@@ -1,0 +1,69 @@
+class java.util.concurrent.Executors$PrivilegedThreadFactory extends java.util.concurrent.Executors$DefaultThreadFactory
+{
+    private final java.security.AccessControlContext acc;
+    private final java.lang.ClassLoader ccl;
+
+    void <init>()
+    {
+        java.util.concurrent.Executors$PrivilegedThreadFactory r0;
+        java.lang.SecurityManager r1;
+        java.lang.RuntimePermission $r2, $r3;
+        java.security.AccessControlContext $r4;
+        java.lang.Thread $r5;
+        java.lang.ClassLoader $r6;
+
+        r0 := @this: java.util.concurrent.Executors$PrivilegedThreadFactory;
+        specialinvoke r0.<java.util.concurrent.Executors$DefaultThreadFactory: void <init>()>();
+        r1 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r1 == null goto label0;
+
+        $r2 = <sun.security.util.SecurityConstants: java.lang.RuntimePermission GET_CLASSLOADER_PERMISSION>;
+        virtualinvoke r1.<java.lang.SecurityManager: void checkPermission(java.security.Permission)>($r2);
+        $r3 = new java.lang.RuntimePermission;
+        specialinvoke $r3.<java.lang.RuntimePermission: void <init>(java.lang.String)>("setContextClassLoader");
+        virtualinvoke r1.<java.lang.SecurityManager: void checkPermission(java.security.Permission)>($r3);
+
+     label0:
+        $r4 = staticinvoke <java.security.AccessController: java.security.AccessControlContext getContext()>();
+        r0.<java.util.concurrent.Executors$PrivilegedThreadFactory: java.security.AccessControlContext acc> = $r4;
+        $r5 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        $r6 = virtualinvoke $r5.<java.lang.Thread: java.lang.ClassLoader getContextClassLoader()>();
+        r0.<java.util.concurrent.Executors$PrivilegedThreadFactory: java.lang.ClassLoader ccl> = $r6;
+        return;
+    }
+
+    public java.lang.Thread newThread(java.lang.Runnable)
+    {
+        java.util.concurrent.Executors$PrivilegedThreadFactory r0;
+        java.lang.Runnable r1;
+        java.util.concurrent.Executors$PrivilegedThreadFactory$1 $r2;
+        java.lang.Thread $r3;
+
+        r0 := @this: java.util.concurrent.Executors$PrivilegedThreadFactory;
+        r1 := @parameter0: java.lang.Runnable;
+        $r2 = new java.util.concurrent.Executors$PrivilegedThreadFactory$1;
+        specialinvoke $r2.<java.util.concurrent.Executors$PrivilegedThreadFactory$1: void <init>(java.util.concurrent.Executors$PrivilegedThreadFactory,java.lang.Runnable)>(r0, r1);
+        $r3 = specialinvoke r0.<java.util.concurrent.Executors$DefaultThreadFactory: java.lang.Thread newThread(java.lang.Runnable)>($r2);
+        return $r3;
+    }
+
+    static java.lang.ClassLoader access$300(java.util.concurrent.Executors$PrivilegedThreadFactory)
+    {
+        java.util.concurrent.Executors$PrivilegedThreadFactory r0;
+        java.lang.ClassLoader $r1;
+
+        r0 := @parameter0: java.util.concurrent.Executors$PrivilegedThreadFactory;
+        $r1 = r0.<java.util.concurrent.Executors$PrivilegedThreadFactory: java.lang.ClassLoader ccl>;
+        return $r1;
+    }
+
+    static java.security.AccessControlContext access$400(java.util.concurrent.Executors$PrivilegedThreadFactory)
+    {
+        java.util.concurrent.Executors$PrivilegedThreadFactory r0;
+        java.security.AccessControlContext $r1;
+
+        r0 := @parameter0: java.util.concurrent.Executors$PrivilegedThreadFactory;
+        $r1 = r0.<java.util.concurrent.Executors$PrivilegedThreadFactory: java.security.AccessControlContext acc>;
+        return $r1;
+    }
+}

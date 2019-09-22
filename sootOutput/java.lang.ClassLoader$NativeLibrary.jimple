@@ -1,0 +1,150 @@
+class java.lang.ClassLoader$NativeLibrary extends java.lang.Object
+{
+    long handle;
+    private int jniVersion;
+    private java.lang.Class fromClass;
+    java.lang.String name;
+
+    native void load(java.lang.String);
+
+    native long find(java.lang.String);
+
+    native void unload();
+
+    public void <init>(java.lang.Class, java.lang.String)
+    {
+        java.lang.ClassLoader$NativeLibrary r0;
+        java.lang.Class r1;
+        java.lang.String r2;
+
+        r0 := @this: java.lang.ClassLoader$NativeLibrary;
+        r1 := @parameter0: java.lang.Class;
+        r2 := @parameter1: java.lang.String;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.lang.ClassLoader$NativeLibrary: java.lang.String name> = r2;
+        r0.<java.lang.ClassLoader$NativeLibrary: java.lang.Class fromClass> = r1;
+        return;
+    }
+
+    protected void finalize()
+    {
+        java.lang.ClassLoader$NativeLibrary r0;
+        java.util.Vector $r1, r2, $r7, $r9, $r11;
+        int i0, i1;
+        java.lang.Throwable r3, r4, $r16, $r19;
+        java.lang.Class $r5;
+        java.lang.ClassLoader $r6;
+        long $l2;
+        byte $b3;
+        java.lang.String $r8;
+        java.lang.Object $r10;
+        boolean $z0;
+        java.util.Stack $r12, $r14, $r17;
+
+        r0 := @this: java.lang.ClassLoader$NativeLibrary;
+        $r1 = staticinvoke <java.lang.ClassLoader: java.util.Vector access$000()>();
+        r2 = $r1;
+        entermonitor $r1;
+
+     label0:
+        $r5 = r0.<java.lang.ClassLoader$NativeLibrary: java.lang.Class fromClass>;
+        $r6 = virtualinvoke $r5.<java.lang.Class: java.lang.ClassLoader getClassLoader()>();
+        if $r6 == null goto label9;
+
+        $l2 = r0.<java.lang.ClassLoader$NativeLibrary: long handle>;
+        $b3 = $l2 cmp 0L;
+        if $b3 == 0 goto label9;
+
+        $r7 = staticinvoke <java.lang.ClassLoader: java.util.Vector access$000()>();
+        i0 = virtualinvoke $r7.<java.util.Vector: int size()>();
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label3;
+
+        $r8 = r0.<java.lang.ClassLoader$NativeLibrary: java.lang.String name>;
+        $r9 = staticinvoke <java.lang.ClassLoader: java.util.Vector access$000()>();
+        $r10 = virtualinvoke $r9.<java.util.Vector: java.lang.Object elementAt(int)>(i1);
+        $z0 = virtualinvoke $r8.<java.lang.String: boolean equals(java.lang.Object)>($r10);
+        if $z0 == 0 goto label2;
+
+        $r11 = staticinvoke <java.lang.ClassLoader: java.util.Vector access$000()>();
+        virtualinvoke $r11.<java.util.Vector: void removeElementAt(int)>(i1);
+        goto label3;
+
+     label2:
+        i1 = i1 + 1;
+        goto label1;
+
+     label3:
+        $r12 = staticinvoke <java.lang.ClassLoader: java.util.Stack access$100()>();
+        virtualinvoke $r12.<java.util.Stack: java.lang.Object push(java.lang.Object)>(r0);
+
+     label4:
+        virtualinvoke r0.<java.lang.ClassLoader$NativeLibrary: void unload()>();
+
+     label5:
+        $r14 = staticinvoke <java.lang.ClassLoader: java.util.Stack access$100()>();
+        virtualinvoke $r14.<java.util.Stack: java.lang.Object pop()>();
+        goto label9;
+
+     label6:
+        $r16 := @caughtexception;
+
+     label7:
+        r3 = $r16;
+
+     label8:
+        $r17 = staticinvoke <java.lang.ClassLoader: java.util.Stack access$100()>();
+        virtualinvoke $r17.<java.util.Stack: java.lang.Object pop()>();
+        throw r3;
+
+     label9:
+        exitmonitor r2;
+
+     label10:
+        goto label14;
+
+     label11:
+        $r19 := @caughtexception;
+
+     label12:
+        r4 = $r19;
+        exitmonitor r2;
+
+     label13:
+        throw r4;
+
+     label14:
+        return;
+
+        catch java.lang.Throwable from label4 to label5 with label6;
+        catch java.lang.Throwable from label7 to label8 with label6;
+        catch java.lang.Throwable from label0 to label10 with label11;
+        catch java.lang.Throwable from label12 to label13 with label11;
+    }
+
+    static java.lang.Class getFromClass()
+    {
+        java.util.Stack $r0;
+        java.lang.Object $r1;
+        java.lang.ClassLoader$NativeLibrary $r2;
+        java.lang.Class $r3;
+
+        $r0 = staticinvoke <java.lang.ClassLoader: java.util.Stack access$100()>();
+        $r1 = virtualinvoke $r0.<java.util.Stack: java.lang.Object peek()>();
+        $r2 = (java.lang.ClassLoader$NativeLibrary) $r1;
+        $r3 = $r2.<java.lang.ClassLoader$NativeLibrary: java.lang.Class fromClass>;
+        return $r3;
+    }
+
+    static java.lang.Class access$200(java.lang.ClassLoader$NativeLibrary)
+    {
+        java.lang.ClassLoader$NativeLibrary r0;
+        java.lang.Class $r1;
+
+        r0 := @parameter0: java.lang.ClassLoader$NativeLibrary;
+        $r1 = r0.<java.lang.ClassLoader$NativeLibrary: java.lang.Class fromClass>;
+        return $r1;
+    }
+}

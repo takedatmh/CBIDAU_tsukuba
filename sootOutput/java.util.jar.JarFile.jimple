@@ -1,0 +1,1157 @@
+public class java.util.jar.JarFile extends java.util.zip.ZipFile
+{
+    private java.lang.ref.SoftReference manRef;
+    private java.util.jar.JarEntry manEntry;
+    private java.util.jar.JarVerifier jv;
+    private boolean jvInitialized;
+    private boolean verify;
+    private boolean computedHasClassPathAttribute;
+    private boolean hasClassPathAttribute;
+    public static final java.lang.String MANIFEST_NAME;
+    private static int[] lastOcc;
+    private static int[] optoSft;
+    private static char[] src;
+    private static java.lang.String javaHome;
+    private static java.lang.String[] jarNames;
+
+    public void <init>(java.lang.String) throws java.io.IOException
+    {
+        java.util.jar.JarFile r0;
+        java.lang.String r1;
+        java.io.File $r2;
+
+        r0 := @this: java.util.jar.JarFile;
+        r1 := @parameter0: java.lang.String;
+        $r2 = new java.io.File;
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>(r1);
+        specialinvoke r0.<java.util.jar.JarFile: void <init>(java.io.File,boolean,int)>($r2, 1, 1);
+        return;
+    }
+
+    public void <init>(java.lang.String, boolean) throws java.io.IOException
+    {
+        java.util.jar.JarFile r0;
+        java.lang.String r1;
+        boolean z0;
+        java.io.File $r2;
+
+        r0 := @this: java.util.jar.JarFile;
+        r1 := @parameter0: java.lang.String;
+        z0 := @parameter1: boolean;
+        $r2 = new java.io.File;
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>(r1);
+        specialinvoke r0.<java.util.jar.JarFile: void <init>(java.io.File,boolean,int)>($r2, z0, 1);
+        return;
+    }
+
+    public void <init>(java.io.File) throws java.io.IOException
+    {
+        java.util.jar.JarFile r0;
+        java.io.File r1;
+
+        r0 := @this: java.util.jar.JarFile;
+        r1 := @parameter0: java.io.File;
+        specialinvoke r0.<java.util.jar.JarFile: void <init>(java.io.File,boolean,int)>(r1, 1, 1);
+        return;
+    }
+
+    public void <init>(java.io.File, boolean) throws java.io.IOException
+    {
+        java.util.jar.JarFile r0;
+        java.io.File r1;
+        boolean z0;
+
+        r0 := @this: java.util.jar.JarFile;
+        r1 := @parameter0: java.io.File;
+        z0 := @parameter1: boolean;
+        specialinvoke r0.<java.util.jar.JarFile: void <init>(java.io.File,boolean,int)>(r1, z0, 1);
+        return;
+    }
+
+    public void <init>(java.io.File, boolean, int) throws java.io.IOException
+    {
+        java.util.jar.JarFile r0;
+        java.io.File r1;
+        boolean z0;
+        int i0;
+
+        r0 := @this: java.util.jar.JarFile;
+        r1 := @parameter0: java.io.File;
+        z0 := @parameter1: boolean;
+        i0 := @parameter2: int;
+        specialinvoke r0.<java.util.zip.ZipFile: void <init>(java.io.File,int)>(r1, i0);
+        r0.<java.util.jar.JarFile: boolean verify> = z0;
+        return;
+    }
+
+    public java.util.jar.Manifest getManifest() throws java.io.IOException
+    {
+        java.util.jar.JarFile r0;
+        java.util.jar.Manifest $r1;
+
+        r0 := @this: java.util.jar.JarFile;
+        $r1 = specialinvoke r0.<java.util.jar.JarFile: java.util.jar.Manifest getManifestFromReference()>();
+        return $r1;
+    }
+
+    private java.util.jar.Manifest getManifestFromReference() throws java.io.IOException
+    {
+        java.util.jar.JarFile r0;
+        java.util.jar.Manifest r1, $r8, $r9, $r11;
+        java.util.jar.JarEntry r2;
+        byte[] r3;
+        java.io.ByteArrayInputStream $r4;
+        java.lang.ref.SoftReference $r5, $r6, $r13;
+        java.lang.Object $r7;
+        boolean $z0, $z1;
+        java.util.jar.JarVerifier $r10;
+        java.io.InputStream $r12;
+
+        r0 := @this: java.util.jar.JarFile;
+        $r5 = r0.<java.util.jar.JarFile: java.lang.ref.SoftReference manRef>;
+        if $r5 == null goto label0;
+
+        $r6 = r0.<java.util.jar.JarFile: java.lang.ref.SoftReference manRef>;
+        $r7 = virtualinvoke $r6.<java.lang.ref.SoftReference: java.lang.Object get()>();
+        $r8 = (java.util.jar.Manifest) $r7;
+        goto label1;
+
+     label0:
+        $r8 = null;
+
+     label1:
+        r1 = $r8;
+        if r1 != null goto label5;
+
+        r2 = specialinvoke r0.<java.util.jar.JarFile: java.util.jar.JarEntry getManEntry()>();
+        if r2 == null goto label5;
+
+        $z0 = r0.<java.util.jar.JarFile: boolean verify>;
+        if $z0 == 0 goto label3;
+
+        r3 = specialinvoke r0.<java.util.jar.JarFile: byte[] getBytes(java.util.zip.ZipEntry)>(r2);
+        $r9 = new java.util.jar.Manifest;
+        $r4 = new java.io.ByteArrayInputStream;
+        specialinvoke $r4.<java.io.ByteArrayInputStream: void <init>(byte[])>(r3);
+        specialinvoke $r9.<java.util.jar.Manifest: void <init>(java.io.InputStream)>($r4);
+        r1 = $r9;
+        $z1 = r0.<java.util.jar.JarFile: boolean jvInitialized>;
+        if $z1 != 0 goto label2;
+
+        $r10 = new java.util.jar.JarVerifier;
+        specialinvoke $r10.<java.util.jar.JarVerifier: void <init>(byte[])>(r3);
+        r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv> = $r10;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r11 = new java.util.jar.Manifest;
+        $r12 = specialinvoke r0.<java.util.zip.ZipFile: java.io.InputStream getInputStream(java.util.zip.ZipEntry)>(r2);
+        specialinvoke $r11.<java.util.jar.Manifest: void <init>(java.io.InputStream)>($r12);
+        r1 = $r11;
+
+     label4:
+        $r13 = new java.lang.ref.SoftReference;
+        specialinvoke $r13.<java.lang.ref.SoftReference: void <init>(java.lang.Object)>(r1);
+        r0.<java.util.jar.JarFile: java.lang.ref.SoftReference manRef> = $r13;
+
+     label5:
+        return r1;
+    }
+
+    private native java.lang.String[] getMetaInfEntryNames();
+
+    public java.util.jar.JarEntry getJarEntry(java.lang.String)
+    {
+        java.util.jar.JarFile r0;
+        java.lang.String r1;
+        java.util.zip.ZipEntry $r2;
+        java.util.jar.JarEntry $r3;
+
+        r0 := @this: java.util.jar.JarFile;
+        r1 := @parameter0: java.lang.String;
+        $r2 = virtualinvoke r0.<java.util.jar.JarFile: java.util.zip.ZipEntry getEntry(java.lang.String)>(r1);
+        $r3 = (java.util.jar.JarEntry) $r2;
+        return $r3;
+    }
+
+    public java.util.zip.ZipEntry getEntry(java.lang.String)
+    {
+        java.util.jar.JarFile r0;
+        java.lang.String r1;
+        java.util.zip.ZipEntry r2;
+        java.util.jar.JarFile$JarFileEntry $r3;
+
+        r0 := @this: java.util.jar.JarFile;
+        r1 := @parameter0: java.lang.String;
+        r2 = specialinvoke r0.<java.util.zip.ZipFile: java.util.zip.ZipEntry getEntry(java.lang.String)>(r1);
+        if r2 == null goto label0;
+
+        $r3 = new java.util.jar.JarFile$JarFileEntry;
+        specialinvoke $r3.<java.util.jar.JarFile$JarFileEntry: void <init>(java.util.jar.JarFile,java.util.zip.ZipEntry)>(r0, r2);
+        return $r3;
+
+     label0:
+        return null;
+    }
+
+    public java.util.Enumeration entries()
+    {
+        java.util.jar.JarFile r0;
+        java.util.Enumeration r1;
+        java.util.jar.JarFile$1 $r2;
+
+        r0 := @this: java.util.jar.JarFile;
+        r1 = specialinvoke r0.<java.util.zip.ZipFile: java.util.Enumeration entries()>();
+        $r2 = new java.util.jar.JarFile$1;
+        specialinvoke $r2.<java.util.jar.JarFile$1: void <init>(java.util.jar.JarFile,java.util.Enumeration)>(r0, r1);
+        return $r2;
+    }
+
+    private void maybeInstantiateVerifier() throws java.io.IOException
+    {
+        java.util.jar.JarFile r0;
+        java.lang.String[] r1;
+        int i0, $i1;
+        java.lang.String r2, $r4;
+        java.util.jar.JarVerifier $r3;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        java.util.Locale $r5;
+
+        r0 := @this: java.util.jar.JarFile;
+        $r3 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        if $r3 == null goto label0;
+
+        return;
+
+     label0:
+        $z0 = r0.<java.util.jar.JarFile: boolean verify>;
+        if $z0 == 0 goto label5;
+
+        r1 = specialinvoke r0.<java.util.jar.JarFile: java.lang.String[] getMetaInfEntryNames()>();
+        if r1 == null goto label4;
+
+        i0 = 0;
+
+     label1:
+        $i1 = lengthof r1;
+        if i0 >= $i1 goto label4;
+
+        $r4 = r1[i0];
+        $r5 = <java.util.Locale: java.util.Locale ENGLISH>;
+        r2 = virtualinvoke $r4.<java.lang.String: java.lang.String toUpperCase(java.util.Locale)>($r5);
+        $z1 = virtualinvoke r2.<java.lang.String: boolean endsWith(java.lang.String)>(".DSA");
+        if $z1 != 0 goto label2;
+
+        $z2 = virtualinvoke r2.<java.lang.String: boolean endsWith(java.lang.String)>(".RSA");
+        if $z2 != 0 goto label2;
+
+        $z3 = virtualinvoke r2.<java.lang.String: boolean endsWith(java.lang.String)>(".EC");
+        if $z3 != 0 goto label2;
+
+        $z4 = virtualinvoke r2.<java.lang.String: boolean endsWith(java.lang.String)>(".SF");
+        if $z4 == 0 goto label3;
+
+     label2:
+        virtualinvoke r0.<java.util.jar.JarFile: java.util.jar.Manifest getManifest()>();
+        return;
+
+     label3:
+        i0 = i0 + 1;
+        goto label1;
+
+     label4:
+        r0.<java.util.jar.JarFile: boolean verify> = 0;
+
+     label5:
+        return;
+    }
+
+    private void initializeVerifier()
+    {
+        java.util.jar.JarFile r0;
+        sun.security.util.ManifestEntryVerifier r1, $r11;
+        java.lang.String[] r2;
+        int i0, $i1, $i2, $i3, $i4;
+        java.lang.String r3, $r6, $r8, $r9;
+        java.util.jar.JarEntry r4;
+        byte[] r5;
+        java.util.Locale $r7;
+        boolean $z0, $z1, $z2;
+        java.util.jar.JarException $r10;
+        java.util.jar.Manifest $r12;
+        java.util.jar.JarVerifier $r13, $r14, $r15, $r20, $r21, $r24;
+        java.io.IOException $r16, r17;
+        sun.security.util.Debug $r18, $r19, $r22, $r23, $r25, $r26;
+
+        r0 := @this: java.util.jar.JarFile;
+        r1 = null;
+
+     label0:
+        r2 = specialinvoke r0.<java.util.jar.JarFile: java.lang.String[] getMetaInfEntryNames()>();
+        if r2 == null goto label6;
+
+        i0 = 0;
+
+     label1:
+        $i1 = lengthof r2;
+        if i0 >= $i1 goto label6;
+
+        $r6 = r2[i0];
+        $r7 = <java.util.Locale: java.util.Locale ENGLISH>;
+        r3 = virtualinvoke $r6.<java.lang.String: java.lang.String toUpperCase(java.util.Locale)>($r7);
+        $r8 = "META-INF/MANIFEST.MF";
+        $z0 = virtualinvoke $r8.<java.lang.String: boolean equals(java.lang.Object)>(r3);
+        if $z0 != 0 goto label2;
+
+        $z1 = staticinvoke <sun.security.util.SignatureFileVerifier: boolean isBlockOrSF(java.lang.String)>(r3);
+        if $z1 == 0 goto label5;
+
+     label2:
+        $r9 = r2[i0];
+        r4 = virtualinvoke r0.<java.util.jar.JarFile: java.util.jar.JarEntry getJarEntry(java.lang.String)>($r9);
+        if r4 != null goto label3;
+
+        $r10 = new java.util.jar.JarException;
+        specialinvoke $r10.<java.util.jar.JarException: void <init>(java.lang.String)>("corrupted jar file");
+        throw $r10;
+
+     label3:
+        if r1 != null goto label4;
+
+        $r11 = new sun.security.util.ManifestEntryVerifier;
+        $r12 = specialinvoke r0.<java.util.jar.JarFile: java.util.jar.Manifest getManifestFromReference()>();
+        specialinvoke $r11.<sun.security.util.ManifestEntryVerifier: void <init>(java.util.jar.Manifest)>($r12);
+        r1 = $r11;
+
+     label4:
+        r5 = specialinvoke r0.<java.util.jar.JarFile: byte[] getBytes(java.util.zip.ZipEntry)>(r4);
+        if r5 == null goto label5;
+
+        $i2 = lengthof r5;
+        if $i2 <= 0 goto label5;
+
+        $r13 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        virtualinvoke $r13.<java.util.jar.JarVerifier: void beginEntry(java.util.jar.JarEntry,sun.security.util.ManifestEntryVerifier)>(r4, r1);
+        $r14 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        $i3 = lengthof r5;
+        $i4 = lengthof r5;
+        virtualinvoke $r14.<java.util.jar.JarVerifier: void update(int,byte[],int,int,sun.security.util.ManifestEntryVerifier)>($i3, r5, 0, $i4, r1);
+        $r15 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        virtualinvoke $r15.<java.util.jar.JarVerifier: void update(int,byte[],int,int,sun.security.util.ManifestEntryVerifier)>(-1, null, 0, 0, r1);
+
+     label5:
+        i0 = i0 + 1;
+        goto label1;
+
+     label6:
+        goto label8;
+
+     label7:
+        $r16 := @caughtexception;
+        r17 = $r16;
+        r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv> = null;
+        r0.<java.util.jar.JarFile: boolean verify> = 0;
+        $r18 = <java.util.jar.JarVerifier: sun.security.util.Debug debug>;
+        if $r18 == null goto label8;
+
+        $r19 = <java.util.jar.JarVerifier: sun.security.util.Debug debug>;
+        virtualinvoke $r19.<sun.security.util.Debug: void println(java.lang.String)>("jarfile parsing error!");
+        virtualinvoke r17.<java.io.IOException: void printStackTrace()>();
+
+     label8:
+        $r20 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        if $r20 == null goto label11;
+
+        $r21 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        virtualinvoke $r21.<java.util.jar.JarVerifier: void doneWithMeta()>();
+        $r22 = <java.util.jar.JarVerifier: sun.security.util.Debug debug>;
+        if $r22 == null goto label9;
+
+        $r23 = <java.util.jar.JarVerifier: sun.security.util.Debug debug>;
+        virtualinvoke $r23.<sun.security.util.Debug: void println(java.lang.String)>("done with meta!");
+
+     label9:
+        $r24 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        $z2 = virtualinvoke $r24.<java.util.jar.JarVerifier: boolean nothingToVerify()>();
+        if $z2 == 0 goto label11;
+
+        $r25 = <java.util.jar.JarVerifier: sun.security.util.Debug debug>;
+        if $r25 == null goto label10;
+
+        $r26 = <java.util.jar.JarVerifier: sun.security.util.Debug debug>;
+        virtualinvoke $r26.<sun.security.util.Debug: void println(java.lang.String)>("nothing to verify!");
+
+     label10:
+        r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv> = null;
+        r0.<java.util.jar.JarFile: boolean verify> = 0;
+
+     label11:
+        return;
+
+        catch java.io.IOException from label0 to label6 with label7;
+    }
+
+    private byte[] getBytes(java.util.zip.ZipEntry) throws java.io.IOException
+    {
+        java.util.jar.JarFile r0;
+        java.util.zip.ZipEntry r1;
+        java.io.InputStream r2;
+        java.lang.Throwable r3, r5, r6, r7, $r8, $r9, r10, $r11, $r12;
+        byte[] r4;
+        long $l0;
+        int $i1;
+
+        r0 := @this: java.util.jar.JarFile;
+        r1 := @parameter0: java.util.zip.ZipEntry;
+        r2 = specialinvoke r0.<java.util.zip.ZipFile: java.io.InputStream getInputStream(java.util.zip.ZipEntry)>(r1);
+        r3 = null;
+
+     label0:
+        $l0 = virtualinvoke r1.<java.util.zip.ZipEntry: long getSize()>();
+        $i1 = (int) $l0;
+        r4 = staticinvoke <sun.misc.IOUtils: byte[] readFully(java.io.InputStream,int,boolean)>(r2, $i1, 1);
+
+     label1:
+        if r2 == null goto label6;
+
+        if r3 == null goto label5;
+
+     label2:
+        virtualinvoke r2.<java.io.InputStream: void close()>();
+
+     label3:
+        goto label6;
+
+     label4:
+        $r8 := @caughtexception;
+        r5 = $r8;
+        virtualinvoke r3.<java.lang.Throwable: void addSuppressed(java.lang.Throwable)>(r5);
+        goto label6;
+
+     label5:
+        virtualinvoke r2.<java.io.InputStream: void close()>();
+
+     label6:
+        return r4;
+
+     label7:
+        $r9 := @caughtexception;
+
+     label8:
+        r10 = $r9;
+        r3 = r10;
+        throw r10;
+
+     label9:
+        $r11 := @caughtexception;
+        r6 = $r11;
+
+     label10:
+        if r2 == null goto label15;
+
+        if r3 == null goto label14;
+
+     label11:
+        virtualinvoke r2.<java.io.InputStream: void close()>();
+
+     label12:
+        goto label15;
+
+     label13:
+        $r12 := @caughtexception;
+        r7 = $r12;
+        virtualinvoke r3.<java.lang.Throwable: void addSuppressed(java.lang.Throwable)>(r7);
+        goto label15;
+
+     label14:
+        virtualinvoke r2.<java.io.InputStream: void close()>();
+
+     label15:
+        throw r6;
+
+        catch java.lang.Throwable from label2 to label3 with label4;
+        catch java.lang.Throwable from label0 to label1 with label7;
+        catch java.lang.Throwable from label0 to label1 with label9;
+        catch java.lang.Throwable from label11 to label12 with label13;
+        catch java.lang.Throwable from label8 to label10 with label9;
+    }
+
+    public synchronized java.io.InputStream getInputStream(java.util.zip.ZipEntry) throws java.io.IOException
+    {
+        java.util.jar.JarFile r0;
+        java.util.zip.ZipEntry r1;
+        java.util.jar.JarVerifier $r2, $r4, $r12;
+        java.io.InputStream $r3, $r5, $r11;
+        boolean $z0, $z1;
+        java.util.jar.JarVerifier$VerifierStream $r6;
+        java.util.jar.Manifest $r8;
+        java.util.jar.JarEntry $r9;
+        java.lang.String $r10;
+
+        r0 := @this: java.util.jar.JarFile;
+        r1 := @parameter0: java.util.zip.ZipEntry;
+        specialinvoke r0.<java.util.jar.JarFile: void maybeInstantiateVerifier()>();
+        $r2 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        if $r2 != null goto label0;
+
+        $r3 = specialinvoke r0.<java.util.zip.ZipFile: java.io.InputStream getInputStream(java.util.zip.ZipEntry)>(r1);
+        return $r3;
+
+     label0:
+        $z0 = r0.<java.util.jar.JarFile: boolean jvInitialized>;
+        if $z0 != 0 goto label1;
+
+        specialinvoke r0.<java.util.jar.JarFile: void initializeVerifier()>();
+        r0.<java.util.jar.JarFile: boolean jvInitialized> = 1;
+        $r4 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        if $r4 != null goto label1;
+
+        $r5 = specialinvoke r0.<java.util.zip.ZipFile: java.io.InputStream getInputStream(java.util.zip.ZipEntry)>(r1);
+        return $r5;
+
+     label1:
+        $r6 = new java.util.jar.JarVerifier$VerifierStream;
+        $r8 = specialinvoke r0.<java.util.jar.JarFile: java.util.jar.Manifest getManifestFromReference()>();
+        $z1 = r1 instanceof java.util.jar.JarFile$JarFileEntry;
+        if $z1 == 0 goto label2;
+
+        $r9 = (java.util.jar.JarEntry) r1;
+        goto label3;
+
+     label2:
+        $r10 = virtualinvoke r1.<java.util.zip.ZipEntry: java.lang.String getName()>();
+        $r9 = virtualinvoke r0.<java.util.jar.JarFile: java.util.jar.JarEntry getJarEntry(java.lang.String)>($r10);
+
+     label3:
+        $r11 = specialinvoke r0.<java.util.zip.ZipFile: java.io.InputStream getInputStream(java.util.zip.ZipEntry)>(r1);
+        $r12 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        specialinvoke $r6.<java.util.jar.JarVerifier$VerifierStream: void <init>(java.util.jar.Manifest,java.util.jar.JarEntry,java.io.InputStream,java.util.jar.JarVerifier)>($r8, $r9, $r11, $r12);
+        return $r6;
+    }
+
+    private java.util.jar.JarEntry getManEntry()
+    {
+        java.util.jar.JarFile r0;
+        java.lang.String[] r1;
+        int i0, $i1;
+        java.util.jar.JarEntry $r2, $r3, $r4, $r10, $r11;
+        java.lang.String $r5, $r6, $r8, $r9;
+        java.util.Locale $r7;
+        boolean $z0;
+
+        r0 := @this: java.util.jar.JarFile;
+        $r2 = r0.<java.util.jar.JarFile: java.util.jar.JarEntry manEntry>;
+        if $r2 != null goto label2;
+
+        $r3 = virtualinvoke r0.<java.util.jar.JarFile: java.util.jar.JarEntry getJarEntry(java.lang.String)>("META-INF/MANIFEST.MF");
+        r0.<java.util.jar.JarFile: java.util.jar.JarEntry manEntry> = $r3;
+        $r4 = r0.<java.util.jar.JarFile: java.util.jar.JarEntry manEntry>;
+        if $r4 != null goto label2;
+
+        r1 = specialinvoke r0.<java.util.jar.JarFile: java.lang.String[] getMetaInfEntryNames()>();
+        if r1 == null goto label2;
+
+        i0 = 0;
+
+     label0:
+        $i1 = lengthof r1;
+        if i0 >= $i1 goto label2;
+
+        $r5 = "META-INF/MANIFEST.MF";
+        $r6 = r1[i0];
+        $r7 = <java.util.Locale: java.util.Locale ENGLISH>;
+        $r8 = virtualinvoke $r6.<java.lang.String: java.lang.String toUpperCase(java.util.Locale)>($r7);
+        $z0 = virtualinvoke $r5.<java.lang.String: boolean equals(java.lang.Object)>($r8);
+        if $z0 == 0 goto label1;
+
+        $r9 = r1[i0];
+        $r10 = virtualinvoke r0.<java.util.jar.JarFile: java.util.jar.JarEntry getJarEntry(java.lang.String)>($r9);
+        r0.<java.util.jar.JarFile: java.util.jar.JarEntry manEntry> = $r10;
+        goto label2;
+
+     label1:
+        i0 = i0 + 1;
+        goto label0;
+
+     label2:
+        $r11 = r0.<java.util.jar.JarFile: java.util.jar.JarEntry manEntry>;
+        return $r11;
+    }
+
+    boolean hasClassPathAttribute() throws java.io.IOException
+    {
+        java.util.jar.JarFile r0;
+        java.util.jar.JarEntry r1;
+        byte[] r2;
+        int i0, i1, i2, $i4, $i5, $i6, $i8, $i9, $i10, $i11, $i15, $i17, $i18, $i19, $i20;
+        char c3, $c12, c13, $c14, $c16;
+        boolean $z0, $z1, $z2, $z3;
+        char[] $r3, $r4;
+        byte $b7;
+        int[] $r5, $r6;
+
+        r0 := @this: java.util.jar.JarFile;
+        $z0 = r0.<java.util.jar.JarFile: boolean computedHasClassPathAttribute>;
+        if $z0 == 0 goto label0;
+
+        $z1 = r0.<java.util.jar.JarFile: boolean hasClassPathAttribute>;
+        return $z1;
+
+     label0:
+        r0.<java.util.jar.JarFile: boolean hasClassPathAttribute> = 0;
+        $z2 = specialinvoke r0.<java.util.jar.JarFile: boolean isKnownToNotHaveClassPathAttribute()>();
+        if $z2 != 0 goto label7;
+
+        r1 = specialinvoke r0.<java.util.jar.JarFile: java.util.jar.JarEntry getManEntry()>();
+        if r1 == null goto label7;
+
+        r2 = specialinvoke r0.<java.util.jar.JarFile: byte[] getBytes(java.util.zip.ZipEntry)>(r1);
+        $i4 = lengthof r2;
+        $r3 = <java.util.jar.JarFile: char[] src>;
+        $i5 = lengthof $r3;
+        i0 = $i4 - $i5;
+        i1 = 0;
+
+     label1:
+        if i1 > i0 goto label7;
+
+        i2 = 9;
+
+     label2:
+        if i2 < 0 goto label6;
+
+        $i6 = i1 + i2;
+        $b7 = r2[$i6];
+        c3 = (char) $b7;
+        $i8 = c3 - 65;
+        $i9 = 90 - c3;
+        $i10 = $i8 | $i9;
+        if $i10 < 0 goto label3;
+
+        $i11 = c3 + 32;
+        $c12 = (char) $i11;
+        goto label4;
+
+     label3:
+        $c12 = c3;
+
+     label4:
+        c13 = $c12;
+        $r4 = <java.util.jar.JarFile: char[] src>;
+        $c14 = $r4[i2];
+        if c13 == $c14 goto label5;
+
+        $i15 = i2 + 1;
+        $r5 = <java.util.jar.JarFile: int[] lastOcc>;
+        $c16 = c13 & 127;
+        $i17 = $r5[$c16];
+        $i18 = $i15 - $i17;
+        $r6 = <java.util.jar.JarFile: int[] optoSft>;
+        $i19 = $r6[i2];
+        $i20 = staticinvoke <java.lang.Math: int max(int,int)>($i18, $i19);
+        i1 = i1 + $i20;
+        goto label1;
+
+     label5:
+        i2 = i2 + -1;
+        goto label2;
+
+     label6:
+        r0.<java.util.jar.JarFile: boolean hasClassPathAttribute> = 1;
+        goto label7;
+
+     label7:
+        r0.<java.util.jar.JarFile: boolean computedHasClassPathAttribute> = 1;
+        $z3 = r0.<java.util.jar.JarFile: boolean hasClassPathAttribute>;
+        return $z3;
+    }
+
+    private boolean isKnownToNotHaveClassPathAttribute()
+    {
+        java.util.jar.JarFile r0;
+        java.lang.String $r1, r3, $r6, $r11, $r15, $r19, $r23, $r27, $r31, $r35, $r39, $r43, $r47, r48, r49, $r51;
+        java.lang.String[] r2, $r7, r50;
+        byte b0;
+        int i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, $i12;
+        sun.security.action.GetPropertyAction $r4;
+        java.lang.Object $r5;
+        java.lang.StringBuilder $r8, $r9, $r10, $r12, $r13, $r14, $r16, $r17, $r18, $r20, $r21, $r22, $r24, $r25, $r26, $r28, $r29, $r30, $r32, $r33, $r34, $r36, $r37, $r38, $r40, $r41, $r42, $r44, $r45, $r46;
+        boolean $z0, $z1;
+
+        r0 := @this: java.util.jar.JarFile;
+        $r1 = <java.util.jar.JarFile: java.lang.String javaHome>;
+        if $r1 != null goto label0;
+
+        $r4 = new sun.security.action.GetPropertyAction;
+        specialinvoke $r4.<sun.security.action.GetPropertyAction: void <init>(java.lang.String)>("java.home");
+        $r5 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r4);
+        $r6 = (java.lang.String) $r5;
+        <java.util.jar.JarFile: java.lang.String javaHome> = $r6;
+
+     label0:
+        $r7 = <java.util.jar.JarFile: java.lang.String[] jarNames>;
+        if $r7 != null goto label1;
+
+        r2 = newarray (java.lang.String)[10];
+        r3 = <java.io.File: java.lang.String separator>;
+        b0 = 0;
+        i2 = b0 + 1;
+        $r8 = new java.lang.StringBuilder;
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>()>();
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r3);
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("rt.jar");
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.String toString()>();
+        r2[b0] = $r11;
+        i3 = i2 + 1;
+        $r12 = new java.lang.StringBuilder;
+        specialinvoke $r12.<java.lang.StringBuilder: void <init>()>();
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r3);
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("sunrsasign.jar");
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.String toString()>();
+        r2[i2] = $r15;
+        i4 = i3 + 1;
+        $r16 = new java.lang.StringBuilder;
+        specialinvoke $r16.<java.lang.StringBuilder: void <init>()>();
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r3);
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("jsse.jar");
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.String toString()>();
+        r2[i3] = $r19;
+        i5 = i4 + 1;
+        $r20 = new java.lang.StringBuilder;
+        specialinvoke $r20.<java.lang.StringBuilder: void <init>()>();
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r3);
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("jce.jar");
+        $r23 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.String toString()>();
+        r2[i4] = $r23;
+        i6 = i5 + 1;
+        $r24 = new java.lang.StringBuilder;
+        specialinvoke $r24.<java.lang.StringBuilder: void <init>()>();
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r3);
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("charsets.jar");
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.String toString()>();
+        r2[i5] = $r27;
+        i7 = i6 + 1;
+        $r28 = new java.lang.StringBuilder;
+        specialinvoke $r28.<java.lang.StringBuilder: void <init>()>();
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r3);
+        $r30 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("dnsns.jar");
+        $r31 = virtualinvoke $r30.<java.lang.StringBuilder: java.lang.String toString()>();
+        r2[i6] = $r31;
+        i8 = i7 + 1;
+        $r32 = new java.lang.StringBuilder;
+        specialinvoke $r32.<java.lang.StringBuilder: void <init>()>();
+        $r33 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r3);
+        $r34 = virtualinvoke $r33.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("ldapsec.jar");
+        $r35 = virtualinvoke $r34.<java.lang.StringBuilder: java.lang.String toString()>();
+        r2[i7] = $r35;
+        i9 = i8 + 1;
+        $r36 = new java.lang.StringBuilder;
+        specialinvoke $r36.<java.lang.StringBuilder: void <init>()>();
+        $r37 = virtualinvoke $r36.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r3);
+        $r38 = virtualinvoke $r37.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("localedata.jar");
+        $r39 = virtualinvoke $r38.<java.lang.StringBuilder: java.lang.String toString()>();
+        r2[i8] = $r39;
+        i10 = i9 + 1;
+        $r40 = new java.lang.StringBuilder;
+        specialinvoke $r40.<java.lang.StringBuilder: void <init>()>();
+        $r41 = virtualinvoke $r40.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r3);
+        $r42 = virtualinvoke $r41.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("sunjce_provider.jar");
+        $r43 = virtualinvoke $r42.<java.lang.StringBuilder: java.lang.String toString()>();
+        r2[i9] = $r43;
+        i11 = i10 + 1;
+        $r44 = new java.lang.StringBuilder;
+        specialinvoke $r44.<java.lang.StringBuilder: void <init>()>();
+        $r45 = virtualinvoke $r44.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r3);
+        $r46 = virtualinvoke $r45.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("sunpkcs11.jar");
+        $r47 = virtualinvoke $r46.<java.lang.StringBuilder: java.lang.String toString()>();
+        r2[i10] = $r47;
+        <java.util.jar.JarFile: java.lang.String[] jarNames> = r2;
+
+     label1:
+        r48 = virtualinvoke r0.<java.util.jar.JarFile: java.lang.String getName()>();
+        r49 = <java.util.jar.JarFile: java.lang.String javaHome>;
+        $z0 = virtualinvoke r48.<java.lang.String: boolean startsWith(java.lang.String)>(r49);
+        if $z0 == 0 goto label4;
+
+        r50 = <java.util.jar.JarFile: java.lang.String[] jarNames>;
+        i1 = 0;
+
+     label2:
+        $i12 = lengthof r50;
+        if i1 >= $i12 goto label4;
+
+        $r51 = r50[i1];
+        $z1 = virtualinvoke r48.<java.lang.String: boolean endsWith(java.lang.String)>($r51);
+        if $z1 == 0 goto label3;
+
+        return 1;
+
+     label3:
+        i1 = i1 + 1;
+        goto label2;
+
+     label4:
+        return 0;
+    }
+
+    private synchronized void ensureInitialization()
+    {
+        java.util.jar.JarFile r0;
+        java.io.IOException r1, $r2;
+        java.lang.RuntimeException $r3;
+        java.util.jar.JarVerifier $r4;
+        boolean $z0;
+
+        r0 := @this: java.util.jar.JarFile;
+
+     label0:
+        specialinvoke r0.<java.util.jar.JarFile: void maybeInstantiateVerifier()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r2 := @caughtexception;
+        r1 = $r2;
+        $r3 = new java.lang.RuntimeException;
+        specialinvoke $r3.<java.lang.RuntimeException: void <init>(java.lang.Throwable)>(r1);
+        throw $r3;
+
+     label3:
+        $r4 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        if $r4 == null goto label4;
+
+        $z0 = r0.<java.util.jar.JarFile: boolean jvInitialized>;
+        if $z0 != 0 goto label4;
+
+        specialinvoke r0.<java.util.jar.JarFile: void initializeVerifier()>();
+        r0.<java.util.jar.JarFile: boolean jvInitialized> = 1;
+
+     label4:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    java.util.jar.JarEntry newEntry(java.util.zip.ZipEntry)
+    {
+        java.util.jar.JarFile r0;
+        java.util.zip.ZipEntry r1;
+        java.util.jar.JarFile$JarFileEntry $r2;
+
+        r0 := @this: java.util.jar.JarFile;
+        r1 := @parameter0: java.util.zip.ZipEntry;
+        $r2 = new java.util.jar.JarFile$JarFileEntry;
+        specialinvoke $r2.<java.util.jar.JarFile$JarFileEntry: void <init>(java.util.jar.JarFile,java.util.zip.ZipEntry)>(r0, r1);
+        return $r2;
+    }
+
+    java.util.Enumeration entryNames(java.security.CodeSource[])
+    {
+        java.util.jar.JarFile r0;
+        java.security.CodeSource[] r1;
+        boolean z0;
+        int i0, $i1;
+        java.util.jar.JarVerifier $r2, $r3;
+        java.util.Enumeration $r4, $r7;
+        java.security.CodeSource $r5;
+        java.security.CodeSigner[] $r6;
+        java.util.jar.JarFile$2 $r8;
+
+        r0 := @this: java.util.jar.JarFile;
+        r1 := @parameter0: java.security.CodeSource[];
+        specialinvoke r0.<java.util.jar.JarFile: void ensureInitialization()>();
+        $r2 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        if $r2 == null goto label0;
+
+        $r3 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        $r4 = virtualinvoke $r3.<java.util.jar.JarVerifier: java.util.Enumeration entryNames(java.util.jar.JarFile,java.security.CodeSource[])>(r0, r1);
+        return $r4;
+
+     label0:
+        z0 = 0;
+        i0 = 0;
+
+     label1:
+        $i1 = lengthof r1;
+        if i0 >= $i1 goto label3;
+
+        $r5 = r1[i0];
+        $r6 = virtualinvoke $r5.<java.security.CodeSource: java.security.CodeSigner[] getCodeSigners()>();
+        if $r6 != null goto label2;
+
+        z0 = 1;
+        goto label3;
+
+     label2:
+        i0 = i0 + 1;
+        goto label1;
+
+     label3:
+        if z0 == 0 goto label4;
+
+        $r7 = specialinvoke r0.<java.util.jar.JarFile: java.util.Enumeration unsignedEntryNames()>();
+        return $r7;
+
+     label4:
+        $r8 = new java.util.jar.JarFile$2;
+        specialinvoke $r8.<java.util.jar.JarFile$2: void <init>(java.util.jar.JarFile)>(r0);
+        return $r8;
+    }
+
+    java.util.Enumeration entries2()
+    {
+        java.util.jar.JarFile r0;
+        java.util.Enumeration r1, $r4, $r5;
+        java.util.jar.JarVerifier $r2, $r3;
+        java.util.jar.JarFile$3 $r6;
+
+        r0 := @this: java.util.jar.JarFile;
+        specialinvoke r0.<java.util.jar.JarFile: void ensureInitialization()>();
+        $r2 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        if $r2 == null goto label0;
+
+        $r3 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        $r4 = specialinvoke r0.<java.util.zip.ZipFile: java.util.Enumeration entries()>();
+        $r5 = virtualinvoke $r3.<java.util.jar.JarVerifier: java.util.Enumeration entries2(java.util.jar.JarFile,java.util.Enumeration)>(r0, $r4);
+        return $r5;
+
+     label0:
+        r1 = specialinvoke r0.<java.util.zip.ZipFile: java.util.Enumeration entries()>();
+        $r6 = new java.util.jar.JarFile$3;
+        specialinvoke $r6.<java.util.jar.JarFile$3: void <init>(java.util.jar.JarFile,java.util.Enumeration)>(r0, r1);
+        return $r6;
+    }
+
+    java.security.CodeSource[] getCodeSources(java.net.URL)
+    {
+        java.util.jar.JarFile r0;
+        java.net.URL r1;
+        java.util.Enumeration r2;
+        java.util.jar.JarVerifier $r3, $r4;
+        java.security.CodeSource[] $r5, $r6;
+        boolean $z0;
+        java.security.CodeSource $r7;
+
+        r0 := @this: java.util.jar.JarFile;
+        r1 := @parameter0: java.net.URL;
+        specialinvoke r0.<java.util.jar.JarFile: void ensureInitialization()>();
+        $r3 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        if $r3 == null goto label0;
+
+        $r4 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        $r5 = virtualinvoke $r4.<java.util.jar.JarVerifier: java.security.CodeSource[] getCodeSources(java.util.jar.JarFile,java.net.URL)>(r0, r1);
+        return $r5;
+
+     label0:
+        r2 = specialinvoke r0.<java.util.jar.JarFile: java.util.Enumeration unsignedEntryNames()>();
+        $z0 = interfaceinvoke r2.<java.util.Enumeration: boolean hasMoreElements()>();
+        if $z0 == 0 goto label1;
+
+        $r6 = newarray (java.security.CodeSource)[1];
+        $r7 = staticinvoke <java.util.jar.JarVerifier: java.security.CodeSource getUnsignedCS(java.net.URL)>(r1);
+        $r6[0] = $r7;
+        return $r6;
+
+     label1:
+        return null;
+    }
+
+    private java.util.Enumeration unsignedEntryNames()
+    {
+        java.util.jar.JarFile r0;
+        java.util.Enumeration r1;
+        java.util.jar.JarFile$4 $r2;
+
+        r0 := @this: java.util.jar.JarFile;
+        r1 = virtualinvoke r0.<java.util.jar.JarFile: java.util.Enumeration entries()>();
+        $r2 = new java.util.jar.JarFile$4;
+        specialinvoke $r2.<java.util.jar.JarFile$4: void <init>(java.util.jar.JarFile,java.util.Enumeration)>(r0, r1);
+        return $r2;
+    }
+
+    java.security.CodeSource getCodeSource(java.net.URL, java.lang.String)
+    {
+        java.util.jar.JarFile r0;
+        java.net.URL r1;
+        java.lang.String r2;
+        null_type n0;
+        java.util.jar.JarEntry r3;
+        java.util.jar.JarVerifier $r4, $r5, $r6, $r8, $r9;
+        boolean $z0;
+        java.security.CodeSource r7, $r10, $r11;
+
+        r0 := @this: java.util.jar.JarFile;
+        r1 := @parameter0: java.net.URL;
+        r2 := @parameter1: java.lang.String;
+        specialinvoke r0.<java.util.jar.JarFile: void ensureInitialization()>();
+        $r4 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        if $r4 == null goto label3;
+
+        $r5 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        $z0 = $r5.<java.util.jar.JarVerifier: boolean eagerValidation>;
+        if $z0 == 0 goto label2;
+
+        n0 = null;
+        r3 = virtualinvoke r0.<java.util.jar.JarFile: java.util.jar.JarEntry getJarEntry(java.lang.String)>(r2);
+        if r3 == null goto label0;
+
+        $r6 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        r7 = virtualinvoke $r6.<java.util.jar.JarVerifier: java.security.CodeSource getCodeSource(java.net.URL,java.util.jar.JarFile,java.util.jar.JarEntry)>(r1, r0, r3);
+        goto label1;
+
+     label0:
+        $r8 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        r7 = virtualinvoke $r8.<java.util.jar.JarVerifier: java.security.CodeSource getCodeSource(java.net.URL,java.lang.String)>(r1, r2);
+
+     label1:
+        return r7;
+
+     label2:
+        $r9 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        $r10 = virtualinvoke $r9.<java.util.jar.JarVerifier: java.security.CodeSource getCodeSource(java.net.URL,java.lang.String)>(r1, r2);
+        return $r10;
+
+     label3:
+        $r11 = staticinvoke <java.util.jar.JarVerifier: java.security.CodeSource getUnsignedCS(java.net.URL)>(r1);
+        return $r11;
+    }
+
+    void setEagerValidation(boolean)
+    {
+        java.util.jar.JarFile r0;
+        boolean z0;
+        java.io.IOException r1, $r2;
+        java.lang.RuntimeException $r3;
+        java.util.jar.JarVerifier $r4, $r5;
+
+        r0 := @this: java.util.jar.JarFile;
+        z0 := @parameter0: boolean;
+
+     label0:
+        specialinvoke r0.<java.util.jar.JarFile: void maybeInstantiateVerifier()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r2 := @caughtexception;
+        r1 = $r2;
+        $r3 = new java.lang.RuntimeException;
+        specialinvoke $r3.<java.lang.RuntimeException: void <init>(java.lang.Throwable)>(r1);
+        throw $r3;
+
+     label3:
+        $r4 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        if $r4 == null goto label4;
+
+        $r5 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        virtualinvoke $r5.<java.util.jar.JarVerifier: void setEagerValidation(boolean)>(z0);
+
+     label4:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    java.util.List getManifestDigests()
+    {
+        java.util.jar.JarFile r0;
+        java.util.jar.JarVerifier $r1, $r2;
+        java.util.List $r3;
+        java.util.ArrayList $r4;
+
+        r0 := @this: java.util.jar.JarFile;
+        specialinvoke r0.<java.util.jar.JarFile: void ensureInitialization()>();
+        $r1 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        $r3 = virtualinvoke $r2.<java.util.jar.JarVerifier: java.util.List getManifestDigests()>();
+        return $r3;
+
+     label0:
+        $r4 = new java.util.ArrayList;
+        specialinvoke $r4.<java.util.ArrayList: void <init>()>();
+        return $r4;
+    }
+
+    static void access$000(java.util.jar.JarFile) throws java.io.IOException
+    {
+        java.util.jar.JarFile r0;
+
+        r0 := @parameter0: java.util.jar.JarFile;
+        specialinvoke r0.<java.util.jar.JarFile: void maybeInstantiateVerifier()>();
+        return;
+    }
+
+    static java.util.jar.JarVerifier access$100(java.util.jar.JarFile)
+    {
+        java.util.jar.JarFile r0;
+        java.util.jar.JarVerifier $r1;
+
+        r0 := @parameter0: java.util.jar.JarFile;
+        $r1 = r0.<java.util.jar.JarFile: java.util.jar.JarVerifier jv>;
+        return $r1;
+    }
+
+    static void <clinit>()
+    {
+        java.util.jar.JavaUtilJarAccessImpl $r0;
+        int i0;
+        char[] $r1;
+        int[] $r2, $r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13;
+
+        $r0 = new java.util.jar.JavaUtilJarAccessImpl;
+        specialinvoke $r0.<java.util.jar.JavaUtilJarAccessImpl: void <init>()>();
+        staticinvoke <sun.misc.SharedSecrets: void setJavaUtilJarAccess(sun.misc.JavaUtilJarAccess)>($r0);
+        $r1 = newarray (char)[10];
+        $r1[0] = 99;
+        $r1[1] = 108;
+        $r1[2] = 97;
+        $r1[3] = 115;
+        $r1[4] = 115;
+        $r1[5] = 45;
+        $r1[6] = 112;
+        $r1[7] = 97;
+        $r1[8] = 116;
+        $r1[9] = 104;
+        <java.util.jar.JarFile: char[] src> = $r1;
+        $r2 = newarray (int)[128];
+        <java.util.jar.JarFile: int[] lastOcc> = $r2;
+        $r3 = newarray (int)[10];
+        <java.util.jar.JarFile: int[] optoSft> = $r3;
+        $r4 = <java.util.jar.JarFile: int[] lastOcc>;
+        $r4[99] = 1;
+        $r5 = <java.util.jar.JarFile: int[] lastOcc>;
+        $r5[108] = 2;
+        $r6 = <java.util.jar.JarFile: int[] lastOcc>;
+        $r6[115] = 5;
+        $r7 = <java.util.jar.JarFile: int[] lastOcc>;
+        $r7[45] = 6;
+        $r8 = <java.util.jar.JarFile: int[] lastOcc>;
+        $r8[112] = 7;
+        $r9 = <java.util.jar.JarFile: int[] lastOcc>;
+        $r9[97] = 8;
+        $r10 = <java.util.jar.JarFile: int[] lastOcc>;
+        $r10[116] = 9;
+        $r11 = <java.util.jar.JarFile: int[] lastOcc>;
+        $r11[104] = 10;
+        i0 = 0;
+
+     label0:
+        if i0 >= 9 goto label1;
+
+        $r12 = <java.util.jar.JarFile: int[] optoSft>;
+        $r12[i0] = 10;
+        i0 = i0 + 1;
+        goto label0;
+
+     label1:
+        $r13 = <java.util.jar.JarFile: int[] optoSft>;
+        $r13[9] = 1;
+        return;
+    }
+}

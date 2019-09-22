@@ -1,0 +1,778 @@
+public class org.apache.tomcat.util.http.fileupload.MultipartStream extends java.lang.Object
+{
+    public static final byte CR;
+    public static final byte LF;
+    public static final byte DASH;
+    public static final int HEADER_PART_SIZE_MAX;
+    protected static final int DEFAULT_BUFSIZE;
+    protected static final byte[] HEADER_SEPARATOR;
+    protected static final byte[] FIELD_SEPARATOR;
+    protected static final byte[] STREAM_TERMINATOR;
+    protected static final byte[] BOUNDARY_PREFIX;
+    private final java.io.InputStream input;
+    private int boundaryLength;
+    private final int keepRegion;
+    private final byte[] boundary;
+    private final int[] boundaryTable;
+    private final int bufSize;
+    private final byte[] buffer;
+    private int head;
+    private int tail;
+    private java.lang.String headerEncoding;
+    private final org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier notifier;
+
+    static void <clinit>()
+    {
+        byte[] $r0, $r1, $r2, $r3;
+
+        $r0 = newarray (byte)[4];
+        $r0[0] = 13;
+        $r0[1] = 10;
+        $r0[2] = 13;
+        $r0[3] = 10;
+        <org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] HEADER_SEPARATOR> = $r0;
+        $r1 = newarray (byte)[2];
+        $r1[0] = 13;
+        $r1[1] = 10;
+        <org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] FIELD_SEPARATOR> = $r1;
+        $r2 = newarray (byte)[2];
+        $r2[0] = 45;
+        $r2[1] = 45;
+        <org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] STREAM_TERMINATOR> = $r2;
+        $r3 = newarray (byte)[4];
+        $r3[0] = 13;
+        $r3[1] = 10;
+        $r3[2] = 45;
+        $r3[3] = 45;
+        <org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] BOUNDARY_PREFIX> = $r3;
+        return;
+    }
+
+    public void <init>(java.io.InputStream, byte[], int, org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier)
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        java.io.InputStream r1;
+        byte[] r2, $r4, $r6, $r8, $r9, $r11, $r12, $r13, $r14, $r15;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16;
+        org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier r3;
+        java.lang.IllegalArgumentException $r5, $r7;
+        int[] $r10;
+
+        r0 := @this: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        r1 := @parameter0: java.io.InputStream;
+        r2 := @parameter1: byte[];
+        i0 := @parameter2: int;
+        r3 := @parameter3: org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        if r2 != null goto label0;
+
+        $r5 = new java.lang.IllegalArgumentException;
+        specialinvoke $r5.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("boundary may not be null");
+        throw $r5;
+
+     label0:
+        $i1 = lengthof r2;
+        $r6 = <org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] BOUNDARY_PREFIX>;
+        $i2 = lengthof $r6;
+        $i3 = $i1 + $i2;
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int boundaryLength> = $i3;
+        $i4 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int boundaryLength>;
+        $i5 = $i4 + 1;
+        if i0 >= $i5 goto label1;
+
+        $r7 = new java.lang.IllegalArgumentException;
+        specialinvoke $r7.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("The buffer size specified for the MultipartStream is too small");
+        throw $r7;
+
+     label1:
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: java.io.InputStream input> = r1;
+        $i6 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int boundaryLength>;
+        $i7 = $i6 * 2;
+        $i8 = staticinvoke <java.lang.Math: int max(int,int)>(i0, $i7);
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int bufSize> = $i8;
+        $i9 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int bufSize>;
+        $r8 = newarray (byte)[$i9];
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] buffer> = $r8;
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier notifier> = r3;
+        $i10 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int boundaryLength>;
+        $r9 = newarray (byte)[$i10];
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary> = $r9;
+        $i11 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int boundaryLength>;
+        $i12 = $i11 + 1;
+        $r10 = newarray (int)[$i12];
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int[] boundaryTable> = $r10;
+        $r11 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $i13 = lengthof $r11;
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int keepRegion> = $i13;
+        $r12 = <org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] BOUNDARY_PREFIX>;
+        $r13 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $r4 = <org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] BOUNDARY_PREFIX>;
+        $i14 = lengthof $r4;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r12, 0, $r13, 0, $i14);
+        $r14 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $r15 = <org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] BOUNDARY_PREFIX>;
+        $i15 = lengthof $r15;
+        $i16 = lengthof r2;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r2, 0, $r14, $i15, $i16);
+        specialinvoke r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: void computeBoundaryTable()>();
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int head> = 0;
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int tail> = 0;
+        return;
+    }
+
+    void <init>(java.io.InputStream, byte[], org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier)
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        java.io.InputStream r1;
+        byte[] r2;
+        org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier r3;
+
+        r0 := @this: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        r1 := @parameter0: java.io.InputStream;
+        r2 := @parameter1: byte[];
+        r3 := @parameter2: org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier;
+        specialinvoke r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: void <init>(java.io.InputStream,byte[],int,org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier)>(r1, r2, 4096, r3);
+        return;
+    }
+
+    public java.lang.String getHeaderEncoding()
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        $r1 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: java.lang.String headerEncoding>;
+        return $r1;
+    }
+
+    public void setHeaderEncoding(java.lang.String)
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: java.lang.String headerEncoding> = r1;
+        return;
+    }
+
+    public byte readByte() throws java.io.IOException
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8;
+        java.io.InputStream $r1;
+        byte[] $r2, $r6;
+        java.io.IOException $r3;
+        org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier $r4, $r5;
+        byte $b9;
+
+        r0 := @this: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        $i0 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int head>;
+        $i1 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int tail>;
+        if $i0 != $i1 goto label1;
+
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int head> = 0;
+        $r1 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: java.io.InputStream input>;
+        $r2 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] buffer>;
+        $i2 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int head>;
+        $i3 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int bufSize>;
+        $i4 = virtualinvoke $r1.<java.io.InputStream: int read(byte[],int,int)>($r2, $i2, $i3);
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int tail> = $i4;
+        $i5 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int tail>;
+        if $i5 != -1 goto label0;
+
+        $r3 = new java.io.IOException;
+        specialinvoke $r3.<java.io.IOException: void <init>(java.lang.String)>("No more data is available");
+        throw $r3;
+
+     label0:
+        $r4 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier notifier>;
+        if $r4 == null goto label1;
+
+        $r5 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier notifier>;
+        $i6 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int tail>;
+        virtualinvoke $r5.<org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier: void noteBytesRead(int)>($i6);
+
+     label1:
+        $r6 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] buffer>;
+        $i7 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int head>;
+        $i8 = $i7 + 1;
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int head> = $i8;
+        $b9 = $r6[$i7];
+        return $b9;
+    }
+
+    public boolean readBoundary() throws org.apache.tomcat.util.http.fileupload.FileUploadBase$FileUploadIOException, org.apache.tomcat.util.http.fileupload.MultipartStream$MalformedStreamException
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        byte[] r1, $r4, $r5;
+        boolean z0, $z1, z2, $z3;
+        org.apache.tomcat.util.http.fileupload.FileUploadBase$FileUploadIOException r2, $r7;
+        int $i0, $i1, $i2;
+        byte $b3, $b4, $b5;
+        org.apache.tomcat.util.http.fileupload.MultipartStream$MalformedStreamException $r6, $r10;
+        java.io.IOException $r8, r9;
+
+        r0 := @this: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        r1 = newarray (byte)[2];
+        z0 = 0;
+        $i0 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int head>;
+        $i1 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int boundaryLength>;
+        $i2 = $i0 + $i1;
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int head> = $i2;
+
+     label0:
+        $b3 = virtualinvoke r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte readByte()>();
+        r1[0] = $b3;
+        $b4 = r1[0];
+        if $b4 != 10 goto label2;
+
+     label1:
+        return 1;
+
+     label2:
+        $b5 = virtualinvoke r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte readByte()>();
+        r1[1] = $b5;
+        $r4 = <org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] STREAM_TERMINATOR>;
+        $z1 = staticinvoke <org.apache.tomcat.util.http.fileupload.MultipartStream: boolean arrayequals(byte[],byte[],int)>(r1, $r4, 2);
+        if $z1 == 0 goto label3;
+
+        z2 = 0;
+        goto label7;
+
+     label3:
+        $r5 = <org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] FIELD_SEPARATOR>;
+        $z3 = staticinvoke <org.apache.tomcat.util.http.fileupload.MultipartStream: boolean arrayequals(byte[],byte[],int)>(r1, $r5, 2);
+        if $z3 == 0 goto label4;
+
+        z2 = 1;
+        goto label7;
+
+     label4:
+        $r6 = new org.apache.tomcat.util.http.fileupload.MultipartStream$MalformedStreamException;
+        specialinvoke $r6.<org.apache.tomcat.util.http.fileupload.MultipartStream$MalformedStreamException: void <init>(java.lang.String)>("Unexpected characters follow a boundary");
+        throw $r6;
+
+     label5:
+        $r7 := @caughtexception;
+        r2 = $r7;
+        throw r2;
+
+     label6:
+        $r8 := @caughtexception;
+        r9 = $r8;
+        $r10 = new org.apache.tomcat.util.http.fileupload.MultipartStream$MalformedStreamException;
+        specialinvoke $r10.<org.apache.tomcat.util.http.fileupload.MultipartStream$MalformedStreamException: void <init>(java.lang.String)>("Stream ended unexpectedly");
+        throw $r10;
+
+     label7:
+        return z2;
+
+        catch org.apache.tomcat.util.http.fileupload.FileUploadBase$FileUploadIOException from label0 to label1 with label5;
+        catch org.apache.tomcat.util.http.fileupload.FileUploadBase$FileUploadIOException from label2 to label5 with label5;
+        catch java.io.IOException from label0 to label1 with label6;
+        catch java.io.IOException from label2 to label5 with label6;
+    }
+
+    public void setBoundary(byte[]) throws org.apache.tomcat.util.http.fileupload.MultipartStream$IllegalBoundaryException
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        byte[] r1, $r2, $r3, $r5;
+        int $i0, $i1, $i2, $i3, $i4, $i5;
+        org.apache.tomcat.util.http.fileupload.MultipartStream$IllegalBoundaryException $r4;
+
+        r0 := @this: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        r1 := @parameter0: byte[];
+        $i0 = lengthof r1;
+        $i1 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int boundaryLength>;
+        $r2 = <org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] BOUNDARY_PREFIX>;
+        $i2 = lengthof $r2;
+        $i3 = $i1 - $i2;
+        if $i0 == $i3 goto label0;
+
+        $r4 = new org.apache.tomcat.util.http.fileupload.MultipartStream$IllegalBoundaryException;
+        specialinvoke $r4.<org.apache.tomcat.util.http.fileupload.MultipartStream$IllegalBoundaryException: void <init>(java.lang.String)>("The length of a boundary token cannot be changed");
+        throw $r4;
+
+     label0:
+        $r5 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $r3 = <org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] BOUNDARY_PREFIX>;
+        $i4 = lengthof $r3;
+        $i5 = lengthof r1;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r1, 0, $r5, $i4, $i5);
+        specialinvoke r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: void computeBoundaryTable()>();
+        return;
+    }
+
+    private void computeBoundaryTable()
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        int i0, i1, $i2, $i5, $i6;
+        int[] $r1, $r2, $r5, $r6, $r7;
+        byte[] $r3, $r4;
+        byte $b3, $b4;
+
+        r0 := @this: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        i0 = 2;
+        i1 = 0;
+        $r1 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int[] boundaryTable>;
+        $r1[0] = -1;
+        $r2 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int[] boundaryTable>;
+        $r2[1] = 0;
+        goto label3;
+
+     label0:
+        $r3 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $i2 = i0 - 1;
+        $b3 = $r3[$i2];
+        $r4 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $b4 = $r4[i1];
+        if $b3 != $b4 goto label1;
+
+        $r5 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int[] boundaryTable>;
+        $i5 = i1 + 1;
+        $r5[i0] = $i5;
+        i1 = i1 + 1;
+        i0 = i0 + 1;
+        goto label3;
+
+     label1:
+        if i1 <= 0 goto label2;
+
+        $r6 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int[] boundaryTable>;
+        i1 = $r6[i1];
+        goto label3;
+
+     label2:
+        $r7 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int[] boundaryTable>;
+        $r7[i0] = 0;
+        i0 = i0 + 1;
+
+     label3:
+        $i6 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int boundaryLength>;
+        if i0 <= $i6 goto label0;
+
+        return;
+    }
+
+    public java.lang.String readHeaders() throws org.apache.tomcat.util.http.fileupload.FileUploadBase$FileUploadIOException, org.apache.tomcat.util.http.fileupload.MultipartStream$MalformedStreamException
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        int i0, i1, $i4;
+        java.io.ByteArrayOutputStream r1, $r4;
+        byte b2, $b3;
+        org.apache.tomcat.util.http.fileupload.FileUploadBase$FileUploadIOException r2, $r5;
+        java.io.UnsupportedEncodingException r3, $r18;
+        java.io.IOException $r6, r7;
+        org.apache.tomcat.util.http.fileupload.MultipartStream$MalformedStreamException $r8, $r9;
+        java.lang.Object[] $r10;
+        java.lang.Integer $r11;
+        java.lang.String $r12, $r15, $r16, r17;
+        byte[] $r13, $r14;
+        null_type n0;
+
+        r0 := @this: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        i0 = 0;
+        $r4 = new java.io.ByteArrayOutputStream;
+        specialinvoke $r4.<java.io.ByteArrayOutputStream: void <init>()>();
+        r1 = $r4;
+        i1 = 0;
+        goto label8;
+
+     label0:
+        b2 = virtualinvoke r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte readByte()>();
+
+     label1:
+        goto label4;
+
+     label2:
+        $r5 := @caughtexception;
+        r2 = $r5;
+        throw r2;
+
+     label3:
+        $r6 := @caughtexception;
+        r7 = $r6;
+        $r8 = new org.apache.tomcat.util.http.fileupload.MultipartStream$MalformedStreamException;
+        specialinvoke $r8.<org.apache.tomcat.util.http.fileupload.MultipartStream$MalformedStreamException: void <init>(java.lang.String)>("Stream ended unexpectedly");
+        throw $r8;
+
+     label4:
+        i1 = i1 + 1;
+        if i1 <= 10240 goto label5;
+
+        $r9 = new org.apache.tomcat.util.http.fileupload.MultipartStream$MalformedStreamException;
+        $r10 = newarray (java.lang.Object)[1];
+        $r11 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(10240);
+        $r10[0] = $r11;
+        $r12 = staticinvoke <java.lang.String: java.lang.String format(java.lang.String,java.lang.Object[])>("Header section has more than %s bytes (maybe it is not properly terminated)", $r10);
+        specialinvoke $r9.<org.apache.tomcat.util.http.fileupload.MultipartStream$MalformedStreamException: void <init>(java.lang.String)>($r12);
+        throw $r9;
+
+     label5:
+        $r13 = <org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] HEADER_SEPARATOR>;
+        $b3 = $r13[i0];
+        if b2 != $b3 goto label6;
+
+        i0 = i0 + 1;
+        goto label7;
+
+     label6:
+        i0 = 0;
+
+     label7:
+        virtualinvoke r1.<java.io.ByteArrayOutputStream: void write(int)>(b2);
+
+     label8:
+        $r14 = <org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] HEADER_SEPARATOR>;
+        $i4 = lengthof $r14;
+        if i0 < $i4 goto label0;
+
+        n0 = null;
+        $r15 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: java.lang.String headerEncoding>;
+        if $r15 == null goto label12;
+
+     label9:
+        $r16 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: java.lang.String headerEncoding>;
+        r17 = virtualinvoke r1.<java.io.ByteArrayOutputStream: java.lang.String toString(java.lang.String)>($r16);
+
+     label10:
+        goto label13;
+
+     label11:
+        $r18 := @caughtexception;
+        r3 = $r18;
+        r17 = virtualinvoke r1.<java.io.ByteArrayOutputStream: java.lang.String toString()>();
+        goto label13;
+
+     label12:
+        r17 = virtualinvoke r1.<java.io.ByteArrayOutputStream: java.lang.String toString()>();
+
+     label13:
+        return r17;
+
+        catch org.apache.tomcat.util.http.fileupload.FileUploadBase$FileUploadIOException from label0 to label1 with label2;
+        catch java.io.IOException from label0 to label1 with label3;
+        catch java.io.UnsupportedEncodingException from label9 to label10 with label11;
+    }
+
+    public int readBodyData(java.io.OutputStream) throws org.apache.tomcat.util.http.fileupload.MultipartStream$MalformedStreamException, java.io.IOException
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        java.io.OutputStream r1;
+        org.apache.tomcat.util.http.fileupload.MultipartStream$ItemInputStream $r2;
+        long $l0;
+        int $i1;
+
+        r0 := @this: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        r1 := @parameter0: java.io.OutputStream;
+        $r2 = virtualinvoke r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: org.apache.tomcat.util.http.fileupload.MultipartStream$ItemInputStream newInputStream()>();
+        $l0 = staticinvoke <org.apache.tomcat.util.http.fileupload.util.Streams: long copy(java.io.InputStream,java.io.OutputStream,boolean)>($r2, r1, 0);
+        $i1 = (int) $l0;
+        return $i1;
+    }
+
+    org.apache.tomcat.util.http.fileupload.MultipartStream$ItemInputStream newInputStream()
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        org.apache.tomcat.util.http.fileupload.MultipartStream$ItemInputStream $r1;
+
+        r0 := @this: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        $r1 = new org.apache.tomcat.util.http.fileupload.MultipartStream$ItemInputStream;
+        specialinvoke $r1.<org.apache.tomcat.util.http.fileupload.MultipartStream$ItemInputStream: void <init>(org.apache.tomcat.util.http.fileupload.MultipartStream)>(r0);
+        return $r1;
+    }
+
+    public int discardBodyData() throws org.apache.tomcat.util.http.fileupload.MultipartStream$MalformedStreamException, java.io.IOException
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        int $i0;
+
+        r0 := @this: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        $i0 = virtualinvoke r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int readBodyData(java.io.OutputStream)>(null);
+        return $i0;
+    }
+
+    public boolean skipPreamble() throws java.io.IOException
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        boolean z0;
+        org.apache.tomcat.util.http.fileupload.MultipartStream$MalformedStreamException r1, $r13;
+        java.lang.Throwable r2, $r20;
+        byte[] $r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r14, $r15, $r16, $r17, $r18, $r19, $r21, $r22, $r23, $r24, $r25, $r26;
+        int $i0, $i1, $i2, $i3, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13;
+
+        r0 := @this: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        $r3 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $r4 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $r5 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $i0 = lengthof $r5;
+        $i1 = $i0 - 2;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r3, 2, $r4, 0, $i1);
+        $r6 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $i2 = lengthof $r6;
+        $i3 = $i2 - 2;
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int boundaryLength> = $i3;
+        specialinvoke r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: void computeBoundaryTable()>();
+
+     label0:
+        virtualinvoke r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int discardBodyData()>();
+        z0 = virtualinvoke r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: boolean readBoundary()>();
+
+     label1:
+        $r7 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $r8 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $r9 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $i5 = lengthof $r9;
+        $i6 = $i5 - 2;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r7, 0, $r8, 2, $i6);
+        $r10 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $i7 = lengthof $r10;
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int boundaryLength> = $i7;
+        $r11 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $r11[0] = 13;
+        $r12 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $r12[1] = 10;
+        specialinvoke r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: void computeBoundaryTable()>();
+        return z0;
+
+     label2:
+        $r13 := @caughtexception;
+
+     label3:
+        r1 = $r13;
+
+     label4:
+        $r14 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $r15 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $r16 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $i8 = lengthof $r16;
+        $i9 = $i8 - 2;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r14, 0, $r15, 2, $i9);
+        $r17 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $i10 = lengthof $r17;
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int boundaryLength> = $i10;
+        $r18 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $r18[0] = 13;
+        $r19 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $r19[1] = 10;
+        specialinvoke r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: void computeBoundaryTable()>();
+        return 0;
+
+     label5:
+        $r20 := @caughtexception;
+        r2 = $r20;
+        $r21 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $r22 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $r23 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $i11 = lengthof $r23;
+        $i12 = $i11 - 2;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r21, 0, $r22, 2, $i12);
+        $r24 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $i13 = lengthof $r24;
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int boundaryLength> = $i13;
+        $r25 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $r25[0] = 13;
+        $r26 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $r26[1] = 10;
+        specialinvoke r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: void computeBoundaryTable()>();
+        throw r2;
+
+        catch org.apache.tomcat.util.http.fileupload.MultipartStream$MalformedStreamException from label0 to label1 with label2;
+        catch java.lang.Throwable from label0 to label1 with label5;
+        catch java.lang.Throwable from label3 to label4 with label5;
+    }
+
+    public static boolean arrayequals(byte[], byte[], int)
+    {
+        byte[] r0, r1;
+        int i0, i1;
+        byte $b2, $b3;
+
+        r0 := @parameter0: byte[];
+        r1 := @parameter1: byte[];
+        i0 := @parameter2: int;
+        i1 = 0;
+        goto label2;
+
+     label0:
+        $b2 = r0[i1];
+        $b3 = r1[i1];
+        if $b2 == $b3 goto label1;
+
+        return 0;
+
+     label1:
+        i1 = i1 + 1;
+
+     label2:
+        if i1 < i0 goto label0;
+
+        return 1;
+    }
+
+    protected int findByte(byte, int)
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        byte b0, $b3;
+        int i1, i2, $i4;
+        byte[] $r1;
+
+        r0 := @this: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        b0 := @parameter0: byte;
+        i1 := @parameter1: int;
+        i2 = i1;
+        goto label2;
+
+     label0:
+        $r1 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] buffer>;
+        $b3 = $r1[i2];
+        if $b3 != b0 goto label1;
+
+        return i2;
+
+     label1:
+        i2 = i2 + 1;
+
+     label2:
+        $i4 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int tail>;
+        if i2 < $i4 goto label0;
+
+        return -1;
+    }
+
+    protected int findSeparator()
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        int i0, i1, $i4, $i5, $i6, $i7;
+        int[] $r1;
+        byte[] $r2, $r3;
+        byte $b2, $b3;
+
+        r0 := @this: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        i0 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int head>;
+        i1 = 0;
+        goto label3;
+
+     label0:
+        $r1 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int[] boundaryTable>;
+        i1 = $r1[i1];
+
+     label1:
+        if i1 < 0 goto label2;
+
+        $r2 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] buffer>;
+        $b2 = $r2[i0];
+        $r3 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] boundary>;
+        $b3 = $r3[i1];
+        if $b2 != $b3 goto label0;
+
+     label2:
+        i0 = i0 + 1;
+        i1 = i1 + 1;
+        $i4 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int boundaryLength>;
+        if i1 != $i4 goto label3;
+
+        $i5 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int boundaryLength>;
+        $i6 = i0 - $i5;
+        return $i6;
+
+     label3:
+        $i7 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int tail>;
+        if i0 < $i7 goto label1;
+
+        return -1;
+    }
+
+    static int access$0(org.apache.tomcat.util.http.fileupload.MultipartStream)
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        int $i0;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        $i0 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int tail>;
+        return $i0;
+    }
+
+    static int access$1(org.apache.tomcat.util.http.fileupload.MultipartStream)
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        int $i0;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        $i0 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int head>;
+        return $i0;
+    }
+
+    static int access$2(org.apache.tomcat.util.http.fileupload.MultipartStream)
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        int $i0;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        $i0 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int keepRegion>;
+        return $i0;
+    }
+
+    static byte[] access$3(org.apache.tomcat.util.http.fileupload.MultipartStream)
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        byte[] $r1;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        $r1 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: byte[] buffer>;
+        return $r1;
+    }
+
+    static void access$4(org.apache.tomcat.util.http.fileupload.MultipartStream, int)
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        int i0;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        i0 := @parameter1: int;
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int head> = i0;
+        return;
+    }
+
+    static java.io.InputStream access$5(org.apache.tomcat.util.http.fileupload.MultipartStream)
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        java.io.InputStream $r1;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        $r1 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: java.io.InputStream input>;
+        return $r1;
+    }
+
+    static void access$6(org.apache.tomcat.util.http.fileupload.MultipartStream, int)
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        int i0;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        i0 := @parameter1: int;
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int tail> = i0;
+        return;
+    }
+
+    static int access$7(org.apache.tomcat.util.http.fileupload.MultipartStream)
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        int $i0;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        $i0 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: int bufSize>;
+        return $i0;
+    }
+
+    static org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier access$8(org.apache.tomcat.util.http.fileupload.MultipartStream)
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream r0;
+        org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier $r1;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.fileupload.MultipartStream;
+        $r1 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream: org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier notifier>;
+        return $r1;
+    }
+}

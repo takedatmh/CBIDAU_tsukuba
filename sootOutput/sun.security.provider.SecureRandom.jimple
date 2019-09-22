@@ -1,0 +1,351 @@
+public final class sun.security.provider.SecureRandom extends java.security.SecureRandomSpi implements java.io.Serializable
+{
+    private static final long serialVersionUID;
+    private static final int DIGEST_SIZE;
+    private transient java.security.MessageDigest digest;
+    private byte[] state;
+    private byte[] remainder;
+    private int remCount;
+
+    public void <init>()
+    {
+        sun.security.provider.SecureRandom r0;
+
+        r0 := @this: sun.security.provider.SecureRandom;
+        specialinvoke r0.<java.security.SecureRandomSpi: void <init>()>();
+        specialinvoke r0.<sun.security.provider.SecureRandom: void init(byte[])>(null);
+        return;
+    }
+
+    private void <init>(byte[])
+    {
+        sun.security.provider.SecureRandom r0;
+        byte[] r1;
+
+        r0 := @this: sun.security.provider.SecureRandom;
+        r1 := @parameter0: byte[];
+        specialinvoke r0.<java.security.SecureRandomSpi: void <init>()>();
+        specialinvoke r0.<sun.security.provider.SecureRandom: void init(byte[])>(r1);
+        return;
+    }
+
+    private void init(byte[])
+    {
+        sun.security.provider.SecureRandom r0;
+        byte[] r1;
+        java.security.GeneralSecurityException r2, $r5;
+        java.security.NoSuchAlgorithmException r3, $r7;
+        java.security.MessageDigest $r4, $r6;
+        java.lang.InternalError $r8;
+
+        r0 := @this: sun.security.provider.SecureRandom;
+        r1 := @parameter0: byte[];
+
+     label0:
+        $r4 = staticinvoke <java.security.MessageDigest: java.security.MessageDigest getInstance(java.lang.String,java.lang.String)>("SHA", "SUN");
+        r0.<sun.security.provider.SecureRandom: java.security.MessageDigest digest> = $r4;
+
+     label1:
+        goto label6;
+
+     label2:
+        $r5 := @caughtexception;
+        r2 = $r5;
+
+     label3:
+        $r6 = staticinvoke <java.security.MessageDigest: java.security.MessageDigest getInstance(java.lang.String)>("SHA");
+        r0.<sun.security.provider.SecureRandom: java.security.MessageDigest digest> = $r6;
+
+     label4:
+        goto label6;
+
+     label5:
+        $r7 := @caughtexception;
+        r3 = $r7;
+        $r8 = new java.lang.InternalError;
+        specialinvoke $r8.<java.lang.InternalError: void <init>(java.lang.String)>("internal error: SHA-1 not available.");
+        throw $r8;
+
+     label6:
+        if r1 == null goto label7;
+
+        virtualinvoke r0.<sun.security.provider.SecureRandom: void engineSetSeed(byte[])>(r1);
+
+     label7:
+        return;
+
+        catch java.security.NoSuchProviderException from label0 to label1 with label2;
+        catch java.security.NoSuchAlgorithmException from label0 to label1 with label2;
+        catch java.security.NoSuchAlgorithmException from label3 to label4 with label5;
+    }
+
+    public byte[] engineGenerateSeed(int)
+    {
+        sun.security.provider.SecureRandom r0;
+        int i0;
+        byte[] r1;
+
+        r0 := @this: sun.security.provider.SecureRandom;
+        i0 := @parameter0: int;
+        r1 = newarray (byte)[i0];
+        staticinvoke <sun.security.provider.SeedGenerator: void generateSeed(byte[])>(r1);
+        return r1;
+    }
+
+    public synchronized void engineSetSeed(byte[])
+    {
+        sun.security.provider.SecureRandom r0;
+        byte[] r1, $r2, $r4, $r5, $r6, $r8;
+        int i0, $i1;
+        java.security.MessageDigest $r3, $r7;
+
+        r0 := @this: sun.security.provider.SecureRandom;
+        r1 := @parameter0: byte[];
+        $r2 = r0.<sun.security.provider.SecureRandom: byte[] state>;
+        if $r2 == null goto label1;
+
+        $r3 = r0.<sun.security.provider.SecureRandom: java.security.MessageDigest digest>;
+        $r4 = r0.<sun.security.provider.SecureRandom: byte[] state>;
+        virtualinvoke $r3.<java.security.MessageDigest: void update(byte[])>($r4);
+        i0 = 0;
+
+     label0:
+        $r5 = r0.<sun.security.provider.SecureRandom: byte[] state>;
+        $i1 = lengthof $r5;
+        if i0 >= $i1 goto label1;
+
+        $r6 = r0.<sun.security.provider.SecureRandom: byte[] state>;
+        $r6[i0] = 0;
+        i0 = i0 + 1;
+        goto label0;
+
+     label1:
+        $r7 = r0.<sun.security.provider.SecureRandom: java.security.MessageDigest digest>;
+        $r8 = virtualinvoke $r7.<java.security.MessageDigest: byte[] digest(byte[])>(r1);
+        r0.<sun.security.provider.SecureRandom: byte[] state> = $r8;
+        return;
+    }
+
+    private static void updateState(byte[], byte[])
+    {
+        byte[] r0, r1;
+        int i0, i1, $i2, $i5, i6, $i11;
+        boolean z0, z1, z2, $z3, $z4;
+        byte $b3, $b4, b7, $b8, $b9, $b10, $b12;
+
+        r0 := @parameter0: byte[];
+        r1 := @parameter1: byte[];
+        i0 = 1;
+        z0 = 0;
+        z1 = 0;
+        z2 = 0;
+        i1 = 0;
+
+     label0:
+        $i2 = lengthof r0;
+        if i1 >= $i2 goto label3;
+
+        $b3 = r0[i1];
+        $b4 = r1[i1];
+        $i5 = $b3 + $b4;
+        i6 = $i5 + i0;
+        b7 = (byte) i6;
+        $z3 = z2;
+        $b8 = r0[i1];
+        if $b8 == b7 goto label1;
+
+        $z4 = 1;
+        goto label2;
+
+     label1:
+        $z4 = 0;
+
+     label2:
+        z2 = $z3 | $z4;
+        r0[i1] = b7;
+        i0 = i6 >> 8;
+        i1 = i1 + 1;
+        goto label0;
+
+     label3:
+        if z2 != 0 goto label4;
+
+        $b9 = 0;
+        $b10 = r0[$b9];
+        $i11 = $b10 + 1;
+        $b12 = (byte) $i11;
+        r0[$b9] = $b12;
+
+     label4:
+        return;
+    }
+
+    public synchronized void engineNextBytes(byte[])
+    {
+        sun.security.provider.SecureRandom r0, $r5;
+        byte[] r1, r2, r3, $r4, $r7, $r10, $r12;
+        int i0, i1, i2, i3, $i4, $i5, $i6, $i7, $i8, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, i18, i19, $i20, $i22, $i23, $i24, $i25;
+        java.security.MessageDigest $r6, $r9, $r11;
+        byte $b9, $b21;
+
+        r0 := @this: sun.security.provider.SecureRandom;
+        r1 := @parameter0: byte[];
+        i0 = 0;
+        r2 = r0.<sun.security.provider.SecureRandom: byte[] remainder>;
+        $r4 = r0.<sun.security.provider.SecureRandom: byte[] state>;
+        if $r4 != null goto label0;
+
+        r3 = newarray (byte)[20];
+        $r5 = staticinvoke <sun.security.provider.SecureRandom$SeederHolder: sun.security.provider.SecureRandom access$100()>();
+        virtualinvoke $r5.<sun.security.provider.SecureRandom: void engineNextBytes(byte[])>(r3);
+        $r6 = r0.<sun.security.provider.SecureRandom: java.security.MessageDigest digest>;
+        $r7 = virtualinvoke $r6.<java.security.MessageDigest: byte[] digest(byte[])>(r3);
+        r0.<sun.security.provider.SecureRandom: byte[] state> = $r7;
+
+     label0:
+        i3 = r0.<sun.security.provider.SecureRandom: int remCount>;
+        if i3 <= 0 goto label5;
+
+        $i4 = lengthof r1;
+        $i5 = $i4 - i0;
+        $i6 = 20 - i3;
+        if $i5 >= $i6 goto label1;
+
+        $i7 = lengthof r1;
+        $i8 = $i7 - i0;
+        goto label2;
+
+     label1:
+        $i8 = 20 - i3;
+
+     label2:
+        i1 = $i8;
+        i2 = 0;
+
+     label3:
+        if i2 >= i1 goto label4;
+
+        $b9 = r2[i3];
+        r1[i2] = $b9;
+        $i10 = i3;
+        i3 = i3 + 1;
+        r2[$i10] = 0;
+        i2 = i2 + 1;
+        goto label3;
+
+     label4:
+        $i11 = r0.<sun.security.provider.SecureRandom: int remCount>;
+        $i12 = $i11 + i1;
+        r0.<sun.security.provider.SecureRandom: int remCount> = $i12;
+        i0 = i0 + i1;
+
+     label5:
+        $i13 = lengthof r1;
+        if i0 >= $i13 goto label10;
+
+        $r9 = r0.<sun.security.provider.SecureRandom: java.security.MessageDigest digest>;
+        $r10 = r0.<sun.security.provider.SecureRandom: byte[] state>;
+        virtualinvoke $r9.<java.security.MessageDigest: void update(byte[])>($r10);
+        $r11 = r0.<sun.security.provider.SecureRandom: java.security.MessageDigest digest>;
+        r2 = virtualinvoke $r11.<java.security.MessageDigest: byte[] digest()>();
+        $r12 = r0.<sun.security.provider.SecureRandom: byte[] state>;
+        staticinvoke <sun.security.provider.SecureRandom: void updateState(byte[],byte[])>($r12, r2);
+        $i14 = lengthof r1;
+        $i15 = $i14 - i0;
+        if $i15 <= 20 goto label6;
+
+        $i16 = 20;
+        goto label7;
+
+     label6:
+        $i17 = lengthof r1;
+        $i16 = $i17 - i0;
+
+     label7:
+        i18 = $i16;
+        i19 = 0;
+
+     label8:
+        if i19 >= i18 goto label9;
+
+        $i20 = i0;
+        i0 = i0 + 1;
+        $b21 = r2[i19];
+        r1[$i20] = $b21;
+        r2[i19] = 0;
+        i19 = i19 + 1;
+        goto label8;
+
+     label9:
+        $i22 = r0.<sun.security.provider.SecureRandom: int remCount>;
+        $i23 = $i22 + i18;
+        r0.<sun.security.provider.SecureRandom: int remCount> = $i23;
+        goto label5;
+
+     label10:
+        r0.<sun.security.provider.SecureRandom: byte[] remainder> = r2;
+        $i24 = r0.<sun.security.provider.SecureRandom: int remCount>;
+        $i25 = $i24 % 20;
+        r0.<sun.security.provider.SecureRandom: int remCount> = $i25;
+        return;
+    }
+
+    private void readObject(java.io.ObjectInputStream) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        sun.security.provider.SecureRandom r0;
+        java.io.ObjectInputStream r1;
+        java.security.GeneralSecurityException r2, $r5;
+        java.security.NoSuchAlgorithmException r3, $r7;
+        java.security.MessageDigest $r4, $r6;
+        java.lang.InternalError $r8;
+
+        r0 := @this: sun.security.provider.SecureRandom;
+        r1 := @parameter0: java.io.ObjectInputStream;
+        virtualinvoke r1.<java.io.ObjectInputStream: void defaultReadObject()>();
+
+     label0:
+        $r4 = staticinvoke <java.security.MessageDigest: java.security.MessageDigest getInstance(java.lang.String,java.lang.String)>("SHA", "SUN");
+        r0.<sun.security.provider.SecureRandom: java.security.MessageDigest digest> = $r4;
+
+     label1:
+        goto label6;
+
+     label2:
+        $r5 := @caughtexception;
+        r2 = $r5;
+
+     label3:
+        $r6 = staticinvoke <java.security.MessageDigest: java.security.MessageDigest getInstance(java.lang.String)>("SHA");
+        r0.<sun.security.provider.SecureRandom: java.security.MessageDigest digest> = $r6;
+
+     label4:
+        goto label6;
+
+     label5:
+        $r7 := @caughtexception;
+        r3 = $r7;
+        $r8 = new java.lang.InternalError;
+        specialinvoke $r8.<java.lang.InternalError: void <init>(java.lang.String)>("internal error: SHA-1 not available.");
+        throw $r8;
+
+     label6:
+        return;
+
+        catch java.security.NoSuchProviderException from label0 to label1 with label2;
+        catch java.security.NoSuchAlgorithmException from label0 to label1 with label2;
+        catch java.security.NoSuchAlgorithmException from label3 to label4 with label5;
+    }
+
+    void <init>(byte[], sun.security.provider.SecureRandom$1)
+    {
+        sun.security.provider.SecureRandom r0;
+        byte[] r1;
+        sun.security.provider.SecureRandom$1 r2;
+
+        r0 := @this: sun.security.provider.SecureRandom;
+        r1 := @parameter0: byte[];
+        r2 := @parameter1: sun.security.provider.SecureRandom$1;
+        specialinvoke r0.<sun.security.provider.SecureRandom: void <init>(byte[])>(r1);
+        return;
+    }
+}

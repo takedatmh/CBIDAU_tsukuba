@@ -1,0 +1,582 @@
+class sun.nio.ch.NativeObject extends java.lang.Object
+{
+    protected static final sun.misc.Unsafe unsafe;
+    protected long allocationAddress;
+    private final long address;
+    private static java.nio.ByteOrder byteOrder;
+    private static int pageSize;
+    static final boolean $assertionsDisabled;
+
+    void <init>(long)
+    {
+        sun.nio.ch.NativeObject r0;
+        long l0;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        l0 := @parameter0: long;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.nio.ch.NativeObject: long allocationAddress> = l0;
+        r0.<sun.nio.ch.NativeObject: long address> = l0;
+        return;
+    }
+
+    void <init>(long, long)
+    {
+        sun.nio.ch.NativeObject r0;
+        long l0, l1, $l2;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        l0 := @parameter0: long;
+        l1 := @parameter1: long;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.nio.ch.NativeObject: long allocationAddress> = l0;
+        $l2 = l0 + l1;
+        r0.<sun.nio.ch.NativeObject: long address> = $l2;
+        return;
+    }
+
+    protected void <init>(int, boolean)
+    {
+        sun.nio.ch.NativeObject r0;
+        int i0, i1, $i6, $i10;
+        boolean z0;
+        sun.misc.Unsafe $r1, $r2;
+        long l2, $l3, $l4, $l5, $l7, $l8, $l9, $l11, $l12, $l13;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        i0 := @parameter0: int;
+        z0 := @parameter1: boolean;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        if z0 != 0 goto label0;
+
+        $r1 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $l3 = (long) i0;
+        $l4 = virtualinvoke $r1.<sun.misc.Unsafe: long allocateMemory(long)>($l3);
+        r0.<sun.nio.ch.NativeObject: long allocationAddress> = $l4;
+        $l5 = r0.<sun.nio.ch.NativeObject: long allocationAddress>;
+        r0.<sun.nio.ch.NativeObject: long address> = $l5;
+        goto label1;
+
+     label0:
+        i1 = staticinvoke <sun.nio.ch.NativeObject: int pageSize()>();
+        $r2 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $i6 = i0 + i1;
+        $l7 = (long) $i6;
+        l2 = virtualinvoke $r2.<sun.misc.Unsafe: long allocateMemory(long)>($l7);
+        r0.<sun.nio.ch.NativeObject: long allocationAddress> = l2;
+        $l8 = (long) i1;
+        $l9 = l2 + $l8;
+        $i10 = i1 - 1;
+        $l11 = (long) $i10;
+        $l12 = l2 & $l11;
+        $l13 = $l9 - $l12;
+        r0.<sun.nio.ch.NativeObject: long address> = $l13;
+
+     label1:
+        return;
+    }
+
+    long address()
+    {
+        sun.nio.ch.NativeObject r0;
+        long $l0;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        $l0 = r0.<sun.nio.ch.NativeObject: long address>;
+        return $l0;
+    }
+
+    long allocationAddress()
+    {
+        sun.nio.ch.NativeObject r0;
+        long $l0;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        $l0 = r0.<sun.nio.ch.NativeObject: long allocationAddress>;
+        return $l0;
+    }
+
+    sun.nio.ch.NativeObject subObject(int)
+    {
+        sun.nio.ch.NativeObject r0, $r1;
+        int i0;
+        long $l1, $l2, $l3;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        i0 := @parameter0: int;
+        $r1 = new sun.nio.ch.NativeObject;
+        $l1 = (long) i0;
+        $l2 = r0.<sun.nio.ch.NativeObject: long address>;
+        $l3 = $l1 + $l2;
+        specialinvoke $r1.<sun.nio.ch.NativeObject: void <init>(long)>($l3);
+        return $r1;
+    }
+
+    sun.nio.ch.NativeObject getObject(int)
+    {
+        sun.nio.ch.NativeObject r0, $r4;
+        int i0, $i2, $i10, $i11;
+        long l1, $l3, $l4, $l5, l6, $l7, $l8, $l9;
+        sun.misc.Unsafe $r1, $r2;
+        java.lang.InternalError $r3;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        i0 := @parameter0: int;
+        l1 = 0L;
+        $i2 = staticinvoke <sun.nio.ch.NativeObject: int addressSize()>();
+        lookupswitch($i2)
+        {
+            case 4: goto label1;
+            case 8: goto label0;
+            default: goto label2;
+        };
+
+     label0:
+        $r1 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $l3 = (long) i0;
+        $l4 = r0.<sun.nio.ch.NativeObject: long address>;
+        $l5 = $l3 + $l4;
+        l6 = virtualinvoke $r1.<sun.misc.Unsafe: long getLong(long)>($l5);
+        goto label3;
+
+     label1:
+        $r2 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $l7 = (long) i0;
+        $l8 = r0.<sun.nio.ch.NativeObject: long address>;
+        $l9 = $l7 + $l8;
+        $i10 = virtualinvoke $r2.<sun.misc.Unsafe: int getInt(long)>($l9);
+        $i11 = $i10 & -1;
+        l6 = (long) $i11;
+        goto label3;
+
+     label2:
+        $r3 = new java.lang.InternalError;
+        specialinvoke $r3.<java.lang.InternalError: void <init>(java.lang.String)>("Address size not supported");
+        throw $r3;
+
+     label3:
+        $r4 = new sun.nio.ch.NativeObject;
+        specialinvoke $r4.<sun.nio.ch.NativeObject: void <init>(long)>(l6);
+        return $r4;
+    }
+
+    void putObject(int, sun.nio.ch.NativeObject)
+    {
+        sun.nio.ch.NativeObject r0, r1;
+        int i0, $i1, $i5;
+        long $l2, $l3, $l4;
+        java.lang.InternalError $r2;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        i0 := @parameter0: int;
+        r1 := @parameter1: sun.nio.ch.NativeObject;
+        $i1 = staticinvoke <sun.nio.ch.NativeObject: int addressSize()>();
+        lookupswitch($i1)
+        {
+            case 4: goto label1;
+            case 8: goto label0;
+            default: goto label2;
+        };
+
+     label0:
+        $l2 = r1.<sun.nio.ch.NativeObject: long address>;
+        virtualinvoke r0.<sun.nio.ch.NativeObject: void putLong(int,long)>(i0, $l2);
+        goto label3;
+
+     label1:
+        $l3 = r1.<sun.nio.ch.NativeObject: long address>;
+        $l4 = $l3 & -1L;
+        $i5 = (int) $l4;
+        virtualinvoke r0.<sun.nio.ch.NativeObject: void putInt(int,int)>(i0, $i5);
+        goto label3;
+
+     label2:
+        $r2 = new java.lang.InternalError;
+        specialinvoke $r2.<java.lang.InternalError: void <init>(java.lang.String)>("Address size not supported");
+        throw $r2;
+
+     label3:
+        return;
+    }
+
+    final byte getByte(int)
+    {
+        sun.nio.ch.NativeObject r0;
+        int i0;
+        sun.misc.Unsafe $r1;
+        long $l1, $l2, $l3;
+        byte $b4;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        i0 := @parameter0: int;
+        $r1 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $l1 = (long) i0;
+        $l2 = r0.<sun.nio.ch.NativeObject: long address>;
+        $l3 = $l1 + $l2;
+        $b4 = virtualinvoke $r1.<sun.misc.Unsafe: byte getByte(long)>($l3);
+        return $b4;
+    }
+
+    final void putByte(int, byte)
+    {
+        sun.nio.ch.NativeObject r0;
+        int i0;
+        byte b1;
+        sun.misc.Unsafe $r1;
+        long $l2, $l3, $l4;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        i0 := @parameter0: int;
+        b1 := @parameter1: byte;
+        $r1 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $l2 = (long) i0;
+        $l3 = r0.<sun.nio.ch.NativeObject: long address>;
+        $l4 = $l2 + $l3;
+        virtualinvoke $r1.<sun.misc.Unsafe: void putByte(long,byte)>($l4, b1);
+        return;
+    }
+
+    final short getShort(int)
+    {
+        sun.nio.ch.NativeObject r0;
+        int i0;
+        sun.misc.Unsafe $r1;
+        long $l1, $l2, $l3;
+        short $s4;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        i0 := @parameter0: int;
+        $r1 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $l1 = (long) i0;
+        $l2 = r0.<sun.nio.ch.NativeObject: long address>;
+        $l3 = $l1 + $l2;
+        $s4 = virtualinvoke $r1.<sun.misc.Unsafe: short getShort(long)>($l3);
+        return $s4;
+    }
+
+    final void putShort(int, short)
+    {
+        sun.nio.ch.NativeObject r0;
+        int i0;
+        short s1;
+        sun.misc.Unsafe $r1;
+        long $l2, $l3, $l4;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        i0 := @parameter0: int;
+        s1 := @parameter1: short;
+        $r1 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $l2 = (long) i0;
+        $l3 = r0.<sun.nio.ch.NativeObject: long address>;
+        $l4 = $l2 + $l3;
+        virtualinvoke $r1.<sun.misc.Unsafe: void putShort(long,short)>($l4, s1);
+        return;
+    }
+
+    final char getChar(int)
+    {
+        sun.nio.ch.NativeObject r0;
+        int i0;
+        sun.misc.Unsafe $r1;
+        long $l1, $l2, $l3;
+        char $c4;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        i0 := @parameter0: int;
+        $r1 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $l1 = (long) i0;
+        $l2 = r0.<sun.nio.ch.NativeObject: long address>;
+        $l3 = $l1 + $l2;
+        $c4 = virtualinvoke $r1.<sun.misc.Unsafe: char getChar(long)>($l3);
+        return $c4;
+    }
+
+    final void putChar(int, char)
+    {
+        sun.nio.ch.NativeObject r0;
+        int i0;
+        char c1;
+        sun.misc.Unsafe $r1;
+        long $l2, $l3, $l4;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        i0 := @parameter0: int;
+        c1 := @parameter1: char;
+        $r1 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $l2 = (long) i0;
+        $l3 = r0.<sun.nio.ch.NativeObject: long address>;
+        $l4 = $l2 + $l3;
+        virtualinvoke $r1.<sun.misc.Unsafe: void putChar(long,char)>($l4, c1);
+        return;
+    }
+
+    final int getInt(int)
+    {
+        sun.nio.ch.NativeObject r0;
+        int i0, $i4;
+        sun.misc.Unsafe $r1;
+        long $l1, $l2, $l3;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        i0 := @parameter0: int;
+        $r1 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $l1 = (long) i0;
+        $l2 = r0.<sun.nio.ch.NativeObject: long address>;
+        $l3 = $l1 + $l2;
+        $i4 = virtualinvoke $r1.<sun.misc.Unsafe: int getInt(long)>($l3);
+        return $i4;
+    }
+
+    final void putInt(int, int)
+    {
+        sun.nio.ch.NativeObject r0;
+        int i0, i1;
+        sun.misc.Unsafe $r1;
+        long $l2, $l3, $l4;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $r1 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $l2 = (long) i0;
+        $l3 = r0.<sun.nio.ch.NativeObject: long address>;
+        $l4 = $l2 + $l3;
+        virtualinvoke $r1.<sun.misc.Unsafe: void putInt(long,int)>($l4, i1);
+        return;
+    }
+
+    final long getLong(int)
+    {
+        sun.nio.ch.NativeObject r0;
+        int i0;
+        sun.misc.Unsafe $r1;
+        long $l1, $l2, $l3, $l4;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        i0 := @parameter0: int;
+        $r1 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $l1 = (long) i0;
+        $l2 = r0.<sun.nio.ch.NativeObject: long address>;
+        $l3 = $l1 + $l2;
+        $l4 = virtualinvoke $r1.<sun.misc.Unsafe: long getLong(long)>($l3);
+        return $l4;
+    }
+
+    final void putLong(int, long)
+    {
+        sun.nio.ch.NativeObject r0;
+        int i0;
+        long l1, $l2, $l3, $l4;
+        sun.misc.Unsafe $r1;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        i0 := @parameter0: int;
+        l1 := @parameter1: long;
+        $r1 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $l2 = (long) i0;
+        $l3 = r0.<sun.nio.ch.NativeObject: long address>;
+        $l4 = $l2 + $l3;
+        virtualinvoke $r1.<sun.misc.Unsafe: void putLong(long,long)>($l4, l1);
+        return;
+    }
+
+    final float getFloat(int)
+    {
+        sun.nio.ch.NativeObject r0;
+        int i0;
+        sun.misc.Unsafe $r1;
+        long $l1, $l2, $l3;
+        float $f0;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        i0 := @parameter0: int;
+        $r1 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $l1 = (long) i0;
+        $l2 = r0.<sun.nio.ch.NativeObject: long address>;
+        $l3 = $l1 + $l2;
+        $f0 = virtualinvoke $r1.<sun.misc.Unsafe: float getFloat(long)>($l3);
+        return $f0;
+    }
+
+    final void putFloat(int, float)
+    {
+        sun.nio.ch.NativeObject r0;
+        int i0;
+        float f0;
+        sun.misc.Unsafe $r1;
+        long $l1, $l2, $l3;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        i0 := @parameter0: int;
+        f0 := @parameter1: float;
+        $r1 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $l1 = (long) i0;
+        $l2 = r0.<sun.nio.ch.NativeObject: long address>;
+        $l3 = $l1 + $l2;
+        virtualinvoke $r1.<sun.misc.Unsafe: void putFloat(long,float)>($l3, f0);
+        return;
+    }
+
+    final double getDouble(int)
+    {
+        sun.nio.ch.NativeObject r0;
+        int i0;
+        sun.misc.Unsafe $r1;
+        long $l1, $l2, $l3;
+        double $d0;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        i0 := @parameter0: int;
+        $r1 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $l1 = (long) i0;
+        $l2 = r0.<sun.nio.ch.NativeObject: long address>;
+        $l3 = $l1 + $l2;
+        $d0 = virtualinvoke $r1.<sun.misc.Unsafe: double getDouble(long)>($l3);
+        return $d0;
+    }
+
+    final void putDouble(int, double)
+    {
+        sun.nio.ch.NativeObject r0;
+        int i0;
+        double d0;
+        sun.misc.Unsafe $r1;
+        long $l1, $l2, $l3;
+
+        r0 := @this: sun.nio.ch.NativeObject;
+        i0 := @parameter0: int;
+        d0 := @parameter1: double;
+        $r1 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $l1 = (long) i0;
+        $l2 = r0.<sun.nio.ch.NativeObject: long address>;
+        $l3 = $l1 + $l2;
+        virtualinvoke $r1.<sun.misc.Unsafe: void putDouble(long,double)>($l3, d0);
+        return;
+    }
+
+    static int addressSize()
+    {
+        sun.misc.Unsafe $r0;
+        int $i0;
+
+        $r0 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $i0 = virtualinvoke $r0.<sun.misc.Unsafe: int addressSize()>();
+        return $i0;
+    }
+
+    static java.nio.ByteOrder byteOrder()
+    {
+        java.nio.ByteOrder $r0, $r2, $r6, $r7, $r12;
+        long l0;
+        byte b1;
+        java.lang.Throwable r1, $r10;
+        sun.misc.Unsafe $r3, $r4, $r5, $r9, $r11;
+        boolean $z0;
+        java.lang.AssertionError $r8;
+
+        $r0 = <sun.nio.ch.NativeObject: java.nio.ByteOrder byteOrder>;
+        if $r0 == null goto label0;
+
+        $r2 = <sun.nio.ch.NativeObject: java.nio.ByteOrder byteOrder>;
+        return $r2;
+
+     label0:
+        $r3 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        l0 = virtualinvoke $r3.<sun.misc.Unsafe: long allocateMemory(long)>(8L);
+
+     label1:
+        $r4 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        virtualinvoke $r4.<sun.misc.Unsafe: void putLong(long,long)>(l0, 72623859790382856L);
+        $r5 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        b1 = virtualinvoke $r5.<sun.misc.Unsafe: byte getByte(long)>(l0);
+        lookupswitch(b1)
+        {
+            case 1: goto label2;
+            case 8: goto label3;
+            default: goto label4;
+        };
+
+     label2:
+        $r6 = <java.nio.ByteOrder: java.nio.ByteOrder BIG_ENDIAN>;
+        <sun.nio.ch.NativeObject: java.nio.ByteOrder byteOrder> = $r6;
+        goto label5;
+
+     label3:
+        $r7 = <java.nio.ByteOrder: java.nio.ByteOrder LITTLE_ENDIAN>;
+        <sun.nio.ch.NativeObject: java.nio.ByteOrder byteOrder> = $r7;
+        goto label5;
+
+     label4:
+        $z0 = <sun.nio.ch.NativeObject: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label5;
+
+        $r8 = new java.lang.AssertionError;
+        specialinvoke $r8.<java.lang.AssertionError: void <init>()>();
+        throw $r8;
+
+     label5:
+        $r9 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        virtualinvoke $r9.<sun.misc.Unsafe: void freeMemory(long)>(l0);
+        goto label9;
+
+     label6:
+        $r10 := @caughtexception;
+
+     label7:
+        r1 = $r10;
+
+     label8:
+        $r11 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        virtualinvoke $r11.<sun.misc.Unsafe: void freeMemory(long)>(l0);
+        throw r1;
+
+     label9:
+        $r12 = <sun.nio.ch.NativeObject: java.nio.ByteOrder byteOrder>;
+        return $r12;
+
+        catch java.lang.Throwable from label1 to label5 with label6;
+        catch java.lang.Throwable from label7 to label8 with label6;
+    }
+
+    static int pageSize()
+    {
+        int $i0, $i1, $i2;
+        sun.misc.Unsafe $r0;
+
+        $i0 = <sun.nio.ch.NativeObject: int pageSize>;
+        if $i0 != -1 goto label0;
+
+        $r0 = <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe>;
+        $i1 = virtualinvoke $r0.<sun.misc.Unsafe: int pageSize()>();
+        <sun.nio.ch.NativeObject: int pageSize> = $i1;
+
+     label0:
+        $i2 = <sun.nio.ch.NativeObject: int pageSize>;
+        return $i2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        boolean $z0, $z1;
+        sun.misc.Unsafe $r1;
+
+        $r0 = class "sun/nio/ch/NativeObject";
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        <sun.nio.ch.NativeObject: boolean $assertionsDisabled> = $z1;
+        $r1 = staticinvoke <sun.misc.Unsafe: sun.misc.Unsafe getUnsafe()>();
+        <sun.nio.ch.NativeObject: sun.misc.Unsafe unsafe> = $r1;
+        <sun.nio.ch.NativeObject: java.nio.ByteOrder byteOrder> = null;
+        <sun.nio.ch.NativeObject: int pageSize> = -1;
+        return;
+    }
+}

@@ -1,0 +1,349 @@
+public class org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor extends java.lang.Object implements java.lang.Runnable
+{
+    protected org.apache.tomcat.util.net.SocketWrapper socket;
+    protected org.apache.tomcat.util.net.SocketStatus status;
+    final org.apache.tomcat.util.net.JIoEndpoint this$0;
+
+    public void <init>(org.apache.tomcat.util.net.JIoEndpoint, org.apache.tomcat.util.net.SocketWrapper)
+    {
+        org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor r0;
+        org.apache.tomcat.util.net.JIoEndpoint r1;
+        org.apache.tomcat.util.net.SocketWrapper r2;
+        java.lang.NullPointerException $r3;
+
+        r0 := @this: org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor;
+        r1 := @parameter0: org.apache.tomcat.util.net.JIoEndpoint;
+        r2 := @parameter1: org.apache.tomcat.util.net.SocketWrapper;
+        r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.JIoEndpoint this$0> = r1;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket> = null;
+        r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketStatus status> = null;
+        if r2 != null goto label0;
+
+        $r3 = new java.lang.NullPointerException;
+        specialinvoke $r3.<java.lang.NullPointerException: void <init>()>();
+        throw $r3;
+
+     label0:
+        r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket> = r2;
+        return;
+    }
+
+    public void <init>(org.apache.tomcat.util.net.JIoEndpoint, org.apache.tomcat.util.net.SocketWrapper, org.apache.tomcat.util.net.SocketStatus)
+    {
+        org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor r0;
+        org.apache.tomcat.util.net.JIoEndpoint r1;
+        org.apache.tomcat.util.net.SocketWrapper r2;
+        org.apache.tomcat.util.net.SocketStatus r3;
+
+        r0 := @this: org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor;
+        r1 := @parameter0: org.apache.tomcat.util.net.JIoEndpoint;
+        r2 := @parameter1: org.apache.tomcat.util.net.SocketWrapper;
+        r3 := @parameter2: org.apache.tomcat.util.net.SocketStatus;
+        specialinvoke r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: void <init>(org.apache.tomcat.util.net.JIoEndpoint,org.apache.tomcat.util.net.SocketWrapper)>(r1, r2);
+        r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketStatus status> = r3;
+        return;
+    }
+
+    public void run()
+    {
+        org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor r0, $r56, $r81;
+        boolean z0, $z1, $z2, $z4, $z5;
+        org.apache.tomcat.util.net.SocketWrapper r1, $r8, $r11, $r23, $r27, $r33, $r37, $r46, $r47, $r49, $r52, $r58, $r62, $r67, $r83, $r89, $r94;
+        org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState r2, $r19, $r29, $r42, $r43, $r44, $r45, $r48;
+        java.lang.Throwable r3, r4, r7, $r14, $r53, $r70, $r97, r98, $r107;
+        org.apache.tomcat.util.net.SocketStatus $r5, $r20, $r24, $r28, $r68, $r84, $r95;
+        java.util.concurrent.RejectedExecutionException r6, $r59, $r85, r86;
+        org.apache.tomcat.util.net.JIoEndpoint $r9, $r21, $r25, $r36, $r50, $r54, $r57, $r65, $r71, $r72, $r75, $r79, $r82, $r92, $r99, $r100, $r103;
+        org.apache.tomcat.util.net.ServerSocketFactory $r10;
+        java.lang.Object $r12, $r38;
+        java.net.Socket $r13, $r39;
+        org.apache.juli.logging.Log $r15, $r16, $r30, $r31, $r60, $r76, $r87, $r104;
+        org.apache.tomcat.util.res.StringManager $r17, $r77, $r105;
+        java.lang.String $r18, $r35, $r64, $r78, $r91, $r106;
+        org.apache.tomcat.util.net.JIoEndpoint$Handler $r22, $r26, $r66, $r93;
+        java.lang.StringBuilder $r32, $r34, $r61, $r63, $r88, $r90;
+        java.io.IOException $r40, r41;
+        java.util.concurrent.ConcurrentLinkedQueue $r51;
+        java.util.concurrent.Executor $r55, $r80;
+        java.lang.NullPointerException $r73, r74, $r101, r102;
+
+        r0 := @this: org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor;
+        z0 = 0;
+        $r8 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        r1 = $r8;
+        entermonitor $r8;
+
+     label0:
+        r2 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState OPEN>;
+
+     label1:
+        $r9 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.JIoEndpoint this$0>;
+        $r10 = $r9.<org.apache.tomcat.util.net.JIoEndpoint: org.apache.tomcat.util.net.ServerSocketFactory serverSocketFactory>;
+        $r11 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        $r12 = virtualinvoke $r11.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r13 = (java.net.Socket) $r12;
+        interfaceinvoke $r10.<org.apache.tomcat.util.net.ServerSocketFactory: void handshake(java.net.Socket)>($r13);
+
+     label2:
+        goto label5;
+
+     label3:
+        $r14 := @caughtexception;
+        r3 = $r14;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r3);
+        $r15 = staticinvoke <org.apache.tomcat.util.net.JIoEndpoint: org.apache.juli.logging.Log access$1()>();
+        $z1 = interfaceinvoke $r15.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z1 == 0 goto label4;
+
+        $r16 = staticinvoke <org.apache.tomcat.util.net.JIoEndpoint: org.apache.juli.logging.Log access$1()>();
+        $r17 = <org.apache.tomcat.util.net.JIoEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r18 = virtualinvoke $r17.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("endpoint.err.handshake");
+        interfaceinvoke $r16.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r18, r3);
+
+     label4:
+        r2 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState CLOSED>;
+
+     label5:
+        $r19 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState CLOSED>;
+        if r2 == $r19 goto label7;
+
+        $r20 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketStatus status>;
+        if $r20 != null goto label6;
+
+        $r21 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.JIoEndpoint this$0>;
+        $r22 = $r21.<org.apache.tomcat.util.net.JIoEndpoint: org.apache.tomcat.util.net.JIoEndpoint$Handler handler>;
+        $r23 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        $r24 = <org.apache.tomcat.util.net.SocketStatus: org.apache.tomcat.util.net.SocketStatus OPEN_READ>;
+        r2 = interfaceinvoke $r22.<org.apache.tomcat.util.net.JIoEndpoint$Handler: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState process(org.apache.tomcat.util.net.SocketWrapper,org.apache.tomcat.util.net.SocketStatus)>($r23, $r24);
+        goto label7;
+
+     label6:
+        $r25 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.JIoEndpoint this$0>;
+        $r26 = $r25.<org.apache.tomcat.util.net.JIoEndpoint: org.apache.tomcat.util.net.JIoEndpoint$Handler handler>;
+        $r27 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        $r28 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketStatus status>;
+        r2 = interfaceinvoke $r26.<org.apache.tomcat.util.net.JIoEndpoint$Handler: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState process(org.apache.tomcat.util.net.SocketWrapper,org.apache.tomcat.util.net.SocketStatus)>($r27, $r28);
+
+     label7:
+        $r29 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState CLOSED>;
+        if r2 != $r29 goto label12;
+
+        $r30 = staticinvoke <org.apache.tomcat.util.net.JIoEndpoint: org.apache.juli.logging.Log access$1()>();
+        $z2 = interfaceinvoke $r30.<org.apache.juli.logging.Log: boolean isTraceEnabled()>();
+        if $z2 == 0 goto label8;
+
+        $r31 = staticinvoke <org.apache.tomcat.util.net.JIoEndpoint: org.apache.juli.logging.Log access$1()>();
+        $r32 = new java.lang.StringBuilder;
+        specialinvoke $r32.<java.lang.StringBuilder: void <init>(java.lang.String)>("Closing socket:");
+        $r33 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        $r34 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r33);
+        $r35 = virtualinvoke $r34.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r31.<org.apache.juli.logging.Log: void trace(java.lang.Object)>($r35);
+
+     label8:
+        $r36 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.JIoEndpoint this$0>;
+        virtualinvoke $r36.<org.apache.tomcat.util.net.JIoEndpoint: long countDownConnection()>();
+
+     label9:
+        $r37 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        $r38 = virtualinvoke $r37.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r39 = (java.net.Socket) $r38;
+        virtualinvoke $r39.<java.net.Socket: void close()>();
+
+     label10:
+        goto label24;
+
+     label11:
+        $r40 := @caughtexception;
+        r41 = $r40;
+        goto label24;
+
+     label12:
+        $r42 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState OPEN>;
+        if r2 == $r42 goto label13;
+
+        $r43 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState UPGRADING>;
+        if r2 == $r43 goto label13;
+
+        $r44 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState UPGRADING_TOMCAT>;
+        if r2 == $r44 goto label13;
+
+        $r45 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState UPGRADED>;
+        if r2 != $r45 goto label14;
+
+     label13:
+        $r46 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        virtualinvoke $r46.<org.apache.tomcat.util.net.SocketWrapper: void setKeptAlive(boolean)>(1);
+        $r47 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        virtualinvoke $r47.<org.apache.tomcat.util.net.SocketWrapper: void access()>();
+        z0 = 1;
+        goto label24;
+
+     label14:
+        $r48 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState LONG>;
+        if r2 != $r48 goto label24;
+
+        $r49 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        virtualinvoke $r49.<org.apache.tomcat.util.net.SocketWrapper: void access()>();
+        $r50 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.JIoEndpoint this$0>;
+        $r51 = $r50.<org.apache.tomcat.util.net.JIoEndpoint: java.util.concurrent.ConcurrentLinkedQueue waitingRequests>;
+        $r52 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        virtualinvoke $r51.<java.util.concurrent.ConcurrentLinkedQueue: boolean add(java.lang.Object)>($r52);
+        goto label24;
+
+     label15:
+        $r53 := @caughtexception;
+        r4 = $r53;
+        if z0 == 0 goto label23;
+
+     label16:
+        $r54 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.JIoEndpoint this$0>;
+        $r55 = virtualinvoke $r54.<org.apache.tomcat.util.net.JIoEndpoint: java.util.concurrent.Executor getExecutor()>();
+        $r56 = new org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor;
+        $r57 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.JIoEndpoint this$0>;
+        $r58 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        $r5 = <org.apache.tomcat.util.net.SocketStatus: org.apache.tomcat.util.net.SocketStatus OPEN_READ>;
+        specialinvoke $r56.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: void <init>(org.apache.tomcat.util.net.JIoEndpoint,org.apache.tomcat.util.net.SocketWrapper,org.apache.tomcat.util.net.SocketStatus)>($r57, $r58, $r5);
+        interfaceinvoke $r55.<java.util.concurrent.Executor: void execute(java.lang.Runnable)>($r56);
+
+     label17:
+        goto label23;
+
+     label18:
+        $r59 := @caughtexception;
+        r6 = $r59;
+        $r60 = staticinvoke <org.apache.tomcat.util.net.JIoEndpoint: org.apache.juli.logging.Log access$1()>();
+        $r61 = new java.lang.StringBuilder;
+        specialinvoke $r61.<java.lang.StringBuilder: void <init>(java.lang.String)>("Socket reprocessing request was rejected for:");
+        $r62 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        $r63 = virtualinvoke $r61.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r62);
+        $r64 = virtualinvoke $r63.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r60.<org.apache.juli.logging.Log: void warn(java.lang.Object,java.lang.Throwable)>($r64, r6);
+
+     label19:
+        $r65 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.JIoEndpoint this$0>;
+        $r66 = $r65.<org.apache.tomcat.util.net.JIoEndpoint: org.apache.tomcat.util.net.JIoEndpoint$Handler handler>;
+        $r67 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        $r68 = <org.apache.tomcat.util.net.SocketStatus: org.apache.tomcat.util.net.SocketStatus DISCONNECT>;
+        interfaceinvoke $r66.<org.apache.tomcat.util.net.JIoEndpoint$Handler: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState process(org.apache.tomcat.util.net.SocketWrapper,org.apache.tomcat.util.net.SocketStatus)>($r67, $r68);
+        goto label21;
+
+     label20:
+        $r70 := @caughtexception;
+        r7 = $r70;
+        $r71 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.JIoEndpoint this$0>;
+        virtualinvoke $r71.<org.apache.tomcat.util.net.JIoEndpoint: long countDownConnection()>();
+        throw r7;
+
+     label21:
+        $r72 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.JIoEndpoint this$0>;
+        virtualinvoke $r72.<org.apache.tomcat.util.net.JIoEndpoint: long countDownConnection()>();
+        goto label23;
+
+     label22:
+        $r73 := @caughtexception;
+        r74 = $r73;
+        $r75 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.JIoEndpoint this$0>;
+        $z4 = $r75.<org.apache.tomcat.util.net.JIoEndpoint: boolean running>;
+        if $z4 == 0 goto label23;
+
+        $r76 = staticinvoke <org.apache.tomcat.util.net.JIoEndpoint: org.apache.juli.logging.Log access$1()>();
+        $r77 = <org.apache.tomcat.util.net.JIoEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r78 = virtualinvoke $r77.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("endpoint.launch.fail");
+        interfaceinvoke $r76.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r78, r74);
+
+     label23:
+        throw r4;
+
+     label24:
+        if z0 == 0 goto label32;
+
+     label25:
+        $r79 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.JIoEndpoint this$0>;
+        $r80 = virtualinvoke $r79.<org.apache.tomcat.util.net.JIoEndpoint: java.util.concurrent.Executor getExecutor()>();
+        $r81 = new org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor;
+        $r82 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.JIoEndpoint this$0>;
+        $r83 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        $r84 = <org.apache.tomcat.util.net.SocketStatus: org.apache.tomcat.util.net.SocketStatus OPEN_READ>;
+        specialinvoke $r81.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: void <init>(org.apache.tomcat.util.net.JIoEndpoint,org.apache.tomcat.util.net.SocketWrapper,org.apache.tomcat.util.net.SocketStatus)>($r82, $r83, $r84);
+        interfaceinvoke $r80.<java.util.concurrent.Executor: void execute(java.lang.Runnable)>($r81);
+
+     label26:
+        goto label32;
+
+     label27:
+        $r85 := @caughtexception;
+        r86 = $r85;
+        $r87 = staticinvoke <org.apache.tomcat.util.net.JIoEndpoint: org.apache.juli.logging.Log access$1()>();
+        $r88 = new java.lang.StringBuilder;
+        specialinvoke $r88.<java.lang.StringBuilder: void <init>(java.lang.String)>("Socket reprocessing request was rejected for:");
+        $r89 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        $r90 = virtualinvoke $r88.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r89);
+        $r91 = virtualinvoke $r90.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r87.<org.apache.juli.logging.Log: void warn(java.lang.Object,java.lang.Throwable)>($r91, r86);
+
+     label28:
+        $r92 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.JIoEndpoint this$0>;
+        $r93 = $r92.<org.apache.tomcat.util.net.JIoEndpoint: org.apache.tomcat.util.net.JIoEndpoint$Handler handler>;
+        $r94 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        $r95 = <org.apache.tomcat.util.net.SocketStatus: org.apache.tomcat.util.net.SocketStatus DISCONNECT>;
+        interfaceinvoke $r93.<org.apache.tomcat.util.net.JIoEndpoint$Handler: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState process(org.apache.tomcat.util.net.SocketWrapper,org.apache.tomcat.util.net.SocketStatus)>($r94, $r95);
+        goto label30;
+
+     label29:
+        $r97 := @caughtexception;
+        r98 = $r97;
+        $r99 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.JIoEndpoint this$0>;
+        virtualinvoke $r99.<org.apache.tomcat.util.net.JIoEndpoint: long countDownConnection()>();
+        throw r98;
+
+     label30:
+        $r100 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.JIoEndpoint this$0>;
+        virtualinvoke $r100.<org.apache.tomcat.util.net.JIoEndpoint: long countDownConnection()>();
+        goto label32;
+
+     label31:
+        $r101 := @caughtexception;
+        r102 = $r101;
+        $r103 = r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.JIoEndpoint this$0>;
+        $z5 = $r103.<org.apache.tomcat.util.net.JIoEndpoint: boolean running>;
+        if $z5 == 0 goto label32;
+
+        $r104 = staticinvoke <org.apache.tomcat.util.net.JIoEndpoint: org.apache.juli.logging.Log access$1()>();
+        $r105 = <org.apache.tomcat.util.net.JIoEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r106 = virtualinvoke $r105.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("endpoint.launch.fail");
+        interfaceinvoke $r104.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r106, r102);
+
+     label32:
+        exitmonitor r1;
+
+     label33:
+        goto label37;
+
+     label34:
+        $r107 := @caughtexception;
+
+     label35:
+        exitmonitor r1;
+
+     label36:
+        throw $r107;
+
+     label37:
+        r0.<org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket> = null;
+        return;
+
+        catch java.lang.Throwable from label1 to label2 with label3;
+        catch java.io.IOException from label9 to label10 with label11;
+        catch java.lang.Throwable from label0 to label15 with label15;
+        catch java.util.concurrent.RejectedExecutionException from label16 to label17 with label18;
+        catch java.lang.Throwable from label19 to label20 with label20;
+        catch java.lang.NullPointerException from label16 to label17 with label22;
+        catch java.util.concurrent.RejectedExecutionException from label25 to label26 with label27;
+        catch java.lang.Throwable from label28 to label29 with label29;
+        catch java.lang.NullPointerException from label25 to label26 with label31;
+        catch java.lang.Throwable from label0 to label33 with label34;
+        catch java.lang.Throwable from label35 to label36 with label34;
+    }
+}

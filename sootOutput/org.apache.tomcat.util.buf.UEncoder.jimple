@@ -1,0 +1,283 @@
+public final class org.apache.tomcat.util.buf.UEncoder extends java.lang.Object
+{
+    private java.util.BitSet safeChars;
+    private org.apache.tomcat.util.buf.C2BConverter c2b;
+    private org.apache.tomcat.util.buf.ByteChunk bb;
+    private org.apache.tomcat.util.buf.CharChunk cb;
+    private org.apache.tomcat.util.buf.CharChunk output;
+    private final boolean readOnlySafeChars;
+    private java.lang.String encoding;
+
+    public void <init>()
+    {
+        org.apache.tomcat.util.buf.UEncoder r0;
+        java.util.BitSet $r1;
+
+        r0 := @this: org.apache.tomcat.util.buf.UEncoder;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<org.apache.tomcat.util.buf.UEncoder: java.util.BitSet safeChars> = null;
+        r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.C2BConverter c2b> = null;
+        r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.ByteChunk bb> = null;
+        r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.CharChunk cb> = null;
+        r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.CharChunk output> = null;
+        r0.<org.apache.tomcat.util.buf.UEncoder: java.lang.String encoding> = "UTF8";
+        $r1 = staticinvoke <org.apache.tomcat.util.buf.UEncoder: java.util.BitSet initialSafeChars()>();
+        r0.<org.apache.tomcat.util.buf.UEncoder: java.util.BitSet safeChars> = $r1;
+        r0.<org.apache.tomcat.util.buf.UEncoder: boolean readOnlySafeChars> = 0;
+        return;
+    }
+
+    public void <init>(org.apache.tomcat.util.buf.UEncoder$SafeCharsSet)
+    {
+        org.apache.tomcat.util.buf.UEncoder r0;
+        org.apache.tomcat.util.buf.UEncoder$SafeCharsSet r1;
+        java.util.BitSet $r2;
+
+        r0 := @this: org.apache.tomcat.util.buf.UEncoder;
+        r1 := @parameter0: org.apache.tomcat.util.buf.UEncoder$SafeCharsSet;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<org.apache.tomcat.util.buf.UEncoder: java.util.BitSet safeChars> = null;
+        r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.C2BConverter c2b> = null;
+        r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.ByteChunk bb> = null;
+        r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.CharChunk cb> = null;
+        r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.CharChunk output> = null;
+        r0.<org.apache.tomcat.util.buf.UEncoder: java.lang.String encoding> = "UTF8";
+        $r2 = staticinvoke <org.apache.tomcat.util.buf.UEncoder$SafeCharsSet: java.util.BitSet access$2(org.apache.tomcat.util.buf.UEncoder$SafeCharsSet)>(r1);
+        r0.<org.apache.tomcat.util.buf.UEncoder: java.util.BitSet safeChars> = $r2;
+        r0.<org.apache.tomcat.util.buf.UEncoder: boolean readOnlySafeChars> = 1;
+        return;
+    }
+
+    public void setEncoding(java.lang.String)
+    {
+        org.apache.tomcat.util.buf.UEncoder r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.tomcat.util.buf.UEncoder;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.tomcat.util.buf.UEncoder: java.lang.String encoding> = r1;
+        return;
+    }
+
+    public void addSafeCharacter(char)
+    {
+        org.apache.tomcat.util.buf.UEncoder r0;
+        char c0;
+        boolean $z0;
+        java.lang.IllegalStateException $r1;
+        java.util.BitSet $r2;
+
+        r0 := @this: org.apache.tomcat.util.buf.UEncoder;
+        c0 := @parameter0: char;
+        $z0 = r0.<org.apache.tomcat.util.buf.UEncoder: boolean readOnlySafeChars>;
+        if $z0 == 0 goto label0;
+
+        $r1 = new java.lang.IllegalStateException;
+        specialinvoke $r1.<java.lang.IllegalStateException: void <init>(java.lang.String)>("UEncoders safeChararacters are read only");
+        throw $r1;
+
+     label0:
+        $r2 = r0.<org.apache.tomcat.util.buf.UEncoder: java.util.BitSet safeChars>;
+        virtualinvoke $r2.<java.util.BitSet: void set(int)>(c0);
+        return;
+    }
+
+    public org.apache.tomcat.util.buf.CharChunk encodeURL(java.lang.String, int, int) throws java.io.IOException
+    {
+        org.apache.tomcat.util.buf.UEncoder r0;
+        java.lang.String r1, $r7;
+        int i0, i1, i2, $i5, $i6;
+        org.apache.tomcat.util.buf.ByteChunk $r2, $r8, $r16, $r20, $r22, $r24;
+        char c3, c4;
+        org.apache.tomcat.util.buf.C2BConverter $r3, $r6, $r14, $r18;
+        org.apache.tomcat.util.buf.CharChunk $r4, $r5, $r9, $r10, $r12, $r13, $r15, $r17, $r19, $r21, $r23, $r25;
+        java.util.BitSet $r11;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.buf.UEncoder;
+        r1 := @parameter0: java.lang.String;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        $r3 = r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.C2BConverter c2b>;
+        if $r3 != null goto label0;
+
+        $r2 = new org.apache.tomcat.util.buf.ByteChunk;
+        specialinvoke $r2.<org.apache.tomcat.util.buf.ByteChunk: void <init>(int)>(8);
+        r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.ByteChunk bb> = $r2;
+        $r4 = new org.apache.tomcat.util.buf.CharChunk;
+        specialinvoke $r4.<org.apache.tomcat.util.buf.CharChunk: void <init>(int)>(2);
+        r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.CharChunk cb> = $r4;
+        $r5 = new org.apache.tomcat.util.buf.CharChunk;
+        specialinvoke $r5.<org.apache.tomcat.util.buf.CharChunk: void <init>(int)>(64);
+        r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.CharChunk output> = $r5;
+        $r6 = new org.apache.tomcat.util.buf.C2BConverter;
+        $r7 = r0.<org.apache.tomcat.util.buf.UEncoder: java.lang.String encoding>;
+        specialinvoke $r6.<org.apache.tomcat.util.buf.C2BConverter: void <init>(java.lang.String)>($r7);
+        r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.C2BConverter c2b> = $r6;
+        goto label1;
+
+     label0:
+        $r8 = r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.ByteChunk bb>;
+        virtualinvoke $r8.<org.apache.tomcat.util.buf.ByteChunk: void recycle()>();
+        $r9 = r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.CharChunk cb>;
+        virtualinvoke $r9.<org.apache.tomcat.util.buf.CharChunk: void recycle()>();
+        $r10 = r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.CharChunk output>;
+        virtualinvoke $r10.<org.apache.tomcat.util.buf.CharChunk: void recycle()>();
+
+     label1:
+        i2 = i0;
+        goto label6;
+
+     label2:
+        c3 = virtualinvoke r1.<java.lang.String: char charAt(int)>(i2);
+        $r11 = r0.<org.apache.tomcat.util.buf.UEncoder: java.util.BitSet safeChars>;
+        $z0 = virtualinvoke $r11.<java.util.BitSet: boolean get(int)>(c3);
+        if $z0 == 0 goto label3;
+
+        $r12 = r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.CharChunk output>;
+        virtualinvoke $r12.<org.apache.tomcat.util.buf.CharChunk: void append(char)>(c3);
+        goto label5;
+
+     label3:
+        $r13 = r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.CharChunk cb>;
+        virtualinvoke $r13.<org.apache.tomcat.util.buf.CharChunk: void append(char)>(c3);
+        $r14 = r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.C2BConverter c2b>;
+        $r15 = r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.CharChunk cb>;
+        $r16 = r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.ByteChunk bb>;
+        virtualinvoke $r14.<org.apache.tomcat.util.buf.C2BConverter: void convert(org.apache.tomcat.util.buf.CharChunk,org.apache.tomcat.util.buf.ByteChunk)>($r15, $r16);
+        if c3 < 55296 goto label4;
+
+        if c3 > 56319 goto label4;
+
+        $i5 = i2 + 1;
+        if $i5 >= i1 goto label4;
+
+        $i6 = i2 + 1;
+        c4 = virtualinvoke r1.<java.lang.String: char charAt(int)>($i6);
+        if c4 < 56320 goto label4;
+
+        if c4 > 57343 goto label4;
+
+        $r17 = r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.CharChunk cb>;
+        virtualinvoke $r17.<org.apache.tomcat.util.buf.CharChunk: void append(char)>(c4);
+        $r18 = r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.C2BConverter c2b>;
+        $r19 = r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.CharChunk cb>;
+        $r20 = r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.ByteChunk bb>;
+        virtualinvoke $r18.<org.apache.tomcat.util.buf.C2BConverter: void convert(org.apache.tomcat.util.buf.CharChunk,org.apache.tomcat.util.buf.ByteChunk)>($r19, $r20);
+        i2 = i2 + 1;
+
+     label4:
+        $r21 = r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.CharChunk output>;
+        $r22 = r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.ByteChunk bb>;
+        virtualinvoke r0.<org.apache.tomcat.util.buf.UEncoder: void urlEncode(org.apache.tomcat.util.buf.CharChunk,org.apache.tomcat.util.buf.ByteChunk)>($r21, $r22);
+        $r23 = r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.CharChunk cb>;
+        virtualinvoke $r23.<org.apache.tomcat.util.buf.CharChunk: void recycle()>();
+        $r24 = r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.ByteChunk bb>;
+        virtualinvoke $r24.<org.apache.tomcat.util.buf.ByteChunk: void recycle()>();
+
+     label5:
+        i2 = i2 + 1;
+
+     label6:
+        if i2 < i1 goto label2;
+
+        $r25 = r0.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.CharChunk output>;
+        return $r25;
+    }
+
+    protected void urlEncode(org.apache.tomcat.util.buf.CharChunk, org.apache.tomcat.util.buf.ByteChunk) throws java.io.IOException
+    {
+        org.apache.tomcat.util.buf.UEncoder r0;
+        org.apache.tomcat.util.buf.CharChunk r1;
+        org.apache.tomcat.util.buf.ByteChunk r2;
+        byte[] r3;
+        int i0, $i8;
+        char c1, c7;
+        byte $b2, $b3, $b4, $b5, $b6;
+
+        r0 := @this: org.apache.tomcat.util.buf.UEncoder;
+        r1 := @parameter0: org.apache.tomcat.util.buf.CharChunk;
+        r2 := @parameter1: org.apache.tomcat.util.buf.ByteChunk;
+        r3 = virtualinvoke r2.<org.apache.tomcat.util.buf.ByteChunk: byte[] getBuffer()>();
+        i0 = virtualinvoke r2.<org.apache.tomcat.util.buf.ByteChunk: int getStart()>();
+        goto label1;
+
+     label0:
+        virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: void append(char)>(37);
+        $b2 = r3[i0];
+        $b3 = $b2 >> 4;
+        $b4 = $b3 & 15;
+        c1 = staticinvoke <java.lang.Character: char forDigit(int,int)>($b4, 16);
+        virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: void append(char)>(c1);
+        $b5 = r3[i0];
+        $b6 = $b5 & 15;
+        c7 = staticinvoke <java.lang.Character: char forDigit(int,int)>($b6, 16);
+        virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: void append(char)>(c7);
+        i0 = i0 + 1;
+
+     label1:
+        $i8 = virtualinvoke r2.<org.apache.tomcat.util.buf.ByteChunk: int getEnd()>();
+        if i0 < $i8 goto label0;
+
+        return;
+    }
+
+    private static java.util.BitSet initialSafeChars()
+    {
+        java.util.BitSet $r0, r1;
+        int i0, i1, i2;
+
+        $r0 = new java.util.BitSet;
+        specialinvoke $r0.<java.util.BitSet: void <init>(int)>(128);
+        r1 = $r0;
+        i0 = 97;
+        goto label1;
+
+     label0:
+        virtualinvoke r1.<java.util.BitSet: void set(int)>(i0);
+        i0 = i0 + 1;
+
+     label1:
+        if i0 <= 122 goto label0;
+
+        i1 = 65;
+        goto label3;
+
+     label2:
+        virtualinvoke r1.<java.util.BitSet: void set(int)>(i1);
+        i1 = i1 + 1;
+
+     label3:
+        if i1 <= 90 goto label2;
+
+        i2 = 48;
+        goto label5;
+
+     label4:
+        virtualinvoke r1.<java.util.BitSet: void set(int)>(i2);
+        i2 = i2 + 1;
+
+     label5:
+        if i2 <= 57 goto label4;
+
+        virtualinvoke r1.<java.util.BitSet: void set(int)>(36);
+        virtualinvoke r1.<java.util.BitSet: void set(int)>(45);
+        virtualinvoke r1.<java.util.BitSet: void set(int)>(95);
+        virtualinvoke r1.<java.util.BitSet: void set(int)>(46);
+        virtualinvoke r1.<java.util.BitSet: void set(int)>(33);
+        virtualinvoke r1.<java.util.BitSet: void set(int)>(42);
+        virtualinvoke r1.<java.util.BitSet: void set(int)>(39);
+        virtualinvoke r1.<java.util.BitSet: void set(int)>(40);
+        virtualinvoke r1.<java.util.BitSet: void set(int)>(41);
+        virtualinvoke r1.<java.util.BitSet: void set(int)>(44);
+        return r1;
+    }
+
+    static java.util.BitSet access$0()
+    {
+        java.util.BitSet $r0;
+
+        $r0 = staticinvoke <org.apache.tomcat.util.buf.UEncoder: java.util.BitSet initialSafeChars()>();
+        return $r0;
+    }
+}

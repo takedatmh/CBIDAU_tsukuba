@@ -1,0 +1,284 @@
+public final class java.math.MathContext extends java.lang.Object implements java.io.Serializable
+{
+    private static final int DEFAULT_DIGITS;
+    private static final java.math.RoundingMode DEFAULT_ROUNDINGMODE;
+    private static final int MIN_DIGITS;
+    private static final long serialVersionUID;
+    public static final java.math.MathContext UNLIMITED;
+    public static final java.math.MathContext DECIMAL32;
+    public static final java.math.MathContext DECIMAL64;
+    public static final java.math.MathContext DECIMAL128;
+    final int precision;
+    final java.math.RoundingMode roundingMode;
+
+    public void <init>(int)
+    {
+        java.math.MathContext r0;
+        int i0;
+        java.math.RoundingMode $r1;
+
+        r0 := @this: java.math.MathContext;
+        i0 := @parameter0: int;
+        $r1 = <java.math.MathContext: java.math.RoundingMode DEFAULT_ROUNDINGMODE>;
+        specialinvoke r0.<java.math.MathContext: void <init>(int,java.math.RoundingMode)>(i0, $r1);
+        return;
+    }
+
+    public void <init>(int, java.math.RoundingMode)
+    {
+        java.math.MathContext r0;
+        int i0;
+        java.math.RoundingMode r1;
+        java.lang.IllegalArgumentException $r2;
+        java.lang.NullPointerException $r3;
+
+        r0 := @this: java.math.MathContext;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.math.RoundingMode;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        if i0 >= 0 goto label0;
+
+        $r2 = new java.lang.IllegalArgumentException;
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Digits < 0");
+        throw $r2;
+
+     label0:
+        if r1 != null goto label1;
+
+        $r3 = new java.lang.NullPointerException;
+        specialinvoke $r3.<java.lang.NullPointerException: void <init>(java.lang.String)>("null RoundingMode");
+        throw $r3;
+
+     label1:
+        r0.<java.math.MathContext: int precision> = i0;
+        r0.<java.math.MathContext: java.math.RoundingMode roundingMode> = r1;
+        return;
+    }
+
+    public void <init>(java.lang.String)
+    {
+        java.math.MathContext r0;
+        java.lang.String r1, r2, $r5;
+        boolean z0, $z1, $z2;
+        int i0, i2, $i3, $i4, i5, $i6;
+        byte b1;
+        java.lang.NullPointerException $r3;
+        java.lang.RuntimeException $r4, $r6, $r8, r9;
+        java.math.RoundingMode $r7;
+        java.lang.IllegalArgumentException $r10, $r11;
+
+        r0 := @this: java.math.MathContext;
+        r1 := @parameter0: java.lang.String;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        z0 = 0;
+        if r1 != null goto label0;
+
+        $r3 = new java.lang.NullPointerException;
+        specialinvoke $r3.<java.lang.NullPointerException: void <init>(java.lang.String)>("null String");
+        throw $r3;
+
+     label0:
+        $z1 = virtualinvoke r1.<java.lang.String: boolean startsWith(java.lang.String)>("precision=");
+        if $z1 != 0 goto label1;
+
+        $r4 = new java.lang.RuntimeException;
+        specialinvoke $r4.<java.lang.RuntimeException: void <init>()>();
+        throw $r4;
+
+     label1:
+        i0 = virtualinvoke r1.<java.lang.String: int indexOf(int)>(32);
+        b1 = 10;
+        $r5 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int,int)>(10, i0);
+        i2 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>($r5);
+        $i3 = i0 + 1;
+        $z2 = virtualinvoke r1.<java.lang.String: boolean startsWith(java.lang.String,int)>("roundingMode=", $i3);
+        if $z2 != 0 goto label2;
+
+        $r6 = new java.lang.RuntimeException;
+        specialinvoke $r6.<java.lang.RuntimeException: void <init>()>();
+        throw $r6;
+
+     label2:
+        $i4 = i0 + 1;
+        i5 = $i4 + 13;
+        $i6 = virtualinvoke r1.<java.lang.String: int length()>();
+        r2 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int,int)>(i5, $i6);
+        $r7 = staticinvoke <java.math.RoundingMode: java.math.RoundingMode valueOf(java.lang.String)>(r2);
+        r0.<java.math.MathContext: java.math.RoundingMode roundingMode> = $r7;
+
+     label3:
+        goto label5;
+
+     label4:
+        $r8 := @caughtexception;
+        r9 = $r8;
+        $r10 = new java.lang.IllegalArgumentException;
+        specialinvoke $r10.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("bad string format");
+        throw $r10;
+
+     label5:
+        if i2 >= 0 goto label6;
+
+        $r11 = new java.lang.IllegalArgumentException;
+        specialinvoke $r11.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Digits < 0");
+        throw $r11;
+
+     label6:
+        r0.<java.math.MathContext: int precision> = i2;
+        return;
+
+        catch java.lang.RuntimeException from label0 to label3 with label4;
+    }
+
+    public int getPrecision()
+    {
+        java.math.MathContext r0;
+        int $i0;
+
+        r0 := @this: java.math.MathContext;
+        $i0 = r0.<java.math.MathContext: int precision>;
+        return $i0;
+    }
+
+    public java.math.RoundingMode getRoundingMode()
+    {
+        java.math.MathContext r0;
+        java.math.RoundingMode $r1;
+
+        r0 := @this: java.math.MathContext;
+        $r1 = r0.<java.math.MathContext: java.math.RoundingMode roundingMode>;
+        return $r1;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        java.math.MathContext r0, r2;
+        java.lang.Object r1;
+        boolean $z0, $z1;
+        int $i0, $i1;
+        java.math.RoundingMode $r3, $r4;
+
+        r0 := @this: java.math.MathContext;
+        r1 := @parameter0: java.lang.Object;
+        $z0 = r1 instanceof java.math.MathContext;
+        if $z0 != 0 goto label0;
+
+        return 0;
+
+     label0:
+        r2 = (java.math.MathContext) r1;
+        $i0 = r2.<java.math.MathContext: int precision>;
+        $i1 = r0.<java.math.MathContext: int precision>;
+        if $i0 != $i1 goto label1;
+
+        $r3 = r2.<java.math.MathContext: java.math.RoundingMode roundingMode>;
+        $r4 = r0.<java.math.MathContext: java.math.RoundingMode roundingMode>;
+        if $r3 != $r4 goto label1;
+
+        $z1 = 1;
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        return $z1;
+    }
+
+    public int hashCode()
+    {
+        java.math.MathContext r0;
+        int $i0, $i1, $i2, $i3;
+        java.math.RoundingMode $r1;
+
+        r0 := @this: java.math.MathContext;
+        $i0 = r0.<java.math.MathContext: int precision>;
+        $r1 = r0.<java.math.MathContext: java.math.RoundingMode roundingMode>;
+        $i1 = virtualinvoke $r1.<java.math.RoundingMode: int hashCode()>();
+        $i2 = $i1 * 59;
+        $i3 = $i0 + $i2;
+        return $i3;
+    }
+
+    public java.lang.String toString()
+    {
+        java.math.MathContext r0;
+        java.lang.StringBuilder $r1, $r2, $r3, $r4, $r5, $r8;
+        int $i0;
+        java.math.RoundingMode $r6;
+        java.lang.String $r7, $r9;
+
+        r0 := @this: java.math.MathContext;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r2 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("precision=");
+        $i0 = r0.<java.math.MathContext: int precision>;
+        $r3 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i0);
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" ");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("roundingMode=");
+        $r6 = r0.<java.math.MathContext: java.math.RoundingMode roundingMode>;
+        $r7 = virtualinvoke $r6.<java.math.RoundingMode: java.lang.String toString()>();
+        $r8 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r7);
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r9;
+    }
+
+    private void readObject(java.io.ObjectInputStream) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        java.math.MathContext r0;
+        java.io.ObjectInputStream r1;
+        java.lang.String r2, r5;
+        int $i0;
+        java.io.StreamCorruptedException $r3, $r6;
+        java.math.RoundingMode $r4;
+
+        r0 := @this: java.math.MathContext;
+        r1 := @parameter0: java.io.ObjectInputStream;
+        virtualinvoke r1.<java.io.ObjectInputStream: void defaultReadObject()>();
+        $i0 = r0.<java.math.MathContext: int precision>;
+        if $i0 >= 0 goto label0;
+
+        r2 = "MathContext: invalid digits in stream";
+        $r3 = new java.io.StreamCorruptedException;
+        specialinvoke $r3.<java.io.StreamCorruptedException: void <init>(java.lang.String)>(r2);
+        throw $r3;
+
+     label0:
+        $r4 = r0.<java.math.MathContext: java.math.RoundingMode roundingMode>;
+        if $r4 != null goto label1;
+
+        r5 = "MathContext: null roundingMode in stream";
+        $r6 = new java.io.StreamCorruptedException;
+        specialinvoke $r6.<java.io.StreamCorruptedException: void <init>(java.lang.String)>(r5);
+        throw $r6;
+
+     label1:
+        return;
+    }
+
+    static void <clinit>()
+    {
+        java.math.RoundingMode $r0, $r1, $r4, $r6, $r8;
+        java.math.MathContext $r2, $r3, $r5, $r7;
+
+        $r0 = <java.math.RoundingMode: java.math.RoundingMode HALF_UP>;
+        <java.math.MathContext: java.math.RoundingMode DEFAULT_ROUNDINGMODE> = $r0;
+        $r2 = new java.math.MathContext;
+        $r1 = <java.math.RoundingMode: java.math.RoundingMode HALF_UP>;
+        specialinvoke $r2.<java.math.MathContext: void <init>(int,java.math.RoundingMode)>(0, $r1);
+        <java.math.MathContext: java.math.MathContext UNLIMITED> = $r2;
+        $r3 = new java.math.MathContext;
+        $r4 = <java.math.RoundingMode: java.math.RoundingMode HALF_EVEN>;
+        specialinvoke $r3.<java.math.MathContext: void <init>(int,java.math.RoundingMode)>(7, $r4);
+        <java.math.MathContext: java.math.MathContext DECIMAL32> = $r3;
+        $r5 = new java.math.MathContext;
+        $r6 = <java.math.RoundingMode: java.math.RoundingMode HALF_EVEN>;
+        specialinvoke $r5.<java.math.MathContext: void <init>(int,java.math.RoundingMode)>(16, $r6);
+        <java.math.MathContext: java.math.MathContext DECIMAL64> = $r5;
+        $r7 = new java.math.MathContext;
+        $r8 = <java.math.RoundingMode: java.math.RoundingMode HALF_EVEN>;
+        specialinvoke $r7.<java.math.MathContext: void <init>(int,java.math.RoundingMode)>(34, $r8);
+        <java.math.MathContext: java.math.MathContext DECIMAL128> = $r7;
+        return;
+    }
+}

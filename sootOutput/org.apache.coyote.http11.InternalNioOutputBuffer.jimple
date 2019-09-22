@@ -1,0 +1,378 @@
+public class org.apache.coyote.http11.InternalNioOutputBuffer extends org.apache.coyote.http11.AbstractOutputBuffer
+{
+    private org.apache.tomcat.util.net.NioChannel socket;
+    private org.apache.tomcat.util.net.NioSelectorPool pool;
+
+    public void <init>(org.apache.coyote.Response, int)
+    {
+        org.apache.coyote.http11.InternalNioOutputBuffer r0;
+        org.apache.coyote.Response r1;
+        int i0;
+        byte[] $r2;
+        org.apache.coyote.http11.InternalNioOutputBuffer$SocketOutputBuffer $r3;
+        org.apache.coyote.http11.OutputFilter[] $r4, $r5;
+        java.util.Locale $r6;
+        org.apache.tomcat.util.http.HttpMessages $r7;
+
+        r0 := @this: org.apache.coyote.http11.InternalNioOutputBuffer;
+        r1 := @parameter0: org.apache.coyote.Response;
+        i0 := @parameter1: int;
+        specialinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void <init>()>();
+        r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.coyote.Response response> = r1;
+        $r2 = newarray (byte)[i0];
+        r0.<org.apache.coyote.http11.InternalNioOutputBuffer: byte[] buf> = $r2;
+        $r3 = new org.apache.coyote.http11.InternalNioOutputBuffer$SocketOutputBuffer;
+        specialinvoke $r3.<org.apache.coyote.http11.InternalNioOutputBuffer$SocketOutputBuffer: void <init>(org.apache.coyote.http11.InternalNioOutputBuffer)>(r0);
+        r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.coyote.OutputBuffer outputStreamOutputBuffer> = $r3;
+        $r4 = newarray (org.apache.coyote.http11.OutputFilter)[0];
+        r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.coyote.http11.OutputFilter[] filterLibrary> = $r4;
+        $r5 = newarray (org.apache.coyote.http11.OutputFilter)[0];
+        r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.coyote.http11.OutputFilter[] activeFilters> = $r5;
+        r0.<org.apache.coyote.http11.InternalNioOutputBuffer: int lastActiveFilter> = -1;
+        r0.<org.apache.coyote.http11.InternalNioOutputBuffer: boolean committed> = 0;
+        r0.<org.apache.coyote.http11.InternalNioOutputBuffer: boolean finished> = 0;
+        $r6 = virtualinvoke r1.<org.apache.coyote.Response: java.util.Locale getLocale()>();
+        $r7 = staticinvoke <org.apache.tomcat.util.http.HttpMessages: org.apache.tomcat.util.http.HttpMessages getInstance(java.util.Locale)>($r6);
+        virtualinvoke $r7.<org.apache.tomcat.util.http.HttpMessages: java.lang.String getMessage(int)>(200);
+        return;
+    }
+
+    public void flush() throws java.io.IOException
+    {
+        org.apache.coyote.http11.InternalNioOutputBuffer r0;
+
+        r0 := @this: org.apache.coyote.http11.InternalNioOutputBuffer;
+        specialinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void flush()>();
+        specialinvoke r0.<org.apache.coyote.http11.InternalNioOutputBuffer: void flushBuffer()>();
+        return;
+    }
+
+    public void recycle()
+    {
+        org.apache.coyote.http11.InternalNioOutputBuffer r0;
+        org.apache.tomcat.util.net.NioChannel $r1, $r2;
+        org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler $r3;
+        java.nio.ByteBuffer $r4;
+
+        r0 := @this: org.apache.coyote.http11.InternalNioOutputBuffer;
+        specialinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void recycle()>();
+        $r1 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket>;
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler getBufHandler()>();
+        $r4 = interfaceinvoke $r3.<org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler: java.nio.ByteBuffer getWriteBuffer()>();
+        virtualinvoke $r4.<java.nio.ByteBuffer: java.nio.Buffer clear()>();
+        r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket> = null;
+
+     label0:
+        return;
+    }
+
+    public void endRequest() throws java.io.IOException
+    {
+        org.apache.coyote.http11.InternalNioOutputBuffer r0;
+
+        r0 := @this: org.apache.coyote.http11.InternalNioOutputBuffer;
+        specialinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void endRequest()>();
+        specialinvoke r0.<org.apache.coyote.http11.InternalNioOutputBuffer: void flushBuffer()>();
+        return;
+    }
+
+    public void sendAck() throws java.io.IOException
+    {
+        org.apache.coyote.http11.InternalNioOutputBuffer r0;
+        byte[] $r1, $r2;
+        boolean $z0;
+        org.apache.tomcat.util.net.NioChannel $r3, $r7;
+        org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler $r4, $r8;
+        java.nio.ByteBuffer $r5, $r9;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.http11.InternalNioOutputBuffer;
+        $z0 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: boolean committed>;
+        if $z0 != 0 goto label0;
+
+        $r3 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket>;
+        $r4 = virtualinvoke $r3.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler getBufHandler()>();
+        $r5 = interfaceinvoke $r4.<org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler: java.nio.ByteBuffer getWriteBuffer()>();
+        $r1 = <org.apache.coyote.http11.Constants: byte[] ACK_BYTES>;
+        $r2 = <org.apache.coyote.http11.Constants: byte[] ACK_BYTES>;
+        $i0 = lengthof $r2;
+        virtualinvoke $r5.<java.nio.ByteBuffer: java.nio.ByteBuffer put(byte[],int,int)>($r1, 0, $i0);
+        $r7 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket>;
+        $r8 = virtualinvoke $r7.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler getBufHandler()>();
+        $r9 = interfaceinvoke $r8.<org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler: java.nio.ByteBuffer getWriteBuffer()>();
+        specialinvoke r0.<org.apache.coyote.http11.InternalNioOutputBuffer: int writeToSocket(java.nio.ByteBuffer,boolean,boolean)>($r9, 1, 1);
+
+     label0:
+        return;
+    }
+
+    private synchronized int writeToSocket(java.nio.ByteBuffer, boolean, boolean) throws java.io.IOException
+    {
+        org.apache.coyote.http11.InternalNioOutputBuffer r0;
+        java.nio.ByteBuffer r1;
+        boolean z0, z1, z2, $z3;
+        org.apache.tomcat.util.net.NioEndpoint$KeyAttachment r2;
+        long l0;
+        java.nio.channels.Selector r3;
+        java.io.IOException r4, $r8, $r10;
+        org.apache.tomcat.util.net.NioChannel $r6, $r12, $r13;
+        java.lang.Object $r7;
+        org.apache.tomcat.util.net.NioSelectorPool $r9, $r11, $r16, $r17;
+        int i1;
+        java.lang.Throwable $r14, r15;
+
+        r0 := @this: org.apache.coyote.http11.InternalNioOutputBuffer;
+        r1 := @parameter0: java.nio.ByteBuffer;
+        z0 := @parameter1: boolean;
+        z1 := @parameter2: boolean;
+        if z1 == 0 goto label0;
+
+        virtualinvoke r1.<java.nio.ByteBuffer: java.nio.Buffer flip()>();
+
+     label0:
+        z2 = 0;
+        $r6 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket>;
+        $r7 = virtualinvoke $r6.<org.apache.tomcat.util.net.NioChannel: java.lang.Object getAttachment()>();
+        r2 = (org.apache.tomcat.util.net.NioEndpoint$KeyAttachment) $r7;
+        if r2 != null goto label1;
+
+        $r8 = new java.io.IOException;
+        specialinvoke $r8.<java.io.IOException: void <init>(java.lang.String)>("Key must be cancelled");
+        throw $r8;
+
+     label1:
+        l0 = virtualinvoke r2.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: long getWriteTimeout()>();
+        r3 = null;
+
+     label2:
+        $r9 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioSelectorPool pool>;
+        r3 = virtualinvoke $r9.<org.apache.tomcat.util.net.NioSelectorPool: java.nio.channels.Selector get()>();
+
+     label3:
+        goto label5;
+
+     label4:
+        $r10 := @caughtexception;
+        r4 = $r10;
+
+     label5:
+        $r11 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioSelectorPool pool>;
+        $r12 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket>;
+        i1 = virtualinvoke $r11.<org.apache.tomcat.util.net.NioSelectorPool: int write(java.nio.ByteBuffer,org.apache.tomcat.util.net.NioChannel,java.nio.channels.Selector,long,boolean)>(r1, $r12, r3, l0, z0);
+
+     label6:
+        $r13 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket>;
+        $z3 = virtualinvoke $r13.<org.apache.tomcat.util.net.NioChannel: boolean flush(boolean,java.nio.channels.Selector,long)>(1, r3, l0);
+        if $z3 == 0 goto label6;
+
+        goto label9;
+
+     label7:
+        $r14 := @caughtexception;
+        r15 = $r14;
+        if r3 == null goto label8;
+
+        $r16 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioSelectorPool pool>;
+        virtualinvoke $r16.<org.apache.tomcat.util.net.NioSelectorPool: void put(java.nio.channels.Selector)>(r3);
+
+     label8:
+        throw r15;
+
+     label9:
+        if r3 == null goto label10;
+
+        $r17 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioSelectorPool pool>;
+        virtualinvoke $r17.<org.apache.tomcat.util.net.NioSelectorPool: void put(java.nio.channels.Selector)>(r3);
+
+     label10:
+        if z0 == 0 goto label11;
+
+        virtualinvoke r1.<java.nio.ByteBuffer: java.nio.Buffer clear()>();
+
+     label11:
+        return i1;
+
+        catch java.io.IOException from label2 to label3 with label4;
+        catch java.lang.Throwable from label5 to label7 with label7;
+    }
+
+    public void init(org.apache.tomcat.util.net.SocketWrapper, org.apache.tomcat.util.net.AbstractEndpoint) throws java.io.IOException
+    {
+        org.apache.coyote.http11.InternalNioOutputBuffer r0;
+        org.apache.tomcat.util.net.SocketWrapper r1;
+        org.apache.tomcat.util.net.AbstractEndpoint r2;
+        java.lang.Object $r3;
+        org.apache.tomcat.util.net.NioChannel $r4;
+        org.apache.tomcat.util.net.NioEndpoint $r5;
+        org.apache.tomcat.util.net.NioSelectorPool $r6;
+
+        r0 := @this: org.apache.coyote.http11.InternalNioOutputBuffer;
+        r1 := @parameter0: org.apache.tomcat.util.net.SocketWrapper;
+        r2 := @parameter1: org.apache.tomcat.util.net.AbstractEndpoint;
+        $r3 = virtualinvoke r1.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r4 = (org.apache.tomcat.util.net.NioChannel) $r3;
+        r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket> = $r4;
+        $r5 = (org.apache.tomcat.util.net.NioEndpoint) r2;
+        $r6 = virtualinvoke $r5.<org.apache.tomcat.util.net.NioEndpoint: org.apache.tomcat.util.net.NioSelectorPool getSelectorPool()>();
+        r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioSelectorPool pool> = $r6;
+        return;
+    }
+
+    protected void commit() throws java.io.IOException
+    {
+        org.apache.coyote.http11.InternalNioOutputBuffer r0;
+        org.apache.coyote.Response $r1;
+        int $i0, $i1;
+        byte[] $r2;
+
+        r0 := @this: org.apache.coyote.http11.InternalNioOutputBuffer;
+        r0.<org.apache.coyote.http11.InternalNioOutputBuffer: boolean committed> = 1;
+        $r1 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.coyote.Response response>;
+        virtualinvoke $r1.<org.apache.coyote.Response: void setCommitted(boolean)>(1);
+        $i0 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: int pos>;
+        if $i0 <= 0 goto label0;
+
+        $r2 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: byte[] buf>;
+        $i1 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: int pos>;
+        specialinvoke r0.<org.apache.coyote.http11.InternalNioOutputBuffer: void addToBB(byte[],int,int)>($r2, 0, $i1);
+
+     label0:
+        return;
+    }
+
+    private synchronized void addToBB(byte[], int, int) throws java.io.IOException
+    {
+        org.apache.coyote.http11.InternalNioOutputBuffer r0;
+        byte[] r1;
+        int i0, i1, i2, $i3, $i4, $i5, $i6;
+        org.apache.tomcat.util.net.NioChannel $r2, $r5, $r8, $r11, $r14, $r17, $r21;
+        org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler $r3, $r6, $r9, $r12, $r15, $r18;
+        java.nio.ByteBuffer $r4, $r7, $r10, $r13, $r16, $r19;
+        java.lang.Object $r22;
+        org.apache.tomcat.util.net.NioEndpoint$KeyAttachment r23;
+
+        r0 := @this: org.apache.coyote.http11.InternalNioOutputBuffer;
+        r1 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        goto label4;
+
+     label0:
+        i2 = i1;
+        $r2 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket>;
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler getBufHandler()>();
+        $r4 = interfaceinvoke $r3.<org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler: java.nio.ByteBuffer getWriteBuffer()>();
+        $i3 = virtualinvoke $r4.<java.nio.ByteBuffer: int position()>();
+        $r5 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket>;
+        $r6 = virtualinvoke $r5.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler getBufHandler()>();
+        $r7 = interfaceinvoke $r6.<org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler: java.nio.ByteBuffer getWriteBuffer()>();
+        $i4 = virtualinvoke $r7.<java.nio.ByteBuffer: int capacity()>();
+        if $i3 == $i4 goto label1;
+
+        $r8 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket>;
+        $r9 = virtualinvoke $r8.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler getBufHandler()>();
+        $r10 = interfaceinvoke $r9.<org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler: java.nio.ByteBuffer getWriteBuffer()>();
+        $i5 = virtualinvoke $r10.<java.nio.ByteBuffer: int remaining()>();
+        if $i5 != 0 goto label2;
+
+     label1:
+        specialinvoke r0.<org.apache.coyote.http11.InternalNioOutputBuffer: void flushBuffer()>();
+
+     label2:
+        $r11 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket>;
+        $r12 = virtualinvoke $r11.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler getBufHandler()>();
+        $r13 = interfaceinvoke $r12.<org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler: java.nio.ByteBuffer getWriteBuffer()>();
+        $i6 = virtualinvoke $r13.<java.nio.ByteBuffer: int remaining()>();
+        if i2 <= $i6 goto label3;
+
+        $r14 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket>;
+        $r15 = virtualinvoke $r14.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler getBufHandler()>();
+        $r16 = interfaceinvoke $r15.<org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler: java.nio.ByteBuffer getWriteBuffer()>();
+        i2 = virtualinvoke $r16.<java.nio.ByteBuffer: int remaining()>();
+
+     label3:
+        $r17 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket>;
+        $r18 = virtualinvoke $r17.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler getBufHandler()>();
+        $r19 = interfaceinvoke $r18.<org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler: java.nio.ByteBuffer getWriteBuffer()>();
+        virtualinvoke $r19.<java.nio.ByteBuffer: java.nio.ByteBuffer put(byte[],int,int)>(r1, i0, i2);
+        i1 = i1 - i2;
+        i0 = i0 + i2;
+
+     label4:
+        if i1 > 0 goto label0;
+
+        $r21 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket>;
+        $r22 = virtualinvoke $r21.<org.apache.tomcat.util.net.NioChannel: java.lang.Object getAttachment()>();
+        r23 = (org.apache.tomcat.util.net.NioEndpoint$KeyAttachment) $r22;
+        if r23 == null goto label5;
+
+        virtualinvoke r23.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void access()>();
+
+     label5:
+        return;
+    }
+
+    private void flushBuffer() throws java.io.IOException
+    {
+        org.apache.coyote.http11.InternalNioOutputBuffer r0;
+        java.nio.channels.SelectionKey r1;
+        org.apache.tomcat.util.net.NioEndpoint$KeyAttachment r2;
+        org.apache.tomcat.util.net.NioChannel $r3, $r5, $r9, $r12, $r16;
+        java.nio.channels.SocketChannel $r4;
+        org.apache.tomcat.util.net.NioEndpoint$Poller $r6;
+        java.nio.channels.Selector $r7;
+        java.lang.Object $r8;
+        org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler $r10, $r13, $r17;
+        java.nio.ByteBuffer $r11, $r14, $r18;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.http11.InternalNioOutputBuffer;
+        $r3 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket>;
+        $r4 = virtualinvoke $r3.<org.apache.tomcat.util.net.NioChannel: java.nio.channels.SocketChannel getIOChannel()>();
+        $r5 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket>;
+        $r6 = virtualinvoke $r5.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.NioEndpoint$Poller getPoller()>();
+        $r7 = virtualinvoke $r6.<org.apache.tomcat.util.net.NioEndpoint$Poller: java.nio.channels.Selector getSelector()>();
+        r1 = virtualinvoke $r4.<java.nio.channels.SocketChannel: java.nio.channels.SelectionKey keyFor(java.nio.channels.Selector)>($r7);
+        if r1 == null goto label0;
+
+        $r8 = virtualinvoke r1.<java.nio.channels.SelectionKey: java.lang.Object attachment()>();
+        r2 = (org.apache.tomcat.util.net.NioEndpoint$KeyAttachment) $r8;
+        virtualinvoke r2.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void access()>();
+
+     label0:
+        $r9 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket>;
+        $r10 = virtualinvoke $r9.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler getBufHandler()>();
+        $r11 = interfaceinvoke $r10.<org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler: java.nio.ByteBuffer getWriteBuffer()>();
+        $i0 = virtualinvoke $r11.<java.nio.ByteBuffer: int position()>();
+        if $i0 <= 0 goto label1;
+
+        $r12 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket>;
+        $r13 = virtualinvoke $r12.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler getBufHandler()>();
+        $r14 = interfaceinvoke $r13.<org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler: java.nio.ByteBuffer getWriteBuffer()>();
+        virtualinvoke $r14.<java.nio.ByteBuffer: java.nio.Buffer flip()>();
+        $r16 = r0.<org.apache.coyote.http11.InternalNioOutputBuffer: org.apache.tomcat.util.net.NioChannel socket>;
+        $r17 = virtualinvoke $r16.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler getBufHandler()>();
+        $r18 = interfaceinvoke $r17.<org.apache.tomcat.util.net.SecureNioChannel$ApplicationBufferHandler: java.nio.ByteBuffer getWriteBuffer()>();
+        specialinvoke r0.<org.apache.coyote.http11.InternalNioOutputBuffer: int writeToSocket(java.nio.ByteBuffer,boolean,boolean)>($r18, 1, 0);
+
+     label1:
+        return;
+    }
+
+    static void access$0(org.apache.coyote.http11.InternalNioOutputBuffer, byte[], int, int) throws java.io.IOException
+    {
+        org.apache.coyote.http11.InternalNioOutputBuffer r0;
+        byte[] r1;
+        int i0, i1;
+
+        r0 := @parameter0: org.apache.coyote.http11.InternalNioOutputBuffer;
+        r1 := @parameter1: byte[];
+        i0 := @parameter2: int;
+        i1 := @parameter3: int;
+        specialinvoke r0.<org.apache.coyote.http11.InternalNioOutputBuffer: void addToBB(byte[],int,int)>(r1, i0, i1);
+        return;
+    }
+}

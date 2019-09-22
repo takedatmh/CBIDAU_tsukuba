@@ -1,0 +1,1463 @@
+public class sun.util.locale.LanguageTag extends java.lang.Object
+{
+    public static final java.lang.String SEP;
+    public static final java.lang.String PRIVATEUSE;
+    public static final java.lang.String UNDETERMINED;
+    public static final java.lang.String PRIVUSE_VARIANT_PREFIX;
+    private java.lang.String language;
+    private java.lang.String script;
+    private java.lang.String region;
+    private java.lang.String privateuse;
+    private java.util.List extlangs;
+    private java.util.List variants;
+    private java.util.List extensions;
+    private static final java.util.Map GRANDFATHERED;
+
+    private void <init>()
+    {
+        sun.util.locale.LanguageTag r0;
+        java.util.List $r1, $r2, $r3;
+
+        r0 := @this: sun.util.locale.LanguageTag;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.util.locale.LanguageTag: java.lang.String language> = "";
+        r0.<sun.util.locale.LanguageTag: java.lang.String script> = "";
+        r0.<sun.util.locale.LanguageTag: java.lang.String region> = "";
+        r0.<sun.util.locale.LanguageTag: java.lang.String privateuse> = "";
+        $r1 = staticinvoke <java.util.Collections: java.util.List emptyList()>();
+        r0.<sun.util.locale.LanguageTag: java.util.List extlangs> = $r1;
+        $r2 = staticinvoke <java.util.Collections: java.util.List emptyList()>();
+        r0.<sun.util.locale.LanguageTag: java.util.List variants> = $r2;
+        $r3 = staticinvoke <java.util.Collections: java.util.List emptyList()>();
+        r0.<sun.util.locale.LanguageTag: java.util.List extensions> = $r3;
+        return;
+    }
+
+    public static sun.util.locale.LanguageTag parse(java.lang.String, sun.util.locale.ParseStatus)
+    {
+        java.lang.String r0, r5, $r8, $r11, $r17;
+        sun.util.locale.ParseStatus r1, $r6;
+        java.lang.String[] r2;
+        sun.util.locale.StringTokenIterator r3, $r10, $r12;
+        sun.util.locale.LanguageTag r4, $r13;
+        java.util.Map $r7;
+        java.lang.Object $r9;
+        boolean $z0, $z7, $z8;
+        int $i0, $i1;
+        java.lang.StringBuilder $r14, $r15, $r16;
+
+        r0 := @parameter0: java.lang.String;
+        r1 := @parameter1: sun.util.locale.ParseStatus;
+        if r1 != null goto label0;
+
+        $r6 = new sun.util.locale.ParseStatus;
+        specialinvoke $r6.<sun.util.locale.ParseStatus: void <init>()>();
+        r1 = $r6;
+        goto label1;
+
+     label0:
+        virtualinvoke r1.<sun.util.locale.ParseStatus: void reset()>();
+
+     label1:
+        $r7 = <sun.util.locale.LanguageTag: java.util.Map GRANDFATHERED>;
+        $r8 = staticinvoke <sun.util.locale.LocaleUtils: java.lang.String toLowerString(java.lang.String)>(r0);
+        $r9 = interfaceinvoke $r7.<java.util.Map: java.lang.Object get(java.lang.Object)>($r8);
+        r2 = (java.lang.String[]) $r9;
+        if r2 == null goto label2;
+
+        $r10 = new sun.util.locale.StringTokenIterator;
+        $r11 = r2[1];
+        specialinvoke $r10.<sun.util.locale.StringTokenIterator: void <init>(java.lang.String,java.lang.String)>($r11, "-");
+        r3 = $r10;
+        goto label3;
+
+     label2:
+        $r12 = new sun.util.locale.StringTokenIterator;
+        specialinvoke $r12.<sun.util.locale.StringTokenIterator: void <init>(java.lang.String,java.lang.String)>(r0, "-");
+        r3 = $r12;
+
+     label3:
+        $r13 = new sun.util.locale.LanguageTag;
+        specialinvoke $r13.<sun.util.locale.LanguageTag: void <init>()>();
+        r4 = $r13;
+        $z0 = specialinvoke r4.<sun.util.locale.LanguageTag: boolean parseLanguage(sun.util.locale.StringTokenIterator,sun.util.locale.ParseStatus)>(r3, r1);
+        if $z0 == 0 goto label4;
+
+        specialinvoke r4.<sun.util.locale.LanguageTag: boolean parseExtlangs(sun.util.locale.StringTokenIterator,sun.util.locale.ParseStatus)>(r3, r1);
+        specialinvoke r4.<sun.util.locale.LanguageTag: boolean parseScript(sun.util.locale.StringTokenIterator,sun.util.locale.ParseStatus)>(r3, r1);
+        specialinvoke r4.<sun.util.locale.LanguageTag: boolean parseRegion(sun.util.locale.StringTokenIterator,sun.util.locale.ParseStatus)>(r3, r1);
+        specialinvoke r4.<sun.util.locale.LanguageTag: boolean parseVariants(sun.util.locale.StringTokenIterator,sun.util.locale.ParseStatus)>(r3, r1);
+        specialinvoke r4.<sun.util.locale.LanguageTag: boolean parseExtensions(sun.util.locale.StringTokenIterator,sun.util.locale.ParseStatus)>(r3, r1);
+
+     label4:
+        specialinvoke r4.<sun.util.locale.LanguageTag: boolean parsePrivateuse(sun.util.locale.StringTokenIterator,sun.util.locale.ParseStatus)>(r3, r1);
+        $z7 = virtualinvoke r3.<sun.util.locale.StringTokenIterator: boolean isDone()>();
+        if $z7 != 0 goto label6;
+
+        $z8 = virtualinvoke r1.<sun.util.locale.ParseStatus: boolean isError()>();
+        if $z8 != 0 goto label6;
+
+        r5 = virtualinvoke r3.<sun.util.locale.StringTokenIterator: java.lang.String current()>();
+        $i0 = virtualinvoke r3.<sun.util.locale.StringTokenIterator: int currentStart()>();
+        r1.<sun.util.locale.ParseStatus: int errorIndex> = $i0;
+        $i1 = virtualinvoke r5.<java.lang.String: int length()>();
+        if $i1 != 0 goto label5;
+
+        r1.<sun.util.locale.ParseStatus: java.lang.String errorMsg> = "Empty subtag";
+        goto label6;
+
+     label5:
+        $r14 = new java.lang.StringBuilder;
+        specialinvoke $r14.<java.lang.StringBuilder: void <init>()>();
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Invalid subtag: ");
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r5);
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.String toString()>();
+        r1.<sun.util.locale.ParseStatus: java.lang.String errorMsg> = $r17;
+
+     label6:
+        return r4;
+    }
+
+    private boolean parseLanguage(sun.util.locale.StringTokenIterator, sun.util.locale.ParseStatus)
+    {
+        sun.util.locale.LanguageTag r0;
+        sun.util.locale.StringTokenIterator r1;
+        sun.util.locale.ParseStatus r2;
+        boolean z0, $z1, $z2, $z3;
+        java.lang.String r3;
+        int $i0;
+
+        r0 := @this: sun.util.locale.LanguageTag;
+        r1 := @parameter0: sun.util.locale.StringTokenIterator;
+        r2 := @parameter1: sun.util.locale.ParseStatus;
+        $z1 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: boolean isDone()>();
+        if $z1 != 0 goto label0;
+
+        $z2 = virtualinvoke r2.<sun.util.locale.ParseStatus: boolean isError()>();
+        if $z2 == 0 goto label1;
+
+     label0:
+        return 0;
+
+     label1:
+        z0 = 0;
+        r3 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: java.lang.String current()>();
+        $z3 = staticinvoke <sun.util.locale.LanguageTag: boolean isLanguage(java.lang.String)>(r3);
+        if $z3 == 0 goto label2;
+
+        z0 = 1;
+        r0.<sun.util.locale.LanguageTag: java.lang.String language> = r3;
+        $i0 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: int currentEnd()>();
+        r2.<sun.util.locale.ParseStatus: int parseLength> = $i0;
+        virtualinvoke r1.<sun.util.locale.StringTokenIterator: java.lang.String next()>();
+
+     label2:
+        return z0;
+    }
+
+    private boolean parseExtlangs(sun.util.locale.StringTokenIterator, sun.util.locale.ParseStatus)
+    {
+        sun.util.locale.LanguageTag r0;
+        sun.util.locale.StringTokenIterator r1;
+        sun.util.locale.ParseStatus r2;
+        boolean z0, $z1, $z2, $z3, $z4, $z5;
+        java.lang.String r3;
+        java.util.ArrayList $r4;
+        java.util.List $r5, $r6, $r8;
+        int $i0, $i1;
+
+        r0 := @this: sun.util.locale.LanguageTag;
+        r1 := @parameter0: sun.util.locale.StringTokenIterator;
+        r2 := @parameter1: sun.util.locale.ParseStatus;
+        $z1 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: boolean isDone()>();
+        if $z1 != 0 goto label0;
+
+        $z2 = virtualinvoke r2.<sun.util.locale.ParseStatus: boolean isError()>();
+        if $z2 == 0 goto label1;
+
+     label0:
+        return 0;
+
+     label1:
+        z0 = 0;
+
+     label2:
+        $z3 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: boolean isDone()>();
+        if $z3 != 0 goto label6;
+
+        r3 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: java.lang.String current()>();
+        $z4 = staticinvoke <sun.util.locale.LanguageTag: boolean isExtlang(java.lang.String)>(r3);
+        if $z4 != 0 goto label3;
+
+        goto label6;
+
+     label3:
+        z0 = 1;
+        $r5 = r0.<sun.util.locale.LanguageTag: java.util.List extlangs>;
+        $z5 = interfaceinvoke $r5.<java.util.List: boolean isEmpty()>();
+        if $z5 == 0 goto label4;
+
+        $r4 = new java.util.ArrayList;
+        specialinvoke $r4.<java.util.ArrayList: void <init>(int)>(3);
+        r0.<sun.util.locale.LanguageTag: java.util.List extlangs> = $r4;
+
+     label4:
+        $r6 = r0.<sun.util.locale.LanguageTag: java.util.List extlangs>;
+        interfaceinvoke $r6.<java.util.List: boolean add(java.lang.Object)>(r3);
+        $i0 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: int currentEnd()>();
+        r2.<sun.util.locale.ParseStatus: int parseLength> = $i0;
+        virtualinvoke r1.<sun.util.locale.StringTokenIterator: java.lang.String next()>();
+        $r8 = r0.<sun.util.locale.LanguageTag: java.util.List extlangs>;
+        $i1 = interfaceinvoke $r8.<java.util.List: int size()>();
+        if $i1 != 3 goto label5;
+
+        goto label6;
+
+     label5:
+        goto label2;
+
+     label6:
+        return z0;
+    }
+
+    private boolean parseScript(sun.util.locale.StringTokenIterator, sun.util.locale.ParseStatus)
+    {
+        sun.util.locale.LanguageTag r0;
+        sun.util.locale.StringTokenIterator r1;
+        sun.util.locale.ParseStatus r2;
+        boolean z0, $z1, $z2, $z3;
+        java.lang.String r3;
+        int $i0;
+
+        r0 := @this: sun.util.locale.LanguageTag;
+        r1 := @parameter0: sun.util.locale.StringTokenIterator;
+        r2 := @parameter1: sun.util.locale.ParseStatus;
+        $z1 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: boolean isDone()>();
+        if $z1 != 0 goto label0;
+
+        $z2 = virtualinvoke r2.<sun.util.locale.ParseStatus: boolean isError()>();
+        if $z2 == 0 goto label1;
+
+     label0:
+        return 0;
+
+     label1:
+        z0 = 0;
+        r3 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: java.lang.String current()>();
+        $z3 = staticinvoke <sun.util.locale.LanguageTag: boolean isScript(java.lang.String)>(r3);
+        if $z3 == 0 goto label2;
+
+        z0 = 1;
+        r0.<sun.util.locale.LanguageTag: java.lang.String script> = r3;
+        $i0 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: int currentEnd()>();
+        r2.<sun.util.locale.ParseStatus: int parseLength> = $i0;
+        virtualinvoke r1.<sun.util.locale.StringTokenIterator: java.lang.String next()>();
+
+     label2:
+        return z0;
+    }
+
+    private boolean parseRegion(sun.util.locale.StringTokenIterator, sun.util.locale.ParseStatus)
+    {
+        sun.util.locale.LanguageTag r0;
+        sun.util.locale.StringTokenIterator r1;
+        sun.util.locale.ParseStatus r2;
+        boolean z0, $z1, $z2, $z3;
+        java.lang.String r3;
+        int $i0;
+
+        r0 := @this: sun.util.locale.LanguageTag;
+        r1 := @parameter0: sun.util.locale.StringTokenIterator;
+        r2 := @parameter1: sun.util.locale.ParseStatus;
+        $z1 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: boolean isDone()>();
+        if $z1 != 0 goto label0;
+
+        $z2 = virtualinvoke r2.<sun.util.locale.ParseStatus: boolean isError()>();
+        if $z2 == 0 goto label1;
+
+     label0:
+        return 0;
+
+     label1:
+        z0 = 0;
+        r3 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: java.lang.String current()>();
+        $z3 = staticinvoke <sun.util.locale.LanguageTag: boolean isRegion(java.lang.String)>(r3);
+        if $z3 == 0 goto label2;
+
+        z0 = 1;
+        r0.<sun.util.locale.LanguageTag: java.lang.String region> = r3;
+        $i0 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: int currentEnd()>();
+        r2.<sun.util.locale.ParseStatus: int parseLength> = $i0;
+        virtualinvoke r1.<sun.util.locale.StringTokenIterator: java.lang.String next()>();
+
+     label2:
+        return z0;
+    }
+
+    private boolean parseVariants(sun.util.locale.StringTokenIterator, sun.util.locale.ParseStatus)
+    {
+        sun.util.locale.LanguageTag r0;
+        sun.util.locale.StringTokenIterator r1;
+        sun.util.locale.ParseStatus r2;
+        boolean z0, $z1, $z2, $z3, $z4, $z5;
+        java.lang.String r3;
+        java.util.ArrayList $r4;
+        java.util.List $r5, $r6;
+        int $i0;
+
+        r0 := @this: sun.util.locale.LanguageTag;
+        r1 := @parameter0: sun.util.locale.StringTokenIterator;
+        r2 := @parameter1: sun.util.locale.ParseStatus;
+        $z1 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: boolean isDone()>();
+        if $z1 != 0 goto label0;
+
+        $z2 = virtualinvoke r2.<sun.util.locale.ParseStatus: boolean isError()>();
+        if $z2 == 0 goto label1;
+
+     label0:
+        return 0;
+
+     label1:
+        z0 = 0;
+
+     label2:
+        $z3 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: boolean isDone()>();
+        if $z3 != 0 goto label5;
+
+        r3 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: java.lang.String current()>();
+        $z4 = staticinvoke <sun.util.locale.LanguageTag: boolean isVariant(java.lang.String)>(r3);
+        if $z4 != 0 goto label3;
+
+        goto label5;
+
+     label3:
+        z0 = 1;
+        $r5 = r0.<sun.util.locale.LanguageTag: java.util.List variants>;
+        $z5 = interfaceinvoke $r5.<java.util.List: boolean isEmpty()>();
+        if $z5 == 0 goto label4;
+
+        $r4 = new java.util.ArrayList;
+        specialinvoke $r4.<java.util.ArrayList: void <init>(int)>(3);
+        r0.<sun.util.locale.LanguageTag: java.util.List variants> = $r4;
+
+     label4:
+        $r6 = r0.<sun.util.locale.LanguageTag: java.util.List variants>;
+        interfaceinvoke $r6.<java.util.List: boolean add(java.lang.Object)>(r3);
+        $i0 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: int currentEnd()>();
+        r2.<sun.util.locale.ParseStatus: int parseLength> = $i0;
+        virtualinvoke r1.<sun.util.locale.StringTokenIterator: java.lang.String next()>();
+        goto label2;
+
+     label5:
+        return z0;
+    }
+
+    private boolean parseExtensions(sun.util.locale.StringTokenIterator, sun.util.locale.ParseStatus)
+    {
+        sun.util.locale.LanguageTag r0;
+        sun.util.locale.StringTokenIterator r1;
+        sun.util.locale.ParseStatus r2;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+        java.lang.String r3, r4, r8, $r16, $r20;
+        int i0, $i1, $i2;
+        java.lang.StringBuilder r5, $r6, $r9, $r12, $r13, $r14, $r15;
+        java.util.List $r17, $r19;
+        java.util.ArrayList $r18;
+
+        r0 := @this: sun.util.locale.LanguageTag;
+        r1 := @parameter0: sun.util.locale.StringTokenIterator;
+        r2 := @parameter1: sun.util.locale.ParseStatus;
+        $z1 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: boolean isDone()>();
+        if $z1 != 0 goto label0;
+
+        $z2 = virtualinvoke r2.<sun.util.locale.ParseStatus: boolean isError()>();
+        if $z2 == 0 goto label1;
+
+     label0:
+        return 0;
+
+     label1:
+        z0 = 0;
+
+     label2:
+        $z3 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: boolean isDone()>();
+        if $z3 != 0 goto label7;
+
+        r3 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: java.lang.String current()>();
+        $z4 = staticinvoke <sun.util.locale.LanguageTag: boolean isExtensionSingleton(java.lang.String)>(r3);
+        if $z4 == 0 goto label7;
+
+        i0 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: int currentStart()>();
+        r4 = r3;
+        $r6 = new java.lang.StringBuilder;
+        specialinvoke $r6.<java.lang.StringBuilder: void <init>(java.lang.String)>(r4);
+        r5 = $r6;
+        virtualinvoke r1.<sun.util.locale.StringTokenIterator: java.lang.String next()>();
+
+     label3:
+        $z5 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: boolean isDone()>();
+        if $z5 != 0 goto label4;
+
+        r8 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: java.lang.String current()>();
+        $z6 = staticinvoke <sun.util.locale.LanguageTag: boolean isExtensionSubtag(java.lang.String)>(r8);
+        if $z6 == 0 goto label4;
+
+        $r9 = virtualinvoke r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("-");
+        virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r8);
+        $i1 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: int currentEnd()>();
+        r2.<sun.util.locale.ParseStatus: int parseLength> = $i1;
+        virtualinvoke r1.<sun.util.locale.StringTokenIterator: java.lang.String next()>();
+        goto label3;
+
+     label4:
+        $i2 = r2.<sun.util.locale.ParseStatus: int parseLength>;
+        if $i2 > i0 goto label5;
+
+        r2.<sun.util.locale.ParseStatus: int errorIndex> = i0;
+        $r12 = new java.lang.StringBuilder;
+        specialinvoke $r12.<java.lang.StringBuilder: void <init>()>();
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Incomplete extension \'");
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r4);
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+        r2.<sun.util.locale.ParseStatus: java.lang.String errorMsg> = $r16;
+        goto label7;
+
+     label5:
+        $r17 = r0.<sun.util.locale.LanguageTag: java.util.List extensions>;
+        $z7 = interfaceinvoke $r17.<java.util.List: boolean isEmpty()>();
+        if $z7 == 0 goto label6;
+
+        $r18 = new java.util.ArrayList;
+        specialinvoke $r18.<java.util.ArrayList: void <init>(int)>(4);
+        r0.<sun.util.locale.LanguageTag: java.util.List extensions> = $r18;
+
+     label6:
+        $r19 = r0.<sun.util.locale.LanguageTag: java.util.List extensions>;
+        $r20 = virtualinvoke r5.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r19.<java.util.List: boolean add(java.lang.Object)>($r20);
+        z0 = 1;
+        goto label2;
+
+     label7:
+        return z0;
+    }
+
+    private boolean parsePrivateuse(sun.util.locale.StringTokenIterator, sun.util.locale.ParseStatus)
+    {
+        sun.util.locale.LanguageTag r0;
+        sun.util.locale.StringTokenIterator r1;
+        sun.util.locale.ParseStatus r2;
+        boolean z0, $z1, $z2, $z3, $z4, $z5;
+        java.lang.String r3, r7, $r11;
+        int i0, $i1, $i2;
+        java.lang.StringBuilder r4, $r5, $r8;
+
+        r0 := @this: sun.util.locale.LanguageTag;
+        r1 := @parameter0: sun.util.locale.StringTokenIterator;
+        r2 := @parameter1: sun.util.locale.ParseStatus;
+        $z1 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: boolean isDone()>();
+        if $z1 != 0 goto label0;
+
+        $z2 = virtualinvoke r2.<sun.util.locale.ParseStatus: boolean isError()>();
+        if $z2 == 0 goto label1;
+
+     label0:
+        return 0;
+
+     label1:
+        z0 = 0;
+        r3 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: java.lang.String current()>();
+        $z3 = staticinvoke <sun.util.locale.LanguageTag: boolean isPrivateusePrefix(java.lang.String)>(r3);
+        if $z3 == 0 goto label6;
+
+        i0 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: int currentStart()>();
+        $r5 = new java.lang.StringBuilder;
+        specialinvoke $r5.<java.lang.StringBuilder: void <init>(java.lang.String)>(r3);
+        r4 = $r5;
+        virtualinvoke r1.<sun.util.locale.StringTokenIterator: java.lang.String next()>();
+
+     label2:
+        $z4 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: boolean isDone()>();
+        if $z4 != 0 goto label4;
+
+        r7 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: java.lang.String current()>();
+        $z5 = staticinvoke <sun.util.locale.LanguageTag: boolean isPrivateuseSubtag(java.lang.String)>(r7);
+        if $z5 != 0 goto label3;
+
+        goto label4;
+
+     label3:
+        $r8 = virtualinvoke r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("-");
+        virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r7);
+        $i1 = virtualinvoke r1.<sun.util.locale.StringTokenIterator: int currentEnd()>();
+        r2.<sun.util.locale.ParseStatus: int parseLength> = $i1;
+        virtualinvoke r1.<sun.util.locale.StringTokenIterator: java.lang.String next()>();
+        goto label2;
+
+     label4:
+        $i2 = r2.<sun.util.locale.ParseStatus: int parseLength>;
+        if $i2 > i0 goto label5;
+
+        r2.<sun.util.locale.ParseStatus: int errorIndex> = i0;
+        r2.<sun.util.locale.ParseStatus: java.lang.String errorMsg> = "Incomplete privateuse";
+        goto label6;
+
+     label5:
+        $r11 = virtualinvoke r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        r0.<sun.util.locale.LanguageTag: java.lang.String privateuse> = $r11;
+        z0 = 1;
+
+     label6:
+        return z0;
+    }
+
+    public static sun.util.locale.LanguageTag parseLocale(sun.util.locale.BaseLocale, sun.util.locale.LocaleExtensions)
+    {
+        sun.util.locale.BaseLocale r0;
+        sun.util.locale.LocaleExtensions r1;
+        sun.util.locale.LanguageTag $r2, r3;
+        java.lang.String r4, r5, r6, r7, r8, r11, r12, $r15, $r16, $r17, $r18, r28, $r34, $r37, $r39, $r48, $r50;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z13, $z14, $z15, $z16, $z17;
+        java.util.ArrayList r9, $r20, r27, $r32;
+        sun.util.locale.StringTokenIterator r10, $r19;
+        java.lang.Character r13;
+        sun.util.locale.Extension r14;
+        int $i0, $i1, $i2, $i4;
+        java.lang.StringBuilder $r22, r23, $r33, $r35, $r36, $r38, $r40, $r41, $r42, $r43, $r44, $r45, $r46, $r47, $r49;
+        java.util.Set r29;
+        java.util.Iterator r30;
+        java.lang.Object $r31;
+        char $c3;
+
+        r0 := @parameter0: sun.util.locale.BaseLocale;
+        r1 := @parameter1: sun.util.locale.LocaleExtensions;
+        $r2 = new sun.util.locale.LanguageTag;
+        specialinvoke $r2.<sun.util.locale.LanguageTag: void <init>()>();
+        r3 = $r2;
+        r4 = virtualinvoke r0.<sun.util.locale.BaseLocale: java.lang.String getLanguage()>();
+        r5 = virtualinvoke r0.<sun.util.locale.BaseLocale: java.lang.String getScript()>();
+        r6 = virtualinvoke r0.<sun.util.locale.BaseLocale: java.lang.String getRegion()>();
+        r7 = virtualinvoke r0.<sun.util.locale.BaseLocale: java.lang.String getVariant()>();
+        z0 = 0;
+        r8 = null;
+        $z1 = staticinvoke <sun.util.locale.LanguageTag: boolean isLanguage(java.lang.String)>(r4);
+        if $z1 == 0 goto label3;
+
+        $z2 = virtualinvoke r4.<java.lang.String: boolean equals(java.lang.Object)>("iw");
+        if $z2 == 0 goto label0;
+
+        r4 = "he";
+        goto label2;
+
+     label0:
+        $z3 = virtualinvoke r4.<java.lang.String: boolean equals(java.lang.Object)>("ji");
+        if $z3 == 0 goto label1;
+
+        r4 = "yi";
+        goto label2;
+
+     label1:
+        $z4 = virtualinvoke r4.<java.lang.String: boolean equals(java.lang.Object)>("in");
+        if $z4 == 0 goto label2;
+
+        r4 = "id";
+
+     label2:
+        r3.<sun.util.locale.LanguageTag: java.lang.String language> = r4;
+
+     label3:
+        $z5 = staticinvoke <sun.util.locale.LanguageTag: boolean isScript(java.lang.String)>(r5);
+        if $z5 == 0 goto label4;
+
+        $r15 = staticinvoke <sun.util.locale.LanguageTag: java.lang.String canonicalizeScript(java.lang.String)>(r5);
+        r3.<sun.util.locale.LanguageTag: java.lang.String script> = $r15;
+        z0 = 1;
+
+     label4:
+        $z6 = staticinvoke <sun.util.locale.LanguageTag: boolean isRegion(java.lang.String)>(r6);
+        if $z6 == 0 goto label5;
+
+        $r16 = staticinvoke <sun.util.locale.LanguageTag: java.lang.String canonicalizeRegion(java.lang.String)>(r6);
+        r3.<sun.util.locale.LanguageTag: java.lang.String region> = $r16;
+        z0 = 1;
+
+     label5:
+        $r17 = r3.<sun.util.locale.LanguageTag: java.lang.String language>;
+        $z7 = virtualinvoke $r17.<java.lang.String: boolean equals(java.lang.Object)>("no");
+        if $z7 == 0 goto label6;
+
+        $r18 = r3.<sun.util.locale.LanguageTag: java.lang.String region>;
+        $z8 = virtualinvoke $r18.<java.lang.String: boolean equals(java.lang.Object)>("NO");
+        if $z8 == 0 goto label6;
+
+        $z9 = virtualinvoke r7.<java.lang.String: boolean equals(java.lang.Object)>("NY");
+        if $z9 == 0 goto label6;
+
+        r3.<sun.util.locale.LanguageTag: java.lang.String language> = "nn";
+        r7 = "";
+
+     label6:
+        $i0 = virtualinvoke r7.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label16;
+
+        r9 = null;
+        $r19 = new sun.util.locale.StringTokenIterator;
+        specialinvoke $r19.<sun.util.locale.StringTokenIterator: void <init>(java.lang.String,java.lang.String)>(r7, "_");
+        r10 = $r19;
+
+     label7:
+        $z10 = virtualinvoke r10.<sun.util.locale.StringTokenIterator: boolean isDone()>();
+        if $z10 != 0 goto label10;
+
+        r11 = virtualinvoke r10.<sun.util.locale.StringTokenIterator: java.lang.String current()>();
+        $z11 = staticinvoke <sun.util.locale.LanguageTag: boolean isVariant(java.lang.String)>(r11);
+        if $z11 != 0 goto label8;
+
+        goto label10;
+
+     label8:
+        if r9 != null goto label9;
+
+        $r20 = new java.util.ArrayList;
+        specialinvoke $r20.<java.util.ArrayList: void <init>()>();
+        r9 = $r20;
+
+     label9:
+        interfaceinvoke r9.<java.util.List: boolean add(java.lang.Object)>(r11);
+        virtualinvoke r10.<sun.util.locale.StringTokenIterator: java.lang.String next()>();
+        goto label7;
+
+     label10:
+        if r9 == null goto label11;
+
+        r3.<sun.util.locale.LanguageTag: java.util.List variants> = r9;
+        z0 = 1;
+
+     label11:
+        $z13 = virtualinvoke r10.<sun.util.locale.StringTokenIterator: boolean isDone()>();
+        if $z13 != 0 goto label16;
+
+        $r22 = new java.lang.StringBuilder;
+        specialinvoke $r22.<java.lang.StringBuilder: void <init>()>();
+        r23 = $r22;
+
+     label12:
+        $z14 = virtualinvoke r10.<sun.util.locale.StringTokenIterator: boolean isDone()>();
+        if $z14 != 0 goto label15;
+
+        r12 = virtualinvoke r10.<sun.util.locale.StringTokenIterator: java.lang.String current()>();
+        $z15 = staticinvoke <sun.util.locale.LanguageTag: boolean isPrivateuseSubtag(java.lang.String)>(r12);
+        if $z15 != 0 goto label13;
+
+        goto label15;
+
+     label13:
+        $i1 = virtualinvoke r23.<java.lang.StringBuilder: int length()>();
+        if $i1 <= 0 goto label14;
+
+        virtualinvoke r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("-");
+
+     label14:
+        virtualinvoke r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r12);
+        virtualinvoke r10.<sun.util.locale.StringTokenIterator: java.lang.String next()>();
+        goto label12;
+
+     label15:
+        $i2 = virtualinvoke r23.<java.lang.StringBuilder: int length()>();
+        if $i2 <= 0 goto label16;
+
+        r8 = virtualinvoke r23.<java.lang.StringBuilder: java.lang.String toString()>();
+
+     label16:
+        r27 = null;
+        r28 = null;
+        if r1 == null goto label21;
+
+        r29 = virtualinvoke r1.<sun.util.locale.LocaleExtensions: java.util.Set getKeys()>();
+        r30 = interfaceinvoke r29.<java.util.Set: java.util.Iterator iterator()>();
+
+     label17:
+        $z16 = interfaceinvoke r30.<java.util.Iterator: boolean hasNext()>();
+        if $z16 == 0 goto label21;
+
+        $r31 = interfaceinvoke r30.<java.util.Iterator: java.lang.Object next()>();
+        r13 = (java.lang.Character) $r31;
+        r14 = virtualinvoke r1.<sun.util.locale.LocaleExtensions: sun.util.locale.Extension getExtension(java.lang.Character)>(r13);
+        $c3 = virtualinvoke r13.<java.lang.Character: char charValue()>();
+        $z17 = staticinvoke <sun.util.locale.LanguageTag: boolean isPrivateusePrefixChar(char)>($c3);
+        if $z17 == 0 goto label18;
+
+        r28 = virtualinvoke r14.<sun.util.locale.Extension: java.lang.String getValue()>();
+        goto label20;
+
+     label18:
+        if r27 != null goto label19;
+
+        $r32 = new java.util.ArrayList;
+        specialinvoke $r32.<java.util.ArrayList: void <init>()>();
+        r27 = $r32;
+
+     label19:
+        $r33 = new java.lang.StringBuilder;
+        specialinvoke $r33.<java.lang.StringBuilder: void <init>()>();
+        $r34 = virtualinvoke r13.<java.lang.Character: java.lang.String toString()>();
+        $r35 = virtualinvoke $r33.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r34);
+        $r36 = virtualinvoke $r35.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("-");
+        $r37 = virtualinvoke r14.<sun.util.locale.Extension: java.lang.String getValue()>();
+        $r38 = virtualinvoke $r36.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r37);
+        $r39 = virtualinvoke $r38.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke r27.<java.util.List: boolean add(java.lang.Object)>($r39);
+
+     label20:
+        goto label17;
+
+     label21:
+        if r27 == null goto label22;
+
+        r3.<sun.util.locale.LanguageTag: java.util.List extensions> = r27;
+        z0 = 1;
+
+     label22:
+        if r8 == null goto label24;
+
+        if r28 != null goto label23;
+
+        $r40 = new java.lang.StringBuilder;
+        specialinvoke $r40.<java.lang.StringBuilder: void <init>()>();
+        $r41 = virtualinvoke $r40.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("lvariant-");
+        $r42 = virtualinvoke $r41.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r8);
+        r28 = virtualinvoke $r42.<java.lang.StringBuilder: java.lang.String toString()>();
+        goto label24;
+
+     label23:
+        $r43 = new java.lang.StringBuilder;
+        specialinvoke $r43.<java.lang.StringBuilder: void <init>()>();
+        $r44 = virtualinvoke $r43.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r28);
+        $r45 = virtualinvoke $r44.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("-");
+        $r46 = virtualinvoke $r45.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("lvariant");
+        $r47 = virtualinvoke $r46.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("-");
+        $r48 = virtualinvoke r8.<java.lang.String: java.lang.String replace(java.lang.CharSequence,java.lang.CharSequence)>("_", "-");
+        $r49 = virtualinvoke $r47.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r48);
+        r28 = virtualinvoke $r49.<java.lang.StringBuilder: java.lang.String toString()>();
+
+     label24:
+        if r28 == null goto label25;
+
+        r3.<sun.util.locale.LanguageTag: java.lang.String privateuse> = r28;
+
+     label25:
+        $r50 = r3.<sun.util.locale.LanguageTag: java.lang.String language>;
+        $i4 = virtualinvoke $r50.<java.lang.String: int length()>();
+        if $i4 != 0 goto label27;
+
+        if z0 != 0 goto label26;
+
+        if r28 != null goto label27;
+
+     label26:
+        r3.<sun.util.locale.LanguageTag: java.lang.String language> = "und";
+
+     label27:
+        return r3;
+    }
+
+    public java.lang.String getLanguage()
+    {
+        sun.util.locale.LanguageTag r0;
+        java.lang.String $r1;
+
+        r0 := @this: sun.util.locale.LanguageTag;
+        $r1 = r0.<sun.util.locale.LanguageTag: java.lang.String language>;
+        return $r1;
+    }
+
+    public java.util.List getExtlangs()
+    {
+        sun.util.locale.LanguageTag r0;
+        java.util.List $r1, $r2, $r3, $r4;
+        boolean $z0;
+
+        r0 := @this: sun.util.locale.LanguageTag;
+        $r1 = r0.<sun.util.locale.LanguageTag: java.util.List extlangs>;
+        $z0 = interfaceinvoke $r1.<java.util.List: boolean isEmpty()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = staticinvoke <java.util.Collections: java.util.List emptyList()>();
+        return $r2;
+
+     label0:
+        $r3 = r0.<sun.util.locale.LanguageTag: java.util.List extlangs>;
+        $r4 = staticinvoke <java.util.Collections: java.util.List unmodifiableList(java.util.List)>($r3);
+        return $r4;
+    }
+
+    public java.lang.String getScript()
+    {
+        sun.util.locale.LanguageTag r0;
+        java.lang.String $r1;
+
+        r0 := @this: sun.util.locale.LanguageTag;
+        $r1 = r0.<sun.util.locale.LanguageTag: java.lang.String script>;
+        return $r1;
+    }
+
+    public java.lang.String getRegion()
+    {
+        sun.util.locale.LanguageTag r0;
+        java.lang.String $r1;
+
+        r0 := @this: sun.util.locale.LanguageTag;
+        $r1 = r0.<sun.util.locale.LanguageTag: java.lang.String region>;
+        return $r1;
+    }
+
+    public java.util.List getVariants()
+    {
+        sun.util.locale.LanguageTag r0;
+        java.util.List $r1, $r2, $r3, $r4;
+        boolean $z0;
+
+        r0 := @this: sun.util.locale.LanguageTag;
+        $r1 = r0.<sun.util.locale.LanguageTag: java.util.List variants>;
+        $z0 = interfaceinvoke $r1.<java.util.List: boolean isEmpty()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = staticinvoke <java.util.Collections: java.util.List emptyList()>();
+        return $r2;
+
+     label0:
+        $r3 = r0.<sun.util.locale.LanguageTag: java.util.List variants>;
+        $r4 = staticinvoke <java.util.Collections: java.util.List unmodifiableList(java.util.List)>($r3);
+        return $r4;
+    }
+
+    public java.util.List getExtensions()
+    {
+        sun.util.locale.LanguageTag r0;
+        java.util.List $r1, $r2, $r3, $r4;
+        boolean $z0;
+
+        r0 := @this: sun.util.locale.LanguageTag;
+        $r1 = r0.<sun.util.locale.LanguageTag: java.util.List extensions>;
+        $z0 = interfaceinvoke $r1.<java.util.List: boolean isEmpty()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = staticinvoke <java.util.Collections: java.util.List emptyList()>();
+        return $r2;
+
+     label0:
+        $r3 = r0.<sun.util.locale.LanguageTag: java.util.List extensions>;
+        $r4 = staticinvoke <java.util.Collections: java.util.List unmodifiableList(java.util.List)>($r3);
+        return $r4;
+    }
+
+    public java.lang.String getPrivateuse()
+    {
+        sun.util.locale.LanguageTag r0;
+        java.lang.String $r1;
+
+        r0 := @this: sun.util.locale.LanguageTag;
+        $r1 = r0.<sun.util.locale.LanguageTag: java.lang.String privateuse>;
+        return $r1;
+    }
+
+    public static boolean isLanguage(java.lang.String)
+    {
+        java.lang.String r0;
+        int i0;
+        boolean $z0, $z1;
+
+        r0 := @parameter0: java.lang.String;
+        i0 = virtualinvoke r0.<java.lang.String: int length()>();
+        if i0 < 2 goto label0;
+
+        if i0 > 8 goto label0;
+
+        $z0 = staticinvoke <sun.util.locale.LocaleUtils: boolean isAlphaString(java.lang.String)>(r0);
+        if $z0 == 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        return $z1;
+    }
+
+    public static boolean isExtlang(java.lang.String)
+    {
+        java.lang.String r0;
+        int $i0;
+        boolean $z0, $z1;
+
+        r0 := @parameter0: java.lang.String;
+        $i0 = virtualinvoke r0.<java.lang.String: int length()>();
+        if $i0 != 3 goto label0;
+
+        $z0 = staticinvoke <sun.util.locale.LocaleUtils: boolean isAlphaString(java.lang.String)>(r0);
+        if $z0 == 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        return $z1;
+    }
+
+    public static boolean isScript(java.lang.String)
+    {
+        java.lang.String r0;
+        int $i0;
+        boolean $z0, $z1;
+
+        r0 := @parameter0: java.lang.String;
+        $i0 = virtualinvoke r0.<java.lang.String: int length()>();
+        if $i0 != 4 goto label0;
+
+        $z0 = staticinvoke <sun.util.locale.LocaleUtils: boolean isAlphaString(java.lang.String)>(r0);
+        if $z0 == 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        return $z1;
+    }
+
+    public static boolean isRegion(java.lang.String)
+    {
+        java.lang.String r0;
+        int $i0, $i1;
+        boolean $z0, $z1, $z2;
+
+        r0 := @parameter0: java.lang.String;
+        $i0 = virtualinvoke r0.<java.lang.String: int length()>();
+        if $i0 != 2 goto label0;
+
+        $z0 = staticinvoke <sun.util.locale.LocaleUtils: boolean isAlphaString(java.lang.String)>(r0);
+        if $z0 != 0 goto label1;
+
+     label0:
+        $i1 = virtualinvoke r0.<java.lang.String: int length()>();
+        if $i1 != 3 goto label2;
+
+        $z1 = staticinvoke <sun.util.locale.LocaleUtils: boolean isNumericString(java.lang.String)>(r0);
+        if $z1 == 0 goto label2;
+
+     label1:
+        $z2 = 1;
+        goto label3;
+
+     label2:
+        $z2 = 0;
+
+     label3:
+        return $z2;
+    }
+
+    public static boolean isVariant(java.lang.String)
+    {
+        java.lang.String r0;
+        int i0;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5;
+        char $c1, $c2, $c3, $c4;
+
+        r0 := @parameter0: java.lang.String;
+        i0 = virtualinvoke r0.<java.lang.String: int length()>();
+        if i0 < 5 goto label0;
+
+        if i0 > 8 goto label0;
+
+        $z0 = staticinvoke <sun.util.locale.LocaleUtils: boolean isAlphaNumericString(java.lang.String)>(r0);
+        return $z0;
+
+     label0:
+        if i0 != 4 goto label3;
+
+        $c1 = virtualinvoke r0.<java.lang.String: char charAt(int)>(0);
+        $z1 = staticinvoke <sun.util.locale.LocaleUtils: boolean isNumeric(char)>($c1);
+        if $z1 == 0 goto label1;
+
+        $c2 = virtualinvoke r0.<java.lang.String: char charAt(int)>(1);
+        $z2 = staticinvoke <sun.util.locale.LocaleUtils: boolean isAlphaNumeric(char)>($c2);
+        if $z2 == 0 goto label1;
+
+        $c3 = virtualinvoke r0.<java.lang.String: char charAt(int)>(2);
+        $z3 = staticinvoke <sun.util.locale.LocaleUtils: boolean isAlphaNumeric(char)>($c3);
+        if $z3 == 0 goto label1;
+
+        $c4 = virtualinvoke r0.<java.lang.String: char charAt(int)>(3);
+        $z4 = staticinvoke <sun.util.locale.LocaleUtils: boolean isAlphaNumeric(char)>($c4);
+        if $z4 == 0 goto label1;
+
+        $z5 = 1;
+        goto label2;
+
+     label1:
+        $z5 = 0;
+
+     label2:
+        return $z5;
+
+     label3:
+        return 0;
+    }
+
+    public static boolean isExtensionSingleton(java.lang.String)
+    {
+        java.lang.String r0;
+        int $i0;
+        boolean $z0, $z1, $z2;
+
+        r0 := @parameter0: java.lang.String;
+        $i0 = virtualinvoke r0.<java.lang.String: int length()>();
+        if $i0 != 1 goto label0;
+
+        $z0 = staticinvoke <sun.util.locale.LocaleUtils: boolean isAlphaString(java.lang.String)>(r0);
+        if $z0 == 0 goto label0;
+
+        $z1 = staticinvoke <sun.util.locale.LocaleUtils: boolean caseIgnoreMatch(java.lang.String,java.lang.String)>("x", r0);
+        if $z1 != 0 goto label0;
+
+        $z2 = 1;
+        goto label1;
+
+     label0:
+        $z2 = 0;
+
+     label1:
+        return $z2;
+    }
+
+    public static boolean isExtensionSingletonChar(char)
+    {
+        char c0;
+        java.lang.String $r0;
+        boolean $z0;
+
+        c0 := @parameter0: char;
+        $r0 = staticinvoke <java.lang.String: java.lang.String valueOf(char)>(c0);
+        $z0 = staticinvoke <sun.util.locale.LanguageTag: boolean isExtensionSingleton(java.lang.String)>($r0);
+        return $z0;
+    }
+
+    public static boolean isExtensionSubtag(java.lang.String)
+    {
+        java.lang.String r0;
+        int i0;
+        boolean $z0, $z1;
+
+        r0 := @parameter0: java.lang.String;
+        i0 = virtualinvoke r0.<java.lang.String: int length()>();
+        if i0 < 2 goto label0;
+
+        if i0 > 8 goto label0;
+
+        $z0 = staticinvoke <sun.util.locale.LocaleUtils: boolean isAlphaNumericString(java.lang.String)>(r0);
+        if $z0 == 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        return $z1;
+    }
+
+    public static boolean isPrivateusePrefix(java.lang.String)
+    {
+        java.lang.String r0;
+        int $i0;
+        boolean $z0, $z1;
+
+        r0 := @parameter0: java.lang.String;
+        $i0 = virtualinvoke r0.<java.lang.String: int length()>();
+        if $i0 != 1 goto label0;
+
+        $z0 = staticinvoke <sun.util.locale.LocaleUtils: boolean caseIgnoreMatch(java.lang.String,java.lang.String)>("x", r0);
+        if $z0 == 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        return $z1;
+    }
+
+    public static boolean isPrivateusePrefixChar(char)
+    {
+        char c0;
+        java.lang.String $r0;
+        boolean $z0;
+
+        c0 := @parameter0: char;
+        $r0 = staticinvoke <java.lang.String: java.lang.String valueOf(char)>(c0);
+        $z0 = staticinvoke <sun.util.locale.LocaleUtils: boolean caseIgnoreMatch(java.lang.String,java.lang.String)>("x", $r0);
+        return $z0;
+    }
+
+    public static boolean isPrivateuseSubtag(java.lang.String)
+    {
+        java.lang.String r0;
+        int i0;
+        boolean $z0, $z1;
+
+        r0 := @parameter0: java.lang.String;
+        i0 = virtualinvoke r0.<java.lang.String: int length()>();
+        if i0 < 1 goto label0;
+
+        if i0 > 8 goto label0;
+
+        $z0 = staticinvoke <sun.util.locale.LocaleUtils: boolean isAlphaNumericString(java.lang.String)>(r0);
+        if $z0 == 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        return $z1;
+    }
+
+    public static java.lang.String canonicalizeLanguage(java.lang.String)
+    {
+        java.lang.String r0, $r1;
+
+        r0 := @parameter0: java.lang.String;
+        $r1 = staticinvoke <sun.util.locale.LocaleUtils: java.lang.String toLowerString(java.lang.String)>(r0);
+        return $r1;
+    }
+
+    public static java.lang.String canonicalizeExtlang(java.lang.String)
+    {
+        java.lang.String r0, $r1;
+
+        r0 := @parameter0: java.lang.String;
+        $r1 = staticinvoke <sun.util.locale.LocaleUtils: java.lang.String toLowerString(java.lang.String)>(r0);
+        return $r1;
+    }
+
+    public static java.lang.String canonicalizeScript(java.lang.String)
+    {
+        java.lang.String r0, $r1;
+
+        r0 := @parameter0: java.lang.String;
+        $r1 = staticinvoke <sun.util.locale.LocaleUtils: java.lang.String toTitleString(java.lang.String)>(r0);
+        return $r1;
+    }
+
+    public static java.lang.String canonicalizeRegion(java.lang.String)
+    {
+        java.lang.String r0, $r1;
+
+        r0 := @parameter0: java.lang.String;
+        $r1 = staticinvoke <sun.util.locale.LocaleUtils: java.lang.String toUpperString(java.lang.String)>(r0);
+        return $r1;
+    }
+
+    public static java.lang.String canonicalizeVariant(java.lang.String)
+    {
+        java.lang.String r0, $r1;
+
+        r0 := @parameter0: java.lang.String;
+        $r1 = staticinvoke <sun.util.locale.LocaleUtils: java.lang.String toLowerString(java.lang.String)>(r0);
+        return $r1;
+    }
+
+    public static java.lang.String canonicalizeExtension(java.lang.String)
+    {
+        java.lang.String r0, $r1;
+
+        r0 := @parameter0: java.lang.String;
+        $r1 = staticinvoke <sun.util.locale.LocaleUtils: java.lang.String toLowerString(java.lang.String)>(r0);
+        return $r1;
+    }
+
+    public static java.lang.String canonicalizeExtensionSingleton(java.lang.String)
+    {
+        java.lang.String r0, $r1;
+
+        r0 := @parameter0: java.lang.String;
+        $r1 = staticinvoke <sun.util.locale.LocaleUtils: java.lang.String toLowerString(java.lang.String)>(r0);
+        return $r1;
+    }
+
+    public static java.lang.String canonicalizeExtensionSubtag(java.lang.String)
+    {
+        java.lang.String r0, $r1;
+
+        r0 := @parameter0: java.lang.String;
+        $r1 = staticinvoke <sun.util.locale.LocaleUtils: java.lang.String toLowerString(java.lang.String)>(r0);
+        return $r1;
+    }
+
+    public static java.lang.String canonicalizePrivateuse(java.lang.String)
+    {
+        java.lang.String r0, $r1;
+
+        r0 := @parameter0: java.lang.String;
+        $r1 = staticinvoke <sun.util.locale.LocaleUtils: java.lang.String toLowerString(java.lang.String)>(r0);
+        return $r1;
+    }
+
+    public static java.lang.String canonicalizePrivateuseSubtag(java.lang.String)
+    {
+        java.lang.String r0, $r1;
+
+        r0 := @parameter0: java.lang.String;
+        $r1 = staticinvoke <sun.util.locale.LocaleUtils: java.lang.String toLowerString(java.lang.String)>(r0);
+        return $r1;
+    }
+
+    public java.lang.String toString()
+    {
+        sun.util.locale.LanguageTag r0;
+        java.lang.StringBuilder $r1, r2, $r10, $r13, $r17, $r24, $r30;
+        java.util.Iterator r3, r21, r27;
+        java.lang.String r4, $r5, $r6, $r12, $r14, $r16, $r18, r23, r29, $r32, $r34, $r36;
+        int $i0, $i1, $i2, $i3, $i4;
+        java.util.List $r8, $r20, $r26;
+        boolean $z0, $z1, $z2;
+        java.lang.Object $r9, $r22, $r28;
+
+        r0 := @this: sun.util.locale.LanguageTag;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        r2 = $r1;
+        $r5 = r0.<sun.util.locale.LanguageTag: java.lang.String language>;
+        $i0 = virtualinvoke $r5.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label7;
+
+        $r6 = r0.<sun.util.locale.LanguageTag: java.lang.String language>;
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+        $r8 = r0.<sun.util.locale.LanguageTag: java.util.List extlangs>;
+        r3 = interfaceinvoke $r8.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r9 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+        r4 = (java.lang.String) $r9;
+        $r10 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("-");
+        virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r4);
+        goto label0;
+
+     label1:
+        $r12 = r0.<sun.util.locale.LanguageTag: java.lang.String script>;
+        $i1 = virtualinvoke $r12.<java.lang.String: int length()>();
+        if $i1 <= 0 goto label2;
+
+        $r13 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("-");
+        $r14 = r0.<sun.util.locale.LanguageTag: java.lang.String script>;
+        virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r14);
+
+     label2:
+        $r16 = r0.<sun.util.locale.LanguageTag: java.lang.String region>;
+        $i2 = virtualinvoke $r16.<java.lang.String: int length()>();
+        if $i2 <= 0 goto label3;
+
+        $r17 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("-");
+        $r18 = r0.<sun.util.locale.LanguageTag: java.lang.String region>;
+        virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r18);
+
+     label3:
+        $r20 = r0.<sun.util.locale.LanguageTag: java.util.List variants>;
+        r21 = interfaceinvoke $r20.<java.util.List: java.util.Iterator iterator()>();
+
+     label4:
+        $z1 = interfaceinvoke r21.<java.util.Iterator: boolean hasNext()>();
+        if $z1 == 0 goto label5;
+
+        $r22 = interfaceinvoke r21.<java.util.Iterator: java.lang.Object next()>();
+        r23 = (java.lang.String) $r22;
+        $r24 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("-");
+        virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r23);
+        goto label4;
+
+     label5:
+        $r26 = r0.<sun.util.locale.LanguageTag: java.util.List extensions>;
+        r27 = interfaceinvoke $r26.<java.util.List: java.util.Iterator iterator()>();
+
+     label6:
+        $z2 = interfaceinvoke r27.<java.util.Iterator: boolean hasNext()>();
+        if $z2 == 0 goto label7;
+
+        $r28 = interfaceinvoke r27.<java.util.Iterator: java.lang.Object next()>();
+        r29 = (java.lang.String) $r28;
+        $r30 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("-");
+        virtualinvoke $r30.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r29);
+        goto label6;
+
+     label7:
+        $r32 = r0.<sun.util.locale.LanguageTag: java.lang.String privateuse>;
+        $i3 = virtualinvoke $r32.<java.lang.String: int length()>();
+        if $i3 <= 0 goto label9;
+
+        $i4 = virtualinvoke r2.<java.lang.StringBuilder: int length()>();
+        if $i4 <= 0 goto label8;
+
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("-");
+
+     label8:
+        $r34 = r0.<sun.util.locale.LanguageTag: java.lang.String privateuse>;
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r34);
+
+     label9:
+        $r36 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r36;
+    }
+
+    static void <clinit>()
+    {
+        java.util.HashMap $r0;
+        java.lang.String[][] r1, r2, $r4;
+        int i0, i1;
+        java.lang.String[] r3, $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25, $r26, $r27, $r28, $r29, $r30;
+        java.util.Map $r31;
+        java.lang.String $r32, $r33;
+
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        <sun.util.locale.LanguageTag: java.util.Map GRANDFATHERED> = $r0;
+        $r4 = newarray (java.lang.String[])[26];
+        $r5 = newarray (java.lang.String)[2];
+        $r5[0] = "art-lojban";
+        $r5[1] = "jbo";
+        $r4[0] = $r5;
+        $r6 = newarray (java.lang.String)[2];
+        $r6[0] = "cel-gaulish";
+        $r6[1] = "xtg-x-cel-gaulish";
+        $r4[1] = $r6;
+        $r7 = newarray (java.lang.String)[2];
+        $r7[0] = "en-GB-oed";
+        $r7[1] = "en-GB-x-oed";
+        $r4[2] = $r7;
+        $r8 = newarray (java.lang.String)[2];
+        $r8[0] = "i-ami";
+        $r8[1] = "ami";
+        $r4[3] = $r8;
+        $r9 = newarray (java.lang.String)[2];
+        $r9[0] = "i-bnn";
+        $r9[1] = "bnn";
+        $r4[4] = $r9;
+        $r10 = newarray (java.lang.String)[2];
+        $r10[0] = "i-default";
+        $r10[1] = "en-x-i-default";
+        $r4[5] = $r10;
+        $r11 = newarray (java.lang.String)[2];
+        $r11[0] = "i-enochian";
+        $r11[1] = "und-x-i-enochian";
+        $r4[6] = $r11;
+        $r12 = newarray (java.lang.String)[2];
+        $r12[0] = "i-hak";
+        $r12[1] = "hak";
+        $r4[7] = $r12;
+        $r13 = newarray (java.lang.String)[2];
+        $r13[0] = "i-klingon";
+        $r13[1] = "tlh";
+        $r4[8] = $r13;
+        $r14 = newarray (java.lang.String)[2];
+        $r14[0] = "i-lux";
+        $r14[1] = "lb";
+        $r4[9] = $r14;
+        $r15 = newarray (java.lang.String)[2];
+        $r15[0] = "i-mingo";
+        $r15[1] = "see-x-i-mingo";
+        $r4[10] = $r15;
+        $r16 = newarray (java.lang.String)[2];
+        $r16[0] = "i-navajo";
+        $r16[1] = "nv";
+        $r4[11] = $r16;
+        $r17 = newarray (java.lang.String)[2];
+        $r17[0] = "i-pwn";
+        $r17[1] = "pwn";
+        $r4[12] = $r17;
+        $r18 = newarray (java.lang.String)[2];
+        $r18[0] = "i-tao";
+        $r18[1] = "tao";
+        $r4[13] = $r18;
+        $r19 = newarray (java.lang.String)[2];
+        $r19[0] = "i-tay";
+        $r19[1] = "tay";
+        $r4[14] = $r19;
+        $r20 = newarray (java.lang.String)[2];
+        $r20[0] = "i-tsu";
+        $r20[1] = "tsu";
+        $r4[15] = $r20;
+        $r21 = newarray (java.lang.String)[2];
+        $r21[0] = "no-bok";
+        $r21[1] = "nb";
+        $r4[16] = $r21;
+        $r22 = newarray (java.lang.String)[2];
+        $r22[0] = "no-nyn";
+        $r22[1] = "nn";
+        $r4[17] = $r22;
+        $r23 = newarray (java.lang.String)[2];
+        $r23[0] = "sgn-BE-FR";
+        $r23[1] = "sfb";
+        $r4[18] = $r23;
+        $r24 = newarray (java.lang.String)[2];
+        $r24[0] = "sgn-BE-NL";
+        $r24[1] = "vgt";
+        $r4[19] = $r24;
+        $r25 = newarray (java.lang.String)[2];
+        $r25[0] = "sgn-CH-DE";
+        $r25[1] = "sgg";
+        $r4[20] = $r25;
+        $r26 = newarray (java.lang.String)[2];
+        $r26[0] = "zh-guoyu";
+        $r26[1] = "cmn";
+        $r4[21] = $r26;
+        $r27 = newarray (java.lang.String)[2];
+        $r27[0] = "zh-hakka";
+        $r27[1] = "hak";
+        $r4[22] = $r27;
+        $r28 = newarray (java.lang.String)[2];
+        $r28[0] = "zh-min";
+        $r28[1] = "nan-x-zh-min";
+        $r4[23] = $r28;
+        $r29 = newarray (java.lang.String)[2];
+        $r29[0] = "zh-min-nan";
+        $r29[1] = "nan";
+        $r4[24] = $r29;
+        $r30 = newarray (java.lang.String)[2];
+        $r30[0] = "zh-xiang";
+        $r30[1] = "hsn";
+        $r4[25] = $r30;
+        r1 = $r4;
+        r2 = r1;
+        i0 = lengthof r2;
+        i1 = 0;
+
+     label0:
+        if i1 >= i0 goto label1;
+
+        r3 = r2[i1];
+        $r31 = <sun.util.locale.LanguageTag: java.util.Map GRANDFATHERED>;
+        $r32 = r3[0];
+        $r33 = staticinvoke <sun.util.locale.LocaleUtils: java.lang.String toLowerString(java.lang.String)>($r32);
+        interfaceinvoke $r31.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r33, r3);
+        i1 = i1 + 1;
+        goto label0;
+
+     label1:
+        return;
+    }
+}

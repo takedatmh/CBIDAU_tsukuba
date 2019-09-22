@@ -1,0 +1,609 @@
+public final class org.apache.catalina.core.ApplicationFilterConfig extends java.lang.Object implements javax.servlet.FilterConfig, java.io.Serializable
+{
+    private static final long serialVersionUID;
+    static final org.apache.tomcat.util.res.StringManager sm;
+    private final org.apache.juli.logging.Log log;
+    private static final java.util.List emptyString;
+    private transient org.apache.catalina.Context context;
+    private transient javax.servlet.Filter filter;
+    private final org.apache.catalina.deploy.FilterDef filterDef;
+    private transient org.apache.tomcat.InstanceManager instanceManager;
+    private javax.management.ObjectName oname;
+
+    static void <clinit>()
+    {
+        org.apache.tomcat.util.res.StringManager $r0;
+        java.util.List $r1;
+
+        $r0 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String)>("org.apache.catalina.core");
+        <org.apache.catalina.core.ApplicationFilterConfig: org.apache.tomcat.util.res.StringManager sm> = $r0;
+        $r1 = staticinvoke <java.util.Collections: java.util.List emptyList()>();
+        <org.apache.catalina.core.ApplicationFilterConfig: java.util.List emptyString> = $r1;
+        return;
+    }
+
+    void <init>(org.apache.catalina.Context, org.apache.catalina.deploy.FilterDef) throws java.lang.ClassCastException, java.lang.ClassNotFoundException, java.lang.IllegalAccessException, java.lang.InstantiationException, javax.servlet.ServletException, java.lang.reflect.InvocationTargetException, javax.naming.NamingException, java.lang.IllegalArgumentException, java.lang.NoSuchMethodException, java.lang.SecurityException
+    {
+        org.apache.catalina.core.ApplicationFilterConfig r0;
+        org.apache.catalina.Context r1;
+        org.apache.catalina.deploy.FilterDef r2;
+        org.apache.juli.logging.Log $r3;
+        javax.servlet.Filter $r4, $r6, $r8;
+        org.apache.tomcat.InstanceManager $r7;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterConfig;
+        r1 := @parameter0: org.apache.catalina.Context;
+        r2 := @parameter1: org.apache.catalina.deploy.FilterDef;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r3 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/catalina/core/ApplicationFilterConfig");
+        r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.juli.logging.Log log> = $r3;
+        r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.Context context> = null;
+        r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.Filter filter> = null;
+        r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.Context context> = r1;
+        r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.deploy.FilterDef filterDef> = r2;
+        $r4 = virtualinvoke r2.<org.apache.catalina.deploy.FilterDef: javax.servlet.Filter getFilter()>();
+        if $r4 != null goto label0;
+
+        virtualinvoke r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.Filter getFilter()>();
+        goto label1;
+
+     label0:
+        $r6 = virtualinvoke r2.<org.apache.catalina.deploy.FilterDef: javax.servlet.Filter getFilter()>();
+        r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.Filter filter> = $r6;
+        $r7 = specialinvoke r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.tomcat.InstanceManager getInstanceManager()>();
+        $r8 = r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.Filter filter>;
+        interfaceinvoke $r7.<org.apache.tomcat.InstanceManager: void newInstance(java.lang.Object)>($r8);
+        specialinvoke r0.<org.apache.catalina.core.ApplicationFilterConfig: void initFilter()>();
+
+     label1:
+        return;
+    }
+
+    public java.lang.String getFilterName()
+    {
+        org.apache.catalina.core.ApplicationFilterConfig r0;
+        org.apache.catalina.deploy.FilterDef $r1;
+        java.lang.String $r2;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterConfig;
+        $r1 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.deploy.FilterDef filterDef>;
+        $r2 = virtualinvoke $r1.<org.apache.catalina.deploy.FilterDef: java.lang.String getFilterName()>();
+        return $r2;
+    }
+
+    public java.lang.String getFilterClass()
+    {
+        org.apache.catalina.core.ApplicationFilterConfig r0;
+        org.apache.catalina.deploy.FilterDef $r1;
+        java.lang.String $r2;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterConfig;
+        $r1 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.deploy.FilterDef filterDef>;
+        $r2 = virtualinvoke $r1.<org.apache.catalina.deploy.FilterDef: java.lang.String getFilterClass()>();
+        return $r2;
+    }
+
+    public java.lang.String getInitParameter(java.lang.String)
+    {
+        org.apache.catalina.core.ApplicationFilterConfig r0;
+        java.lang.String r1, $r5;
+        java.util.Map r2;
+        org.apache.catalina.deploy.FilterDef $r3;
+        java.lang.Object $r4;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterConfig;
+        r1 := @parameter0: java.lang.String;
+        $r3 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.deploy.FilterDef filterDef>;
+        r2 = virtualinvoke $r3.<org.apache.catalina.deploy.FilterDef: java.util.Map getParameterMap()>();
+        if r2 != null goto label0;
+
+        return null;
+
+     label0:
+        $r4 = interfaceinvoke r2.<java.util.Map: java.lang.Object get(java.lang.Object)>(r1);
+        $r5 = (java.lang.String) $r4;
+        return $r5;
+    }
+
+    public java.util.Enumeration getInitParameterNames()
+    {
+        org.apache.catalina.core.ApplicationFilterConfig r0;
+        java.util.Map r1;
+        org.apache.catalina.deploy.FilterDef $r2;
+        java.util.List $r3;
+        java.util.Enumeration $r4, $r6;
+        java.util.Set $r5;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterConfig;
+        $r2 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.deploy.FilterDef filterDef>;
+        r1 = virtualinvoke $r2.<org.apache.catalina.deploy.FilterDef: java.util.Map getParameterMap()>();
+        if r1 != null goto label0;
+
+        $r3 = <org.apache.catalina.core.ApplicationFilterConfig: java.util.List emptyString>;
+        $r4 = staticinvoke <java.util.Collections: java.util.Enumeration enumeration(java.util.Collection)>($r3);
+        return $r4;
+
+     label0:
+        $r5 = interfaceinvoke r1.<java.util.Map: java.util.Set keySet()>();
+        $r6 = staticinvoke <java.util.Collections: java.util.Enumeration enumeration(java.util.Collection)>($r5);
+        return $r6;
+    }
+
+    public javax.servlet.ServletContext getServletContext()
+    {
+        org.apache.catalina.core.ApplicationFilterConfig r0;
+        org.apache.catalina.Context $r1;
+        javax.servlet.ServletContext $r2;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterConfig;
+        $r1 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.Context context>;
+        $r2 = interfaceinvoke $r1.<org.apache.catalina.Context: javax.servlet.ServletContext getServletContext()>();
+        return $r2;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.catalina.core.ApplicationFilterConfig r0;
+        java.lang.StringBuilder $r1, r2;
+        org.apache.catalina.deploy.FilterDef $r4, $r8;
+        java.lang.String $r5, $r9, $r12;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterConfig;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>(java.lang.String)>("ApplicationFilterConfig[");
+        r2 = $r1;
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("name=");
+        $r4 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.deploy.FilterDef filterDef>;
+        $r5 = virtualinvoke $r4.<org.apache.catalina.deploy.FilterDef: java.lang.String getFilterName()>();
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r5);
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", filterClass=");
+        $r8 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.deploy.FilterDef filterDef>;
+        $r9 = virtualinvoke $r8.<org.apache.catalina.deploy.FilterDef: java.lang.String getFilterClass()>();
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r9);
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+        $r12 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r12;
+    }
+
+    public java.util.Map getFilterInitParameterMap()
+    {
+        org.apache.catalina.core.ApplicationFilterConfig r0;
+        org.apache.catalina.deploy.FilterDef $r1;
+        java.util.Map $r2, $r3;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterConfig;
+        $r1 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.deploy.FilterDef filterDef>;
+        $r2 = virtualinvoke $r1.<org.apache.catalina.deploy.FilterDef: java.util.Map getParameterMap()>();
+        $r3 = staticinvoke <java.util.Collections: java.util.Map unmodifiableMap(java.util.Map)>($r2);
+        return $r3;
+    }
+
+    javax.servlet.Filter getFilter() throws java.lang.ClassCastException, java.lang.ClassNotFoundException, java.lang.IllegalAccessException, java.lang.InstantiationException, javax.servlet.ServletException, java.lang.reflect.InvocationTargetException, javax.naming.NamingException, java.lang.IllegalArgumentException, java.lang.NoSuchMethodException, java.lang.SecurityException
+    {
+        org.apache.catalina.core.ApplicationFilterConfig r0;
+        java.lang.String r1;
+        javax.servlet.Filter $r2, $r3, $r7, $r8;
+        org.apache.catalina.deploy.FilterDef $r4;
+        org.apache.tomcat.InstanceManager $r5;
+        java.lang.Object $r6;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterConfig;
+        $r2 = r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.Filter filter>;
+        if $r2 == null goto label0;
+
+        $r3 = r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.Filter filter>;
+        return $r3;
+
+     label0:
+        $r4 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.deploy.FilterDef filterDef>;
+        r1 = virtualinvoke $r4.<org.apache.catalina.deploy.FilterDef: java.lang.String getFilterClass()>();
+        $r5 = specialinvoke r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.tomcat.InstanceManager getInstanceManager()>();
+        $r6 = interfaceinvoke $r5.<org.apache.tomcat.InstanceManager: java.lang.Object newInstance(java.lang.String)>(r1);
+        $r7 = (javax.servlet.Filter) $r6;
+        r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.Filter filter> = $r7;
+        specialinvoke r0.<org.apache.catalina.core.ApplicationFilterConfig: void initFilter()>();
+        $r8 = r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.Filter filter>;
+        return $r8;
+    }
+
+    private void initFilter() throws javax.servlet.ServletException
+    {
+        org.apache.catalina.core.ApplicationFilterConfig r0;
+        java.lang.Throwable r1, $r6;
+        java.lang.String r2, r8;
+        org.apache.catalina.Context $r3, $r4;
+        boolean $z0, $z1;
+        javax.servlet.Filter $r5, $r10;
+        int $i0, $i1;
+        javax.servlet.ServletContext $r7, $r9;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterConfig;
+        $r3 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.Context context>;
+        $z0 = $r3 instanceof org.apache.catalina.core.StandardContext;
+        if $z0 == 0 goto label4;
+
+        $r4 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.Context context>;
+        $z1 = interfaceinvoke $r4.<org.apache.catalina.Context: boolean getSwallowOutput()>();
+        if $z1 == 0 goto label4;
+
+     label0:
+        staticinvoke <org.apache.tomcat.util.log.SystemLogHandler: void startCapture()>();
+        $r5 = r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.Filter filter>;
+        interfaceinvoke $r5.<javax.servlet.Filter: void init(javax.servlet.FilterConfig)>(r0);
+        goto label3;
+
+     label1:
+        $r6 := @caughtexception;
+        r1 = $r6;
+        r2 = staticinvoke <org.apache.tomcat.util.log.SystemLogHandler: java.lang.String stopCapture()>();
+        if r2 == null goto label2;
+
+        $i0 = virtualinvoke r2.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label2;
+
+        $r7 = virtualinvoke r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.ServletContext getServletContext()>();
+        interfaceinvoke $r7.<javax.servlet.ServletContext: void log(java.lang.String)>(r2);
+
+     label2:
+        throw r1;
+
+     label3:
+        r8 = staticinvoke <org.apache.tomcat.util.log.SystemLogHandler: java.lang.String stopCapture()>();
+        if r8 == null goto label5;
+
+        $i1 = virtualinvoke r8.<java.lang.String: int length()>();
+        if $i1 <= 0 goto label5;
+
+        $r9 = virtualinvoke r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.ServletContext getServletContext()>();
+        interfaceinvoke $r9.<javax.servlet.ServletContext: void log(java.lang.String)>(r8);
+        goto label5;
+
+     label4:
+        $r10 = r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.Filter filter>;
+        interfaceinvoke $r10.<javax.servlet.Filter: void init(javax.servlet.FilterConfig)>(r0);
+
+     label5:
+        specialinvoke r0.<org.apache.catalina.core.ApplicationFilterConfig: void registerJMX()>();
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label1;
+    }
+
+    org.apache.catalina.deploy.FilterDef getFilterDef()
+    {
+        org.apache.catalina.core.ApplicationFilterConfig r0;
+        org.apache.catalina.deploy.FilterDef $r1;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterConfig;
+        $r1 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.deploy.FilterDef filterDef>;
+        return $r1;
+    }
+
+    void release()
+    {
+        org.apache.catalina.core.ApplicationFilterConfig r0;
+        java.lang.Throwable r1, r2, $r5, $r9, r10;
+        javax.servlet.Filter $r3, $r4, $r6, $r7, $r8, $r24;
+        boolean $z0, $z1;
+        org.apache.catalina.Context $r11, $r20, $r21, $r27;
+        org.apache.juli.logging.Log $r12, $r28;
+        org.apache.tomcat.util.res.StringManager $r13, $r29;
+        java.lang.Object[] $r14, $r30;
+        org.apache.catalina.deploy.FilterDef $r15, $r17, $r31, $r33;
+        java.lang.String $r16, $r18, $r19, $r32, $r34, $r35;
+        org.apache.catalina.core.StandardContext $r22;
+        org.apache.tomcat.InstanceManager $r23;
+        java.lang.Exception $r25, r26;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterConfig;
+        specialinvoke r0.<org.apache.catalina.core.ApplicationFilterConfig: void unregisterJMX()>();
+        $r3 = r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.Filter filter>;
+        if $r3 == null goto label11;
+
+     label0:
+        $z0 = <org.apache.catalina.Globals: boolean IS_SECURITY_ENABLED>;
+        if $z0 == 0 goto label4;
+
+     label1:
+        $r4 = r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.Filter filter>;
+        staticinvoke <org.apache.catalina.security.SecurityUtil: void doAsPrivilege(java.lang.String,javax.servlet.Filter)>("destroy", $r4);
+        goto label3;
+
+     label2:
+        $r5 := @caughtexception;
+        r1 = $r5;
+        $r6 = r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.Filter filter>;
+        staticinvoke <org.apache.catalina.security.SecurityUtil: void remove(java.lang.Object)>($r6);
+        throw r1;
+
+     label3:
+        $r7 = r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.Filter filter>;
+        staticinvoke <org.apache.catalina.security.SecurityUtil: void remove(java.lang.Object)>($r7);
+        goto label7;
+
+     label4:
+        $r8 = r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.Filter filter>;
+        interfaceinvoke $r8.<javax.servlet.Filter: void destroy()>();
+
+     label5:
+        goto label7;
+
+     label6:
+        $r9 := @caughtexception;
+        r10 = $r9;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r10);
+        $r11 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.Context context>;
+        $r12 = interfaceinvoke $r11.<org.apache.catalina.Context: org.apache.juli.logging.Log getLogger()>();
+        $r13 = <org.apache.catalina.core.ApplicationFilterConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r14 = newarray (java.lang.Object)[2];
+        $r15 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.deploy.FilterDef filterDef>;
+        $r16 = virtualinvoke $r15.<org.apache.catalina.deploy.FilterDef: java.lang.String getFilterName()>();
+        $r14[0] = $r16;
+        $r17 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.deploy.FilterDef filterDef>;
+        $r18 = virtualinvoke $r17.<org.apache.catalina.deploy.FilterDef: java.lang.String getFilterClass()>();
+        $r14[1] = $r18;
+        $r19 = virtualinvoke $r13.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("applicationFilterConfig.release", $r14);
+        interfaceinvoke $r12.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r19, r10);
+
+     label7:
+        $r20 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.Context context>;
+        $z1 = interfaceinvoke $r20.<org.apache.catalina.Context: boolean getIgnoreAnnotations()>();
+        if $z1 != 0 goto label11;
+
+     label8:
+        $r21 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.Context context>;
+        $r22 = (org.apache.catalina.core.StandardContext) $r21;
+        $r23 = virtualinvoke $r22.<org.apache.catalina.core.StandardContext: org.apache.tomcat.InstanceManager getInstanceManager()>();
+        $r24 = r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.Filter filter>;
+        interfaceinvoke $r23.<org.apache.tomcat.InstanceManager: void destroyInstance(java.lang.Object)>($r24);
+
+     label9:
+        goto label11;
+
+     label10:
+        $r25 := @caughtexception;
+        r26 = $r25;
+        r2 = staticinvoke <org.apache.tomcat.util.ExceptionUtils: java.lang.Throwable unwrapInvocationTargetException(java.lang.Throwable)>(r26);
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r2);
+        $r27 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.Context context>;
+        $r28 = interfaceinvoke $r27.<org.apache.catalina.Context: org.apache.juli.logging.Log getLogger()>();
+        $r29 = <org.apache.catalina.core.ApplicationFilterConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r30 = newarray (java.lang.Object)[2];
+        $r31 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.deploy.FilterDef filterDef>;
+        $r32 = virtualinvoke $r31.<org.apache.catalina.deploy.FilterDef: java.lang.String getFilterName()>();
+        $r30[0] = $r32;
+        $r33 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.deploy.FilterDef filterDef>;
+        $r34 = virtualinvoke $r33.<org.apache.catalina.deploy.FilterDef: java.lang.String getFilterClass()>();
+        $r30[1] = $r34;
+        $r35 = virtualinvoke $r29.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("applicationFilterConfig.preDestroy", $r30);
+        interfaceinvoke $r28.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r35, r2);
+
+     label11:
+        r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.Filter filter> = null;
+        return;
+
+        catch java.lang.Throwable from label1 to label2 with label2;
+        catch java.lang.Throwable from label0 to label5 with label6;
+        catch java.lang.Exception from label8 to label9 with label10;
+    }
+
+    private org.apache.tomcat.InstanceManager getInstanceManager()
+    {
+        org.apache.catalina.core.ApplicationFilterConfig r0;
+        java.util.HashMap $r1;
+        org.apache.tomcat.InstanceManager $r2, $r6, $r11;
+        org.apache.catalina.Context $r3, $r4, $r8;
+        boolean $z0;
+        org.apache.catalina.core.StandardContext $r5;
+        org.apache.catalina.core.DefaultInstanceManager $r7;
+        java.lang.Class $r9;
+        java.lang.ClassLoader $r10;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterConfig;
+        $r2 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.tomcat.InstanceManager instanceManager>;
+        if $r2 != null goto label1;
+
+        $r3 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.Context context>;
+        $z0 = $r3 instanceof org.apache.catalina.core.StandardContext;
+        if $z0 == 0 goto label0;
+
+        $r4 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.Context context>;
+        $r5 = (org.apache.catalina.core.StandardContext) $r4;
+        $r6 = virtualinvoke $r5.<org.apache.catalina.core.StandardContext: org.apache.tomcat.InstanceManager getInstanceManager()>();
+        r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.tomcat.InstanceManager instanceManager> = $r6;
+        goto label1;
+
+     label0:
+        $r7 = new org.apache.catalina.core.DefaultInstanceManager;
+        $r1 = new java.util.HashMap;
+        specialinvoke $r1.<java.util.HashMap: void <init>()>();
+        $r8 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.Context context>;
+        $r9 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+        $r10 = virtualinvoke $r9.<java.lang.Class: java.lang.ClassLoader getClassLoader()>();
+        specialinvoke $r7.<org.apache.catalina.core.DefaultInstanceManager: void <init>(javax.naming.Context,java.util.Map,org.apache.catalina.Context,java.lang.ClassLoader)>(null, $r1, $r8, $r10);
+        r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.tomcat.InstanceManager instanceManager> = $r7;
+
+     label1:
+        $r11 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.tomcat.InstanceManager instanceManager>;
+        return $r11;
+    }
+
+    private void registerJMX()
+    {
+        org.apache.catalina.core.ApplicationFilterConfig r0;
+        java.lang.String r1, r2, r3, r4, r5, $r12, r13, $r24, $r30, $r33, r35, $r37, $r50, $r51, $r52;
+        null_type n0;
+        org.apache.catalina.core.StandardContext r6;
+        org.apache.catalina.Context $r7, $r10, $r14, $r21, $r22;
+        boolean $z0, $z1, $z2;
+        java.lang.StringBuilder $r8, $r9, $r17, $r18, $r19, $r23, $r25, $r26, $r27, $r28, $r29, $r31, $r32, $r34, $r36, $r38, $r39, $r40, $r41;
+        org.apache.catalina.Container $r11, $r15, $r16;
+        org.apache.catalina.deploy.FilterDef $r20;
+        javax.management.ObjectName $r42, $r44;
+        org.apache.tomcat.util.modeler.Registry $r43;
+        java.lang.Exception $r45, r46;
+        org.apache.juli.logging.Log $r47;
+        org.apache.tomcat.util.res.StringManager $r48;
+        java.lang.Object[] $r49;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterConfig;
+        $r7 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.Context context>;
+        r1 = interfaceinvoke $r7.<org.apache.catalina.Context: java.lang.String getName()>();
+        $z0 = virtualinvoke r1.<java.lang.String: boolean startsWith(java.lang.String)>("/");
+        if $z0 != 0 goto label0;
+
+        $r8 = new java.lang.StringBuilder;
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>(java.lang.String)>("/");
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        r1 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+
+     label0:
+        $r10 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.Context context>;
+        $r11 = interfaceinvoke $r10.<org.apache.catalina.Context: org.apache.catalina.Container getParent()>();
+        r2 = interfaceinvoke $r11.<org.apache.catalina.Container: java.lang.String getName()>();
+        if r2 != null goto label1;
+
+        $r12 = "DEFAULT";
+        goto label2;
+
+     label1:
+        $r12 = r2;
+
+     label2:
+        r13 = $r12;
+        $r14 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.Context context>;
+        $r15 = interfaceinvoke $r14.<org.apache.catalina.Context: org.apache.catalina.Container getParent()>();
+        $r16 = interfaceinvoke $r15.<org.apache.catalina.Container: org.apache.catalina.Container getParent()>();
+        r3 = interfaceinvoke $r16.<org.apache.catalina.Container: java.lang.String getName()>();
+        $r17 = new java.lang.StringBuilder;
+        specialinvoke $r17.<java.lang.StringBuilder: void <init>(java.lang.String)>("//");
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r13);
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        r4 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.String toString()>();
+        n0 = null;
+        $r20 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.deploy.FilterDef filterDef>;
+        r5 = virtualinvoke $r20.<org.apache.catalina.deploy.FilterDef: java.lang.String getFilterName()>();
+        $z1 = staticinvoke <org.apache.tomcat.util.modeler.Util: boolean objectNameValueNeedsQuote(java.lang.String)>(r5);
+        if $z1 == 0 goto label3;
+
+        r5 = staticinvoke <javax.management.ObjectName: java.lang.String quote(java.lang.String)>(r5);
+
+     label3:
+        $r21 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.Context context>;
+        $z2 = $r21 instanceof org.apache.catalina.core.StandardContext;
+        if $z2 == 0 goto label4;
+
+        $r22 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.Context context>;
+        r6 = (org.apache.catalina.core.StandardContext) $r22;
+        $r23 = new java.lang.StringBuilder;
+        $r24 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r3);
+        specialinvoke $r23.<java.lang.StringBuilder: void <init>(java.lang.String)>($r24);
+        $r25 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(":j2eeType=Filter,name=");
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r5);
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(",WebModule=");
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r4);
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(",J2EEApplication=");
+        $r30 = virtualinvoke r6.<org.apache.catalina.core.StandardContext: java.lang.String getJ2EEApplication()>();
+        $r31 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r30);
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(",J2EEServer=");
+        $r33 = virtualinvoke r6.<org.apache.catalina.core.StandardContext: java.lang.String getJ2EEServer()>();
+        $r34 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r33);
+        r35 = virtualinvoke $r34.<java.lang.StringBuilder: java.lang.String toString()>();
+        goto label5;
+
+     label4:
+        $r36 = new java.lang.StringBuilder;
+        $r37 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r3);
+        specialinvoke $r36.<java.lang.StringBuilder: void <init>(java.lang.String)>($r37);
+        $r38 = virtualinvoke $r36.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(":j2eeType=Filter,name=");
+        $r39 = virtualinvoke $r38.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r5);
+        $r40 = virtualinvoke $r39.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(",WebModule=");
+        $r41 = virtualinvoke $r40.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r4);
+        r35 = virtualinvoke $r41.<java.lang.StringBuilder: java.lang.String toString()>();
+
+     label5:
+        $r42 = new javax.management.ObjectName;
+        specialinvoke $r42.<javax.management.ObjectName: void <init>(java.lang.String)>(r35);
+        r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.management.ObjectName oname> = $r42;
+        $r43 = staticinvoke <org.apache.tomcat.util.modeler.Registry: org.apache.tomcat.util.modeler.Registry getRegistry(java.lang.Object,java.lang.Object)>(null, null);
+        $r44 = r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.management.ObjectName oname>;
+        virtualinvoke $r43.<org.apache.tomcat.util.modeler.Registry: void registerComponent(java.lang.Object,javax.management.ObjectName,java.lang.String)>(r0, $r44, null);
+
+     label6:
+        goto label8;
+
+     label7:
+        $r45 := @caughtexception;
+        r46 = $r45;
+        $r47 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.juli.logging.Log log>;
+        $r48 = <org.apache.catalina.core.ApplicationFilterConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r49 = newarray (java.lang.Object)[2];
+        $r50 = virtualinvoke r0.<org.apache.catalina.core.ApplicationFilterConfig: java.lang.String getFilterClass()>();
+        $r49[0] = $r50;
+        $r51 = virtualinvoke r0.<org.apache.catalina.core.ApplicationFilterConfig: java.lang.String getFilterName()>();
+        $r49[1] = $r51;
+        $r52 = virtualinvoke $r48.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("applicationFilterConfig.jmxRegisterFail", $r49);
+        interfaceinvoke $r47.<org.apache.juli.logging.Log: void info(java.lang.Object,java.lang.Throwable)>($r52, r46);
+
+     label8:
+        return;
+
+        catch java.lang.Exception from label5 to label6 with label7;
+    }
+
+    private void unregisterJMX()
+    {
+        org.apache.catalina.core.ApplicationFilterConfig r0;
+        java.lang.Exception r1, $r12;
+        javax.management.ObjectName $r2, $r4;
+        org.apache.tomcat.util.modeler.Registry $r3;
+        org.apache.juli.logging.Log $r5, $r6, $r13;
+        boolean $z0;
+        org.apache.tomcat.util.res.StringManager $r7, $r14;
+        java.lang.Object[] $r8, $r15;
+        java.lang.String $r9, $r10, $r11, $r16, $r17, $r18;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterConfig;
+        $r2 = r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.management.ObjectName oname>;
+        if $r2 == null goto label3;
+
+     label0:
+        $r3 = staticinvoke <org.apache.tomcat.util.modeler.Registry: org.apache.tomcat.util.modeler.Registry getRegistry(java.lang.Object,java.lang.Object)>(null, null);
+        $r4 = r0.<org.apache.catalina.core.ApplicationFilterConfig: javax.management.ObjectName oname>;
+        virtualinvoke $r3.<org.apache.tomcat.util.modeler.Registry: void unregisterComponent(javax.management.ObjectName)>($r4);
+        $r5 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.juli.logging.Log log>;
+        $z0 = interfaceinvoke $r5.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label3;
+
+        $r6 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.juli.logging.Log log>;
+        $r7 = <org.apache.catalina.core.ApplicationFilterConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r8 = newarray (java.lang.Object)[2];
+        $r9 = virtualinvoke r0.<org.apache.catalina.core.ApplicationFilterConfig: java.lang.String getFilterClass()>();
+        $r8[0] = $r9;
+        $r10 = virtualinvoke r0.<org.apache.catalina.core.ApplicationFilterConfig: java.lang.String getFilterName()>();
+        $r8[1] = $r10;
+        $r11 = virtualinvoke $r7.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("applicationFilterConfig.jmxUnregister", $r8);
+        interfaceinvoke $r6.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r11);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r12 := @caughtexception;
+        r1 = $r12;
+        $r13 = r0.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.juli.logging.Log log>;
+        $r14 = <org.apache.catalina.core.ApplicationFilterConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r15 = newarray (java.lang.Object)[2];
+        $r16 = virtualinvoke r0.<org.apache.catalina.core.ApplicationFilterConfig: java.lang.String getFilterClass()>();
+        $r15[0] = $r16;
+        $r17 = virtualinvoke r0.<org.apache.catalina.core.ApplicationFilterConfig: java.lang.String getFilterName()>();
+        $r15[1] = $r17;
+        $r18 = virtualinvoke $r14.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("applicationFilterConfig.jmxUnregisterFail", $r15);
+        interfaceinvoke $r13.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r18, r1);
+
+     label3:
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+}

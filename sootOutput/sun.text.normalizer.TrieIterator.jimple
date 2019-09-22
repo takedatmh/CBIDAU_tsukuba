@@ -1,0 +1,541 @@
+public class sun.text.normalizer.TrieIterator extends java.lang.Object implements sun.text.normalizer.RangeValueIterator
+{
+    private static final int BMP_INDEX_LENGTH_;
+    private static final int LEAD_SURROGATE_MIN_VALUE_;
+    private static final int TRAIL_SURROGATE_MIN_VALUE_;
+    private static final int TRAIL_SURROGATE_COUNT_;
+    private static final int TRAIL_SURROGATE_INDEX_BLOCK_LENGTH_;
+    private static final int DATA_BLOCK_LENGTH_;
+    private sun.text.normalizer.Trie m_trie_;
+    private int m_initialValue_;
+    private int m_currentCodepoint_;
+    private int m_nextCodepoint_;
+    private int m_nextValue_;
+    private int m_nextIndex_;
+    private int m_nextBlock_;
+    private int m_nextBlockIndex_;
+    private int m_nextTrailIndexOffset_;
+
+    public void <init>(sun.text.normalizer.Trie)
+    {
+        sun.text.normalizer.TrieIterator r0;
+        sun.text.normalizer.Trie r1, $r3;
+        java.lang.IllegalArgumentException $r2;
+        int $i0, $i1;
+
+        r0 := @this: sun.text.normalizer.TrieIterator;
+        r1 := @parameter0: sun.text.normalizer.Trie;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        if r1 != null goto label0;
+
+        $r2 = new java.lang.IllegalArgumentException;
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Argument trie cannot be null");
+        throw $r2;
+
+     label0:
+        r0.<sun.text.normalizer.TrieIterator: sun.text.normalizer.Trie m_trie_> = r1;
+        $r3 = r0.<sun.text.normalizer.TrieIterator: sun.text.normalizer.Trie m_trie_>;
+        $i0 = virtualinvoke $r3.<sun.text.normalizer.Trie: int getInitialValue()>();
+        $i1 = virtualinvoke r0.<sun.text.normalizer.TrieIterator: int extract(int)>($i0);
+        r0.<sun.text.normalizer.TrieIterator: int m_initialValue_> = $i1;
+        virtualinvoke r0.<sun.text.normalizer.TrieIterator: void reset()>();
+        return;
+    }
+
+    public final boolean next(sun.text.normalizer.RangeValueIterator$Element)
+    {
+        sun.text.normalizer.TrieIterator r0;
+        sun.text.normalizer.RangeValueIterator$Element r1;
+        int $i0, $i1;
+        boolean $z0;
+
+        r0 := @this: sun.text.normalizer.TrieIterator;
+        r1 := @parameter0: sun.text.normalizer.RangeValueIterator$Element;
+        $i0 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        if $i0 <= 1114111 goto label0;
+
+        return 0;
+
+     label0:
+        $i1 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        if $i1 >= 65536 goto label1;
+
+        $z0 = specialinvoke r0.<sun.text.normalizer.TrieIterator: boolean calculateNextBMPElement(sun.text.normalizer.RangeValueIterator$Element)>(r1);
+        if $z0 == 0 goto label1;
+
+        return 1;
+
+     label1:
+        specialinvoke r0.<sun.text.normalizer.TrieIterator: void calculateNextSupplementaryElement(sun.text.normalizer.RangeValueIterator$Element)>(r1);
+        return 1;
+    }
+
+    public final void reset()
+    {
+        sun.text.normalizer.TrieIterator r0;
+        sun.text.normalizer.Trie $r1, $r3;
+        char[] $r2;
+        char $c0;
+        int $i1, $i2, $i3, $i4, $i5, $i6;
+
+        r0 := @this: sun.text.normalizer.TrieIterator;
+        r0.<sun.text.normalizer.TrieIterator: int m_currentCodepoint_> = 0;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_> = 0;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextIndex_> = 0;
+        $r1 = r0.<sun.text.normalizer.TrieIterator: sun.text.normalizer.Trie m_trie_>;
+        $r2 = $r1.<sun.text.normalizer.Trie: char[] m_index_>;
+        $c0 = $r2[0];
+        $i1 = $c0 << 2;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextBlock_> = $i1;
+        $i2 = r0.<sun.text.normalizer.TrieIterator: int m_nextBlock_>;
+        if $i2 != 0 goto label0;
+
+        $i3 = r0.<sun.text.normalizer.TrieIterator: int m_initialValue_>;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextValue_> = $i3;
+        goto label1;
+
+     label0:
+        $r3 = r0.<sun.text.normalizer.TrieIterator: sun.text.normalizer.Trie m_trie_>;
+        $i4 = r0.<sun.text.normalizer.TrieIterator: int m_nextBlock_>;
+        $i5 = virtualinvoke $r3.<sun.text.normalizer.Trie: int getValue(int)>($i4);
+        $i6 = virtualinvoke r0.<sun.text.normalizer.TrieIterator: int extract(int)>($i5);
+        r0.<sun.text.normalizer.TrieIterator: int m_nextValue_> = $i6;
+
+     label1:
+        r0.<sun.text.normalizer.TrieIterator: int m_nextBlockIndex_> = 0;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextTrailIndexOffset_> = 32;
+        return;
+    }
+
+    protected int extract(int)
+    {
+        sun.text.normalizer.TrieIterator r0;
+        int i0;
+
+        r0 := @this: sun.text.normalizer.TrieIterator;
+        i0 := @parameter0: int;
+        return i0;
+    }
+
+    private final void setResult(sun.text.normalizer.RangeValueIterator$Element, int, int, int)
+    {
+        sun.text.normalizer.TrieIterator r0;
+        sun.text.normalizer.RangeValueIterator$Element r1;
+        int i0, i1, i2;
+
+        r0 := @this: sun.text.normalizer.TrieIterator;
+        r1 := @parameter0: sun.text.normalizer.RangeValueIterator$Element;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        i2 := @parameter3: int;
+        r1.<sun.text.normalizer.RangeValueIterator$Element: int start> = i0;
+        r1.<sun.text.normalizer.RangeValueIterator$Element: int limit> = i1;
+        r1.<sun.text.normalizer.RangeValueIterator$Element: int value> = i2;
+        return;
+    }
+
+    private final boolean calculateNextBMPElement(sun.text.normalizer.RangeValueIterator$Element)
+    {
+        sun.text.normalizer.TrieIterator r0;
+        sun.text.normalizer.RangeValueIterator$Element r1;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21;
+        boolean $z0, $z1;
+
+        r0 := @this: sun.text.normalizer.TrieIterator;
+        r1 := @parameter0: sun.text.normalizer.RangeValueIterator$Element;
+        i0 = r0.<sun.text.normalizer.TrieIterator: int m_nextBlock_>;
+        i1 = r0.<sun.text.normalizer.TrieIterator: int m_nextValue_>;
+        $i2 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        r0.<sun.text.normalizer.TrieIterator: int m_currentCodepoint_> = $i2;
+        $i3 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        $i4 = $i3 + 1;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_> = $i4;
+        $i5 = r0.<sun.text.normalizer.TrieIterator: int m_nextBlockIndex_>;
+        $i6 = $i5 + 1;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextBlockIndex_> = $i6;
+        $z0 = specialinvoke r0.<sun.text.normalizer.TrieIterator: boolean checkBlockDetail(int)>(i1);
+        if $z0 != 0 goto label0;
+
+        $i7 = r0.<sun.text.normalizer.TrieIterator: int m_currentCodepoint_>;
+        $i8 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        specialinvoke r0.<sun.text.normalizer.TrieIterator: void setResult(sun.text.normalizer.RangeValueIterator$Element,int,int,int)>(r1, $i7, $i8, i1);
+        return 1;
+
+     label0:
+        $i9 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        if $i9 >= 65536 goto label3;
+
+        $i10 = r0.<sun.text.normalizer.TrieIterator: int m_nextIndex_>;
+        $i11 = $i10 + 1;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextIndex_> = $i11;
+        $i12 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        if $i12 != 55296 goto label1;
+
+        r0.<sun.text.normalizer.TrieIterator: int m_nextIndex_> = 2048;
+        goto label2;
+
+     label1:
+        $i13 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        if $i13 != 56320 goto label2;
+
+        $i14 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        $i15 = $i14 >> 5;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextIndex_> = $i15;
+
+     label2:
+        r0.<sun.text.normalizer.TrieIterator: int m_nextBlockIndex_> = 0;
+        $z1 = specialinvoke r0.<sun.text.normalizer.TrieIterator: boolean checkBlock(int,int)>(i0, i1);
+        if $z1 != 0 goto label0;
+
+        $i16 = r0.<sun.text.normalizer.TrieIterator: int m_currentCodepoint_>;
+        $i17 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        specialinvoke r0.<sun.text.normalizer.TrieIterator: void setResult(sun.text.normalizer.RangeValueIterator$Element,int,int,int)>(r1, $i16, $i17, i1);
+        return 1;
+
+     label3:
+        $i18 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        $i19 = $i18 - 1;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_> = $i19;
+        $i20 = r0.<sun.text.normalizer.TrieIterator: int m_nextBlockIndex_>;
+        $i21 = $i20 - 1;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextBlockIndex_> = $i21;
+        return 0;
+    }
+
+    private final void calculateNextSupplementaryElement(sun.text.normalizer.RangeValueIterator$Element)
+    {
+        sun.text.normalizer.TrieIterator r0;
+        sun.text.normalizer.RangeValueIterator$Element r1;
+        int i0, i1, i2, i3, $i4, $i5, $i6, $i7, $i8, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i23, $i24, $i25, $i26, $i27, $i28, $i30, $i31, $i32, $i33, $i34, $i35, $i36, $i37, $i38, $i39, $i40, $i41, $i42, $i43, $i44, $i45, $i46;
+        char $c9, $c22, $c29;
+        boolean $z0, $z1, $z2, $z3;
+        sun.text.normalizer.Trie $r6, $r8, $r9, $r12, $r14;
+        char[] $r7;
+        sun.text.normalizer.Trie$DataManipulate $r10, $r13;
+        java.lang.NullPointerException $r11;
+
+        r0 := @this: sun.text.normalizer.TrieIterator;
+        r1 := @parameter0: sun.text.normalizer.RangeValueIterator$Element;
+        i0 = r0.<sun.text.normalizer.TrieIterator: int m_nextValue_>;
+        i1 = r0.<sun.text.normalizer.TrieIterator: int m_nextBlock_>;
+        $i4 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        $i5 = $i4 + 1;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_> = $i5;
+        $i6 = r0.<sun.text.normalizer.TrieIterator: int m_nextBlockIndex_>;
+        $i7 = $i6 + 1;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextBlockIndex_> = $i7;
+        $i8 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        $c9 = staticinvoke <sun.text.normalizer.UTF16: char getTrailSurrogate(int)>($i8);
+        if $c9 == 56320 goto label1;
+
+        $z0 = specialinvoke r0.<sun.text.normalizer.TrieIterator: boolean checkNullNextTrailIndex()>();
+        if $z0 != 0 goto label0;
+
+        $z1 = specialinvoke r0.<sun.text.normalizer.TrieIterator: boolean checkBlockDetail(int)>(i0);
+        if $z1 != 0 goto label0;
+
+        $i10 = r0.<sun.text.normalizer.TrieIterator: int m_currentCodepoint_>;
+        $i11 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        specialinvoke r0.<sun.text.normalizer.TrieIterator: void setResult(sun.text.normalizer.RangeValueIterator$Element,int,int,int)>(r1, $i10, $i11, i0);
+        $i12 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        r0.<sun.text.normalizer.TrieIterator: int m_currentCodepoint_> = $i12;
+        return;
+
+     label0:
+        $i13 = r0.<sun.text.normalizer.TrieIterator: int m_nextIndex_>;
+        $i14 = $i13 + 1;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextIndex_> = $i14;
+        $i15 = r0.<sun.text.normalizer.TrieIterator: int m_nextTrailIndexOffset_>;
+        $i16 = $i15 + 1;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextTrailIndexOffset_> = $i16;
+        $z2 = specialinvoke r0.<sun.text.normalizer.TrieIterator: boolean checkTrailBlock(int,int)>(i1, i0);
+        if $z2 != 0 goto label1;
+
+        $i17 = r0.<sun.text.normalizer.TrieIterator: int m_currentCodepoint_>;
+        $i18 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        specialinvoke r0.<sun.text.normalizer.TrieIterator: void setResult(sun.text.normalizer.RangeValueIterator$Element,int,int,int)>(r1, $i17, $i18, i0);
+        $i19 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        r0.<sun.text.normalizer.TrieIterator: int m_currentCodepoint_> = $i19;
+        return;
+
+     label1:
+        $i20 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        i2 = staticinvoke <sun.text.normalizer.UTF16: char getLeadSurrogate(int)>($i20);
+
+     label2:
+        if i2 >= 56320 goto label9;
+
+        $r6 = r0.<sun.text.normalizer.TrieIterator: sun.text.normalizer.Trie m_trie_>;
+        $r7 = $r6.<sun.text.normalizer.Trie: char[] m_index_>;
+        $i21 = i2 >> 5;
+        $c22 = $r7[$i21];
+        i3 = $c22 << 2;
+        $r8 = r0.<sun.text.normalizer.TrieIterator: sun.text.normalizer.Trie m_trie_>;
+        $i23 = $r8.<sun.text.normalizer.Trie: int m_dataOffset_>;
+        if i3 != $i23 goto label4;
+
+        $i24 = r0.<sun.text.normalizer.TrieIterator: int m_initialValue_>;
+        if i0 == $i24 goto label3;
+
+        $i25 = r0.<sun.text.normalizer.TrieIterator: int m_initialValue_>;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextValue_> = $i25;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextBlock_> = 0;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextBlockIndex_> = 0;
+        $i26 = r0.<sun.text.normalizer.TrieIterator: int m_currentCodepoint_>;
+        $i27 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        specialinvoke r0.<sun.text.normalizer.TrieIterator: void setResult(sun.text.normalizer.RangeValueIterator$Element,int,int,int)>(r1, $i26, $i27, i0);
+        $i28 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        r0.<sun.text.normalizer.TrieIterator: int m_currentCodepoint_> = $i28;
+        return;
+
+     label3:
+        i2 = i2 + 32;
+        $c29 = (char) i2;
+        $i30 = staticinvoke <sun.text.normalizer.UCharacterProperty: int getRawSupplementary(char,char)>($c29, 56320);
+        r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_> = $i30;
+        goto label2;
+
+     label4:
+        $r9 = r0.<sun.text.normalizer.TrieIterator: sun.text.normalizer.Trie m_trie_>;
+        $r10 = $r9.<sun.text.normalizer.Trie: sun.text.normalizer.Trie$DataManipulate m_dataManipulate_>;
+        if $r10 != null goto label5;
+
+        $r11 = new java.lang.NullPointerException;
+        specialinvoke $r11.<java.lang.NullPointerException: void <init>(java.lang.String)>("The field DataManipulate in this Trie is null");
+        throw $r11;
+
+     label5:
+        $r12 = r0.<sun.text.normalizer.TrieIterator: sun.text.normalizer.Trie m_trie_>;
+        $r13 = $r12.<sun.text.normalizer.Trie: sun.text.normalizer.Trie$DataManipulate m_dataManipulate_>;
+        $r14 = r0.<sun.text.normalizer.TrieIterator: sun.text.normalizer.Trie m_trie_>;
+        $i31 = i2 & 31;
+        $i32 = i3 + $i31;
+        $i33 = virtualinvoke $r14.<sun.text.normalizer.Trie: int getValue(int)>($i32);
+        $i34 = interfaceinvoke $r13.<sun.text.normalizer.Trie$DataManipulate: int getFoldingOffset(int)>($i33);
+        r0.<sun.text.normalizer.TrieIterator: int m_nextIndex_> = $i34;
+        $i35 = r0.<sun.text.normalizer.TrieIterator: int m_nextIndex_>;
+        if $i35 > 0 goto label7;
+
+        $i36 = r0.<sun.text.normalizer.TrieIterator: int m_initialValue_>;
+        if i0 == $i36 goto label6;
+
+        $i37 = r0.<sun.text.normalizer.TrieIterator: int m_initialValue_>;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextValue_> = $i37;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextBlock_> = 0;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextBlockIndex_> = 0;
+        $i38 = r0.<sun.text.normalizer.TrieIterator: int m_currentCodepoint_>;
+        $i39 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        specialinvoke r0.<sun.text.normalizer.TrieIterator: void setResult(sun.text.normalizer.RangeValueIterator$Element,int,int,int)>(r1, $i38, $i39, i0);
+        $i40 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        r0.<sun.text.normalizer.TrieIterator: int m_currentCodepoint_> = $i40;
+        return;
+
+     label6:
+        $i41 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        $i42 = $i41 + 1024;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_> = $i42;
+        goto label8;
+
+     label7:
+        r0.<sun.text.normalizer.TrieIterator: int m_nextTrailIndexOffset_> = 0;
+        $z3 = specialinvoke r0.<sun.text.normalizer.TrieIterator: boolean checkTrailBlock(int,int)>(i1, i0);
+        if $z3 != 0 goto label8;
+
+        $i43 = r0.<sun.text.normalizer.TrieIterator: int m_currentCodepoint_>;
+        $i44 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        specialinvoke r0.<sun.text.normalizer.TrieIterator: void setResult(sun.text.normalizer.RangeValueIterator$Element,int,int,int)>(r1, $i43, $i44, i0);
+        $i45 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        r0.<sun.text.normalizer.TrieIterator: int m_currentCodepoint_> = $i45;
+        return;
+
+     label8:
+        i2 = i2 + 1;
+        goto label2;
+
+     label9:
+        $i46 = r0.<sun.text.normalizer.TrieIterator: int m_currentCodepoint_>;
+        specialinvoke r0.<sun.text.normalizer.TrieIterator: void setResult(sun.text.normalizer.RangeValueIterator$Element,int,int,int)>(r1, $i46, 1114112, i0);
+        return;
+    }
+
+    private final boolean checkBlockDetail(int)
+    {
+        sun.text.normalizer.TrieIterator r0;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11;
+        sun.text.normalizer.Trie $r1;
+
+        r0 := @this: sun.text.normalizer.TrieIterator;
+        i0 := @parameter0: int;
+
+     label0:
+        $i1 = r0.<sun.text.normalizer.TrieIterator: int m_nextBlockIndex_>;
+        if $i1 >= 32 goto label2;
+
+        $r1 = r0.<sun.text.normalizer.TrieIterator: sun.text.normalizer.Trie m_trie_>;
+        $i2 = r0.<sun.text.normalizer.TrieIterator: int m_nextBlock_>;
+        $i3 = r0.<sun.text.normalizer.TrieIterator: int m_nextBlockIndex_>;
+        $i4 = $i2 + $i3;
+        $i5 = virtualinvoke $r1.<sun.text.normalizer.Trie: int getValue(int)>($i4);
+        $i6 = virtualinvoke r0.<sun.text.normalizer.TrieIterator: int extract(int)>($i5);
+        r0.<sun.text.normalizer.TrieIterator: int m_nextValue_> = $i6;
+        $i7 = r0.<sun.text.normalizer.TrieIterator: int m_nextValue_>;
+        if $i7 == i0 goto label1;
+
+        return 0;
+
+     label1:
+        $i8 = r0.<sun.text.normalizer.TrieIterator: int m_nextBlockIndex_>;
+        $i9 = $i8 + 1;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextBlockIndex_> = $i9;
+        $i10 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        $i11 = $i10 + 1;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_> = $i11;
+        goto label0;
+
+     label2:
+        return 1;
+    }
+
+    private final boolean checkBlock(int, int)
+    {
+        sun.text.normalizer.TrieIterator r0;
+        int i0, i1, $i2, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15;
+        sun.text.normalizer.Trie $r1;
+        char[] $r2;
+        char $c3;
+        boolean $z0;
+
+        r0 := @this: sun.text.normalizer.TrieIterator;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $r1 = r0.<sun.text.normalizer.TrieIterator: sun.text.normalizer.Trie m_trie_>;
+        $r2 = $r1.<sun.text.normalizer.Trie: char[] m_index_>;
+        $i2 = r0.<sun.text.normalizer.TrieIterator: int m_nextIndex_>;
+        $c3 = $r2[$i2];
+        $i4 = $c3 << 2;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextBlock_> = $i4;
+        $i5 = r0.<sun.text.normalizer.TrieIterator: int m_nextBlock_>;
+        if $i5 != i0 goto label0;
+
+        $i6 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        $i7 = r0.<sun.text.normalizer.TrieIterator: int m_currentCodepoint_>;
+        $i8 = $i6 - $i7;
+        if $i8 < 32 goto label0;
+
+        $i9 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        $i10 = $i9 + 32;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_> = $i10;
+        goto label3;
+
+     label0:
+        $i11 = r0.<sun.text.normalizer.TrieIterator: int m_nextBlock_>;
+        if $i11 != 0 goto label2;
+
+        $i12 = r0.<sun.text.normalizer.TrieIterator: int m_initialValue_>;
+        if i1 == $i12 goto label1;
+
+        $i13 = r0.<sun.text.normalizer.TrieIterator: int m_initialValue_>;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextValue_> = $i13;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextBlockIndex_> = 0;
+        return 0;
+
+     label1:
+        $i14 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        $i15 = $i14 + 32;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_> = $i15;
+        goto label3;
+
+     label2:
+        $z0 = specialinvoke r0.<sun.text.normalizer.TrieIterator: boolean checkBlockDetail(int)>(i1);
+        if $z0 != 0 goto label3;
+
+        return 0;
+
+     label3:
+        return 1;
+    }
+
+    private final boolean checkTrailBlock(int, int)
+    {
+        sun.text.normalizer.TrieIterator r0;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6;
+        boolean $z0;
+
+        r0 := @this: sun.text.normalizer.TrieIterator;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+
+     label0:
+        $i2 = r0.<sun.text.normalizer.TrieIterator: int m_nextTrailIndexOffset_>;
+        if $i2 >= 32 goto label2;
+
+        r0.<sun.text.normalizer.TrieIterator: int m_nextBlockIndex_> = 0;
+        $z0 = specialinvoke r0.<sun.text.normalizer.TrieIterator: boolean checkBlock(int,int)>(i0, i1);
+        if $z0 != 0 goto label1;
+
+        return 0;
+
+     label1:
+        $i3 = r0.<sun.text.normalizer.TrieIterator: int m_nextTrailIndexOffset_>;
+        $i4 = $i3 + 1;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextTrailIndexOffset_> = $i4;
+        $i5 = r0.<sun.text.normalizer.TrieIterator: int m_nextIndex_>;
+        $i6 = $i5 + 1;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextIndex_> = $i6;
+        goto label0;
+
+     label2:
+        return 1;
+    }
+
+    private final boolean checkNullNextTrailIndex()
+    {
+        sun.text.normalizer.TrieIterator r0;
+        char c0, $c6, $c7, $c8;
+        int i1, $i2, $i3, $i4, $i5, $i9, $i10, $i11, $i12, $i13;
+        sun.text.normalizer.Trie $r2, $r4, $r7, $r9;
+        char[] $r3;
+        sun.text.normalizer.Trie$DataManipulate $r5, $r8;
+        java.lang.NullPointerException $r6;
+
+        r0 := @this: sun.text.normalizer.TrieIterator;
+        $i2 = r0.<sun.text.normalizer.TrieIterator: int m_nextIndex_>;
+        if $i2 > 0 goto label1;
+
+        $i3 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        $i4 = $i3 + 1023;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_> = $i4;
+        $i5 = r0.<sun.text.normalizer.TrieIterator: int m_nextCodepoint_>;
+        c0 = staticinvoke <sun.text.normalizer.UTF16: char getLeadSurrogate(int)>($i5);
+        $r2 = r0.<sun.text.normalizer.TrieIterator: sun.text.normalizer.Trie m_trie_>;
+        $r3 = $r2.<sun.text.normalizer.Trie: char[] m_index_>;
+        $c6 = c0 >> 5;
+        $c7 = $r3[$c6];
+        i1 = $c7 << 2;
+        $r4 = r0.<sun.text.normalizer.TrieIterator: sun.text.normalizer.Trie m_trie_>;
+        $r5 = $r4.<sun.text.normalizer.Trie: sun.text.normalizer.Trie$DataManipulate m_dataManipulate_>;
+        if $r5 != null goto label0;
+
+        $r6 = new java.lang.NullPointerException;
+        specialinvoke $r6.<java.lang.NullPointerException: void <init>(java.lang.String)>("The field DataManipulate in this Trie is null");
+        throw $r6;
+
+     label0:
+        $r7 = r0.<sun.text.normalizer.TrieIterator: sun.text.normalizer.Trie m_trie_>;
+        $r8 = $r7.<sun.text.normalizer.Trie: sun.text.normalizer.Trie$DataManipulate m_dataManipulate_>;
+        $r9 = r0.<sun.text.normalizer.TrieIterator: sun.text.normalizer.Trie m_trie_>;
+        $c8 = c0 & 31;
+        $i9 = i1 + $c8;
+        $i10 = virtualinvoke $r9.<sun.text.normalizer.Trie: int getValue(int)>($i9);
+        $i11 = interfaceinvoke $r8.<sun.text.normalizer.Trie$DataManipulate: int getFoldingOffset(int)>($i10);
+        r0.<sun.text.normalizer.TrieIterator: int m_nextIndex_> = $i11;
+        $i12 = r0.<sun.text.normalizer.TrieIterator: int m_nextIndex_>;
+        $i13 = $i12 - 1;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextIndex_> = $i13;
+        r0.<sun.text.normalizer.TrieIterator: int m_nextBlockIndex_> = 32;
+        return 1;
+
+     label1:
+        return 0;
+    }
+}

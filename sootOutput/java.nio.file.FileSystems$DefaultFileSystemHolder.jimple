@@ -1,0 +1,114 @@
+class java.nio.file.FileSystems$DefaultFileSystemHolder extends java.lang.Object
+{
+    static final java.nio.file.FileSystem defaultFileSystem;
+
+    private void <init>()
+    {
+        java.nio.file.FileSystems$DefaultFileSystemHolder r0;
+
+        r0 := @this: java.nio.file.FileSystems$DefaultFileSystemHolder;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    private static java.nio.file.FileSystem defaultFileSystem()
+    {
+        java.nio.file.FileSystems$DefaultFileSystemHolder$1 $r0;
+        java.nio.file.spi.FileSystemProvider r1;
+        java.lang.Object $r2;
+        java.net.URI $r3;
+        java.nio.file.FileSystem $r4;
+
+        $r0 = new java.nio.file.FileSystems$DefaultFileSystemHolder$1;
+        specialinvoke $r0.<java.nio.file.FileSystems$DefaultFileSystemHolder$1: void <init>()>();
+        $r2 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r0);
+        r1 = (java.nio.file.spi.FileSystemProvider) $r2;
+        $r3 = staticinvoke <java.net.URI: java.net.URI create(java.lang.String)>("file:///");
+        $r4 = virtualinvoke r1.<java.nio.file.spi.FileSystemProvider: java.nio.file.FileSystem getFileSystem(java.net.URI)>($r3);
+        return $r4;
+    }
+
+    private static java.nio.file.spi.FileSystemProvider getDefaultProvider()
+    {
+        java.nio.file.spi.FileSystemProvider r0;
+        java.lang.String r1, r3, $r10;
+        java.lang.String[] r2;
+        int i0, i1;
+        java.lang.ClassLoader $r4;
+        java.lang.Class r5;
+        java.lang.reflect.Constructor r6;
+        java.lang.Class[] $r7;
+        java.lang.Object[] $r8;
+        java.lang.Object $r9;
+        boolean $z0;
+        java.lang.Error $r11, $r14;
+        java.lang.Exception $r12, r13;
+
+        r0 = staticinvoke <sun.nio.fs.DefaultFileSystemProvider: java.nio.file.spi.FileSystemProvider create()>();
+        r1 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("java.nio.file.spi.DefaultFileSystemProvider");
+        if r1 == null goto label5;
+
+        r2 = virtualinvoke r1.<java.lang.String: java.lang.String[] split(java.lang.String)>(",");
+        i0 = lengthof r2;
+        i1 = 0;
+
+     label0:
+        if i1 >= i0 goto label5;
+
+        r3 = r2[i1];
+
+     label1:
+        $r4 = staticinvoke <java.lang.ClassLoader: java.lang.ClassLoader getSystemClassLoader()>();
+        r5 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String,boolean,java.lang.ClassLoader)>(r3, 1, $r4);
+        $r7 = newarray (java.lang.Class)[1];
+        $r7[0] = class "java/nio/file/spi/FileSystemProvider";
+        r6 = virtualinvoke r5.<java.lang.Class: java.lang.reflect.Constructor getDeclaredConstructor(java.lang.Class[])>($r7);
+        $r8 = newarray (java.lang.Object)[1];
+        $r8[0] = r0;
+        $r9 = virtualinvoke r6.<java.lang.reflect.Constructor: java.lang.Object newInstance(java.lang.Object[])>($r8);
+        r0 = (java.nio.file.spi.FileSystemProvider) $r9;
+        $r10 = virtualinvoke r0.<java.nio.file.spi.FileSystemProvider: java.lang.String getScheme()>();
+        $z0 = virtualinvoke $r10.<java.lang.String: boolean equals(java.lang.Object)>("file");
+        if $z0 != 0 goto label2;
+
+        $r11 = new java.lang.Error;
+        specialinvoke $r11.<java.lang.Error: void <init>(java.lang.String)>("Default provider must use scheme \'file\'");
+        throw $r11;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r12 := @caughtexception;
+        r13 = $r12;
+        $r14 = new java.lang.Error;
+        specialinvoke $r14.<java.lang.Error: void <init>(java.lang.Throwable)>(r13);
+        throw $r14;
+
+     label4:
+        i1 = i1 + 1;
+        goto label0;
+
+     label5:
+        return r0;
+
+        catch java.lang.Exception from label1 to label2 with label3;
+    }
+
+    static java.nio.file.spi.FileSystemProvider access$000()
+    {
+        java.nio.file.spi.FileSystemProvider $r0;
+
+        $r0 = staticinvoke <java.nio.file.FileSystems$DefaultFileSystemHolder: java.nio.file.spi.FileSystemProvider getDefaultProvider()>();
+        return $r0;
+    }
+
+    static void <clinit>()
+    {
+        java.nio.file.FileSystem $r0;
+
+        $r0 = staticinvoke <java.nio.file.FileSystems$DefaultFileSystemHolder: java.nio.file.FileSystem defaultFileSystem()>();
+        <java.nio.file.FileSystems$DefaultFileSystemHolder: java.nio.file.FileSystem defaultFileSystem> = $r0;
+        return;
+    }
+}

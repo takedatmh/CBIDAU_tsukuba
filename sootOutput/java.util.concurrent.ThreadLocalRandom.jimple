@@ -1,0 +1,241 @@
+public class java.util.concurrent.ThreadLocalRandom extends java.util.Random
+{
+    private static final long multiplier;
+    private static final long addend;
+    private static final long mask;
+    private long rnd;
+    boolean initialized;
+    private long pad0;
+    private long pad1;
+    private long pad2;
+    private long pad3;
+    private long pad4;
+    private long pad5;
+    private long pad6;
+    private long pad7;
+    private static final java.lang.ThreadLocal localRandom;
+    private static final long serialVersionUID;
+
+    void <init>()
+    {
+        java.util.concurrent.ThreadLocalRandom r0;
+
+        r0 := @this: java.util.concurrent.ThreadLocalRandom;
+        specialinvoke r0.<java.util.Random: void <init>()>();
+        r0.<java.util.concurrent.ThreadLocalRandom: boolean initialized> = 1;
+        return;
+    }
+
+    public static java.util.concurrent.ThreadLocalRandom current()
+    {
+        java.lang.ThreadLocal $r0;
+        java.lang.Object $r1;
+        java.util.concurrent.ThreadLocalRandom $r2;
+
+        $r0 = <java.util.concurrent.ThreadLocalRandom: java.lang.ThreadLocal localRandom>;
+        $r1 = virtualinvoke $r0.<java.lang.ThreadLocal: java.lang.Object get()>();
+        $r2 = (java.util.concurrent.ThreadLocalRandom) $r1;
+        return $r2;
+    }
+
+    public void setSeed(long)
+    {
+        java.util.concurrent.ThreadLocalRandom r0;
+        long l0, $l1, $l2;
+        boolean $z0;
+        java.lang.UnsupportedOperationException $r1;
+
+        r0 := @this: java.util.concurrent.ThreadLocalRandom;
+        l0 := @parameter0: long;
+        $z0 = r0.<java.util.concurrent.ThreadLocalRandom: boolean initialized>;
+        if $z0 == 0 goto label0;
+
+        $r1 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r1.<java.lang.UnsupportedOperationException: void <init>()>();
+        throw $r1;
+
+     label0:
+        $l1 = l0 ^ 25214903917L;
+        $l2 = $l1 & 281474976710655L;
+        r0.<java.util.concurrent.ThreadLocalRandom: long rnd> = $l2;
+        return;
+    }
+
+    protected int next(int)
+    {
+        java.util.concurrent.ThreadLocalRandom r0;
+        int i0, $i6, $i8;
+        long $l1, $l2, $l3, $l4, $l5, $l7;
+
+        r0 := @this: java.util.concurrent.ThreadLocalRandom;
+        i0 := @parameter0: int;
+        $l1 = r0.<java.util.concurrent.ThreadLocalRandom: long rnd>;
+        $l2 = $l1 * 25214903917L;
+        $l3 = $l2 + 11L;
+        $l4 = $l3 & 281474976710655L;
+        r0.<java.util.concurrent.ThreadLocalRandom: long rnd> = $l4;
+        $l5 = r0.<java.util.concurrent.ThreadLocalRandom: long rnd>;
+        $i6 = 48 - i0;
+        $l7 = $l5 >>> $i6;
+        $i8 = (int) $l7;
+        return $i8;
+    }
+
+    public int nextInt(int, int)
+    {
+        java.util.concurrent.ThreadLocalRandom r0;
+        int i0, i1, $i2, $i3, $i4;
+        java.lang.IllegalArgumentException $r1;
+
+        r0 := @this: java.util.concurrent.ThreadLocalRandom;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        if i0 < i1 goto label0;
+
+        $r1 = new java.lang.IllegalArgumentException;
+        specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>()>();
+        throw $r1;
+
+     label0:
+        $i2 = i1 - i0;
+        $i3 = virtualinvoke r0.<java.util.concurrent.ThreadLocalRandom: int nextInt(int)>($i2);
+        $i4 = $i3 + i0;
+        return $i4;
+    }
+
+    public long nextLong(long)
+    {
+        java.util.concurrent.ThreadLocalRandom r0;
+        long l0, l1, l3, l4, $l8, $l10, $l13, $l14;
+        int i2, $i7, $i9, $i11, $i12;
+        byte $b5, $b6;
+        java.lang.IllegalArgumentException $r1;
+
+        r0 := @this: java.util.concurrent.ThreadLocalRandom;
+        l0 := @parameter0: long;
+        $b5 = l0 cmp 0L;
+        if $b5 > 0 goto label0;
+
+        $r1 = new java.lang.IllegalArgumentException;
+        specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("n must be positive");
+        throw $r1;
+
+     label0:
+        l1 = 0L;
+
+     label1:
+        $b6 = l0 cmp 2147483647L;
+        if $b6 < 0 goto label5;
+
+        i2 = virtualinvoke r0.<java.util.concurrent.ThreadLocalRandom: int next(int)>(2);
+        l3 = l0 >>> 1;
+        $i7 = i2 & 2;
+        if $i7 != 0 goto label2;
+
+        $l8 = l3;
+        goto label3;
+
+     label2:
+        $l8 = l0 - l3;
+
+     label3:
+        l4 = $l8;
+        $i9 = i2 & 1;
+        if $i9 != 0 goto label4;
+
+        $l10 = l0 - l4;
+        l1 = l1 + $l10;
+
+     label4:
+        l0 = l4;
+        goto label1;
+
+     label5:
+        $i11 = (int) l0;
+        $i12 = virtualinvoke r0.<java.util.concurrent.ThreadLocalRandom: int nextInt(int)>($i11);
+        $l13 = (long) $i12;
+        $l14 = l1 + $l13;
+        return $l14;
+    }
+
+    public long nextLong(long, long)
+    {
+        java.util.concurrent.ThreadLocalRandom r0;
+        long l0, l1, $l3, $l4, $l5;
+        byte $b2;
+        java.lang.IllegalArgumentException $r1;
+
+        r0 := @this: java.util.concurrent.ThreadLocalRandom;
+        l0 := @parameter0: long;
+        l1 := @parameter1: long;
+        $b2 = l0 cmp l1;
+        if $b2 < 0 goto label0;
+
+        $r1 = new java.lang.IllegalArgumentException;
+        specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>()>();
+        throw $r1;
+
+     label0:
+        $l3 = l1 - l0;
+        $l4 = virtualinvoke r0.<java.util.concurrent.ThreadLocalRandom: long nextLong(long)>($l3);
+        $l5 = $l4 + l0;
+        return $l5;
+    }
+
+    public double nextDouble(double)
+    {
+        java.util.concurrent.ThreadLocalRandom r0;
+        double d0, $d1, $d2;
+        byte $b0;
+        java.lang.IllegalArgumentException $r1;
+
+        r0 := @this: java.util.concurrent.ThreadLocalRandom;
+        d0 := @parameter0: double;
+        $b0 = d0 cmpg 0.0;
+        if $b0 > 0 goto label0;
+
+        $r1 = new java.lang.IllegalArgumentException;
+        specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("n must be positive");
+        throw $r1;
+
+     label0:
+        $d1 = virtualinvoke r0.<java.util.concurrent.ThreadLocalRandom: double nextDouble()>();
+        $d2 = $d1 * d0;
+        return $d2;
+    }
+
+    public double nextDouble(double, double)
+    {
+        java.util.concurrent.ThreadLocalRandom r0;
+        double d0, d1, $d2, $d3, $d4, $d5;
+        byte $b0;
+        java.lang.IllegalArgumentException $r1;
+
+        r0 := @this: java.util.concurrent.ThreadLocalRandom;
+        d0 := @parameter0: double;
+        d1 := @parameter1: double;
+        $b0 = d0 cmpl d1;
+        if $b0 < 0 goto label0;
+
+        $r1 = new java.lang.IllegalArgumentException;
+        specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>()>();
+        throw $r1;
+
+     label0:
+        $d2 = virtualinvoke r0.<java.util.concurrent.ThreadLocalRandom: double nextDouble()>();
+        $d3 = d1 - d0;
+        $d4 = $d2 * $d3;
+        $d5 = $d4 + d0;
+        return $d5;
+    }
+
+    static void <clinit>()
+    {
+        java.util.concurrent.ThreadLocalRandom$1 $r0;
+
+        $r0 = new java.util.concurrent.ThreadLocalRandom$1;
+        specialinvoke $r0.<java.util.concurrent.ThreadLocalRandom$1: void <init>()>();
+        <java.util.concurrent.ThreadLocalRandom: java.lang.ThreadLocal localRandom> = $r0;
+        return;
+    }
+}

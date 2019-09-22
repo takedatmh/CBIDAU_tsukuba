@@ -1,0 +1,210 @@
+class sun.nio.fs.UnixException extends java.lang.Exception
+{
+    static final long serialVersionUID;
+    private int errno;
+    private java.lang.String msg;
+
+    void <init>(int)
+    {
+        sun.nio.fs.UnixException r0;
+        int i0;
+
+        r0 := @this: sun.nio.fs.UnixException;
+        i0 := @parameter0: int;
+        specialinvoke r0.<java.lang.Exception: void <init>()>();
+        r0.<sun.nio.fs.UnixException: int errno> = i0;
+        r0.<sun.nio.fs.UnixException: java.lang.String msg> = null;
+        return;
+    }
+
+    void <init>(java.lang.String)
+    {
+        sun.nio.fs.UnixException r0;
+        java.lang.String r1;
+
+        r0 := @this: sun.nio.fs.UnixException;
+        r1 := @parameter0: java.lang.String;
+        specialinvoke r0.<java.lang.Exception: void <init>()>();
+        r0.<sun.nio.fs.UnixException: int errno> = 0;
+        r0.<sun.nio.fs.UnixException: java.lang.String msg> = r1;
+        return;
+    }
+
+    int errno()
+    {
+        sun.nio.fs.UnixException r0;
+        int $i0;
+
+        r0 := @this: sun.nio.fs.UnixException;
+        $i0 = r0.<sun.nio.fs.UnixException: int errno>;
+        return $i0;
+    }
+
+    void setError(int)
+    {
+        sun.nio.fs.UnixException r0;
+        int i0;
+
+        r0 := @this: sun.nio.fs.UnixException;
+        i0 := @parameter0: int;
+        r0.<sun.nio.fs.UnixException: int errno> = i0;
+        r0.<sun.nio.fs.UnixException: java.lang.String msg> = null;
+        return;
+    }
+
+    java.lang.String errorString()
+    {
+        sun.nio.fs.UnixException r0;
+        java.lang.String $r1, $r2, $r3;
+        int $i0;
+        byte[] $r4;
+
+        r0 := @this: sun.nio.fs.UnixException;
+        $r1 = r0.<sun.nio.fs.UnixException: java.lang.String msg>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<sun.nio.fs.UnixException: java.lang.String msg>;
+        return $r2;
+
+     label0:
+        $r3 = new java.lang.String;
+        $i0 = virtualinvoke r0.<sun.nio.fs.UnixException: int errno()>();
+        $r4 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: byte[] strerror(int)>($i0);
+        specialinvoke $r3.<java.lang.String: void <init>(byte[])>($r4);
+        return $r3;
+    }
+
+    public java.lang.String getMessage()
+    {
+        sun.nio.fs.UnixException r0;
+        java.lang.String $r1;
+
+        r0 := @this: sun.nio.fs.UnixException;
+        $r1 = virtualinvoke r0.<sun.nio.fs.UnixException: java.lang.String errorString()>();
+        return $r1;
+    }
+
+    private java.io.IOException translateToIOException(java.lang.String, java.lang.String)
+    {
+        sun.nio.fs.UnixException r0;
+        java.lang.String r1, r2, $r3, $r5, $r10;
+        java.io.IOException $r4;
+        int $i0, $i1, $i2;
+        java.nio.file.AccessDeniedException $r6;
+        java.nio.file.NoSuchFileException $r7;
+        java.nio.file.FileAlreadyExistsException $r8;
+        java.nio.file.FileSystemException $r9;
+
+        r0 := @this: sun.nio.fs.UnixException;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String;
+        $r3 = r0.<sun.nio.fs.UnixException: java.lang.String msg>;
+        if $r3 == null goto label0;
+
+        $r4 = new java.io.IOException;
+        $r5 = r0.<sun.nio.fs.UnixException: java.lang.String msg>;
+        specialinvoke $r4.<java.io.IOException: void <init>(java.lang.String)>($r5);
+        return $r4;
+
+     label0:
+        $i0 = virtualinvoke r0.<sun.nio.fs.UnixException: int errno()>();
+        if $i0 != 13 goto label1;
+
+        $r6 = new java.nio.file.AccessDeniedException;
+        specialinvoke $r6.<java.nio.file.AccessDeniedException: void <init>(java.lang.String,java.lang.String,java.lang.String)>(r1, r2, null);
+        return $r6;
+
+     label1:
+        $i1 = virtualinvoke r0.<sun.nio.fs.UnixException: int errno()>();
+        if $i1 != 2 goto label2;
+
+        $r7 = new java.nio.file.NoSuchFileException;
+        specialinvoke $r7.<java.nio.file.NoSuchFileException: void <init>(java.lang.String,java.lang.String,java.lang.String)>(r1, r2, null);
+        return $r7;
+
+     label2:
+        $i2 = virtualinvoke r0.<sun.nio.fs.UnixException: int errno()>();
+        if $i2 != 17 goto label3;
+
+        $r8 = new java.nio.file.FileAlreadyExistsException;
+        specialinvoke $r8.<java.nio.file.FileAlreadyExistsException: void <init>(java.lang.String,java.lang.String,java.lang.String)>(r1, r2, null);
+        return $r8;
+
+     label3:
+        $r9 = new java.nio.file.FileSystemException;
+        $r10 = virtualinvoke r0.<sun.nio.fs.UnixException: java.lang.String errorString()>();
+        specialinvoke $r9.<java.nio.file.FileSystemException: void <init>(java.lang.String,java.lang.String,java.lang.String)>(r1, r2, $r10);
+        return $r9;
+    }
+
+    void rethrowAsIOException(java.lang.String) throws java.io.IOException
+    {
+        sun.nio.fs.UnixException r0;
+        java.lang.String r1;
+        java.io.IOException r2;
+
+        r0 := @this: sun.nio.fs.UnixException;
+        r1 := @parameter0: java.lang.String;
+        r2 = specialinvoke r0.<sun.nio.fs.UnixException: java.io.IOException translateToIOException(java.lang.String,java.lang.String)>(r1, null);
+        throw r2;
+    }
+
+    void rethrowAsIOException(sun.nio.fs.UnixPath, sun.nio.fs.UnixPath) throws java.io.IOException
+    {
+        sun.nio.fs.UnixException r0;
+        sun.nio.fs.UnixPath r1, r2;
+        java.lang.String r3, r4, $r6, $r7;
+        java.io.IOException r5;
+
+        r0 := @this: sun.nio.fs.UnixException;
+        r1 := @parameter0: sun.nio.fs.UnixPath;
+        r2 := @parameter1: sun.nio.fs.UnixPath;
+        if r1 != null goto label0;
+
+        $r6 = null;
+        goto label1;
+
+     label0:
+        $r6 = virtualinvoke r1.<sun.nio.fs.UnixPath: java.lang.String getPathForExceptionMessage()>();
+
+     label1:
+        r3 = $r6;
+        if r2 != null goto label2;
+
+        $r7 = null;
+        goto label3;
+
+     label2:
+        $r7 = virtualinvoke r2.<sun.nio.fs.UnixPath: java.lang.String getPathForExceptionMessage()>();
+
+     label3:
+        r4 = $r7;
+        r5 = specialinvoke r0.<sun.nio.fs.UnixException: java.io.IOException translateToIOException(java.lang.String,java.lang.String)>(r3, r4);
+        throw r5;
+    }
+
+    void rethrowAsIOException(sun.nio.fs.UnixPath) throws java.io.IOException
+    {
+        sun.nio.fs.UnixException r0;
+        sun.nio.fs.UnixPath r1;
+
+        r0 := @this: sun.nio.fs.UnixException;
+        r1 := @parameter0: sun.nio.fs.UnixPath;
+        virtualinvoke r0.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath,sun.nio.fs.UnixPath)>(r1, null);
+        return;
+    }
+
+    java.io.IOException asIOException(sun.nio.fs.UnixPath)
+    {
+        sun.nio.fs.UnixException r0;
+        sun.nio.fs.UnixPath r1;
+        java.lang.String $r2;
+        java.io.IOException $r3;
+
+        r0 := @this: sun.nio.fs.UnixException;
+        r1 := @parameter0: sun.nio.fs.UnixPath;
+        $r2 = virtualinvoke r1.<sun.nio.fs.UnixPath: java.lang.String getPathForExceptionMessage()>();
+        $r3 = specialinvoke r0.<sun.nio.fs.UnixException: java.io.IOException translateToIOException(java.lang.String,java.lang.String)>($r2, null);
+        return $r3;
+    }
+}

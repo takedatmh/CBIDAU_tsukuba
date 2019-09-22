@@ -1,0 +1,1170 @@
+public class org.apache.coyote.ajp.AjpProcessor extends org.apache.coyote.ajp.AbstractAjpProcessor
+{
+    private static final org.apache.juli.logging.Log log;
+    protected java.io.InputStream input;
+    protected java.io.OutputStream output;
+    private static int[] $SWITCH_TABLE$org$apache$coyote$ActionCode;
+
+    static void <clinit>()
+    {
+        org.apache.juli.logging.Log $r0;
+
+        $r0 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/coyote/ajp/AjpProcessor");
+        <org.apache.coyote.ajp.AjpProcessor: org.apache.juli.logging.Log log> = $r0;
+        return;
+    }
+
+    protected org.apache.juli.logging.Log getLog()
+    {
+        org.apache.coyote.ajp.AjpProcessor r0;
+        org.apache.juli.logging.Log $r1;
+
+        r0 := @this: org.apache.coyote.ajp.AjpProcessor;
+        $r1 = <org.apache.coyote.ajp.AjpProcessor: org.apache.juli.logging.Log log>;
+        return $r1;
+    }
+
+    public void <init>(int, org.apache.tomcat.util.net.JIoEndpoint)
+    {
+        org.apache.coyote.ajp.AjpProcessor r0;
+        int i0;
+        org.apache.tomcat.util.net.JIoEndpoint r1;
+        org.apache.coyote.Response $r2;
+        org.apache.coyote.ajp.AbstractAjpProcessor$SocketOutputBuffer $r3;
+
+        r0 := @this: org.apache.coyote.ajp.AjpProcessor;
+        i0 := @parameter0: int;
+        r1 := @parameter1: org.apache.tomcat.util.net.JIoEndpoint;
+        specialinvoke r0.<org.apache.coyote.ajp.AbstractAjpProcessor: void <init>(int,org.apache.tomcat.util.net.AbstractEndpoint)>(i0, r1);
+        $r2 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Response response>;
+        $r3 = new org.apache.coyote.ajp.AbstractAjpProcessor$SocketOutputBuffer;
+        specialinvoke $r3.<org.apache.coyote.ajp.AbstractAjpProcessor$SocketOutputBuffer: void <init>(org.apache.coyote.ajp.AbstractAjpProcessor)>(r0);
+        virtualinvoke $r2.<org.apache.coyote.Response: void setOutputBuffer(org.apache.coyote.OutputBuffer)>($r3);
+        return;
+    }
+
+    public org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState process(org.apache.tomcat.util.net.SocketWrapper) throws java.io.IOException
+    {
+        org.apache.coyote.ajp.AjpProcessor r0;
+        org.apache.tomcat.util.net.SocketWrapper r1;
+        org.apache.coyote.RequestInfo r2;
+        int i0, $i2, $i3, $i4, $i5;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14, $z15, $z16, $z17;
+        byte b1;
+        java.io.IOException r3, $r22, $r31, r32;
+        org.apache.coyote.Request $r4, $r30, $r42, $r53, $r60, $r64, $r77, $r86;
+        java.lang.Object $r5, $r8, $r11, $r13, $r16;
+        java.net.Socket $r6, $r9, $r12, $r14, $r17;
+        java.io.InputStream $r7;
+        java.io.OutputStream $r10, $r20;
+        org.apache.coyote.ajp.AjpMessage $r15, $r18;
+        org.apache.tomcat.util.net.AbstractEndpoint $r19, $r56, $r88, $r90;
+        byte[] $r21;
+        org.apache.coyote.ErrorState $r23, $r29, $r33, $r40, $r44, $r51, $r55, $r58, $r62, $r68, $r75, $r79, $r80, $r83, $r84, $r87, $r89;
+        org.apache.juli.logging.Log $r24, $r25, $r36, $r47, $r71;
+        java.lang.StringBuilder $r26, $r27;
+        java.lang.String $r28, $r38, $r49, $r73;
+        long $l6;
+        java.lang.Throwable $r34, r35, $r45, r46, $r69, r70, $r81, r82;
+        org.apache.tomcat.util.res.StringManager $r37, $r48, $r72;
+        org.apache.coyote.Response $r39, $r43, $r50, $r54, $r57, $r61, $r65, $r74, $r78, $r85;
+        org.apache.coyote.Adapter $r41, $r52, $r59, $r63, $r76;
+        java.io.InterruptedIOException $r66, r67;
+        org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState $r91, $r92;
+
+        r0 := @this: org.apache.coyote.ajp.AjpProcessor;
+        r1 := @parameter0: org.apache.tomcat.util.net.SocketWrapper;
+        $r4 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Request request>;
+        r2 = virtualinvoke $r4.<org.apache.coyote.Request: org.apache.coyote.RequestInfo getRequestProcessor()>();
+        virtualinvoke r2.<org.apache.coyote.RequestInfo: void setStage(int)>(1);
+        r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper> = r1;
+        $r5 = virtualinvoke r1.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r6 = (java.net.Socket) $r5;
+        $r7 = virtualinvoke $r6.<java.net.Socket: java.io.InputStream getInputStream()>();
+        r0.<org.apache.coyote.ajp.AjpProcessor: java.io.InputStream input> = $r7;
+        $r8 = virtualinvoke r1.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r9 = (java.net.Socket) $r8;
+        $r10 = virtualinvoke $r9.<java.net.Socket: java.io.OutputStream getOutputStream()>();
+        r0.<org.apache.coyote.ajp.AjpProcessor: java.io.OutputStream output> = $r10;
+        i0 = -1;
+        $i2 = r0.<org.apache.coyote.ajp.AjpProcessor: int keepAliveTimeout>;
+        if $i2 <= 0 goto label0;
+
+        $r11 = virtualinvoke r1.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r12 = (java.net.Socket) $r11;
+        i0 = virtualinvoke $r12.<java.net.Socket: int getSoTimeout()>();
+
+     label0:
+        z0 = 0;
+        goto label36;
+
+     label1:
+        $i3 = r0.<org.apache.coyote.ajp.AjpProcessor: int keepAliveTimeout>;
+        if $i3 <= 0 goto label2;
+
+        $r13 = virtualinvoke r1.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r14 = (java.net.Socket) $r13;
+        $i4 = r0.<org.apache.coyote.ajp.AjpProcessor: int keepAliveTimeout>;
+        virtualinvoke $r14.<java.net.Socket: void setSoTimeout(int)>($i4);
+
+     label2:
+        $r15 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.ajp.AjpMessage requestHeaderMessage>;
+        $z1 = virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: boolean readMessage(org.apache.coyote.ajp.AjpMessage)>($r15);
+        if $z1 != 0 goto label4;
+
+     label3:
+        goto label37;
+
+     label4:
+        $i5 = r0.<org.apache.coyote.ajp.AjpProcessor: int keepAliveTimeout>;
+        if $i5 <= 0 goto label5;
+
+        $r16 = virtualinvoke r1.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r17 = (java.net.Socket) $r16;
+        virtualinvoke $r17.<java.net.Socket: void setSoTimeout(int)>(i0);
+
+     label5:
+        $r18 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.ajp.AjpMessage requestHeaderMessage>;
+        b1 = virtualinvoke $r18.<org.apache.coyote.ajp.AjpMessage: byte getByte()>();
+        if b1 != 10 goto label12;
+
+        $r19 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $z2 = virtualinvoke $r19.<org.apache.tomcat.util.net.AbstractEndpoint: boolean isPaused()>();
+        if $z2 == 0 goto label7;
+
+        virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: void recycle(boolean)>(1);
+
+     label6:
+        goto label37;
+
+     label7:
+        z0 = 1;
+
+     label8:
+        $r20 = r0.<org.apache.coyote.ajp.AjpProcessor: java.io.OutputStream output>;
+        $r21 = <org.apache.coyote.ajp.AjpProcessor: byte[] pongMessageArray>;
+        virtualinvoke $r20.<java.io.OutputStream: void write(byte[])>($r21);
+
+     label9:
+        goto label36;
+
+     label10:
+        $r22 := @caughtexception;
+        r3 = $r22;
+        $r23 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r23, r3);
+
+     label11:
+        goto label36;
+
+     label12:
+        if b1 == 2 goto label15;
+
+        $r24 = <org.apache.coyote.ajp.AjpProcessor: org.apache.juli.logging.Log log>;
+        $z3 = interfaceinvoke $r24.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z3 == 0 goto label13;
+
+        $r25 = <org.apache.coyote.ajp.AjpProcessor: org.apache.juli.logging.Log log>;
+        $r26 = new java.lang.StringBuilder;
+        specialinvoke $r26.<java.lang.StringBuilder: void <init>(java.lang.String)>("Unexpected message: ");
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(b1);
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r25.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r28);
+
+     label13:
+        $r29 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r29, null);
+
+     label14:
+        goto label37;
+
+     label15:
+        $r30 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Request request>;
+        $l6 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        virtualinvoke $r30.<org.apache.coyote.Request: void setStartTime(long)>($l6);
+
+     label16:
+        goto label19;
+
+     label17:
+        $r31 := @caughtexception;
+        r32 = $r31;
+        $r33 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r33, r32);
+        goto label37;
+
+     label18:
+        $r34 := @caughtexception;
+        r35 = $r34;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r35);
+        $r36 = <org.apache.coyote.ajp.AjpProcessor: org.apache.juli.logging.Log log>;
+        $r37 = <org.apache.coyote.ajp.AjpProcessor: org.apache.tomcat.util.res.StringManager sm>;
+        $r38 = virtualinvoke $r37.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("ajpprocessor.header.error");
+        interfaceinvoke $r36.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r38, r35);
+        $r39 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Response response>;
+        virtualinvoke $r39.<org.apache.coyote.Response: void setStatus(int)>(400);
+        $r40 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r40, r35);
+        $r41 = virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Adapter getAdapter()>();
+        $r42 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Request request>;
+        $r43 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Response response>;
+        interfaceinvoke $r41.<org.apache.coyote.Adapter: void log(org.apache.coyote.Request,org.apache.coyote.Response,long)>($r42, $r43, 0L);
+
+     label19:
+        $r44 = virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.ErrorState getErrorState()>();
+        $z4 = virtualinvoke $r44.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z4 != 0 goto label23;
+
+        virtualinvoke r2.<org.apache.coyote.RequestInfo: void setStage(int)>(2);
+
+     label20:
+        virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: void prepareRequest()>();
+
+     label21:
+        goto label23;
+
+     label22:
+        $r45 := @caughtexception;
+        r46 = $r45;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r46);
+        $r47 = <org.apache.coyote.ajp.AjpProcessor: org.apache.juli.logging.Log log>;
+        $r48 = <org.apache.coyote.ajp.AjpProcessor: org.apache.tomcat.util.res.StringManager sm>;
+        $r49 = virtualinvoke $r48.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("ajpprocessor.request.prepare");
+        interfaceinvoke $r47.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r49, r46);
+        $r50 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Response response>;
+        virtualinvoke $r50.<org.apache.coyote.Response: void setStatus(int)>(500);
+        $r51 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r51, r46);
+        $r52 = virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Adapter getAdapter()>();
+        $r53 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Request request>;
+        $r54 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Response response>;
+        interfaceinvoke $r52.<org.apache.coyote.Adapter: void log(org.apache.coyote.Request,org.apache.coyote.Response,long)>($r53, $r54, 0L);
+
+     label23:
+        $r55 = virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.ErrorState getErrorState()>();
+        $z5 = virtualinvoke $r55.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z5 != 0 goto label24;
+
+        if z0 != 0 goto label24;
+
+        $r56 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $z6 = virtualinvoke $r56.<org.apache.tomcat.util.net.AbstractEndpoint: boolean isPaused()>();
+        if $z6 == 0 goto label24;
+
+        $r57 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Response response>;
+        virtualinvoke $r57.<org.apache.coyote.Response: void setStatus(int)>(503);
+        $r58 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r58, null);
+        $r59 = virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Adapter getAdapter()>();
+        $r60 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Request request>;
+        $r61 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Response response>;
+        interfaceinvoke $r59.<org.apache.coyote.Adapter: void log(org.apache.coyote.Request,org.apache.coyote.Response,long)>($r60, $r61, 0L);
+
+     label24:
+        z0 = 0;
+        $r62 = virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.ErrorState getErrorState()>();
+        $z7 = virtualinvoke $r62.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z7 != 0 goto label29;
+
+     label25:
+        virtualinvoke r2.<org.apache.coyote.RequestInfo: void setStage(int)>(3);
+        $r63 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Adapter adapter>;
+        $r64 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Request request>;
+        $r65 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Response response>;
+        interfaceinvoke $r63.<org.apache.coyote.Adapter: void service(org.apache.coyote.Request,org.apache.coyote.Response)>($r64, $r65);
+
+     label26:
+        goto label29;
+
+     label27:
+        $r66 := @caughtexception;
+        r67 = $r66;
+        $r68 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r68, r67);
+        goto label29;
+
+     label28:
+        $r69 := @caughtexception;
+        r70 = $r69;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r70);
+        $r71 = <org.apache.coyote.ajp.AjpProcessor: org.apache.juli.logging.Log log>;
+        $r72 = <org.apache.coyote.ajp.AjpProcessor: org.apache.tomcat.util.res.StringManager sm>;
+        $r73 = virtualinvoke $r72.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("ajpprocessor.request.process");
+        interfaceinvoke $r71.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r73, r70);
+        $r74 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Response response>;
+        virtualinvoke $r74.<org.apache.coyote.Response: void setStatus(int)>(500);
+        $r75 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r75, r70);
+        $r76 = virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Adapter getAdapter()>();
+        $r77 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Request request>;
+        $r78 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Response response>;
+        interfaceinvoke $r76.<org.apache.coyote.Adapter: void log(org.apache.coyote.Request,org.apache.coyote.Response,long)>($r77, $r78, 0L);
+
+     label29:
+        $z8 = virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: boolean isAsync()>();
+        if $z8 == 0 goto label30;
+
+        $r79 = virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.ErrorState getErrorState()>();
+        $z9 = virtualinvoke $r79.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z9 != 0 goto label30;
+
+        goto label37;
+
+     label30:
+        $z10 = r0.<org.apache.coyote.ajp.AjpProcessor: boolean finished>;
+        if $z10 != 0 goto label34;
+
+        $r80 = virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.ErrorState getErrorState()>();
+        $z11 = virtualinvoke $r80.<org.apache.coyote.ErrorState: boolean isIoAllowed()>();
+        if $z11 == 0 goto label34;
+
+     label31:
+        virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: void finish()>();
+
+     label32:
+        goto label34;
+
+     label33:
+        $r81 := @caughtexception;
+        r82 = $r81;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r82);
+        $r83 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r83, r82);
+
+     label34:
+        $r84 = virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.ErrorState getErrorState()>();
+        $z12 = virtualinvoke $r84.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z12 == 0 goto label35;
+
+        $r85 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Response response>;
+        virtualinvoke $r85.<org.apache.coyote.Response: void setStatus(int)>(500);
+
+     label35:
+        $r86 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.Request request>;
+        virtualinvoke $r86.<org.apache.coyote.Request: void updateCounters()>();
+        virtualinvoke r2.<org.apache.coyote.RequestInfo: void setStage(int)>(6);
+        virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: void recycle(boolean)>(0);
+
+     label36:
+        $r87 = virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.ErrorState getErrorState()>();
+        $z13 = virtualinvoke $r87.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z13 != 0 goto label37;
+
+        $r88 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $z14 = virtualinvoke $r88.<org.apache.tomcat.util.net.AbstractEndpoint: boolean isPaused()>();
+        if $z14 == 0 goto label1;
+
+     label37:
+        virtualinvoke r2.<org.apache.coyote.RequestInfo: void setStage(int)>(7);
+        $z15 = virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: boolean isAsync()>();
+        if $z15 == 0 goto label38;
+
+        $r89 = virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.ErrorState getErrorState()>();
+        $z16 = virtualinvoke $r89.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z16 != 0 goto label38;
+
+        $r90 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $z17 = virtualinvoke $r90.<org.apache.tomcat.util.net.AbstractEndpoint: boolean isPaused()>();
+        if $z17 != 0 goto label38;
+
+        $r91 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState LONG>;
+        return $r91;
+
+     label38:
+        r0.<org.apache.coyote.ajp.AjpProcessor: java.io.InputStream input> = null;
+        r0.<org.apache.coyote.ajp.AjpProcessor: java.io.OutputStream output> = null;
+        $r92 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState CLOSED>;
+        return $r92;
+
+        catch java.io.IOException from label8 to label9 with label10;
+        catch java.io.IOException from label1 to label3 with label17;
+        catch java.io.IOException from label4 to label6 with label17;
+        catch java.io.IOException from label7 to label11 with label17;
+        catch java.io.IOException from label12 to label14 with label17;
+        catch java.io.IOException from label15 to label16 with label17;
+        catch java.lang.Throwable from label1 to label3 with label18;
+        catch java.lang.Throwable from label4 to label6 with label18;
+        catch java.lang.Throwable from label7 to label11 with label18;
+        catch java.lang.Throwable from label12 to label14 with label18;
+        catch java.lang.Throwable from label15 to label16 with label18;
+        catch java.lang.Throwable from label20 to label21 with label22;
+        catch java.io.InterruptedIOException from label25 to label26 with label27;
+        catch java.lang.Throwable from label25 to label26 with label28;
+        catch java.lang.Throwable from label31 to label32 with label33;
+    }
+
+    public void recycle(boolean)
+    {
+        org.apache.coyote.ajp.AjpProcessor r0;
+        boolean z0;
+
+        r0 := @this: org.apache.coyote.ajp.AjpProcessor;
+        z0 := @parameter0: boolean;
+        specialinvoke r0.<org.apache.coyote.ajp.AbstractAjpProcessor: void recycle(boolean)>(z0);
+        if z0 == 0 goto label0;
+
+        r0.<org.apache.coyote.ajp.AjpProcessor: java.io.InputStream input> = null;
+        r0.<org.apache.coyote.ajp.AjpProcessor: java.io.OutputStream output> = null;
+
+     label0:
+        return;
+    }
+
+    protected void actionInternal(org.apache.coyote.ActionCode, java.lang.Object)
+    {
+        org.apache.coyote.ajp.AjpProcessor r0;
+        org.apache.coyote.ActionCode r1;
+        java.lang.Object r2;
+        int[] $r3;
+        org.apache.tomcat.util.net.SocketStatus $r4, $r15;
+        long l0;
+        int $i1, $i2;
+        org.apache.coyote.AsyncStateMachine $r5, $r11;
+        boolean $z0, $z1;
+        org.apache.tomcat.util.net.AbstractEndpoint $r6, $r12;
+        org.apache.tomcat.util.net.JIoEndpoint $r7, $r13;
+        org.apache.tomcat.util.net.SocketWrapper $r8, $r10, $r14;
+        java.lang.Long $r9;
+
+        r0 := @this: org.apache.coyote.ajp.AjpProcessor;
+        r1 := @parameter0: org.apache.coyote.ActionCode;
+        r2 := @parameter1: java.lang.Object;
+        $r3 = staticinvoke <org.apache.coyote.ajp.AjpProcessor: int[] $SWITCH_TABLE$org$apache$coyote$ActionCode()>();
+        $i1 = virtualinvoke r1.<org.apache.coyote.ActionCode: int ordinal()>();
+        $i2 = $r3[$i1];
+        tableswitch($i2)
+        {
+            case 26: goto label3;
+            case 27: goto label4;
+            case 28: goto label4;
+            case 29: goto label0;
+            case 30: goto label4;
+            case 31: goto label4;
+            case 32: goto label1;
+            default: goto label4;
+        };
+
+     label0:
+        $r5 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        $z0 = virtualinvoke $r5.<org.apache.coyote.AsyncStateMachine: boolean asyncComplete()>();
+        if $z0 == 0 goto label4;
+
+        $r6 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r7 = (org.apache.tomcat.util.net.JIoEndpoint) $r6;
+        $r8 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r4 = <org.apache.tomcat.util.net.SocketStatus: org.apache.tomcat.util.net.SocketStatus OPEN_READ>;
+        virtualinvoke $r7.<org.apache.tomcat.util.net.JIoEndpoint: void processSocketAsync(org.apache.tomcat.util.net.SocketWrapper,org.apache.tomcat.util.net.SocketStatus)>($r8, $r4);
+        goto label4;
+
+     label1:
+        if r2 != null goto label2;
+
+        return;
+
+     label2:
+        $r9 = (java.lang.Long) r2;
+        l0 = virtualinvoke $r9.<java.lang.Long: long longValue()>();
+        $r10 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        virtualinvoke $r10.<org.apache.tomcat.util.net.SocketWrapper: void setTimeout(long)>(l0);
+        goto label4;
+
+     label3:
+        $r11 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        $z1 = virtualinvoke $r11.<org.apache.coyote.AsyncStateMachine: boolean asyncDispatch()>();
+        if $z1 == 0 goto label4;
+
+        $r12 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r13 = (org.apache.tomcat.util.net.JIoEndpoint) $r12;
+        $r14 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r15 = <org.apache.tomcat.util.net.SocketStatus: org.apache.tomcat.util.net.SocketStatus OPEN_READ>;
+        virtualinvoke $r13.<org.apache.tomcat.util.net.JIoEndpoint: void processSocketAsync(org.apache.tomcat.util.net.SocketWrapper,org.apache.tomcat.util.net.SocketStatus)>($r14, $r15);
+
+     label4:
+        return;
+    }
+
+    protected void resetTimeouts()
+    {
+        org.apache.coyote.ajp.AjpProcessor r0;
+
+        r0 := @this: org.apache.coyote.ajp.AjpProcessor;
+        return;
+    }
+
+    protected void output(byte[], int, int) throws java.io.IOException
+    {
+        org.apache.coyote.ajp.AjpProcessor r0;
+        byte[] r1;
+        int i0, i1;
+        java.io.OutputStream $r2;
+
+        r0 := @this: org.apache.coyote.ajp.AjpProcessor;
+        r1 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        $r2 = r0.<org.apache.coyote.ajp.AjpProcessor: java.io.OutputStream output>;
+        virtualinvoke $r2.<java.io.OutputStream: void write(byte[],int,int)>(r1, i0, i1);
+        return;
+    }
+
+    protected boolean read(byte[], int, int) throws java.io.IOException
+    {
+        org.apache.coyote.ajp.AjpProcessor r0;
+        byte[] r1;
+        int i0, i1, i2, $i3, $i4, i5;
+        boolean z0;
+        java.io.InputStream $r2;
+        java.io.IOException $r3;
+        org.apache.tomcat.util.res.StringManager $r4;
+        java.lang.String $r5;
+
+        r0 := @this: org.apache.coyote.ajp.AjpProcessor;
+        r1 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        i2 = 0;
+        z0 = 0;
+        goto label2;
+
+     label0:
+        $r2 = r0.<org.apache.coyote.ajp.AjpProcessor: java.io.InputStream input>;
+        $i3 = i2 + i0;
+        $i4 = i1 - i2;
+        i5 = virtualinvoke $r2.<java.io.InputStream: int read(byte[],int,int)>(r1, $i3, $i4);
+        if i5 <= 0 goto label1;
+
+        i2 = i2 + i5;
+        goto label2;
+
+     label1:
+        $r3 = new java.io.IOException;
+        $r4 = <org.apache.coyote.ajp.AjpProcessor: org.apache.tomcat.util.res.StringManager sm>;
+        $r5 = virtualinvoke $r4.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("ajpprocessor.failedread");
+        specialinvoke $r3.<java.io.IOException: void <init>(java.lang.String)>($r5);
+        throw $r3;
+
+     label2:
+        if i2 < i1 goto label0;
+
+        return 1;
+    }
+
+    public boolean receive() throws java.io.IOException
+    {
+        org.apache.coyote.ajp.AjpProcessor r0;
+        int i0, $i1;
+        org.apache.coyote.ajp.AjpMessage $r1, $r2, $r3, $r4, $r5;
+        boolean $z0;
+        org.apache.tomcat.util.buf.MessageBytes $r6;
+
+        r0 := @this: org.apache.coyote.ajp.AjpProcessor;
+        r0.<org.apache.coyote.ajp.AjpProcessor: boolean first> = 0;
+        $r1 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.ajp.AjpMessage bodyMessage>;
+        virtualinvoke $r1.<org.apache.coyote.ajp.AjpMessage: void reset()>();
+        $r2 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.ajp.AjpMessage bodyMessage>;
+        $z0 = virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: boolean readMessage(org.apache.coyote.ajp.AjpMessage)>($r2);
+        if $z0 != 0 goto label0;
+
+        return 0;
+
+     label0:
+        $r3 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.ajp.AjpMessage bodyMessage>;
+        $i1 = virtualinvoke $r3.<org.apache.coyote.ajp.AjpMessage: int getLen()>();
+        if $i1 != 0 goto label1;
+
+        return 0;
+
+     label1:
+        $r4 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.ajp.AjpMessage bodyMessage>;
+        i0 = virtualinvoke $r4.<org.apache.coyote.ajp.AjpMessage: int peekInt()>();
+        if i0 != 0 goto label2;
+
+        return 0;
+
+     label2:
+        $r5 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.coyote.ajp.AjpMessage bodyMessage>;
+        $r6 = r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.tomcat.util.buf.MessageBytes bodyBytes>;
+        virtualinvoke $r5.<org.apache.coyote.ajp.AjpMessage: void getBodyBytes(org.apache.tomcat.util.buf.MessageBytes)>($r6);
+        r0.<org.apache.coyote.ajp.AjpProcessor: boolean empty> = 0;
+        return 1;
+    }
+
+    protected boolean readMessage(org.apache.coyote.ajp.AjpMessage) throws java.io.IOException
+    {
+        org.apache.coyote.ajp.AjpProcessor r0;
+        org.apache.coyote.ajp.AjpMessage r1;
+        byte[] r2;
+        int i0, i1, $i2, $i3;
+        java.lang.String r3;
+        org.apache.tomcat.util.res.StringManager $r4;
+        java.lang.Object[] $r5;
+        java.lang.Integer $r6, $r7;
+        org.apache.juli.logging.Log $r8;
+        java.lang.IllegalArgumentException $r9;
+
+        r0 := @this: org.apache.coyote.ajp.AjpProcessor;
+        r1 := @parameter0: org.apache.coyote.ajp.AjpMessage;
+        r2 = virtualinvoke r1.<org.apache.coyote.ajp.AjpMessage: byte[] getBuffer()>();
+        i0 = virtualinvoke r1.<org.apache.coyote.ajp.AjpMessage: int getHeaderLength()>();
+        virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: boolean read(byte[],int,int)>(r2, 0, i0);
+        i1 = virtualinvoke r1.<org.apache.coyote.ajp.AjpMessage: int processHeader(boolean)>(1);
+        if i1 >= 0 goto label0;
+
+        return 0;
+
+     label0:
+        if i1 != 0 goto label1;
+
+        return 1;
+
+     label1:
+        $i2 = lengthof r2;
+        if i1 <= $i2 goto label2;
+
+        $r4 = <org.apache.coyote.ajp.AjpProcessor: org.apache.tomcat.util.res.StringManager sm>;
+        $r5 = newarray (java.lang.Object)[2];
+        $r6 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i1);
+        $r5[0] = $r6;
+        $i3 = lengthof r2;
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i3);
+        $r5[1] = $r7;
+        r3 = virtualinvoke $r4.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("ajpprocessor.header.tooLong", $r5);
+        $r8 = virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: org.apache.juli.logging.Log getLog()>();
+        interfaceinvoke $r8.<org.apache.juli.logging.Log: void error(java.lang.Object)>(r3);
+        $r9 = new java.lang.IllegalArgumentException;
+        specialinvoke $r9.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>(r3);
+        throw $r9;
+
+     label2:
+        virtualinvoke r0.<org.apache.coyote.ajp.AjpProcessor: boolean read(byte[],int,int)>(r2, i0, i1);
+        return 1;
+    }
+
+    static int[] $SWITCH_TABLE$org$apache$coyote$ActionCode()
+    {
+        int[] $r0, r1;
+        org.apache.coyote.ActionCode[] $r2;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i22, $i23, $i24, $i25, $i26, $i27, $i28, $i29, $i30, $i31, $i32, $i33, $i34, $i35, $i36, $i37, $i38, $i39, $i40, $i41, $i42;
+        org.apache.coyote.ActionCode $r3, $r5, $r7, $r9, $r11, $r13, $r15, $r17, $r19, $r21, $r23, $r25, $r27, $r29, $r31, $r33, $r35, $r37, $r39, $r41, $r43, $r45, $r47, $r49, $r51, $r53, $r55, $r57, $r59, $r61, $r63, $r65, $r67, $r69, $r71, $r73, $r75, $r77, $r79, $r81, $r83, $r85;
+        java.lang.NoSuchFieldError $r4, $r6, $r8, $r10, $r12, $r14, $r16, $r18, $r20, $r22, $r24, $r26, $r28, $r30, $r32, $r34, $r36, $r38, $r40, $r42, $r44, $r46, $r48, $r50, $r52, $r54, $r56, $r58, $r60, $r62, $r64, $r66, $r68, $r70, $r72, $r74, $r76, $r78, $r80, $r82, $r84, $r86;
+
+        $r0 = <org.apache.coyote.ajp.AjpProcessor: int[] $SWITCH_TABLE$org$apache$coyote$ActionCode>;
+        if $r0 == null goto label0;
+
+        return $r0;
+
+     label0:
+        $r2 = staticinvoke <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode[] values()>();
+        $i0 = lengthof $r2;
+        r1 = newarray (int)[$i0];
+
+     label1:
+        $r3 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ACK>;
+        $i1 = virtualinvoke $r3.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i1] = 1;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r4 := @caughtexception;
+
+     label4:
+        $r5 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_COMPLETE>;
+        $i2 = virtualinvoke $r5.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i2] = 29;
+
+     label5:
+        goto label7;
+
+     label6:
+        $r6 := @caughtexception;
+
+     label7:
+        $r7 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_DISPATCH>;
+        $i3 = virtualinvoke $r7.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i3] = 26;
+
+     label8:
+        goto label10;
+
+     label9:
+        $r8 := @caughtexception;
+
+     label10:
+        $r9 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_DISPATCHED>;
+        $i4 = virtualinvoke $r9.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i4] = 27;
+
+     label11:
+        goto label13;
+
+     label12:
+        $r10 := @caughtexception;
+
+     label13:
+        $r11 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_ERROR>;
+        $i5 = virtualinvoke $r11.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i5] = 31;
+
+     label14:
+        goto label16;
+
+     label15:
+        $r12 := @caughtexception;
+
+     label16:
+        $r13 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_IS_ASYNC>;
+        $i6 = virtualinvoke $r13.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i6] = 33;
+
+     label17:
+        goto label19;
+
+     label18:
+        $r14 := @caughtexception;
+
+     label19:
+        $r15 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_IS_COMPLETING>;
+        $i7 = virtualinvoke $r15.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i7] = 35;
+
+     label20:
+        goto label22;
+
+     label21:
+        $r16 := @caughtexception;
+
+     label22:
+        $r17 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_IS_DISPATCHING>;
+        $i8 = virtualinvoke $r17.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i8] = 36;
+
+     label23:
+        goto label25;
+
+     label24:
+        $r18 := @caughtexception;
+
+     label25:
+        $r19 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_IS_ERROR>;
+        $i9 = virtualinvoke $r19.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i9] = 38;
+
+     label26:
+        goto label28;
+
+     label27:
+        $r20 := @caughtexception;
+
+     label28:
+        $r21 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_IS_STARTED>;
+        $i10 = virtualinvoke $r21.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i10] = 34;
+
+     label29:
+        goto label31;
+
+     label30:
+        $r22 := @caughtexception;
+
+     label31:
+        $r23 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_IS_TIMINGOUT>;
+        $i11 = virtualinvoke $r23.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i11] = 37;
+
+     label32:
+        goto label34;
+
+     label33:
+        $r24 := @caughtexception;
+
+     label34:
+        $r25 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_POST_PROCESS>;
+        $i12 = virtualinvoke $r25.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i12] = 40;
+
+     label35:
+        goto label37;
+
+     label36:
+        $r26 := @caughtexception;
+
+     label37:
+        $r27 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_RUN>;
+        $i13 = virtualinvoke $r27.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i13] = 28;
+
+     label38:
+        goto label40;
+
+     label39:
+        $r28 := @caughtexception;
+
+     label40:
+        $r29 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_SETTIMEOUT>;
+        $i14 = virtualinvoke $r29.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i14] = 32;
+
+     label41:
+        goto label43;
+
+     label42:
+        $r30 := @caughtexception;
+
+     label43:
+        $r31 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_START>;
+        $i15 = virtualinvoke $r31.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i15] = 25;
+
+     label44:
+        goto label46;
+
+     label45:
+        $r32 := @caughtexception;
+
+     label46:
+        $r33 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_TIMEOUT>;
+        $i16 = virtualinvoke $r33.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i16] = 30;
+
+     label47:
+        goto label49;
+
+     label48:
+        $r34 := @caughtexception;
+
+     label49:
+        $r35 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode AVAILABLE>;
+        $i17 = virtualinvoke $r35.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i17] = 22;
+
+     label50:
+        goto label52;
+
+     label51:
+        $r36 := @caughtexception;
+
+     label52:
+        $r37 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode CLIENT_FLUSH>;
+        $i18 = virtualinvoke $r37.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i18] = 5;
+
+     label53:
+        goto label55;
+
+     label54:
+        $r38 := @caughtexception;
+
+     label55:
+        $r39 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode CLOSE>;
+        $i19 = virtualinvoke $r39.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i19] = 2;
+
+     label56:
+        goto label58;
+
+     label57:
+        $r40 := @caughtexception;
+
+     label58:
+        $r41 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode CLOSE_NOW>;
+        $i20 = virtualinvoke $r41.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i20] = 4;
+
+     label59:
+        goto label61;
+
+     label60:
+        $r42 := @caughtexception;
+
+     label61:
+        $r43 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode COMET_BEGIN>;
+        $i21 = virtualinvoke $r43.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i21] = 20;
+
+     label62:
+        goto label64;
+
+     label63:
+        $r44 := @caughtexception;
+
+     label64:
+        $r45 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode COMET_CLOSE>;
+        $i22 = virtualinvoke $r45.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i22] = 23;
+
+     label65:
+        goto label67;
+
+     label66:
+        $r46 := @caughtexception;
+
+     label67:
+        $r47 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode COMET_END>;
+        $i23 = virtualinvoke $r47.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i23] = 21;
+
+     label68:
+        goto label70;
+
+     label69:
+        $r48 := @caughtexception;
+
+     label70:
+        $r49 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode COMET_SETTIMEOUT>;
+        $i24 = virtualinvoke $r49.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i24] = 24;
+
+     label71:
+        goto label73;
+
+     label72:
+        $r50 := @caughtexception;
+
+     label73:
+        $r51 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode COMMIT>;
+        $i25 = virtualinvoke $r51.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i25] = 3;
+
+     label74:
+        goto label76;
+
+     label75:
+        $r52 := @caughtexception;
+
+     label76:
+        $r53 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode CUSTOM>;
+        $i26 = virtualinvoke $r53.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i26] = 6;
+
+     label77:
+        goto label79;
+
+     label78:
+        $r54 := @caughtexception;
+
+     label79:
+        $r55 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode DISABLE_SWALLOW_INPUT>;
+        $i27 = virtualinvoke $r55.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i27] = 10;
+
+     label80:
+        goto label82;
+
+     label81:
+        $r56 := @caughtexception;
+
+     label82:
+        $r57 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode END_REQUEST>;
+        $i28 = virtualinvoke $r57.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i28] = 42;
+
+     label83:
+        goto label85;
+
+     label84:
+        $r58 := @caughtexception;
+
+     label85:
+        $r59 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode IS_ERROR>;
+        $i29 = virtualinvoke $r59.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i29] = 9;
+
+     label86:
+        goto label88;
+
+     label87:
+        $r60 := @caughtexception;
+
+     label88:
+        $r61 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode POST_REQUEST>;
+        $i30 = virtualinvoke $r61.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i30] = 8;
+
+     label89:
+        goto label91;
+
+     label90:
+        $r62 := @caughtexception;
+
+     label91:
+        $r63 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_HOST_ADDR_ATTRIBUTE>;
+        $i31 = virtualinvoke $r63.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i31] = 12;
+
+     label92:
+        goto label94;
+
+     label93:
+        $r64 := @caughtexception;
+
+     label94:
+        $r65 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_HOST_ATTRIBUTE>;
+        $i32 = virtualinvoke $r65.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i32] = 11;
+
+     label95:
+        goto label97;
+
+     label96:
+        $r66 := @caughtexception;
+
+     label97:
+        $r67 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_LOCALPORT_ATTRIBUTE>;
+        $i33 = virtualinvoke $r67.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i33] = 16;
+
+     label98:
+        goto label100;
+
+     label99:
+        $r68 := @caughtexception;
+
+     label100:
+        $r69 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_LOCAL_ADDR_ATTRIBUTE>;
+        $i34 = virtualinvoke $r69.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i34] = 17;
+
+     label101:
+        goto label103;
+
+     label102:
+        $r70 := @caughtexception;
+
+     label103:
+        $r71 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_LOCAL_NAME_ATTRIBUTE>;
+        $i35 = virtualinvoke $r71.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i35] = 18;
+
+     label104:
+        goto label106;
+
+     label105:
+        $r72 := @caughtexception;
+
+     label106:
+        $r73 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_REMOTEPORT_ATTRIBUTE>;
+        $i36 = virtualinvoke $r73.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i36] = 15;
+
+     label107:
+        goto label109;
+
+     label108:
+        $r74 := @caughtexception;
+
+     label109:
+        $r75 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_SET_BODY_REPLAY>;
+        $i37 = virtualinvoke $r75.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i37] = 19;
+
+     label110:
+        goto label112;
+
+     label111:
+        $r76 := @caughtexception;
+
+     label112:
+        $r77 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_SSL_ATTRIBUTE>;
+        $i38 = virtualinvoke $r77.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i38] = 13;
+
+     label113:
+        goto label115;
+
+     label114:
+        $r78 := @caughtexception;
+
+     label115:
+        $r79 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_SSL_CERTIFICATE>;
+        $i39 = virtualinvoke $r79.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i39] = 14;
+
+     label116:
+        goto label118;
+
+     label117:
+        $r80 := @caughtexception;
+
+     label118:
+        $r81 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode RESET>;
+        $i40 = virtualinvoke $r81.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i40] = 7;
+
+     label119:
+        goto label121;
+
+     label120:
+        $r82 := @caughtexception;
+
+     label121:
+        $r83 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode UPGRADE>;
+        $i41 = virtualinvoke $r83.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i41] = 41;
+
+     label122:
+        goto label124;
+
+     label123:
+        $r84 := @caughtexception;
+
+     label124:
+        $r85 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode UPGRADE_TOMCAT>;
+        $i42 = virtualinvoke $r85.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i42] = 39;
+
+     label125:
+        goto label127;
+
+     label126:
+        $r86 := @caughtexception;
+
+     label127:
+        <org.apache.coyote.ajp.AjpProcessor: int[] $SWITCH_TABLE$org$apache$coyote$ActionCode> = r1;
+        return r1;
+
+        catch java.lang.NoSuchFieldError from label1 to label2 with label3;
+        catch java.lang.NoSuchFieldError from label4 to label5 with label6;
+        catch java.lang.NoSuchFieldError from label7 to label8 with label9;
+        catch java.lang.NoSuchFieldError from label10 to label11 with label12;
+        catch java.lang.NoSuchFieldError from label13 to label14 with label15;
+        catch java.lang.NoSuchFieldError from label16 to label17 with label18;
+        catch java.lang.NoSuchFieldError from label19 to label20 with label21;
+        catch java.lang.NoSuchFieldError from label22 to label23 with label24;
+        catch java.lang.NoSuchFieldError from label25 to label26 with label27;
+        catch java.lang.NoSuchFieldError from label28 to label29 with label30;
+        catch java.lang.NoSuchFieldError from label31 to label32 with label33;
+        catch java.lang.NoSuchFieldError from label34 to label35 with label36;
+        catch java.lang.NoSuchFieldError from label37 to label38 with label39;
+        catch java.lang.NoSuchFieldError from label40 to label41 with label42;
+        catch java.lang.NoSuchFieldError from label43 to label44 with label45;
+        catch java.lang.NoSuchFieldError from label46 to label47 with label48;
+        catch java.lang.NoSuchFieldError from label49 to label50 with label51;
+        catch java.lang.NoSuchFieldError from label52 to label53 with label54;
+        catch java.lang.NoSuchFieldError from label55 to label56 with label57;
+        catch java.lang.NoSuchFieldError from label58 to label59 with label60;
+        catch java.lang.NoSuchFieldError from label61 to label62 with label63;
+        catch java.lang.NoSuchFieldError from label64 to label65 with label66;
+        catch java.lang.NoSuchFieldError from label67 to label68 with label69;
+        catch java.lang.NoSuchFieldError from label70 to label71 with label72;
+        catch java.lang.NoSuchFieldError from label73 to label74 with label75;
+        catch java.lang.NoSuchFieldError from label76 to label77 with label78;
+        catch java.lang.NoSuchFieldError from label79 to label80 with label81;
+        catch java.lang.NoSuchFieldError from label82 to label83 with label84;
+        catch java.lang.NoSuchFieldError from label85 to label86 with label87;
+        catch java.lang.NoSuchFieldError from label88 to label89 with label90;
+        catch java.lang.NoSuchFieldError from label91 to label92 with label93;
+        catch java.lang.NoSuchFieldError from label94 to label95 with label96;
+        catch java.lang.NoSuchFieldError from label97 to label98 with label99;
+        catch java.lang.NoSuchFieldError from label100 to label101 with label102;
+        catch java.lang.NoSuchFieldError from label103 to label104 with label105;
+        catch java.lang.NoSuchFieldError from label106 to label107 with label108;
+        catch java.lang.NoSuchFieldError from label109 to label110 with label111;
+        catch java.lang.NoSuchFieldError from label112 to label113 with label114;
+        catch java.lang.NoSuchFieldError from label115 to label116 with label117;
+        catch java.lang.NoSuchFieldError from label118 to label119 with label120;
+        catch java.lang.NoSuchFieldError from label121 to label122 with label123;
+        catch java.lang.NoSuchFieldError from label124 to label125 with label126;
+    }
+}

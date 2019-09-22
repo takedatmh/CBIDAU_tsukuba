@@ -1,0 +1,69 @@
+public class org.apache.catalina.authenticator.SingleSignOnListener extends java.lang.Object implements org.apache.catalina.SessionListener, java.io.Serializable
+{
+    private static final long serialVersionUID;
+    private final java.lang.String ssoId;
+
+    public void <init>(java.lang.String)
+    {
+        org.apache.catalina.authenticator.SingleSignOnListener r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.catalina.authenticator.SingleSignOnListener;
+        r1 := @parameter0: java.lang.String;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<org.apache.catalina.authenticator.SingleSignOnListener: java.lang.String ssoId> = r1;
+        return;
+    }
+
+    public void sessionEvent(org.apache.catalina.SessionEvent)
+    {
+        org.apache.catalina.authenticator.SingleSignOnListener r0;
+        org.apache.catalina.SessionEvent r1;
+        java.lang.String $r2, $r8, $r11;
+        org.apache.catalina.Session r3;
+        org.apache.catalina.Manager r4;
+        org.apache.catalina.Context r5;
+        org.apache.catalina.Authenticator r6;
+        org.apache.catalina.authenticator.SingleSignOn r7;
+        boolean $z0, $z1;
+        org.apache.catalina.Container $r9;
+        org.apache.catalina.authenticator.AuthenticatorBase $r10;
+
+        r0 := @this: org.apache.catalina.authenticator.SingleSignOnListener;
+        r1 := @parameter0: org.apache.catalina.SessionEvent;
+        $r2 = "destroySession";
+        $r8 = virtualinvoke r1.<org.apache.catalina.SessionEvent: java.lang.String getType()>();
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>($r8);
+        if $z0 != 0 goto label0;
+
+        return;
+
+     label0:
+        r3 = virtualinvoke r1.<org.apache.catalina.SessionEvent: org.apache.catalina.Session getSession()>();
+        r4 = interfaceinvoke r3.<org.apache.catalina.Session: org.apache.catalina.Manager getManager()>();
+        if r4 != null goto label1;
+
+        return;
+
+     label1:
+        $r9 = interfaceinvoke r4.<org.apache.catalina.Manager: org.apache.catalina.Container getContainer()>();
+        r5 = (org.apache.catalina.Context) $r9;
+        r6 = interfaceinvoke r5.<org.apache.catalina.Context: org.apache.catalina.Authenticator getAuthenticator()>();
+        $z1 = r6 instanceof org.apache.catalina.authenticator.AuthenticatorBase;
+        if $z1 != 0 goto label2;
+
+        return;
+
+     label2:
+        $r10 = (org.apache.catalina.authenticator.AuthenticatorBase) r6;
+        r7 = $r10.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.authenticator.SingleSignOn sso>;
+        if r7 != null goto label3;
+
+        return;
+
+     label3:
+        $r11 = r0.<org.apache.catalina.authenticator.SingleSignOnListener: java.lang.String ssoId>;
+        virtualinvoke r7.<org.apache.catalina.authenticator.SingleSignOn: void sessionDestroyed(java.lang.String,org.apache.catalina.Session)>($r11, r3);
+        return;
+    }
+}

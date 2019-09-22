@@ -1,0 +1,72 @@
+public class org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier extends java.lang.Object
+{
+    private final org.apache.tomcat.util.http.fileupload.ProgressListener listener;
+    private final long contentLength;
+    private long bytesRead;
+    private int items;
+
+    void <init>(org.apache.tomcat.util.http.fileupload.ProgressListener, long)
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier r0;
+        org.apache.tomcat.util.http.fileupload.ProgressListener r1;
+        long l0;
+
+        r0 := @this: org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier;
+        r1 := @parameter0: org.apache.tomcat.util.http.fileupload.ProgressListener;
+        l0 := @parameter1: long;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier: org.apache.tomcat.util.http.fileupload.ProgressListener listener> = r1;
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier: long contentLength> = l0;
+        return;
+    }
+
+    void noteBytesRead(int)
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier r0;
+        int i0;
+        long $l1, $l2, $l3;
+
+        r0 := @this: org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier;
+        i0 := @parameter0: int;
+        $l1 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier: long bytesRead>;
+        $l2 = (long) i0;
+        $l3 = $l1 + $l2;
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier: long bytesRead> = $l3;
+        specialinvoke r0.<org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier: void notifyListener()>();
+        return;
+    }
+
+    void noteItem()
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier r0;
+        int $i0, $i1;
+
+        r0 := @this: org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier;
+        $i0 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier: int items>;
+        $i1 = $i0 + 1;
+        r0.<org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier: int items> = $i1;
+        specialinvoke r0.<org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier: void notifyListener()>();
+        return;
+    }
+
+    private void notifyListener()
+    {
+        org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier r0;
+        org.apache.tomcat.util.http.fileupload.ProgressListener $r1, $r2;
+        long $l0, $l1;
+        int $i2;
+
+        r0 := @this: org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier;
+        $r1 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier: org.apache.tomcat.util.http.fileupload.ProgressListener listener>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier: org.apache.tomcat.util.http.fileupload.ProgressListener listener>;
+        $l0 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier: long bytesRead>;
+        $l1 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier: long contentLength>;
+        $i2 = r0.<org.apache.tomcat.util.http.fileupload.MultipartStream$ProgressNotifier: int items>;
+        interfaceinvoke $r2.<org.apache.tomcat.util.http.fileupload.ProgressListener: void update(long,long,int)>($l0, $l1, $i2);
+
+     label0:
+        return;
+    }
+}

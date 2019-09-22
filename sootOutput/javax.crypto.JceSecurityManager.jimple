@@ -1,0 +1,397 @@
+final class javax.crypto.JceSecurityManager extends java.lang.SecurityManager
+{
+    private static final javax.crypto.CryptoPermissions defaultPolicy;
+    private static final javax.crypto.CryptoPermissions exemptPolicy;
+    private static final javax.crypto.CryptoAllPermission allPerm;
+    private static final java.util.Vector TrustedCallersCache;
+    private static final java.util.concurrent.ConcurrentMap exemptCache;
+    private static final javax.crypto.CryptoPermissions CACHE_NULL_MARK;
+    static final javax.crypto.JceSecurityManager INSTANCE;
+
+    private void <init>()
+    {
+        javax.crypto.JceSecurityManager r0;
+
+        r0 := @this: javax.crypto.JceSecurityManager;
+        specialinvoke r0.<java.lang.SecurityManager: void <init>()>();
+        return;
+    }
+
+    javax.crypto.CryptoPermission getCryptoPermission(java.lang.String)
+    {
+        javax.crypto.JceSecurityManager r0;
+        java.lang.String r1, r12, $r14, $r32, $r37, $r39, $r42, $r44;
+        java.util.Locale $r2;
+        javax.crypto.CryptoPermission r3, r9, r10, r11, $r40, $r43;
+        java.lang.Class[] r4;
+        java.net.URL r5, $r22;
+        int i0, $i1, $i2, $i3, $i4;
+        java.lang.Class r6, r7, $r18;
+        java.lang.Throwable r8, $r25;
+        javax.crypto.CryptoAllPermission $r13, $r27, $r28;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+        java.util.concurrent.ConcurrentMap $r15, $r19, $r21;
+        java.lang.Object $r16, $r20, $r31, $r36;
+        javax.crypto.CryptoPermissions r17, $r23, $r26, $r33;
+        java.security.PermissionCollection r29, r34;
+        java.util.Enumeration r30, r35;
+        java.security.spec.AlgorithmParameterSpec $r41;
+        java.lang.Exception $r47, r48;
+
+        r0 := @this: javax.crypto.JceSecurityManager;
+        r1 := @parameter0: java.lang.String;
+        $r2 = <java.util.Locale: java.util.Locale ENGLISH>;
+        r12 = virtualinvoke r1.<java.lang.String: java.lang.String toUpperCase(java.util.Locale)>($r2);
+        r3 = specialinvoke r0.<javax.crypto.JceSecurityManager: javax.crypto.CryptoPermission getDefaultPermission(java.lang.String)>(r12);
+        $r13 = <javax.crypto.CryptoAllPermission: javax.crypto.CryptoAllPermission INSTANCE>;
+        if r3 != $r13 goto label0;
+
+        return r3;
+
+     label0:
+        r4 = virtualinvoke r0.<javax.crypto.JceSecurityManager: java.lang.Class[] getClassContext()>();
+        r5 = null;
+        i0 = 0;
+
+     label1:
+        $i1 = lengthof r4;
+        if i0 >= $i1 goto label5;
+
+        r6 = r4[i0];
+        r5 = staticinvoke <javax.crypto.JceSecurity: java.net.URL getCodeBase(java.lang.Class)>(r6);
+        if r5 == null goto label2;
+
+        goto label5;
+
+     label2:
+        $r14 = virtualinvoke r6.<java.lang.Class: java.lang.String getName()>();
+        $z0 = virtualinvoke $r14.<java.lang.String: boolean startsWith(java.lang.String)>("javax.crypto.");
+        if $z0 == 0 goto label3;
+
+        goto label4;
+
+     label3:
+        return r3;
+
+     label4:
+        i0 = i0 + 1;
+        goto label1;
+
+     label5:
+        $i2 = lengthof r4;
+        if i0 != $i2 goto label6;
+
+        return r3;
+
+     label6:
+        $r15 = <javax.crypto.JceSecurityManager: java.util.concurrent.ConcurrentMap exemptCache>;
+        $r16 = interfaceinvoke $r15.<java.util.concurrent.ConcurrentMap: java.lang.Object get(java.lang.Object)>(r5);
+        r17 = (javax.crypto.CryptoPermissions) $r16;
+        if r17 != null goto label15;
+
+        $r18 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+        r7 = $r18;
+        entermonitor $r18;
+
+     label7:
+        $r19 = <javax.crypto.JceSecurityManager: java.util.concurrent.ConcurrentMap exemptCache>;
+        $r20 = interfaceinvoke $r19.<java.util.concurrent.ConcurrentMap: java.lang.Object get(java.lang.Object)>(r5);
+        r17 = (javax.crypto.CryptoPermissions) $r20;
+        if r17 != null goto label10;
+
+        r17 = staticinvoke <javax.crypto.JceSecurityManager: javax.crypto.CryptoPermissions getAppPermissions(java.net.URL)>(r5);
+        $r21 = <javax.crypto.JceSecurityManager: java.util.concurrent.ConcurrentMap exemptCache>;
+        $r22 = r5;
+        if r17 != null goto label8;
+
+        $r23 = <javax.crypto.JceSecurityManager: javax.crypto.CryptoPermissions CACHE_NULL_MARK>;
+        goto label9;
+
+     label8:
+        $r23 = r17;
+
+     label9:
+        interfaceinvoke $r21.<java.util.concurrent.ConcurrentMap: java.lang.Object putIfAbsent(java.lang.Object,java.lang.Object)>($r22, $r23);
+
+     label10:
+        exitmonitor r7;
+
+     label11:
+        goto label15;
+
+     label12:
+        $r25 := @caughtexception;
+
+     label13:
+        r8 = $r25;
+        exitmonitor r7;
+
+     label14:
+        throw r8;
+
+     label15:
+        if r17 == null goto label16;
+
+        $r26 = <javax.crypto.JceSecurityManager: javax.crypto.CryptoPermissions CACHE_NULL_MARK>;
+        if r17 != $r26 goto label17;
+
+     label16:
+        return r3;
+
+     label17:
+        $r27 = <javax.crypto.JceSecurityManager: javax.crypto.CryptoAllPermission allPerm>;
+        $z1 = virtualinvoke r17.<javax.crypto.CryptoPermissions: boolean implies(java.security.Permission)>($r27);
+        if $z1 == 0 goto label18;
+
+        $r28 = <javax.crypto.JceSecurityManager: javax.crypto.CryptoAllPermission allPerm>;
+        return $r28;
+
+     label18:
+        r29 = virtualinvoke r17.<javax.crypto.CryptoPermissions: java.security.PermissionCollection getPermissionCollection(java.lang.String)>(r12);
+        if r29 != null goto label19;
+
+        return r3;
+
+     label19:
+        r30 = virtualinvoke r29.<java.security.PermissionCollection: java.util.Enumeration elements()>();
+
+     label20:
+        $z2 = interfaceinvoke r30.<java.util.Enumeration: boolean hasMoreElements()>();
+        if $z2 == 0 goto label22;
+
+        $r31 = interfaceinvoke r30.<java.util.Enumeration: java.lang.Object nextElement()>();
+        r9 = (javax.crypto.CryptoPermission) $r31;
+        $r32 = virtualinvoke r9.<javax.crypto.CryptoPermission: java.lang.String getExemptionMechanism()>();
+        if $r32 != null goto label21;
+
+        return r9;
+
+     label21:
+        goto label20;
+
+     label22:
+        $r33 = <javax.crypto.JceSecurityManager: javax.crypto.CryptoPermissions exemptPolicy>;
+        r34 = virtualinvoke $r33.<javax.crypto.CryptoPermissions: java.security.PermissionCollection getPermissionCollection(java.lang.String)>(r12);
+        if r34 != null goto label23;
+
+        return r3;
+
+     label23:
+        r35 = virtualinvoke r34.<java.security.PermissionCollection: java.util.Enumeration elements()>();
+
+     label24:
+        $z3 = interfaceinvoke r35.<java.util.Enumeration: boolean hasMoreElements()>();
+        if $z3 == 0 goto label34;
+
+        $r36 = interfaceinvoke r35.<java.util.Enumeration: java.lang.Object nextElement()>();
+        r10 = (javax.crypto.CryptoPermission) $r36;
+
+     label25:
+        $r37 = virtualinvoke r10.<javax.crypto.CryptoPermission: java.lang.String getExemptionMechanism()>();
+        staticinvoke <javax.crypto.ExemptionMechanism: javax.crypto.ExemptionMechanism getInstance(java.lang.String)>($r37);
+        $r39 = virtualinvoke r10.<javax.crypto.CryptoPermission: java.lang.String getAlgorithm()>();
+        $z4 = virtualinvoke $r39.<java.lang.String: boolean equals(java.lang.Object)>("*");
+        if $z4 == 0 goto label29;
+
+        $z5 = virtualinvoke r10.<javax.crypto.CryptoPermission: boolean getCheckParam()>();
+        if $z5 == 0 goto label26;
+
+        $r40 = new javax.crypto.CryptoPermission;
+        $i3 = virtualinvoke r10.<javax.crypto.CryptoPermission: int getMaxKeySize()>();
+        $r41 = virtualinvoke r10.<javax.crypto.CryptoPermission: java.security.spec.AlgorithmParameterSpec getAlgorithmParameterSpec()>();
+        $r42 = virtualinvoke r10.<javax.crypto.CryptoPermission: java.lang.String getExemptionMechanism()>();
+        specialinvoke $r40.<javax.crypto.CryptoPermission: void <init>(java.lang.String,int,java.security.spec.AlgorithmParameterSpec,java.lang.String)>(r12, $i3, $r41, $r42);
+        r11 = $r40;
+        goto label27;
+
+     label26:
+        $r43 = new javax.crypto.CryptoPermission;
+        $i4 = virtualinvoke r10.<javax.crypto.CryptoPermission: int getMaxKeySize()>();
+        $r44 = virtualinvoke r10.<javax.crypto.CryptoPermission: java.lang.String getExemptionMechanism()>();
+        specialinvoke $r43.<javax.crypto.CryptoPermission: void <init>(java.lang.String,int,java.lang.String)>(r12, $i4, $r44);
+        r11 = $r43;
+
+     label27:
+        $z6 = virtualinvoke r17.<javax.crypto.CryptoPermissions: boolean implies(java.security.Permission)>(r11);
+        if $z6 == 0 goto label29;
+
+     label28:
+        return r11;
+
+     label29:
+        $z7 = virtualinvoke r17.<javax.crypto.CryptoPermissions: boolean implies(java.security.Permission)>(r10);
+        if $z7 == 0 goto label31;
+
+     label30:
+        return r10;
+
+     label31:
+        goto label33;
+
+     label32:
+        $r47 := @caughtexception;
+        r48 = $r47;
+        goto label24;
+
+     label33:
+        goto label24;
+
+     label34:
+        return r3;
+
+        catch java.lang.Throwable from label7 to label11 with label12;
+        catch java.lang.Throwable from label13 to label14 with label12;
+        catch java.lang.Exception from label25 to label28 with label32;
+        catch java.lang.Exception from label29 to label30 with label32;
+    }
+
+    private static javax.crypto.CryptoPermissions getAppPermissions(java.net.URL)
+    {
+        java.net.URL r0;
+        java.lang.Exception r1, $r3;
+        javax.crypto.CryptoPermissions $r2;
+
+        r0 := @parameter0: java.net.URL;
+
+     label0:
+        $r2 = staticinvoke <javax.crypto.JceSecurity: javax.crypto.CryptoPermissions verifyExemptJar(java.net.URL)>(r0);
+
+     label1:
+        return $r2;
+
+     label2:
+        $r3 := @caughtexception;
+        r1 = $r3;
+        return null;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    private javax.crypto.CryptoPermission getDefaultPermission(java.lang.String)
+    {
+        javax.crypto.JceSecurityManager r0;
+        java.lang.String r1;
+        javax.crypto.CryptoPermissions $r2;
+        java.util.Enumeration r3;
+        java.security.PermissionCollection $r4;
+        java.lang.Object $r5;
+        javax.crypto.CryptoPermission $r6;
+
+        r0 := @this: javax.crypto.JceSecurityManager;
+        r1 := @parameter0: java.lang.String;
+        $r2 = <javax.crypto.JceSecurityManager: javax.crypto.CryptoPermissions defaultPolicy>;
+        $r4 = virtualinvoke $r2.<javax.crypto.CryptoPermissions: java.security.PermissionCollection getPermissionCollection(java.lang.String)>(r1);
+        r3 = virtualinvoke $r4.<java.security.PermissionCollection: java.util.Enumeration elements()>();
+        $r5 = interfaceinvoke r3.<java.util.Enumeration: java.lang.Object nextElement()>();
+        $r6 = (javax.crypto.CryptoPermission) $r5;
+        return $r6;
+    }
+
+    boolean isCallerTrusted()
+    {
+        javax.crypto.JceSecurityManager r0;
+        java.lang.Class[] r1;
+        java.net.URL r2;
+        int i0, $i1, $i2;
+        java.lang.Exception r3, $r7;
+        java.lang.Class $r4, $r6, $r9;
+        java.util.Vector $r5, $r8;
+        boolean $z0;
+
+        r0 := @this: javax.crypto.JceSecurityManager;
+        r1 = virtualinvoke r0.<javax.crypto.JceSecurityManager: java.lang.Class[] getClassContext()>();
+        r2 = null;
+        i0 = 0;
+
+     label0:
+        $i1 = lengthof r1;
+        if i0 >= $i1 goto label2;
+
+        $r4 = r1[i0];
+        r2 = staticinvoke <javax.crypto.JceSecurity: java.net.URL getCodeBase(java.lang.Class)>($r4);
+        if r2 == null goto label1;
+
+        goto label2;
+
+     label1:
+        i0 = i0 + 1;
+        goto label0;
+
+     label2:
+        $i2 = lengthof r1;
+        if i0 != $i2 goto label3;
+
+        return 1;
+
+     label3:
+        $r5 = <javax.crypto.JceSecurityManager: java.util.Vector TrustedCallersCache>;
+        $r6 = r1[i0];
+        $z0 = virtualinvoke $r5.<java.util.Vector: boolean contains(java.lang.Object)>($r6);
+        if $z0 == 0 goto label4;
+
+        return 1;
+
+     label4:
+        staticinvoke <javax.crypto.JceSecurity: void verifyProviderJar(java.net.URL)>(r2);
+
+     label5:
+        goto label7;
+
+     label6:
+        $r7 := @caughtexception;
+        r3 = $r7;
+        return 0;
+
+     label7:
+        $r8 = <javax.crypto.JceSecurityManager: java.util.Vector TrustedCallersCache>;
+        $r9 = r1[i0];
+        virtualinvoke $r8.<java.util.Vector: void addElement(java.lang.Object)>($r9);
+        return 1;
+
+        catch java.lang.Exception from label4 to label5 with label6;
+    }
+
+    void <init>(javax.crypto.JceSecurityManager$1)
+    {
+        javax.crypto.JceSecurityManager r0;
+        javax.crypto.JceSecurityManager$1 r1;
+
+        r0 := @this: javax.crypto.JceSecurityManager;
+        r1 := @parameter0: javax.crypto.JceSecurityManager$1;
+        specialinvoke r0.<javax.crypto.JceSecurityManager: void <init>()>();
+        return;
+    }
+
+    static void <clinit>()
+    {
+        java.util.Vector $r0;
+        java.util.concurrent.ConcurrentHashMap $r1;
+        javax.crypto.CryptoPermissions $r2, $r3, $r4;
+        javax.crypto.CryptoAllPermission $r5;
+        javax.crypto.JceSecurityManager$1 $r6;
+        java.lang.Object $r7;
+        javax.crypto.JceSecurityManager $r8;
+
+        $r0 = new java.util.Vector;
+        specialinvoke $r0.<java.util.Vector: void <init>(int)>(2);
+        <javax.crypto.JceSecurityManager: java.util.Vector TrustedCallersCache> = $r0;
+        $r1 = new java.util.concurrent.ConcurrentHashMap;
+        specialinvoke $r1.<java.util.concurrent.ConcurrentHashMap: void <init>()>();
+        <javax.crypto.JceSecurityManager: java.util.concurrent.ConcurrentMap exemptCache> = $r1;
+        $r2 = new javax.crypto.CryptoPermissions;
+        specialinvoke $r2.<javax.crypto.CryptoPermissions: void <init>()>();
+        <javax.crypto.JceSecurityManager: javax.crypto.CryptoPermissions CACHE_NULL_MARK> = $r2;
+        $r3 = staticinvoke <javax.crypto.JceSecurity: javax.crypto.CryptoPermissions getDefaultPolicy()>();
+        <javax.crypto.JceSecurityManager: javax.crypto.CryptoPermissions defaultPolicy> = $r3;
+        $r4 = staticinvoke <javax.crypto.JceSecurity: javax.crypto.CryptoPermissions getExemptPolicy()>();
+        <javax.crypto.JceSecurityManager: javax.crypto.CryptoPermissions exemptPolicy> = $r4;
+        $r5 = <javax.crypto.CryptoAllPermission: javax.crypto.CryptoAllPermission INSTANCE>;
+        <javax.crypto.JceSecurityManager: javax.crypto.CryptoAllPermission allPerm> = $r5;
+        $r6 = new javax.crypto.JceSecurityManager$1;
+        specialinvoke $r6.<javax.crypto.JceSecurityManager$1: void <init>()>();
+        $r7 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r6);
+        $r8 = (javax.crypto.JceSecurityManager) $r7;
+        <javax.crypto.JceSecurityManager: javax.crypto.JceSecurityManager INSTANCE> = $r8;
+        return;
+    }
+}

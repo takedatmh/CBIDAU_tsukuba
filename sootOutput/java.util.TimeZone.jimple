@@ -1,0 +1,916 @@
+public abstract class java.util.TimeZone extends java.lang.Object implements java.io.Serializable, java.lang.Cloneable
+{
+    public static final int SHORT;
+    public static final int LONG;
+    private static final int ONE_MINUTE;
+    private static final int ONE_HOUR;
+    private static final int ONE_DAY;
+    static final long serialVersionUID;
+    private static final boolean allowSetDefault;
+    static final java.util.TimeZone NO_TIMEZONE;
+    private java.lang.String ID;
+    private static volatile java.util.TimeZone defaultTimeZone;
+    static final java.lang.String GMT_ID;
+    private static final int GMT_ID_LENGTH;
+    private static volatile java.util.TimeZone mainAppContextDefault;
+    static final boolean $assertionsDisabled;
+
+    public void <init>()
+    {
+        java.util.TimeZone r0;
+
+        r0 := @this: java.util.TimeZone;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public abstract int getOffset(int, int, int, int, int, int);
+
+    public int getOffset(long)
+    {
+        java.util.TimeZone r0;
+        long l0;
+        java.util.Date $r1;
+        boolean $z0;
+        int $i1, $i2, $i3, $i4;
+
+        r0 := @this: java.util.TimeZone;
+        l0 := @parameter0: long;
+        $r1 = new java.util.Date;
+        specialinvoke $r1.<java.util.Date: void <init>(long)>(l0);
+        $z0 = virtualinvoke r0.<java.util.TimeZone: boolean inDaylightTime(java.util.Date)>($r1);
+        if $z0 == 0 goto label0;
+
+        $i1 = virtualinvoke r0.<java.util.TimeZone: int getRawOffset()>();
+        $i2 = virtualinvoke r0.<java.util.TimeZone: int getDSTSavings()>();
+        $i3 = $i1 + $i2;
+        return $i3;
+
+     label0:
+        $i4 = virtualinvoke r0.<java.util.TimeZone: int getRawOffset()>();
+        return $i4;
+    }
+
+    int getOffsets(long, int[])
+    {
+        java.util.TimeZone r0;
+        long l0;
+        int[] r1;
+        int i1, i2, $i3;
+        java.util.Date $r2;
+        boolean $z0;
+
+        r0 := @this: java.util.TimeZone;
+        l0 := @parameter0: long;
+        r1 := @parameter1: int[];
+        i1 = virtualinvoke r0.<java.util.TimeZone: int getRawOffset()>();
+        i2 = 0;
+        $r2 = new java.util.Date;
+        specialinvoke $r2.<java.util.Date: void <init>(long)>(l0);
+        $z0 = virtualinvoke r0.<java.util.TimeZone: boolean inDaylightTime(java.util.Date)>($r2);
+        if $z0 == 0 goto label0;
+
+        i2 = virtualinvoke r0.<java.util.TimeZone: int getDSTSavings()>();
+
+     label0:
+        if r1 == null goto label1;
+
+        r1[0] = i1;
+        r1[1] = i2;
+
+     label1:
+        $i3 = i1 + i2;
+        return $i3;
+    }
+
+    public abstract void setRawOffset(int);
+
+    public abstract int getRawOffset();
+
+    public java.lang.String getID()
+    {
+        java.util.TimeZone r0;
+        java.lang.String $r1;
+
+        r0 := @this: java.util.TimeZone;
+        $r1 = r0.<java.util.TimeZone: java.lang.String ID>;
+        return $r1;
+    }
+
+    public void setID(java.lang.String)
+    {
+        java.util.TimeZone r0;
+        java.lang.String r1;
+        java.lang.NullPointerException $r2;
+
+        r0 := @this: java.util.TimeZone;
+        r1 := @parameter0: java.lang.String;
+        if r1 != null goto label0;
+
+        $r2 = new java.lang.NullPointerException;
+        specialinvoke $r2.<java.lang.NullPointerException: void <init>()>();
+        throw $r2;
+
+     label0:
+        r0.<java.util.TimeZone: java.lang.String ID> = r1;
+        return;
+    }
+
+    public final java.lang.String getDisplayName()
+    {
+        java.util.TimeZone r0;
+        java.util.Locale$Category $r1;
+        java.util.Locale $r2;
+        java.lang.String $r3;
+
+        r0 := @this: java.util.TimeZone;
+        $r1 = <java.util.Locale$Category: java.util.Locale$Category DISPLAY>;
+        $r2 = staticinvoke <java.util.Locale: java.util.Locale getDefault(java.util.Locale$Category)>($r1);
+        $r3 = virtualinvoke r0.<java.util.TimeZone: java.lang.String getDisplayName(boolean,int,java.util.Locale)>(0, 1, $r2);
+        return $r3;
+    }
+
+    public final java.lang.String getDisplayName(java.util.Locale)
+    {
+        java.util.TimeZone r0;
+        java.util.Locale r1;
+        java.lang.String $r2;
+
+        r0 := @this: java.util.TimeZone;
+        r1 := @parameter0: java.util.Locale;
+        $r2 = virtualinvoke r0.<java.util.TimeZone: java.lang.String getDisplayName(boolean,int,java.util.Locale)>(0, 1, r1);
+        return $r2;
+    }
+
+    public final java.lang.String getDisplayName(boolean, int)
+    {
+        java.util.TimeZone r0;
+        boolean z0;
+        int i0;
+        java.util.Locale$Category $r1;
+        java.util.Locale $r2;
+        java.lang.String $r3;
+
+        r0 := @this: java.util.TimeZone;
+        z0 := @parameter0: boolean;
+        i0 := @parameter1: int;
+        $r1 = <java.util.Locale$Category: java.util.Locale$Category DISPLAY>;
+        $r2 = staticinvoke <java.util.Locale: java.util.Locale getDefault(java.util.Locale$Category)>($r1);
+        $r3 = virtualinvoke r0.<java.util.TimeZone: java.lang.String getDisplayName(boolean,int,java.util.Locale)>(z0, i0, $r2);
+        return $r3;
+    }
+
+    public java.lang.String getDisplayName(boolean, int, java.util.Locale)
+    {
+        java.util.TimeZone r0;
+        boolean z0, $z1;
+        int i0, i2, $i3, i5;
+        java.util.Locale r1;
+        java.lang.StringBuilder $r2, $r6, $r7;
+        java.lang.String r3, $r8, $r9, $r10;
+        java.lang.String[] r4;
+        char c1;
+        java.lang.IllegalArgumentException $r5;
+        byte $b4;
+
+        r0 := @this: java.util.TimeZone;
+        z0 := @parameter0: boolean;
+        i0 := @parameter1: int;
+        r1 := @parameter2: java.util.Locale;
+        if i0 == 0 goto label0;
+
+        if i0 == 1 goto label0;
+
+        $r5 = new java.lang.IllegalArgumentException;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+        $r6 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Illegal style: ");
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r5.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r8);
+        throw $r5;
+
+     label0:
+        r3 = virtualinvoke r0.<java.util.TimeZone: java.lang.String getID()>();
+        r4 = staticinvoke <java.util.TimeZone: java.lang.String[] getDisplayNames(java.lang.String,java.util.Locale)>(r3, r1);
+        if r4 != null goto label4;
+
+        $z1 = virtualinvoke r3.<java.lang.String: boolean startsWith(java.lang.String)>("GMT");
+        if $z1 == 0 goto label2;
+
+        c1 = virtualinvoke r3.<java.lang.String: char charAt(int)>(3);
+        if c1 == 43 goto label1;
+
+        if c1 != 45 goto label2;
+
+     label1:
+        return r3;
+
+     label2:
+        i2 = virtualinvoke r0.<java.util.TimeZone: int getRawOffset()>();
+        if z0 == 0 goto label3;
+
+        $i3 = virtualinvoke r0.<java.util.TimeZone: int getDSTSavings()>();
+        i2 = i2 + $i3;
+
+     label3:
+        $r9 = staticinvoke <sun.util.calendar.ZoneInfoFile: java.lang.String toCustomID(int)>(i2);
+        return $r9;
+
+     label4:
+        if z0 == 0 goto label5;
+
+        $b4 = 3;
+        goto label6;
+
+     label5:
+        $b4 = 1;
+
+     label6:
+        i5 = $b4;
+        if i0 != 0 goto label7;
+
+        i5 = i5 + 1;
+
+     label7:
+        $r10 = r4[i5];
+        return $r10;
+    }
+
+    private static final java.lang.String[] getDisplayNames(java.lang.String, java.util.Locale)
+    {
+        java.lang.String r0;
+        java.util.Locale r1;
+        java.util.Map r2, r4;
+        java.lang.ref.SoftReference r3, $r15, r16;
+        java.lang.String[] r5, r9, r11;
+        java.lang.Object $r6, $r7, $r8;
+        java.util.concurrent.ConcurrentHashMap $r12, r13;
+
+        r0 := @parameter0: java.lang.String;
+        r1 := @parameter1: java.util.Locale;
+        r2 = staticinvoke <java.util.TimeZone$DisplayNames: java.util.Map access$000()>();
+        $r6 = interfaceinvoke r2.<java.util.Map: java.lang.Object get(java.lang.Object)>(r0);
+        r3 = (java.lang.ref.SoftReference) $r6;
+        if r3 == null goto label2;
+
+        $r7 = virtualinvoke r3.<java.lang.ref.SoftReference: java.lang.Object get()>();
+        r4 = (java.util.Map) $r7;
+        if r4 == null goto label2;
+
+        $r8 = interfaceinvoke r4.<java.util.Map: java.lang.Object get(java.lang.Object)>(r1);
+        r5 = (java.lang.String[]) $r8;
+        if r5 == null goto label0;
+
+        return r5;
+
+     label0:
+        r9 = staticinvoke <sun.util.TimeZoneNameUtility: java.lang.String[] retrieveDisplayNames(java.lang.String,java.util.Locale)>(r0, r1);
+        if r9 == null goto label1;
+
+        interfaceinvoke r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(r1, r9);
+
+     label1:
+        return r9;
+
+     label2:
+        r11 = staticinvoke <sun.util.TimeZoneNameUtility: java.lang.String[] retrieveDisplayNames(java.lang.String,java.util.Locale)>(r0, r1);
+        if r11 == null goto label3;
+
+        $r12 = new java.util.concurrent.ConcurrentHashMap;
+        specialinvoke $r12.<java.util.concurrent.ConcurrentHashMap: void <init>()>();
+        r13 = $r12;
+        interfaceinvoke r13.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(r1, r11);
+        $r15 = new java.lang.ref.SoftReference;
+        specialinvoke $r15.<java.lang.ref.SoftReference: void <init>(java.lang.Object)>(r13);
+        r16 = $r15;
+        interfaceinvoke r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(r0, r16);
+
+     label3:
+        return r11;
+    }
+
+    public int getDSTSavings()
+    {
+        java.util.TimeZone r0;
+        boolean $z0;
+
+        r0 := @this: java.util.TimeZone;
+        $z0 = virtualinvoke r0.<java.util.TimeZone: boolean useDaylightTime()>();
+        if $z0 == 0 goto label0;
+
+        return 3600000;
+
+     label0:
+        return 0;
+    }
+
+    public abstract boolean useDaylightTime();
+
+    public boolean observesDaylightTime()
+    {
+        java.util.TimeZone r0;
+        java.util.Date $r1;
+        boolean $z0, $z1, $z2;
+
+        r0 := @this: java.util.TimeZone;
+        $z0 = virtualinvoke r0.<java.util.TimeZone: boolean useDaylightTime()>();
+        if $z0 != 0 goto label0;
+
+        $r1 = new java.util.Date;
+        specialinvoke $r1.<java.util.Date: void <init>()>();
+        $z1 = virtualinvoke r0.<java.util.TimeZone: boolean inDaylightTime(java.util.Date)>($r1);
+        if $z1 == 0 goto label1;
+
+     label0:
+        $z2 = 1;
+        goto label2;
+
+     label1:
+        $z2 = 0;
+
+     label2:
+        return $z2;
+    }
+
+    public abstract boolean inDaylightTime(java.util.Date);
+
+    public static synchronized java.util.TimeZone getTimeZone(java.lang.String)
+    {
+        java.lang.String r0;
+        java.util.TimeZone $r1;
+
+        r0 := @parameter0: java.lang.String;
+        $r1 = staticinvoke <java.util.TimeZone: java.util.TimeZone getTimeZone(java.lang.String,boolean)>(r0, 1);
+        return $r1;
+    }
+
+    private static java.util.TimeZone getTimeZone(java.lang.String, boolean)
+    {
+        java.lang.String r0;
+        boolean z0;
+        java.util.TimeZone r1;
+        sun.util.calendar.ZoneInfo $r2;
+
+        r0 := @parameter0: java.lang.String;
+        z0 := @parameter1: boolean;
+        r1 = staticinvoke <sun.util.calendar.ZoneInfo: java.util.TimeZone getTimeZone(java.lang.String)>(r0);
+        if r1 != null goto label0;
+
+        r1 = staticinvoke <java.util.TimeZone: java.util.TimeZone parseCustomTimeZone(java.lang.String)>(r0);
+        if r1 != null goto label0;
+
+        if z0 == 0 goto label0;
+
+        $r2 = new sun.util.calendar.ZoneInfo;
+        specialinvoke $r2.<sun.util.calendar.ZoneInfo: void <init>(java.lang.String,int)>("GMT", 0);
+        r1 = $r2;
+
+     label0:
+        return r1;
+    }
+
+    public static synchronized java.lang.String[] getAvailableIDs(int)
+    {
+        int i0;
+        java.lang.String[] $r0;
+
+        i0 := @parameter0: int;
+        $r0 = staticinvoke <sun.util.calendar.ZoneInfo: java.lang.String[] getAvailableIDs(int)>(i0);
+        return $r0;
+    }
+
+    public static synchronized java.lang.String[] getAvailableIDs()
+    {
+        java.lang.String[] $r0;
+
+        $r0 = staticinvoke <sun.util.calendar.ZoneInfo: java.lang.String[] getAvailableIDs()>();
+        return $r0;
+    }
+
+    private static native java.lang.String getSystemTimeZoneID(java.lang.String, java.lang.String);
+
+    private static native java.lang.String getSystemGMTOffsetID();
+
+    public static java.util.TimeZone getDefault()
+    {
+        java.util.TimeZone $r0, $r2;
+        java.lang.Object $r1;
+
+        $r0 = staticinvoke <java.util.TimeZone: java.util.TimeZone getDefaultRef()>();
+        $r1 = virtualinvoke $r0.<java.util.TimeZone: java.lang.Object clone()>();
+        $r2 = (java.util.TimeZone) $r1;
+        return $r2;
+    }
+
+    static java.util.TimeZone getDefaultRef()
+    {
+        java.util.TimeZone r0;
+        boolean $z0;
+        java.lang.AssertionError $r1;
+
+        r0 = staticinvoke <java.util.TimeZone: java.util.TimeZone getDefaultInAppContext()>();
+        if r0 != null goto label0;
+
+        r0 = <java.util.TimeZone: java.util.TimeZone defaultTimeZone>;
+        if r0 != null goto label0;
+
+        r0 = staticinvoke <java.util.TimeZone: java.util.TimeZone setDefaultZone()>();
+        $z0 = <java.util.TimeZone: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label0;
+
+        if r0 != null goto label0;
+
+        $r1 = new java.lang.AssertionError;
+        specialinvoke $r1.<java.lang.AssertionError: void <init>()>();
+        throw $r1;
+
+     label0:
+        return r0;
+    }
+
+    private static synchronized java.util.TimeZone setDefaultZone()
+    {
+        null_type n0;
+        java.lang.String r0, r1, r2, r12, r14;
+        java.lang.NullPointerException r3, $r10;
+        sun.security.action.GetPropertyAction $r4, $r6, $r8;
+        java.lang.Object $r5, $r7, $r9;
+        boolean $z0, $z1;
+        java.util.TimeZone r11;
+        java.lang.AssertionError $r13;
+        java.util.TimeZone$1 $r15;
+
+        n0 = null;
+        $r4 = new sun.security.action.GetPropertyAction;
+        specialinvoke $r4.<sun.security.action.GetPropertyAction: void <init>(java.lang.String)>("user.timezone");
+        $r5 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r4);
+        r0 = (java.lang.String) $r5;
+        if r0 == null goto label0;
+
+        $z0 = virtualinvoke r0.<java.lang.String: boolean equals(java.lang.Object)>("");
+        if $z0 == 0 goto label4;
+
+     label0:
+        $r6 = new sun.security.action.GetPropertyAction;
+        specialinvoke $r6.<sun.security.action.GetPropertyAction: void <init>(java.lang.String)>("user.country");
+        $r7 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r6);
+        r1 = (java.lang.String) $r7;
+        $r8 = new sun.security.action.GetPropertyAction;
+        specialinvoke $r8.<sun.security.action.GetPropertyAction: void <init>(java.lang.String)>("java.home");
+        $r9 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r8);
+        r2 = (java.lang.String) $r9;
+
+     label1:
+        r0 = staticinvoke <java.util.TimeZone: java.lang.String getSystemTimeZoneID(java.lang.String,java.lang.String)>(r2, r1);
+        if r0 != null goto label2;
+
+        r0 = "GMT";
+
+     label2:
+        goto label4;
+
+     label3:
+        $r10 := @caughtexception;
+        r3 = $r10;
+        r0 = "GMT";
+
+     label4:
+        r11 = staticinvoke <java.util.TimeZone: java.util.TimeZone getTimeZone(java.lang.String,boolean)>(r0, 0);
+        if r11 != null goto label6;
+
+        r12 = staticinvoke <java.util.TimeZone: java.lang.String getSystemGMTOffsetID()>();
+        if r12 == null goto label5;
+
+        r0 = r12;
+
+     label5:
+        r11 = staticinvoke <java.util.TimeZone: java.util.TimeZone getTimeZone(java.lang.String,boolean)>(r0, 1);
+
+     label6:
+        $z1 = <java.util.TimeZone: boolean $assertionsDisabled>;
+        if $z1 != 0 goto label7;
+
+        if r11 != null goto label7;
+
+        $r13 = new java.lang.AssertionError;
+        specialinvoke $r13.<java.lang.AssertionError: void <init>()>();
+        throw $r13;
+
+     label7:
+        r14 = r0;
+        $r15 = new java.util.TimeZone$1;
+        specialinvoke $r15.<java.util.TimeZone$1: void <init>(java.lang.String)>(r14);
+        staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r15);
+        <java.util.TimeZone: java.util.TimeZone defaultTimeZone> = r11;
+        return r11;
+
+        catch java.lang.NullPointerException from label1 to label2 with label3;
+    }
+
+    private static boolean hasPermission()
+    {
+        boolean z0, $z1;
+        java.lang.SecurityManager r0;
+        java.util.PropertyPermission $r1;
+        java.lang.SecurityException r2, $r3;
+
+        z0 = 1;
+        r0 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r0 == null goto label4;
+
+     label0:
+        $r1 = new java.util.PropertyPermission;
+        specialinvoke $r1.<java.util.PropertyPermission: void <init>(java.lang.String,java.lang.String)>("user.timezone", "write");
+        virtualinvoke r0.<java.lang.SecurityManager: void checkPermission(java.security.Permission)>($r1);
+
+     label1:
+        goto label4;
+
+     label2:
+        $r3 := @caughtexception;
+        r2 = $r3;
+        $z1 = <java.util.TimeZone: boolean allowSetDefault>;
+        if $z1 != 0 goto label3;
+
+        throw r2;
+
+     label3:
+        z0 = 0;
+
+     label4:
+        return z0;
+
+        catch java.lang.SecurityException from label0 to label1 with label2;
+    }
+
+    public static void setDefault(java.util.TimeZone)
+    {
+        java.util.TimeZone r0;
+        boolean $z0;
+        java.lang.Class r1, $r3;
+        java.lang.Throwable r2, $r4;
+
+        r0 := @parameter0: java.util.TimeZone;
+        $z0 = staticinvoke <java.util.TimeZone: boolean hasPermission()>();
+        if $z0 == 0 goto label6;
+
+        $r3 = class "java/util/TimeZone";
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        <java.util.TimeZone: java.util.TimeZone defaultTimeZone> = r0;
+        staticinvoke <java.util.TimeZone: void setDefaultInAppContext(java.util.TimeZone)>(null);
+        exitmonitor r1;
+
+     label1:
+        goto label5;
+
+     label2:
+        $r4 := @caughtexception;
+
+     label3:
+        r2 = $r4;
+        exitmonitor r1;
+
+     label4:
+        throw r2;
+
+     label5:
+        goto label7;
+
+     label6:
+        staticinvoke <java.util.TimeZone: void setDefaultInAppContext(java.util.TimeZone)>(r0);
+
+     label7:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static java.util.TimeZone getDefaultInAppContext()
+    {
+        boolean $z0, $z1, $z2;
+        sun.misc.JavaAWTAccess r0;
+        java.util.TimeZone r1, $r3, $r5;
+        java.lang.SecurityManager $r2;
+        java.lang.Object $r4;
+
+        $z0 = <java.util.TimeZone: boolean allowSetDefault>;
+        if $z0 == 0 goto label4;
+
+        r0 = staticinvoke <sun.misc.SharedSecrets: sun.misc.JavaAWTAccess getJavaAWTAccess()>();
+        $r2 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if $r2 == null goto label0;
+
+        if r0 != null goto label1;
+
+     label0:
+        $r3 = <java.util.TimeZone: java.util.TimeZone mainAppContextDefault>;
+        return $r3;
+
+     label1:
+        $z1 = interfaceinvoke r0.<sun.misc.JavaAWTAccess: boolean isDisposed()>();
+        if $z1 == 0 goto label2;
+
+        return null;
+
+     label2:
+        $r4 = interfaceinvoke r0.<sun.misc.JavaAWTAccess: java.lang.Object get(java.lang.Object)>(class "java/util/TimeZone");
+        r1 = (java.util.TimeZone) $r4;
+        if r1 != null goto label3;
+
+        $z2 = interfaceinvoke r0.<sun.misc.JavaAWTAccess: boolean isMainAppContext()>();
+        if $z2 == 0 goto label3;
+
+        $r5 = <java.util.TimeZone: java.util.TimeZone mainAppContextDefault>;
+        return $r5;
+
+     label3:
+        return r1;
+
+     label4:
+        return null;
+    }
+
+    private static void setDefaultInAppContext(java.util.TimeZone)
+    {
+        java.util.TimeZone r0;
+        boolean $z0, $z1, $z2;
+        sun.misc.JavaAWTAccess r1;
+        java.lang.SecurityManager $r2;
+
+        r0 := @parameter0: java.util.TimeZone;
+        $z0 = <java.util.TimeZone: boolean allowSetDefault>;
+        if $z0 == 0 goto label2;
+
+        r1 = staticinvoke <sun.misc.SharedSecrets: sun.misc.JavaAWTAccess getJavaAWTAccess()>();
+        $r2 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if $r2 == null goto label0;
+
+        if r1 != null goto label1;
+
+     label0:
+        <java.util.TimeZone: java.util.TimeZone mainAppContextDefault> = r0;
+        goto label2;
+
+     label1:
+        $z1 = interfaceinvoke r1.<sun.misc.JavaAWTAccess: boolean isDisposed()>();
+        if $z1 != 0 goto label2;
+
+        interfaceinvoke r1.<sun.misc.JavaAWTAccess: void put(java.lang.Object,java.lang.Object)>(class "java/util/TimeZone", r0);
+        $z2 = interfaceinvoke r1.<sun.misc.JavaAWTAccess: boolean isMainAppContext()>();
+        if $z2 == 0 goto label2;
+
+        <java.util.TimeZone: java.util.TimeZone mainAppContextDefault> = null;
+
+     label2:
+        return;
+    }
+
+    public boolean hasSameRules(java.util.TimeZone)
+    {
+        java.util.TimeZone r0, r1;
+        int $i0, $i1;
+        boolean $z0, $z1, $z2;
+
+        r0 := @this: java.util.TimeZone;
+        r1 := @parameter0: java.util.TimeZone;
+        if r1 == null goto label0;
+
+        $i0 = virtualinvoke r0.<java.util.TimeZone: int getRawOffset()>();
+        $i1 = virtualinvoke r1.<java.util.TimeZone: int getRawOffset()>();
+        if $i0 != $i1 goto label0;
+
+        $z0 = virtualinvoke r0.<java.util.TimeZone: boolean useDaylightTime()>();
+        $z1 = virtualinvoke r1.<java.util.TimeZone: boolean useDaylightTime()>();
+        if $z0 != $z1 goto label0;
+
+        $z2 = 1;
+        goto label1;
+
+     label0:
+        $z2 = 0;
+
+     label1:
+        return $z2;
+    }
+
+    public java.lang.Object clone()
+    {
+        java.util.TimeZone r0, r1;
+        java.lang.Object $r2;
+        java.lang.String $r3;
+        java.lang.CloneNotSupportedException $r5, r6;
+        java.lang.InternalError $r7;
+
+        r0 := @this: java.util.TimeZone;
+
+     label0:
+        $r2 = specialinvoke r0.<java.lang.Object: java.lang.Object clone()>();
+        r1 = (java.util.TimeZone) $r2;
+        $r3 = r0.<java.util.TimeZone: java.lang.String ID>;
+        r1.<java.util.TimeZone: java.lang.String ID> = $r3;
+
+     label1:
+        return r1;
+
+     label2:
+        $r5 := @caughtexception;
+        r6 = $r5;
+        $r7 = new java.lang.InternalError;
+        specialinvoke $r7.<java.lang.InternalError: void <init>()>();
+        throw $r7;
+
+        catch java.lang.CloneNotSupportedException from label0 to label1 with label2;
+    }
+
+    private static final java.util.TimeZone parseCustomTimeZone(java.lang.String)
+    {
+        java.lang.String r0;
+        int i0, i3, i4, i5, i6, i7, $i8, $i9, i10, $i11, $i13, $i14, $i15, $i16, $i17, $i18;
+        sun.util.calendar.ZoneInfo r1, r2;
+        byte b1;
+        boolean z0;
+        char c2, c12;
+
+        r0 := @parameter0: java.lang.String;
+        $i8 = virtualinvoke r0.<java.lang.String: int length()>();
+        i0 = $i8;
+        if $i8 < 5 goto label0;
+
+        $i9 = virtualinvoke r0.<java.lang.String: int indexOf(java.lang.String)>("GMT");
+        if $i9 == 0 goto label1;
+
+     label0:
+        return null;
+
+     label1:
+        r1 = staticinvoke <sun.util.calendar.ZoneInfoFile: sun.util.calendar.ZoneInfo getZoneInfo(java.lang.String)>(r0);
+        if r1 == null goto label2;
+
+        return r1;
+
+     label2:
+        b1 = 3;
+        z0 = 0;
+        i10 = b1 + 1;
+        c2 = virtualinvoke r0.<java.lang.String: char charAt(int)>(b1);
+        if c2 != 45 goto label3;
+
+        z0 = 1;
+        goto label4;
+
+     label3:
+        if c2 == 43 goto label4;
+
+        return null;
+
+     label4:
+        i3 = 0;
+        i4 = 0;
+        i5 = 0;
+        i6 = 0;
+
+     label5:
+        if i10 >= i0 goto label11;
+
+        $i11 = i10;
+        i10 = i10 + 1;
+        c12 = virtualinvoke r0.<java.lang.String: char charAt(int)>($i11);
+        if c12 != 58 goto label8;
+
+        if i5 <= 0 goto label6;
+
+        return null;
+
+     label6:
+        if i6 <= 2 goto label7;
+
+        return null;
+
+     label7:
+        i3 = i4;
+        i5 = i5 + 1;
+        i4 = 0;
+        i6 = 0;
+        goto label5;
+
+     label8:
+        if c12 < 48 goto label9;
+
+        if c12 <= 57 goto label10;
+
+     label9:
+        return null;
+
+     label10:
+        $i13 = i4 * 10;
+        $i14 = c12 - 48;
+        i4 = $i13 + $i14;
+        i6 = i6 + 1;
+        goto label5;
+
+     label11:
+        if i10 == i0 goto label12;
+
+        return null;
+
+     label12:
+        if i5 != 0 goto label14;
+
+        if i6 > 2 goto label13;
+
+        i3 = i4;
+        i4 = 0;
+        goto label15;
+
+     label13:
+        i3 = i4 / 100;
+        i4 = i4 % 100;
+        goto label15;
+
+     label14:
+        if i6 == 2 goto label15;
+
+        return null;
+
+     label15:
+        if i3 > 23 goto label16;
+
+        if i4 <= 59 goto label17;
+
+     label16:
+        return null;
+
+     label17:
+        $i15 = i3 * 60;
+        $i16 = $i15 + i4;
+        $i17 = $i16 * 60;
+        i7 = $i17 * 1000;
+        if i7 != 0 goto label19;
+
+        r2 = staticinvoke <sun.util.calendar.ZoneInfoFile: sun.util.calendar.ZoneInfo getZoneInfo(java.lang.String)>("GMT");
+        if z0 == 0 goto label18;
+
+        virtualinvoke r2.<sun.util.calendar.ZoneInfo: void setID(java.lang.String)>("GMT-00:00");
+        goto label22;
+
+     label18:
+        virtualinvoke r2.<sun.util.calendar.ZoneInfo: void setID(java.lang.String)>("GMT+00:00");
+        goto label22;
+
+     label19:
+        if z0 == 0 goto label20;
+
+        $i18 = neg i7;
+        goto label21;
+
+     label20:
+        $i18 = i7;
+
+     label21:
+        r2 = staticinvoke <sun.util.calendar.ZoneInfoFile: sun.util.calendar.ZoneInfo getCustomTimeZone(java.lang.String,int)>(r0, $i18);
+
+     label22:
+        return r2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        boolean $z0, $z1, $z2;
+        sun.security.action.GetPropertyAction $r1;
+        java.lang.Object $r2;
+
+        $r0 = class "java/util/TimeZone";
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        <java.util.TimeZone: boolean $assertionsDisabled> = $z1;
+        $r1 = new sun.security.action.GetPropertyAction;
+        specialinvoke $r1.<sun.security.action.GetPropertyAction: void <init>(java.lang.String)>("jdk.util.TimeZone.allowSetDefault");
+        $r2 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r1);
+        if $r2 == null goto label2;
+
+        $z2 = 1;
+        goto label3;
+
+     label2:
+        $z2 = 0;
+
+     label3:
+        <java.util.TimeZone: boolean allowSetDefault> = $z2;
+        <java.util.TimeZone: java.util.TimeZone NO_TIMEZONE> = null;
+        return;
+    }
+}

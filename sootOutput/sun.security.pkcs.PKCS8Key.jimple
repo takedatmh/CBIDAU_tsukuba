@@ -1,0 +1,689 @@
+public class sun.security.pkcs.PKCS8Key extends java.lang.Object implements java.security.PrivateKey
+{
+    private static final long serialVersionUID;
+    protected sun.security.x509.AlgorithmId algid;
+    protected byte[] key;
+    protected byte[] encodedKey;
+    public static final java.math.BigInteger version;
+
+    public void <init>()
+    {
+        sun.security.pkcs.PKCS8Key r0;
+
+        r0 := @this: sun.security.pkcs.PKCS8Key;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    private void <init>(sun.security.x509.AlgorithmId, byte[]) throws java.security.InvalidKeyException
+    {
+        sun.security.pkcs.PKCS8Key r0;
+        sun.security.x509.AlgorithmId r1;
+        byte[] r2;
+
+        r0 := @this: sun.security.pkcs.PKCS8Key;
+        r1 := @parameter0: sun.security.x509.AlgorithmId;
+        r2 := @parameter1: byte[];
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.security.pkcs.PKCS8Key: sun.security.x509.AlgorithmId algid> = r1;
+        r0.<sun.security.pkcs.PKCS8Key: byte[] key> = r2;
+        virtualinvoke r0.<sun.security.pkcs.PKCS8Key: byte[] encode()>();
+        return;
+    }
+
+    public static sun.security.pkcs.PKCS8Key parse(sun.security.util.DerValue) throws java.io.IOException
+    {
+        sun.security.util.DerValue r0;
+        java.security.PrivateKey r1;
+        boolean $z0;
+        sun.security.pkcs.PKCS8Key $r2;
+        java.io.IOException $r3;
+
+        r0 := @parameter0: sun.security.util.DerValue;
+        r1 = staticinvoke <sun.security.pkcs.PKCS8Key: java.security.PrivateKey parseKey(sun.security.util.DerValue)>(r0);
+        $z0 = r1 instanceof sun.security.pkcs.PKCS8Key;
+        if $z0 == 0 goto label0;
+
+        $r2 = (sun.security.pkcs.PKCS8Key) r1;
+        return $r2;
+
+     label0:
+        $r3 = new java.io.IOException;
+        specialinvoke $r3.<java.io.IOException: void <init>(java.lang.String)>("Provider did not return PKCS8Key");
+        throw $r3;
+    }
+
+    public static java.security.PrivateKey parseKey(sun.security.util.DerValue) throws java.io.IOException
+    {
+        sun.security.util.DerValue r0, $r19;
+        java.math.BigInteger r1, $r7, $r11;
+        sun.security.x509.AlgorithmId r2;
+        java.security.PrivateKey r3;
+        java.security.InvalidKeyException r4, $r22;
+        byte $b0;
+        java.io.IOException $r5, $r8, $r23, $r25;
+        sun.security.util.DerInputStream $r6, $r18, $r20, $r24;
+        boolean $z0;
+        java.lang.StringBuilder $r9, $r10, $r13, $r14, $r16;
+        java.lang.String $r12, $r15, $r17;
+        byte[] $r21;
+        int $i1;
+
+        r0 := @parameter0: sun.security.util.DerValue;
+        $b0 = r0.<sun.security.util.DerValue: byte tag>;
+        if $b0 == 48 goto label0;
+
+        $r5 = new java.io.IOException;
+        specialinvoke $r5.<java.io.IOException: void <init>(java.lang.String)>("corrupt private key");
+        throw $r5;
+
+     label0:
+        $r6 = r0.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        r1 = virtualinvoke $r6.<sun.security.util.DerInputStream: java.math.BigInteger getBigInteger()>();
+        $r7 = <sun.security.pkcs.PKCS8Key: java.math.BigInteger version>;
+        $z0 = virtualinvoke $r7.<java.math.BigInteger: boolean equals(java.lang.Object)>(r1);
+        if $z0 != 0 goto label1;
+
+        $r8 = new java.io.IOException;
+        $r9 = new java.lang.StringBuilder;
+        specialinvoke $r9.<java.lang.StringBuilder: void <init>()>();
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("version mismatch: (supported: ");
+        $r11 = <sun.security.pkcs.PKCS8Key: java.math.BigInteger version>;
+        $r12 = staticinvoke <sun.security.util.Debug: java.lang.String toHexString(java.math.BigInteger)>($r11);
+        $r13 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r12);
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", parsed: ");
+        $r15 = staticinvoke <sun.security.util.Debug: java.lang.String toHexString(java.math.BigInteger)>(r1);
+        $r16 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r15);
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r8.<java.io.IOException: void <init>(java.lang.String)>($r17);
+        throw $r8;
+
+     label1:
+        $r18 = r0.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $r19 = virtualinvoke $r18.<sun.security.util.DerInputStream: sun.security.util.DerValue getDerValue()>();
+        r2 = staticinvoke <sun.security.x509.AlgorithmId: sun.security.x509.AlgorithmId parse(sun.security.util.DerValue)>($r19);
+
+     label2:
+        $r20 = r0.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $r21 = virtualinvoke $r20.<sun.security.util.DerInputStream: byte[] getOctetString()>();
+        r3 = staticinvoke <sun.security.pkcs.PKCS8Key: java.security.PrivateKey buildPKCS8Key(sun.security.x509.AlgorithmId,byte[])>(r2, $r21);
+
+     label3:
+        goto label5;
+
+     label4:
+        $r22 := @caughtexception;
+        r4 = $r22;
+        $r23 = new java.io.IOException;
+        specialinvoke $r23.<java.io.IOException: void <init>(java.lang.String)>("corrupt private key");
+        throw $r23;
+
+     label5:
+        $r24 = r0.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $i1 = virtualinvoke $r24.<sun.security.util.DerInputStream: int available()>();
+        if $i1 == 0 goto label6;
+
+        $r25 = new java.io.IOException;
+        specialinvoke $r25.<java.io.IOException: void <init>(java.lang.String)>("excess private key");
+        throw $r25;
+
+     label6:
+        return r3;
+
+        catch java.security.InvalidKeyException from label2 to label3 with label4;
+    }
+
+    protected void parseKeyBits() throws java.io.IOException, java.security.InvalidKeyException
+    {
+        sun.security.pkcs.PKCS8Key r0;
+
+        r0 := @this: sun.security.pkcs.PKCS8Key;
+        virtualinvoke r0.<sun.security.pkcs.PKCS8Key: byte[] encode()>();
+        return;
+    }
+
+    static java.security.PrivateKey buildPKCS8Key(sun.security.x509.AlgorithmId, byte[]) throws java.io.IOException, java.security.InvalidKeyException
+    {
+        sun.security.x509.AlgorithmId r0;
+        byte[] r1, $r12;
+        sun.security.util.DerOutputStream $r2, r3;
+        java.security.spec.PKCS8EncodedKeySpec r4, $r11;
+        java.security.KeyFactory r5;
+        java.security.Provider r6;
+        java.lang.Class r7;
+        java.lang.ClassNotFoundException r8, r10, $r27, $r31;
+        java.lang.ClassLoader r9;
+        java.lang.String $r13, r19, $r23, $r25, $r40;
+        java.security.PrivateKey $r14;
+        java.security.NoSuchAlgorithmException $r15, r16;
+        java.security.spec.InvalidKeySpecException $r17, r18;
+        java.lang.InstantiationException $r20, $r26, $r32, r33;
+        java.lang.StringBuilder $r21, $r22, $r24, $r37, $r38, $r39;
+        java.lang.Object r28;
+        boolean $z0;
+        sun.security.pkcs.PKCS8Key r29, $r41, r42;
+        java.lang.IllegalAccessException $r34, r35;
+        java.io.IOException $r36;
+
+        r0 := @parameter0: sun.security.x509.AlgorithmId;
+        r1 := @parameter1: byte[];
+        $r2 = new sun.security.util.DerOutputStream;
+        specialinvoke $r2.<sun.security.util.DerOutputStream: void <init>()>();
+        r3 = $r2;
+        staticinvoke <sun.security.pkcs.PKCS8Key: void encode(sun.security.util.DerOutputStream,sun.security.x509.AlgorithmId,byte[])>(r3, r0, r1);
+        $r11 = new java.security.spec.PKCS8EncodedKeySpec;
+        $r12 = virtualinvoke r3.<sun.security.util.DerOutputStream: byte[] toByteArray()>();
+        specialinvoke $r11.<java.security.spec.PKCS8EncodedKeySpec: void <init>(byte[])>($r12);
+        r4 = $r11;
+
+     label0:
+        $r13 = virtualinvoke r0.<sun.security.x509.AlgorithmId: java.lang.String getName()>();
+        r5 = staticinvoke <java.security.KeyFactory: java.security.KeyFactory getInstance(java.lang.String)>($r13);
+        $r14 = virtualinvoke r5.<java.security.KeyFactory: java.security.PrivateKey generatePrivate(java.security.spec.KeySpec)>(r4);
+
+     label1:
+        return $r14;
+
+     label2:
+        $r15 := @caughtexception;
+        r16 = $r15;
+        goto label4;
+
+     label3:
+        $r17 := @caughtexception;
+        r18 = $r17;
+
+     label4:
+        r19 = "";
+
+     label5:
+        r6 = staticinvoke <java.security.Security: java.security.Provider getProvider(java.lang.String)>("SUN");
+        if r6 != null goto label6;
+
+        $r20 = new java.lang.InstantiationException;
+        specialinvoke $r20.<java.lang.InstantiationException: void <init>()>();
+        throw $r20;
+
+     label6:
+        $r21 = new java.lang.StringBuilder;
+        specialinvoke $r21.<java.lang.StringBuilder: void <init>()>();
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("PrivateKey.PKCS#8.");
+        $r23 = virtualinvoke r0.<sun.security.x509.AlgorithmId: java.lang.String getName()>();
+        $r24 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r23);
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.String toString()>();
+        r19 = virtualinvoke r6.<java.security.Provider: java.lang.String getProperty(java.lang.String)>($r25);
+        if r19 != null goto label7;
+
+        $r26 = new java.lang.InstantiationException;
+        specialinvoke $r26.<java.lang.InstantiationException: void <init>()>();
+        throw $r26;
+
+     label7:
+        r7 = null;
+
+     label8:
+        r7 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(r19);
+
+     label9:
+        goto label11;
+
+     label10:
+        $r27 := @caughtexception;
+        r8 = $r27;
+        r9 = staticinvoke <java.lang.ClassLoader: java.lang.ClassLoader getSystemClassLoader()>();
+        if r9 == null goto label11;
+
+        r7 = virtualinvoke r9.<java.lang.ClassLoader: java.lang.Class loadClass(java.lang.String)>(r19);
+
+     label11:
+        r28 = null;
+        if r7 == null goto label12;
+
+        r28 = virtualinvoke r7.<java.lang.Class: java.lang.Object newInstance()>();
+
+     label12:
+        $z0 = r28 instanceof sun.security.pkcs.PKCS8Key;
+        if $z0 == 0 goto label14;
+
+        r29 = (sun.security.pkcs.PKCS8Key) r28;
+        r29.<sun.security.pkcs.PKCS8Key: sun.security.x509.AlgorithmId algid> = r0;
+        r29.<sun.security.pkcs.PKCS8Key: byte[] key> = r1;
+        virtualinvoke r29.<sun.security.pkcs.PKCS8Key: void parseKeyBits()>();
+
+     label13:
+        return r29;
+
+     label14:
+        goto label18;
+
+     label15:
+        $r31 := @caughtexception;
+        r10 = $r31;
+        goto label18;
+
+     label16:
+        $r32 := @caughtexception;
+        r33 = $r32;
+        goto label18;
+
+     label17:
+        $r34 := @caughtexception;
+        r35 = $r34;
+        $r36 = new java.io.IOException;
+        $r37 = new java.lang.StringBuilder;
+        specialinvoke $r37.<java.lang.StringBuilder: void <init>()>();
+        $r38 = virtualinvoke $r37.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r19);
+        $r39 = virtualinvoke $r38.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" [internal error]");
+        $r40 = virtualinvoke $r39.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r36.<java.io.IOException: void <init>(java.lang.String)>($r40);
+        throw $r36;
+
+     label18:
+        $r41 = new sun.security.pkcs.PKCS8Key;
+        specialinvoke $r41.<sun.security.pkcs.PKCS8Key: void <init>()>();
+        r42 = $r41;
+        r42.<sun.security.pkcs.PKCS8Key: sun.security.x509.AlgorithmId algid> = r0;
+        r42.<sun.security.pkcs.PKCS8Key: byte[] key> = r1;
+        return r42;
+
+        catch java.security.NoSuchAlgorithmException from label0 to label1 with label2;
+        catch java.security.spec.InvalidKeySpecException from label0 to label1 with label3;
+        catch java.lang.ClassNotFoundException from label8 to label9 with label10;
+        catch java.lang.ClassNotFoundException from label5 to label13 with label15;
+        catch java.lang.InstantiationException from label5 to label13 with label16;
+        catch java.lang.IllegalAccessException from label5 to label13 with label17;
+    }
+
+    public java.lang.String getAlgorithm()
+    {
+        sun.security.pkcs.PKCS8Key r0;
+        sun.security.x509.AlgorithmId $r1;
+        java.lang.String $r2;
+
+        r0 := @this: sun.security.pkcs.PKCS8Key;
+        $r1 = r0.<sun.security.pkcs.PKCS8Key: sun.security.x509.AlgorithmId algid>;
+        $r2 = virtualinvoke $r1.<sun.security.x509.AlgorithmId: java.lang.String getName()>();
+        return $r2;
+    }
+
+    public sun.security.x509.AlgorithmId getAlgorithmId()
+    {
+        sun.security.pkcs.PKCS8Key r0;
+        sun.security.x509.AlgorithmId $r1;
+
+        r0 := @this: sun.security.pkcs.PKCS8Key;
+        $r1 = r0.<sun.security.pkcs.PKCS8Key: sun.security.x509.AlgorithmId algid>;
+        return $r1;
+    }
+
+    public final void encode(sun.security.util.DerOutputStream) throws java.io.IOException
+    {
+        sun.security.pkcs.PKCS8Key r0;
+        sun.security.util.DerOutputStream r1;
+        sun.security.x509.AlgorithmId $r2;
+        byte[] $r3;
+
+        r0 := @this: sun.security.pkcs.PKCS8Key;
+        r1 := @parameter0: sun.security.util.DerOutputStream;
+        $r2 = r0.<sun.security.pkcs.PKCS8Key: sun.security.x509.AlgorithmId algid>;
+        $r3 = r0.<sun.security.pkcs.PKCS8Key: byte[] key>;
+        staticinvoke <sun.security.pkcs.PKCS8Key: void encode(sun.security.util.DerOutputStream,sun.security.x509.AlgorithmId,byte[])>(r1, $r2, $r3);
+        return;
+    }
+
+    public synchronized byte[] getEncoded()
+    {
+        sun.security.pkcs.PKCS8Key r0;
+        byte[] r1;
+        java.security.InvalidKeyException r2, $r3;
+
+        r0 := @this: sun.security.pkcs.PKCS8Key;
+        r1 = null;
+
+     label0:
+        r1 = virtualinvoke r0.<sun.security.pkcs.PKCS8Key: byte[] encode()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r3 := @caughtexception;
+        r2 = $r3;
+
+     label3:
+        return r1;
+
+        catch java.security.InvalidKeyException from label0 to label1 with label2;
+    }
+
+    public java.lang.String getFormat()
+    {
+        sun.security.pkcs.PKCS8Key r0;
+
+        r0 := @this: sun.security.pkcs.PKCS8Key;
+        return "PKCS#8";
+    }
+
+    public byte[] encode() throws java.security.InvalidKeyException
+    {
+        sun.security.pkcs.PKCS8Key r0;
+        sun.security.util.DerOutputStream r1, $r4;
+        java.lang.StringBuilder $r2, $r9, $r11;
+        byte[] $r3, $r5, $r13, $r15;
+        java.io.IOException $r6, r7;
+        java.security.InvalidKeyException $r8;
+        java.lang.String $r10, $r12;
+        java.lang.Object $r14;
+
+        r0 := @this: sun.security.pkcs.PKCS8Key;
+        $r3 = r0.<sun.security.pkcs.PKCS8Key: byte[] encodedKey>;
+        if $r3 != null goto label3;
+
+     label0:
+        $r4 = new sun.security.util.DerOutputStream;
+        specialinvoke $r4.<sun.security.util.DerOutputStream: void <init>()>();
+        r1 = $r4;
+        virtualinvoke r0.<sun.security.pkcs.PKCS8Key: void encode(sun.security.util.DerOutputStream)>(r1);
+        $r5 = virtualinvoke r1.<sun.security.util.DerOutputStream: byte[] toByteArray()>();
+        r0.<sun.security.pkcs.PKCS8Key: byte[] encodedKey> = $r5;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r6 := @caughtexception;
+        r7 = $r6;
+        $r8 = new java.security.InvalidKeyException;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+        $r9 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("IOException : ");
+        $r10 = virtualinvoke r7.<java.io.IOException: java.lang.String getMessage()>();
+        $r11 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r10);
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r8.<java.security.InvalidKeyException: void <init>(java.lang.String)>($r12);
+        throw $r8;
+
+     label3:
+        $r13 = r0.<sun.security.pkcs.PKCS8Key: byte[] encodedKey>;
+        $r14 = virtualinvoke $r13.<java.lang.Object: java.lang.Object clone()>();
+        $r15 = (byte[]) $r14;
+        return $r15;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    public void decode(java.io.InputStream) throws java.security.InvalidKeyException
+    {
+        sun.security.pkcs.PKCS8Key r0;
+        java.io.InputStream r1;
+        sun.security.util.DerValue $r2, r3, $r21;
+        java.math.BigInteger r4, $r8, $r13;
+        byte $b0;
+        java.security.InvalidKeyException $r5, $r28;
+        sun.security.util.DerInputStream $r6, $r20, $r23, $r25;
+        boolean $z0;
+        java.io.IOException $r9, $r26, r27;
+        java.lang.StringBuilder $r10, $r11, $r15, $r16, $r18, $r29, $r30, $r32;
+        java.lang.String $r14, $r17, $r19, $r31, $r33;
+        sun.security.x509.AlgorithmId $r22;
+        byte[] $r24;
+        int $i1;
+
+        r0 := @this: sun.security.pkcs.PKCS8Key;
+        r1 := @parameter0: java.io.InputStream;
+
+     label0:
+        $r2 = new sun.security.util.DerValue;
+        specialinvoke $r2.<sun.security.util.DerValue: void <init>(java.io.InputStream)>(r1);
+        r3 = $r2;
+        $b0 = r3.<sun.security.util.DerValue: byte tag>;
+        if $b0 == 48 goto label1;
+
+        $r5 = new java.security.InvalidKeyException;
+        specialinvoke $r5.<java.security.InvalidKeyException: void <init>(java.lang.String)>("invalid key format");
+        throw $r5;
+
+     label1:
+        $r6 = r3.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        r4 = virtualinvoke $r6.<sun.security.util.DerInputStream: java.math.BigInteger getBigInteger()>();
+        $r8 = <sun.security.pkcs.PKCS8Key: java.math.BigInteger version>;
+        $z0 = virtualinvoke r4.<java.math.BigInteger: boolean equals(java.lang.Object)>($r8);
+        if $z0 != 0 goto label2;
+
+        $r9 = new java.io.IOException;
+        $r10 = new java.lang.StringBuilder;
+        specialinvoke $r10.<java.lang.StringBuilder: void <init>()>();
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("version mismatch: (supported: ");
+        $r13 = <sun.security.pkcs.PKCS8Key: java.math.BigInteger version>;
+        $r14 = staticinvoke <sun.security.util.Debug: java.lang.String toHexString(java.math.BigInteger)>($r13);
+        $r15 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r14);
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", parsed: ");
+        $r17 = staticinvoke <sun.security.util.Debug: java.lang.String toHexString(java.math.BigInteger)>(r4);
+        $r18 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r17);
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r9.<java.io.IOException: void <init>(java.lang.String)>($r19);
+        throw $r9;
+
+     label2:
+        $r20 = r3.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $r21 = virtualinvoke $r20.<sun.security.util.DerInputStream: sun.security.util.DerValue getDerValue()>();
+        $r22 = staticinvoke <sun.security.x509.AlgorithmId: sun.security.x509.AlgorithmId parse(sun.security.util.DerValue)>($r21);
+        r0.<sun.security.pkcs.PKCS8Key: sun.security.x509.AlgorithmId algid> = $r22;
+        $r23 = r3.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $r24 = virtualinvoke $r23.<sun.security.util.DerInputStream: byte[] getOctetString()>();
+        r0.<sun.security.pkcs.PKCS8Key: byte[] key> = $r24;
+        virtualinvoke r0.<sun.security.pkcs.PKCS8Key: void parseKeyBits()>();
+        $r25 = r3.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $i1 = virtualinvoke $r25.<sun.security.util.DerInputStream: int available()>();
+        if $i1 == 0 goto label3;
+
+     label3:
+        goto label5;
+
+     label4:
+        $r26 := @caughtexception;
+        r27 = $r26;
+        $r28 = new java.security.InvalidKeyException;
+        $r29 = new java.lang.StringBuilder;
+        specialinvoke $r29.<java.lang.StringBuilder: void <init>()>();
+        $r30 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("IOException : ");
+        $r31 = virtualinvoke r27.<java.io.IOException: java.lang.String getMessage()>();
+        $r32 = virtualinvoke $r30.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r31);
+        $r33 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r28.<java.security.InvalidKeyException: void <init>(java.lang.String)>($r33);
+        throw $r28;
+
+     label5:
+        return;
+
+        catch java.io.IOException from label0 to label3 with label4;
+    }
+
+    public void decode(byte[]) throws java.security.InvalidKeyException
+    {
+        sun.security.pkcs.PKCS8Key r0;
+        byte[] r1;
+        java.io.ByteArrayInputStream $r2;
+
+        r0 := @this: sun.security.pkcs.PKCS8Key;
+        r1 := @parameter0: byte[];
+        $r2 = new java.io.ByteArrayInputStream;
+        specialinvoke $r2.<java.io.ByteArrayInputStream: void <init>(byte[])>(r1);
+        virtualinvoke r0.<sun.security.pkcs.PKCS8Key: void decode(java.io.InputStream)>($r2);
+        return;
+    }
+
+    protected java.lang.Object writeReplace() throws java.io.ObjectStreamException
+    {
+        sun.security.pkcs.PKCS8Key r0;
+        java.security.KeyRep $r1;
+        java.security.KeyRep$Type $r2;
+        java.lang.String $r3, $r4;
+        byte[] $r5;
+
+        r0 := @this: sun.security.pkcs.PKCS8Key;
+        $r1 = new java.security.KeyRep;
+        $r2 = <java.security.KeyRep$Type: java.security.KeyRep$Type PRIVATE>;
+        $r3 = virtualinvoke r0.<sun.security.pkcs.PKCS8Key: java.lang.String getAlgorithm()>();
+        $r4 = virtualinvoke r0.<sun.security.pkcs.PKCS8Key: java.lang.String getFormat()>();
+        $r5 = virtualinvoke r0.<sun.security.pkcs.PKCS8Key: byte[] getEncoded()>();
+        specialinvoke $r1.<java.security.KeyRep: void <init>(java.security.KeyRep$Type,java.lang.String,java.lang.String,byte[])>($r2, $r3, $r4, $r5);
+        return $r1;
+    }
+
+    private void readObject(java.io.ObjectInputStream) throws java.io.IOException
+    {
+        sun.security.pkcs.PKCS8Key r0;
+        java.io.ObjectInputStream r1;
+        java.security.InvalidKeyException r2, $r4;
+        java.lang.StringBuilder $r3, $r6, $r8;
+        java.io.IOException $r5;
+        java.lang.String $r7, $r9;
+
+        r0 := @this: sun.security.pkcs.PKCS8Key;
+        r1 := @parameter0: java.io.ObjectInputStream;
+
+     label0:
+        virtualinvoke r0.<sun.security.pkcs.PKCS8Key: void decode(java.io.InputStream)>(r1);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r4 := @caughtexception;
+        r2 = $r4;
+        virtualinvoke r2.<java.security.InvalidKeyException: void printStackTrace()>();
+        $r5 = new java.io.IOException;
+        $r3 = new java.lang.StringBuilder;
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>()>();
+        $r6 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("deserialized key is invalid: ");
+        $r7 = virtualinvoke r2.<java.security.InvalidKeyException: java.lang.String getMessage()>();
+        $r8 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r7);
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r5.<java.io.IOException: void <init>(java.lang.String)>($r9);
+        throw $r5;
+
+     label3:
+        return;
+
+        catch java.security.InvalidKeyException from label0 to label1 with label2;
+    }
+
+    static void encode(sun.security.util.DerOutputStream, sun.security.x509.AlgorithmId, byte[]) throws java.io.IOException
+    {
+        sun.security.util.DerOutputStream r0, $r3, r4;
+        sun.security.x509.AlgorithmId r1;
+        byte[] r2;
+        java.math.BigInteger $r5;
+
+        r0 := @parameter0: sun.security.util.DerOutputStream;
+        r1 := @parameter1: sun.security.x509.AlgorithmId;
+        r2 := @parameter2: byte[];
+        $r3 = new sun.security.util.DerOutputStream;
+        specialinvoke $r3.<sun.security.util.DerOutputStream: void <init>()>();
+        r4 = $r3;
+        $r5 = <sun.security.pkcs.PKCS8Key: java.math.BigInteger version>;
+        virtualinvoke r4.<sun.security.util.DerOutputStream: void putInteger(java.math.BigInteger)>($r5);
+        virtualinvoke r1.<sun.security.x509.AlgorithmId: void encode(sun.security.util.DerOutputStream)>(r4);
+        virtualinvoke r4.<sun.security.util.DerOutputStream: void putOctetString(byte[])>(r2);
+        virtualinvoke r0.<sun.security.util.DerOutputStream: void write(byte,sun.security.util.DerOutputStream)>(48, r4);
+        return;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        sun.security.pkcs.PKCS8Key r0;
+        java.lang.Object r1;
+        byte[] r2, r3, $r4;
+        int i0, $i1, $i2, $i3;
+        boolean $z0;
+        java.security.Key $r5;
+        byte $b4, $b5;
+
+        r0 := @this: sun.security.pkcs.PKCS8Key;
+        r1 := @parameter0: java.lang.Object;
+        if r0 != r1 goto label0;
+
+        return 1;
+
+     label0:
+        $z0 = r1 instanceof java.security.Key;
+        if $z0 == 0 goto label7;
+
+        $r4 = r0.<sun.security.pkcs.PKCS8Key: byte[] encodedKey>;
+        if $r4 == null goto label1;
+
+        r2 = r0.<sun.security.pkcs.PKCS8Key: byte[] encodedKey>;
+        goto label2;
+
+     label1:
+        r2 = virtualinvoke r0.<sun.security.pkcs.PKCS8Key: byte[] getEncoded()>();
+
+     label2:
+        $r5 = (java.security.Key) r1;
+        r3 = interfaceinvoke $r5.<java.security.Key: byte[] getEncoded()>();
+        $i1 = lengthof r2;
+        $i2 = lengthof r3;
+        if $i1 == $i2 goto label3;
+
+        return 0;
+
+     label3:
+        i0 = 0;
+
+     label4:
+        $i3 = lengthof r2;
+        if i0 >= $i3 goto label6;
+
+        $b4 = r2[i0];
+        $b5 = r3[i0];
+        if $b4 == $b5 goto label5;
+
+        return 0;
+
+     label5:
+        i0 = i0 + 1;
+        goto label4;
+
+     label6:
+        return 1;
+
+     label7:
+        return 0;
+    }
+
+    public int hashCode()
+    {
+        sun.security.pkcs.PKCS8Key r0;
+        int i0, i1, $i2, $i4;
+        byte[] r1;
+        byte $b3;
+
+        r0 := @this: sun.security.pkcs.PKCS8Key;
+        i0 = 0;
+        r1 = virtualinvoke r0.<sun.security.pkcs.PKCS8Key: byte[] getEncoded()>();
+        i1 = 1;
+
+     label0:
+        $i2 = lengthof r1;
+        if i1 >= $i2 goto label1;
+
+        $b3 = r1[i1];
+        $i4 = $b3 * i1;
+        i0 = i0 + $i4;
+        i1 = i1 + 1;
+        goto label0;
+
+     label1:
+        return i0;
+    }
+
+    static void <clinit>()
+    {
+        java.math.BigInteger $r0;
+
+        $r0 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        <sun.security.pkcs.PKCS8Key: java.math.BigInteger version> = $r0;
+        return;
+    }
+}

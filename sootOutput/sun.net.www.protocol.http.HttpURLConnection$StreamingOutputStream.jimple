@@ -1,0 +1,229 @@
+class sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream extends java.io.FilterOutputStream
+{
+    long expected;
+    long written;
+    boolean closed;
+    boolean error;
+    java.io.IOException errorExcp;
+    final sun.net.www.protocol.http.HttpURLConnection this$0;
+
+    void <init>(sun.net.www.protocol.http.HttpURLConnection, java.io.OutputStream, long)
+    {
+        sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream r0;
+        sun.net.www.protocol.http.HttpURLConnection r1;
+        java.io.OutputStream r2;
+        long l0;
+
+        r0 := @this: sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream;
+        r1 := @parameter0: sun.net.www.protocol.http.HttpURLConnection;
+        r2 := @parameter1: java.io.OutputStream;
+        l0 := @parameter2: long;
+        r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: sun.net.www.protocol.http.HttpURLConnection this$0> = r1;
+        specialinvoke r0.<java.io.FilterOutputStream: void <init>(java.io.OutputStream)>(r2);
+        r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: long expected> = l0;
+        r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: long written> = 0L;
+        r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: boolean closed> = 0;
+        r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: boolean error> = 0;
+        return;
+    }
+
+    public void write(int) throws java.io.IOException
+    {
+        sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream r0;
+        int i0;
+        long $l1, $l2, $l3, $l5, $l6;
+        byte $b4, $b7;
+        java.io.IOException $r2;
+        java.io.OutputStream $r3;
+
+        r0 := @this: sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream;
+        i0 := @parameter0: int;
+        virtualinvoke r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: void checkError()>();
+        $l1 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: long written>;
+        $l2 = $l1 + 1L;
+        r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: long written> = $l2;
+        $l3 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: long expected>;
+        $b4 = $l3 cmp -1L;
+        if $b4 == 0 goto label0;
+
+        $l5 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: long written>;
+        $l6 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: long expected>;
+        $b7 = $l5 cmp $l6;
+        if $b7 <= 0 goto label0;
+
+        $r2 = new java.io.IOException;
+        specialinvoke $r2.<java.io.IOException: void <init>(java.lang.String)>("too many bytes written");
+        throw $r2;
+
+     label0:
+        $r3 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: java.io.OutputStream out>;
+        virtualinvoke $r3.<java.io.OutputStream: void write(int)>(i0);
+        return;
+    }
+
+    public void write(byte[]) throws java.io.IOException
+    {
+        sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream r0;
+        byte[] r1;
+        int $i0;
+
+        r0 := @this: sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream;
+        r1 := @parameter0: byte[];
+        $i0 = lengthof r1;
+        virtualinvoke r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: void write(byte[],int,int)>(r1, 0, $i0);
+        return;
+    }
+
+    public void write(byte[], int, int) throws java.io.IOException
+    {
+        sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream r0;
+        byte[] r1;
+        int i0, i1;
+        long $l2, $l3, $l4, $l5, $l7, $l8;
+        byte $b6, $b9;
+        java.io.OutputStream $r3, $r5;
+        java.io.IOException $r4;
+
+        r0 := @this: sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream;
+        r1 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        virtualinvoke r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: void checkError()>();
+        $l2 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: long written>;
+        $l3 = (long) i1;
+        $l4 = $l2 + $l3;
+        r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: long written> = $l4;
+        $l5 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: long expected>;
+        $b6 = $l5 cmp -1L;
+        if $b6 == 0 goto label0;
+
+        $l7 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: long written>;
+        $l8 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: long expected>;
+        $b9 = $l7 cmp $l8;
+        if $b9 <= 0 goto label0;
+
+        $r3 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: java.io.OutputStream out>;
+        virtualinvoke $r3.<java.io.OutputStream: void close()>();
+        $r4 = new java.io.IOException;
+        specialinvoke $r4.<java.io.IOException: void <init>(java.lang.String)>("too many bytes written");
+        throw $r4;
+
+     label0:
+        $r5 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: java.io.OutputStream out>;
+        virtualinvoke $r5.<java.io.OutputStream: void write(byte[],int,int)>(r1, i0, i1);
+        return;
+    }
+
+    void checkError() throws java.io.IOException
+    {
+        sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream r0;
+        boolean $z0, $z1, $z2;
+        java.io.IOException $r1, $r2, $r5;
+        java.io.OutputStream $r3;
+        java.io.PrintStream $r4;
+
+        r0 := @this: sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream;
+        $z0 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: boolean closed>;
+        if $z0 == 0 goto label0;
+
+        $r1 = new java.io.IOException;
+        specialinvoke $r1.<java.io.IOException: void <init>(java.lang.String)>("Stream is closed");
+        throw $r1;
+
+     label0:
+        $z1 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: boolean error>;
+        if $z1 == 0 goto label1;
+
+        $r2 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: java.io.IOException errorExcp>;
+        throw $r2;
+
+     label1:
+        $r3 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: java.io.OutputStream out>;
+        $r4 = (java.io.PrintStream) $r3;
+        $z2 = virtualinvoke $r4.<java.io.PrintStream: boolean checkError()>();
+        if $z2 == 0 goto label2;
+
+        $r5 = new java.io.IOException;
+        specialinvoke $r5.<java.io.IOException: void <init>(java.lang.String)>("Error writing request body to server");
+        throw $r5;
+
+     label2:
+        return;
+    }
+
+    boolean writtenOK()
+    {
+        sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream r0;
+        boolean $z0, $z1, $z2;
+
+        r0 := @this: sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream;
+        $z0 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: boolean closed>;
+        if $z0 == 0 goto label0;
+
+        $z1 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: boolean error>;
+        if $z1 != 0 goto label0;
+
+        $z2 = 1;
+        goto label1;
+
+     label0:
+        $z2 = 0;
+
+     label1:
+        return $z2;
+    }
+
+    public void close() throws java.io.IOException
+    {
+        sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream r0;
+        java.io.OutputStream r1, $r3;
+        boolean $z0;
+        long $l0, $l2, $l3;
+        byte $b1, $b4;
+        java.io.IOException $r2, $r4;
+        sun.net.www.protocol.http.HttpURLConnection $r5;
+        sun.net.www.http.HttpClient $r6;
+
+        r0 := @this: sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream;
+        $z0 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: boolean closed>;
+        if $z0 == 0 goto label0;
+
+        return;
+
+     label0:
+        r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: boolean closed> = 1;
+        $l0 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: long expected>;
+        $b1 = $l0 cmp -1L;
+        if $b1 == 0 goto label2;
+
+        $l2 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: long written>;
+        $l3 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: long expected>;
+        $b4 = $l2 cmp $l3;
+        if $b4 == 0 goto label1;
+
+        r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: boolean error> = 1;
+        $r2 = new java.io.IOException;
+        specialinvoke $r2.<java.io.IOException: void <init>(java.lang.String)>("insufficient data written");
+        r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: java.io.IOException errorExcp> = $r2;
+        $r3 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: java.io.OutputStream out>;
+        virtualinvoke $r3.<java.io.OutputStream: void close()>();
+        $r4 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: java.io.IOException errorExcp>;
+        throw $r4;
+
+     label1:
+        specialinvoke r0.<java.io.FilterOutputStream: void flush()>();
+        goto label3;
+
+     label2:
+        specialinvoke r0.<java.io.FilterOutputStream: void close()>();
+        $r5 = r0.<sun.net.www.protocol.http.HttpURLConnection$StreamingOutputStream: sun.net.www.protocol.http.HttpURLConnection this$0>;
+        $r6 = $r5.<sun.net.www.protocol.http.HttpURLConnection: sun.net.www.http.HttpClient http>;
+        r1 = virtualinvoke $r6.<sun.net.www.http.HttpClient: java.io.OutputStream getOutputStream()>();
+        virtualinvoke r1.<java.io.OutputStream: void write(int)>(13);
+        virtualinvoke r1.<java.io.OutputStream: void write(int)>(10);
+        virtualinvoke r1.<java.io.OutputStream: void flush()>();
+
+     label3:
+        return;
+    }
+}

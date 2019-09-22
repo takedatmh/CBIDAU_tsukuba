@@ -1,0 +1,385 @@
+public class sun.security.x509.GeneralName extends java.lang.Object
+{
+    private sun.security.x509.GeneralNameInterface name;
+
+    public void <init>(sun.security.x509.GeneralNameInterface)
+    {
+        sun.security.x509.GeneralName r0;
+        sun.security.x509.GeneralNameInterface r1;
+        java.lang.NullPointerException $r2;
+
+        r0 := @this: sun.security.x509.GeneralName;
+        r1 := @parameter0: sun.security.x509.GeneralNameInterface;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.security.x509.GeneralName: sun.security.x509.GeneralNameInterface name> = null;
+        if r1 != null goto label0;
+
+        $r2 = new java.lang.NullPointerException;
+        specialinvoke $r2.<java.lang.NullPointerException: void <init>(java.lang.String)>("GeneralName must not be null");
+        throw $r2;
+
+     label0:
+        r0.<sun.security.x509.GeneralName: sun.security.x509.GeneralNameInterface name> = r1;
+        return;
+    }
+
+    public void <init>(sun.security.util.DerValue) throws java.io.IOException
+    {
+        sun.security.x509.GeneralName r0;
+        sun.security.util.DerValue r1;
+
+        r0 := @this: sun.security.x509.GeneralName;
+        r1 := @parameter0: sun.security.util.DerValue;
+        specialinvoke r0.<sun.security.x509.GeneralName: void <init>(sun.security.util.DerValue,boolean)>(r1, 0);
+        return;
+    }
+
+    public void <init>(sun.security.util.DerValue, boolean) throws java.io.IOException
+    {
+        sun.security.x509.GeneralName r0;
+        sun.security.util.DerValue r1;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14, $z15, $z16;
+        short s0;
+        byte $b1, $b2, $b3;
+        sun.security.x509.OtherName $r2;
+        java.io.IOException $r3, $r5, $r7, $r10, $r12, $r14, $r17, $r19, $r20;
+        sun.security.x509.RFC822Name $r4;
+        sun.security.x509.DNSName $r6;
+        sun.security.x509.URIName $r9;
+        sun.security.x509.IPAddressName $r11;
+        sun.security.x509.OIDName $r13;
+        sun.security.x509.X500Name $r15;
+        sun.security.util.DerInputStream $r16;
+        sun.security.x509.EDIPartyName $r18;
+        java.lang.StringBuilder $r21, $r22, $r23, $r24;
+        java.lang.String $r25;
+
+        r0 := @this: sun.security.x509.GeneralName;
+        r1 := @parameter0: sun.security.util.DerValue;
+        z0 := @parameter1: boolean;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.security.x509.GeneralName: sun.security.x509.GeneralNameInterface name> = null;
+        $b1 = r1.<sun.security.util.DerValue: byte tag>;
+        $b2 = $b1 & 31;
+        $b3 = (byte) $b2;
+        s0 = (short) $b3;
+        tableswitch(s0)
+        {
+            case 0: goto label0;
+            case 1: goto label2;
+            case 2: goto label4;
+            case 3: goto label18;
+            case 4: goto label14;
+            case 5: goto label16;
+            case 6: goto label6;
+            case 7: goto label10;
+            case 8: goto label12;
+            default: goto label18;
+        };
+
+     label0:
+        $z1 = virtualinvoke r1.<sun.security.util.DerValue: boolean isContextSpecific()>();
+        if $z1 == 0 goto label1;
+
+        $z2 = virtualinvoke r1.<sun.security.util.DerValue: boolean isConstructed()>();
+        if $z2 == 0 goto label1;
+
+        virtualinvoke r1.<sun.security.util.DerValue: void resetTag(byte)>(48);
+        $r2 = new sun.security.x509.OtherName;
+        specialinvoke $r2.<sun.security.x509.OtherName: void <init>(sun.security.util.DerValue)>(r1);
+        r0.<sun.security.x509.GeneralName: sun.security.x509.GeneralNameInterface name> = $r2;
+        goto label19;
+
+     label1:
+        $r3 = new java.io.IOException;
+        specialinvoke $r3.<java.io.IOException: void <init>(java.lang.String)>("Invalid encoding of Other-Name");
+        throw $r3;
+
+     label2:
+        $z3 = virtualinvoke r1.<sun.security.util.DerValue: boolean isContextSpecific()>();
+        if $z3 == 0 goto label3;
+
+        $z4 = virtualinvoke r1.<sun.security.util.DerValue: boolean isConstructed()>();
+        if $z4 != 0 goto label3;
+
+        virtualinvoke r1.<sun.security.util.DerValue: void resetTag(byte)>(22);
+        $r4 = new sun.security.x509.RFC822Name;
+        specialinvoke $r4.<sun.security.x509.RFC822Name: void <init>(sun.security.util.DerValue)>(r1);
+        r0.<sun.security.x509.GeneralName: sun.security.x509.GeneralNameInterface name> = $r4;
+        goto label19;
+
+     label3:
+        $r5 = new java.io.IOException;
+        specialinvoke $r5.<java.io.IOException: void <init>(java.lang.String)>("Invalid encoding of RFC822 name");
+        throw $r5;
+
+     label4:
+        $z5 = virtualinvoke r1.<sun.security.util.DerValue: boolean isContextSpecific()>();
+        if $z5 == 0 goto label5;
+
+        $z6 = virtualinvoke r1.<sun.security.util.DerValue: boolean isConstructed()>();
+        if $z6 != 0 goto label5;
+
+        virtualinvoke r1.<sun.security.util.DerValue: void resetTag(byte)>(22);
+        $r6 = new sun.security.x509.DNSName;
+        specialinvoke $r6.<sun.security.x509.DNSName: void <init>(sun.security.util.DerValue)>(r1);
+        r0.<sun.security.x509.GeneralName: sun.security.x509.GeneralNameInterface name> = $r6;
+        goto label19;
+
+     label5:
+        $r7 = new java.io.IOException;
+        specialinvoke $r7.<java.io.IOException: void <init>(java.lang.String)>("Invalid encoding of DNS name");
+        throw $r7;
+
+     label6:
+        $z7 = virtualinvoke r1.<sun.security.util.DerValue: boolean isContextSpecific()>();
+        if $z7 == 0 goto label9;
+
+        $z8 = virtualinvoke r1.<sun.security.util.DerValue: boolean isConstructed()>();
+        if $z8 != 0 goto label9;
+
+        virtualinvoke r1.<sun.security.util.DerValue: void resetTag(byte)>(22);
+        if z0 == 0 goto label7;
+
+        $r9 = staticinvoke <sun.security.x509.URIName: sun.security.x509.URIName nameConstraint(sun.security.util.DerValue)>(r1);
+        goto label8;
+
+     label7:
+        $r9 = new sun.security.x509.URIName;
+        specialinvoke $r9.<sun.security.x509.URIName: void <init>(sun.security.util.DerValue)>(r1);
+
+     label8:
+        r0.<sun.security.x509.GeneralName: sun.security.x509.GeneralNameInterface name> = $r9;
+        goto label19;
+
+     label9:
+        $r10 = new java.io.IOException;
+        specialinvoke $r10.<java.io.IOException: void <init>(java.lang.String)>("Invalid encoding of URI");
+        throw $r10;
+
+     label10:
+        $z9 = virtualinvoke r1.<sun.security.util.DerValue: boolean isContextSpecific()>();
+        if $z9 == 0 goto label11;
+
+        $z10 = virtualinvoke r1.<sun.security.util.DerValue: boolean isConstructed()>();
+        if $z10 != 0 goto label11;
+
+        virtualinvoke r1.<sun.security.util.DerValue: void resetTag(byte)>(4);
+        $r11 = new sun.security.x509.IPAddressName;
+        specialinvoke $r11.<sun.security.x509.IPAddressName: void <init>(sun.security.util.DerValue)>(r1);
+        r0.<sun.security.x509.GeneralName: sun.security.x509.GeneralNameInterface name> = $r11;
+        goto label19;
+
+     label11:
+        $r12 = new java.io.IOException;
+        specialinvoke $r12.<java.io.IOException: void <init>(java.lang.String)>("Invalid encoding of IP address");
+        throw $r12;
+
+     label12:
+        $z11 = virtualinvoke r1.<sun.security.util.DerValue: boolean isContextSpecific()>();
+        if $z11 == 0 goto label13;
+
+        $z12 = virtualinvoke r1.<sun.security.util.DerValue: boolean isConstructed()>();
+        if $z12 != 0 goto label13;
+
+        virtualinvoke r1.<sun.security.util.DerValue: void resetTag(byte)>(6);
+        $r13 = new sun.security.x509.OIDName;
+        specialinvoke $r13.<sun.security.x509.OIDName: void <init>(sun.security.util.DerValue)>(r1);
+        r0.<sun.security.x509.GeneralName: sun.security.x509.GeneralNameInterface name> = $r13;
+        goto label19;
+
+     label13:
+        $r14 = new java.io.IOException;
+        specialinvoke $r14.<java.io.IOException: void <init>(java.lang.String)>("Invalid encoding of OID name");
+        throw $r14;
+
+     label14:
+        $z13 = virtualinvoke r1.<sun.security.util.DerValue: boolean isContextSpecific()>();
+        if $z13 == 0 goto label15;
+
+        $z14 = virtualinvoke r1.<sun.security.util.DerValue: boolean isConstructed()>();
+        if $z14 == 0 goto label15;
+
+        $r15 = new sun.security.x509.X500Name;
+        $r16 = virtualinvoke r1.<sun.security.util.DerValue: sun.security.util.DerInputStream getData()>();
+        specialinvoke $r15.<sun.security.x509.X500Name: void <init>(sun.security.util.DerInputStream)>($r16);
+        r0.<sun.security.x509.GeneralName: sun.security.x509.GeneralNameInterface name> = $r15;
+        goto label19;
+
+     label15:
+        $r17 = new java.io.IOException;
+        specialinvoke $r17.<java.io.IOException: void <init>(java.lang.String)>("Invalid encoding of Directory name");
+        throw $r17;
+
+     label16:
+        $z15 = virtualinvoke r1.<sun.security.util.DerValue: boolean isContextSpecific()>();
+        if $z15 == 0 goto label17;
+
+        $z16 = virtualinvoke r1.<sun.security.util.DerValue: boolean isConstructed()>();
+        if $z16 == 0 goto label17;
+
+        virtualinvoke r1.<sun.security.util.DerValue: void resetTag(byte)>(48);
+        $r18 = new sun.security.x509.EDIPartyName;
+        specialinvoke $r18.<sun.security.x509.EDIPartyName: void <init>(sun.security.util.DerValue)>(r1);
+        r0.<sun.security.x509.GeneralName: sun.security.x509.GeneralNameInterface name> = $r18;
+        goto label19;
+
+     label17:
+        $r19 = new java.io.IOException;
+        specialinvoke $r19.<java.io.IOException: void <init>(java.lang.String)>("Invalid encoding of EDI name");
+        throw $r19;
+
+     label18:
+        $r20 = new java.io.IOException;
+        $r21 = new java.lang.StringBuilder;
+        specialinvoke $r21.<java.lang.StringBuilder: void <init>()>();
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Unrecognized GeneralName tag, (");
+        $r23 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(s0);
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(")");
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r20.<java.io.IOException: void <init>(java.lang.String)>($r25);
+        throw $r20;
+
+     label19:
+        return;
+    }
+
+    public int getType()
+    {
+        sun.security.x509.GeneralName r0;
+        sun.security.x509.GeneralNameInterface $r1;
+        int $i0;
+
+        r0 := @this: sun.security.x509.GeneralName;
+        $r1 = r0.<sun.security.x509.GeneralName: sun.security.x509.GeneralNameInterface name>;
+        $i0 = interfaceinvoke $r1.<sun.security.x509.GeneralNameInterface: int getType()>();
+        return $i0;
+    }
+
+    public sun.security.x509.GeneralNameInterface getName()
+    {
+        sun.security.x509.GeneralName r0;
+        sun.security.x509.GeneralNameInterface $r1;
+
+        r0 := @this: sun.security.x509.GeneralName;
+        $r1 = r0.<sun.security.x509.GeneralName: sun.security.x509.GeneralNameInterface name>;
+        return $r1;
+    }
+
+    public java.lang.String toString()
+    {
+        sun.security.x509.GeneralName r0;
+        sun.security.x509.GeneralNameInterface $r1;
+        java.lang.String $r2;
+
+        r0 := @this: sun.security.x509.GeneralName;
+        $r1 = r0.<sun.security.x509.GeneralName: sun.security.x509.GeneralNameInterface name>;
+        $r2 = virtualinvoke $r1.<java.lang.Object: java.lang.String toString()>();
+        return $r2;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        sun.security.x509.GeneralName r0, $r4;
+        java.lang.Object r1;
+        sun.security.x509.GeneralNameInterface r2, $r5;
+        java.lang.UnsupportedOperationException r3, $r6;
+        boolean $z0, $z1;
+        int $i0;
+
+        r0 := @this: sun.security.x509.GeneralName;
+        r1 := @parameter0: java.lang.Object;
+        if r0 != r1 goto label0;
+
+        return 1;
+
+     label0:
+        $z0 = r1 instanceof sun.security.x509.GeneralName;
+        if $z0 != 0 goto label1;
+
+        return 0;
+
+     label1:
+        $r4 = (sun.security.x509.GeneralName) r1;
+        r2 = $r4.<sun.security.x509.GeneralName: sun.security.x509.GeneralNameInterface name>;
+
+     label2:
+        $r5 = r0.<sun.security.x509.GeneralName: sun.security.x509.GeneralNameInterface name>;
+        $i0 = interfaceinvoke $r5.<sun.security.x509.GeneralNameInterface: int constrains(sun.security.x509.GeneralNameInterface)>(r2);
+        if $i0 != 0 goto label3;
+
+        $z1 = 1;
+        goto label4;
+
+     label3:
+        $z1 = 0;
+
+     label4:
+        return $z1;
+
+     label5:
+        $r6 := @caughtexception;
+        r3 = $r6;
+        return 0;
+
+        catch java.lang.UnsupportedOperationException from label2 to label4 with label5;
+    }
+
+    public int hashCode()
+    {
+        sun.security.x509.GeneralName r0;
+        sun.security.x509.GeneralNameInterface $r1;
+        int $i0;
+
+        r0 := @this: sun.security.x509.GeneralName;
+        $r1 = r0.<sun.security.x509.GeneralName: sun.security.x509.GeneralNameInterface name>;
+        $i0 = virtualinvoke $r1.<java.lang.Object: int hashCode()>();
+        return $i0;
+    }
+
+    public void encode(sun.security.util.DerOutputStream) throws java.io.IOException
+    {
+        sun.security.x509.GeneralName r0;
+        sun.security.util.DerOutputStream r1, $r2, r3;
+        int i0;
+        sun.security.x509.GeneralNameInterface $r4, $r5;
+        byte $b1, $b2, $b3, $b4, $b5, $b6;
+
+        r0 := @this: sun.security.x509.GeneralName;
+        r1 := @parameter0: sun.security.util.DerOutputStream;
+        $r2 = new sun.security.util.DerOutputStream;
+        specialinvoke $r2.<sun.security.util.DerOutputStream: void <init>()>();
+        r3 = $r2;
+        $r4 = r0.<sun.security.x509.GeneralName: sun.security.x509.GeneralNameInterface name>;
+        interfaceinvoke $r4.<sun.security.x509.GeneralNameInterface: void encode(sun.security.util.DerOutputStream)>(r3);
+        $r5 = r0.<sun.security.x509.GeneralName: sun.security.x509.GeneralNameInterface name>;
+        i0 = interfaceinvoke $r5.<sun.security.x509.GeneralNameInterface: int getType()>();
+        if i0 == 0 goto label0;
+
+        if i0 == 3 goto label0;
+
+        if i0 != 5 goto label1;
+
+     label0:
+        $b1 = (byte) i0;
+        $b2 = staticinvoke <sun.security.util.DerValue: byte createTag(byte,boolean,byte)>(-128, 1, $b1);
+        virtualinvoke r1.<sun.security.util.DerOutputStream: void writeImplicit(byte,sun.security.util.DerOutputStream)>($b2, r3);
+        goto label3;
+
+     label1:
+        if i0 != 4 goto label2;
+
+        $b3 = (byte) i0;
+        $b4 = staticinvoke <sun.security.util.DerValue: byte createTag(byte,boolean,byte)>(-128, 1, $b3);
+        virtualinvoke r1.<sun.security.util.DerOutputStream: void write(byte,sun.security.util.DerOutputStream)>($b4, r3);
+        goto label3;
+
+     label2:
+        $b5 = (byte) i0;
+        $b6 = staticinvoke <sun.security.util.DerValue: byte createTag(byte,boolean,byte)>(-128, 0, $b5);
+        virtualinvoke r1.<sun.security.util.DerOutputStream: void writeImplicit(byte,sun.security.util.DerOutputStream)>($b6, r3);
+
+     label3:
+        return;
+    }
+}

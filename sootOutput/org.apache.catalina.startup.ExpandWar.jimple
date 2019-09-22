@@ -1,0 +1,868 @@
+public class org.apache.catalina.startup.ExpandWar extends java.lang.Object
+{
+    private static final org.apache.juli.logging.Log log;
+    protected static final org.apache.tomcat.util.res.StringManager sm;
+
+    static void <clinit>()
+    {
+        org.apache.juli.logging.Log $r0;
+        org.apache.tomcat.util.res.StringManager $r1;
+
+        $r0 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/catalina/startup/ExpandWar");
+        <org.apache.catalina.startup.ExpandWar: org.apache.juli.logging.Log log> = $r0;
+        $r1 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String)>("org.apache.catalina.startup");
+        <org.apache.catalina.startup.ExpandWar: org.apache.tomcat.util.res.StringManager sm> = $r1;
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.catalina.startup.ExpandWar r0;
+
+        r0 := @this: org.apache.catalina.startup.ExpandWar;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static java.lang.String expand(org.apache.catalina.Host, java.net.URL, java.lang.String) throws java.io.IOException
+    {
+        org.apache.catalina.Host r0;
+        java.net.URL r1;
+        java.lang.String r2, r6, r12, $r17, $r19, $r20, $r24, $r25, $r27, $r31, $r32, $r34, $r35, $r40, $r44, $r45, $r47, $r51, $r55, $r56, $r67;
+        java.io.File $r3, r4, r5, r13, r14, $r18, $r26, $r39, $r46;
+        java.net.JarURLConnection r7;
+        java.util.jar.JarFile r8;
+        java.io.InputStream r9;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z13;
+        java.util.Enumeration r10;
+        java.util.jar.JarEntry r11;
+        int i0;
+        java.lang.Throwable r15, r16, $r59, $r60, $r61, r62, $r63, r64, $r65, r66;
+        java.io.IOException $r21, $r28, $r48, $r57, r58;
+        org.apache.tomcat.util.res.StringManager $r22, $r29, $r42, $r49, $r53;
+        java.lang.Object[] $r23, $r30, $r43, $r50, $r54;
+        java.lang.StringBuilder $r33, $r36;
+        java.net.URLConnection $r37;
+        java.lang.Object $r38;
+        java.lang.IllegalArgumentException $r41;
+        java.util.zip.ZipException $r52;
+        long l1;
+        byte $b2, $b3;
+        null_type n0, n1, n2, n3;
+
+        r0 := @parameter0: org.apache.catalina.Host;
+        r1 := @parameter1: java.net.URL;
+        r2 := @parameter2: java.lang.String;
+        $r3 = new java.io.File;
+        $r17 = interfaceinvoke r0.<org.apache.catalina.Host: java.lang.String getAppBase()>();
+        specialinvoke $r3.<java.io.File: void <init>(java.lang.String)>($r17);
+        r4 = $r3;
+        $z1 = virtualinvoke r4.<java.io.File: boolean isAbsolute()>();
+        if $z1 != 0 goto label0;
+
+        $r18 = new java.io.File;
+        $r19 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("catalina.base");
+        $r20 = interfaceinvoke r0.<org.apache.catalina.Host: java.lang.String getAppBase()>();
+        specialinvoke $r18.<java.io.File: void <init>(java.lang.String,java.lang.String)>($r19, $r20);
+        r4 = $r18;
+
+     label0:
+        $z2 = virtualinvoke r4.<java.io.File: boolean exists()>();
+        if $z2 == 0 goto label1;
+
+        $z3 = virtualinvoke r4.<java.io.File: boolean isDirectory()>();
+        if $z3 != 0 goto label2;
+
+     label1:
+        $r21 = new java.io.IOException;
+        $r22 = <org.apache.catalina.startup.ExpandWar: org.apache.tomcat.util.res.StringManager sm>;
+        $r23 = newarray (java.lang.Object)[1];
+        $r24 = virtualinvoke r4.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r23[0] = $r24;
+        $r25 = virtualinvoke $r22.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("hostConfig.appBase", $r23);
+        specialinvoke $r21.<java.io.IOException: void <init>(java.lang.String)>($r25);
+        throw $r21;
+
+     label2:
+        $r26 = new java.io.File;
+        specialinvoke $r26.<java.io.File: void <init>(java.io.File,java.lang.String)>(r4, r2);
+        r5 = $r26;
+        $z4 = virtualinvoke r5.<java.io.File: boolean exists()>();
+        if $z4 == 0 goto label3;
+
+        $r27 = virtualinvoke r5.<java.io.File: java.lang.String getAbsolutePath()>();
+        return $r27;
+
+     label3:
+        $z5 = virtualinvoke r5.<java.io.File: boolean mkdir()>();
+        if $z5 != 0 goto label4;
+
+        $z6 = virtualinvoke r5.<java.io.File: boolean isDirectory()>();
+        if $z6 != 0 goto label4;
+
+        $r28 = new java.io.IOException;
+        $r29 = <org.apache.catalina.startup.ExpandWar: org.apache.tomcat.util.res.StringManager sm>;
+        $r30 = newarray (java.lang.Object)[1];
+        $r30[0] = r5;
+        $r31 = virtualinvoke $r29.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("expandWar.createFailed", $r30);
+        specialinvoke $r28.<java.io.IOException: void <init>(java.lang.String)>($r31);
+        throw $r28;
+
+     label4:
+        r6 = virtualinvoke r5.<java.io.File: java.lang.String getCanonicalPath()>();
+        $r32 = <java.io.File: java.lang.String separator>;
+        $z7 = virtualinvoke r6.<java.lang.String: boolean endsWith(java.lang.String)>($r32);
+        if $z7 != 0 goto label5;
+
+        $r33 = new java.lang.StringBuilder;
+        $r34 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r6);
+        specialinvoke $r33.<java.lang.StringBuilder: void <init>(java.lang.String)>($r34);
+        $r35 = <java.io.File: java.lang.String separator>;
+        $r36 = virtualinvoke $r33.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r35);
+        r6 = virtualinvoke $r36.<java.lang.StringBuilder: java.lang.String toString()>();
+
+     label5:
+        $r37 = virtualinvoke r1.<java.net.URL: java.net.URLConnection openConnection()>();
+        r7 = (java.net.JarURLConnection) $r37;
+        virtualinvoke r7.<java.net.JarURLConnection: void setUseCaches(boolean)>(0);
+        r8 = null;
+        r9 = null;
+        z0 = 0;
+
+     label6:
+        r8 = virtualinvoke r7.<java.net.JarURLConnection: java.util.jar.JarFile getJarFile()>();
+        r10 = virtualinvoke r8.<java.util.jar.JarFile: java.util.Enumeration entries()>();
+        goto label13;
+
+     label7:
+        $r38 = interfaceinvoke r10.<java.util.Enumeration: java.lang.Object nextElement()>();
+        r11 = (java.util.jar.JarEntry) $r38;
+        r12 = virtualinvoke r11.<java.util.jar.JarEntry: java.lang.String getName()>();
+        $r39 = new java.io.File;
+        specialinvoke $r39.<java.io.File: void <init>(java.io.File,java.lang.String)>(r5, r12);
+        r13 = $r39;
+        $r40 = virtualinvoke r13.<java.io.File: java.lang.String getCanonicalPath()>();
+        $z8 = virtualinvoke $r40.<java.lang.String: boolean startsWith(java.lang.String)>(r6);
+        if $z8 != 0 goto label8;
+
+        $r41 = new java.lang.IllegalArgumentException;
+        $r42 = <org.apache.catalina.startup.ExpandWar: org.apache.tomcat.util.res.StringManager sm>;
+        $r43 = newarray (java.lang.Object)[4];
+        $r43[0] = r1;
+        $r43[1] = r12;
+        $r44 = virtualinvoke r13.<java.io.File: java.lang.String getCanonicalPath()>();
+        $r43[2] = $r44;
+        $r43[3] = r6;
+        $r45 = virtualinvoke $r42.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("expandWar.illegalPath", $r43);
+        specialinvoke $r41.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r45);
+        throw $r41;
+
+     label8:
+        i0 = virtualinvoke r12.<java.lang.String: int lastIndexOf(int)>(47);
+        if i0 < 0 goto label9;
+
+        $r46 = new java.io.File;
+        $r47 = virtualinvoke r12.<java.lang.String: java.lang.String substring(int,int)>(0, i0);
+        specialinvoke $r46.<java.io.File: void <init>(java.io.File,java.lang.String)>(r5, $r47);
+        r14 = $r46;
+        $z9 = virtualinvoke r14.<java.io.File: boolean mkdirs()>();
+        if $z9 != 0 goto label9;
+
+        $z10 = virtualinvoke r14.<java.io.File: boolean isDirectory()>();
+        if $z10 != 0 goto label9;
+
+        $r48 = new java.io.IOException;
+        $r49 = <org.apache.catalina.startup.ExpandWar: org.apache.tomcat.util.res.StringManager sm>;
+        $r50 = newarray (java.lang.Object)[1];
+        $r50[0] = r14;
+        $r51 = virtualinvoke $r49.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("expandWar.createFailed", $r50);
+        specialinvoke $r48.<java.io.IOException: void <init>(java.lang.String)>($r51);
+        throw $r48;
+
+     label9:
+        $z11 = virtualinvoke r12.<java.lang.String: boolean endsWith(java.lang.String)>("/");
+        if $z11 == 0 goto label10;
+
+        goto label13;
+
+     label10:
+        r9 = virtualinvoke r8.<java.util.jar.JarFile: java.io.InputStream getInputStream(java.util.zip.ZipEntry)>(r11);
+        if r9 != null goto label11;
+
+        $r52 = new java.util.zip.ZipException;
+        $r53 = <org.apache.catalina.startup.ExpandWar: org.apache.tomcat.util.res.StringManager sm>;
+        $r54 = newarray (java.lang.Object)[1];
+        $r55 = virtualinvoke r11.<java.util.jar.JarEntry: java.lang.String getName()>();
+        $r54[0] = $r55;
+        $r56 = virtualinvoke $r53.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("expandWar.missingJarEntry", $r54);
+        specialinvoke $r52.<java.util.zip.ZipException: void <init>(java.lang.String)>($r56);
+        throw $r52;
+
+     label11:
+        staticinvoke <org.apache.catalina.startup.ExpandWar: void expand(java.io.InputStream,java.io.File)>(r9, r13);
+        l1 = virtualinvoke r11.<java.util.jar.JarEntry: long getTime()>();
+        $b2 = l1 cmp -1L;
+        if $b2 == 0 goto label12;
+
+        $b3 = l1 cmp 0L;
+        if $b3 == 0 goto label12;
+
+        virtualinvoke r13.<java.io.File: boolean setLastModified(long)>(l1);
+
+     label12:
+        virtualinvoke r9.<java.io.InputStream: void close()>();
+        r9 = null;
+
+     label13:
+        $z13 = interfaceinvoke r10.<java.util.Enumeration: boolean hasMoreElements()>();
+        if $z13 != 0 goto label7;
+
+        z0 = 1;
+
+     label14:
+        goto label28;
+
+     label15:
+        $r57 := @caughtexception;
+        r58 = $r57;
+        throw r58;
+
+     label16:
+        $r59 := @caughtexception;
+        r15 = $r59;
+        if z0 != 0 goto label17;
+
+        staticinvoke <org.apache.catalina.startup.ExpandWar: boolean deleteDir(java.io.File)>(r5);
+
+     label17:
+        if r9 == null goto label22;
+
+     label18:
+        virtualinvoke r9.<java.io.InputStream: void close()>();
+
+     label19:
+        goto label21;
+
+     label20:
+        $r60 := @caughtexception;
+        r16 = $r60;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r16);
+
+     label21:
+        n0 = null;
+
+     label22:
+        if r8 == null goto label27;
+
+     label23:
+        virtualinvoke r8.<java.util.jar.JarFile: void close()>();
+
+     label24:
+        goto label26;
+
+     label25:
+        $r61 := @caughtexception;
+        r62 = $r61;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r62);
+
+     label26:
+        n1 = null;
+
+     label27:
+        throw r15;
+
+     label28:
+        if z0 != 0 goto label29;
+
+        staticinvoke <org.apache.catalina.startup.ExpandWar: boolean deleteDir(java.io.File)>(r5);
+
+     label29:
+        if r9 == null goto label34;
+
+     label30:
+        virtualinvoke r9.<java.io.InputStream: void close()>();
+
+     label31:
+        goto label33;
+
+     label32:
+        $r63 := @caughtexception;
+        r64 = $r63;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r64);
+
+     label33:
+        n2 = null;
+
+     label34:
+        if r8 == null goto label39;
+
+     label35:
+        virtualinvoke r8.<java.util.jar.JarFile: void close()>();
+
+     label36:
+        goto label38;
+
+     label37:
+        $r65 := @caughtexception;
+        r66 = $r65;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r66);
+
+     label38:
+        n3 = null;
+
+     label39:
+        $r67 = virtualinvoke r5.<java.io.File: java.lang.String getAbsolutePath()>();
+        return $r67;
+
+        catch java.io.IOException from label6 to label14 with label15;
+        catch java.lang.Throwable from label6 to label16 with label16;
+        catch java.lang.Throwable from label18 to label19 with label20;
+        catch java.lang.Throwable from label23 to label24 with label25;
+        catch java.lang.Throwable from label30 to label31 with label32;
+        catch java.lang.Throwable from label35 to label36 with label37;
+    }
+
+    public static void validate(org.apache.catalina.Host, java.net.URL, java.lang.String) throws java.io.IOException
+    {
+        org.apache.catalina.Host r0;
+        java.net.URL r1;
+        java.lang.String r2, r6, r11, $r15, $r17, $r18, $r20, $r22, $r23, $r28, $r32, $r33;
+        java.io.File $r3, r4, r5, r12, $r16, $r19, $r27;
+        java.net.JarURLConnection r7;
+        java.util.jar.JarFile r8;
+        java.util.Enumeration r9;
+        java.util.jar.JarEntry r10;
+        java.lang.Throwable r13, r14, $r36, $r37, $r38, r39;
+        boolean $z0, $z1, $z2, $z3;
+        java.lang.StringBuilder $r21, $r24;
+        java.net.URLConnection $r25;
+        java.lang.Object $r26;
+        java.lang.IllegalArgumentException $r29;
+        org.apache.tomcat.util.res.StringManager $r30;
+        java.lang.Object[] $r31;
+        java.io.IOException $r34, r35;
+        null_type n0, n1;
+
+        r0 := @parameter0: org.apache.catalina.Host;
+        r1 := @parameter1: java.net.URL;
+        r2 := @parameter2: java.lang.String;
+        $r3 = new java.io.File;
+        $r15 = interfaceinvoke r0.<org.apache.catalina.Host: java.lang.String getAppBase()>();
+        specialinvoke $r3.<java.io.File: void <init>(java.lang.String)>($r15);
+        r4 = $r3;
+        $z0 = virtualinvoke r4.<java.io.File: boolean isAbsolute()>();
+        if $z0 != 0 goto label0;
+
+        $r16 = new java.io.File;
+        $r17 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("catalina.base");
+        $r18 = interfaceinvoke r0.<org.apache.catalina.Host: java.lang.String getAppBase()>();
+        specialinvoke $r16.<java.io.File: void <init>(java.lang.String,java.lang.String)>($r17, $r18);
+        r4 = $r16;
+
+     label0:
+        $r19 = new java.io.File;
+        specialinvoke $r19.<java.io.File: void <init>(java.io.File,java.lang.String)>(r4, r2);
+        r5 = $r19;
+        r6 = virtualinvoke r5.<java.io.File: java.lang.String getCanonicalPath()>();
+        $r20 = <java.io.File: java.lang.String separator>;
+        $z1 = virtualinvoke r6.<java.lang.String: boolean endsWith(java.lang.String)>($r20);
+        if $z1 != 0 goto label1;
+
+        $r21 = new java.lang.StringBuilder;
+        $r22 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r6);
+        specialinvoke $r21.<java.lang.StringBuilder: void <init>(java.lang.String)>($r22);
+        $r23 = <java.io.File: java.lang.String separator>;
+        $r24 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r23);
+        r6 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.String toString()>();
+
+     label1:
+        $r25 = virtualinvoke r1.<java.net.URL: java.net.URLConnection openConnection()>();
+        r7 = (java.net.JarURLConnection) $r25;
+        virtualinvoke r7.<java.net.JarURLConnection: void setUseCaches(boolean)>(0);
+        r8 = null;
+
+     label2:
+        r8 = virtualinvoke r7.<java.net.JarURLConnection: java.util.jar.JarFile getJarFile()>();
+        r9 = virtualinvoke r8.<java.util.jar.JarFile: java.util.Enumeration entries()>();
+        goto label4;
+
+     label3:
+        $r26 = interfaceinvoke r9.<java.util.Enumeration: java.lang.Object nextElement()>();
+        r10 = (java.util.jar.JarEntry) $r26;
+        r11 = virtualinvoke r10.<java.util.jar.JarEntry: java.lang.String getName()>();
+        $r27 = new java.io.File;
+        specialinvoke $r27.<java.io.File: void <init>(java.io.File,java.lang.String)>(r5, r11);
+        r12 = $r27;
+        $r28 = virtualinvoke r12.<java.io.File: java.lang.String getCanonicalPath()>();
+        $z2 = virtualinvoke $r28.<java.lang.String: boolean startsWith(java.lang.String)>(r6);
+        if $z2 != 0 goto label4;
+
+        $r29 = new java.lang.IllegalArgumentException;
+        $r30 = <org.apache.catalina.startup.ExpandWar: org.apache.tomcat.util.res.StringManager sm>;
+        $r31 = newarray (java.lang.Object)[4];
+        $r31[0] = r1;
+        $r31[1] = r11;
+        $r32 = virtualinvoke r12.<java.io.File: java.lang.String getCanonicalPath()>();
+        $r31[2] = $r32;
+        $r31[3] = r6;
+        $r33 = virtualinvoke $r30.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("expandWar.illegalPath", $r31);
+        specialinvoke $r29.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r33);
+        throw $r29;
+
+     label4:
+        $z3 = interfaceinvoke r9.<java.util.Enumeration: boolean hasMoreElements()>();
+        if $z3 != 0 goto label3;
+
+     label5:
+        goto label13;
+
+     label6:
+        $r34 := @caughtexception;
+        r35 = $r34;
+        throw r35;
+
+     label7:
+        $r36 := @caughtexception;
+        r13 = $r36;
+        if r8 == null goto label12;
+
+     label8:
+        virtualinvoke r8.<java.util.jar.JarFile: void close()>();
+
+     label9:
+        goto label11;
+
+     label10:
+        $r37 := @caughtexception;
+        r14 = $r37;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r14);
+
+     label11:
+        n0 = null;
+
+     label12:
+        throw r13;
+
+     label13:
+        if r8 == null goto label18;
+
+     label14:
+        virtualinvoke r8.<java.util.jar.JarFile: void close()>();
+
+     label15:
+        goto label17;
+
+     label16:
+        $r38 := @caughtexception;
+        r39 = $r38;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r39);
+
+     label17:
+        n1 = null;
+
+     label18:
+        return;
+
+        catch java.io.IOException from label2 to label5 with label6;
+        catch java.lang.Throwable from label2 to label7 with label7;
+        catch java.lang.Throwable from label8 to label9 with label10;
+        catch java.lang.Throwable from label14 to label15 with label16;
+    }
+
+    public static boolean copy(java.io.File, java.io.File)
+    {
+        java.io.File r0, r1, r2, r3, $r10, $r12;
+        boolean z0, $z1, $z2;
+        null_type n0;
+        int i0, $i3;
+        java.nio.channels.FileChannel r4, r5;
+        java.io.IOException r6, r7, $r16, $r21, $r22, r23, $r25, r26, $r27, r28, $r29, r30, $r31, r32;
+        java.lang.Throwable r8, $r24;
+        java.lang.String[] r9;
+        java.lang.String $r11, $r13, $r20;
+        java.io.FileInputStream $r14;
+        java.io.FileOutputStream $r15;
+        long $l1;
+        org.apache.juli.logging.Log $r17;
+        org.apache.tomcat.util.res.StringManager $r18;
+        java.lang.Object[] $r19;
+
+        r0 := @parameter0: java.io.File;
+        r1 := @parameter1: java.io.File;
+        z0 = 1;
+        n0 = null;
+        $z1 = virtualinvoke r0.<java.io.File: boolean isDirectory()>();
+        if $z1 == 0 goto label0;
+
+        r9 = virtualinvoke r0.<java.io.File: java.lang.String[] list()>();
+        z0 = virtualinvoke r1.<java.io.File: boolean mkdir()>();
+        goto label1;
+
+     label0:
+        r9 = newarray (java.lang.String)[1];
+        r9[0] = "";
+
+     label1:
+        if r9 != null goto label2;
+
+        r9 = newarray (java.lang.String)[0];
+
+     label2:
+        i0 = 0;
+        goto label34;
+
+     label3:
+        $r10 = new java.io.File;
+        $r11 = r9[i0];
+        specialinvoke $r10.<java.io.File: void <init>(java.io.File,java.lang.String)>(r0, $r11);
+        r2 = $r10;
+        $r12 = new java.io.File;
+        $r13 = r9[i0];
+        specialinvoke $r12.<java.io.File: void <init>(java.io.File,java.lang.String)>(r1, $r13);
+        r3 = $r12;
+        $z2 = virtualinvoke r2.<java.io.File: boolean isDirectory()>();
+        if $z2 == 0 goto label4;
+
+        z0 = staticinvoke <org.apache.catalina.startup.ExpandWar: boolean copy(java.io.File,java.io.File)>(r2, r3);
+        goto label33;
+
+     label4:
+        r4 = null;
+        r5 = null;
+
+     label5:
+        $r14 = new java.io.FileInputStream;
+        specialinvoke $r14.<java.io.FileInputStream: void <init>(java.io.File)>(r2);
+        r4 = virtualinvoke $r14.<java.io.FileInputStream: java.nio.channels.FileChannel getChannel()>();
+        $r15 = new java.io.FileOutputStream;
+        specialinvoke $r15.<java.io.FileOutputStream: void <init>(java.io.File)>(r3);
+        r5 = virtualinvoke $r15.<java.io.FileOutputStream: java.nio.channels.FileChannel getChannel()>();
+        $l1 = virtualinvoke r4.<java.nio.channels.FileChannel: long size()>();
+        virtualinvoke r4.<java.nio.channels.FileChannel: long transferTo(long,long,java.nio.channels.WritableByteChannel)>(0L, $l1, r5);
+
+     label6:
+        goto label25;
+
+     label7:
+        $r16 := @caughtexception;
+        r6 = $r16;
+        $r17 = <org.apache.catalina.startup.ExpandWar: org.apache.juli.logging.Log log>;
+        $r18 = <org.apache.catalina.startup.ExpandWar: org.apache.tomcat.util.res.StringManager sm>;
+        $r19 = newarray (java.lang.Object)[2];
+        $r19[0] = r2;
+        $r19[1] = r3;
+        $r20 = virtualinvoke $r18.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("expandWar.copy", $r19);
+        interfaceinvoke $r17.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r20, r6);
+        z0 = 0;
+
+     label8:
+        if r4 == null goto label12;
+
+     label9:
+        virtualinvoke r4.<java.nio.channels.FileChannel: void close()>();
+
+     label10:
+        goto label12;
+
+     label11:
+        $r21 := @caughtexception;
+        r7 = $r21;
+
+     label12:
+        if r5 == null goto label33;
+
+     label13:
+        virtualinvoke r5.<java.nio.channels.FileChannel: void close()>();
+
+     label14:
+        goto label33;
+
+     label15:
+        $r22 := @caughtexception;
+        r23 = $r22;
+        goto label33;
+
+     label16:
+        $r24 := @caughtexception;
+        r8 = $r24;
+        if r4 == null goto label20;
+
+     label17:
+        virtualinvoke r4.<java.nio.channels.FileChannel: void close()>();
+
+     label18:
+        goto label20;
+
+     label19:
+        $r25 := @caughtexception;
+        r26 = $r25;
+
+     label20:
+        if r5 == null goto label24;
+
+     label21:
+        virtualinvoke r5.<java.nio.channels.FileChannel: void close()>();
+
+     label22:
+        goto label24;
+
+     label23:
+        $r27 := @caughtexception;
+        r28 = $r27;
+
+     label24:
+        throw r8;
+
+     label25:
+        if r4 == null goto label29;
+
+     label26:
+        virtualinvoke r4.<java.nio.channels.FileChannel: void close()>();
+
+     label27:
+        goto label29;
+
+     label28:
+        $r29 := @caughtexception;
+        r30 = $r29;
+
+     label29:
+        if r5 == null goto label33;
+
+     label30:
+        virtualinvoke r5.<java.nio.channels.FileChannel: void close()>();
+
+     label31:
+        goto label33;
+
+     label32:
+        $r31 := @caughtexception;
+        r32 = $r31;
+
+     label33:
+        i0 = i0 + 1;
+
+     label34:
+        $i3 = lengthof r9;
+        if i0 >= $i3 goto label35;
+
+        if z0 != 0 goto label3;
+
+     label35:
+        return z0;
+
+        catch java.io.IOException from label5 to label6 with label7;
+        catch java.io.IOException from label9 to label10 with label11;
+        catch java.io.IOException from label13 to label14 with label15;
+        catch java.lang.Throwable from label5 to label8 with label16;
+        catch java.io.IOException from label17 to label18 with label19;
+        catch java.io.IOException from label21 to label22 with label23;
+        catch java.io.IOException from label26 to label27 with label28;
+        catch java.io.IOException from label30 to label31 with label32;
+    }
+
+    public static boolean delete(java.io.File)
+    {
+        java.io.File r0;
+        boolean $z0;
+
+        r0 := @parameter0: java.io.File;
+        $z0 = staticinvoke <org.apache.catalina.startup.ExpandWar: boolean delete(java.io.File,boolean)>(r0, 1);
+        return $z0;
+    }
+
+    public static boolean delete(java.io.File, boolean)
+    {
+        java.io.File r0;
+        boolean z0, z1, $z2, $z3;
+        org.apache.juli.logging.Log $r1;
+        org.apache.tomcat.util.res.StringManager $r2;
+        java.lang.Object[] $r3;
+        java.lang.String $r4, $r5;
+
+        r0 := @parameter0: java.io.File;
+        z0 := @parameter1: boolean;
+        $z2 = virtualinvoke r0.<java.io.File: boolean isDirectory()>();
+        if $z2 == 0 goto label0;
+
+        z1 = staticinvoke <org.apache.catalina.startup.ExpandWar: boolean deleteDir(java.io.File,boolean)>(r0, z0);
+        goto label2;
+
+     label0:
+        $z3 = virtualinvoke r0.<java.io.File: boolean exists()>();
+        if $z3 == 0 goto label1;
+
+        z1 = virtualinvoke r0.<java.io.File: boolean delete()>();
+        goto label2;
+
+     label1:
+        z1 = 1;
+
+     label2:
+        if z0 == 0 goto label3;
+
+        if z1 != 0 goto label3;
+
+        $r1 = <org.apache.catalina.startup.ExpandWar: org.apache.juli.logging.Log log>;
+        $r2 = <org.apache.catalina.startup.ExpandWar: org.apache.tomcat.util.res.StringManager sm>;
+        $r3 = newarray (java.lang.Object)[1];
+        $r4 = virtualinvoke r0.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r3[0] = $r4;
+        $r5 = virtualinvoke $r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("expandWar.deleteFailed", $r3);
+        interfaceinvoke $r1.<org.apache.juli.logging.Log: void error(java.lang.Object)>($r5);
+
+     label3:
+        return z1;
+    }
+
+    public static boolean deleteDir(java.io.File)
+    {
+        java.io.File r0;
+        boolean $z0;
+
+        r0 := @parameter0: java.io.File;
+        $z0 = staticinvoke <org.apache.catalina.startup.ExpandWar: boolean deleteDir(java.io.File,boolean)>(r0, 1);
+        return $z0;
+    }
+
+    public static boolean deleteDir(java.io.File, boolean)
+    {
+        java.io.File r0, r2, $r3;
+        boolean z0, $z1, $z4, z5;
+        java.lang.String[] r1;
+        int i0, $i1;
+        java.lang.String $r4, $r8, $r9;
+        org.apache.juli.logging.Log $r5;
+        org.apache.tomcat.util.res.StringManager $r6;
+        java.lang.Object[] $r7;
+
+        r0 := @parameter0: java.io.File;
+        z0 := @parameter1: boolean;
+        r1 = virtualinvoke r0.<java.io.File: java.lang.String[] list()>();
+        if r1 != null goto label0;
+
+        r1 = newarray (java.lang.String)[0];
+
+     label0:
+        i0 = 0;
+        goto label4;
+
+     label1:
+        $r3 = new java.io.File;
+        $r4 = r1[i0];
+        specialinvoke $r3.<java.io.File: void <init>(java.io.File,java.lang.String)>(r0, $r4);
+        r2 = $r3;
+        $z1 = virtualinvoke r2.<java.io.File: boolean isDirectory()>();
+        if $z1 == 0 goto label2;
+
+        staticinvoke <org.apache.catalina.startup.ExpandWar: boolean deleteDir(java.io.File,boolean)>(r2, z0);
+        goto label3;
+
+     label2:
+        virtualinvoke r2.<java.io.File: boolean delete()>();
+
+     label3:
+        i0 = i0 + 1;
+
+     label4:
+        $i1 = lengthof r1;
+        if i0 < $i1 goto label1;
+
+        $z4 = virtualinvoke r0.<java.io.File: boolean exists()>();
+        if $z4 == 0 goto label5;
+
+        z5 = virtualinvoke r0.<java.io.File: boolean delete()>();
+        goto label6;
+
+     label5:
+        z5 = 1;
+
+     label6:
+        if z0 == 0 goto label7;
+
+        if z5 != 0 goto label7;
+
+        $r5 = <org.apache.catalina.startup.ExpandWar: org.apache.juli.logging.Log log>;
+        $r6 = <org.apache.catalina.startup.ExpandWar: org.apache.tomcat.util.res.StringManager sm>;
+        $r7 = newarray (java.lang.Object)[1];
+        $r8 = virtualinvoke r0.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r7[0] = $r8;
+        $r9 = virtualinvoke $r6.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("expandWar.deleteFailed", $r7);
+        interfaceinvoke $r5.<org.apache.juli.logging.Log: void error(java.lang.Object)>($r9);
+
+     label7:
+        return z5;
+    }
+
+    private static void expand(java.io.InputStream, java.io.File) throws java.io.IOException
+    {
+        java.io.InputStream r0;
+        java.io.File r1;
+        java.io.BufferedOutputStream r2, $r7;
+        java.io.FileOutputStream $r3;
+        byte[] r4;
+        int i0;
+        java.lang.Throwable r5, $r8;
+        java.io.IOException r6, $r9, $r10, r11;
+
+        r0 := @parameter0: java.io.InputStream;
+        r1 := @parameter1: java.io.File;
+        r2 = null;
+
+     label0:
+        $r7 = new java.io.BufferedOutputStream;
+        $r3 = new java.io.FileOutputStream;
+        specialinvoke $r3.<java.io.FileOutputStream: void <init>(java.io.File)>(r1);
+        specialinvoke $r7.<java.io.BufferedOutputStream: void <init>(java.io.OutputStream)>($r3);
+        r2 = $r7;
+        r4 = newarray (byte)[2048];
+
+     label1:
+        i0 = virtualinvoke r0.<java.io.InputStream: int read(byte[])>(r4);
+        if i0 > 0 goto label2;
+
+        goto label8;
+
+     label2:
+        virtualinvoke r2.<java.io.BufferedOutputStream: void write(byte[],int,int)>(r4, 0, i0);
+        goto label1;
+
+     label3:
+        $r8 := @caughtexception;
+        r5 = $r8;
+        if r2 == null goto label7;
+
+     label4:
+        virtualinvoke r2.<java.io.BufferedOutputStream: void close()>();
+
+     label5:
+        goto label7;
+
+     label6:
+        $r9 := @caughtexception;
+        r6 = $r9;
+
+     label7:
+        throw r5;
+
+     label8:
+        if r2 == null goto label12;
+
+     label9:
+        virtualinvoke r2.<java.io.BufferedOutputStream: void close()>();
+
+     label10:
+        goto label12;
+
+     label11:
+        $r10 := @caughtexception;
+        r11 = $r10;
+
+     label12:
+        return;
+
+        catch java.lang.Throwable from label0 to label3 with label3;
+        catch java.io.IOException from label4 to label5 with label6;
+        catch java.io.IOException from label9 to label10 with label11;
+    }
+}

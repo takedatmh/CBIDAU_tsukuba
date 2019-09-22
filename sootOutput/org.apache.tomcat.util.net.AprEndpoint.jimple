@@ -1,0 +1,2177 @@
+public class org.apache.tomcat.util.net.AprEndpoint extends org.apache.tomcat.util.net.AbstractEndpoint
+{
+    private static final org.apache.juli.logging.Log log;
+    protected static final java.util.Set SSL_PROTO_ALL;
+    protected long rootPool;
+    protected long serverSock;
+    protected long serverSockPool;
+    protected long sslContext;
+    protected java.util.concurrent.ConcurrentLinkedQueue waitingRequests;
+    private final java.util.Map connections;
+    protected boolean deferAccept;
+    protected int sendfileSize;
+    protected org.apache.tomcat.util.net.AprEndpoint$Handler handler;
+    protected int pollTime;
+    protected boolean useSendfile;
+    private boolean useSendFileSet;
+    protected boolean useComet;
+    protected int sendfileThreadCount;
+    protected org.apache.tomcat.util.net.AprEndpoint$Poller poller;
+    protected org.apache.tomcat.util.net.AprEndpoint$AsyncTimeout asyncTimeout;
+    protected org.apache.tomcat.util.net.AprEndpoint$Sendfile sendfile;
+    protected java.lang.String SSLProtocol;
+    protected java.lang.String SSLPassword;
+    protected java.lang.String SSLCipherSuite;
+    protected java.lang.String SSLCertificateFile;
+    protected java.lang.String SSLCertificateKeyFile;
+    protected java.lang.String SSLCertificateChainFile;
+    protected java.lang.String SSLCACertificatePath;
+    protected java.lang.String SSLCACertificateFile;
+    protected java.lang.String SSLCARevocationPath;
+    protected java.lang.String SSLCARevocationFile;
+    protected java.lang.String SSLVerifyClient;
+    protected int SSLVerifyDepth;
+    protected boolean SSLInsecureRenegotiation;
+    protected boolean SSLHonorCipherOrder;
+    protected boolean SSLDisableCompression;
+
+    static void <clinit>()
+    {
+        org.apache.juli.logging.Log $r0;
+        java.util.HashSet $r1;
+        java.util.Set $r2, $r3, $r4;
+
+        $r0 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/tomcat/util/net/AprEndpoint");
+        <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log> = $r0;
+        $r1 = new java.util.HashSet;
+        specialinvoke $r1.<java.util.HashSet: void <init>()>();
+        <org.apache.tomcat.util.net.AprEndpoint: java.util.Set SSL_PROTO_ALL> = $r1;
+        $r2 = <org.apache.tomcat.util.net.AprEndpoint: java.util.Set SSL_PROTO_ALL>;
+        interfaceinvoke $r2.<java.util.Set: boolean add(java.lang.Object)>("TLSv1");
+        $r3 = <org.apache.tomcat.util.net.AprEndpoint: java.util.Set SSL_PROTO_ALL>;
+        interfaceinvoke $r3.<java.util.Set: boolean add(java.lang.Object)>("TLSv1.1");
+        $r4 = <org.apache.tomcat.util.net.AprEndpoint: java.util.Set SSL_PROTO_ALL>;
+        interfaceinvoke $r4.<java.util.Set: boolean add(java.lang.Object)>("TLSv1.2");
+        return;
+    }
+
+    public void removeWaitingRequest(org.apache.tomcat.util.net.SocketWrapper)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        org.apache.tomcat.util.net.SocketWrapper r1;
+        java.util.concurrent.ConcurrentLinkedQueue $r2;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        r1 := @parameter0: org.apache.tomcat.util.net.SocketWrapper;
+        $r2 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.util.concurrent.ConcurrentLinkedQueue waitingRequests>;
+        virtualinvoke $r2.<java.util.concurrent.ConcurrentLinkedQueue: boolean remove(java.lang.Object)>(r1);
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.util.concurrent.ConcurrentLinkedQueue $r1;
+        java.util.concurrent.ConcurrentHashMap $r2;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        specialinvoke r0.<org.apache.tomcat.util.net.AbstractEndpoint: void <init>()>();
+        r0.<org.apache.tomcat.util.net.AprEndpoint: long rootPool> = 0L;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSock> = 0L;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSockPool> = 0L;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: long sslContext> = 0L;
+        $r1 = new java.util.concurrent.ConcurrentLinkedQueue;
+        specialinvoke $r1.<java.util.concurrent.ConcurrentLinkedQueue: void <init>()>();
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.util.concurrent.ConcurrentLinkedQueue waitingRequests> = $r1;
+        $r2 = new java.util.concurrent.ConcurrentHashMap;
+        specialinvoke $r2.<java.util.concurrent.ConcurrentHashMap: void <init>()>();
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.util.Map connections> = $r2;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean deferAccept> = 1;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: int sendfileSize> = 1024;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Handler handler> = null;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: int pollTime> = 2000;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean useSendfile> = 0;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean useSendFileSet> = 0;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean useComet> = 1;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: int sendfileThreadCount> = 0;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Poller poller> = null;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$AsyncTimeout asyncTimeout> = null;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Sendfile sendfile> = null;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLProtocol> = "all";
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLPassword> = null;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCipherSuite> = "HIGH:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!kRSA";
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCertificateFile> = null;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCertificateKeyFile> = null;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCertificateChainFile> = null;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCACertificatePath> = null;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCACertificateFile> = null;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCARevocationPath> = null;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCARevocationFile> = null;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLVerifyClient> = "none";
+        r0.<org.apache.tomcat.util.net.AprEndpoint: int SSLVerifyDepth> = 10;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean SSLInsecureRenegotiation> = 0;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean SSLHonorCipherOrder> = 0;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean SSLDisableCompression> = 0;
+        virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: void setMaxConnections(int)>(8192);
+        return;
+    }
+
+    public void setDeferAccept(boolean)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        boolean z0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean deferAccept> = z0;
+        return;
+    }
+
+    public boolean getDeferAccept()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $z0 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean deferAccept>;
+        return $z0;
+    }
+
+    public void setSendfileSize(int)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        int i0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        i0 := @parameter0: int;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: int sendfileSize> = i0;
+        return;
+    }
+
+    public int getSendfileSize()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        int $i0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $i0 = r0.<org.apache.tomcat.util.net.AprEndpoint: int sendfileSize>;
+        return $i0;
+    }
+
+    public void setHandler(org.apache.tomcat.util.net.AprEndpoint$Handler)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        org.apache.tomcat.util.net.AprEndpoint$Handler r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        r1 := @parameter0: org.apache.tomcat.util.net.AprEndpoint$Handler;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Handler handler> = r1;
+        return;
+    }
+
+    public org.apache.tomcat.util.net.AprEndpoint$Handler getHandler()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        org.apache.tomcat.util.net.AprEndpoint$Handler $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Handler handler>;
+        return $r1;
+    }
+
+    public int getPollTime()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        int $i0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $i0 = r0.<org.apache.tomcat.util.net.AprEndpoint: int pollTime>;
+        return $i0;
+    }
+
+    public void setPollTime(int)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        int i0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        i0 := @parameter0: int;
+        if i0 <= 0 goto label0;
+
+        r0.<org.apache.tomcat.util.net.AprEndpoint: int pollTime> = i0;
+
+     label0:
+        return;
+    }
+
+    public void setUseSendfile(boolean)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        boolean z0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean useSendFileSet> = 1;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean useSendfile> = z0;
+        return;
+    }
+
+    public boolean getUseSendfile()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $z0 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean useSendfile>;
+        return $z0;
+    }
+
+    public void setUseComet(boolean)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        boolean z0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean useComet> = z0;
+        return;
+    }
+
+    public boolean getUseComet()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $z0 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean useComet>;
+        return $z0;
+    }
+
+    public boolean getUseCometTimeout()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        return 0;
+    }
+
+    public boolean getUsePolling()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        return 1;
+    }
+
+    public void setSendfileThreadCount(int)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        int i0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        i0 := @parameter0: int;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: int sendfileThreadCount> = i0;
+        return;
+    }
+
+    public int getSendfileThreadCount()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        int $i0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $i0 = r0.<org.apache.tomcat.util.net.AprEndpoint: int sendfileThreadCount>;
+        return $i0;
+    }
+
+    public org.apache.tomcat.util.net.AprEndpoint$Poller getPoller()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        org.apache.tomcat.util.net.AprEndpoint$Poller $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Poller poller>;
+        return $r1;
+    }
+
+    public org.apache.tomcat.util.net.AprEndpoint$AsyncTimeout getAsyncTimeout()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        org.apache.tomcat.util.net.AprEndpoint$AsyncTimeout $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$AsyncTimeout asyncTimeout>;
+        return $r1;
+    }
+
+    public org.apache.tomcat.util.net.AprEndpoint$Sendfile getSendfile()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        org.apache.tomcat.util.net.AprEndpoint$Sendfile $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Sendfile sendfile>;
+        return $r1;
+    }
+
+    public java.lang.String getSSLProtocol()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLProtocol>;
+        return $r1;
+    }
+
+    public void setSSLProtocol(java.lang.String)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLProtocol> = r1;
+        return;
+    }
+
+    public java.lang.String getSSLPassword()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLPassword>;
+        return $r1;
+    }
+
+    public void setSSLPassword(java.lang.String)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLPassword> = r1;
+        return;
+    }
+
+    public java.lang.String getSSLCipherSuite()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCipherSuite>;
+        return $r1;
+    }
+
+    public void setSSLCipherSuite(java.lang.String)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCipherSuite> = r1;
+        return;
+    }
+
+    public java.lang.String getSSLCertificateFile()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCertificateFile>;
+        return $r1;
+    }
+
+    public void setSSLCertificateFile(java.lang.String)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCertificateFile> = r1;
+        return;
+    }
+
+    public java.lang.String getSSLCertificateKeyFile()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCertificateKeyFile>;
+        return $r1;
+    }
+
+    public void setSSLCertificateKeyFile(java.lang.String)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCertificateKeyFile> = r1;
+        return;
+    }
+
+    public java.lang.String getSSLCertificateChainFile()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCertificateChainFile>;
+        return $r1;
+    }
+
+    public void setSSLCertificateChainFile(java.lang.String)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCertificateChainFile> = r1;
+        return;
+    }
+
+    public java.lang.String getSSLCACertificatePath()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCACertificatePath>;
+        return $r1;
+    }
+
+    public void setSSLCACertificatePath(java.lang.String)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCACertificatePath> = r1;
+        return;
+    }
+
+    public java.lang.String getSSLCACertificateFile()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCACertificateFile>;
+        return $r1;
+    }
+
+    public void setSSLCACertificateFile(java.lang.String)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCACertificateFile> = r1;
+        return;
+    }
+
+    public java.lang.String getSSLCARevocationPath()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCARevocationPath>;
+        return $r1;
+    }
+
+    public void setSSLCARevocationPath(java.lang.String)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCARevocationPath> = r1;
+        return;
+    }
+
+    public java.lang.String getSSLCARevocationFile()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCARevocationFile>;
+        return $r1;
+    }
+
+    public void setSSLCARevocationFile(java.lang.String)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCARevocationFile> = r1;
+        return;
+    }
+
+    public java.lang.String getSSLVerifyClient()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLVerifyClient>;
+        return $r1;
+    }
+
+    public void setSSLVerifyClient(java.lang.String)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLVerifyClient> = r1;
+        return;
+    }
+
+    public int getSSLVerifyDepth()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        int $i0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $i0 = r0.<org.apache.tomcat.util.net.AprEndpoint: int SSLVerifyDepth>;
+        return $i0;
+    }
+
+    public void setSSLVerifyDepth(int)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        int i0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        i0 := @parameter0: int;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: int SSLVerifyDepth> = i0;
+        return;
+    }
+
+    public void setSSLInsecureRenegotiation(boolean)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        boolean z0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean SSLInsecureRenegotiation> = z0;
+        return;
+    }
+
+    public boolean getSSLInsecureRenegotiation()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $z0 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean SSLInsecureRenegotiation>;
+        return $z0;
+    }
+
+    public void setSSLHonorCipherOrder(boolean)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        boolean z0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean SSLHonorCipherOrder> = z0;
+        return;
+    }
+
+    public boolean getSSLHonorCipherOrder()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $z0 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean SSLHonorCipherOrder>;
+        return $z0;
+    }
+
+    public void setSSLDisableCompression(boolean)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        boolean z0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean SSLDisableCompression> = z0;
+        return;
+    }
+
+    public boolean getSSLDisableCompression()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $z0 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean SSLDisableCompression>;
+        return $z0;
+    }
+
+    public int getLocalPort()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        long l0, l1;
+        org.apache.tomcat.jni.Sockaddr r1;
+        byte $b2;
+        int $i3;
+        java.lang.Exception $r2, r3;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        l0 = r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSock>;
+        $b2 = l0 cmp 0L;
+        if $b2 != 0 goto label0;
+
+        return -1;
+
+     label0:
+        l1 = staticinvoke <org.apache.tomcat.jni.Address: long get(int,long)>(0, l0);
+        r1 = staticinvoke <org.apache.tomcat.jni.Address: org.apache.tomcat.jni.Sockaddr getInfo(long)>(l1);
+        $i3 = r1.<org.apache.tomcat.jni.Sockaddr: int port>;
+
+     label1:
+        return $i3;
+
+     label2:
+        $r2 := @caughtexception;
+        r3 = $r2;
+        return -1;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    public void setMaxConnections(int)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        int i0, $i1, $i2;
+        org.apache.juli.logging.Log $r1, $r6;
+        org.apache.tomcat.util.res.StringManager $r2, $r7;
+        java.lang.Object[] $r3, $r8;
+        java.lang.Integer $r4, $r9;
+        java.lang.String $r5, $r10;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        i0 := @parameter0: int;
+        if i0 != -1 goto label0;
+
+        $r1 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r2 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r3 = newarray (java.lang.Object)[1];
+        $i1 = virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: int getMaxConnections()>();
+        $r4 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i1);
+        $r3[0] = $r4;
+        $r5 = virtualinvoke $r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("endpoint.apr.maxConnections.unlimited", $r3);
+        interfaceinvoke $r1.<org.apache.juli.logging.Log: void warn(java.lang.Object)>($r5);
+        return;
+
+     label0:
+        $z0 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean running>;
+        if $z0 == 0 goto label1;
+
+        $r6 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r7 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r8 = newarray (java.lang.Object)[1];
+        $i2 = virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: int getMaxConnections()>();
+        $r9 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i2);
+        $r8[0] = $r9;
+        $r10 = virtualinvoke $r7.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("endpoint.apr.maxConnections.running", $r8);
+        interfaceinvoke $r6.<org.apache.juli.logging.Log: void warn(java.lang.Object)>($r10);
+        return;
+
+     label1:
+        specialinvoke r0.<org.apache.tomcat.util.net.AbstractEndpoint: void setMaxConnections(int)>(i0);
+        return;
+    }
+
+    public int getKeepAliveCount()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        org.apache.tomcat.util.net.AprEndpoint$Poller $r1, $r2;
+        int $i0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Poller poller>;
+        if $r1 != null goto label0;
+
+        return 0;
+
+     label0:
+        $r2 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Poller poller>;
+        $i0 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint$Poller: int getConnectionCount()>();
+        return $i0;
+    }
+
+    public int getSendfileCount()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        org.apache.tomcat.util.net.AprEndpoint$Sendfile $r1, $r2;
+        int $i0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Sendfile sendfile>;
+        if $r1 != null goto label0;
+
+        return 0;
+
+     label0:
+        $r2 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Sendfile sendfile>;
+        $i0 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint$Sendfile: int getSendfileCount()>();
+        return $i0;
+    }
+
+    public void bind() throws java.lang.Exception
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.UnsatisfiedLinkError r1, $r8, $r62, r63, $r69, r70, $r76, r77;
+        org.apache.tomcat.util.res.StringManager $r2, $r16, $r23, $r32, $r53, $r60, $r65, $r72, $r79, $r99;
+        byte b0, b3, b42;
+        long l1, $l6, $l7, $l8, $l11, $l13, $l14, $l15, $l17, $l19, $l20, $l23, $l26, $l32, $l33, $l34, $l35, $l36, $l37, $l38, $l39, $l40, $l41, $l43;
+        int i2, i4, i5, $i9, $i10, $i12, $i21, i22, $i25, $i27, $i28, $i29, $i44;
+        java.lang.StringBuilder $r3, $r18, $r25, $r26;
+        java.util.HashSet r4, $r36;
+        java.lang.String[] r5, $r38;
+        java.lang.String r6, r7, $r10, r11, $r19, $r20, $r21, $r27, $r28, $r29, $r30, $r33, $r34, $r35, $r37, $r39, r40, $r42, r46, $r47, $r48, $r49, $r50, $r51, $r55, $r56, $r61, $r67, $r68, $r74, $r75, $r81, $r82, $r83, $r84, $r85, $r86, $r87, $r88, $r89, $r90, $r91, $r92, $r93, $r94, $r95, $r96, $r97, $r100;
+        java.lang.Exception $r9, $r15, $r22, $r31, $r52, $r57, r58, $r59;
+        java.net.InetAddress $r12, $r13;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z16, $z19, $z20, $z21, $z22, $z23, $z24, $z25, z26, $z27, z28, $z29, z30, $z36, $z37, $z38, $z39, $z40;
+        org.apache.tomcat.jni.Sockaddr $r14;
+        java.lang.Object[] $r17, $r24, $r54, $r66, $r73, $r80;
+        char $c30, $c31;
+        java.util.Set $r41, $r43;
+        java.util.Iterator r44;
+        java.lang.Object $r45;
+        org.apache.juli.logging.Log $r64, $r71, $r78, $r98;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+
+     label0:
+        $l6 = staticinvoke <org.apache.tomcat.jni.Pool: long create(long)>(0L);
+        r0.<org.apache.tomcat.util.net.AprEndpoint: long rootPool> = $l6;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r8 := @caughtexception;
+        r1 = $r8;
+        $r9 = new java.lang.Exception;
+        $r2 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r10 = virtualinvoke $r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("endpoint.init.notavail");
+        specialinvoke $r9.<java.lang.Exception: void <init>(java.lang.String)>($r10);
+        throw $r9;
+
+     label3:
+        $l7 = r0.<org.apache.tomcat.util.net.AprEndpoint: long rootPool>;
+        $l8 = staticinvoke <org.apache.tomcat.jni.Pool: long create(long)>($l7);
+        r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSockPool> = $l8;
+        r11 = null;
+        $r12 = virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: java.net.InetAddress getAddress()>();
+        if $r12 == null goto label4;
+
+        $r13 = virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: java.net.InetAddress getAddress()>();
+        r11 = virtualinvoke $r13.<java.net.InetAddress: java.lang.String getHostAddress()>();
+
+     label4:
+        b0 = 1;
+        $z0 = <org.apache.tomcat.jni.Library: boolean APR_HAVE_IPV6>;
+        if $z0 == 0 goto label6;
+
+        if r11 != null goto label5;
+
+        $z1 = <org.apache.tomcat.jni.OS: boolean IS_BSD>;
+        if $z1 != 0 goto label6;
+
+        $z2 = <org.apache.tomcat.jni.OS: boolean IS_WIN32>;
+        if $z2 != 0 goto label6;
+
+        $z3 = <org.apache.tomcat.jni.OS: boolean IS_WIN64>;
+        if $z3 != 0 goto label6;
+
+        b0 = 0;
+        goto label6;
+
+     label5:
+        $i9 = virtualinvoke r11.<java.lang.String: int indexOf(int)>(58);
+        if $i9 < 0 goto label6;
+
+        b0 = 0;
+
+     label6:
+        $i10 = virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: int getPort()>();
+        $l11 = r0.<org.apache.tomcat.util.net.AprEndpoint: long rootPool>;
+        l1 = staticinvoke <org.apache.tomcat.jni.Address: long info(java.lang.String,int,int,int,long)>(r11, b0, $i10, 0, $l11);
+        $r14 = staticinvoke <org.apache.tomcat.jni.Address: org.apache.tomcat.jni.Sockaddr getInfo(long)>(l1);
+        $i12 = $r14.<org.apache.tomcat.jni.Sockaddr: int family>;
+        $l13 = r0.<org.apache.tomcat.util.net.AprEndpoint: long rootPool>;
+        $l14 = staticinvoke <org.apache.tomcat.jni.Socket: long create(int,int,int,long)>($i12, 0, 6, $l13);
+        r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSock> = $l14;
+        $z4 = <org.apache.tomcat.jni.OS: boolean IS_UNIX>;
+        if $z4 == 0 goto label7;
+
+        $l15 = r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSock>;
+        staticinvoke <org.apache.tomcat.jni.Socket: int optSet(long,int,int)>($l15, 16, 1);
+
+     label7:
+        $l17 = r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSock>;
+        staticinvoke <org.apache.tomcat.jni.Socket: int optSet(long,int,int)>($l17, 2, 1);
+        $l19 = r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSock>;
+        i2 = staticinvoke <org.apache.tomcat.jni.Socket: int bind(long,long)>($l19, l1);
+        if i2 == 0 goto label8;
+
+        $r15 = new java.lang.Exception;
+        $r16 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r17 = newarray (java.lang.Object)[2];
+        $r3 = new java.lang.StringBuilder;
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>()>();
+        $r18 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i2);
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r17[0] = $r19;
+        $r20 = staticinvoke <org.apache.tomcat.jni.Error: java.lang.String strerror(int)>(i2);
+        $r17[1] = $r20;
+        $r21 = virtualinvoke $r16.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("endpoint.init.bind", $r17);
+        specialinvoke $r15.<java.lang.Exception: void <init>(java.lang.String)>($r21);
+        throw $r15;
+
+     label8:
+        $l20 = r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSock>;
+        $i21 = virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: int getBacklog()>();
+        i22 = staticinvoke <org.apache.tomcat.jni.Socket: int listen(long,int)>($l20, $i21);
+        if i22 == 0 goto label9;
+
+        $r22 = new java.lang.Exception;
+        $r23 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r24 = newarray (java.lang.Object)[2];
+        $r25 = new java.lang.StringBuilder;
+        specialinvoke $r25.<java.lang.StringBuilder: void <init>()>();
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i22);
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r24[0] = $r27;
+        $r28 = staticinvoke <org.apache.tomcat.jni.Error: java.lang.String strerror(int)>(i22);
+        $r24[1] = $r28;
+        $r29 = virtualinvoke $r23.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("endpoint.init.listen", $r24);
+        specialinvoke $r22.<java.lang.Exception: void <init>(java.lang.String)>($r29);
+        throw $r22;
+
+     label9:
+        $z5 = <org.apache.tomcat.jni.OS: boolean IS_WIN32>;
+        if $z5 != 0 goto label10;
+
+        $z6 = <org.apache.tomcat.jni.OS: boolean IS_WIN64>;
+        if $z6 == 0 goto label11;
+
+     label10:
+        $l23 = r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSock>;
+        staticinvoke <org.apache.tomcat.jni.Socket: int optSet(long,int,int)>($l23, 16, 1);
+
+     label11:
+        $z7 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean useSendFileSet>;
+        if $z7 != 0 goto label12;
+
+        $z8 = <org.apache.tomcat.jni.Library: boolean APR_HAS_SENDFILE>;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean useSendfile> = $z8;
+        goto label13;
+
+     label12:
+        $z9 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean useSendfile>;
+        if $z9 == 0 goto label13;
+
+        $z10 = <org.apache.tomcat.jni.Library: boolean APR_HAS_SENDFILE>;
+        if $z10 != 0 goto label13;
+
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean useSendfile> = 0;
+
+     label13:
+        $i25 = r0.<org.apache.tomcat.util.net.AprEndpoint: int acceptorThreadCount>;
+        if $i25 != 0 goto label14;
+
+        r0.<org.apache.tomcat.util.net.AprEndpoint: int acceptorThreadCount> = 1;
+
+     label14:
+        $z11 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean deferAccept>;
+        if $z11 == 0 goto label15;
+
+        $l26 = r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSock>;
+        $i27 = staticinvoke <org.apache.tomcat.jni.Socket: int optSet(long,int,int)>($l26, 32768, 1);
+        if $i27 != 70023 goto label15;
+
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean deferAccept> = 0;
+
+     label15:
+        $z12 = virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: boolean isSSLEnabled()>();
+        if $z12 == 0 goto label55;
+
+        $r30 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCertificateFile>;
+        if $r30 != null goto label16;
+
+        $r31 = new java.lang.Exception;
+        $r32 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r33 = virtualinvoke $r32.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("endpoint.apr.noSslCertFile");
+        specialinvoke $r31.<java.lang.Exception: void <init>(java.lang.String)>($r33);
+        throw $r31;
+
+     label16:
+        b3 = 0;
+        $r34 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLProtocol>;
+        if $r34 == null goto label17;
+
+        $r35 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLProtocol>;
+        $i28 = virtualinvoke $r35.<java.lang.String: int length()>();
+        if $i28 != 0 goto label18;
+
+     label17:
+        b3 = 28;
+        goto label33;
+
+     label18:
+        $r36 = new java.util.HashSet;
+        specialinvoke $r36.<java.util.HashSet: void <init>()>();
+        r4 = $r36;
+        $r37 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLProtocol>;
+        $r38 = virtualinvoke $r37.<java.lang.String: java.lang.String[] split(java.lang.String)>("(?=[-+])");
+        r5 = $r38;
+        i4 = lengthof $r38;
+        i5 = 0;
+        goto label25;
+
+     label19:
+        r6 = r5[i5];
+        r7 = virtualinvoke r6.<java.lang.String: java.lang.String trim()>();
+        $i29 = virtualinvoke r7.<java.lang.String: int length()>();
+        if $i29 <= 1 goto label24;
+
+        $c30 = virtualinvoke r7.<java.lang.String: char charAt(int)>(0);
+        if $c30 != 45 goto label21;
+
+        $r39 = virtualinvoke r7.<java.lang.String: java.lang.String substring(int)>(1);
+        r40 = virtualinvoke $r39.<java.lang.String: java.lang.String trim()>();
+        $z13 = virtualinvoke r40.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("all");
+        if $z13 == 0 goto label20;
+
+        $r41 = <org.apache.tomcat.util.net.AprEndpoint: java.util.Set SSL_PROTO_ALL>;
+        interfaceinvoke r4.<java.util.Set: boolean removeAll(java.util.Collection)>($r41);
+        goto label24;
+
+     label20:
+        interfaceinvoke r4.<java.util.Set: boolean remove(java.lang.Object)>(r40);
+        goto label24;
+
+     label21:
+        $c31 = virtualinvoke r7.<java.lang.String: char charAt(int)>(0);
+        if $c31 != 43 goto label22;
+
+        $r42 = virtualinvoke r7.<java.lang.String: java.lang.String substring(int)>(1);
+        r7 = virtualinvoke $r42.<java.lang.String: java.lang.String trim()>();
+
+     label22:
+        $z16 = virtualinvoke r7.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("all");
+        if $z16 == 0 goto label23;
+
+        $r43 = <org.apache.tomcat.util.net.AprEndpoint: java.util.Set SSL_PROTO_ALL>;
+        interfaceinvoke r4.<java.util.Set: boolean addAll(java.util.Collection)>($r43);
+        goto label24;
+
+     label23:
+        interfaceinvoke r4.<java.util.Set: boolean add(java.lang.Object)>(r7);
+
+     label24:
+        i5 = i5 + 1;
+
+     label25:
+        if i5 < i4 goto label19;
+
+        r44 = interfaceinvoke r4.<java.util.Set: java.util.Iterator iterator()>();
+        goto label32;
+
+     label26:
+        $r45 = interfaceinvoke r44.<java.util.Iterator: java.lang.Object next()>();
+        r46 = (java.lang.String) $r45;
+        $r47 = "SSLv2";
+        $z19 = virtualinvoke $r47.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>(r46);
+        if $z19 == 0 goto label27;
+
+        b3 = b3 | 1;
+        goto label32;
+
+     label27:
+        $r48 = "SSLv3";
+        $z20 = virtualinvoke $r48.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>(r46);
+        if $z20 == 0 goto label28;
+
+        b3 = b3 | 2;
+        goto label32;
+
+     label28:
+        $r49 = "TLSv1";
+        $z21 = virtualinvoke $r49.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>(r46);
+        if $z21 == 0 goto label29;
+
+        b3 = b3 | 4;
+        goto label32;
+
+     label29:
+        $r50 = "TLSv1.1";
+        $z22 = virtualinvoke $r50.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>(r46);
+        if $z22 == 0 goto label30;
+
+        b3 = b3 | 8;
+        goto label32;
+
+     label30:
+        $r51 = "TLSv1.2";
+        $z23 = virtualinvoke $r51.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>(r46);
+        if $z23 == 0 goto label31;
+
+        b3 = b3 | 16;
+        goto label32;
+
+     label31:
+        $r52 = new java.lang.Exception;
+        $r53 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r54 = newarray (java.lang.Object)[1];
+        $r55 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLProtocol>;
+        $r54[0] = $r55;
+        $r56 = virtualinvoke $r53.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("endpoint.apr.invalidSslProtocol", $r54);
+        specialinvoke $r52.<java.lang.Exception: void <init>(java.lang.String)>($r56);
+        throw $r52;
+
+     label32:
+        $z24 = interfaceinvoke r44.<java.util.Iterator: boolean hasNext()>();
+        if $z24 != 0 goto label26;
+
+     label33:
+        $l32 = r0.<org.apache.tomcat.util.net.AprEndpoint: long rootPool>;
+        $l33 = staticinvoke <org.apache.tomcat.jni.SSLContext: long make(long,int,int)>($l32, b3, 1);
+        r0.<org.apache.tomcat.util.net.AprEndpoint: long sslContext> = $l33;
+
+     label34:
+        goto label36;
+
+     label35:
+        $r57 := @caughtexception;
+        r58 = $r57;
+        $r59 = new java.lang.Exception;
+        $r60 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r61 = virtualinvoke $r60.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("endpoint.apr.failSslContextMake");
+        specialinvoke $r59.<java.lang.Exception: void <init>(java.lang.String,java.lang.Throwable)>($r61, r58);
+        throw $r59;
+
+     label36:
+        $z25 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean SSLInsecureRenegotiation>;
+        if $z25 == 0 goto label41;
+
+        z26 = 0;
+
+     label37:
+        z26 = staticinvoke <org.apache.tomcat.jni.SSL: boolean hasOp(int)>(262144);
+        if z26 == 0 goto label40;
+
+        $l34 = r0.<org.apache.tomcat.util.net.AprEndpoint: long sslContext>;
+        staticinvoke <org.apache.tomcat.jni.SSLContext: void setOptions(long,int)>($l34, 262144);
+
+     label38:
+        goto label40;
+
+     label39:
+        $r62 := @caughtexception;
+        r63 = $r62;
+
+     label40:
+        if z26 != 0 goto label41;
+
+        $r64 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r65 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r66 = newarray (java.lang.Object)[1];
+        $r67 = staticinvoke <org.apache.tomcat.jni.SSL: java.lang.String versionString()>();
+        $r66[0] = $r67;
+        $r68 = virtualinvoke $r65.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("endpoint.warn.noInsecureReneg", $r66);
+        interfaceinvoke $r64.<org.apache.juli.logging.Log: void warn(java.lang.Object)>($r68);
+
+     label41:
+        $z27 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean SSLHonorCipherOrder>;
+        if $z27 == 0 goto label46;
+
+        z28 = 0;
+
+     label42:
+        z28 = staticinvoke <org.apache.tomcat.jni.SSL: boolean hasOp(int)>(4194304);
+        if z28 == 0 goto label45;
+
+        $l35 = r0.<org.apache.tomcat.util.net.AprEndpoint: long sslContext>;
+        staticinvoke <org.apache.tomcat.jni.SSLContext: void setOptions(long,int)>($l35, 4194304);
+
+     label43:
+        goto label45;
+
+     label44:
+        $r69 := @caughtexception;
+        r70 = $r69;
+
+     label45:
+        if z28 != 0 goto label46;
+
+        $r71 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r72 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r73 = newarray (java.lang.Object)[1];
+        $r74 = staticinvoke <org.apache.tomcat.jni.SSL: java.lang.String versionString()>();
+        $r73[0] = $r74;
+        $r75 = virtualinvoke $r72.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("endpoint.warn.noHonorCipherOrder", $r73);
+        interfaceinvoke $r71.<org.apache.juli.logging.Log: void warn(java.lang.Object)>($r75);
+
+     label46:
+        $z29 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean SSLDisableCompression>;
+        if $z29 == 0 goto label51;
+
+        z30 = 0;
+
+     label47:
+        z30 = staticinvoke <org.apache.tomcat.jni.SSL: boolean hasOp(int)>(131072);
+        if z30 == 0 goto label50;
+
+        $l36 = r0.<org.apache.tomcat.util.net.AprEndpoint: long sslContext>;
+        staticinvoke <org.apache.tomcat.jni.SSLContext: void setOptions(long,int)>($l36, 131072);
+
+     label48:
+        goto label50;
+
+     label49:
+        $r76 := @caughtexception;
+        r77 = $r76;
+
+     label50:
+        if z30 != 0 goto label51;
+
+        $r78 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r79 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r80 = newarray (java.lang.Object)[1];
+        $r81 = staticinvoke <org.apache.tomcat.jni.SSL: java.lang.String versionString()>();
+        $r80[0] = $r81;
+        $r82 = virtualinvoke $r79.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("endpoint.warn.noDisableCompression", $r80);
+        interfaceinvoke $r78.<org.apache.juli.logging.Log: void warn(java.lang.Object)>($r82);
+
+     label51:
+        $l37 = r0.<org.apache.tomcat.util.net.AprEndpoint: long sslContext>;
+        $r83 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCipherSuite>;
+        staticinvoke <org.apache.tomcat.jni.SSLContext: boolean setCipherSuite(long,java.lang.String)>($l37, $r83);
+        $l38 = r0.<org.apache.tomcat.util.net.AprEndpoint: long sslContext>;
+        $r84 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCertificateFile>;
+        $r85 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCertificateKeyFile>;
+        $r86 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLPassword>;
+        staticinvoke <org.apache.tomcat.jni.SSLContext: boolean setCertificate(long,java.lang.String,java.lang.String,java.lang.String,int)>($l38, $r84, $r85, $r86, 0);
+        $l39 = r0.<org.apache.tomcat.util.net.AprEndpoint: long sslContext>;
+        $r87 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCertificateChainFile>;
+        staticinvoke <org.apache.tomcat.jni.SSLContext: boolean setCertificateChainFile(long,java.lang.String,boolean)>($l39, $r87, 0);
+        $l40 = r0.<org.apache.tomcat.util.net.AprEndpoint: long sslContext>;
+        $r88 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCACertificateFile>;
+        $r89 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCACertificatePath>;
+        staticinvoke <org.apache.tomcat.jni.SSLContext: boolean setCACertificate(long,java.lang.String,java.lang.String)>($l40, $r88, $r89);
+        $l41 = r0.<org.apache.tomcat.util.net.AprEndpoint: long sslContext>;
+        $r90 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCARevocationFile>;
+        $r91 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLCARevocationPath>;
+        staticinvoke <org.apache.tomcat.jni.SSLContext: boolean setCARevocation(long,java.lang.String,java.lang.String)>($l41, $r90, $r91);
+        b42 = 0;
+        $r92 = "optional";
+        $r93 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLVerifyClient>;
+        $z36 = virtualinvoke $r92.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>($r93);
+        if $z36 == 0 goto label52;
+
+        b42 = 1;
+        goto label54;
+
+     label52:
+        $r94 = "require";
+        $r95 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLVerifyClient>;
+        $z37 = virtualinvoke $r94.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>($r95);
+        if $z37 == 0 goto label53;
+
+        b42 = 2;
+        goto label54;
+
+     label53:
+        $r96 = "optionalNoCA";
+        $r97 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String SSLVerifyClient>;
+        $z38 = virtualinvoke $r96.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>($r97);
+        if $z38 == 0 goto label54;
+
+        b42 = 3;
+
+     label54:
+        $l43 = r0.<org.apache.tomcat.util.net.AprEndpoint: long sslContext>;
+        $i44 = r0.<org.apache.tomcat.util.net.AprEndpoint: int SSLVerifyDepth>;
+        staticinvoke <org.apache.tomcat.jni.SSLContext: void setVerify(long,int,int)>($l43, b42, $i44);
+        $z39 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean useSendfile>;
+        if $z39 == 0 goto label55;
+
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean useSendfile> = 0;
+        $z40 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean useSendFileSet>;
+        if $z40 == 0 goto label55;
+
+        $r98 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r99 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r100 = virtualinvoke $r99.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("endpoint.apr.noSendfileWithSSL");
+        interfaceinvoke $r98.<org.apache.juli.logging.Log: void warn(java.lang.Object)>($r100);
+
+     label55:
+        return;
+
+        catch java.lang.UnsatisfiedLinkError from label0 to label1 with label2;
+        catch java.lang.Exception from label33 to label34 with label35;
+        catch java.lang.UnsatisfiedLinkError from label37 to label38 with label39;
+        catch java.lang.UnsatisfiedLinkError from label42 to label43 with label44;
+        catch java.lang.UnsatisfiedLinkError from label47 to label48 with label49;
+    }
+
+    public void startInternal() throws java.lang.Exception
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.lang.Thread r1, r2, $r7, $r16, $r24, r31;
+        boolean $z0, $z1;
+        java.util.concurrent.Executor $r3;
+        org.apache.tomcat.util.net.AprEndpoint$Poller $r5, $r6, $r8;
+        java.lang.StringBuilder $r9, $r12, $r18, $r21, $r26, $r29;
+        java.lang.String $r10, $r11, $r13, $r19, $r20, $r22, $r27, $r28, $r30;
+        int $i0, $i1, $i2;
+        org.apache.tomcat.util.net.AprEndpoint$Sendfile $r14, $r15, $r17;
+        org.apache.tomcat.util.net.AprEndpoint$AsyncTimeout $r23, $r25;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $z0 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean running>;
+        if $z0 != 0 goto label2;
+
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean running> = 1;
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean paused> = 0;
+        $r3 = virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: java.util.concurrent.Executor getExecutor()>();
+        if $r3 != null goto label0;
+
+        virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: void createExecutor()>();
+
+     label0:
+        virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.threads.LimitLatch initializeConnectionLatch()>();
+        $r5 = new org.apache.tomcat.util.net.AprEndpoint$Poller;
+        specialinvoke $r5.<org.apache.tomcat.util.net.AprEndpoint$Poller: void <init>(org.apache.tomcat.util.net.AprEndpoint)>(r0);
+        r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Poller poller> = $r5;
+        $r6 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Poller poller>;
+        virtualinvoke $r6.<org.apache.tomcat.util.net.AprEndpoint$Poller: void init()>();
+        $r7 = new java.lang.Thread;
+        $r8 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Poller poller>;
+        $r9 = new java.lang.StringBuilder;
+        $r10 = virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String getName()>();
+        $r11 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r10);
+        specialinvoke $r9.<java.lang.StringBuilder: void <init>(java.lang.String)>($r11);
+        $r12 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("-Poller");
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r7.<java.lang.Thread: void <init>(java.lang.Runnable,java.lang.String)>($r8, $r13);
+        r1 = $r7;
+        $i0 = r0.<org.apache.tomcat.util.net.AprEndpoint: int threadPriority>;
+        virtualinvoke r1.<java.lang.Thread: void setPriority(int)>($i0);
+        virtualinvoke r1.<java.lang.Thread: void setDaemon(boolean)>(1);
+        virtualinvoke r1.<java.lang.Thread: void start()>();
+        $z1 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean useSendfile>;
+        if $z1 == 0 goto label1;
+
+        $r14 = new org.apache.tomcat.util.net.AprEndpoint$Sendfile;
+        specialinvoke $r14.<org.apache.tomcat.util.net.AprEndpoint$Sendfile: void <init>(org.apache.tomcat.util.net.AprEndpoint)>(r0);
+        r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Sendfile sendfile> = $r14;
+        $r15 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Sendfile sendfile>;
+        virtualinvoke $r15.<org.apache.tomcat.util.net.AprEndpoint$Sendfile: void init()>();
+        $r16 = new java.lang.Thread;
+        $r17 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Sendfile sendfile>;
+        $r18 = new java.lang.StringBuilder;
+        $r19 = virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String getName()>();
+        $r20 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r19);
+        specialinvoke $r18.<java.lang.StringBuilder: void <init>(java.lang.String)>($r20);
+        $r21 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("-Sendfile");
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r16.<java.lang.Thread: void <init>(java.lang.Runnable,java.lang.String)>($r17, $r22);
+        r2 = $r16;
+        $i1 = r0.<org.apache.tomcat.util.net.AprEndpoint: int threadPriority>;
+        virtualinvoke r2.<java.lang.Thread: void setPriority(int)>($i1);
+        virtualinvoke r2.<java.lang.Thread: void setDaemon(boolean)>(1);
+        virtualinvoke r2.<java.lang.Thread: void start()>();
+
+     label1:
+        virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: void startAcceptorThreads()>();
+        $r23 = new org.apache.tomcat.util.net.AprEndpoint$AsyncTimeout;
+        specialinvoke $r23.<org.apache.tomcat.util.net.AprEndpoint$AsyncTimeout: void <init>(org.apache.tomcat.util.net.AprEndpoint)>(r0);
+        r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$AsyncTimeout asyncTimeout> = $r23;
+        $r24 = new java.lang.Thread;
+        $r25 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$AsyncTimeout asyncTimeout>;
+        $r26 = new java.lang.StringBuilder;
+        $r27 = virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String getName()>();
+        $r28 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r27);
+        specialinvoke $r26.<java.lang.StringBuilder: void <init>(java.lang.String)>($r28);
+        $r29 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("-AsyncTimeout");
+        $r30 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r24.<java.lang.Thread: void <init>(java.lang.Runnable,java.lang.String)>($r25, $r30);
+        r31 = $r24;
+        $i2 = r0.<org.apache.tomcat.util.net.AprEndpoint: int threadPriority>;
+        virtualinvoke r31.<java.lang.Thread: void setPriority(int)>($i2);
+        virtualinvoke r31.<java.lang.Thread: void setDaemon(boolean)>(1);
+        virtualinvoke r31.<java.lang.Thread: void start()>();
+
+     label2:
+        return;
+    }
+
+    public void stopInternal()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        org.apache.tomcat.util.net.AbstractEndpoint$Acceptor[] r1, $r6;
+        int i0, i1;
+        org.apache.tomcat.util.net.AbstractEndpoint$Acceptor r2;
+        long l2, $l4, $l7, $l9;
+        java.lang.InterruptedException r3, $r7;
+        boolean $z0, $z1, $z2;
+        org.apache.tomcat.util.net.AprEndpoint$Poller $r4, $r15;
+        org.apache.tomcat.util.net.AprEndpoint$AsyncTimeout $r5;
+        byte $b3, $b5, $b6, $b8;
+        org.apache.tomcat.util.net.AbstractEndpoint$Acceptor$AcceptorState $r8, $r9;
+        org.apache.juli.logging.Log $r10;
+        org.apache.tomcat.util.res.StringManager $r11;
+        java.lang.Object[] $r12;
+        java.lang.String $r13, $r14;
+        java.lang.Exception $r16, r17, $r20, r21;
+        java.util.Map $r18;
+        org.apache.tomcat.util.net.AprEndpoint$Sendfile $r19;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: void releaseConnectionLatch()>();
+        $z0 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean paused>;
+        if $z0 != 0 goto label0;
+
+        virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: void pause()>();
+
+     label0:
+        $z1 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean running>;
+        if $z1 == 0 goto label18;
+
+        r0.<org.apache.tomcat.util.net.AprEndpoint: boolean running> = 0;
+        $r4 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Poller poller>;
+        virtualinvoke $r4.<org.apache.tomcat.util.net.AprEndpoint$Poller: void stop()>();
+        $r5 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$AsyncTimeout asyncTimeout>;
+        virtualinvoke $r5.<org.apache.tomcat.util.net.AprEndpoint$AsyncTimeout: void stop()>();
+        virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: void unlockAccept()>();
+        $r6 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AbstractEndpoint$Acceptor[] acceptors>;
+        r1 = $r6;
+        i0 = lengthof $r6;
+        i1 = 0;
+        goto label9;
+
+     label1:
+        r2 = r1[i1];
+        l2 = 10000L;
+        goto label6;
+
+     label2:
+        staticinvoke <java.lang.Thread: void sleep(long)>(50L);
+
+     label3:
+        goto label5;
+
+     label4:
+        $r7 := @caughtexception;
+        r3 = $r7;
+
+     label5:
+        l2 = l2 - 50L;
+
+     label6:
+        $b3 = l2 cmp 0L;
+        if $b3 <= 0 goto label7;
+
+        $r8 = virtualinvoke r2.<org.apache.tomcat.util.net.AbstractEndpoint$Acceptor: org.apache.tomcat.util.net.AbstractEndpoint$Acceptor$AcceptorState getState()>();
+        $r9 = <org.apache.tomcat.util.net.AbstractEndpoint$Acceptor$AcceptorState: org.apache.tomcat.util.net.AbstractEndpoint$Acceptor$AcceptorState ENDED>;
+        if $r8 == $r9 goto label7;
+
+        $l4 = r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSock>;
+        $b5 = $l4 cmp 0L;
+        if $b5 != 0 goto label2;
+
+     label7:
+        $b6 = l2 cmp 0L;
+        if $b6 != 0 goto label8;
+
+        $r10 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r11 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r12 = newarray (java.lang.Object)[1];
+        $r13 = virtualinvoke r2.<org.apache.tomcat.util.net.AbstractEndpoint$Acceptor: java.lang.String getThreadName()>();
+        $r12[0] = $r13;
+        $r14 = virtualinvoke $r11.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("endpoint.warn.unlockAcceptorFailed", $r12);
+        interfaceinvoke $r10.<org.apache.juli.logging.Log: void warn(java.lang.Object)>($r14);
+        $l7 = r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSock>;
+        $b8 = $l7 cmp 0L;
+        if $b8 == 0 goto label8;
+
+        $l9 = r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSock>;
+        staticinvoke <org.apache.tomcat.jni.Socket: int shutdown(long,int)>($l9, 0);
+        r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSock> = 0L;
+
+     label8:
+        i1 = i1 + 1;
+
+     label9:
+        if i1 < i0 goto label1;
+
+     label10:
+        $r15 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Poller poller>;
+        virtualinvoke $r15.<org.apache.tomcat.util.net.AprEndpoint$Poller: void destroy()>();
+
+     label11:
+        goto label13;
+
+     label12:
+        $r16 := @caughtexception;
+        r17 = $r16;
+
+     label13:
+        r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Poller poller> = null;
+        $r18 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.util.Map connections>;
+        interfaceinvoke $r18.<java.util.Map: void clear()>();
+        $z2 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean useSendfile>;
+        if $z2 == 0 goto label18;
+
+     label14:
+        $r19 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Sendfile sendfile>;
+        virtualinvoke $r19.<org.apache.tomcat.util.net.AprEndpoint$Sendfile: void destroy()>();
+
+     label15:
+        goto label17;
+
+     label16:
+        $r20 := @caughtexception;
+        r21 = $r20;
+
+     label17:
+        r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Sendfile sendfile> = null;
+
+     label18:
+        virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: void shutdownExecutor()>();
+        return;
+
+        catch java.lang.InterruptedException from label2 to label3 with label4;
+        catch java.lang.Exception from label10 to label11 with label12;
+        catch java.lang.Exception from label14 to label15 with label16;
+    }
+
+    public void unbind() throws java.lang.Exception
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        boolean $z0;
+        long $l0, $l2, $l3, $l5, $l7, $l9;
+        byte $b1, $b4, $b8;
+        org.apache.tomcat.util.net.AprEndpoint$Handler $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $z0 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean running>;
+        if $z0 == 0 goto label0;
+
+        virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: void stop()>();
+
+     label0:
+        $l0 = r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSockPool>;
+        $b1 = $l0 cmp 0L;
+        if $b1 == 0 goto label1;
+
+        $l2 = r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSockPool>;
+        staticinvoke <org.apache.tomcat.jni.Pool: void destroy(long)>($l2);
+        r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSockPool> = 0L;
+
+     label1:
+        $l3 = r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSock>;
+        $b4 = $l3 cmp 0L;
+        if $b4 == 0 goto label2;
+
+        $l5 = r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSock>;
+        staticinvoke <org.apache.tomcat.jni.Socket: int close(long)>($l5);
+        r0.<org.apache.tomcat.util.net.AprEndpoint: long serverSock> = 0L;
+
+     label2:
+        r0.<org.apache.tomcat.util.net.AprEndpoint: long sslContext> = 0L;
+        $l7 = r0.<org.apache.tomcat.util.net.AprEndpoint: long rootPool>;
+        $b8 = $l7 cmp 0L;
+        if $b8 == 0 goto label3;
+
+        $l9 = r0.<org.apache.tomcat.util.net.AprEndpoint: long rootPool>;
+        staticinvoke <org.apache.tomcat.jni.Pool: void destroy(long)>($l9);
+        r0.<org.apache.tomcat.util.net.AprEndpoint: long rootPool> = 0L;
+
+     label3:
+        $r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Handler handler>;
+        interfaceinvoke $r1.<org.apache.tomcat.util.net.AprEndpoint$Handler: void recycle()>();
+        return;
+    }
+
+    protected org.apache.tomcat.util.net.AbstractEndpoint$Acceptor createAcceptor()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        org.apache.tomcat.util.net.AprEndpoint$Acceptor $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = new org.apache.tomcat.util.net.AprEndpoint$Acceptor;
+        specialinvoke $r1.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: void <init>(org.apache.tomcat.util.net.AprEndpoint)>(r0);
+        return $r1;
+    }
+
+    protected boolean setSocketOptions(long)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        long l0, $l11, $l13, $l15;
+        byte b1, $b7, $b14;
+        java.lang.StringBuilder $r1, $r14, $r16;
+        java.lang.Throwable r2, $r18;
+        org.apache.tomcat.util.net.SocketProperties $r3, $r4, $r5, $r6, $r7, $r8;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        int $i2, $i3, $i9, $i10, $i17;
+        short $s6;
+        org.apache.juli.logging.Log $r9, $r10, $r19, $r20, $r23;
+        org.apache.tomcat.util.res.StringManager $r11, $r21, $r24;
+        java.lang.String $r12, $r13, $r15, $r17, $r22, $r25;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        l0 := @parameter0: long;
+        b1 = 1;
+
+     label0:
+        $r3 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.SocketProperties socketProperties>;
+        $z0 = virtualinvoke $r3.<org.apache.tomcat.util.net.SocketProperties: boolean getSoLingerOn()>();
+        if $z0 == 0 goto label1;
+
+        $r4 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.SocketProperties socketProperties>;
+        $i2 = virtualinvoke $r4.<org.apache.tomcat.util.net.SocketProperties: int getSoLingerTime()>();
+        if $i2 < 0 goto label1;
+
+        $r5 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.SocketProperties socketProperties>;
+        $i3 = virtualinvoke $r5.<org.apache.tomcat.util.net.SocketProperties: int getSoLingerTime()>();
+        staticinvoke <org.apache.tomcat.jni.Socket: int optSet(long,int,int)>(l0, 1, $i3);
+
+     label1:
+        $r6 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.SocketProperties socketProperties>;
+        $z1 = virtualinvoke $r6.<org.apache.tomcat.util.net.SocketProperties: boolean getTcpNoDelay()>();
+        if $z1 == 0 goto label4;
+
+        $s6 = 512;
+        $r7 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.SocketProperties socketProperties>;
+        $z2 = virtualinvoke $r7.<org.apache.tomcat.util.net.SocketProperties: boolean getTcpNoDelay()>();
+        if $z2 == 0 goto label2;
+
+        $b7 = 1;
+        goto label3;
+
+     label2:
+        $b7 = 0;
+
+     label3:
+        staticinvoke <org.apache.tomcat.jni.Socket: int optSet(long,int,int)>(l0, $s6, $b7);
+
+     label4:
+        $r8 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.SocketProperties socketProperties>;
+        $i9 = virtualinvoke $r8.<org.apache.tomcat.util.net.SocketProperties: int getSoTimeout()>();
+        $i10 = $i9 * 1000;
+        $l11 = (long) $i10;
+        staticinvoke <org.apache.tomcat.jni.Socket: int timeoutSet(long,long)>(l0, $l11);
+        b1 = 2;
+        $l13 = r0.<org.apache.tomcat.util.net.AprEndpoint: long sslContext>;
+        $b14 = $l13 cmp 0L;
+        if $b14 == 0 goto label9;
+
+        $l15 = r0.<org.apache.tomcat.util.net.AprEndpoint: long sslContext>;
+        staticinvoke <org.apache.tomcat.jni.SSLSocket: int attach(long,long)>($l15, l0);
+        $i17 = staticinvoke <org.apache.tomcat.jni.SSLSocket: int handshake(long)>(l0);
+        if $i17 == 0 goto label9;
+
+        $r9 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $z3 = interfaceinvoke $r9.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z3 == 0 goto label5;
+
+        $r10 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r1 = new java.lang.StringBuilder;
+        $r11 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r12 = virtualinvoke $r11.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("endpoint.err.handshake");
+        $r13 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r12);
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>(java.lang.String)>($r13);
+        $r14 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(": ");
+        $r15 = staticinvoke <org.apache.tomcat.jni.SSL: java.lang.String getLastError()>();
+        $r16 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r15);
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r10.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r17);
+
+     label5:
+        return 0;
+
+     label6:
+        $r18 := @caughtexception;
+        r2 = $r18;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r2);
+        $r19 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $z4 = interfaceinvoke $r19.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z4 == 0 goto label8;
+
+        if b1 != 2 goto label7;
+
+        $r20 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r21 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r22 = virtualinvoke $r21.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("endpoint.err.handshake");
+        interfaceinvoke $r20.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r22, r2);
+        goto label8;
+
+     label7:
+        $r23 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r24 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r25 = virtualinvoke $r24.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("endpoint.err.unexpected");
+        interfaceinvoke $r23.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r25, r2);
+
+     label8:
+        return 0;
+
+     label9:
+        return 1;
+
+        catch java.lang.Throwable from label0 to label5 with label6;
+    }
+
+    protected long allocatePoller(int, long, int)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        int i0, i2, $i3, $i6;
+        long l1, $l4, $l5;
+        org.apache.tomcat.jni.Error r1, $r3;
+        java.lang.StringBuilder $r2, $r7;
+        boolean $z0;
+        org.apache.juli.logging.Log $r4, $r10;
+        org.apache.tomcat.util.res.StringManager $r5, $r11;
+        java.lang.Object[] $r6;
+        java.lang.String $r8, $r9, $r12;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        i0 := @parameter0: int;
+        l1 := @parameter1: long;
+        i2 := @parameter2: int;
+
+     label0:
+        $i3 = i2 * 1000;
+        $l4 = (long) $i3;
+        $l5 = staticinvoke <org.apache.tomcat.jni.Poll: long create(int,long,int,long)>(i0, l1, 0, $l4);
+
+     label1:
+        return $l5;
+
+     label2:
+        $r3 := @caughtexception;
+        r1 = $r3;
+        $i6 = virtualinvoke r1.<org.apache.tomcat.jni.Error: int getError()>();
+        $z0 = staticinvoke <org.apache.tomcat.jni.Status: boolean APR_STATUS_IS_EINVAL(int)>($i6);
+        if $z0 == 0 goto label3;
+
+        $r4 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r5 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r6 = newarray (java.lang.Object)[1];
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+        $r7 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r6[0] = $r8;
+        $r9 = virtualinvoke $r5.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("endpoint.poll.limitedpollsize", $r6);
+        interfaceinvoke $r4.<org.apache.juli.logging.Log: void info(java.lang.Object)>($r9);
+        return 0L;
+
+     label3:
+        $r10 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r11 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r12 = virtualinvoke $r11.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("endpoint.poll.initfail");
+        interfaceinvoke $r10.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r12, r1);
+        return -1L;
+
+        catch org.apache.tomcat.jni.Error from label0 to label1 with label2;
+    }
+
+    protected boolean processSocketWithOptions(long)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        long l0;
+        org.apache.tomcat.util.res.StringManager $r1, $r24;
+        org.apache.tomcat.util.net.AprEndpoint$AprSocketWrapper r2, $r8;
+        boolean $z0, $z1, $z2;
+        org.apache.juli.logging.Log $r3, $r4, $r17, $r23;
+        java.lang.Object[] $r5;
+        java.lang.Long $r6, $r9, $r11;
+        java.lang.String $r7, $r20, $r25;
+        int $i1;
+        java.util.Map $r10;
+        java.util.concurrent.Executor $r13;
+        org.apache.tomcat.util.net.AprEndpoint$SocketWithOptionsProcessor $r14;
+        java.util.concurrent.RejectedExecutionException $r15, r16;
+        java.lang.StringBuilder $r18, $r19;
+        java.lang.Throwable $r21, r22;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        l0 := @parameter0: long;
+
+     label0:
+        $z0 = r0.<org.apache.tomcat.util.net.AprEndpoint: boolean running>;
+        if $z0 == 0 goto label5;
+
+        $r3 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $z1 = interfaceinvoke $r3.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z1 == 0 goto label1;
+
+        $r4 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r1 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r5 = newarray (java.lang.Object)[1];
+        $r6 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>(l0);
+        $r5[0] = $r6;
+        $r7 = virtualinvoke $r1.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("endpoint.debug.socket", $r5);
+        interfaceinvoke $r4.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r7);
+
+     label1:
+        $r8 = new org.apache.tomcat.util.net.AprEndpoint$AprSocketWrapper;
+        $r9 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>(l0);
+        specialinvoke $r8.<org.apache.tomcat.util.net.AprEndpoint$AprSocketWrapper: void <init>(java.lang.Long)>($r9);
+        r2 = $r8;
+        $i1 = virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: int getMaxKeepAliveRequests()>();
+        virtualinvoke r2.<org.apache.tomcat.util.net.AprEndpoint$AprSocketWrapper: void setKeepAliveLeft(int)>($i1);
+        $z2 = virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: boolean isSSLEnabled()>();
+        virtualinvoke r2.<org.apache.tomcat.util.net.AprEndpoint$AprSocketWrapper: void setSecure(boolean)>($z2);
+        $r10 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.util.Map connections>;
+        $r11 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>(l0);
+        interfaceinvoke $r10.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r11, r2);
+        $r13 = virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: java.util.concurrent.Executor getExecutor()>();
+        $r14 = new org.apache.tomcat.util.net.AprEndpoint$SocketWithOptionsProcessor;
+        specialinvoke $r14.<org.apache.tomcat.util.net.AprEndpoint$SocketWithOptionsProcessor: void <init>(org.apache.tomcat.util.net.AprEndpoint,org.apache.tomcat.util.net.SocketWrapper)>(r0, r2);
+        interfaceinvoke $r13.<java.util.concurrent.Executor: void execute(java.lang.Runnable)>($r14);
+
+     label2:
+        goto label5;
+
+     label3:
+        $r15 := @caughtexception;
+        r16 = $r15;
+        $r17 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r18 = new java.lang.StringBuilder;
+        specialinvoke $r18.<java.lang.StringBuilder: void <init>(java.lang.String)>("Socket processing request was rejected for:");
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(long)>(l0);
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r17.<org.apache.juli.logging.Log: void warn(java.lang.Object,java.lang.Throwable)>($r20, r16);
+        return 0;
+
+     label4:
+        $r21 := @caughtexception;
+        r22 = $r21;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r22);
+        $r23 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r24 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r25 = virtualinvoke $r24.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("endpoint.process.fail");
+        interfaceinvoke $r23.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r25, r22);
+        return 0;
+
+     label5:
+        return 1;
+
+        catch java.util.concurrent.RejectedExecutionException from label0 to label2 with label3;
+        catch java.lang.Throwable from label0 to label2 with label4;
+    }
+
+    public boolean processSocket(long, org.apache.tomcat.util.net.SocketStatus)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        long l0;
+        org.apache.tomcat.util.net.SocketStatus r1;
+        java.util.concurrent.Executor r2;
+        org.apache.tomcat.util.res.StringManager $r3, $r22;
+        org.apache.tomcat.util.net.SocketWrapper r4;
+        org.apache.juli.logging.Log $r5, $r15, $r21;
+        java.lang.Object[] $r6;
+        java.lang.Long $r7, $r10;
+        java.lang.String $r8, $r18, $r23;
+        java.util.Map $r9;
+        java.lang.Object $r11;
+        org.apache.tomcat.util.net.AprEndpoint$SocketProcessor $r12;
+        java.util.concurrent.RejectedExecutionException $r13, r14;
+        java.lang.StringBuilder $r16, $r17;
+        java.lang.Throwable $r19, r20;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        l0 := @parameter0: long;
+        r1 := @parameter1: org.apache.tomcat.util.net.SocketStatus;
+
+     label0:
+        r2 = virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: java.util.concurrent.Executor getExecutor()>();
+        if r2 != null goto label1;
+
+        $r5 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r3 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r6 = newarray (java.lang.Object)[2];
+        $r7 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>(l0);
+        $r6[0] = $r7;
+        $r6[1] = null;
+        $r8 = virtualinvoke $r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("endpoint.warn.noExector", $r6);
+        interfaceinvoke $r5.<org.apache.juli.logging.Log: void warn(java.lang.Object)>($r8);
+        goto label5;
+
+     label1:
+        $r9 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.util.Map connections>;
+        $r10 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>(l0);
+        $r11 = interfaceinvoke $r9.<java.util.Map: java.lang.Object get(java.lang.Object)>($r10);
+        r4 = (org.apache.tomcat.util.net.SocketWrapper) $r11;
+        if r4 == null goto label5;
+
+        $r12 = new org.apache.tomcat.util.net.AprEndpoint$SocketProcessor;
+        specialinvoke $r12.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: void <init>(org.apache.tomcat.util.net.AprEndpoint,org.apache.tomcat.util.net.SocketWrapper,org.apache.tomcat.util.net.SocketStatus)>(r0, r4, r1);
+        interfaceinvoke r2.<java.util.concurrent.Executor: void execute(java.lang.Runnable)>($r12);
+
+     label2:
+        goto label5;
+
+     label3:
+        $r13 := @caughtexception;
+        r14 = $r13;
+        $r15 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r16 = new java.lang.StringBuilder;
+        specialinvoke $r16.<java.lang.StringBuilder: void <init>(java.lang.String)>("Socket processing request was rejected for:");
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(long)>(l0);
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r15.<org.apache.juli.logging.Log: void warn(java.lang.Object,java.lang.Throwable)>($r18, r14);
+        return 0;
+
+     label4:
+        $r19 := @caughtexception;
+        r20 = $r19;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r20);
+        $r21 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r22 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r23 = virtualinvoke $r22.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("endpoint.process.fail");
+        interfaceinvoke $r21.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r23, r20);
+        return 0;
+
+     label5:
+        return 1;
+
+        catch java.util.concurrent.RejectedExecutionException from label0 to label2 with label3;
+        catch java.lang.Throwable from label0 to label2 with label4;
+    }
+
+    public void processSocketAsync(org.apache.tomcat.util.net.SocketWrapper, org.apache.tomcat.util.net.SocketStatus)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        org.apache.tomcat.util.net.SocketWrapper r1, r4;
+        org.apache.tomcat.util.net.SocketStatus r2;
+        org.apache.tomcat.util.net.AprEndpoint$SocketProcessor r5, $r11;
+        java.lang.ClassLoader r6, $r15, $r19;
+        org.apache.tomcat.util.security.PrivilegedSetTccl r7, r8, $r13, $r25, $r29, r30, $r33, r34;
+        java.lang.Throwable r9, $r28, $r37, $r44, r45;
+        java.util.concurrent.ConcurrentLinkedQueue $r10;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        java.lang.Thread $r12, $r17, $r27, $r32, $r36;
+        java.lang.Class $r14, $r18;
+        java.util.concurrent.Executor r20;
+        org.apache.juli.logging.Log $r21, $r40, $r46;
+        org.apache.tomcat.util.res.StringManager $r22, $r47;
+        java.lang.Object[] $r23;
+        java.lang.String $r24, $r43, $r48;
+        java.util.concurrent.RejectedExecutionException $r38, r39;
+        java.lang.StringBuilder $r41, $r42;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        r1 := @parameter0: org.apache.tomcat.util.net.SocketWrapper;
+        r2 := @parameter1: org.apache.tomcat.util.net.SocketStatus;
+
+     label0:
+        r4 = r1;
+        entermonitor r1;
+
+     label1:
+        $r10 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.util.concurrent.ConcurrentLinkedQueue waitingRequests>;
+        $z0 = virtualinvoke $r10.<java.util.concurrent.ConcurrentLinkedQueue: boolean remove(java.lang.Object)>(r1);
+        if $z0 == 0 goto label15;
+
+        $r11 = new org.apache.tomcat.util.net.AprEndpoint$SocketProcessor;
+        specialinvoke $r11.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: void <init>(org.apache.tomcat.util.net.AprEndpoint,org.apache.tomcat.util.net.SocketWrapper,org.apache.tomcat.util.net.SocketStatus)>(r0, r1, r2);
+        r5 = $r11;
+        $r12 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        r6 = virtualinvoke $r12.<java.lang.Thread: java.lang.ClassLoader getContextClassLoader()>();
+
+     label2:
+        $z1 = <org.apache.tomcat.util.net.Constants: boolean IS_SECURITY_ENABLED>;
+        if $z1 == 0 goto label3;
+
+        $r13 = new org.apache.tomcat.util.security.PrivilegedSetTccl;
+        $r14 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+        $r15 = virtualinvoke $r14.<java.lang.Class: java.lang.ClassLoader getClassLoader()>();
+        specialinvoke $r13.<org.apache.tomcat.util.security.PrivilegedSetTccl: void <init>(java.lang.ClassLoader)>($r15);
+        r7 = $r13;
+        staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>(r7);
+        goto label4;
+
+     label3:
+        $r17 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        $r18 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+        $r19 = virtualinvoke $r18.<java.lang.Class: java.lang.ClassLoader getClassLoader()>();
+        virtualinvoke $r17.<java.lang.Thread: void setContextClassLoader(java.lang.ClassLoader)>($r19);
+
+     label4:
+        r20 = virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: java.util.concurrent.Executor getExecutor()>();
+        if r20 != null goto label9;
+
+        $r21 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r22 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r23 = newarray (java.lang.Object)[2];
+        $r23[0] = r1;
+        $r23[1] = r2;
+        $r24 = virtualinvoke $r22.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("endpoint.warn.noExector", $r23);
+        interfaceinvoke $r21.<org.apache.juli.logging.Log: void warn(java.lang.Object)>($r24);
+
+     label5:
+        $z2 = <org.apache.tomcat.util.net.Constants: boolean IS_SECURITY_ENABLED>;
+        if $z2 == 0 goto label6;
+
+        $r25 = new org.apache.tomcat.util.security.PrivilegedSetTccl;
+        specialinvoke $r25.<org.apache.tomcat.util.security.PrivilegedSetTccl: void <init>(java.lang.ClassLoader)>(r6);
+        r8 = $r25;
+        staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>(r8);
+        goto label7;
+
+     label6:
+        $r27 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        virtualinvoke $r27.<java.lang.Thread: void setContextClassLoader(java.lang.ClassLoader)>(r6);
+
+     label7:
+        exitmonitor r4;
+
+     label8:
+        return;
+
+     label9:
+        interfaceinvoke r20.<java.util.concurrent.Executor: void execute(java.lang.Runnable)>(r5);
+        goto label13;
+
+     label10:
+        $r28 := @caughtexception;
+        r9 = $r28;
+        $z3 = <org.apache.tomcat.util.net.Constants: boolean IS_SECURITY_ENABLED>;
+        if $z3 == 0 goto label11;
+
+        $r29 = new org.apache.tomcat.util.security.PrivilegedSetTccl;
+        specialinvoke $r29.<org.apache.tomcat.util.security.PrivilegedSetTccl: void <init>(java.lang.ClassLoader)>(r6);
+        r30 = $r29;
+        staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>(r30);
+        goto label12;
+
+     label11:
+        $r32 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        virtualinvoke $r32.<java.lang.Thread: void setContextClassLoader(java.lang.ClassLoader)>(r6);
+
+     label12:
+        throw r9;
+
+     label13:
+        $z4 = <org.apache.tomcat.util.net.Constants: boolean IS_SECURITY_ENABLED>;
+        if $z4 == 0 goto label14;
+
+        $r33 = new org.apache.tomcat.util.security.PrivilegedSetTccl;
+        specialinvoke $r33.<org.apache.tomcat.util.security.PrivilegedSetTccl: void <init>(java.lang.ClassLoader)>(r6);
+        r34 = $r33;
+        staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>(r34);
+        goto label15;
+
+     label14:
+        $r36 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        virtualinvoke $r36.<java.lang.Thread: void setContextClassLoader(java.lang.ClassLoader)>(r6);
+
+     label15:
+        exitmonitor r4;
+
+     label16:
+        goto label22;
+
+     label17:
+        $r37 := @caughtexception;
+
+     label18:
+        exitmonitor r4;
+
+     label19:
+        throw $r37;
+
+     label20:
+        $r38 := @caughtexception;
+        r39 = $r38;
+        $r40 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r41 = new java.lang.StringBuilder;
+        specialinvoke $r41.<java.lang.StringBuilder: void <init>(java.lang.String)>("Socket processing request was rejected for: ");
+        $r42 = virtualinvoke $r41.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r1);
+        $r43 = virtualinvoke $r42.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r40.<org.apache.juli.logging.Log: void warn(java.lang.Object,java.lang.Throwable)>($r43, r39);
+        goto label22;
+
+     label21:
+        $r44 := @caughtexception;
+        r45 = $r44;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r45);
+        $r46 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r47 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r48 = virtualinvoke $r47.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("endpoint.process.fail");
+        interfaceinvoke $r46.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r48, r45);
+
+     label22:
+        return;
+
+        catch java.lang.Throwable from label2 to label5 with label10;
+        catch java.lang.Throwable from label9 to label10 with label10;
+        catch java.lang.Throwable from label1 to label8 with label17;
+        catch java.lang.Throwable from label9 to label16 with label17;
+        catch java.lang.Throwable from label18 to label19 with label17;
+        catch java.util.concurrent.RejectedExecutionException from label0 to label8 with label20;
+        catch java.util.concurrent.RejectedExecutionException from label9 to label20 with label20;
+        catch java.lang.Throwable from label0 to label8 with label21;
+        catch java.lang.Throwable from label9 to label20 with label21;
+    }
+
+    private void closeSocket(long)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        long l0;
+        org.apache.tomcat.util.net.AprEndpoint$Poller r1;
+        java.util.Map $r2;
+        java.lang.Long $r3;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        l0 := @parameter0: long;
+        $r2 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.util.Map connections>;
+        $r3 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>(l0);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object remove(java.lang.Object)>($r3);
+        r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Poller poller>;
+        if r1 == null goto label0;
+
+        $z0 = virtualinvoke r1.<org.apache.tomcat.util.net.AprEndpoint$Poller: boolean close(long)>(l0);
+        if $z0 != 0 goto label0;
+
+        specialinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: void destroySocket(long)>(l0);
+
+     label0:
+        return;
+    }
+
+    private void destroySocket(long)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        long l0;
+        java.lang.String r1;
+        java.util.Map $r2;
+        java.lang.Long $r3, $r8;
+        org.apache.juli.logging.Log $r5, $r9, $r10, $r12;
+        boolean $z0, $z1;
+        org.apache.tomcat.util.res.StringManager $r6;
+        java.lang.Object[] $r7;
+        java.lang.Exception $r11;
+        byte $b1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        l0 := @parameter0: long;
+        $r2 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.util.Map connections>;
+        $r3 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>(l0);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object remove(java.lang.Object)>($r3);
+        $r5 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $z0 = interfaceinvoke $r5.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label1;
+
+        $r6 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r7 = newarray (java.lang.Object)[1];
+        $r8 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>(l0);
+        $r7[0] = $r8;
+        r1 = virtualinvoke $r6.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("endpoint.debug.destroySocket", $r7);
+        $r9 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $z1 = interfaceinvoke $r9.<org.apache.juli.logging.Log: boolean isTraceEnabled()>();
+        if $z1 == 0 goto label0;
+
+        $r10 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        $r11 = new java.lang.Exception;
+        specialinvoke $r11.<java.lang.Exception: void <init>()>();
+        interfaceinvoke $r10.<org.apache.juli.logging.Log: void trace(java.lang.Object,java.lang.Throwable)>(r1, $r11);
+        goto label1;
+
+     label0:
+        $r12 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r12.<org.apache.juli.logging.Log: void debug(java.lang.Object)>(r1);
+
+     label1:
+        $b1 = l0 cmp 0L;
+        if $b1 == 0 goto label2;
+
+        staticinvoke <org.apache.tomcat.jni.Socket: void destroy(long)>(l0);
+        virtualinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: long countDownConnection()>();
+
+     label2:
+        return;
+    }
+
+    protected org.apache.juli.logging.Log getLog()
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        org.apache.juli.logging.Log $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        return $r1;
+    }
+
+    static void access$0(org.apache.tomcat.util.net.AprEndpoint, long)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        long l0;
+
+        r0 := @parameter0: org.apache.tomcat.util.net.AprEndpoint;
+        l0 := @parameter1: long;
+        specialinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: void closeSocket(long)>(l0);
+        return;
+    }
+
+    static void access$1(org.apache.tomcat.util.net.AprEndpoint, long)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        long l0;
+
+        r0 := @parameter0: org.apache.tomcat.util.net.AprEndpoint;
+        l0 := @parameter1: long;
+        specialinvoke r0.<org.apache.tomcat.util.net.AprEndpoint: void destroySocket(long)>(l0);
+        return;
+    }
+
+    static java.util.Map access$2(org.apache.tomcat.util.net.AprEndpoint)
+    {
+        org.apache.tomcat.util.net.AprEndpoint r0;
+        java.util.Map $r1;
+
+        r0 := @parameter0: org.apache.tomcat.util.net.AprEndpoint;
+        $r1 = r0.<org.apache.tomcat.util.net.AprEndpoint: java.util.Map connections>;
+        return $r1;
+    }
+
+    static org.apache.juli.logging.Log access$3()
+    {
+        org.apache.juli.logging.Log $r0;
+
+        $r0 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.juli.logging.Log log>;
+        return $r0;
+    }
+}

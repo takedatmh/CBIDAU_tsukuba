@@ -1,0 +1,374 @@
+public class org.apache.tomcat.util.scan.UrlJar extends java.lang.Object implements org.apache.tomcat.util.scan.Jar
+{
+    private org.apache.tomcat.util.scan.NonClosingJarInputStream jarInputStream;
+    private java.net.URL url;
+    private java.util.jar.JarEntry entry;
+    private java.util.Map mrMap;
+
+    public void <init>(java.net.URL) throws java.io.IOException
+    {
+        org.apache.tomcat.util.scan.UrlJar r0;
+        java.net.URL r1;
+        boolean z0, $z1;
+        java.util.jar.Manifest r2;
+        java.lang.String r3;
+        org.apache.tomcat.util.scan.NonClosingJarInputStream $r4, $r5;
+        java.util.jar.Attributes $r6;
+        java.lang.Boolean $r7;
+
+        r0 := @this: org.apache.tomcat.util.scan.UrlJar;
+        r1 := @parameter0: java.net.URL;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<org.apache.tomcat.util.scan.UrlJar: org.apache.tomcat.util.scan.NonClosingJarInputStream jarInputStream> = null;
+        r0.<org.apache.tomcat.util.scan.UrlJar: java.net.URL url> = null;
+        r0.<org.apache.tomcat.util.scan.UrlJar: java.util.jar.JarEntry entry> = null;
+        r0.<org.apache.tomcat.util.scan.UrlJar: java.util.Map mrMap> = null;
+        r0.<org.apache.tomcat.util.scan.UrlJar: java.net.URL url> = r1;
+        $r4 = specialinvoke r0.<org.apache.tomcat.util.scan.UrlJar: org.apache.tomcat.util.scan.NonClosingJarInputStream createJarInputStream()>();
+        r0.<org.apache.tomcat.util.scan.UrlJar: org.apache.tomcat.util.scan.NonClosingJarInputStream jarInputStream> = $r4;
+        z0 = 0;
+        $z1 = staticinvoke <org.apache.tomcat.util.compat.JreCompat: boolean isJre9Available()>();
+        if $z1 == 0 goto label0;
+
+        $r5 = r0.<org.apache.tomcat.util.scan.UrlJar: org.apache.tomcat.util.scan.NonClosingJarInputStream jarInputStream>;
+        r2 = virtualinvoke $r5.<org.apache.tomcat.util.scan.NonClosingJarInputStream: java.util.jar.Manifest getManifest()>();
+        if r2 == null goto label0;
+
+        $r6 = virtualinvoke r2.<java.util.jar.Manifest: java.util.jar.Attributes getMainAttributes()>();
+        r3 = virtualinvoke $r6.<java.util.jar.Attributes: java.lang.String getValue(java.lang.String)>("Multi-Release");
+        if r3 == null goto label0;
+
+        $r7 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(java.lang.String)>(r3);
+        z0 = virtualinvoke $r7.<java.lang.Boolean: boolean booleanValue()>();
+
+     label0:
+        if z0 == 0 goto label1;
+
+        specialinvoke r0.<org.apache.tomcat.util.scan.UrlJar: void populateMrMap()>();
+
+     label1:
+        return;
+    }
+
+    public boolean entryExists(java.lang.String) throws java.io.IOException
+    {
+        org.apache.tomcat.util.scan.UrlJar r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.tomcat.util.scan.UrlJar;
+        r1 := @parameter0: java.lang.String;
+        return 0;
+    }
+
+    public java.io.InputStream getInputStream(java.lang.String) throws java.io.IOException
+    {
+        org.apache.tomcat.util.scan.UrlJar r0;
+        java.lang.String r1, $r4;
+        java.util.jar.JarEntry r2;
+        org.apache.tomcat.util.scan.NonClosingJarInputStream $r3, $r5, $r6;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.scan.UrlJar;
+        r1 := @parameter0: java.lang.String;
+        $r3 = r0.<org.apache.tomcat.util.scan.UrlJar: org.apache.tomcat.util.scan.NonClosingJarInputStream jarInputStream>;
+        r2 = virtualinvoke $r3.<org.apache.tomcat.util.scan.NonClosingJarInputStream: java.util.jar.JarEntry getNextJarEntry()>();
+        goto label2;
+
+     label0:
+        $r4 = virtualinvoke r2.<java.util.jar.JarEntry: java.lang.String getName()>();
+        $z0 = virtualinvoke r1.<java.lang.String: boolean equals(java.lang.Object)>($r4);
+        if $z0 == 0 goto label1;
+
+        goto label3;
+
+     label1:
+        $r5 = r0.<org.apache.tomcat.util.scan.UrlJar: org.apache.tomcat.util.scan.NonClosingJarInputStream jarInputStream>;
+        r2 = virtualinvoke $r5.<org.apache.tomcat.util.scan.NonClosingJarInputStream: java.util.jar.JarEntry getNextJarEntry()>();
+
+     label2:
+        if r2 != null goto label0;
+
+     label3:
+        if r2 != null goto label4;
+
+        return null;
+
+     label4:
+        $r6 = r0.<org.apache.tomcat.util.scan.UrlJar: org.apache.tomcat.util.scan.NonClosingJarInputStream jarInputStream>;
+        return $r6;
+    }
+
+    public void close()
+    {
+        org.apache.tomcat.util.scan.UrlJar r0;
+        java.io.IOException r1, $r4;
+        org.apache.tomcat.util.scan.NonClosingJarInputStream $r2, $r3;
+
+        r0 := @this: org.apache.tomcat.util.scan.UrlJar;
+        $r2 = r0.<org.apache.tomcat.util.scan.UrlJar: org.apache.tomcat.util.scan.NonClosingJarInputStream jarInputStream>;
+        if $r2 == null goto label3;
+
+     label0:
+        $r3 = r0.<org.apache.tomcat.util.scan.UrlJar: org.apache.tomcat.util.scan.NonClosingJarInputStream jarInputStream>;
+        virtualinvoke $r3.<org.apache.tomcat.util.scan.NonClosingJarInputStream: void reallyClose()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r4 := @caughtexception;
+        r1 = $r4;
+
+     label3:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    private org.apache.tomcat.util.scan.NonClosingJarInputStream createJarInputStream() throws java.io.IOException
+    {
+        org.apache.tomcat.util.scan.UrlJar r0;
+        java.net.JarURLConnection r1;
+        java.net.URL r2, $r4;
+        java.net.URLConnection r3, $r5;
+        org.apache.tomcat.util.scan.NonClosingJarInputStream $r6;
+        java.io.InputStream $r7;
+
+        r0 := @this: org.apache.tomcat.util.scan.UrlJar;
+        $r4 = r0.<org.apache.tomcat.util.scan.UrlJar: java.net.URL url>;
+        $r5 = virtualinvoke $r4.<java.net.URL: java.net.URLConnection openConnection()>();
+        r1 = (java.net.JarURLConnection) $r5;
+        r2 = virtualinvoke r1.<java.net.JarURLConnection: java.net.URL getJarFileURL()>();
+        r3 = virtualinvoke r2.<java.net.URL: java.net.URLConnection openConnection()>();
+        virtualinvoke r3.<java.net.URLConnection: void setUseCaches(boolean)>(0);
+        $r6 = new org.apache.tomcat.util.scan.NonClosingJarInputStream;
+        $r7 = virtualinvoke r3.<java.net.URLConnection: java.io.InputStream getInputStream()>();
+        specialinvoke $r6.<org.apache.tomcat.util.scan.NonClosingJarInputStream: void <init>(java.io.InputStream)>($r7);
+        return $r6;
+    }
+
+    public void nextEntry()
+    {
+        org.apache.tomcat.util.scan.UrlJar r0;
+        java.io.IOException r1, $r23;
+        org.apache.tomcat.util.scan.NonClosingJarInputStream $r2, $r5, $r18;
+        java.util.jar.JarEntry $r3, $r6, $r7, $r10, $r12, $r16, $r19, $r20, $r21;
+        java.util.Map $r4, $r8, $r14;
+        java.util.Set $r9;
+        java.lang.String $r11, $r13, $r17, $r22;
+        boolean $z0, $z1, $z2, $z3;
+        java.util.Collection $r15;
+
+        r0 := @this: org.apache.tomcat.util.scan.UrlJar;
+
+     label0:
+        $r2 = r0.<org.apache.tomcat.util.scan.UrlJar: org.apache.tomcat.util.scan.NonClosingJarInputStream jarInputStream>;
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.scan.NonClosingJarInputStream: java.util.jar.JarEntry getNextJarEntry()>();
+        r0.<org.apache.tomcat.util.scan.UrlJar: java.util.jar.JarEntry entry> = $r3;
+        $r4 = r0.<org.apache.tomcat.util.scan.UrlJar: java.util.Map mrMap>;
+        if $r4 == null goto label4;
+
+        goto label2;
+
+     label1:
+        $r5 = r0.<org.apache.tomcat.util.scan.UrlJar: org.apache.tomcat.util.scan.NonClosingJarInputStream jarInputStream>;
+        $r6 = virtualinvoke $r5.<org.apache.tomcat.util.scan.NonClosingJarInputStream: java.util.jar.JarEntry getNextJarEntry()>();
+        r0.<org.apache.tomcat.util.scan.UrlJar: java.util.jar.JarEntry entry> = $r6;
+
+     label2:
+        $r7 = r0.<org.apache.tomcat.util.scan.UrlJar: java.util.jar.JarEntry entry>;
+        if $r7 == null goto label7;
+
+        $r8 = r0.<org.apache.tomcat.util.scan.UrlJar: java.util.Map mrMap>;
+        $r9 = interfaceinvoke $r8.<java.util.Map: java.util.Set keySet()>();
+        $r10 = r0.<org.apache.tomcat.util.scan.UrlJar: java.util.jar.JarEntry entry>;
+        $r11 = virtualinvoke $r10.<java.util.jar.JarEntry: java.lang.String getName()>();
+        $z0 = interfaceinvoke $r9.<java.util.Set: boolean contains(java.lang.Object)>($r11);
+        if $z0 != 0 goto label1;
+
+        $r12 = r0.<org.apache.tomcat.util.scan.UrlJar: java.util.jar.JarEntry entry>;
+        $r13 = virtualinvoke $r12.<java.util.jar.JarEntry: java.lang.String getName()>();
+        $z1 = virtualinvoke $r13.<java.lang.String: boolean startsWith(java.lang.String)>("META-INF/versions/");
+        if $z1 == 0 goto label7;
+
+        $r14 = r0.<org.apache.tomcat.util.scan.UrlJar: java.util.Map mrMap>;
+        $r15 = interfaceinvoke $r14.<java.util.Map: java.util.Collection values()>();
+        $r16 = r0.<org.apache.tomcat.util.scan.UrlJar: java.util.jar.JarEntry entry>;
+        $r17 = virtualinvoke $r16.<java.util.jar.JarEntry: java.lang.String getName()>();
+        $z2 = interfaceinvoke $r15.<java.util.Collection: boolean contains(java.lang.Object)>($r17);
+        if $z2 == 0 goto label1;
+
+        goto label7;
+
+     label3:
+        $r18 = r0.<org.apache.tomcat.util.scan.UrlJar: org.apache.tomcat.util.scan.NonClosingJarInputStream jarInputStream>;
+        $r19 = virtualinvoke $r18.<org.apache.tomcat.util.scan.NonClosingJarInputStream: java.util.jar.JarEntry getNextJarEntry()>();
+        r0.<org.apache.tomcat.util.scan.UrlJar: java.util.jar.JarEntry entry> = $r19;
+
+     label4:
+        $r20 = r0.<org.apache.tomcat.util.scan.UrlJar: java.util.jar.JarEntry entry>;
+        if $r20 == null goto label7;
+
+        $r21 = r0.<org.apache.tomcat.util.scan.UrlJar: java.util.jar.JarEntry entry>;
+        $r22 = virtualinvoke $r21.<java.util.jar.JarEntry: java.lang.String getName()>();
+        $z3 = virtualinvoke $r22.<java.lang.String: boolean startsWith(java.lang.String)>("META-INF/versions/");
+        if $z3 != 0 goto label3;
+
+     label5:
+        goto label7;
+
+     label6:
+        $r23 := @caughtexception;
+        r1 = $r23;
+        r0.<org.apache.tomcat.util.scan.UrlJar: java.util.jar.JarEntry entry> = null;
+
+     label7:
+        return;
+
+        catch java.io.IOException from label0 to label5 with label6;
+    }
+
+    public java.lang.String getEntryName()
+    {
+        org.apache.tomcat.util.scan.UrlJar r0;
+        java.util.jar.JarEntry $r1, $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.tomcat.util.scan.UrlJar;
+        $r1 = r0.<org.apache.tomcat.util.scan.UrlJar: java.util.jar.JarEntry entry>;
+        if $r1 != null goto label0;
+
+        return null;
+
+     label0:
+        $r2 = r0.<org.apache.tomcat.util.scan.UrlJar: java.util.jar.JarEntry entry>;
+        $r3 = virtualinvoke $r2.<java.util.jar.JarEntry: java.lang.String getName()>();
+        return $r3;
+    }
+
+    public java.io.InputStream getEntryInputStream() throws java.io.IOException
+    {
+        org.apache.tomcat.util.scan.UrlJar r0;
+        org.apache.tomcat.util.scan.NonClosingJarInputStream $r1;
+
+        r0 := @this: org.apache.tomcat.util.scan.UrlJar;
+        $r1 = r0.<org.apache.tomcat.util.scan.UrlJar: org.apache.tomcat.util.scan.NonClosingJarInputStream jarInputStream>;
+        return $r1;
+    }
+
+    public void reset() throws java.io.IOException
+    {
+        org.apache.tomcat.util.scan.UrlJar r0;
+        org.apache.tomcat.util.scan.NonClosingJarInputStream $r1;
+
+        r0 := @this: org.apache.tomcat.util.scan.UrlJar;
+        virtualinvoke r0.<org.apache.tomcat.util.scan.UrlJar: void close()>();
+        r0.<org.apache.tomcat.util.scan.UrlJar: java.util.jar.JarEntry entry> = null;
+        $r1 = specialinvoke r0.<org.apache.tomcat.util.scan.UrlJar: org.apache.tomcat.util.scan.NonClosingJarInputStream createJarInputStream()>();
+        r0.<org.apache.tomcat.util.scan.UrlJar: org.apache.tomcat.util.scan.NonClosingJarInputStream jarInputStream> = $r1;
+        return;
+    }
+
+    private void populateMrMap() throws java.io.IOException
+    {
+        org.apache.tomcat.util.scan.UrlJar r0;
+        org.apache.tomcat.util.compat.JreCompat $r1;
+        int i0, i1, i2, $i3, $i4;
+        java.util.HashMap r2, $r7, $r16;
+        java.util.jar.JarEntry r3;
+        java.lang.String r4, r5, $r9, $r23, $r27, $r31, $r33;
+        java.lang.Integer r6, $r11, $r13, $r26;
+        org.apache.tomcat.util.scan.NonClosingJarInputStream $r8, $r15, $r35;
+        boolean $z0, $z1, $z2;
+        java.lang.Object $r10, $r19, $r22, $r25, $r30;
+        java.util.Set $r17;
+        java.util.Iterator r18;
+        java.util.Map$Entry r20;
+        java.util.Map $r21;
+        java.lang.StringBuilder $r24, $r28, $r29, $r32;
+
+        r0 := @this: org.apache.tomcat.util.scan.UrlJar;
+        $r1 = staticinvoke <org.apache.tomcat.util.compat.JreCompat: org.apache.tomcat.util.compat.JreCompat getInstance()>();
+        i0 = virtualinvoke $r1.<org.apache.tomcat.util.compat.JreCompat: int jarFileRuntimeMajorVersion()>();
+        $r7 = new java.util.HashMap;
+        specialinvoke $r7.<java.util.HashMap: void <init>()>();
+        r2 = $r7;
+        $r8 = r0.<org.apache.tomcat.util.scan.UrlJar: org.apache.tomcat.util.scan.NonClosingJarInputStream jarInputStream>;
+        r3 = virtualinvoke $r8.<org.apache.tomcat.util.scan.NonClosingJarInputStream: java.util.jar.JarEntry getNextJarEntry()>();
+        goto label3;
+
+     label0:
+        r4 = virtualinvoke r3.<java.util.jar.JarEntry: java.lang.String getName()>();
+        $z0 = virtualinvoke r4.<java.lang.String: boolean startsWith(java.lang.String)>("META-INF/versions/");
+        if $z0 == 0 goto label2;
+
+        $z1 = virtualinvoke r4.<java.lang.String: boolean endsWith(java.lang.String)>(".class");
+        if $z1 == 0 goto label2;
+
+        i1 = virtualinvoke r4.<java.lang.String: int indexOf(int,int)>(47, 18);
+        if i1 <= 0 goto label2;
+
+        $i3 = i1 + 1;
+        r5 = virtualinvoke r4.<java.lang.String: java.lang.String substring(int)>($i3);
+        $r9 = virtualinvoke r4.<java.lang.String: java.lang.String substring(int,int)>(18, i1);
+        i2 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>($r9);
+        if i2 > i0 goto label2;
+
+        $r10 = interfaceinvoke r2.<java.util.Map: java.lang.Object get(java.lang.Object)>(r5);
+        r6 = (java.lang.Integer) $r10;
+        if r6 != null goto label1;
+
+        $r11 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i2);
+        interfaceinvoke r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(r5, $r11);
+        goto label2;
+
+     label1:
+        $i4 = virtualinvoke r6.<java.lang.Integer: int intValue()>();
+        if i2 <= $i4 goto label2;
+
+        $r13 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i2);
+        interfaceinvoke r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(r5, $r13);
+
+     label2:
+        $r15 = r0.<org.apache.tomcat.util.scan.UrlJar: org.apache.tomcat.util.scan.NonClosingJarInputStream jarInputStream>;
+        r3 = virtualinvoke $r15.<org.apache.tomcat.util.scan.NonClosingJarInputStream: java.util.jar.JarEntry getNextJarEntry()>();
+
+     label3:
+        if r3 != null goto label0;
+
+        $r16 = new java.util.HashMap;
+        specialinvoke $r16.<java.util.HashMap: void <init>()>();
+        r0.<org.apache.tomcat.util.scan.UrlJar: java.util.Map mrMap> = $r16;
+        $r17 = interfaceinvoke r2.<java.util.Map: java.util.Set entrySet()>();
+        r18 = interfaceinvoke $r17.<java.util.Set: java.util.Iterator iterator()>();
+        goto label5;
+
+     label4:
+        $r19 = interfaceinvoke r18.<java.util.Iterator: java.lang.Object next()>();
+        r20 = (java.util.Map$Entry) $r19;
+        $r21 = r0.<org.apache.tomcat.util.scan.UrlJar: java.util.Map mrMap>;
+        $r22 = interfaceinvoke r20.<java.util.Map$Entry: java.lang.Object getKey()>();
+        $r23 = (java.lang.String) $r22;
+        $r24 = new java.lang.StringBuilder;
+        specialinvoke $r24.<java.lang.StringBuilder: void <init>(java.lang.String)>("META-INF/versions/");
+        $r25 = interfaceinvoke r20.<java.util.Map$Entry: java.lang.Object getValue()>();
+        $r26 = (java.lang.Integer) $r25;
+        $r27 = virtualinvoke $r26.<java.lang.Integer: java.lang.String toString()>();
+        $r28 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r27);
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("/");
+        $r30 = interfaceinvoke r20.<java.util.Map$Entry: java.lang.Object getKey()>();
+        $r31 = (java.lang.String) $r30;
+        $r32 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r31);
+        $r33 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r21.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r23, $r33);
+
+     label5:
+        $z2 = interfaceinvoke r18.<java.util.Iterator: boolean hasNext()>();
+        if $z2 != 0 goto label4;
+
+        virtualinvoke r0.<org.apache.tomcat.util.scan.UrlJar: void close()>();
+        $r35 = specialinvoke r0.<org.apache.tomcat.util.scan.UrlJar: org.apache.tomcat.util.scan.NonClosingJarInputStream createJarInputStream()>();
+        r0.<org.apache.tomcat.util.scan.UrlJar: org.apache.tomcat.util.scan.NonClosingJarInputStream jarInputStream> = $r35;
+        return;
+    }
+}

@@ -1,0 +1,298 @@
+public final class sun.text.normalizer.UCharacter extends java.lang.Object
+{
+    public static final int MIN_VALUE;
+    public static final int MAX_VALUE;
+    public static final int SUPPLEMENTARY_MIN_VALUE;
+    private static final sun.text.normalizer.UCharacterProperty PROPERTY_;
+    private static final char[] PROPERTY_TRIE_INDEX_;
+    private static final char[] PROPERTY_TRIE_DATA_;
+    private static final int PROPERTY_INITIAL_VALUE_;
+    private static final sun.text.normalizer.UBiDiProps gBdp;
+    private static final int NUMERIC_TYPE_SHIFT_;
+    private static final int NUMERIC_TYPE_MASK_;
+
+    public void <init>()
+    {
+        sun.text.normalizer.UCharacter r0;
+
+        r0 := @this: sun.text.normalizer.UCharacter;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static int digit(int, int)
+    {
+        int i0, i1, i2, i3, $i4, $i5;
+
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        i2 = staticinvoke <sun.text.normalizer.UCharacter: int getProperty(int)>(i0);
+        $i4 = staticinvoke <sun.text.normalizer.UCharacter: int getNumericType(int)>(i2);
+        if $i4 != 1 goto label0;
+
+        i3 = staticinvoke <sun.text.normalizer.UCharacterProperty: int getUnsignedValue(int)>(i2);
+        goto label1;
+
+     label0:
+        i3 = staticinvoke <sun.text.normalizer.UCharacter: int getEuropeanDigit(int)>(i0);
+
+     label1:
+        if 0 > i3 goto label2;
+
+        if i3 >= i1 goto label2;
+
+        $i5 = i3;
+        goto label3;
+
+     label2:
+        $i5 = -1;
+
+     label3:
+        return $i5;
+    }
+
+    public static int getDirection(int)
+    {
+        int i0, $i1;
+        sun.text.normalizer.UBiDiProps $r0;
+
+        i0 := @parameter0: int;
+        $r0 = <sun.text.normalizer.UCharacter: sun.text.normalizer.UBiDiProps gBdp>;
+        $i1 = virtualinvoke $r0.<sun.text.normalizer.UBiDiProps: int getClass(int)>(i0);
+        return $i1;
+    }
+
+    public static int getCodePoint(char, char)
+    {
+        char c0, c1;
+        boolean $z0, $z1;
+        int $i2;
+        java.lang.IllegalArgumentException $r0;
+
+        c0 := @parameter0: char;
+        c1 := @parameter1: char;
+        $z0 = staticinvoke <sun.text.normalizer.UTF16: boolean isLeadSurrogate(char)>(c0);
+        if $z0 == 0 goto label0;
+
+        $z1 = staticinvoke <sun.text.normalizer.UTF16: boolean isTrailSurrogate(char)>(c1);
+        if $z1 == 0 goto label0;
+
+        $i2 = staticinvoke <sun.text.normalizer.UCharacterProperty: int getRawSupplementary(char,char)>(c0, c1);
+        return $i2;
+
+     label0:
+        $r0 = new java.lang.IllegalArgumentException;
+        specialinvoke $r0.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Illegal surrogate characters");
+        throw $r0;
+    }
+
+    public static sun.text.normalizer.VersionInfo getAge(int)
+    {
+        int i0;
+        java.lang.IllegalArgumentException $r0;
+        sun.text.normalizer.UCharacterProperty $r1;
+        sun.text.normalizer.VersionInfo $r2;
+
+        i0 := @parameter0: int;
+        if i0 < 0 goto label0;
+
+        if i0 <= 1114111 goto label1;
+
+     label0:
+        $r0 = new java.lang.IllegalArgumentException;
+        specialinvoke $r0.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Codepoint out of bounds");
+        throw $r0;
+
+     label1:
+        $r1 = <sun.text.normalizer.UCharacter: sun.text.normalizer.UCharacterProperty PROPERTY_>;
+        $r2 = virtualinvoke $r1.<sun.text.normalizer.UCharacterProperty: sun.text.normalizer.VersionInfo getAge(int)>(i0);
+        return $r2;
+    }
+
+    private static int getEuropeanDigit(int)
+    {
+        int i0, $i1, $i3, $i4, $i5, $i6, $i7;
+        byte $b2;
+
+        i0 := @parameter0: int;
+        if i0 <= 122 goto label0;
+
+        if i0 < 65313 goto label2;
+
+     label0:
+        if i0 < 65 goto label2;
+
+        if i0 <= 90 goto label1;
+
+        if i0 < 97 goto label2;
+
+     label1:
+        if i0 > 65370 goto label2;
+
+        if i0 <= 65338 goto label3;
+
+        if i0 >= 65345 goto label3;
+
+     label2:
+        return -1;
+
+     label3:
+        if i0 > 122 goto label6;
+
+        $i1 = i0 + 10;
+        if i0 > 90 goto label4;
+
+        $b2 = 65;
+        goto label5;
+
+     label4:
+        $b2 = 97;
+
+     label5:
+        $i3 = $i1 - $b2;
+        return $i3;
+
+     label6:
+        if i0 > 65338 goto label7;
+
+        $i4 = i0 + 10;
+        $i5 = $i4 - 65313;
+        return $i5;
+
+     label7:
+        $i6 = i0 + 10;
+        $i7 = $i6 - 65345;
+        return $i7;
+    }
+
+    private static int getNumericType(int)
+    {
+        int i0, $i1, $i2;
+
+        i0 := @parameter0: int;
+        $i1 = i0 & 224;
+        $i2 = $i1 >> 5;
+        return $i2;
+    }
+
+    private static final int getProperty(int)
+    {
+        int i0, $i1, $i3, $i4, $i5, $i7, $i8, $i9, $i11, $i12, $i13, $i16, $i19;
+        java.lang.ArrayIndexOutOfBoundsException r0, $r3;
+        char[] $r1, $r2, $r4, $r5;
+        char $c2, $c6, $c10, $c14, $c15, $c17, $c18;
+        sun.text.normalizer.UCharacterProperty $r6;
+        sun.text.normalizer.CharTrie $r7;
+
+        i0 := @parameter0: int;
+        if i0 < 55296 goto label0;
+
+        if i0 <= 56319 goto label3;
+
+        if i0 >= 65536 goto label3;
+
+     label0:
+        $r1 = <sun.text.normalizer.UCharacter: char[] PROPERTY_TRIE_DATA_>;
+        $r2 = <sun.text.normalizer.UCharacter: char[] PROPERTY_TRIE_INDEX_>;
+        $i1 = i0 >> 5;
+        $c2 = $r2[$i1];
+        $i3 = $c2 << 2;
+        $i4 = i0 & 31;
+        $i5 = $i3 + $i4;
+        $c6 = $r1[$i5];
+
+     label1:
+        return $c6;
+
+     label2:
+        $r3 := @caughtexception;
+        r0 = $r3;
+        $i7 = <sun.text.normalizer.UCharacter: int PROPERTY_INITIAL_VALUE_>;
+        return $i7;
+
+     label3:
+        if i0 > 56319 goto label4;
+
+        $r4 = <sun.text.normalizer.UCharacter: char[] PROPERTY_TRIE_DATA_>;
+        $r5 = <sun.text.normalizer.UCharacter: char[] PROPERTY_TRIE_INDEX_>;
+        $i8 = i0 >> 5;
+        $i9 = 320 + $i8;
+        $c10 = $r5[$i9];
+        $i11 = $c10 << 2;
+        $i12 = i0 & 31;
+        $i13 = $i11 + $i12;
+        $c14 = $r4[$i13];
+        return $c14;
+
+     label4:
+        if i0 > 1114111 goto label5;
+
+        $r6 = <sun.text.normalizer.UCharacter: sun.text.normalizer.UCharacterProperty PROPERTY_>;
+        $r7 = $r6.<sun.text.normalizer.UCharacterProperty: sun.text.normalizer.CharTrie m_trie_>;
+        $c15 = staticinvoke <sun.text.normalizer.UTF16: char getLeadSurrogate(int)>(i0);
+        $i16 = i0 & 1023;
+        $c17 = (char) $i16;
+        $c18 = virtualinvoke $r7.<sun.text.normalizer.CharTrie: char getSurrogateValue(char,char)>($c15, $c17);
+        return $c18;
+
+     label5:
+        $i19 = <sun.text.normalizer.UCharacter: int PROPERTY_INITIAL_VALUE_>;
+        return $i19;
+
+        catch java.lang.ArrayIndexOutOfBoundsException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        sun.text.normalizer.UCharacterProperty $r0, $r3, $r5, $r7;
+        java.lang.Exception r1, $r8;
+        java.io.IOException r2, $r12;
+        char[] $r4, $r6;
+        int $i0;
+        java.util.MissingResourceException $r9;
+        java.lang.String $r10;
+        sun.text.normalizer.UBiDiProps r11;
+
+     label0:
+        $r0 = staticinvoke <sun.text.normalizer.UCharacterProperty: sun.text.normalizer.UCharacterProperty getInstance()>();
+        <sun.text.normalizer.UCharacter: sun.text.normalizer.UCharacterProperty PROPERTY_> = $r0;
+        $r3 = <sun.text.normalizer.UCharacter: sun.text.normalizer.UCharacterProperty PROPERTY_>;
+        $r4 = $r3.<sun.text.normalizer.UCharacterProperty: char[] m_trieIndex_>;
+        <sun.text.normalizer.UCharacter: char[] PROPERTY_TRIE_INDEX_> = $r4;
+        $r5 = <sun.text.normalizer.UCharacter: sun.text.normalizer.UCharacterProperty PROPERTY_>;
+        $r6 = $r5.<sun.text.normalizer.UCharacterProperty: char[] m_trieData_>;
+        <sun.text.normalizer.UCharacter: char[] PROPERTY_TRIE_DATA_> = $r6;
+        $r7 = <sun.text.normalizer.UCharacter: sun.text.normalizer.UCharacterProperty PROPERTY_>;
+        $i0 = $r7.<sun.text.normalizer.UCharacterProperty: int m_trieInitialValue_>;
+        <sun.text.normalizer.UCharacter: int PROPERTY_INITIAL_VALUE_> = $i0;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r8 := @caughtexception;
+        r1 = $r8;
+        $r9 = new java.util.MissingResourceException;
+        $r10 = virtualinvoke r1.<java.lang.Exception: java.lang.String getMessage()>();
+        specialinvoke $r9.<java.util.MissingResourceException: void <init>(java.lang.String,java.lang.String,java.lang.String)>($r10, "", "");
+        throw $r9;
+
+     label3:
+        r11 = staticinvoke <sun.text.normalizer.UBiDiProps: sun.text.normalizer.UBiDiProps getSingleton()>();
+
+     label4:
+        goto label6;
+
+     label5:
+        $r12 := @caughtexception;
+        r2 = $r12;
+        r11 = staticinvoke <sun.text.normalizer.UBiDiProps: sun.text.normalizer.UBiDiProps getDummy()>();
+
+     label6:
+        <sun.text.normalizer.UCharacter: sun.text.normalizer.UBiDiProps gBdp> = r11;
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+        catch java.io.IOException from label3 to label4 with label5;
+    }
+}

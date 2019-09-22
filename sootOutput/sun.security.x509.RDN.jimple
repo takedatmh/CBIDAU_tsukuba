@@ -1,0 +1,765 @@
+public class sun.security.x509.RDN extends java.lang.Object
+{
+    final sun.security.x509.AVA[] assertion;
+    private volatile java.util.List avaList;
+    private volatile java.lang.String canonicalString;
+
+    public void <init>(java.lang.String) throws java.io.IOException
+    {
+        sun.security.x509.RDN r0;
+        java.lang.String r1;
+        java.util.Map $r2;
+
+        r0 := @this: sun.security.x509.RDN;
+        r1 := @parameter0: java.lang.String;
+        $r2 = staticinvoke <java.util.Collections: java.util.Map emptyMap()>();
+        specialinvoke r0.<sun.security.x509.RDN: void <init>(java.lang.String,java.util.Map)>(r1, $r2);
+        return;
+    }
+
+    public void <init>(java.lang.String, java.util.Map) throws java.io.IOException
+    {
+        sun.security.x509.RDN r0;
+        java.lang.String r1, r4, $r12, r15, $r21;
+        java.util.Map r2;
+        int i0, i1, i2, i3, $i4, $i5, $i7, $i8, $i9;
+        java.util.ArrayList r3, $r6;
+        sun.security.x509.AVA r5, $r13, $r22, r24;
+        char $c6;
+        java.io.IOException $r7, $r16;
+        java.lang.StringBuilder $r8, $r9, $r10, $r11, $r17, $r18, $r19, $r20;
+        java.io.StringReader $r14, $r23;
+        sun.security.x509.AVA[] $r25, $r27;
+        java.lang.Object[] $r26;
+
+        r0 := @this: sun.security.x509.RDN;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.util.Map;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        i0 = 0;
+        i1 = 0;
+        i2 = 0;
+        $r6 = new java.util.ArrayList;
+        specialinvoke $r6.<java.util.ArrayList: void <init>(int)>(3);
+        r3 = $r6;
+        i3 = virtualinvoke r1.<java.lang.String: int indexOf(int)>(43);
+
+     label0:
+        if i3 < 0 goto label3;
+
+        $i4 = staticinvoke <sun.security.x509.X500Name: int countQuotes(java.lang.String,int,int)>(r1, i1, i3);
+        i0 = i0 + $i4;
+        if i3 <= 0 goto label2;
+
+        $i5 = i3 - 1;
+        $c6 = virtualinvoke r1.<java.lang.String: char charAt(int)>($i5);
+        if $c6 == 92 goto label2;
+
+        if i0 == 1 goto label2;
+
+        r4 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int,int)>(i2, i3);
+        $i7 = virtualinvoke r4.<java.lang.String: int length()>();
+        if $i7 != 0 goto label1;
+
+        $r7 = new java.io.IOException;
+        $r8 = new java.lang.StringBuilder;
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>()>();
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("empty AVA in RDN \"");
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\"");
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r7.<java.io.IOException: void <init>(java.lang.String)>($r12);
+        throw $r7;
+
+     label1:
+        $r13 = new sun.security.x509.AVA;
+        $r14 = new java.io.StringReader;
+        specialinvoke $r14.<java.io.StringReader: void <init>(java.lang.String)>(r4);
+        specialinvoke $r13.<sun.security.x509.AVA: void <init>(java.io.Reader,java.util.Map)>($r14, r2);
+        r5 = $r13;
+        interfaceinvoke r3.<java.util.List: boolean add(java.lang.Object)>(r5);
+        i2 = i3 + 1;
+        i0 = 0;
+
+     label2:
+        i1 = i3 + 1;
+        i3 = virtualinvoke r1.<java.lang.String: int indexOf(int,int)>(43, i1);
+        goto label0;
+
+     label3:
+        r15 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int)>(i2);
+        $i8 = virtualinvoke r15.<java.lang.String: int length()>();
+        if $i8 != 0 goto label4;
+
+        $r16 = new java.io.IOException;
+        $r17 = new java.lang.StringBuilder;
+        specialinvoke $r17.<java.lang.StringBuilder: void <init>()>();
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("empty AVA in RDN \"");
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\"");
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r16.<java.io.IOException: void <init>(java.lang.String)>($r21);
+        throw $r16;
+
+     label4:
+        $r22 = new sun.security.x509.AVA;
+        $r23 = new java.io.StringReader;
+        specialinvoke $r23.<java.io.StringReader: void <init>(java.lang.String)>(r15);
+        specialinvoke $r22.<sun.security.x509.AVA: void <init>(java.io.Reader,java.util.Map)>($r23, r2);
+        r24 = $r22;
+        interfaceinvoke r3.<java.util.List: boolean add(java.lang.Object)>(r24);
+        $i9 = interfaceinvoke r3.<java.util.List: int size()>();
+        $r25 = newarray (sun.security.x509.AVA)[$i9];
+        $r26 = interfaceinvoke r3.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>($r25);
+        $r27 = (sun.security.x509.AVA[]) $r26;
+        r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion> = $r27;
+        return;
+    }
+
+    void <init>(java.lang.String, java.lang.String) throws java.io.IOException
+    {
+        sun.security.x509.RDN r0;
+        java.lang.String r1, r2;
+        java.util.Map $r3;
+
+        r0 := @this: sun.security.x509.RDN;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String;
+        $r3 = staticinvoke <java.util.Collections: java.util.Map emptyMap()>();
+        specialinvoke r0.<sun.security.x509.RDN: void <init>(java.lang.String,java.lang.String,java.util.Map)>(r1, r2, $r3);
+        return;
+    }
+
+    void <init>(java.lang.String, java.lang.String, java.util.Map) throws java.io.IOException
+    {
+        sun.security.x509.RDN r0;
+        java.lang.String r1, r2, r6, $r11, $r18, r21, $r27;
+        java.util.Map r3;
+        java.lang.StringBuilder $r4, $r9, $r10, $r14, $r15, $r16, $r17, $r23, $r24, $r25, $r26;
+        boolean z0, $z1;
+        int i0, i1, $i2, $i4, i5, $i6, $i7;
+        java.util.ArrayList r5, $r12;
+        sun.security.x509.AVA r7, $r19, $r28, r30;
+        java.io.IOException $r8, $r13, $r22;
+        char $c3;
+        java.io.StringReader $r20, $r29;
+        sun.security.x509.AVA[] $r31, $r33;
+        java.lang.Object[] $r32;
+
+        r0 := @this: sun.security.x509.RDN;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: java.util.Map;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $z1 = virtualinvoke r2.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("RFC2253");
+        if $z1 != 0 goto label0;
+
+        $r8 = new java.io.IOException;
+        $r4 = new java.lang.StringBuilder;
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>()>();
+        $r9 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Unsupported format ");
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r8.<java.io.IOException: void <init>(java.lang.String)>($r11);
+        throw $r8;
+
+     label0:
+        z0 = 0;
+        i0 = 0;
+        $r12 = new java.util.ArrayList;
+        specialinvoke $r12.<java.util.ArrayList: void <init>(int)>(3);
+        r5 = $r12;
+        i1 = virtualinvoke r1.<java.lang.String: int indexOf(int)>(43);
+
+     label1:
+        if i1 < 0 goto label4;
+
+        if i1 <= 0 goto label3;
+
+        $i2 = i1 - 1;
+        $c3 = virtualinvoke r1.<java.lang.String: char charAt(int)>($i2);
+        if $c3 == 92 goto label3;
+
+        r6 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int,int)>(i0, i1);
+        $i4 = virtualinvoke r6.<java.lang.String: int length()>();
+        if $i4 != 0 goto label2;
+
+        $r13 = new java.io.IOException;
+        $r14 = new java.lang.StringBuilder;
+        specialinvoke $r14.<java.lang.StringBuilder: void <init>()>();
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("empty AVA in RDN \"");
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\"");
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r13.<java.io.IOException: void <init>(java.lang.String)>($r18);
+        throw $r13;
+
+     label2:
+        $r19 = new sun.security.x509.AVA;
+        $r20 = new java.io.StringReader;
+        specialinvoke $r20.<java.io.StringReader: void <init>(java.lang.String)>(r6);
+        specialinvoke $r19.<sun.security.x509.AVA: void <init>(java.io.Reader,int,java.util.Map)>($r20, 3, r3);
+        r7 = $r19;
+        interfaceinvoke r5.<java.util.List: boolean add(java.lang.Object)>(r7);
+        i0 = i1 + 1;
+
+     label3:
+        i5 = i1 + 1;
+        i1 = virtualinvoke r1.<java.lang.String: int indexOf(int,int)>(43, i5);
+        goto label1;
+
+     label4:
+        r21 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int)>(i0);
+        $i6 = virtualinvoke r21.<java.lang.String: int length()>();
+        if $i6 != 0 goto label5;
+
+        $r22 = new java.io.IOException;
+        $r23 = new java.lang.StringBuilder;
+        specialinvoke $r23.<java.lang.StringBuilder: void <init>()>();
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("empty AVA in RDN \"");
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\"");
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r22.<java.io.IOException: void <init>(java.lang.String)>($r27);
+        throw $r22;
+
+     label5:
+        $r28 = new sun.security.x509.AVA;
+        $r29 = new java.io.StringReader;
+        specialinvoke $r29.<java.io.StringReader: void <init>(java.lang.String)>(r21);
+        specialinvoke $r28.<sun.security.x509.AVA: void <init>(java.io.Reader,int,java.util.Map)>($r29, 3, r3);
+        r30 = $r28;
+        interfaceinvoke r5.<java.util.List: boolean add(java.lang.Object)>(r30);
+        $i7 = interfaceinvoke r5.<java.util.List: int size()>();
+        $r31 = newarray (sun.security.x509.AVA)[$i7];
+        $r32 = interfaceinvoke r5.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>($r31);
+        $r33 = (sun.security.x509.AVA[]) $r32;
+        r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion> = $r33;
+        return;
+    }
+
+    void <init>(sun.security.util.DerValue) throws java.io.IOException
+    {
+        sun.security.x509.RDN r0;
+        sun.security.util.DerValue r1, $r10;
+        sun.security.util.DerInputStream r2, $r5;
+        sun.security.util.DerValue[] r3;
+        int i0, $i2, $i3;
+        byte $b1;
+        java.io.IOException $r4;
+        byte[] $r6;
+        sun.security.x509.AVA[] $r7, $r8;
+        sun.security.x509.AVA $r9;
+
+        r0 := @this: sun.security.x509.RDN;
+        r1 := @parameter0: sun.security.util.DerValue;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $b1 = r1.<sun.security.util.DerValue: byte tag>;
+        if $b1 == 49 goto label0;
+
+        $r4 = new java.io.IOException;
+        specialinvoke $r4.<java.io.IOException: void <init>(java.lang.String)>("X500 RDN");
+        throw $r4;
+
+     label0:
+        $r5 = new sun.security.util.DerInputStream;
+        $r6 = virtualinvoke r1.<sun.security.util.DerValue: byte[] toByteArray()>();
+        specialinvoke $r5.<sun.security.util.DerInputStream: void <init>(byte[])>($r6);
+        r2 = $r5;
+        r3 = virtualinvoke r2.<sun.security.util.DerInputStream: sun.security.util.DerValue[] getSet(int)>(5);
+        $i2 = lengthof r3;
+        $r7 = newarray (sun.security.x509.AVA)[$i2];
+        r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion> = $r7;
+        i0 = 0;
+
+     label1:
+        $i3 = lengthof r3;
+        if i0 >= $i3 goto label2;
+
+        $r8 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $r9 = new sun.security.x509.AVA;
+        $r10 = r3[i0];
+        specialinvoke $r9.<sun.security.x509.AVA: void <init>(sun.security.util.DerValue)>($r10);
+        $r8[i0] = $r9;
+        i0 = i0 + 1;
+        goto label1;
+
+     label2:
+        return;
+    }
+
+    void <init>(int)
+    {
+        sun.security.x509.RDN r0;
+        int i0;
+        sun.security.x509.AVA[] $r1;
+
+        r0 := @this: sun.security.x509.RDN;
+        i0 := @parameter0: int;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r1 = newarray (sun.security.x509.AVA)[i0];
+        r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion> = $r1;
+        return;
+    }
+
+    public void <init>(sun.security.x509.AVA)
+    {
+        sun.security.x509.RDN r0;
+        sun.security.x509.AVA r1;
+        java.lang.NullPointerException $r2;
+        sun.security.x509.AVA[] $r3;
+
+        r0 := @this: sun.security.x509.RDN;
+        r1 := @parameter0: sun.security.x509.AVA;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        if r1 != null goto label0;
+
+        $r2 = new java.lang.NullPointerException;
+        specialinvoke $r2.<java.lang.NullPointerException: void <init>()>();
+        throw $r2;
+
+     label0:
+        $r3 = newarray (sun.security.x509.AVA)[1];
+        $r3[0] = r1;
+        r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion> = $r3;
+        return;
+    }
+
+    public void <init>(sun.security.x509.AVA[])
+    {
+        sun.security.x509.RDN r0;
+        sun.security.x509.AVA[] r1, $r3, $r4, $r5;
+        int i0, $i1;
+        java.lang.Object $r2;
+        sun.security.x509.AVA $r6;
+        java.lang.NullPointerException $r7;
+
+        r0 := @this: sun.security.x509.RDN;
+        r1 := @parameter0: sun.security.x509.AVA[];
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r2 = virtualinvoke r1.<java.lang.Object: java.lang.Object clone()>();
+        $r3 = (sun.security.x509.AVA[]) $r2;
+        r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion> = $r3;
+        i0 = 0;
+
+     label0:
+        $r4 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $i1 = lengthof $r4;
+        if i0 >= $i1 goto label2;
+
+        $r5 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $r6 = $r5[i0];
+        if $r6 != null goto label1;
+
+        $r7 = new java.lang.NullPointerException;
+        specialinvoke $r7.<java.lang.NullPointerException: void <init>()>();
+        throw $r7;
+
+     label1:
+        i0 = i0 + 1;
+        goto label0;
+
+     label2:
+        return;
+    }
+
+    public java.util.List avas()
+    {
+        sun.security.x509.RDN r0;
+        java.util.List r1, $r3;
+        sun.security.x509.AVA[] $r2;
+
+        r0 := @this: sun.security.x509.RDN;
+        r1 = r0.<sun.security.x509.RDN: java.util.List avaList>;
+        if r1 != null goto label0;
+
+        $r2 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $r3 = staticinvoke <java.util.Arrays: java.util.List asList(java.lang.Object[])>($r2);
+        r1 = staticinvoke <java.util.Collections: java.util.List unmodifiableList(java.util.List)>($r3);
+        r0.<sun.security.x509.RDN: java.util.List avaList> = r1;
+
+     label0:
+        return r1;
+    }
+
+    public int size()
+    {
+        sun.security.x509.RDN r0;
+        sun.security.x509.AVA[] $r1;
+        int $i0;
+
+        r0 := @this: sun.security.x509.RDN;
+        $r1 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $i0 = lengthof $r1;
+        return $i0;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        sun.security.x509.RDN r0, r2;
+        java.lang.Object r1;
+        java.lang.String r3, r4;
+        boolean $z0, $z1;
+        sun.security.x509.AVA[] $r5, $r6;
+        int $i0, $i1;
+
+        r0 := @this: sun.security.x509.RDN;
+        r1 := @parameter0: java.lang.Object;
+        if r0 != r1 goto label0;
+
+        return 1;
+
+     label0:
+        $z0 = r1 instanceof sun.security.x509.RDN;
+        if $z0 != 0 goto label1;
+
+        return 0;
+
+     label1:
+        r2 = (sun.security.x509.RDN) r1;
+        $r5 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $i0 = lengthof $r5;
+        $r6 = r2.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $i1 = lengthof $r6;
+        if $i0 == $i1 goto label2;
+
+        return 0;
+
+     label2:
+        r3 = virtualinvoke r0.<sun.security.x509.RDN: java.lang.String toRFC2253String(boolean)>(1);
+        r4 = virtualinvoke r2.<sun.security.x509.RDN: java.lang.String toRFC2253String(boolean)>(1);
+        $z1 = virtualinvoke r3.<java.lang.String: boolean equals(java.lang.Object)>(r4);
+        return $z1;
+    }
+
+    public int hashCode()
+    {
+        sun.security.x509.RDN r0;
+        java.lang.String $r1;
+        int $i0;
+
+        r0 := @this: sun.security.x509.RDN;
+        $r1 = virtualinvoke r0.<sun.security.x509.RDN: java.lang.String toRFC2253String(boolean)>(1);
+        $i0 = virtualinvoke $r1.<java.lang.String: int hashCode()>();
+        return $i0;
+    }
+
+    sun.security.util.DerValue findAttribute(sun.security.util.ObjectIdentifier)
+    {
+        sun.security.x509.RDN r0;
+        sun.security.util.ObjectIdentifier r1, $r5;
+        int i0, $i1;
+        sun.security.x509.AVA[] $r2, $r3, $r6;
+        sun.security.x509.AVA $r4, $r7;
+        boolean $z0;
+        sun.security.util.DerValue $r8;
+
+        r0 := @this: sun.security.x509.RDN;
+        r1 := @parameter0: sun.security.util.ObjectIdentifier;
+        i0 = 0;
+
+     label0:
+        $r2 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $i1 = lengthof $r2;
+        if i0 >= $i1 goto label2;
+
+        $r3 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $r4 = $r3[i0];
+        $r5 = $r4.<sun.security.x509.AVA: sun.security.util.ObjectIdentifier oid>;
+        $z0 = virtualinvoke $r5.<sun.security.util.ObjectIdentifier: boolean equals(sun.security.util.ObjectIdentifier)>(r1);
+        if $z0 == 0 goto label1;
+
+        $r6 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $r7 = $r6[i0];
+        $r8 = $r7.<sun.security.x509.AVA: sun.security.util.DerValue value>;
+        return $r8;
+
+     label1:
+        i0 = i0 + 1;
+        goto label0;
+
+     label2:
+        return null;
+    }
+
+    void encode(sun.security.util.DerOutputStream) throws java.io.IOException
+    {
+        sun.security.x509.RDN r0;
+        sun.security.util.DerOutputStream r1;
+        sun.security.x509.AVA[] $r2;
+
+        r0 := @this: sun.security.x509.RDN;
+        r1 := @parameter0: sun.security.util.DerOutputStream;
+        $r2 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        virtualinvoke r1.<sun.security.util.DerOutputStream: void putOrderedSetOf(byte,sun.security.util.DerEncoder[])>(49, $r2);
+        return;
+    }
+
+    public java.lang.String toString()
+    {
+        sun.security.x509.RDN r0;
+        java.lang.StringBuilder r1, $r6;
+        int i0, $i1, $i2;
+        sun.security.x509.AVA[] $r2, $r3, $r7, $r9;
+        sun.security.x509.AVA $r4, $r10;
+        java.lang.String $r5, $r11, $r13;
+
+        r0 := @this: sun.security.x509.RDN;
+        $r2 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $i1 = lengthof $r2;
+        if $i1 != 1 goto label0;
+
+        $r3 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $r4 = $r3[0];
+        $r5 = virtualinvoke $r4.<sun.security.x509.AVA: java.lang.String toString()>();
+        return $r5;
+
+     label0:
+        $r6 = new java.lang.StringBuilder;
+        specialinvoke $r6.<java.lang.StringBuilder: void <init>()>();
+        r1 = $r6;
+        i0 = 0;
+
+     label1:
+        $r7 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $i2 = lengthof $r7;
+        if i0 >= $i2 goto label3;
+
+        if i0 == 0 goto label2;
+
+        virtualinvoke r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" + ");
+
+     label2:
+        $r9 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $r10 = $r9[i0];
+        $r11 = virtualinvoke $r10.<sun.security.x509.AVA: java.lang.String toString()>();
+        virtualinvoke r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r11);
+        i0 = i0 + 1;
+        goto label1;
+
+     label3:
+        $r13 = virtualinvoke r1.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r13;
+    }
+
+    public java.lang.String toRFC1779String()
+    {
+        sun.security.x509.RDN r0;
+        java.util.Map $r1;
+        java.lang.String $r2;
+
+        r0 := @this: sun.security.x509.RDN;
+        $r1 = staticinvoke <java.util.Collections: java.util.Map emptyMap()>();
+        $r2 = virtualinvoke r0.<sun.security.x509.RDN: java.lang.String toRFC1779String(java.util.Map)>($r1);
+        return $r2;
+    }
+
+    public java.lang.String toRFC1779String(java.util.Map)
+    {
+        sun.security.x509.RDN r0;
+        java.util.Map r1;
+        java.lang.StringBuilder r2, $r7;
+        int i0, $i1, $i2;
+        sun.security.x509.AVA[] $r3, $r4, $r8, $r10;
+        sun.security.x509.AVA $r5, $r11;
+        java.lang.String $r6, $r12, $r14;
+
+        r0 := @this: sun.security.x509.RDN;
+        r1 := @parameter0: java.util.Map;
+        $r3 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $i1 = lengthof $r3;
+        if $i1 != 1 goto label0;
+
+        $r4 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $r5 = $r4[0];
+        $r6 = virtualinvoke $r5.<sun.security.x509.AVA: java.lang.String toRFC1779String(java.util.Map)>(r1);
+        return $r6;
+
+     label0:
+        $r7 = new java.lang.StringBuilder;
+        specialinvoke $r7.<java.lang.StringBuilder: void <init>()>();
+        r2 = $r7;
+        i0 = 0;
+
+     label1:
+        $r8 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $i2 = lengthof $r8;
+        if i0 >= $i2 goto label3;
+
+        if i0 == 0 goto label2;
+
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" + ");
+
+     label2:
+        $r10 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $r11 = $r10[i0];
+        $r12 = virtualinvoke $r11.<sun.security.x509.AVA: java.lang.String toRFC1779String(java.util.Map)>(r1);
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r12);
+        i0 = i0 + 1;
+        goto label1;
+
+     label3:
+        $r14 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r14;
+    }
+
+    public java.lang.String toRFC2253String()
+    {
+        sun.security.x509.RDN r0;
+        java.util.Map $r1;
+        java.lang.String $r2;
+
+        r0 := @this: sun.security.x509.RDN;
+        $r1 = staticinvoke <java.util.Collections: java.util.Map emptyMap()>();
+        $r2 = specialinvoke r0.<sun.security.x509.RDN: java.lang.String toRFC2253StringInternal(boolean,java.util.Map)>(0, $r1);
+        return $r2;
+    }
+
+    public java.lang.String toRFC2253String(java.util.Map)
+    {
+        sun.security.x509.RDN r0;
+        java.util.Map r1;
+        java.lang.String $r2;
+
+        r0 := @this: sun.security.x509.RDN;
+        r1 := @parameter0: java.util.Map;
+        $r2 = specialinvoke r0.<sun.security.x509.RDN: java.lang.String toRFC2253StringInternal(boolean,java.util.Map)>(0, r1);
+        return $r2;
+    }
+
+    public java.lang.String toRFC2253String(boolean)
+    {
+        sun.security.x509.RDN r0;
+        boolean z0;
+        java.util.Map $r1, $r4;
+        java.lang.String r2, $r3;
+
+        r0 := @this: sun.security.x509.RDN;
+        z0 := @parameter0: boolean;
+        if z0 != 0 goto label0;
+
+        $r1 = staticinvoke <java.util.Collections: java.util.Map emptyMap()>();
+        $r3 = specialinvoke r0.<sun.security.x509.RDN: java.lang.String toRFC2253StringInternal(boolean,java.util.Map)>(0, $r1);
+        return $r3;
+
+     label0:
+        r2 = r0.<sun.security.x509.RDN: java.lang.String canonicalString>;
+        if r2 != null goto label1;
+
+        $r4 = staticinvoke <java.util.Collections: java.util.Map emptyMap()>();
+        r2 = specialinvoke r0.<sun.security.x509.RDN: java.lang.String toRFC2253StringInternal(boolean,java.util.Map)>(1, $r4);
+        r0.<sun.security.x509.RDN: java.lang.String canonicalString> = r2;
+
+     label1:
+        return r2;
+    }
+
+    private java.lang.String toRFC2253StringInternal(boolean, java.util.Map)
+    {
+        sun.security.x509.RDN r0;
+        boolean z0;
+        java.util.Map r1;
+        java.lang.StringBuilder r2, $r9;
+        int i0, i1, $i2, $i3, $i4, $i5, i6, $i7;
+        sun.security.x509.AVA[] $r3, $r4, $r7, $r10, $r12, $r17, $r19, $r20;
+        sun.security.x509.AVA $r5, $r8, $r13, $r21, $r25;
+        java.lang.String $r6, $r14, $r26, $r28;
+        java.util.ArrayList $r16, r18;
+        java.util.Comparator $r22;
+        java.lang.Object $r24;
+
+        r0 := @this: sun.security.x509.RDN;
+        z0 := @parameter0: boolean;
+        r1 := @parameter1: java.util.Map;
+        $r3 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $i2 = lengthof $r3;
+        if $i2 != 1 goto label2;
+
+        if z0 == 0 goto label0;
+
+        $r4 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $r5 = $r4[0];
+        $r6 = virtualinvoke $r5.<sun.security.x509.AVA: java.lang.String toRFC2253CanonicalString()>();
+        goto label1;
+
+     label0:
+        $r7 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $r8 = $r7[0];
+        $r6 = virtualinvoke $r8.<sun.security.x509.AVA: java.lang.String toRFC2253String(java.util.Map)>(r1);
+
+     label1:
+        return $r6;
+
+     label2:
+        $r9 = new java.lang.StringBuilder;
+        specialinvoke $r9.<java.lang.StringBuilder: void <init>()>();
+        r2 = $r9;
+        if z0 != 0 goto label6;
+
+        i0 = 0;
+
+     label3:
+        $r10 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $i3 = lengthof $r10;
+        if i0 >= $i3 goto label5;
+
+        if i0 <= 0 goto label4;
+
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(43);
+
+     label4:
+        $r12 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $r13 = $r12[i0];
+        $r14 = virtualinvoke $r13.<sun.security.x509.AVA: java.lang.String toRFC2253String(java.util.Map)>(r1);
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r14);
+        i0 = i0 + 1;
+        goto label3;
+
+     label5:
+        goto label11;
+
+     label6:
+        $r16 = new java.util.ArrayList;
+        $r17 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $i4 = lengthof $r17;
+        specialinvoke $r16.<java.util.ArrayList: void <init>(int)>($i4);
+        r18 = $r16;
+        i1 = 0;
+
+     label7:
+        $r19 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $i5 = lengthof $r19;
+        if i1 >= $i5 goto label8;
+
+        $r20 = r0.<sun.security.x509.RDN: sun.security.x509.AVA[] assertion>;
+        $r21 = $r20[i1];
+        interfaceinvoke r18.<java.util.List: boolean add(java.lang.Object)>($r21);
+        i1 = i1 + 1;
+        goto label7;
+
+     label8:
+        $r22 = staticinvoke <sun.security.x509.AVAComparator: java.util.Comparator getInstance()>();
+        staticinvoke <java.util.Collections: void sort(java.util.List,java.util.Comparator)>(r18, $r22);
+        i6 = 0;
+
+     label9:
+        $i7 = interfaceinvoke r18.<java.util.List: int size()>();
+        if i6 >= $i7 goto label11;
+
+        if i6 <= 0 goto label10;
+
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(43);
+
+     label10:
+        $r24 = interfaceinvoke r18.<java.util.List: java.lang.Object get(int)>(i6);
+        $r25 = (sun.security.x509.AVA) $r24;
+        $r26 = virtualinvoke $r25.<sun.security.x509.AVA: java.lang.String toRFC2253CanonicalString()>();
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r26);
+        i6 = i6 + 1;
+        goto label9;
+
+     label11:
+        $r28 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r28;
+    }
+}

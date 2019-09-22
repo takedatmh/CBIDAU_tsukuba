@@ -1,0 +1,4599 @@
+public class java.text.DecimalFormat extends java.text.NumberFormat
+{
+    private transient java.math.BigInteger bigIntegerMultiplier;
+    private transient java.math.BigDecimal bigDecimalMultiplier;
+    private static final int STATUS_INFINITE;
+    private static final int STATUS_POSITIVE;
+    private static final int STATUS_LENGTH;
+    private transient java.text.DigitList digitList;
+    private java.lang.String positivePrefix;
+    private java.lang.String positiveSuffix;
+    private java.lang.String negativePrefix;
+    private java.lang.String negativeSuffix;
+    private java.lang.String posPrefixPattern;
+    private java.lang.String posSuffixPattern;
+    private java.lang.String negPrefixPattern;
+    private java.lang.String negSuffixPattern;
+    private int multiplier;
+    private byte groupingSize;
+    private boolean decimalSeparatorAlwaysShown;
+    private boolean parseBigDecimal;
+    private transient boolean isCurrencyFormat;
+    private java.text.DecimalFormatSymbols symbols;
+    private boolean useExponentialNotation;
+    private transient java.text.FieldPosition[] positivePrefixFieldPositions;
+    private transient java.text.FieldPosition[] positiveSuffixFieldPositions;
+    private transient java.text.FieldPosition[] negativePrefixFieldPositions;
+    private transient java.text.FieldPosition[] negativeSuffixFieldPositions;
+    private byte minExponentDigits;
+    private int maximumIntegerDigits;
+    private int minimumIntegerDigits;
+    private int maximumFractionDigits;
+    private int minimumFractionDigits;
+    private java.math.RoundingMode roundingMode;
+    static final int currentSerialVersion;
+    private int serialVersionOnStream;
+    private static final char PATTERN_ZERO_DIGIT;
+    private static final char PATTERN_GROUPING_SEPARATOR;
+    private static final char PATTERN_DECIMAL_SEPARATOR;
+    private static final char PATTERN_PER_MILLE;
+    private static final char PATTERN_PERCENT;
+    private static final char PATTERN_DIGIT;
+    private static final char PATTERN_SEPARATOR;
+    private static final java.lang.String PATTERN_EXPONENT;
+    private static final char PATTERN_MINUS;
+    private static final char CURRENCY_SIGN;
+    private static final char QUOTE;
+    private static java.text.FieldPosition[] EmptyFieldPositionArray;
+    static final int DOUBLE_INTEGER_DIGITS;
+    static final int DOUBLE_FRACTION_DIGITS;
+    static final int MAXIMUM_INTEGER_DIGITS;
+    static final int MAXIMUM_FRACTION_DIGITS;
+    static final long serialVersionUID;
+    private static final java.util.concurrent.ConcurrentMap cachedLocaleData;
+    static final boolean $assertionsDisabled;
+
+    public void <init>()
+    {
+        java.text.DecimalFormat r0;
+        java.text.DigitList $r1;
+        java.util.Locale r2;
+        java.lang.String r3;
+        java.util.ResourceBundle r4;
+        java.lang.String[] r5;
+        int $i0, $i1, $i2, $i3;
+        java.math.RoundingMode $r6;
+        java.util.Locale$Category $r7;
+        java.util.concurrent.ConcurrentMap $r8, $r10;
+        java.lang.Object $r9;
+        java.text.DecimalFormatSymbols $r12;
+
+        r0 := @this: java.text.DecimalFormat;
+        specialinvoke r0.<java.text.NumberFormat: void <init>()>();
+        $r1 = new java.text.DigitList;
+        specialinvoke $r1.<java.text.DigitList: void <init>()>();
+        r0.<java.text.DecimalFormat: java.text.DigitList digitList> = $r1;
+        r0.<java.text.DecimalFormat: java.lang.String positivePrefix> = "";
+        r0.<java.text.DecimalFormat: java.lang.String positiveSuffix> = "";
+        r0.<java.text.DecimalFormat: java.lang.String negativePrefix> = "-";
+        r0.<java.text.DecimalFormat: java.lang.String negativeSuffix> = "";
+        r0.<java.text.DecimalFormat: int multiplier> = 1;
+        r0.<java.text.DecimalFormat: byte groupingSize> = 3;
+        r0.<java.text.DecimalFormat: boolean decimalSeparatorAlwaysShown> = 0;
+        r0.<java.text.DecimalFormat: boolean parseBigDecimal> = 0;
+        r0.<java.text.DecimalFormat: boolean isCurrencyFormat> = 0;
+        r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols> = null;
+        $i0 = specialinvoke r0.<java.text.NumberFormat: int getMaximumIntegerDigits()>();
+        r0.<java.text.DecimalFormat: int maximumIntegerDigits> = $i0;
+        $i1 = specialinvoke r0.<java.text.NumberFormat: int getMinimumIntegerDigits()>();
+        r0.<java.text.DecimalFormat: int minimumIntegerDigits> = $i1;
+        $i2 = specialinvoke r0.<java.text.NumberFormat: int getMaximumFractionDigits()>();
+        r0.<java.text.DecimalFormat: int maximumFractionDigits> = $i2;
+        $i3 = specialinvoke r0.<java.text.NumberFormat: int getMinimumFractionDigits()>();
+        r0.<java.text.DecimalFormat: int minimumFractionDigits> = $i3;
+        $r6 = <java.math.RoundingMode: java.math.RoundingMode HALF_EVEN>;
+        r0.<java.text.DecimalFormat: java.math.RoundingMode roundingMode> = $r6;
+        r0.<java.text.DecimalFormat: int serialVersionOnStream> = 4;
+        $r7 = <java.util.Locale$Category: java.util.Locale$Category FORMAT>;
+        r2 = staticinvoke <java.util.Locale: java.util.Locale getDefault(java.util.Locale$Category)>($r7);
+        $r8 = <java.text.DecimalFormat: java.util.concurrent.ConcurrentMap cachedLocaleData>;
+        $r9 = interfaceinvoke $r8.<java.util.concurrent.ConcurrentMap: java.lang.Object get(java.lang.Object)>(r2);
+        r3 = (java.lang.String) $r9;
+        if r3 != null goto label0;
+
+        r4 = staticinvoke <sun.util.resources.LocaleData: java.util.ResourceBundle getNumberFormatData(java.util.Locale)>(r2);
+        r5 = virtualinvoke r4.<java.util.ResourceBundle: java.lang.String[] getStringArray(java.lang.String)>("NumberPatterns");
+        r3 = r5[0];
+        $r10 = <java.text.DecimalFormat: java.util.concurrent.ConcurrentMap cachedLocaleData>;
+        interfaceinvoke $r10.<java.util.concurrent.ConcurrentMap: java.lang.Object putIfAbsent(java.lang.Object,java.lang.Object)>(r2, r3);
+
+     label0:
+        $r12 = new java.text.DecimalFormatSymbols;
+        specialinvoke $r12.<java.text.DecimalFormatSymbols: void <init>(java.util.Locale)>(r2);
+        r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols> = $r12;
+        specialinvoke r0.<java.text.DecimalFormat: void applyPattern(java.lang.String,boolean)>(r3, 0);
+        return;
+    }
+
+    public void <init>(java.lang.String)
+    {
+        java.text.DecimalFormat r0;
+        java.lang.String r1;
+        java.text.DigitList $r2;
+        java.util.Locale$Category $r3;
+        int $i0, $i1, $i2, $i3;
+        java.math.RoundingMode $r4;
+        java.text.DecimalFormatSymbols $r5;
+        java.util.Locale $r6;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.String;
+        specialinvoke r0.<java.text.NumberFormat: void <init>()>();
+        $r2 = new java.text.DigitList;
+        specialinvoke $r2.<java.text.DigitList: void <init>()>();
+        r0.<java.text.DecimalFormat: java.text.DigitList digitList> = $r2;
+        r0.<java.text.DecimalFormat: java.lang.String positivePrefix> = "";
+        r0.<java.text.DecimalFormat: java.lang.String positiveSuffix> = "";
+        r0.<java.text.DecimalFormat: java.lang.String negativePrefix> = "-";
+        r0.<java.text.DecimalFormat: java.lang.String negativeSuffix> = "";
+        r0.<java.text.DecimalFormat: int multiplier> = 1;
+        r0.<java.text.DecimalFormat: byte groupingSize> = 3;
+        r0.<java.text.DecimalFormat: boolean decimalSeparatorAlwaysShown> = 0;
+        r0.<java.text.DecimalFormat: boolean parseBigDecimal> = 0;
+        r0.<java.text.DecimalFormat: boolean isCurrencyFormat> = 0;
+        r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols> = null;
+        $i0 = specialinvoke r0.<java.text.NumberFormat: int getMaximumIntegerDigits()>();
+        r0.<java.text.DecimalFormat: int maximumIntegerDigits> = $i0;
+        $i1 = specialinvoke r0.<java.text.NumberFormat: int getMinimumIntegerDigits()>();
+        r0.<java.text.DecimalFormat: int minimumIntegerDigits> = $i1;
+        $i2 = specialinvoke r0.<java.text.NumberFormat: int getMaximumFractionDigits()>();
+        r0.<java.text.DecimalFormat: int maximumFractionDigits> = $i2;
+        $i3 = specialinvoke r0.<java.text.NumberFormat: int getMinimumFractionDigits()>();
+        r0.<java.text.DecimalFormat: int minimumFractionDigits> = $i3;
+        $r4 = <java.math.RoundingMode: java.math.RoundingMode HALF_EVEN>;
+        r0.<java.text.DecimalFormat: java.math.RoundingMode roundingMode> = $r4;
+        r0.<java.text.DecimalFormat: int serialVersionOnStream> = 4;
+        $r5 = new java.text.DecimalFormatSymbols;
+        $r3 = <java.util.Locale$Category: java.util.Locale$Category FORMAT>;
+        $r6 = staticinvoke <java.util.Locale: java.util.Locale getDefault(java.util.Locale$Category)>($r3);
+        specialinvoke $r5.<java.text.DecimalFormatSymbols: void <init>(java.util.Locale)>($r6);
+        r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols> = $r5;
+        specialinvoke r0.<java.text.DecimalFormat: void applyPattern(java.lang.String,boolean)>(r1, 0);
+        return;
+    }
+
+    public void <init>(java.lang.String, java.text.DecimalFormatSymbols)
+    {
+        java.text.DecimalFormat r0;
+        java.lang.String r1;
+        java.text.DecimalFormatSymbols r2, $r6;
+        java.text.DigitList $r3;
+        int $i0, $i1, $i2, $i3;
+        java.math.RoundingMode $r4;
+        java.lang.Object $r5;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.text.DecimalFormatSymbols;
+        specialinvoke r0.<java.text.NumberFormat: void <init>()>();
+        $r3 = new java.text.DigitList;
+        specialinvoke $r3.<java.text.DigitList: void <init>()>();
+        r0.<java.text.DecimalFormat: java.text.DigitList digitList> = $r3;
+        r0.<java.text.DecimalFormat: java.lang.String positivePrefix> = "";
+        r0.<java.text.DecimalFormat: java.lang.String positiveSuffix> = "";
+        r0.<java.text.DecimalFormat: java.lang.String negativePrefix> = "-";
+        r0.<java.text.DecimalFormat: java.lang.String negativeSuffix> = "";
+        r0.<java.text.DecimalFormat: int multiplier> = 1;
+        r0.<java.text.DecimalFormat: byte groupingSize> = 3;
+        r0.<java.text.DecimalFormat: boolean decimalSeparatorAlwaysShown> = 0;
+        r0.<java.text.DecimalFormat: boolean parseBigDecimal> = 0;
+        r0.<java.text.DecimalFormat: boolean isCurrencyFormat> = 0;
+        r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols> = null;
+        $i0 = specialinvoke r0.<java.text.NumberFormat: int getMaximumIntegerDigits()>();
+        r0.<java.text.DecimalFormat: int maximumIntegerDigits> = $i0;
+        $i1 = specialinvoke r0.<java.text.NumberFormat: int getMinimumIntegerDigits()>();
+        r0.<java.text.DecimalFormat: int minimumIntegerDigits> = $i1;
+        $i2 = specialinvoke r0.<java.text.NumberFormat: int getMaximumFractionDigits()>();
+        r0.<java.text.DecimalFormat: int maximumFractionDigits> = $i2;
+        $i3 = specialinvoke r0.<java.text.NumberFormat: int getMinimumFractionDigits()>();
+        r0.<java.text.DecimalFormat: int minimumFractionDigits> = $i3;
+        $r4 = <java.math.RoundingMode: java.math.RoundingMode HALF_EVEN>;
+        r0.<java.text.DecimalFormat: java.math.RoundingMode roundingMode> = $r4;
+        r0.<java.text.DecimalFormat: int serialVersionOnStream> = 4;
+        $r5 = virtualinvoke r2.<java.text.DecimalFormatSymbols: java.lang.Object clone()>();
+        $r6 = (java.text.DecimalFormatSymbols) $r5;
+        r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols> = $r6;
+        specialinvoke r0.<java.text.DecimalFormat: void applyPattern(java.lang.String,boolean)>(r1, 0);
+        return;
+    }
+
+    public final java.lang.StringBuffer format(java.lang.Object, java.lang.StringBuffer, java.text.FieldPosition)
+    {
+        java.text.DecimalFormat r0;
+        java.lang.Object r1;
+        java.lang.StringBuffer r2, $r6, $r8, $r10, $r12;
+        java.text.FieldPosition r3;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9;
+        java.math.BigInteger $r4, $r9;
+        int $i0;
+        java.lang.Number $r5, $r11;
+        long $l1;
+        java.math.BigDecimal $r7;
+        double $d0;
+        java.lang.IllegalArgumentException $r13;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.Object;
+        r2 := @parameter1: java.lang.StringBuffer;
+        r3 := @parameter2: java.text.FieldPosition;
+        $z0 = r1 instanceof java.lang.Long;
+        if $z0 != 0 goto label0;
+
+        $z1 = r1 instanceof java.lang.Integer;
+        if $z1 != 0 goto label0;
+
+        $z2 = r1 instanceof java.lang.Short;
+        if $z2 != 0 goto label0;
+
+        $z3 = r1 instanceof java.lang.Byte;
+        if $z3 != 0 goto label0;
+
+        $z4 = r1 instanceof java.util.concurrent.atomic.AtomicInteger;
+        if $z4 != 0 goto label0;
+
+        $z5 = r1 instanceof java.util.concurrent.atomic.AtomicLong;
+        if $z5 != 0 goto label0;
+
+        $z6 = r1 instanceof java.math.BigInteger;
+        if $z6 == 0 goto label1;
+
+        $r4 = (java.math.BigInteger) r1;
+        $i0 = virtualinvoke $r4.<java.math.BigInteger: int bitLength()>();
+        if $i0 >= 64 goto label1;
+
+     label0:
+        $r5 = (java.lang.Number) r1;
+        $l1 = virtualinvoke $r5.<java.lang.Number: long longValue()>();
+        $r6 = virtualinvoke r0.<java.text.DecimalFormat: java.lang.StringBuffer format(long,java.lang.StringBuffer,java.text.FieldPosition)>($l1, r2, r3);
+        return $r6;
+
+     label1:
+        $z7 = r1 instanceof java.math.BigDecimal;
+        if $z7 == 0 goto label2;
+
+        $r7 = (java.math.BigDecimal) r1;
+        $r8 = specialinvoke r0.<java.text.DecimalFormat: java.lang.StringBuffer format(java.math.BigDecimal,java.lang.StringBuffer,java.text.FieldPosition)>($r7, r2, r3);
+        return $r8;
+
+     label2:
+        $z8 = r1 instanceof java.math.BigInteger;
+        if $z8 == 0 goto label3;
+
+        $r9 = (java.math.BigInteger) r1;
+        $r10 = specialinvoke r0.<java.text.DecimalFormat: java.lang.StringBuffer format(java.math.BigInteger,java.lang.StringBuffer,java.text.FieldPosition)>($r9, r2, r3);
+        return $r10;
+
+     label3:
+        $z9 = r1 instanceof java.lang.Number;
+        if $z9 == 0 goto label4;
+
+        $r11 = (java.lang.Number) r1;
+        $d0 = virtualinvoke $r11.<java.lang.Number: double doubleValue()>();
+        $r12 = virtualinvoke r0.<java.text.DecimalFormat: java.lang.StringBuffer format(double,java.lang.StringBuffer,java.text.FieldPosition)>($d0, r2, r3);
+        return $r12;
+
+     label4:
+        $r13 = new java.lang.IllegalArgumentException;
+        specialinvoke $r13.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Cannot format given Object as a Number");
+        throw $r13;
+    }
+
+    public java.lang.StringBuffer format(double, java.lang.StringBuffer, java.text.FieldPosition)
+    {
+        java.text.DecimalFormat r0;
+        double d0;
+        java.lang.StringBuffer r1, $r4;
+        java.text.FieldPosition r2;
+        java.text.Format$FieldDelegate $r3;
+
+        r0 := @this: java.text.DecimalFormat;
+        d0 := @parameter0: double;
+        r1 := @parameter1: java.lang.StringBuffer;
+        r2 := @parameter2: java.text.FieldPosition;
+        virtualinvoke r2.<java.text.FieldPosition: void setBeginIndex(int)>(0);
+        virtualinvoke r2.<java.text.FieldPosition: void setEndIndex(int)>(0);
+        $r3 = virtualinvoke r2.<java.text.FieldPosition: java.text.Format$FieldDelegate getFieldDelegate()>();
+        $r4 = specialinvoke r0.<java.text.DecimalFormat: java.lang.StringBuffer format(double,java.lang.StringBuffer,java.text.Format$FieldDelegate)>(d0, r1, $r3);
+        return $r4;
+    }
+
+    private java.lang.StringBuffer format(double, java.lang.StringBuffer, java.text.Format$FieldDelegate)
+    {
+        java.text.DecimalFormat r0;
+        double d0, $d1, $d2, $d3;
+        java.lang.StringBuffer r1, $r30;
+        java.text.Format$FieldDelegate r2;
+        int i0, i1, i2, i3, i4, i5, $i6, $i7, $i11, $i12, $i13, $i14, $i16;
+        java.text.NumberFormat$Field $r3, $r4, $r11, $r14, $r18, $r19, $r22, $r25;
+        java.lang.Throwable r5, $r31;
+        boolean $z0, $z1, $z2, $z3, z4, $z5, $z6, $z7, $z9, $z10, $z11;
+        java.text.DecimalFormatSymbols $r6, $r15;
+        java.lang.String $r7, $r9, $r12, $r16, $r20, $r23;
+        byte $b8, $b9, $b10, $b15;
+        java.text.FieldPosition[] $r10, $r13, $r21, $r24;
+        java.lang.AssertionError $r26;
+        java.text.DigitList $r27, r28, $r29;
+
+        r0 := @this: java.text.DecimalFormat;
+        d0 := @parameter0: double;
+        r1 := @parameter1: java.lang.StringBuffer;
+        r2 := @parameter2: java.text.Format$FieldDelegate;
+        $z0 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d0);
+        if $z0 != 0 goto label0;
+
+        $z1 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d0);
+        if $z1 == 0 goto label1;
+
+        $i6 = r0.<java.text.DecimalFormat: int multiplier>;
+        if $i6 != 0 goto label1;
+
+     label0:
+        i0 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        $r6 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $r7 = virtualinvoke $r6.<java.text.DecimalFormatSymbols: java.lang.String getNaN()>();
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r7);
+        $r3 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field INTEGER>;
+        $r4 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field INTEGER>;
+        $i7 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        interfaceinvoke r2.<java.text.Format$FieldDelegate: void formatted(int,java.text.Format$Field,java.lang.Object,int,int,java.lang.StringBuffer)>(0, $r3, $r4, i0, $i7, r1);
+        return r1;
+
+     label1:
+        $b8 = d0 cmpg 0.0;
+        if $b8 < 0 goto label2;
+
+        $b9 = d0 cmpl 0.0;
+        if $b9 != 0 goto label3;
+
+        $d1 = 1.0 / d0;
+        $b10 = $d1 cmpg 0.0;
+        if $b10 >= 0 goto label3;
+
+     label2:
+        $z2 = 1;
+        goto label4;
+
+     label3:
+        $z2 = 0;
+
+     label4:
+        $i11 = r0.<java.text.DecimalFormat: int multiplier>;
+        if $i11 >= 0 goto label5;
+
+        $z3 = 1;
+        goto label6;
+
+     label5:
+        $z3 = 0;
+
+     label6:
+        z4 = $z2 ^ $z3;
+        $i12 = r0.<java.text.DecimalFormat: int multiplier>;
+        if $i12 == 1 goto label7;
+
+        $i13 = r0.<java.text.DecimalFormat: int multiplier>;
+        $d2 = (double) $i13;
+        d0 = d0 * $d2;
+
+     label7:
+        $z5 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d0);
+        if $z5 == 0 goto label12;
+
+        if z4 == 0 goto label8;
+
+        $r9 = r0.<java.text.DecimalFormat: java.lang.String negativePrefix>;
+        $r10 = specialinvoke r0.<java.text.DecimalFormat: java.text.FieldPosition[] getNegativePrefixFieldPositions()>();
+        $r11 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field SIGN>;
+        specialinvoke r0.<java.text.DecimalFormat: void append(java.lang.StringBuffer,java.lang.String,java.text.Format$FieldDelegate,java.text.FieldPosition[],java.text.Format$Field)>(r1, $r9, r2, $r10, $r11);
+        goto label9;
+
+     label8:
+        $r12 = r0.<java.text.DecimalFormat: java.lang.String positivePrefix>;
+        $r13 = specialinvoke r0.<java.text.DecimalFormat: java.text.FieldPosition[] getPositivePrefixFieldPositions()>();
+        $r14 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field SIGN>;
+        specialinvoke r0.<java.text.DecimalFormat: void append(java.lang.StringBuffer,java.lang.String,java.text.Format$FieldDelegate,java.text.FieldPosition[],java.text.Format$Field)>(r1, $r12, r2, $r13, $r14);
+
+     label9:
+        i1 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        $r15 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $r16 = virtualinvoke $r15.<java.text.DecimalFormatSymbols: java.lang.String getInfinity()>();
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r16);
+        $r18 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field INTEGER>;
+        $r19 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field INTEGER>;
+        $i14 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        interfaceinvoke r2.<java.text.Format$FieldDelegate: void formatted(int,java.text.Format$Field,java.lang.Object,int,int,java.lang.StringBuffer)>(0, $r18, $r19, i1, $i14, r1);
+        if z4 == 0 goto label10;
+
+        $r20 = r0.<java.text.DecimalFormat: java.lang.String negativeSuffix>;
+        $r21 = specialinvoke r0.<java.text.DecimalFormat: java.text.FieldPosition[] getNegativeSuffixFieldPositions()>();
+        $r22 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field SIGN>;
+        specialinvoke r0.<java.text.DecimalFormat: void append(java.lang.StringBuffer,java.lang.String,java.text.Format$FieldDelegate,java.text.FieldPosition[],java.text.Format$Field)>(r1, $r20, r2, $r21, $r22);
+        goto label11;
+
+     label10:
+        $r23 = r0.<java.text.DecimalFormat: java.lang.String positiveSuffix>;
+        $r24 = specialinvoke r0.<java.text.DecimalFormat: java.text.FieldPosition[] getPositiveSuffixFieldPositions()>();
+        $r25 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field SIGN>;
+        specialinvoke r0.<java.text.DecimalFormat: void append(java.lang.StringBuffer,java.lang.String,java.text.Format$FieldDelegate,java.text.FieldPosition[],java.text.Format$Field)>(r1, $r23, r2, $r24, $r25);
+
+     label11:
+        return r1;
+
+     label12:
+        if z4 == 0 goto label13;
+
+        d0 = neg d0;
+
+     label13:
+        $z6 = <java.text.DecimalFormat: boolean $assertionsDisabled>;
+        if $z6 != 0 goto label15;
+
+        $b15 = d0 cmpl 0.0;
+        if $b15 < 0 goto label14;
+
+        $z7 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d0);
+        if $z7 == 0 goto label15;
+
+     label14:
+        $r26 = new java.lang.AssertionError;
+        specialinvoke $r26.<java.lang.AssertionError: void <init>()>();
+        throw $r26;
+
+     label15:
+        $r27 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        r28 = $r27;
+        entermonitor $r27;
+
+     label16:
+        i2 = specialinvoke r0.<java.text.NumberFormat: int getMaximumIntegerDigits()>();
+        i3 = specialinvoke r0.<java.text.NumberFormat: int getMinimumIntegerDigits()>();
+        i4 = specialinvoke r0.<java.text.NumberFormat: int getMaximumFractionDigits()>();
+        i5 = specialinvoke r0.<java.text.NumberFormat: int getMinimumFractionDigits()>();
+        $r29 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $d3 = d0;
+        $z9 = r0.<java.text.DecimalFormat: boolean useExponentialNotation>;
+        if $z9 == 0 goto label17;
+
+        $i16 = i2 + i4;
+        goto label18;
+
+     label17:
+        $i16 = i4;
+
+     label18:
+        $z10 = r0.<java.text.DecimalFormat: boolean useExponentialNotation>;
+        if $z10 != 0 goto label19;
+
+        $z11 = 1;
+        goto label20;
+
+     label19:
+        $z11 = 0;
+
+     label20:
+        virtualinvoke $r29.<java.text.DigitList: void set(boolean,double,int,boolean)>(z4, $d3, $i16, $z11);
+        $r30 = specialinvoke r0.<java.text.DecimalFormat: java.lang.StringBuffer subformat(java.lang.StringBuffer,java.text.Format$FieldDelegate,boolean,boolean,int,int,int,int)>(r1, r2, z4, 0, i2, i3, i4, i5);
+        exitmonitor r28;
+
+     label21:
+        return $r30;
+
+     label22:
+        $r31 := @caughtexception;
+
+     label23:
+        r5 = $r31;
+        exitmonitor r28;
+
+     label24:
+        throw r5;
+
+        catch java.lang.Throwable from label16 to label21 with label22;
+        catch java.lang.Throwable from label23 to label24 with label22;
+    }
+
+    public java.lang.StringBuffer format(long, java.lang.StringBuffer, java.text.FieldPosition)
+    {
+        java.text.DecimalFormat r0;
+        long l0;
+        java.lang.StringBuffer r1, $r4;
+        java.text.FieldPosition r2;
+        java.text.Format$FieldDelegate $r3;
+
+        r0 := @this: java.text.DecimalFormat;
+        l0 := @parameter0: long;
+        r1 := @parameter1: java.lang.StringBuffer;
+        r2 := @parameter2: java.text.FieldPosition;
+        virtualinvoke r2.<java.text.FieldPosition: void setBeginIndex(int)>(0);
+        virtualinvoke r2.<java.text.FieldPosition: void setEndIndex(int)>(0);
+        $r3 = virtualinvoke r2.<java.text.FieldPosition: java.text.Format$FieldDelegate getFieldDelegate()>();
+        $r4 = specialinvoke r0.<java.text.DecimalFormat: java.lang.StringBuffer format(long,java.lang.StringBuffer,java.text.Format$FieldDelegate)>(l0, r1, $r3);
+        return $r4;
+    }
+
+    private java.lang.StringBuffer format(long, java.lang.StringBuffer, java.text.Format$FieldDelegate)
+    {
+        java.text.DecimalFormat r0;
+        long l0, l1, $l12, $l16, l17, $l20;
+        java.lang.StringBuffer r1, $r5, $r9;
+        java.text.Format$FieldDelegate r2;
+        boolean z0, z1, $z2, $z3, $z4, $z5, $z6;
+        int i2, i3, i4, i5, $i8, $i9, $i10, $i11, $i15, $i19, $i21;
+        java.lang.Throwable r3, $r10;
+        byte $b6, $b7, $b13, $b14, $b18;
+        java.math.BigInteger r4;
+        java.text.DigitList $r6, r7, $r8;
+
+        r0 := @this: java.text.DecimalFormat;
+        l0 := @parameter0: long;
+        r1 := @parameter1: java.lang.StringBuffer;
+        r2 := @parameter2: java.text.Format$FieldDelegate;
+        $b6 = l0 cmp 0L;
+        if $b6 >= 0 goto label0;
+
+        $z2 = 1;
+        goto label1;
+
+     label0:
+        $z2 = 0;
+
+     label1:
+        z0 = $z2;
+        if z0 == 0 goto label2;
+
+        l0 = neg l0;
+
+     label2:
+        z1 = 0;
+        $b7 = l0 cmp 0L;
+        if $b7 >= 0 goto label3;
+
+        $i8 = r0.<java.text.DecimalFormat: int multiplier>;
+        if $i8 == 0 goto label7;
+
+        z1 = 1;
+        goto label7;
+
+     label3:
+        $i9 = r0.<java.text.DecimalFormat: int multiplier>;
+        if $i9 == 1 goto label7;
+
+        $i10 = r0.<java.text.DecimalFormat: int multiplier>;
+        if $i10 == 0 goto label7;
+
+        $i11 = r0.<java.text.DecimalFormat: int multiplier>;
+        $l12 = (long) $i11;
+        l1 = 9223372036854775807L / $l12;
+        $b13 = l1 cmp 0L;
+        if $b13 >= 0 goto label4;
+
+        l1 = neg l1;
+
+     label4:
+        $b14 = l0 cmp l1;
+        if $b14 <= 0 goto label5;
+
+        $z3 = 1;
+        goto label6;
+
+     label5:
+        $z3 = 0;
+
+     label6:
+        z1 = $z3;
+
+     label7:
+        if z1 == 0 goto label9;
+
+        if z0 == 0 goto label8;
+
+        l0 = neg l0;
+
+     label8:
+        r4 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(l0);
+        $r5 = specialinvoke r0.<java.text.DecimalFormat: java.lang.StringBuffer format(java.math.BigInteger,java.lang.StringBuffer,java.text.Format$FieldDelegate,boolean)>(r4, r1, r2, 1);
+        return $r5;
+
+     label9:
+        $i15 = r0.<java.text.DecimalFormat: int multiplier>;
+        $l16 = (long) $i15;
+        l17 = l0 * $l16;
+        $b18 = l17 cmp 0L;
+        if $b18 != 0 goto label10;
+
+        z0 = 0;
+        goto label13;
+
+     label10:
+        $i19 = r0.<java.text.DecimalFormat: int multiplier>;
+        if $i19 >= 0 goto label13;
+
+        l17 = neg l17;
+        if z0 != 0 goto label11;
+
+        $z4 = 1;
+        goto label12;
+
+     label11:
+        $z4 = 0;
+
+     label12:
+        z0 = $z4;
+
+     label13:
+        $r6 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        r7 = $r6;
+        entermonitor $r6;
+
+     label14:
+        i2 = specialinvoke r0.<java.text.NumberFormat: int getMaximumIntegerDigits()>();
+        i3 = specialinvoke r0.<java.text.NumberFormat: int getMinimumIntegerDigits()>();
+        i4 = specialinvoke r0.<java.text.NumberFormat: int getMaximumFractionDigits()>();
+        i5 = specialinvoke r0.<java.text.NumberFormat: int getMinimumFractionDigits()>();
+        $r8 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $z5 = z0;
+        $l20 = l17;
+        $z6 = r0.<java.text.DecimalFormat: boolean useExponentialNotation>;
+        if $z6 == 0 goto label15;
+
+        $i21 = i2 + i4;
+        goto label16;
+
+     label15:
+        $i21 = 0;
+
+     label16:
+        virtualinvoke $r8.<java.text.DigitList: void set(boolean,long,int)>($z5, $l20, $i21);
+        $r9 = specialinvoke r0.<java.text.DecimalFormat: java.lang.StringBuffer subformat(java.lang.StringBuffer,java.text.Format$FieldDelegate,boolean,boolean,int,int,int,int)>(r1, r2, z0, 1, i2, i3, i4, i5);
+        exitmonitor r7;
+
+     label17:
+        return $r9;
+
+     label18:
+        $r10 := @caughtexception;
+
+     label19:
+        r3 = $r10;
+        exitmonitor r7;
+
+     label20:
+        throw r3;
+
+        catch java.lang.Throwable from label14 to label17 with label18;
+        catch java.lang.Throwable from label19 to label20 with label18;
+    }
+
+    private java.lang.StringBuffer format(java.math.BigDecimal, java.lang.StringBuffer, java.text.FieldPosition)
+    {
+        java.text.DecimalFormat r0;
+        java.math.BigDecimal r1;
+        java.lang.StringBuffer r2, $r5;
+        java.text.FieldPosition r3;
+        java.text.Format$FieldDelegate $r4;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.math.BigDecimal;
+        r2 := @parameter1: java.lang.StringBuffer;
+        r3 := @parameter2: java.text.FieldPosition;
+        virtualinvoke r3.<java.text.FieldPosition: void setBeginIndex(int)>(0);
+        virtualinvoke r3.<java.text.FieldPosition: void setEndIndex(int)>(0);
+        $r4 = virtualinvoke r3.<java.text.FieldPosition: java.text.Format$FieldDelegate getFieldDelegate()>();
+        $r5 = specialinvoke r0.<java.text.DecimalFormat: java.lang.StringBuffer format(java.math.BigDecimal,java.lang.StringBuffer,java.text.Format$FieldDelegate)>(r1, r2, $r4);
+        return $r5;
+    }
+
+    private java.lang.StringBuffer format(java.math.BigDecimal, java.lang.StringBuffer, java.text.Format$FieldDelegate)
+    {
+        java.text.DecimalFormat r0;
+        java.math.BigDecimal r1, $r5, $r7;
+        java.lang.StringBuffer r2, $r10;
+        java.text.Format$FieldDelegate r3;
+        boolean z0, $z1, $z3, $z4, $z5;
+        java.text.DigitList r4, $r8, $r9;
+        int i0, i1, i2, i3, i4, $i5, $i6, $i7;
+        java.lang.Throwable r6, $r11;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.math.BigDecimal;
+        r2 := @parameter1: java.lang.StringBuffer;
+        r3 := @parameter2: java.text.Format$FieldDelegate;
+        $i5 = r0.<java.text.DecimalFormat: int multiplier>;
+        if $i5 == 1 goto label0;
+
+        $r7 = specialinvoke r0.<java.text.DecimalFormat: java.math.BigDecimal getBigDecimalMultiplier()>();
+        r1 = virtualinvoke r1.<java.math.BigDecimal: java.math.BigDecimal multiply(java.math.BigDecimal)>($r7);
+
+     label0:
+        $i6 = virtualinvoke r1.<java.math.BigDecimal: int signum()>();
+        if $i6 != -1 goto label1;
+
+        $z1 = 1;
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        z0 = $z1;
+        if z0 == 0 goto label3;
+
+        r1 = virtualinvoke r1.<java.math.BigDecimal: java.math.BigDecimal negate()>();
+
+     label3:
+        $r8 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        r4 = $r8;
+        entermonitor $r8;
+
+     label4:
+        i0 = virtualinvoke r0.<java.text.DecimalFormat: int getMaximumIntegerDigits()>();
+        i1 = virtualinvoke r0.<java.text.DecimalFormat: int getMinimumIntegerDigits()>();
+        i2 = virtualinvoke r0.<java.text.DecimalFormat: int getMaximumFractionDigits()>();
+        i3 = virtualinvoke r0.<java.text.DecimalFormat: int getMinimumFractionDigits()>();
+        i4 = i0 + i2;
+        $r9 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $r5 = r1;
+        $z3 = r0.<java.text.DecimalFormat: boolean useExponentialNotation>;
+        if $z3 == 0 goto label6;
+
+        if i4 >= 0 goto label5;
+
+        $i7 = 2147483647;
+        goto label7;
+
+     label5:
+        $i7 = i4;
+        goto label7;
+
+     label6:
+        $i7 = i2;
+
+     label7:
+        $z4 = r0.<java.text.DecimalFormat: boolean useExponentialNotation>;
+        if $z4 != 0 goto label8;
+
+        $z5 = 1;
+        goto label9;
+
+     label8:
+        $z5 = 0;
+
+     label9:
+        virtualinvoke $r9.<java.text.DigitList: void set(boolean,java.math.BigDecimal,int,boolean)>(z0, $r5, $i7, $z5);
+        $r10 = specialinvoke r0.<java.text.DecimalFormat: java.lang.StringBuffer subformat(java.lang.StringBuffer,java.text.Format$FieldDelegate,boolean,boolean,int,int,int,int)>(r2, r3, z0, 0, i0, i1, i2, i3);
+        exitmonitor r4;
+
+     label10:
+        return $r10;
+
+     label11:
+        $r11 := @caughtexception;
+
+     label12:
+        r6 = $r11;
+        exitmonitor r4;
+
+     label13:
+        throw r6;
+
+        catch java.lang.Throwable from label4 to label10 with label11;
+        catch java.lang.Throwable from label12 to label13 with label11;
+    }
+
+    private java.lang.StringBuffer format(java.math.BigInteger, java.lang.StringBuffer, java.text.FieldPosition)
+    {
+        java.text.DecimalFormat r0;
+        java.math.BigInteger r1;
+        java.lang.StringBuffer r2, $r5;
+        java.text.FieldPosition r3;
+        java.text.Format$FieldDelegate $r4;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.math.BigInteger;
+        r2 := @parameter1: java.lang.StringBuffer;
+        r3 := @parameter2: java.text.FieldPosition;
+        virtualinvoke r3.<java.text.FieldPosition: void setBeginIndex(int)>(0);
+        virtualinvoke r3.<java.text.FieldPosition: void setEndIndex(int)>(0);
+        $r4 = virtualinvoke r3.<java.text.FieldPosition: java.text.Format$FieldDelegate getFieldDelegate()>();
+        $r5 = specialinvoke r0.<java.text.DecimalFormat: java.lang.StringBuffer format(java.math.BigInteger,java.lang.StringBuffer,java.text.Format$FieldDelegate,boolean)>(r1, r2, $r4, 0);
+        return $r5;
+    }
+
+    private java.lang.StringBuffer format(java.math.BigInteger, java.lang.StringBuffer, java.text.Format$FieldDelegate, boolean)
+    {
+        java.text.DecimalFormat r0;
+        java.math.BigInteger r1, $r5, $r7;
+        java.lang.StringBuffer r2, $r10;
+        java.text.Format$FieldDelegate r3;
+        boolean z0, z1, $z2, $z4;
+        java.text.DigitList r4, $r8, $r9;
+        int i0, i1, i2, i3, i4, $i5, $i6, $i7;
+        java.lang.Throwable r6, $r11;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.math.BigInteger;
+        r2 := @parameter1: java.lang.StringBuffer;
+        r3 := @parameter2: java.text.Format$FieldDelegate;
+        z0 := @parameter3: boolean;
+        $i5 = r0.<java.text.DecimalFormat: int multiplier>;
+        if $i5 == 1 goto label0;
+
+        $r7 = specialinvoke r0.<java.text.DecimalFormat: java.math.BigInteger getBigIntegerMultiplier()>();
+        r1 = virtualinvoke r1.<java.math.BigInteger: java.math.BigInteger multiply(java.math.BigInteger)>($r7);
+
+     label0:
+        $i6 = virtualinvoke r1.<java.math.BigInteger: int signum()>();
+        if $i6 != -1 goto label1;
+
+        $z2 = 1;
+        goto label2;
+
+     label1:
+        $z2 = 0;
+
+     label2:
+        z1 = $z2;
+        if z1 == 0 goto label3;
+
+        r1 = virtualinvoke r1.<java.math.BigInteger: java.math.BigInteger negate()>();
+
+     label3:
+        $r8 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        r4 = $r8;
+        entermonitor $r8;
+
+     label4:
+        if z0 == 0 goto label5;
+
+        i0 = specialinvoke r0.<java.text.NumberFormat: int getMaximumIntegerDigits()>();
+        i1 = specialinvoke r0.<java.text.NumberFormat: int getMinimumIntegerDigits()>();
+        i2 = specialinvoke r0.<java.text.NumberFormat: int getMaximumFractionDigits()>();
+        i3 = specialinvoke r0.<java.text.NumberFormat: int getMinimumFractionDigits()>();
+        i4 = i0 + i2;
+        goto label6;
+
+     label5:
+        i0 = virtualinvoke r0.<java.text.DecimalFormat: int getMaximumIntegerDigits()>();
+        i1 = virtualinvoke r0.<java.text.DecimalFormat: int getMinimumIntegerDigits()>();
+        i2 = virtualinvoke r0.<java.text.DecimalFormat: int getMaximumFractionDigits()>();
+        i3 = virtualinvoke r0.<java.text.DecimalFormat: int getMinimumFractionDigits()>();
+        i4 = i0 + i2;
+        if i4 >= 0 goto label6;
+
+        i4 = 2147483647;
+
+     label6:
+        $r9 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $r5 = r1;
+        $z4 = r0.<java.text.DecimalFormat: boolean useExponentialNotation>;
+        if $z4 == 0 goto label7;
+
+        $i7 = i4;
+        goto label8;
+
+     label7:
+        $i7 = 0;
+
+     label8:
+        virtualinvoke $r9.<java.text.DigitList: void set(boolean,java.math.BigInteger,int)>(z1, $r5, $i7);
+        $r10 = specialinvoke r0.<java.text.DecimalFormat: java.lang.StringBuffer subformat(java.lang.StringBuffer,java.text.Format$FieldDelegate,boolean,boolean,int,int,int,int)>(r2, r3, z1, 1, i0, i1, i2, i3);
+        exitmonitor r4;
+
+     label9:
+        return $r10;
+
+     label10:
+        $r11 := @caughtexception;
+
+     label11:
+        r6 = $r11;
+        exitmonitor r4;
+
+     label12:
+        throw r6;
+
+        catch java.lang.Throwable from label4 to label9 with label10;
+        catch java.lang.Throwable from label11 to label12 with label10;
+    }
+
+    public java.text.AttributedCharacterIterator formatToCharacterIterator(java.lang.Object)
+    {
+        java.text.DecimalFormat r0;
+        java.lang.Object r1;
+        java.text.CharacterIteratorFieldDelegate $r2, r3;
+        java.lang.StringBuffer r4, $r5;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9;
+        java.lang.Number $r6, $r8;
+        double $d0;
+        long $l0;
+        java.math.BigDecimal $r10;
+        java.math.BigInteger $r12;
+        java.lang.NullPointerException $r14;
+        java.lang.IllegalArgumentException $r15;
+        java.lang.String $r16;
+        java.text.AttributedCharacterIterator $r17;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.Object;
+        $r2 = new java.text.CharacterIteratorFieldDelegate;
+        specialinvoke $r2.<java.text.CharacterIteratorFieldDelegate: void <init>()>();
+        r3 = $r2;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        r4 = $r5;
+        $z0 = r1 instanceof java.lang.Double;
+        if $z0 != 0 goto label0;
+
+        $z1 = r1 instanceof java.lang.Float;
+        if $z1 == 0 goto label1;
+
+     label0:
+        $r6 = (java.lang.Number) r1;
+        $d0 = virtualinvoke $r6.<java.lang.Number: double doubleValue()>();
+        specialinvoke r0.<java.text.DecimalFormat: java.lang.StringBuffer format(double,java.lang.StringBuffer,java.text.Format$FieldDelegate)>($d0, r4, r3);
+        goto label7;
+
+     label1:
+        $z2 = r1 instanceof java.lang.Long;
+        if $z2 != 0 goto label2;
+
+        $z3 = r1 instanceof java.lang.Integer;
+        if $z3 != 0 goto label2;
+
+        $z4 = r1 instanceof java.lang.Short;
+        if $z4 != 0 goto label2;
+
+        $z5 = r1 instanceof java.lang.Byte;
+        if $z5 != 0 goto label2;
+
+        $z6 = r1 instanceof java.util.concurrent.atomic.AtomicInteger;
+        if $z6 != 0 goto label2;
+
+        $z7 = r1 instanceof java.util.concurrent.atomic.AtomicLong;
+        if $z7 == 0 goto label3;
+
+     label2:
+        $r8 = (java.lang.Number) r1;
+        $l0 = virtualinvoke $r8.<java.lang.Number: long longValue()>();
+        specialinvoke r0.<java.text.DecimalFormat: java.lang.StringBuffer format(long,java.lang.StringBuffer,java.text.Format$FieldDelegate)>($l0, r4, r3);
+        goto label7;
+
+     label3:
+        $z8 = r1 instanceof java.math.BigDecimal;
+        if $z8 == 0 goto label4;
+
+        $r10 = (java.math.BigDecimal) r1;
+        specialinvoke r0.<java.text.DecimalFormat: java.lang.StringBuffer format(java.math.BigDecimal,java.lang.StringBuffer,java.text.Format$FieldDelegate)>($r10, r4, r3);
+        goto label7;
+
+     label4:
+        $z9 = r1 instanceof java.math.BigInteger;
+        if $z9 == 0 goto label5;
+
+        $r12 = (java.math.BigInteger) r1;
+        specialinvoke r0.<java.text.DecimalFormat: java.lang.StringBuffer format(java.math.BigInteger,java.lang.StringBuffer,java.text.Format$FieldDelegate,boolean)>($r12, r4, r3, 0);
+        goto label7;
+
+     label5:
+        if r1 != null goto label6;
+
+        $r14 = new java.lang.NullPointerException;
+        specialinvoke $r14.<java.lang.NullPointerException: void <init>(java.lang.String)>("formatToCharacterIterator must be passed non-null object");
+        throw $r14;
+
+     label6:
+        $r15 = new java.lang.IllegalArgumentException;
+        specialinvoke $r15.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Cannot format given Object as a Number");
+        throw $r15;
+
+     label7:
+        $r16 = virtualinvoke r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r17 = virtualinvoke r3.<java.text.CharacterIteratorFieldDelegate: java.text.AttributedCharacterIterator getIterator(java.lang.String)>($r16);
+        return $r17;
+    }
+
+    private java.lang.StringBuffer subformat(java.lang.StringBuffer, java.text.Format$FieldDelegate, boolean, boolean, int, int, int, int)
+    {
+        java.text.DecimalFormat r0;
+        java.lang.StringBuffer r1;
+        java.text.Format$FieldDelegate r2;
+        boolean z0, z1, z2, z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, z13, $z14;
+        int i0, i1, i2, i3, i5, i8, i9, i10, i11, i12, i13, i14, i15, i16, i17, i18, i19, $i21, $i22, i23, $i24, $i25, $i26, $i27, $i28, $i30, $i32, i33, $i34, i35, $i37, i40, $i41, $i42, $i44, $i46, i47, i48, i49, $i50, $i51, $i52, i53, i54, $i55, $i56, $i57, $i59, $i63, i64, $i65, $i66, $i67, $i68, i69, $i70, $i71, i72, i73, $i74, $i75, $i76, $i77, $i78, $i79, $i81, $i83;
+        char c4, c6, c7, $c20, $c29, $c31, $c36, $c43, $c45, $c58, $c60, $c80, $c82;
+        java.text.NumberFormat$Field $r3, $r14, $r26, $r27, $r28, $r29, $r30, $r31, $r35, $r36, $r40, $r41, $r51, $r52, $r64, $r65, $r68, $r69, $r71, $r72, $r81, $r82, $r85, $r88;
+        java.text.DecimalFormatSymbols $r4, $r5, $r6, $r7, $r32, $r38;
+        java.text.DigitList $r8, $r9, $r15, $r16, $r17, $r18, $r21, $r22, $r37, $r42, $r43, $r45, $r47, $r48, $r53, $r54, $r55, $r56, $r57, $r58, $r59, $r66, $r73, $r74, $r76, $r77;
+        java.lang.String $r10, $r12, $r33, $r83, $r86;
+        java.text.FieldPosition[] $r11, $r13, $r84, $r87;
+        char[] $r23, $r49, $r60, $r78;
+        long $l38;
+        byte $b39, $b61, $b62;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.StringBuffer;
+        r2 := @parameter1: java.text.Format$FieldDelegate;
+        z0 := @parameter2: boolean;
+        z1 := @parameter3: boolean;
+        i0 := @parameter4: int;
+        i1 := @parameter5: int;
+        i2 := @parameter6: int;
+        i3 := @parameter7: int;
+        $r4 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        c4 = virtualinvoke $r4.<java.text.DecimalFormatSymbols: char getZeroDigit()>();
+        i5 = c4 - 48;
+        $r5 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        c6 = virtualinvoke $r5.<java.text.DecimalFormatSymbols: char getGroupingSeparator()>();
+        $z4 = r0.<java.text.DecimalFormat: boolean isCurrencyFormat>;
+        if $z4 == 0 goto label0;
+
+        $r6 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c20 = virtualinvoke $r6.<java.text.DecimalFormatSymbols: char getMonetaryDecimalSeparator()>();
+        goto label1;
+
+     label0:
+        $r7 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c20 = virtualinvoke $r7.<java.text.DecimalFormatSymbols: char getDecimalSeparator()>();
+
+     label1:
+        c7 = $c20;
+        $r8 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $z5 = virtualinvoke $r8.<java.text.DigitList: boolean isZero()>();
+        if $z5 == 0 goto label2;
+
+        $r9 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $r9.<java.text.DigitList: int decimalAt> = 0;
+
+     label2:
+        if z0 == 0 goto label3;
+
+        $r10 = r0.<java.text.DecimalFormat: java.lang.String negativePrefix>;
+        $r11 = specialinvoke r0.<java.text.DecimalFormat: java.text.FieldPosition[] getNegativePrefixFieldPositions()>();
+        $r3 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field SIGN>;
+        specialinvoke r0.<java.text.DecimalFormat: void append(java.lang.StringBuffer,java.lang.String,java.text.Format$FieldDelegate,java.text.FieldPosition[],java.text.Format$Field)>(r1, $r10, r2, $r11, $r3);
+        goto label4;
+
+     label3:
+        $r12 = r0.<java.text.DecimalFormat: java.lang.String positivePrefix>;
+        $r13 = specialinvoke r0.<java.text.DecimalFormat: java.text.FieldPosition[] getPositivePrefixFieldPositions()>();
+        $r14 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field SIGN>;
+        specialinvoke r0.<java.text.DecimalFormat: void append(java.lang.StringBuffer,java.lang.String,java.text.Format$FieldDelegate,java.text.FieldPosition[],java.text.Format$Field)>(r1, $r12, r2, $r13, $r14);
+
+     label4:
+        $z6 = r0.<java.text.DecimalFormat: boolean useExponentialNotation>;
+        if $z6 == 0 goto label33;
+
+        i8 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        i9 = -1;
+        i10 = -1;
+        $r15 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        i11 = $r15.<java.text.DigitList: int decimalAt>;
+        i12 = i0;
+        i13 = i1;
+        if i12 <= 1 goto label7;
+
+        if i12 <= i1 goto label7;
+
+        if i11 < 1 goto label5;
+
+        $i21 = i11 - 1;
+        $i22 = $i21 / i12;
+        i23 = $i22 * i12;
+        goto label6;
+
+     label5:
+        $i24 = i11 - i12;
+        $i25 = $i24 / i12;
+        i23 = $i25 * i12;
+
+     label6:
+        i13 = 1;
+        goto label8;
+
+     label7:
+        i23 = i11 - i13;
+
+     label8:
+        i14 = i1 + i3;
+        if i14 >= 0 goto label9;
+
+        i14 = 2147483647;
+
+     label9:
+        $r16 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $z7 = virtualinvoke $r16.<java.text.DigitList: boolean isZero()>();
+        if $z7 == 0 goto label10;
+
+        $i26 = i13;
+        goto label11;
+
+     label10:
+        $r17 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $i27 = $r17.<java.text.DigitList: int decimalAt>;
+        $i26 = $i27 - i23;
+
+     label11:
+        i15 = $i26;
+        if i14 >= i15 goto label12;
+
+        i14 = i15;
+
+     label12:
+        $r18 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        i16 = $r18.<java.text.DigitList: int count>;
+        if i14 <= i16 goto label13;
+
+        i16 = i14;
+
+     label13:
+        z2 = 0;
+        i17 = 0;
+
+     label14:
+        if i17 >= i16 goto label18;
+
+        if i17 != i15 goto label15;
+
+        i9 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c7);
+        z2 = 1;
+        i10 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+
+     label15:
+        $r21 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $i28 = $r21.<java.text.DigitList: int count>;
+        if i17 >= $i28 goto label16;
+
+        $r22 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $r23 = $r22.<java.text.DigitList: char[] digits>;
+        $c29 = $r23[i17];
+        $i30 = $c29 + i5;
+        $c31 = (char) $i30;
+        goto label17;
+
+     label16:
+        $c31 = c4;
+
+     label17:
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c31);
+        i17 = i17 + 1;
+        goto label14;
+
+     label18:
+        $z8 = r0.<java.text.DecimalFormat: boolean decimalSeparatorAlwaysShown>;
+        if $z8 == 0 goto label19;
+
+        if i16 != i15 goto label19;
+
+        i9 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c7);
+        z2 = 1;
+        i10 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+
+     label19:
+        if i9 != -1 goto label20;
+
+        i9 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+
+     label20:
+        $r26 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field INTEGER>;
+        $r27 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field INTEGER>;
+        interfaceinvoke r2.<java.text.Format$FieldDelegate: void formatted(int,java.text.Format$Field,java.lang.Object,int,int,java.lang.StringBuffer)>(0, $r26, $r27, i8, i9, r1);
+        if z2 == 0 goto label21;
+
+        $r28 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field DECIMAL_SEPARATOR>;
+        $r29 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field DECIMAL_SEPARATOR>;
+        interfaceinvoke r2.<java.text.Format$FieldDelegate: void formatted(java.text.Format$Field,java.lang.Object,int,int,java.lang.StringBuffer)>($r28, $r29, i9, i10, r1);
+
+     label21:
+        if i10 != -1 goto label22;
+
+        i10 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+
+     label22:
+        $r30 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field FRACTION>;
+        $r31 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field FRACTION>;
+        $i32 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        interfaceinvoke r2.<java.text.Format$FieldDelegate: void formatted(int,java.text.Format$Field,java.lang.Object,int,int,java.lang.StringBuffer)>(1, $r30, $r31, i10, $i32, r1);
+        i33 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        $r32 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $r33 = virtualinvoke $r32.<java.text.DecimalFormatSymbols: java.lang.String getExponentSeparator()>();
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r33);
+        $r35 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field EXPONENT_SYMBOL>;
+        $r36 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field EXPONENT_SYMBOL>;
+        $i34 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        interfaceinvoke r2.<java.text.Format$FieldDelegate: void formatted(java.text.Format$Field,java.lang.Object,int,int,java.lang.StringBuffer)>($r35, $r36, i33, $i34, r1);
+        $r37 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $z9 = virtualinvoke $r37.<java.text.DigitList: boolean isZero()>();
+        if $z9 == 0 goto label23;
+
+        i23 = 0;
+
+     label23:
+        if i23 >= 0 goto label24;
+
+        $z10 = 1;
+        goto label25;
+
+     label24:
+        $z10 = 0;
+
+     label25:
+        z3 = $z10;
+        if z3 == 0 goto label26;
+
+        i23 = neg i23;
+        i35 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        $r38 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c36 = virtualinvoke $r38.<java.text.DecimalFormatSymbols: char getMinusSign()>();
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c36);
+        $r40 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field EXPONENT_SIGN>;
+        $r41 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field EXPONENT_SIGN>;
+        $i37 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        interfaceinvoke r2.<java.text.Format$FieldDelegate: void formatted(java.text.Format$Field,java.lang.Object,int,int,java.lang.StringBuffer)>($r40, $r41, i35, $i37, r1);
+
+     label26:
+        $r42 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $l38 = (long) i23;
+        virtualinvoke $r42.<java.text.DigitList: void set(boolean,long)>(z3, $l38);
+        i18 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        $r43 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        i19 = $r43.<java.text.DigitList: int decimalAt>;
+
+     label27:
+        $b39 = r0.<java.text.DecimalFormat: byte minExponentDigits>;
+        if i19 >= $b39 goto label28;
+
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c4);
+        i19 = i19 + 1;
+        goto label27;
+
+     label28:
+        i40 = 0;
+
+     label29:
+        $r45 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $i41 = $r45.<java.text.DigitList: int decimalAt>;
+        if i40 >= $i41 goto label32;
+
+        $r47 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $i42 = $r47.<java.text.DigitList: int count>;
+        if i40 >= $i42 goto label30;
+
+        $r48 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $r49 = $r48.<java.text.DigitList: char[] digits>;
+        $c43 = $r49[i40];
+        $i44 = $c43 + i5;
+        $c45 = (char) $i44;
+        goto label31;
+
+     label30:
+        $c45 = c4;
+
+     label31:
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c45);
+        i40 = i40 + 1;
+        goto label29;
+
+     label32:
+        $r51 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field EXPONENT>;
+        $r52 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field EXPONENT>;
+        $i46 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        interfaceinvoke r2.<java.text.Format$FieldDelegate: void formatted(java.text.Format$Field,java.lang.Object,int,int,java.lang.StringBuffer)>($r51, $r52, i18, $i46, r1);
+        goto label54;
+
+     label33:
+        i47 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        i48 = i1;
+        i49 = 0;
+        $r53 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $i50 = $r53.<java.text.DigitList: int decimalAt>;
+        if $i50 <= 0 goto label34;
+
+        $r54 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $i51 = $r54.<java.text.DigitList: int decimalAt>;
+        if i48 >= $i51 goto label34;
+
+        $r55 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        i48 = $r55.<java.text.DigitList: int decimalAt>;
+
+     label34:
+        if i48 <= i0 goto label35;
+
+        i48 = i0;
+        $r56 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $i52 = $r56.<java.text.DigitList: int decimalAt>;
+        i49 = $i52 - i48;
+
+     label35:
+        i53 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        i54 = i48 - 1;
+
+     label36:
+        if i54 < 0 goto label40;
+
+        $r57 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $i55 = $r57.<java.text.DigitList: int decimalAt>;
+        if i54 >= $i55 goto label37;
+
+        $r58 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $i56 = $r58.<java.text.DigitList: int count>;
+        if i49 >= $i56 goto label37;
+
+        $r59 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $r60 = $r59.<java.text.DigitList: char[] digits>;
+        $i57 = i49;
+        i49 = i49 + 1;
+        $c58 = $r60[$i57];
+        $i59 = $c58 + i5;
+        $c60 = (char) $i59;
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c60);
+        goto label38;
+
+     label37:
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c4);
+
+     label38:
+        $z11 = virtualinvoke r0.<java.text.DecimalFormat: boolean isGroupingUsed()>();
+        if $z11 == 0 goto label39;
+
+        if i54 <= 0 goto label39;
+
+        $b61 = r0.<java.text.DecimalFormat: byte groupingSize>;
+        if $b61 == 0 goto label39;
+
+        $b62 = r0.<java.text.DecimalFormat: byte groupingSize>;
+        $i63 = i54 % $b62;
+        if $i63 != 0 goto label39;
+
+        i64 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c6);
+        $r64 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field GROUPING_SEPARATOR>;
+        $r65 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field GROUPING_SEPARATOR>;
+        $i65 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        interfaceinvoke r2.<java.text.Format$FieldDelegate: void formatted(java.text.Format$Field,java.lang.Object,int,int,java.lang.StringBuffer)>($r64, $r65, i64, $i65, r1);
+
+     label39:
+        i54 = i54 + -1;
+        goto label36;
+
+     label40:
+        if i3 > 0 goto label41;
+
+        if z1 != 0 goto label42;
+
+        $r66 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $i66 = $r66.<java.text.DigitList: int count>;
+        if i49 >= $i66 goto label42;
+
+     label41:
+        $z12 = 1;
+        goto label43;
+
+     label42:
+        $z12 = 0;
+
+     label43:
+        z13 = $z12;
+        if z13 != 0 goto label44;
+
+        $i67 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        if $i67 != i53 goto label44;
+
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c4);
+
+     label44:
+        $r68 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field INTEGER>;
+        $r69 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field INTEGER>;
+        $i68 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        interfaceinvoke r2.<java.text.Format$FieldDelegate: void formatted(int,java.text.Format$Field,java.lang.Object,int,int,java.lang.StringBuffer)>(0, $r68, $r69, i47, $i68, r1);
+        i69 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        $z14 = r0.<java.text.DecimalFormat: boolean decimalSeparatorAlwaysShown>;
+        if $z14 != 0 goto label45;
+
+        if z13 == 0 goto label46;
+
+     label45:
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c7);
+
+     label46:
+        $i70 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        if i69 == $i70 goto label47;
+
+        $r71 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field DECIMAL_SEPARATOR>;
+        $r72 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field DECIMAL_SEPARATOR>;
+        $i71 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        interfaceinvoke r2.<java.text.Format$FieldDelegate: void formatted(java.text.Format$Field,java.lang.Object,int,int,java.lang.StringBuffer)>($r71, $r72, i69, $i71, r1);
+
+     label47:
+        i72 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        i73 = 0;
+
+     label48:
+        if i73 >= i2 goto label53;
+
+        if i73 < i3 goto label49;
+
+        if z1 != 0 goto label53;
+
+        $r73 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $i74 = $r73.<java.text.DigitList: int count>;
+        if i49 < $i74 goto label49;
+
+        goto label53;
+
+     label49:
+        $i75 = -1 - i73;
+        $r74 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $i76 = $r74.<java.text.DigitList: int decimalAt>;
+        $i77 = $i76 - 1;
+        if $i75 <= $i77 goto label50;
+
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c4);
+        goto label52;
+
+     label50:
+        if z1 != 0 goto label51;
+
+        $r76 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $i78 = $r76.<java.text.DigitList: int count>;
+        if i49 >= $i78 goto label51;
+
+        $r77 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $r78 = $r77.<java.text.DigitList: char[] digits>;
+        $i79 = i49;
+        i49 = i49 + 1;
+        $c80 = $r78[$i79];
+        $i81 = $c80 + i5;
+        $c82 = (char) $i81;
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c82);
+        goto label52;
+
+     label51:
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c4);
+
+     label52:
+        i73 = i73 + 1;
+        goto label48;
+
+     label53:
+        $r81 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field FRACTION>;
+        $r82 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field FRACTION>;
+        $i83 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        interfaceinvoke r2.<java.text.Format$FieldDelegate: void formatted(int,java.text.Format$Field,java.lang.Object,int,int,java.lang.StringBuffer)>(1, $r81, $r82, i72, $i83, r1);
+
+     label54:
+        if z0 == 0 goto label55;
+
+        $r83 = r0.<java.text.DecimalFormat: java.lang.String negativeSuffix>;
+        $r84 = specialinvoke r0.<java.text.DecimalFormat: java.text.FieldPosition[] getNegativeSuffixFieldPositions()>();
+        $r85 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field SIGN>;
+        specialinvoke r0.<java.text.DecimalFormat: void append(java.lang.StringBuffer,java.lang.String,java.text.Format$FieldDelegate,java.text.FieldPosition[],java.text.Format$Field)>(r1, $r83, r2, $r84, $r85);
+        goto label56;
+
+     label55:
+        $r86 = r0.<java.text.DecimalFormat: java.lang.String positiveSuffix>;
+        $r87 = specialinvoke r0.<java.text.DecimalFormat: java.text.FieldPosition[] getPositiveSuffixFieldPositions()>();
+        $r88 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field SIGN>;
+        specialinvoke r0.<java.text.DecimalFormat: void append(java.lang.StringBuffer,java.lang.String,java.text.Format$FieldDelegate,java.text.FieldPosition[],java.text.Format$Field)>(r1, $r86, r2, $r87, $r88);
+
+     label56:
+        return r1;
+    }
+
+    private void append(java.lang.StringBuffer, java.lang.String, java.text.Format$FieldDelegate, java.text.FieldPosition[], java.text.Format$Field)
+    {
+        java.text.DecimalFormat r0;
+        java.lang.StringBuffer r1;
+        java.lang.String r2;
+        java.text.Format$FieldDelegate r3;
+        java.text.FieldPosition[] r4;
+        java.text.Format$Field r5, r7;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7;
+        java.text.FieldPosition r6;
+        java.text.NumberFormat$Field $r9;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.StringBuffer;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: java.text.Format$FieldDelegate;
+        r4 := @parameter3: java.text.FieldPosition[];
+        r5 := @parameter4: java.text.Format$Field;
+        i0 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        $i3 = virtualinvoke r2.<java.lang.String: int length()>();
+        if $i3 <= 0 goto label2;
+
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(r2);
+        i1 = 0;
+        i2 = lengthof r4;
+
+     label0:
+        if i1 >= i2 goto label2;
+
+        r6 = r4[i1];
+        r7 = virtualinvoke r6.<java.text.FieldPosition: java.text.Format$Field getFieldAttribute()>();
+        $r9 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field SIGN>;
+        if r7 != $r9 goto label1;
+
+        r7 = r5;
+
+     label1:
+        $i4 = virtualinvoke r6.<java.text.FieldPosition: int getBeginIndex()>();
+        $i5 = i0 + $i4;
+        $i6 = virtualinvoke r6.<java.text.FieldPosition: int getEndIndex()>();
+        $i7 = i0 + $i6;
+        interfaceinvoke r3.<java.text.Format$FieldDelegate: void formatted(java.text.Format$Field,java.lang.Object,int,int,java.lang.StringBuffer)>(r7, r7, $i5, $i7, r1);
+        i1 = i1 + 1;
+        goto label0;
+
+     label2:
+        return;
+    }
+
+    public java.lang.Number parse(java.lang.String, java.text.ParsePosition)
+    {
+        java.text.DecimalFormat r0;
+        java.lang.String r1, $r7, $r9, $r11, $r13, $r14;
+        java.text.ParsePosition r2;
+        boolean[] r3;
+        java.math.BigDecimal r4, $r23, $r25;
+        java.lang.ArithmeticException r5, $r24;
+        double d0, $d1, $d2, $d3, $d4, $d5;
+        long l0, $l13, $l14, $l17;
+        int $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i10, $i11, $i12, $i16, $i18, $i19;
+        java.text.DecimalFormatSymbols $r6, $r8, $r10;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, z9, z10, $z11, $z12, $z13, $z14, $z15, $z16;
+        java.text.DigitList $r15, $r18, $r22, $r27, $r28, $r29;
+        java.math.RoundingMode $r26;
+        byte $b9, $b15, $b20, $b21, $b22;
+        java.lang.Number $r30;
+        java.lang.Double r31, r32, r33, r34, r35, r36, r37;
+        java.lang.Long r38;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.text.ParsePosition;
+        $i1 = r2.<java.text.ParsePosition: int index>;
+        $r6 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $r7 = virtualinvoke $r6.<java.text.DecimalFormatSymbols: java.lang.String getNaN()>();
+        $r8 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $r9 = virtualinvoke $r8.<java.text.DecimalFormatSymbols: java.lang.String getNaN()>();
+        $i2 = virtualinvoke $r9.<java.lang.String: int length()>();
+        $z0 = virtualinvoke r1.<java.lang.String: boolean regionMatches(int,java.lang.String,int,int)>($i1, $r7, 0, $i2);
+        if $z0 == 0 goto label0;
+
+        $i3 = r2.<java.text.ParsePosition: int index>;
+        $r10 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $r11 = virtualinvoke $r10.<java.text.DecimalFormatSymbols: java.lang.String getNaN()>();
+        $i4 = virtualinvoke $r11.<java.lang.String: int length()>();
+        $i5 = $i3 + $i4;
+        r2.<java.text.ParsePosition: int index> = $i5;
+        r31 = new java.lang.Double;
+        specialinvoke r31.<java.lang.Double: void <init>(double)>(#NaN);
+        return r31;
+
+     label0:
+        r3 = newarray (boolean)[2];
+        $r13 = r0.<java.text.DecimalFormat: java.lang.String positivePrefix>;
+        $r14 = r0.<java.text.DecimalFormat: java.lang.String negativePrefix>;
+        $r15 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $z1 = specialinvoke r0.<java.text.DecimalFormat: boolean subparse(java.lang.String,java.text.ParsePosition,java.lang.String,java.lang.String,java.text.DigitList,boolean,boolean[])>(r1, r2, $r13, $r14, $r15, 0, r3);
+        if $z1 != 0 goto label1;
+
+        return null;
+
+     label1:
+        $z2 = r3[0];
+        if $z2 == 0 goto label5;
+
+        $z3 = r3[1];
+        $i6 = r0.<java.text.DecimalFormat: int multiplier>;
+        if $i6 < 0 goto label2;
+
+        $z4 = 1;
+        goto label3;
+
+     label2:
+        $z4 = 0;
+
+     label3:
+        if $z3 != $z4 goto label4;
+
+        r32 = new java.lang.Double;
+        specialinvoke r32.<java.lang.Double: void <init>(double)>(#Infinity);
+        return r32;
+
+     label4:
+        r33 = new java.lang.Double;
+        specialinvoke r33.<java.lang.Double: void <init>(double)>(#-Infinity);
+        return r33;
+
+     label5:
+        $i7 = r0.<java.text.DecimalFormat: int multiplier>;
+        if $i7 != 0 goto label8;
+
+        $r18 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $z5 = virtualinvoke $r18.<java.text.DigitList: boolean isZero()>();
+        if $z5 == 0 goto label6;
+
+        r34 = new java.lang.Double;
+        specialinvoke r34.<java.lang.Double: void <init>(double)>(#NaN);
+        return r34;
+
+     label6:
+        $z6 = r3[1];
+        if $z6 == 0 goto label7;
+
+        r35 = new java.lang.Double;
+        specialinvoke r35.<java.lang.Double: void <init>(double)>(#Infinity);
+        return r35;
+
+     label7:
+        r36 = new java.lang.Double;
+        specialinvoke r36.<java.lang.Double: void <init>(double)>(#-Infinity);
+        return r36;
+
+     label8:
+        $z7 = virtualinvoke r0.<java.text.DecimalFormat: boolean isParseBigDecimal()>();
+        if $z7 == 0 goto label14;
+
+        $r22 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        r4 = virtualinvoke $r22.<java.text.DigitList: java.math.BigDecimal getBigDecimal()>();
+        $i8 = r0.<java.text.DecimalFormat: int multiplier>;
+        if $i8 == 1 goto label12;
+
+     label9:
+        $r23 = specialinvoke r0.<java.text.DecimalFormat: java.math.BigDecimal getBigDecimalMultiplier()>();
+        r4 = virtualinvoke r4.<java.math.BigDecimal: java.math.BigDecimal divide(java.math.BigDecimal)>($r23);
+
+     label10:
+        goto label12;
+
+     label11:
+        $r24 := @caughtexception;
+        r5 = $r24;
+        $r25 = specialinvoke r0.<java.text.DecimalFormat: java.math.BigDecimal getBigDecimalMultiplier()>();
+        $r26 = r0.<java.text.DecimalFormat: java.math.RoundingMode roundingMode>;
+        r4 = virtualinvoke r4.<java.math.BigDecimal: java.math.BigDecimal divide(java.math.BigDecimal,java.math.RoundingMode)>($r25, $r26);
+
+     label12:
+        $z8 = r3[1];
+        if $z8 != 0 goto label13;
+
+        r4 = virtualinvoke r4.<java.math.BigDecimal: java.math.BigDecimal negate()>();
+
+     label13:
+        return r4;
+
+     label14:
+        z9 = 1;
+        z10 = 0;
+        d0 = 0.0;
+        l0 = 0L;
+        $r27 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $z11 = r3[1];
+        $z12 = virtualinvoke r0.<java.text.DecimalFormat: boolean isParseIntegerOnly()>();
+        $z13 = virtualinvoke $r27.<java.text.DigitList: boolean fitsIntoLong(boolean,boolean)>($z11, $z12);
+        if $z13 == 0 goto label15;
+
+        z9 = 0;
+        $r28 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        l0 = virtualinvoke $r28.<java.text.DigitList: long getLong()>();
+        $b9 = l0 cmp 0L;
+        if $b9 >= 0 goto label16;
+
+        z10 = 1;
+        goto label16;
+
+     label15:
+        $r29 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        d0 = virtualinvoke $r29.<java.text.DigitList: double getDouble()>();
+
+     label16:
+        $i10 = r0.<java.text.DecimalFormat: int multiplier>;
+        if $i10 == 1 goto label19;
+
+        if z9 == 0 goto label17;
+
+        $i11 = r0.<java.text.DecimalFormat: int multiplier>;
+        $d1 = (double) $i11;
+        d0 = d0 / $d1;
+        goto label19;
+
+     label17:
+        $i12 = r0.<java.text.DecimalFormat: int multiplier>;
+        $l13 = (long) $i12;
+        $l14 = l0 % $l13;
+        $b15 = $l14 cmp 0L;
+        if $b15 != 0 goto label18;
+
+        $i16 = r0.<java.text.DecimalFormat: int multiplier>;
+        $l17 = (long) $i16;
+        l0 = l0 / $l17;
+        goto label19;
+
+     label18:
+        $d2 = (double) l0;
+        $i18 = r0.<java.text.DecimalFormat: int multiplier>;
+        $d3 = (double) $i18;
+        d0 = $d2 / $d3;
+        z9 = 1;
+
+     label19:
+        $z14 = r3[1];
+        if $z14 != 0 goto label20;
+
+        if z10 != 0 goto label20;
+
+        d0 = neg d0;
+        l0 = neg l0;
+
+     label20:
+        $i19 = r0.<java.text.DecimalFormat: int multiplier>;
+        if $i19 == 1 goto label24;
+
+        if z9 == 0 goto label24;
+
+        l0 = (long) d0;
+        $d4 = (double) l0;
+        $b20 = d0 cmpl $d4;
+        if $b20 != 0 goto label21;
+
+        $b21 = d0 cmpl 0.0;
+        if $b21 != 0 goto label22;
+
+        $d5 = 1.0 / d0;
+        $b22 = $d5 cmpg 0.0;
+        if $b22 >= 0 goto label22;
+
+     label21:
+        $z15 = virtualinvoke r0.<java.text.DecimalFormat: boolean isParseIntegerOnly()>();
+        if $z15 != 0 goto label22;
+
+        $z16 = 1;
+        goto label23;
+
+     label22:
+        $z16 = 0;
+
+     label23:
+        z9 = $z16;
+
+     label24:
+        if z9 == 0 goto label25;
+
+        r37 = new java.lang.Double;
+        $r30 = r37;
+        specialinvoke r37.<java.lang.Double: void <init>(double)>(d0);
+        goto label26;
+
+     label25:
+        r38 = new java.lang.Long;
+        $r30 = r38;
+        specialinvoke r38.<java.lang.Long: void <init>(long)>(l0);
+
+     label26:
+        return $r30;
+
+        catch java.lang.ArithmeticException from label9 to label10 with label11;
+    }
+
+    private java.math.BigInteger getBigIntegerMultiplier()
+    {
+        java.text.DecimalFormat r0;
+        java.math.BigInteger $r1, $r2, $r3;
+        int $i0;
+        long $l1;
+
+        r0 := @this: java.text.DecimalFormat;
+        $r1 = r0.<java.text.DecimalFormat: java.math.BigInteger bigIntegerMultiplier>;
+        if $r1 != null goto label0;
+
+        $i0 = r0.<java.text.DecimalFormat: int multiplier>;
+        $l1 = (long) $i0;
+        $r2 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>($l1);
+        r0.<java.text.DecimalFormat: java.math.BigInteger bigIntegerMultiplier> = $r2;
+
+     label0:
+        $r3 = r0.<java.text.DecimalFormat: java.math.BigInteger bigIntegerMultiplier>;
+        return $r3;
+    }
+
+    private java.math.BigDecimal getBigDecimalMultiplier()
+    {
+        java.text.DecimalFormat r0;
+        java.math.BigDecimal $r1, $r2, $r3;
+        int $i0;
+
+        r0 := @this: java.text.DecimalFormat;
+        $r2 = r0.<java.text.DecimalFormat: java.math.BigDecimal bigDecimalMultiplier>;
+        if $r2 != null goto label0;
+
+        $r1 = new java.math.BigDecimal;
+        $i0 = r0.<java.text.DecimalFormat: int multiplier>;
+        specialinvoke $r1.<java.math.BigDecimal: void <init>(int)>($i0);
+        r0.<java.text.DecimalFormat: java.math.BigDecimal bigDecimalMultiplier> = $r1;
+
+     label0:
+        $r3 = r0.<java.text.DecimalFormat: java.math.BigDecimal bigDecimalMultiplier>;
+        return $r3;
+    }
+
+    private final boolean subparse(java.lang.String, java.text.ParsePosition, java.lang.String, java.lang.String, java.text.DigitList, boolean, boolean[])
+    {
+        java.text.DecimalFormat r0;
+        java.lang.String r1, r3, r4, r7, $r12, $r14, $r16, $r26, $r28, $r29, $r30, $r31, $r32, $r33, $r34, $r35, $r37, $r38;
+        java.text.ParsePosition r2, r8, $r23;
+        java.text.DigitList r5, r10, $r24;
+        boolean z0, z1, z2, z3, z4, z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14, z15;
+        boolean[] r6, r9;
+        int i0, i1, i5, i6, i7, i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, i17, $i18, $i19, $i20, $i23, $i24, $i25, $i26, $i27, $i29, $i31, $i32, $i33, $i36, $i37, $i38, $i39, $i40, $i41, $i42, $i43, $i44, $i45, $i46, $i47;
+        char c2, c3, c4, c8, $c22, $c28, $c30, $c34;
+        java.text.DecimalFormatSymbols $r11, $r13, $r15, $r17, $r18, $r19, $r20, $r21, $r25;
+        byte $b21;
+        long $l35;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.text.ParsePosition;
+        r3 := @parameter2: java.lang.String;
+        r4 := @parameter3: java.lang.String;
+        r5 := @parameter4: java.text.DigitList;
+        z0 := @parameter5: boolean;
+        r6 := @parameter6: boolean[];
+        i0 = r2.<java.text.ParsePosition: int index>;
+        i1 = r2.<java.text.ParsePosition: int index>;
+        $i10 = virtualinvoke r3.<java.lang.String: int length()>();
+        z1 = virtualinvoke r1.<java.lang.String: boolean regionMatches(int,java.lang.String,int,int)>(i0, r3, 0, $i10);
+        $i11 = virtualinvoke r4.<java.lang.String: int length()>();
+        z2 = virtualinvoke r1.<java.lang.String: boolean regionMatches(int,java.lang.String,int,int)>(i0, r4, 0, $i11);
+        if z1 == 0 goto label1;
+
+        if z2 == 0 goto label1;
+
+        $i12 = virtualinvoke r3.<java.lang.String: int length()>();
+        $i13 = virtualinvoke r4.<java.lang.String: int length()>();
+        if $i12 <= $i13 goto label0;
+
+        z2 = 0;
+        goto label1;
+
+     label0:
+        $i14 = virtualinvoke r3.<java.lang.String: int length()>();
+        $i15 = virtualinvoke r4.<java.lang.String: int length()>();
+        if $i14 >= $i15 goto label1;
+
+        z1 = 0;
+
+     label1:
+        if z1 == 0 goto label2;
+
+        $i16 = virtualinvoke r3.<java.lang.String: int length()>();
+        i17 = i0 + $i16;
+        goto label4;
+
+     label2:
+        if z2 == 0 goto label3;
+
+        $i18 = virtualinvoke r4.<java.lang.String: int length()>();
+        i17 = i0 + $i18;
+        goto label4;
+
+     label3:
+        r2.<java.text.ParsePosition: int errorIndex> = i0;
+        return 0;
+
+     label4:
+        r6[0] = 0;
+        if z0 != 0 goto label5;
+
+        $r11 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $r12 = virtualinvoke $r11.<java.text.DecimalFormatSymbols: java.lang.String getInfinity()>();
+        $r13 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $r14 = virtualinvoke $r13.<java.text.DecimalFormatSymbols: java.lang.String getInfinity()>();
+        $i19 = virtualinvoke $r14.<java.lang.String: int length()>();
+        $z6 = virtualinvoke r1.<java.lang.String: boolean regionMatches(int,java.lang.String,int,int)>(i17, $r12, 0, $i19);
+        if $z6 == 0 goto label5;
+
+        $r15 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $r16 = virtualinvoke $r15.<java.text.DecimalFormatSymbols: java.lang.String getInfinity()>();
+        $i20 = virtualinvoke $r16.<java.lang.String: int length()>();
+        i17 = i17 + $i20;
+        r6[0] = 1;
+        goto label24;
+
+     label5:
+        $b21 = 0;
+        r5.<java.text.DigitList: int count> = $b21;
+        r5.<java.text.DigitList: int decimalAt> = $b21;
+        $r17 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        c2 = virtualinvoke $r17.<java.text.DecimalFormatSymbols: char getZeroDigit()>();
+        $z7 = r0.<java.text.DecimalFormat: boolean isCurrencyFormat>;
+        if $z7 == 0 goto label6;
+
+        $r18 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c22 = virtualinvoke $r18.<java.text.DecimalFormatSymbols: char getMonetaryDecimalSeparator()>();
+        goto label7;
+
+     label6:
+        $r19 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c22 = virtualinvoke $r19.<java.text.DecimalFormatSymbols: char getDecimalSeparator()>();
+
+     label7:
+        c3 = $c22;
+        $r20 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        c4 = virtualinvoke $r20.<java.text.DecimalFormatSymbols: char getGroupingSeparator()>();
+        $r21 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        r7 = virtualinvoke $r21.<java.text.DecimalFormatSymbols: java.lang.String getExponentSeparator()>();
+        z3 = 0;
+        z4 = 0;
+        z5 = 0;
+        i5 = 0;
+        i6 = 0;
+        i7 = -1;
+
+     label8:
+        $i23 = virtualinvoke r1.<java.lang.String: int length()>();
+        if i17 >= $i23 goto label21;
+
+        c8 = virtualinvoke r1.<java.lang.String: char charAt(int)>(i17);
+        i9 = c8 - c2;
+        if i9 < 0 goto label9;
+
+        if i9 <= 9 goto label10;
+
+     label9:
+        i9 = staticinvoke <java.lang.Character: int digit(char,int)>(c8, 10);
+
+     label10:
+        if i9 != 0 goto label13;
+
+        i7 = -1;
+        z5 = 1;
+        $i24 = r5.<java.text.DigitList: int count>;
+        if $i24 != 0 goto label12;
+
+        if z3 != 0 goto label11;
+
+        goto label20;
+
+     label11:
+        $i25 = r5.<java.text.DigitList: int decimalAt>;
+        $i26 = $i25 - 1;
+        r5.<java.text.DigitList: int decimalAt> = $i26;
+        goto label20;
+
+     label12:
+        i6 = i6 + 1;
+        $i27 = i9 + 48;
+        $c28 = (char) $i27;
+        virtualinvoke r5.<java.text.DigitList: void append(char)>($c28);
+        goto label20;
+
+     label13:
+        if i9 <= 0 goto label14;
+
+        if i9 > 9 goto label14;
+
+        z5 = 1;
+        i6 = i6 + 1;
+        $i29 = i9 + 48;
+        $c30 = (char) $i29;
+        virtualinvoke r5.<java.text.DigitList: void append(char)>($c30);
+        i7 = -1;
+        goto label20;
+
+     label14:
+        if z0 != 0 goto label16;
+
+        if c8 != c3 goto label16;
+
+        $z8 = virtualinvoke r0.<java.text.DecimalFormat: boolean isParseIntegerOnly()>();
+        if $z8 != 0 goto label21;
+
+        if z3 == 0 goto label15;
+
+        goto label21;
+
+     label15:
+        r5.<java.text.DigitList: int decimalAt> = i6;
+        z3 = 1;
+        goto label20;
+
+     label16:
+        if z0 != 0 goto label18;
+
+        if c8 != c4 goto label18;
+
+        $z9 = virtualinvoke r0.<java.text.DecimalFormat: boolean isGroupingUsed()>();
+        if $z9 == 0 goto label18;
+
+        if z3 == 0 goto label17;
+
+        goto label21;
+
+     label17:
+        i7 = i17;
+        goto label20;
+
+     label18:
+        if z0 != 0 goto label21;
+
+        $i31 = virtualinvoke r7.<java.lang.String: int length()>();
+        $z10 = virtualinvoke r1.<java.lang.String: boolean regionMatches(int,java.lang.String,int,int)>(i17, r7, 0, $i31);
+        if $z10 == 0 goto label21;
+
+        if z4 != 0 goto label21;
+
+        $r23 = new java.text.ParsePosition;
+        $i32 = virtualinvoke r7.<java.lang.String: int length()>();
+        $i33 = i17 + $i32;
+        specialinvoke $r23.<java.text.ParsePosition: void <init>(int)>($i33);
+        r8 = $r23;
+        r9 = newarray (boolean)[2];
+        $r24 = new java.text.DigitList;
+        specialinvoke $r24.<java.text.DigitList: void <init>()>();
+        r10 = $r24;
+        $r25 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c34 = virtualinvoke $r25.<java.text.DecimalFormatSymbols: char getMinusSign()>();
+        $r26 = staticinvoke <java.lang.Character: java.lang.String toString(char)>($c34);
+        $z11 = specialinvoke r0.<java.text.DecimalFormat: boolean subparse(java.lang.String,java.text.ParsePosition,java.lang.String,java.lang.String,java.text.DigitList,boolean,boolean[])>(r1, r8, "", $r26, r10, 1, r9);
+        if $z11 == 0 goto label21;
+
+        $z12 = r9[1];
+        $z13 = virtualinvoke r10.<java.text.DigitList: boolean fitsIntoLong(boolean,boolean)>($z12, 1);
+        if $z13 == 0 goto label21;
+
+        i17 = r8.<java.text.ParsePosition: int index>;
+        $l35 = virtualinvoke r10.<java.text.DigitList: long getLong()>();
+        i5 = (int) $l35;
+        $z14 = r9[1];
+        if $z14 != 0 goto label19;
+
+        i5 = neg i5;
+
+     label19:
+        z15 = 1;
+        goto label21;
+
+     label20:
+        i17 = i17 + 1;
+        goto label8;
+
+     label21:
+        if i7 == -1 goto label22;
+
+        i17 = i7;
+
+     label22:
+        if z3 != 0 goto label23;
+
+        r5.<java.text.DigitList: int decimalAt> = i6;
+
+     label23:
+        $i36 = r5.<java.text.DigitList: int decimalAt>;
+        $i37 = $i36 + i5;
+        r5.<java.text.DigitList: int decimalAt> = $i37;
+        if z5 != 0 goto label24;
+
+        if i6 != 0 goto label24;
+
+        r2.<java.text.ParsePosition: int index> = i1;
+        r2.<java.text.ParsePosition: int errorIndex> = i1;
+        return 0;
+
+     label24:
+        if z0 != 0 goto label32;
+
+        if z1 == 0 goto label25;
+
+        $r28 = r0.<java.text.DecimalFormat: java.lang.String positiveSuffix>;
+        $r29 = r0.<java.text.DecimalFormat: java.lang.String positiveSuffix>;
+        $i38 = virtualinvoke $r29.<java.lang.String: int length()>();
+        z1 = virtualinvoke r1.<java.lang.String: boolean regionMatches(int,java.lang.String,int,int)>(i17, $r28, 0, $i38);
+
+     label25:
+        if z2 == 0 goto label26;
+
+        $r30 = r0.<java.text.DecimalFormat: java.lang.String negativeSuffix>;
+        $r31 = r0.<java.text.DecimalFormat: java.lang.String negativeSuffix>;
+        $i39 = virtualinvoke $r31.<java.lang.String: int length()>();
+        z2 = virtualinvoke r1.<java.lang.String: boolean regionMatches(int,java.lang.String,int,int)>(i17, $r30, 0, $i39);
+
+     label26:
+        if z1 == 0 goto label28;
+
+        if z2 == 0 goto label28;
+
+        $r32 = r0.<java.text.DecimalFormat: java.lang.String positiveSuffix>;
+        $i40 = virtualinvoke $r32.<java.lang.String: int length()>();
+        $r33 = r0.<java.text.DecimalFormat: java.lang.String negativeSuffix>;
+        $i41 = virtualinvoke $r33.<java.lang.String: int length()>();
+        if $i40 <= $i41 goto label27;
+
+        z2 = 0;
+        goto label28;
+
+     label27:
+        $r34 = r0.<java.text.DecimalFormat: java.lang.String positiveSuffix>;
+        $i42 = virtualinvoke $r34.<java.lang.String: int length()>();
+        $r35 = r0.<java.text.DecimalFormat: java.lang.String negativeSuffix>;
+        $i43 = virtualinvoke $r35.<java.lang.String: int length()>();
+        if $i42 >= $i43 goto label28;
+
+        z1 = 0;
+
+     label28:
+        if z1 != z2 goto label29;
+
+        r2.<java.text.ParsePosition: int errorIndex> = i17;
+        return 0;
+
+     label29:
+        $i44 = i17;
+        if z1 == 0 goto label30;
+
+        $r37 = r0.<java.text.DecimalFormat: java.lang.String positiveSuffix>;
+        $i45 = virtualinvoke $r37.<java.lang.String: int length()>();
+        goto label31;
+
+     label30:
+        $r38 = r0.<java.text.DecimalFormat: java.lang.String negativeSuffix>;
+        $i45 = virtualinvoke $r38.<java.lang.String: int length()>();
+
+     label31:
+        $i46 = $i44 + $i45;
+        r2.<java.text.ParsePosition: int index> = $i46;
+        goto label33;
+
+     label32:
+        r2.<java.text.ParsePosition: int index> = i17;
+
+     label33:
+        r6[1] = z1;
+        $i47 = r2.<java.text.ParsePosition: int index>;
+        if $i47 != i1 goto label34;
+
+        r2.<java.text.ParsePosition: int errorIndex> = i17;
+        return 0;
+
+     label34:
+        return 1;
+    }
+
+    public java.text.DecimalFormatSymbols getDecimalFormatSymbols()
+    {
+        java.text.DecimalFormat r0;
+        java.lang.Exception r1, $r5;
+        java.text.DecimalFormatSymbols $r2, $r4;
+        java.lang.Object $r3;
+
+        r0 := @this: java.text.DecimalFormat;
+
+     label0:
+        $r2 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $r3 = virtualinvoke $r2.<java.text.DecimalFormatSymbols: java.lang.Object clone()>();
+        $r4 = (java.text.DecimalFormatSymbols) $r3;
+
+     label1:
+        return $r4;
+
+     label2:
+        $r5 := @caughtexception;
+        r1 = $r5;
+        return null;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    public void setDecimalFormatSymbols(java.text.DecimalFormatSymbols)
+    {
+        java.text.DecimalFormat r0;
+        java.text.DecimalFormatSymbols r1, $r4;
+        java.lang.Exception r2, $r5;
+        java.lang.Object $r3;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.text.DecimalFormatSymbols;
+
+     label0:
+        $r3 = virtualinvoke r1.<java.text.DecimalFormatSymbols: java.lang.Object clone()>();
+        $r4 = (java.text.DecimalFormatSymbols) $r3;
+        r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols> = $r4;
+        specialinvoke r0.<java.text.DecimalFormat: void expandAffixes()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r5 := @caughtexception;
+        r2 = $r5;
+
+     label3:
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    public java.lang.String getPositivePrefix()
+    {
+        java.text.DecimalFormat r0;
+        java.lang.String $r1;
+
+        r0 := @this: java.text.DecimalFormat;
+        $r1 = r0.<java.text.DecimalFormat: java.lang.String positivePrefix>;
+        return $r1;
+    }
+
+    public void setPositivePrefix(java.lang.String)
+    {
+        java.text.DecimalFormat r0;
+        java.lang.String r1;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.String;
+        r0.<java.text.DecimalFormat: java.lang.String positivePrefix> = r1;
+        r0.<java.text.DecimalFormat: java.lang.String posPrefixPattern> = null;
+        r0.<java.text.DecimalFormat: java.text.FieldPosition[] positivePrefixFieldPositions> = null;
+        return;
+    }
+
+    private java.text.FieldPosition[] getPositivePrefixFieldPositions()
+    {
+        java.text.DecimalFormat r0;
+        java.text.FieldPosition[] $r1, $r4, $r5, $r6;
+        java.lang.String $r2, $r3;
+
+        r0 := @this: java.text.DecimalFormat;
+        $r1 = r0.<java.text.DecimalFormat: java.text.FieldPosition[] positivePrefixFieldPositions>;
+        if $r1 != null goto label1;
+
+        $r2 = r0.<java.text.DecimalFormat: java.lang.String posPrefixPattern>;
+        if $r2 == null goto label0;
+
+        $r3 = r0.<java.text.DecimalFormat: java.lang.String posPrefixPattern>;
+        $r4 = specialinvoke r0.<java.text.DecimalFormat: java.text.FieldPosition[] expandAffix(java.lang.String)>($r3);
+        r0.<java.text.DecimalFormat: java.text.FieldPosition[] positivePrefixFieldPositions> = $r4;
+        goto label1;
+
+     label0:
+        $r5 = <java.text.DecimalFormat: java.text.FieldPosition[] EmptyFieldPositionArray>;
+        r0.<java.text.DecimalFormat: java.text.FieldPosition[] positivePrefixFieldPositions> = $r5;
+
+     label1:
+        $r6 = r0.<java.text.DecimalFormat: java.text.FieldPosition[] positivePrefixFieldPositions>;
+        return $r6;
+    }
+
+    public java.lang.String getNegativePrefix()
+    {
+        java.text.DecimalFormat r0;
+        java.lang.String $r1;
+
+        r0 := @this: java.text.DecimalFormat;
+        $r1 = r0.<java.text.DecimalFormat: java.lang.String negativePrefix>;
+        return $r1;
+    }
+
+    public void setNegativePrefix(java.lang.String)
+    {
+        java.text.DecimalFormat r0;
+        java.lang.String r1;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.String;
+        r0.<java.text.DecimalFormat: java.lang.String negativePrefix> = r1;
+        r0.<java.text.DecimalFormat: java.lang.String negPrefixPattern> = null;
+        return;
+    }
+
+    private java.text.FieldPosition[] getNegativePrefixFieldPositions()
+    {
+        java.text.DecimalFormat r0;
+        java.text.FieldPosition[] $r1, $r4, $r5, $r6;
+        java.lang.String $r2, $r3;
+
+        r0 := @this: java.text.DecimalFormat;
+        $r1 = r0.<java.text.DecimalFormat: java.text.FieldPosition[] negativePrefixFieldPositions>;
+        if $r1 != null goto label1;
+
+        $r2 = r0.<java.text.DecimalFormat: java.lang.String negPrefixPattern>;
+        if $r2 == null goto label0;
+
+        $r3 = r0.<java.text.DecimalFormat: java.lang.String negPrefixPattern>;
+        $r4 = specialinvoke r0.<java.text.DecimalFormat: java.text.FieldPosition[] expandAffix(java.lang.String)>($r3);
+        r0.<java.text.DecimalFormat: java.text.FieldPosition[] negativePrefixFieldPositions> = $r4;
+        goto label1;
+
+     label0:
+        $r5 = <java.text.DecimalFormat: java.text.FieldPosition[] EmptyFieldPositionArray>;
+        r0.<java.text.DecimalFormat: java.text.FieldPosition[] negativePrefixFieldPositions> = $r5;
+
+     label1:
+        $r6 = r0.<java.text.DecimalFormat: java.text.FieldPosition[] negativePrefixFieldPositions>;
+        return $r6;
+    }
+
+    public java.lang.String getPositiveSuffix()
+    {
+        java.text.DecimalFormat r0;
+        java.lang.String $r1;
+
+        r0 := @this: java.text.DecimalFormat;
+        $r1 = r0.<java.text.DecimalFormat: java.lang.String positiveSuffix>;
+        return $r1;
+    }
+
+    public void setPositiveSuffix(java.lang.String)
+    {
+        java.text.DecimalFormat r0;
+        java.lang.String r1;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.String;
+        r0.<java.text.DecimalFormat: java.lang.String positiveSuffix> = r1;
+        r0.<java.text.DecimalFormat: java.lang.String posSuffixPattern> = null;
+        return;
+    }
+
+    private java.text.FieldPosition[] getPositiveSuffixFieldPositions()
+    {
+        java.text.DecimalFormat r0;
+        java.text.FieldPosition[] $r1, $r4, $r5, $r6;
+        java.lang.String $r2, $r3;
+
+        r0 := @this: java.text.DecimalFormat;
+        $r1 = r0.<java.text.DecimalFormat: java.text.FieldPosition[] positiveSuffixFieldPositions>;
+        if $r1 != null goto label1;
+
+        $r2 = r0.<java.text.DecimalFormat: java.lang.String posSuffixPattern>;
+        if $r2 == null goto label0;
+
+        $r3 = r0.<java.text.DecimalFormat: java.lang.String posSuffixPattern>;
+        $r4 = specialinvoke r0.<java.text.DecimalFormat: java.text.FieldPosition[] expandAffix(java.lang.String)>($r3);
+        r0.<java.text.DecimalFormat: java.text.FieldPosition[] positiveSuffixFieldPositions> = $r4;
+        goto label1;
+
+     label0:
+        $r5 = <java.text.DecimalFormat: java.text.FieldPosition[] EmptyFieldPositionArray>;
+        r0.<java.text.DecimalFormat: java.text.FieldPosition[] positiveSuffixFieldPositions> = $r5;
+
+     label1:
+        $r6 = r0.<java.text.DecimalFormat: java.text.FieldPosition[] positiveSuffixFieldPositions>;
+        return $r6;
+    }
+
+    public java.lang.String getNegativeSuffix()
+    {
+        java.text.DecimalFormat r0;
+        java.lang.String $r1;
+
+        r0 := @this: java.text.DecimalFormat;
+        $r1 = r0.<java.text.DecimalFormat: java.lang.String negativeSuffix>;
+        return $r1;
+    }
+
+    public void setNegativeSuffix(java.lang.String)
+    {
+        java.text.DecimalFormat r0;
+        java.lang.String r1;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.String;
+        r0.<java.text.DecimalFormat: java.lang.String negativeSuffix> = r1;
+        r0.<java.text.DecimalFormat: java.lang.String negSuffixPattern> = null;
+        return;
+    }
+
+    private java.text.FieldPosition[] getNegativeSuffixFieldPositions()
+    {
+        java.text.DecimalFormat r0;
+        java.text.FieldPosition[] $r1, $r4, $r5, $r6;
+        java.lang.String $r2, $r3;
+
+        r0 := @this: java.text.DecimalFormat;
+        $r1 = r0.<java.text.DecimalFormat: java.text.FieldPosition[] negativeSuffixFieldPositions>;
+        if $r1 != null goto label1;
+
+        $r2 = r0.<java.text.DecimalFormat: java.lang.String negSuffixPattern>;
+        if $r2 == null goto label0;
+
+        $r3 = r0.<java.text.DecimalFormat: java.lang.String negSuffixPattern>;
+        $r4 = specialinvoke r0.<java.text.DecimalFormat: java.text.FieldPosition[] expandAffix(java.lang.String)>($r3);
+        r0.<java.text.DecimalFormat: java.text.FieldPosition[] negativeSuffixFieldPositions> = $r4;
+        goto label1;
+
+     label0:
+        $r5 = <java.text.DecimalFormat: java.text.FieldPosition[] EmptyFieldPositionArray>;
+        r0.<java.text.DecimalFormat: java.text.FieldPosition[] negativeSuffixFieldPositions> = $r5;
+
+     label1:
+        $r6 = r0.<java.text.DecimalFormat: java.text.FieldPosition[] negativeSuffixFieldPositions>;
+        return $r6;
+    }
+
+    public int getMultiplier()
+    {
+        java.text.DecimalFormat r0;
+        int $i0;
+
+        r0 := @this: java.text.DecimalFormat;
+        $i0 = r0.<java.text.DecimalFormat: int multiplier>;
+        return $i0;
+    }
+
+    public void setMultiplier(int)
+    {
+        java.text.DecimalFormat r0;
+        int i0;
+
+        r0 := @this: java.text.DecimalFormat;
+        i0 := @parameter0: int;
+        r0.<java.text.DecimalFormat: int multiplier> = i0;
+        r0.<java.text.DecimalFormat: java.math.BigDecimal bigDecimalMultiplier> = null;
+        r0.<java.text.DecimalFormat: java.math.BigInteger bigIntegerMultiplier> = null;
+        return;
+    }
+
+    public int getGroupingSize()
+    {
+        java.text.DecimalFormat r0;
+        byte $b0;
+
+        r0 := @this: java.text.DecimalFormat;
+        $b0 = r0.<java.text.DecimalFormat: byte groupingSize>;
+        return $b0;
+    }
+
+    public void setGroupingSize(int)
+    {
+        java.text.DecimalFormat r0;
+        int i0;
+        byte $b1;
+
+        r0 := @this: java.text.DecimalFormat;
+        i0 := @parameter0: int;
+        $b1 = (byte) i0;
+        r0.<java.text.DecimalFormat: byte groupingSize> = $b1;
+        return;
+    }
+
+    public boolean isDecimalSeparatorAlwaysShown()
+    {
+        java.text.DecimalFormat r0;
+        boolean $z0;
+
+        r0 := @this: java.text.DecimalFormat;
+        $z0 = r0.<java.text.DecimalFormat: boolean decimalSeparatorAlwaysShown>;
+        return $z0;
+    }
+
+    public void setDecimalSeparatorAlwaysShown(boolean)
+    {
+        java.text.DecimalFormat r0;
+        boolean z0;
+
+        r0 := @this: java.text.DecimalFormat;
+        z0 := @parameter0: boolean;
+        r0.<java.text.DecimalFormat: boolean decimalSeparatorAlwaysShown> = z0;
+        return;
+    }
+
+    public boolean isParseBigDecimal()
+    {
+        java.text.DecimalFormat r0;
+        boolean $z0;
+
+        r0 := @this: java.text.DecimalFormat;
+        $z0 = r0.<java.text.DecimalFormat: boolean parseBigDecimal>;
+        return $z0;
+    }
+
+    public void setParseBigDecimal(boolean)
+    {
+        java.text.DecimalFormat r0;
+        boolean z0;
+
+        r0 := @this: java.text.DecimalFormat;
+        z0 := @parameter0: boolean;
+        r0.<java.text.DecimalFormat: boolean parseBigDecimal> = z0;
+        return;
+    }
+
+    public java.lang.Object clone()
+    {
+        java.text.DecimalFormat r0, r1;
+        java.lang.Object $r2, $r4, $r7;
+        java.text.DecimalFormatSymbols $r3, $r5;
+        java.text.DigitList $r6, $r8;
+        java.lang.Exception $r10, r11;
+        java.lang.InternalError $r12;
+
+        r0 := @this: java.text.DecimalFormat;
+
+     label0:
+        $r2 = specialinvoke r0.<java.text.NumberFormat: java.lang.Object clone()>();
+        r1 = (java.text.DecimalFormat) $r2;
+        $r3 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $r4 = virtualinvoke $r3.<java.text.DecimalFormatSymbols: java.lang.Object clone()>();
+        $r5 = (java.text.DecimalFormatSymbols) $r4;
+        r1.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols> = $r5;
+        $r6 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        $r7 = virtualinvoke $r6.<java.text.DigitList: java.lang.Object clone()>();
+        $r8 = (java.text.DigitList) $r7;
+        r1.<java.text.DecimalFormat: java.text.DigitList digitList> = $r8;
+
+     label1:
+        return r1;
+
+     label2:
+        $r10 := @caughtexception;
+        r11 = $r10;
+        $r12 = new java.lang.InternalError;
+        specialinvoke $r12.<java.lang.InternalError: void <init>()>();
+        throw $r12;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        java.text.DecimalFormat r0, r2;
+        java.lang.Object r1;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14, $z15, $z16, $z17;
+        java.lang.String $r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25, $r26, $r27, $r28, $r29, $r30;
+        int $i0, $i1, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13;
+        byte $b2, $b3, $b4, $b5;
+        java.math.RoundingMode $r31, $r32;
+        java.text.DecimalFormatSymbols $r33, $r34;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.Object;
+        if r1 != null goto label0;
+
+        return 0;
+
+     label0:
+        $z0 = specialinvoke r0.<java.text.NumberFormat: boolean equals(java.lang.Object)>(r1);
+        if $z0 != 0 goto label1;
+
+        return 0;
+
+     label1:
+        r2 = (java.text.DecimalFormat) r1;
+        $r3 = r0.<java.text.DecimalFormat: java.lang.String posPrefixPattern>;
+        $r4 = r2.<java.text.DecimalFormat: java.lang.String posPrefixPattern>;
+        if $r3 != $r4 goto label2;
+
+        $r5 = r0.<java.text.DecimalFormat: java.lang.String positivePrefix>;
+        $r6 = r2.<java.text.DecimalFormat: java.lang.String positivePrefix>;
+        $z1 = virtualinvoke $r5.<java.lang.String: boolean equals(java.lang.Object)>($r6);
+        if $z1 != 0 goto label3;
+
+     label2:
+        $r7 = r0.<java.text.DecimalFormat: java.lang.String posPrefixPattern>;
+        if $r7 == null goto label11;
+
+        $r8 = r0.<java.text.DecimalFormat: java.lang.String posPrefixPattern>;
+        $r9 = r2.<java.text.DecimalFormat: java.lang.String posPrefixPattern>;
+        $z2 = virtualinvoke $r8.<java.lang.String: boolean equals(java.lang.Object)>($r9);
+        if $z2 == 0 goto label11;
+
+     label3:
+        $r10 = r0.<java.text.DecimalFormat: java.lang.String posSuffixPattern>;
+        $r11 = r2.<java.text.DecimalFormat: java.lang.String posSuffixPattern>;
+        if $r10 != $r11 goto label4;
+
+        $r12 = r0.<java.text.DecimalFormat: java.lang.String positiveSuffix>;
+        $r13 = r2.<java.text.DecimalFormat: java.lang.String positiveSuffix>;
+        $z3 = virtualinvoke $r12.<java.lang.String: boolean equals(java.lang.Object)>($r13);
+        if $z3 != 0 goto label5;
+
+     label4:
+        $r14 = r0.<java.text.DecimalFormat: java.lang.String posSuffixPattern>;
+        if $r14 == null goto label11;
+
+        $r15 = r0.<java.text.DecimalFormat: java.lang.String posSuffixPattern>;
+        $r16 = r2.<java.text.DecimalFormat: java.lang.String posSuffixPattern>;
+        $z4 = virtualinvoke $r15.<java.lang.String: boolean equals(java.lang.Object)>($r16);
+        if $z4 == 0 goto label11;
+
+     label5:
+        $r17 = r0.<java.text.DecimalFormat: java.lang.String negPrefixPattern>;
+        $r18 = r2.<java.text.DecimalFormat: java.lang.String negPrefixPattern>;
+        if $r17 != $r18 goto label6;
+
+        $r19 = r0.<java.text.DecimalFormat: java.lang.String negativePrefix>;
+        $r20 = r2.<java.text.DecimalFormat: java.lang.String negativePrefix>;
+        $z5 = virtualinvoke $r19.<java.lang.String: boolean equals(java.lang.Object)>($r20);
+        if $z5 != 0 goto label7;
+
+     label6:
+        $r21 = r0.<java.text.DecimalFormat: java.lang.String negPrefixPattern>;
+        if $r21 == null goto label11;
+
+        $r22 = r0.<java.text.DecimalFormat: java.lang.String negPrefixPattern>;
+        $r23 = r2.<java.text.DecimalFormat: java.lang.String negPrefixPattern>;
+        $z6 = virtualinvoke $r22.<java.lang.String: boolean equals(java.lang.Object)>($r23);
+        if $z6 == 0 goto label11;
+
+     label7:
+        $r24 = r0.<java.text.DecimalFormat: java.lang.String negSuffixPattern>;
+        $r25 = r2.<java.text.DecimalFormat: java.lang.String negSuffixPattern>;
+        if $r24 != $r25 goto label8;
+
+        $r26 = r0.<java.text.DecimalFormat: java.lang.String negativeSuffix>;
+        $r27 = r2.<java.text.DecimalFormat: java.lang.String negativeSuffix>;
+        $z7 = virtualinvoke $r26.<java.lang.String: boolean equals(java.lang.Object)>($r27);
+        if $z7 != 0 goto label9;
+
+     label8:
+        $r28 = r0.<java.text.DecimalFormat: java.lang.String negSuffixPattern>;
+        if $r28 == null goto label11;
+
+        $r29 = r0.<java.text.DecimalFormat: java.lang.String negSuffixPattern>;
+        $r30 = r2.<java.text.DecimalFormat: java.lang.String negSuffixPattern>;
+        $z8 = virtualinvoke $r29.<java.lang.String: boolean equals(java.lang.Object)>($r30);
+        if $z8 == 0 goto label11;
+
+     label9:
+        $i0 = r0.<java.text.DecimalFormat: int multiplier>;
+        $i1 = r2.<java.text.DecimalFormat: int multiplier>;
+        if $i0 != $i1 goto label11;
+
+        $b2 = r0.<java.text.DecimalFormat: byte groupingSize>;
+        $b3 = r2.<java.text.DecimalFormat: byte groupingSize>;
+        if $b2 != $b3 goto label11;
+
+        $z9 = r0.<java.text.DecimalFormat: boolean decimalSeparatorAlwaysShown>;
+        $z10 = r2.<java.text.DecimalFormat: boolean decimalSeparatorAlwaysShown>;
+        if $z9 != $z10 goto label11;
+
+        $z11 = r0.<java.text.DecimalFormat: boolean parseBigDecimal>;
+        $z12 = r2.<java.text.DecimalFormat: boolean parseBigDecimal>;
+        if $z11 != $z12 goto label11;
+
+        $z13 = r0.<java.text.DecimalFormat: boolean useExponentialNotation>;
+        $z14 = r2.<java.text.DecimalFormat: boolean useExponentialNotation>;
+        if $z13 != $z14 goto label11;
+
+        $z15 = r0.<java.text.DecimalFormat: boolean useExponentialNotation>;
+        if $z15 == 0 goto label10;
+
+        $b4 = r0.<java.text.DecimalFormat: byte minExponentDigits>;
+        $b5 = r2.<java.text.DecimalFormat: byte minExponentDigits>;
+        if $b4 != $b5 goto label11;
+
+     label10:
+        $i6 = r0.<java.text.DecimalFormat: int maximumIntegerDigits>;
+        $i7 = r2.<java.text.DecimalFormat: int maximumIntegerDigits>;
+        if $i6 != $i7 goto label11;
+
+        $i8 = r0.<java.text.DecimalFormat: int minimumIntegerDigits>;
+        $i9 = r2.<java.text.DecimalFormat: int minimumIntegerDigits>;
+        if $i8 != $i9 goto label11;
+
+        $i10 = r0.<java.text.DecimalFormat: int maximumFractionDigits>;
+        $i11 = r2.<java.text.DecimalFormat: int maximumFractionDigits>;
+        if $i10 != $i11 goto label11;
+
+        $i12 = r0.<java.text.DecimalFormat: int minimumFractionDigits>;
+        $i13 = r2.<java.text.DecimalFormat: int minimumFractionDigits>;
+        if $i12 != $i13 goto label11;
+
+        $r31 = r0.<java.text.DecimalFormat: java.math.RoundingMode roundingMode>;
+        $r32 = r2.<java.text.DecimalFormat: java.math.RoundingMode roundingMode>;
+        if $r31 != $r32 goto label11;
+
+        $r33 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $r34 = r2.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $z16 = virtualinvoke $r33.<java.text.DecimalFormatSymbols: boolean equals(java.lang.Object)>($r34);
+        if $z16 == 0 goto label11;
+
+        $z17 = 1;
+        goto label12;
+
+     label11:
+        $z17 = 0;
+
+     label12:
+        return $z17;
+    }
+
+    public int hashCode()
+    {
+        java.text.DecimalFormat r0;
+        int $i0, $i1, $i2, $i3;
+        java.lang.String $r1;
+
+        r0 := @this: java.text.DecimalFormat;
+        $i0 = specialinvoke r0.<java.text.NumberFormat: int hashCode()>();
+        $i1 = $i0 * 37;
+        $r1 = r0.<java.text.DecimalFormat: java.lang.String positivePrefix>;
+        $i2 = virtualinvoke $r1.<java.lang.String: int hashCode()>();
+        $i3 = $i1 + $i2;
+        return $i3;
+    }
+
+    public java.lang.String toPattern()
+    {
+        java.text.DecimalFormat r0;
+        java.lang.String $r1;
+
+        r0 := @this: java.text.DecimalFormat;
+        $r1 = specialinvoke r0.<java.text.DecimalFormat: java.lang.String toPattern(boolean)>(0);
+        return $r1;
+    }
+
+    public java.lang.String toLocalizedPattern()
+    {
+        java.text.DecimalFormat r0;
+        java.lang.String $r1;
+
+        r0 := @this: java.text.DecimalFormat;
+        $r1 = specialinvoke r0.<java.text.DecimalFormat: java.lang.String toPattern(boolean)>(1);
+        return $r1;
+    }
+
+    private void expandAffixes()
+    {
+        java.text.DecimalFormat r0;
+        java.lang.StringBuffer $r1, r2;
+        java.lang.String $r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13, $r14;
+
+        r0 := @this: java.text.DecimalFormat;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        r2 = $r1;
+        $r3 = r0.<java.text.DecimalFormat: java.lang.String posPrefixPattern>;
+        if $r3 == null goto label0;
+
+        $r4 = r0.<java.text.DecimalFormat: java.lang.String posPrefixPattern>;
+        $r5 = specialinvoke r0.<java.text.DecimalFormat: java.lang.String expandAffix(java.lang.String,java.lang.StringBuffer)>($r4, r2);
+        r0.<java.text.DecimalFormat: java.lang.String positivePrefix> = $r5;
+        r0.<java.text.DecimalFormat: java.text.FieldPosition[] positivePrefixFieldPositions> = null;
+
+     label0:
+        $r6 = r0.<java.text.DecimalFormat: java.lang.String posSuffixPattern>;
+        if $r6 == null goto label1;
+
+        $r7 = r0.<java.text.DecimalFormat: java.lang.String posSuffixPattern>;
+        $r8 = specialinvoke r0.<java.text.DecimalFormat: java.lang.String expandAffix(java.lang.String,java.lang.StringBuffer)>($r7, r2);
+        r0.<java.text.DecimalFormat: java.lang.String positiveSuffix> = $r8;
+        r0.<java.text.DecimalFormat: java.text.FieldPosition[] positiveSuffixFieldPositions> = null;
+
+     label1:
+        $r9 = r0.<java.text.DecimalFormat: java.lang.String negPrefixPattern>;
+        if $r9 == null goto label2;
+
+        $r10 = r0.<java.text.DecimalFormat: java.lang.String negPrefixPattern>;
+        $r11 = specialinvoke r0.<java.text.DecimalFormat: java.lang.String expandAffix(java.lang.String,java.lang.StringBuffer)>($r10, r2);
+        r0.<java.text.DecimalFormat: java.lang.String negativePrefix> = $r11;
+        r0.<java.text.DecimalFormat: java.text.FieldPosition[] negativePrefixFieldPositions> = null;
+
+     label2:
+        $r12 = r0.<java.text.DecimalFormat: java.lang.String negSuffixPattern>;
+        if $r12 == null goto label3;
+
+        $r13 = r0.<java.text.DecimalFormat: java.lang.String negSuffixPattern>;
+        $r14 = specialinvoke r0.<java.text.DecimalFormat: java.lang.String expandAffix(java.lang.String,java.lang.StringBuffer)>($r13, r2);
+        r0.<java.text.DecimalFormat: java.lang.String negativeSuffix> = $r14;
+        r0.<java.text.DecimalFormat: java.text.FieldPosition[] negativeSuffixFieldPositions> = null;
+
+     label3:
+        return;
+    }
+
+    private java.lang.String expandAffix(java.lang.String, java.lang.StringBuffer)
+    {
+        java.text.DecimalFormat r0;
+        java.lang.String r1, $r4, $r7, $r13;
+        java.lang.StringBuffer r2;
+        int i0, $i2, $i3, $i4, $i5;
+        char c1, $c6;
+        java.text.DecimalFormatSymbols $r3, $r6, $r9, $r10, $r11;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.StringBuffer;
+        virtualinvoke r2.<java.lang.StringBuffer: void setLength(int)>(0);
+        i0 = 0;
+
+     label0:
+        $i2 = virtualinvoke r1.<java.lang.String: int length()>();
+        if i0 >= $i2 goto label7;
+
+        $i3 = i0;
+        i0 = i0 + 1;
+        c1 = virtualinvoke r1.<java.lang.String: char charAt(int)>($i3);
+        if c1 != 39 goto label6;
+
+        $i4 = i0;
+        i0 = i0 + 1;
+        c1 = virtualinvoke r1.<java.lang.String: char charAt(int)>($i4);
+        lookupswitch(c1)
+        {
+            case 37: goto label3;
+            case 45: goto label5;
+            case 164: goto label1;
+            case 8240: goto label4;
+            default: goto label6;
+        };
+
+     label1:
+        $i5 = virtualinvoke r1.<java.lang.String: int length()>();
+        if i0 >= $i5 goto label2;
+
+        $c6 = virtualinvoke r1.<java.lang.String: char charAt(int)>(i0);
+        if $c6 != 164 goto label2;
+
+        i0 = i0 + 1;
+        $r3 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $r4 = virtualinvoke $r3.<java.text.DecimalFormatSymbols: java.lang.String getInternationalCurrencySymbol()>();
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        goto label0;
+
+     label2:
+        $r6 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $r7 = virtualinvoke $r6.<java.text.DecimalFormatSymbols: java.lang.String getCurrencySymbol()>();
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r7);
+        goto label0;
+
+     label3:
+        $r9 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        c1 = virtualinvoke $r9.<java.text.DecimalFormatSymbols: char getPercent()>();
+        goto label6;
+
+     label4:
+        $r10 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        c1 = virtualinvoke $r10.<java.text.DecimalFormatSymbols: char getPerMill()>();
+        goto label6;
+
+     label5:
+        $r11 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        c1 = virtualinvoke $r11.<java.text.DecimalFormatSymbols: char getMinusSign()>();
+
+     label6:
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c1);
+        goto label0;
+
+     label7:
+        $r13 = virtualinvoke r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r13;
+    }
+
+    private java.text.FieldPosition[] expandAffix(java.lang.String)
+    {
+        java.text.DecimalFormat r0;
+        java.lang.String r1, r4;
+        java.util.ArrayList r2, $r8, $r14;
+        int i0, i1, $i4, $i5, $i6, $i8, $i10, $i11, $i12, $i13, $i17;
+        char c2, c7, $c9;
+        byte b3;
+        java.text.NumberFormat$Field r3, $r10;
+        java.text.FieldPosition r5, $r9, $r15, r16;
+        java.text.DecimalFormatSymbols $r6, $r7, $r11, $r12, $r13;
+        java.text.FieldPosition[] $r17, $r19, $r20, $r21;
+        java.lang.Object[] $r18;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.String;
+        r2 = null;
+        i0 = 0;
+        i1 = 0;
+
+     label0:
+        $i4 = virtualinvoke r1.<java.lang.String: int length()>();
+        if i1 >= $i4 goto label11;
+
+        $i5 = i1;
+        i1 = i1 + 1;
+        c2 = virtualinvoke r1.<java.lang.String: char charAt(int)>($i5);
+        if c2 != 39 goto label10;
+
+        b3 = -1;
+        r3 = null;
+        $i6 = i1;
+        i1 = i1 + 1;
+        c7 = virtualinvoke r1.<java.lang.String: char charAt(int)>($i6);
+        lookupswitch(c7)
+        {
+            case 37: goto label5;
+            case 45: goto label7;
+            case 164: goto label1;
+            case 8240: goto label6;
+            default: goto label8;
+        };
+
+     label1:
+        $i8 = virtualinvoke r1.<java.lang.String: int length()>();
+        if i1 >= $i8 goto label2;
+
+        $c9 = virtualinvoke r1.<java.lang.String: char charAt(int)>(i1);
+        if $c9 != 164 goto label2;
+
+        i1 = i1 + 1;
+        $r6 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        r4 = virtualinvoke $r6.<java.text.DecimalFormatSymbols: java.lang.String getInternationalCurrencySymbol()>();
+        goto label3;
+
+     label2:
+        $r7 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        r4 = virtualinvoke $r7.<java.text.DecimalFormatSymbols: java.lang.String getCurrencySymbol()>();
+
+     label3:
+        $i10 = virtualinvoke r4.<java.lang.String: int length()>();
+        if $i10 <= 0 goto label0;
+
+        if r2 != null goto label4;
+
+        $r8 = new java.util.ArrayList;
+        specialinvoke $r8.<java.util.ArrayList: void <init>(int)>(2);
+        r2 = $r8;
+
+     label4:
+        $r9 = new java.text.FieldPosition;
+        $r10 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field CURRENCY>;
+        specialinvoke $r9.<java.text.FieldPosition: void <init>(java.text.Format$Field)>($r10);
+        r5 = $r9;
+        virtualinvoke r5.<java.text.FieldPosition: void setBeginIndex(int)>(i0);
+        $i11 = virtualinvoke r4.<java.lang.String: int length()>();
+        $i12 = i0 + $i11;
+        virtualinvoke r5.<java.text.FieldPosition: void setEndIndex(int)>($i12);
+        virtualinvoke r2.<java.util.ArrayList: boolean add(java.lang.Object)>(r5);
+        $i13 = virtualinvoke r4.<java.lang.String: int length()>();
+        i0 = i0 + $i13;
+        goto label0;
+
+     label5:
+        $r11 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        virtualinvoke $r11.<java.text.DecimalFormatSymbols: char getPercent()>();
+        b3 = -1;
+        r3 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field PERCENT>;
+        goto label8;
+
+     label6:
+        $r12 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        virtualinvoke $r12.<java.text.DecimalFormatSymbols: char getPerMill()>();
+        b3 = -1;
+        r3 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field PERMILLE>;
+        goto label8;
+
+     label7:
+        $r13 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        virtualinvoke $r13.<java.text.DecimalFormatSymbols: char getMinusSign()>();
+        b3 = -1;
+        r3 = <java.text.NumberFormat$Field: java.text.NumberFormat$Field SIGN>;
+
+     label8:
+        if r3 == null goto label10;
+
+        if r2 != null goto label9;
+
+        $r14 = new java.util.ArrayList;
+        specialinvoke $r14.<java.util.ArrayList: void <init>(int)>(2);
+        r2 = $r14;
+
+     label9:
+        $r15 = new java.text.FieldPosition;
+        specialinvoke $r15.<java.text.FieldPosition: void <init>(java.text.Format$Field,int)>(r3, b3);
+        r16 = $r15;
+        virtualinvoke r16.<java.text.FieldPosition: void setBeginIndex(int)>(i0);
+        $i17 = i0 + 1;
+        virtualinvoke r16.<java.text.FieldPosition: void setEndIndex(int)>($i17);
+        virtualinvoke r2.<java.util.ArrayList: boolean add(java.lang.Object)>(r16);
+
+     label10:
+        i0 = i0 + 1;
+        goto label0;
+
+     label11:
+        if r2 == null goto label12;
+
+        $r17 = <java.text.DecimalFormat: java.text.FieldPosition[] EmptyFieldPositionArray>;
+        $r18 = virtualinvoke r2.<java.util.ArrayList: java.lang.Object[] toArray(java.lang.Object[])>($r17);
+        $r19 = (java.text.FieldPosition[]) $r18;
+        $r20 = (java.text.FieldPosition[]) $r19;
+        return $r20;
+
+     label12:
+        $r21 = <java.text.DecimalFormat: java.text.FieldPosition[] EmptyFieldPositionArray>;
+        return $r21;
+    }
+
+    private void appendAffix(java.lang.StringBuffer, java.lang.String, java.lang.String, boolean)
+    {
+        java.text.DecimalFormat r0;
+        java.lang.StringBuffer r1;
+        java.lang.String r2, r3, $r4, $r5;
+        boolean z0;
+        int i0, i1, $i3, i4, i5, $i6;
+        char c2, $c7;
+        java.text.DecimalFormatSymbols $r8, $r9, $r10;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.StringBuffer;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: java.lang.String;
+        z0 := @parameter3: boolean;
+        if r2 != null goto label0;
+
+        specialinvoke r0.<java.text.DecimalFormat: void appendAffix(java.lang.StringBuffer,java.lang.String,boolean)>(r1, r3, z0);
+        goto label10;
+
+     label0:
+        i0 = 0;
+
+     label1:
+        $i3 = virtualinvoke r2.<java.lang.String: int length()>();
+        if i0 >= $i3 goto label10;
+
+        i1 = virtualinvoke r2.<java.lang.String: int indexOf(int,int)>(39, i0);
+        if i1 >= 0 goto label2;
+
+        $r4 = virtualinvoke r2.<java.lang.String: java.lang.String substring(int)>(i0);
+        specialinvoke r0.<java.text.DecimalFormat: void appendAffix(java.lang.StringBuffer,java.lang.String,boolean)>(r1, $r4, z0);
+        goto label10;
+
+     label2:
+        if i1 <= i0 goto label3;
+
+        $r5 = virtualinvoke r2.<java.lang.String: java.lang.String substring(int,int)>(i0, i1);
+        specialinvoke r0.<java.text.DecimalFormat: void appendAffix(java.lang.StringBuffer,java.lang.String,boolean)>(r1, $r5, z0);
+
+     label3:
+        i4 = i1 + 1;
+        c2 = virtualinvoke r2.<java.lang.String: char charAt(int)>(i4);
+        i5 = i4 + 1;
+        if c2 != 39 goto label4;
+
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c2);
+        goto label9;
+
+     label4:
+        if c2 != 164 goto label5;
+
+        $i6 = virtualinvoke r2.<java.lang.String: int length()>();
+        if i5 >= $i6 goto label5;
+
+        $c7 = virtualinvoke r2.<java.lang.String: char charAt(int)>(i5);
+        if $c7 != 164 goto label5;
+
+        i5 = i5 + 1;
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c2);
+        goto label9;
+
+     label5:
+        if z0 == 0 goto label9;
+
+        lookupswitch(c2)
+        {
+            case 37: goto label6;
+            case 45: goto label8;
+            case 8240: goto label7;
+            default: goto label9;
+        };
+
+     label6:
+        $r8 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        c2 = virtualinvoke $r8.<java.text.DecimalFormatSymbols: char getPercent()>();
+        goto label9;
+
+     label7:
+        $r9 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        c2 = virtualinvoke $r9.<java.text.DecimalFormatSymbols: char getPerMill()>();
+        goto label9;
+
+     label8:
+        $r10 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        c2 = virtualinvoke $r10.<java.text.DecimalFormatSymbols: char getMinusSign()>();
+
+     label9:
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c2);
+        i0 = i5;
+        goto label1;
+
+     label10:
+        return;
+    }
+
+    private void appendAffix(java.lang.StringBuffer, java.lang.String, boolean)
+    {
+        java.text.DecimalFormat r0;
+        java.lang.StringBuffer r1;
+        java.lang.String r2;
+        boolean z0, z1, $z2, $z3;
+        int i0, $i3, $i5, $i7, $i9, $i11, $i13, $i15, $i17, $i18, $i19, $i20, $i21, $i22, $i23, $i24, $i25, $i26, $i27, $i28, $i29;
+        char c1, $c2, $c4, $c6, $c8, $c10, $c12, $c14, $c16;
+        java.text.DecimalFormatSymbols $r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.StringBuffer;
+        r2 := @parameter1: java.lang.String;
+        z0 := @parameter2: boolean;
+        if z0 == 0 goto label3;
+
+        $r3 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c2 = virtualinvoke $r3.<java.text.DecimalFormatSymbols: char getZeroDigit()>();
+        $i3 = virtualinvoke r2.<java.lang.String: int indexOf(int)>($c2);
+        if $i3 >= 0 goto label0;
+
+        $r4 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c4 = virtualinvoke $r4.<java.text.DecimalFormatSymbols: char getGroupingSeparator()>();
+        $i5 = virtualinvoke r2.<java.lang.String: int indexOf(int)>($c4);
+        if $i5 >= 0 goto label0;
+
+        $r5 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c6 = virtualinvoke $r5.<java.text.DecimalFormatSymbols: char getDecimalSeparator()>();
+        $i7 = virtualinvoke r2.<java.lang.String: int indexOf(int)>($c6);
+        if $i7 >= 0 goto label0;
+
+        $r6 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c8 = virtualinvoke $r6.<java.text.DecimalFormatSymbols: char getPercent()>();
+        $i9 = virtualinvoke r2.<java.lang.String: int indexOf(int)>($c8);
+        if $i9 >= 0 goto label0;
+
+        $r7 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c10 = virtualinvoke $r7.<java.text.DecimalFormatSymbols: char getPerMill()>();
+        $i11 = virtualinvoke r2.<java.lang.String: int indexOf(int)>($c10);
+        if $i11 >= 0 goto label0;
+
+        $r8 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c12 = virtualinvoke $r8.<java.text.DecimalFormatSymbols: char getDigit()>();
+        $i13 = virtualinvoke r2.<java.lang.String: int indexOf(int)>($c12);
+        if $i13 >= 0 goto label0;
+
+        $r9 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c14 = virtualinvoke $r9.<java.text.DecimalFormatSymbols: char getPatternSeparator()>();
+        $i15 = virtualinvoke r2.<java.lang.String: int indexOf(int)>($c14);
+        if $i15 >= 0 goto label0;
+
+        $r10 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c16 = virtualinvoke $r10.<java.text.DecimalFormatSymbols: char getMinusSign()>();
+        $i17 = virtualinvoke r2.<java.lang.String: int indexOf(int)>($c16);
+        if $i17 >= 0 goto label0;
+
+        $i18 = virtualinvoke r2.<java.lang.String: int indexOf(int)>(164);
+        if $i18 < 0 goto label1;
+
+     label0:
+        $z2 = 1;
+        goto label2;
+
+     label1:
+        $z2 = 0;
+
+     label2:
+        z1 = $z2;
+        goto label7;
+
+     label3:
+        $i19 = virtualinvoke r2.<java.lang.String: int indexOf(int)>(48);
+        if $i19 >= 0 goto label4;
+
+        $i20 = virtualinvoke r2.<java.lang.String: int indexOf(int)>(44);
+        if $i20 >= 0 goto label4;
+
+        $i21 = virtualinvoke r2.<java.lang.String: int indexOf(int)>(46);
+        if $i21 >= 0 goto label4;
+
+        $i22 = virtualinvoke r2.<java.lang.String: int indexOf(int)>(37);
+        if $i22 >= 0 goto label4;
+
+        $i23 = virtualinvoke r2.<java.lang.String: int indexOf(int)>(8240);
+        if $i23 >= 0 goto label4;
+
+        $i24 = virtualinvoke r2.<java.lang.String: int indexOf(int)>(35);
+        if $i24 >= 0 goto label4;
+
+        $i25 = virtualinvoke r2.<java.lang.String: int indexOf(int)>(59);
+        if $i25 >= 0 goto label4;
+
+        $i26 = virtualinvoke r2.<java.lang.String: int indexOf(int)>(45);
+        if $i26 >= 0 goto label4;
+
+        $i27 = virtualinvoke r2.<java.lang.String: int indexOf(int)>(164);
+        if $i27 < 0 goto label5;
+
+     label4:
+        $z3 = 1;
+        goto label6;
+
+     label5:
+        $z3 = 0;
+
+     label6:
+        z1 = $z3;
+
+     label7:
+        if z1 == 0 goto label8;
+
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(39);
+
+     label8:
+        $i28 = virtualinvoke r2.<java.lang.String: int indexOf(int)>(39);
+        if $i28 >= 0 goto label9;
+
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(r2);
+        goto label12;
+
+     label9:
+        i0 = 0;
+
+     label10:
+        $i29 = virtualinvoke r2.<java.lang.String: int length()>();
+        if i0 >= $i29 goto label12;
+
+        c1 = virtualinvoke r2.<java.lang.String: char charAt(int)>(i0);
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c1);
+        if c1 != 39 goto label11;
+
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c1);
+
+     label11:
+        i0 = i0 + 1;
+        goto label10;
+
+     label12:
+        if z1 == 0 goto label13;
+
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(39);
+
+     label13:
+        return;
+    }
+
+    private java.lang.String toPattern(boolean)
+    {
+        java.text.DecimalFormat r0;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8;
+        java.lang.StringBuffer $r1, r2;
+        int i0, i1, i2, $i3, $i5, $i6, $i9, $i11, $i13, i15, $i16, $i17, i20;
+        java.lang.String $r3, $r4, $r5, $r6, $r25, $r30, $r31, $r32, $r33, $r34, $r35, $r36, $r37, $r38, $r39, $r40, $r41, $r44, $r46, $r47, $r48, $r49, $r53, $r55, $r59, $r60, $r61;
+        byte $b4, $b7, $b8, $b21;
+        java.text.DecimalFormatSymbols $r8, $r11, $r12, $r15, $r18, $r21, $r24, $r28, $r51, $r57;
+        char $c10, $c12, $c14, $c18, $c19, $c22, $c23, $c24;
+        java.lang.StringBuilder $r42, $r43, $r45, $r50, $r52, $r54;
+
+        r0 := @this: java.text.DecimalFormat;
+        z0 := @parameter0: boolean;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        r2 = $r1;
+        i0 = 1;
+
+     label0:
+        if i0 < 0 goto label40;
+
+        if i0 != 1 goto label1;
+
+        $r3 = r0.<java.text.DecimalFormat: java.lang.String posPrefixPattern>;
+        $r4 = r0.<java.text.DecimalFormat: java.lang.String positivePrefix>;
+        specialinvoke r0.<java.text.DecimalFormat: void appendAffix(java.lang.StringBuffer,java.lang.String,java.lang.String,boolean)>(r2, $r3, $r4, z0);
+        goto label2;
+
+     label1:
+        $r5 = r0.<java.text.DecimalFormat: java.lang.String negPrefixPattern>;
+        $r6 = r0.<java.text.DecimalFormat: java.lang.String negativePrefix>;
+        specialinvoke r0.<java.text.DecimalFormat: void appendAffix(java.lang.StringBuffer,java.lang.String,java.lang.String,boolean)>(r2, $r5, $r6, z0);
+
+     label2:
+        $z1 = r0.<java.text.DecimalFormat: boolean useExponentialNotation>;
+        if $z1 == 0 goto label3;
+
+        $i3 = virtualinvoke r0.<java.text.DecimalFormat: int getMaximumIntegerDigits()>();
+        goto label4;
+
+     label3:
+        $b4 = r0.<java.text.DecimalFormat: byte groupingSize>;
+        $i5 = virtualinvoke r0.<java.text.DecimalFormat: int getMinimumIntegerDigits()>();
+        $i6 = staticinvoke <java.lang.Math: int max(int,int)>($b4, $i5);
+        $i3 = $i6 + 1;
+
+     label4:
+        i1 = $i3;
+        i2 = i1;
+
+     label5:
+        if i2 <= 0 goto label13;
+
+        if i2 == i1 goto label8;
+
+        $z2 = virtualinvoke r0.<java.text.DecimalFormat: boolean isGroupingUsed()>();
+        if $z2 == 0 goto label8;
+
+        $b7 = r0.<java.text.DecimalFormat: byte groupingSize>;
+        if $b7 == 0 goto label8;
+
+        $b8 = r0.<java.text.DecimalFormat: byte groupingSize>;
+        $i9 = i2 % $b8;
+        if $i9 != 0 goto label8;
+
+        if z0 == 0 goto label6;
+
+        $r8 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c10 = virtualinvoke $r8.<java.text.DecimalFormatSymbols: char getGroupingSeparator()>();
+        goto label7;
+
+     label6:
+        $c10 = 44;
+
+     label7:
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c10);
+
+     label8:
+        $i11 = virtualinvoke r0.<java.text.DecimalFormat: int getMinimumIntegerDigits()>();
+        if i2 > $i11 goto label10;
+
+        if z0 == 0 goto label9;
+
+        $r11 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c12 = virtualinvoke $r11.<java.text.DecimalFormatSymbols: char getZeroDigit()>();
+        goto label12;
+
+     label9:
+        $c12 = 48;
+        goto label12;
+
+     label10:
+        if z0 == 0 goto label11;
+
+        $r12 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c12 = virtualinvoke $r12.<java.text.DecimalFormatSymbols: char getDigit()>();
+        goto label12;
+
+     label11:
+        $c12 = 35;
+
+     label12:
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c12);
+        i2 = i2 + -1;
+        goto label5;
+
+     label13:
+        $i13 = virtualinvoke r0.<java.text.DecimalFormat: int getMaximumFractionDigits()>();
+        if $i13 > 0 goto label14;
+
+        $z3 = r0.<java.text.DecimalFormat: boolean decimalSeparatorAlwaysShown>;
+        if $z3 == 0 goto label17;
+
+     label14:
+        if z0 == 0 goto label15;
+
+        $r15 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c14 = virtualinvoke $r15.<java.text.DecimalFormatSymbols: char getDecimalSeparator()>();
+        goto label16;
+
+     label15:
+        $c14 = 46;
+
+     label16:
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c14);
+
+     label17:
+        i15 = 0;
+
+     label18:
+        $i16 = virtualinvoke r0.<java.text.DecimalFormat: int getMaximumFractionDigits()>();
+        if i15 >= $i16 goto label25;
+
+        $i17 = virtualinvoke r0.<java.text.DecimalFormat: int getMinimumFractionDigits()>();
+        if i15 >= $i17 goto label21;
+
+        if z0 == 0 goto label19;
+
+        $r18 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c18 = virtualinvoke $r18.<java.text.DecimalFormatSymbols: char getZeroDigit()>();
+        goto label20;
+
+     label19:
+        $c18 = 48;
+
+     label20:
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c18);
+        goto label24;
+
+     label21:
+        if z0 == 0 goto label22;
+
+        $r21 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c19 = virtualinvoke $r21.<java.text.DecimalFormatSymbols: char getDigit()>();
+        goto label23;
+
+     label22:
+        $c19 = 35;
+
+     label23:
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c19);
+
+     label24:
+        i15 = i15 + 1;
+        goto label18;
+
+     label25:
+        $z4 = r0.<java.text.DecimalFormat: boolean useExponentialNotation>;
+        if $z4 == 0 goto label31;
+
+        if z0 == 0 goto label26;
+
+        $r24 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $r25 = virtualinvoke $r24.<java.text.DecimalFormatSymbols: java.lang.String getExponentSeparator()>();
+        goto label27;
+
+     label26:
+        $r25 = "E";
+
+     label27:
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r25);
+        i20 = 0;
+
+     label28:
+        $b21 = r0.<java.text.DecimalFormat: byte minExponentDigits>;
+        if i20 >= $b21 goto label31;
+
+        if z0 == 0 goto label29;
+
+        $r28 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c22 = virtualinvoke $r28.<java.text.DecimalFormatSymbols: char getZeroDigit()>();
+        goto label30;
+
+     label29:
+        $c22 = 48;
+
+     label30:
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c22);
+        i20 = i20 + 1;
+        goto label28;
+
+     label31:
+        if i0 != 1 goto label38;
+
+        $r30 = r0.<java.text.DecimalFormat: java.lang.String posSuffixPattern>;
+        $r31 = r0.<java.text.DecimalFormat: java.lang.String positiveSuffix>;
+        specialinvoke r0.<java.text.DecimalFormat: void appendAffix(java.lang.StringBuffer,java.lang.String,java.lang.String,boolean)>(r2, $r30, $r31, z0);
+        $r32 = r0.<java.text.DecimalFormat: java.lang.String negSuffixPattern>;
+        $r33 = r0.<java.text.DecimalFormat: java.lang.String posSuffixPattern>;
+        if $r32 != $r33 goto label32;
+
+        $r34 = r0.<java.text.DecimalFormat: java.lang.String negativeSuffix>;
+        $r35 = r0.<java.text.DecimalFormat: java.lang.String positiveSuffix>;
+        $z5 = virtualinvoke $r34.<java.lang.String: boolean equals(java.lang.Object)>($r35);
+        if $z5 != 0 goto label33;
+
+     label32:
+        $r36 = r0.<java.text.DecimalFormat: java.lang.String negSuffixPattern>;
+        if $r36 == null goto label35;
+
+        $r37 = r0.<java.text.DecimalFormat: java.lang.String negSuffixPattern>;
+        $r38 = r0.<java.text.DecimalFormat: java.lang.String posSuffixPattern>;
+        $z6 = virtualinvoke $r37.<java.lang.String: boolean equals(java.lang.Object)>($r38);
+        if $z6 == 0 goto label35;
+
+     label33:
+        $r39 = r0.<java.text.DecimalFormat: java.lang.String negPrefixPattern>;
+        if $r39 == null goto label34;
+
+        $r40 = r0.<java.text.DecimalFormat: java.lang.String posPrefixPattern>;
+        if $r40 == null goto label34;
+
+        $r41 = r0.<java.text.DecimalFormat: java.lang.String negPrefixPattern>;
+        $r42 = new java.lang.StringBuilder;
+        specialinvoke $r42.<java.lang.StringBuilder: void <init>()>();
+        $r43 = virtualinvoke $r42.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'-");
+        $r44 = r0.<java.text.DecimalFormat: java.lang.String posPrefixPattern>;
+        $r45 = virtualinvoke $r43.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r44);
+        $r46 = virtualinvoke $r45.<java.lang.StringBuilder: java.lang.String toString()>();
+        $z7 = virtualinvoke $r41.<java.lang.String: boolean equals(java.lang.Object)>($r46);
+        if $z7 != 0 goto label40;
+
+     label34:
+        $r47 = r0.<java.text.DecimalFormat: java.lang.String negPrefixPattern>;
+        $r48 = r0.<java.text.DecimalFormat: java.lang.String posPrefixPattern>;
+        if $r47 != $r48 goto label35;
+
+        $r49 = r0.<java.text.DecimalFormat: java.lang.String negativePrefix>;
+        $r50 = new java.lang.StringBuilder;
+        specialinvoke $r50.<java.lang.StringBuilder: void <init>()>();
+        $r51 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c23 = virtualinvoke $r51.<java.text.DecimalFormatSymbols: char getMinusSign()>();
+        $r52 = virtualinvoke $r50.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>($c23);
+        $r53 = r0.<java.text.DecimalFormat: java.lang.String positivePrefix>;
+        $r54 = virtualinvoke $r52.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r53);
+        $r55 = virtualinvoke $r54.<java.lang.StringBuilder: java.lang.String toString()>();
+        $z8 = virtualinvoke $r49.<java.lang.String: boolean equals(java.lang.Object)>($r55);
+        if $z8 == 0 goto label35;
+
+        goto label40;
+
+     label35:
+        if z0 == 0 goto label36;
+
+        $r57 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $c24 = virtualinvoke $r57.<java.text.DecimalFormatSymbols: char getPatternSeparator()>();
+        goto label37;
+
+     label36:
+        $c24 = 59;
+
+     label37:
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c24);
+        goto label39;
+
+     label38:
+        $r59 = r0.<java.text.DecimalFormat: java.lang.String negSuffixPattern>;
+        $r60 = r0.<java.text.DecimalFormat: java.lang.String negativeSuffix>;
+        specialinvoke r0.<java.text.DecimalFormat: void appendAffix(java.lang.StringBuffer,java.lang.String,java.lang.String,boolean)>(r2, $r59, $r60, z0);
+
+     label39:
+        i0 = i0 + -1;
+        goto label0;
+
+     label40:
+        $r61 = virtualinvoke r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r61;
+    }
+
+    public void applyPattern(java.lang.String)
+    {
+        java.text.DecimalFormat r0;
+        java.lang.String r1;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.String;
+        specialinvoke r0.<java.text.DecimalFormat: void applyPattern(java.lang.String,boolean)>(r1, 0);
+        return;
+    }
+
+    public void applyLocalizedPattern(java.lang.String)
+    {
+        java.text.DecimalFormat r0;
+        java.lang.String r1;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.String;
+        specialinvoke r0.<java.text.DecimalFormat: void applyPattern(java.lang.String,boolean)>(r1, 1);
+        return;
+    }
+
+    private void applyPattern(java.lang.String, boolean)
+    {
+        java.text.DecimalFormat r0;
+        java.lang.String r1, r2, $r19, $r29, $r35, $r42, $r51, $r57, $r63, $r70, $r76, $r77, $r78, $r79, $r80, $r87, $r88, $r89, $r90, $r91, $r92, $r93, $r94, $r97, $r99;
+        boolean z0, z1, z2, z3, z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12;
+        char c0, c1, c2, c3, c4, c5, c6, c7, c19, $c25, $c30, $c34, $c42;
+        int i8, i9, i10, i11, i13, i14, i15, i18, $i20, $i21, $i22, $i23, $i24, i26, $i27, $i28, $i29, $i31, $i32, $i33, $i35, $i36, $i37, $i38, $i39, i40, $i41, $i44, $i46, i48, $i49, $i50, i51, $i52, i53, $i54, $i55, $i56, $i57, $i58, $i59, $i61;
+        java.lang.StringBuffer r3, r4, r5, $r15, $r16, $r18;
+        short s12;
+        byte b16, b17, $b43, $b45, $b47, $b60;
+        java.text.DecimalFormatSymbols $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13, $r14;
+        java.lang.IllegalArgumentException $r22, $r30, $r37, $r46, $r52, $r58, $r65, $r71;
+        java.lang.StringBuilder $r23, $r24, $r25, $r26, $r27, $r28, $r31, $r32, $r33, $r34, $r38, $r39, $r40, $r41, $r47, $r48, $r49, $r50, $r53, $r54, $r55, $r56, $r59, $r60, $r61, $r62, $r66, $r67, $r68, $r69, $r72, $r73, $r74, $r75, $r95, $r96, $r98;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.lang.String;
+        z0 := @parameter1: boolean;
+        c0 = 48;
+        c1 = 44;
+        c2 = 46;
+        c3 = 37;
+        c4 = 8240;
+        c5 = 35;
+        c6 = 59;
+        r2 = "E";
+        c7 = 45;
+        if z0 == 0 goto label0;
+
+        $r6 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        c0 = virtualinvoke $r6.<java.text.DecimalFormatSymbols: char getZeroDigit()>();
+        $r7 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        c1 = virtualinvoke $r7.<java.text.DecimalFormatSymbols: char getGroupingSeparator()>();
+        $r8 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        c2 = virtualinvoke $r8.<java.text.DecimalFormatSymbols: char getDecimalSeparator()>();
+        $r9 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        c3 = virtualinvoke $r9.<java.text.DecimalFormatSymbols: char getPercent()>();
+        $r10 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        c4 = virtualinvoke $r10.<java.text.DecimalFormatSymbols: char getPerMill()>();
+        $r11 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        c5 = virtualinvoke $r11.<java.text.DecimalFormatSymbols: char getDigit()>();
+        $r12 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        c6 = virtualinvoke $r12.<java.text.DecimalFormatSymbols: char getPatternSeparator()>();
+        $r13 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        r2 = virtualinvoke $r13.<java.text.DecimalFormatSymbols: java.lang.String getExponentSeparator()>();
+        $r14 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        c7 = virtualinvoke $r14.<java.text.DecimalFormatSymbols: char getMinusSign()>();
+
+     label0:
+        z1 = 0;
+        r0.<java.text.DecimalFormat: boolean decimalSeparatorAlwaysShown> = 0;
+        r0.<java.text.DecimalFormat: boolean isCurrencyFormat> = 0;
+        r0.<java.text.DecimalFormat: boolean useExponentialNotation> = 0;
+        z2 = 0;
+        i8 = 0;
+        i9 = 0;
+        i10 = 1;
+
+     label1:
+        if i10 < 0 goto label67;
+
+        $i20 = virtualinvoke r1.<java.lang.String: int length()>();
+        if i9 >= $i20 goto label67;
+
+        z3 = 0;
+        $r15 = new java.lang.StringBuffer;
+        specialinvoke $r15.<java.lang.StringBuffer: void <init>()>();
+        r3 = $r15;
+        $r16 = new java.lang.StringBuffer;
+        specialinvoke $r16.<java.lang.StringBuffer: void <init>()>();
+        r4 = $r16;
+        i11 = -1;
+        s12 = 1;
+        i13 = 0;
+        i14 = 0;
+        i15 = 0;
+        b16 = -1;
+        b17 = 0;
+        r5 = r3;
+        i18 = i9;
+
+     label2:
+        $i21 = virtualinvoke r1.<java.lang.String: int length()>();
+        if i18 >= $i21 goto label43;
+
+        c19 = virtualinvoke r1.<java.lang.String: char charAt(int)>(i18);
+        tableswitch(b17)
+        {
+            case 0: goto label3;
+            case 1: goto label25;
+            case 2: goto label3;
+            default: goto label42;
+        };
+
+     label3:
+        if z3 == 0 goto label5;
+
+        if c19 != 39 goto label24;
+
+        $i22 = i18 + 1;
+        $i23 = virtualinvoke r1.<java.lang.String: int length()>();
+        if $i22 >= $i23 goto label4;
+
+        $i24 = i18 + 1;
+        $c25 = virtualinvoke r1.<java.lang.String: char charAt(int)>($i24);
+        if $c25 != 39 goto label4;
+
+        i18 = i18 + 1;
+        virtualinvoke r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'\'");
+        goto label42;
+
+     label4:
+        z3 = 0;
+        goto label42;
+
+     label5:
+        if c19 == c5 goto label6;
+
+        if c19 == c0 goto label6;
+
+        if c19 == c1 goto label6;
+
+        if c19 != c2 goto label8;
+
+     label6:
+        b17 = 1;
+        if i10 != 1 goto label7;
+
+        i26 = i18;
+
+     label7:
+        i18 = i18 + -1;
+        goto label42;
+
+     label8:
+        if c19 != 164 goto label14;
+
+        $i27 = i18 + 1;
+        $i28 = virtualinvoke r1.<java.lang.String: int length()>();
+        if $i27 >= $i28 goto label9;
+
+        $i29 = i18 + 1;
+        $c30 = virtualinvoke r1.<java.lang.String: char charAt(int)>($i29);
+        if $c30 != 164 goto label9;
+
+        $z5 = 1;
+        goto label10;
+
+     label9:
+        $z5 = 0;
+
+     label10:
+        z4 = $z5;
+        if z4 == 0 goto label11;
+
+        i18 = i18 + 1;
+
+     label11:
+        r0.<java.text.DecimalFormat: boolean isCurrencyFormat> = 1;
+        $r18 = r5;
+        if z4 == 0 goto label12;
+
+        $r19 = "\'\u00a4\u00a4";
+        goto label13;
+
+     label12:
+        $r19 = "\'\u00a4";
+
+     label13:
+        virtualinvoke $r18.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r19);
+        goto label42;
+
+     label14:
+        if c19 != 39 goto label16;
+
+        if c19 != 39 goto label24;
+
+        $i31 = i18 + 1;
+        $i32 = virtualinvoke r1.<java.lang.String: int length()>();
+        if $i31 >= $i32 goto label15;
+
+        $i33 = i18 + 1;
+        $c34 = virtualinvoke r1.<java.lang.String: char charAt(int)>($i33);
+        if $c34 != 39 goto label15;
+
+        i18 = i18 + 1;
+        virtualinvoke r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'\'");
+        goto label42;
+
+     label15:
+        z3 = 1;
+        goto label42;
+
+     label16:
+        if c19 != c6 goto label19;
+
+        if b17 == 0 goto label17;
+
+        if i10 != 0 goto label18;
+
+     label17:
+        $r22 = new java.lang.IllegalArgumentException;
+        $r23 = new java.lang.StringBuilder;
+        specialinvoke $r23.<java.lang.StringBuilder: void <init>()>();
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Unquoted special character \'");
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(c19);
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\' in pattern \"");
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(34);
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r22.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r29);
+        throw $r22;
+
+     label18:
+        i9 = i18 + 1;
+        i18 = virtualinvoke r1.<java.lang.String: int length()>();
+        goto label42;
+
+     label19:
+        if c19 != c3 goto label21;
+
+        if s12 == 1 goto label20;
+
+        $r30 = new java.lang.IllegalArgumentException;
+        $r31 = new java.lang.StringBuilder;
+        specialinvoke $r31.<java.lang.StringBuilder: void <init>()>();
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Too many percent/per mille characters in pattern \"");
+        $r33 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r34 = virtualinvoke $r33.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(34);
+        $r35 = virtualinvoke $r34.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r30.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r35);
+        throw $r30;
+
+     label20:
+        s12 = 100;
+        virtualinvoke r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'%");
+        goto label42;
+
+     label21:
+        if c19 != c4 goto label23;
+
+        if s12 == 1 goto label22;
+
+        $r37 = new java.lang.IllegalArgumentException;
+        $r38 = new java.lang.StringBuilder;
+        specialinvoke $r38.<java.lang.StringBuilder: void <init>()>();
+        $r39 = virtualinvoke $r38.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Too many percent/per mille characters in pattern \"");
+        $r40 = virtualinvoke $r39.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r41 = virtualinvoke $r40.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(34);
+        $r42 = virtualinvoke $r41.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r37.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r42);
+        throw $r37;
+
+     label22:
+        s12 = 1000;
+        virtualinvoke r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'\u2030");
+        goto label42;
+
+     label23:
+        if c19 != c7 goto label24;
+
+        virtualinvoke r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'-");
+        goto label42;
+
+     label24:
+        virtualinvoke r5.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c19);
+        goto label42;
+
+     label25:
+        if i10 != 1 goto label26;
+
+        i8 = i8 + 1;
+        goto label27;
+
+     label26:
+        i8 = i8 + -1;
+        if i8 != 0 goto label42;
+
+        b17 = 2;
+        r5 = r4;
+        goto label42;
+
+     label27:
+        if c19 != c5 goto label30;
+
+        if i14 <= 0 goto label28;
+
+        i15 = i15 + 1;
+        goto label29;
+
+     label28:
+        i13 = i13 + 1;
+
+     label29:
+        if b16 < 0 goto label42;
+
+        if i11 >= 0 goto label42;
+
+        $i35 = b16 + 1;
+        b16 = (byte) $i35;
+        goto label42;
+
+     label30:
+        if c19 != c0 goto label32;
+
+        if i15 <= 0 goto label31;
+
+        $r46 = new java.lang.IllegalArgumentException;
+        $r47 = new java.lang.StringBuilder;
+        specialinvoke $r47.<java.lang.StringBuilder: void <init>()>();
+        $r48 = virtualinvoke $r47.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Unexpected \'0\' in pattern \"");
+        $r49 = virtualinvoke $r48.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r50 = virtualinvoke $r49.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(34);
+        $r51 = virtualinvoke $r50.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r46.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r51);
+        throw $r46;
+
+     label31:
+        i14 = i14 + 1;
+        if b16 < 0 goto label42;
+
+        if i11 >= 0 goto label42;
+
+        $i36 = b16 + 1;
+        b16 = (byte) $i36;
+        goto label42;
+
+     label32:
+        if c19 != c1 goto label33;
+
+        b16 = 0;
+        goto label42;
+
+     label33:
+        if c19 != c2 goto label35;
+
+        if i11 < 0 goto label34;
+
+        $r52 = new java.lang.IllegalArgumentException;
+        $r53 = new java.lang.StringBuilder;
+        specialinvoke $r53.<java.lang.StringBuilder: void <init>()>();
+        $r54 = virtualinvoke $r53.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Multiple decimal separators in pattern \"");
+        $r55 = virtualinvoke $r54.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r56 = virtualinvoke $r55.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(34);
+        $r57 = virtualinvoke $r56.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r52.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r57);
+        throw $r52;
+
+     label34:
+        $i37 = i13 + i14;
+        i11 = $i37 + i15;
+        goto label42;
+
+     label35:
+        $i38 = virtualinvoke r2.<java.lang.String: int length()>();
+        $z6 = virtualinvoke r1.<java.lang.String: boolean regionMatches(int,java.lang.String,int,int)>(i18, r2, 0, $i38);
+        if $z6 == 0 goto label41;
+
+        $z7 = r0.<java.text.DecimalFormat: boolean useExponentialNotation>;
+        if $z7 == 0 goto label36;
+
+        $r58 = new java.lang.IllegalArgumentException;
+        $r59 = new java.lang.StringBuilder;
+        specialinvoke $r59.<java.lang.StringBuilder: void <init>()>();
+        $r60 = virtualinvoke $r59.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Multiple exponential symbols in pattern \"");
+        $r61 = virtualinvoke $r60.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r62 = virtualinvoke $r61.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(34);
+        $r63 = virtualinvoke $r62.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r58.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r63);
+        throw $r58;
+
+     label36:
+        r0.<java.text.DecimalFormat: boolean useExponentialNotation> = 1;
+        r0.<java.text.DecimalFormat: byte minExponentDigits> = 0;
+        $i39 = virtualinvoke r2.<java.lang.String: int length()>();
+        i40 = i18 + $i39;
+
+     label37:
+        $i41 = virtualinvoke r1.<java.lang.String: int length()>();
+        if i40 >= $i41 goto label38;
+
+        $c42 = virtualinvoke r1.<java.lang.String: char charAt(int)>(i40);
+        if $c42 != c0 goto label38;
+
+        $b43 = r0.<java.text.DecimalFormat: byte minExponentDigits>;
+        $i44 = $b43 + 1;
+        $b45 = (byte) $i44;
+        r0.<java.text.DecimalFormat: byte minExponentDigits> = $b45;
+        i8 = i8 + 1;
+        i40 = i40 + 1;
+        goto label37;
+
+     label38:
+        $i46 = i13 + i14;
+        if $i46 < 1 goto label39;
+
+        $b47 = r0.<java.text.DecimalFormat: byte minExponentDigits>;
+        if $b47 >= 1 goto label40;
+
+     label39:
+        $r65 = new java.lang.IllegalArgumentException;
+        $r66 = new java.lang.StringBuilder;
+        specialinvoke $r66.<java.lang.StringBuilder: void <init>()>();
+        $r67 = virtualinvoke $r66.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Malformed exponential pattern \"");
+        $r68 = virtualinvoke $r67.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r69 = virtualinvoke $r68.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(34);
+        $r70 = virtualinvoke $r69.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r65.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r70);
+        throw $r65;
+
+     label40:
+        b17 = 2;
+        r5 = r4;
+        i18 = i40 + -1;
+        goto label42;
+
+     label41:
+        b17 = 2;
+        r5 = r4;
+        i18 = i18 + -1;
+        i8 = i8 + -1;
+        goto label42;
+
+     label42:
+        i18 = i18 + 1;
+        goto label2;
+
+     label43:
+        if i14 != 0 goto label45;
+
+        if i13 <= 0 goto label45;
+
+        if i11 < 0 goto label45;
+
+        i48 = i11;
+        if i48 != 0 goto label44;
+
+        i48 = i48 + 1;
+
+     label44:
+        i15 = i13 - i48;
+        i13 = i48 - 1;
+        i14 = 1;
+
+     label45:
+        if i11 >= 0 goto label46;
+
+        if i15 > 0 goto label48;
+
+     label46:
+        if i11 < 0 goto label47;
+
+        if i11 < i13 goto label48;
+
+        $i49 = i13 + i14;
+        if i11 > $i49 goto label48;
+
+     label47:
+        if b16 == 0 goto label48;
+
+        if z3 == 0 goto label49;
+
+     label48:
+        $r71 = new java.lang.IllegalArgumentException;
+        $r72 = new java.lang.StringBuilder;
+        specialinvoke $r72.<java.lang.StringBuilder: void <init>()>();
+        $r73 = virtualinvoke $r72.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Malformed pattern \"");
+        $r74 = virtualinvoke $r73.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r75 = virtualinvoke $r74.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(34);
+        $r76 = virtualinvoke $r75.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r71.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r76);
+        throw $r71;
+
+     label49:
+        if i10 != 1 goto label65;
+
+        $r77 = virtualinvoke r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        r0.<java.text.DecimalFormat: java.lang.String posPrefixPattern> = $r77;
+        $r78 = virtualinvoke r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        r0.<java.text.DecimalFormat: java.lang.String posSuffixPattern> = $r78;
+        $r79 = r0.<java.text.DecimalFormat: java.lang.String posPrefixPattern>;
+        r0.<java.text.DecimalFormat: java.lang.String negPrefixPattern> = $r79;
+        $r80 = r0.<java.text.DecimalFormat: java.lang.String posSuffixPattern>;
+        r0.<java.text.DecimalFormat: java.lang.String negSuffixPattern> = $r80;
+        $i50 = i13 + i14;
+        i51 = $i50 + i15;
+        if i11 < 0 goto label50;
+
+        $i52 = i11;
+        goto label51;
+
+     label50:
+        $i52 = i51;
+
+     label51:
+        i53 = $i52;
+        $i54 = i53 - i13;
+        virtualinvoke r0.<java.text.DecimalFormat: void setMinimumIntegerDigits(int)>($i54);
+        $z8 = r0.<java.text.DecimalFormat: boolean useExponentialNotation>;
+        if $z8 == 0 goto label52;
+
+        $i55 = virtualinvoke r0.<java.text.DecimalFormat: int getMinimumIntegerDigits()>();
+        $i56 = i13 + $i55;
+        goto label53;
+
+     label52:
+        $i56 = 2147483647;
+
+     label53:
+        virtualinvoke r0.<java.text.DecimalFormat: void setMaximumIntegerDigits(int)>($i56);
+        if i11 < 0 goto label54;
+
+        $i57 = i51 - i11;
+        goto label55;
+
+     label54:
+        $i57 = 0;
+
+     label55:
+        virtualinvoke r0.<java.text.DecimalFormat: void setMaximumFractionDigits(int)>($i57);
+        if i11 < 0 goto label56;
+
+        $i58 = i13 + i14;
+        $i59 = $i58 - i11;
+        goto label57;
+
+     label56:
+        $i59 = 0;
+
+     label57:
+        virtualinvoke r0.<java.text.DecimalFormat: void setMinimumFractionDigits(int)>($i59);
+        if b16 <= 0 goto label58;
+
+        $z9 = 1;
+        goto label59;
+
+     label58:
+        $z9 = 0;
+
+     label59:
+        virtualinvoke r0.<java.text.DecimalFormat: void setGroupingUsed(boolean)>($z9);
+        if b16 <= 0 goto label60;
+
+        $b60 = b16;
+        goto label61;
+
+     label60:
+        $b60 = 0;
+
+     label61:
+        r0.<java.text.DecimalFormat: byte groupingSize> = $b60;
+        r0.<java.text.DecimalFormat: int multiplier> = s12;
+        if i11 == 0 goto label62;
+
+        if i11 != i51 goto label63;
+
+     label62:
+        $z10 = 1;
+        goto label64;
+
+     label63:
+        $z10 = 0;
+
+     label64:
+        virtualinvoke r0.<java.text.DecimalFormat: void setDecimalSeparatorAlwaysShown(boolean)>($z10);
+        goto label66;
+
+     label65:
+        $r87 = virtualinvoke r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        r0.<java.text.DecimalFormat: java.lang.String negPrefixPattern> = $r87;
+        $r88 = virtualinvoke r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        r0.<java.text.DecimalFormat: java.lang.String negSuffixPattern> = $r88;
+        z1 = 1;
+
+     label66:
+        i10 = i10 + -1;
+        goto label1;
+
+     label67:
+        $i61 = virtualinvoke r1.<java.lang.String: int length()>();
+        if $i61 != 0 goto label68;
+
+        $r89 = "";
+        r0.<java.text.DecimalFormat: java.lang.String posSuffixPattern> = $r89;
+        r0.<java.text.DecimalFormat: java.lang.String posPrefixPattern> = $r89;
+        virtualinvoke r0.<java.text.DecimalFormat: void setMinimumIntegerDigits(int)>(0);
+        virtualinvoke r0.<java.text.DecimalFormat: void setMaximumIntegerDigits(int)>(2147483647);
+        virtualinvoke r0.<java.text.DecimalFormat: void setMinimumFractionDigits(int)>(0);
+        virtualinvoke r0.<java.text.DecimalFormat: void setMaximumFractionDigits(int)>(2147483647);
+
+     label68:
+        if z1 == 0 goto label69;
+
+        $r90 = r0.<java.text.DecimalFormat: java.lang.String negPrefixPattern>;
+        $r91 = r0.<java.text.DecimalFormat: java.lang.String posPrefixPattern>;
+        $z11 = virtualinvoke $r90.<java.lang.String: boolean equals(java.lang.Object)>($r91);
+        if $z11 == 0 goto label70;
+
+        $r92 = r0.<java.text.DecimalFormat: java.lang.String negSuffixPattern>;
+        $r93 = r0.<java.text.DecimalFormat: java.lang.String posSuffixPattern>;
+        $z12 = virtualinvoke $r92.<java.lang.String: boolean equals(java.lang.Object)>($r93);
+        if $z12 == 0 goto label70;
+
+     label69:
+        $r94 = r0.<java.text.DecimalFormat: java.lang.String posSuffixPattern>;
+        r0.<java.text.DecimalFormat: java.lang.String negSuffixPattern> = $r94;
+        $r95 = new java.lang.StringBuilder;
+        specialinvoke $r95.<java.lang.StringBuilder: void <init>()>();
+        $r96 = virtualinvoke $r95.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'-");
+        $r97 = r0.<java.text.DecimalFormat: java.lang.String posPrefixPattern>;
+        $r98 = virtualinvoke $r96.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r97);
+        $r99 = virtualinvoke $r98.<java.lang.StringBuilder: java.lang.String toString()>();
+        r0.<java.text.DecimalFormat: java.lang.String negPrefixPattern> = $r99;
+
+     label70:
+        specialinvoke r0.<java.text.DecimalFormat: void expandAffixes()>();
+        return;
+    }
+
+    public void setMaximumIntegerDigits(int)
+    {
+        java.text.DecimalFormat r0;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9;
+
+        r0 := @this: java.text.DecimalFormat;
+        i0 := @parameter0: int;
+        $i1 = staticinvoke <java.lang.Math: int max(int,int)>(0, i0);
+        $i2 = staticinvoke <java.lang.Math: int min(int,int)>($i1, 2147483647);
+        r0.<java.text.DecimalFormat: int maximumIntegerDigits> = $i2;
+        $i3 = r0.<java.text.DecimalFormat: int maximumIntegerDigits>;
+        if $i3 <= 309 goto label0;
+
+        $i4 = 309;
+        goto label1;
+
+     label0:
+        $i4 = r0.<java.text.DecimalFormat: int maximumIntegerDigits>;
+
+     label1:
+        specialinvoke r0.<java.text.NumberFormat: void setMaximumIntegerDigits(int)>($i4);
+        $i5 = r0.<java.text.DecimalFormat: int minimumIntegerDigits>;
+        $i6 = r0.<java.text.DecimalFormat: int maximumIntegerDigits>;
+        if $i5 <= $i6 goto label4;
+
+        $i7 = r0.<java.text.DecimalFormat: int maximumIntegerDigits>;
+        r0.<java.text.DecimalFormat: int minimumIntegerDigits> = $i7;
+        $i8 = r0.<java.text.DecimalFormat: int minimumIntegerDigits>;
+        if $i8 <= 309 goto label2;
+
+        $i9 = 309;
+        goto label3;
+
+     label2:
+        $i9 = r0.<java.text.DecimalFormat: int minimumIntegerDigits>;
+
+     label3:
+        specialinvoke r0.<java.text.NumberFormat: void setMinimumIntegerDigits(int)>($i9);
+
+     label4:
+        return;
+    }
+
+    public void setMinimumIntegerDigits(int)
+    {
+        java.text.DecimalFormat r0;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9;
+
+        r0 := @this: java.text.DecimalFormat;
+        i0 := @parameter0: int;
+        $i1 = staticinvoke <java.lang.Math: int max(int,int)>(0, i0);
+        $i2 = staticinvoke <java.lang.Math: int min(int,int)>($i1, 2147483647);
+        r0.<java.text.DecimalFormat: int minimumIntegerDigits> = $i2;
+        $i3 = r0.<java.text.DecimalFormat: int minimumIntegerDigits>;
+        if $i3 <= 309 goto label0;
+
+        $i4 = 309;
+        goto label1;
+
+     label0:
+        $i4 = r0.<java.text.DecimalFormat: int minimumIntegerDigits>;
+
+     label1:
+        specialinvoke r0.<java.text.NumberFormat: void setMinimumIntegerDigits(int)>($i4);
+        $i5 = r0.<java.text.DecimalFormat: int minimumIntegerDigits>;
+        $i6 = r0.<java.text.DecimalFormat: int maximumIntegerDigits>;
+        if $i5 <= $i6 goto label4;
+
+        $i7 = r0.<java.text.DecimalFormat: int minimumIntegerDigits>;
+        r0.<java.text.DecimalFormat: int maximumIntegerDigits> = $i7;
+        $i8 = r0.<java.text.DecimalFormat: int maximumIntegerDigits>;
+        if $i8 <= 309 goto label2;
+
+        $i9 = 309;
+        goto label3;
+
+     label2:
+        $i9 = r0.<java.text.DecimalFormat: int maximumIntegerDigits>;
+
+     label3:
+        specialinvoke r0.<java.text.NumberFormat: void setMaximumIntegerDigits(int)>($i9);
+
+     label4:
+        return;
+    }
+
+    public void setMaximumFractionDigits(int)
+    {
+        java.text.DecimalFormat r0;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9;
+
+        r0 := @this: java.text.DecimalFormat;
+        i0 := @parameter0: int;
+        $i1 = staticinvoke <java.lang.Math: int max(int,int)>(0, i0);
+        $i2 = staticinvoke <java.lang.Math: int min(int,int)>($i1, 2147483647);
+        r0.<java.text.DecimalFormat: int maximumFractionDigits> = $i2;
+        $i3 = r0.<java.text.DecimalFormat: int maximumFractionDigits>;
+        if $i3 <= 340 goto label0;
+
+        $i4 = 340;
+        goto label1;
+
+     label0:
+        $i4 = r0.<java.text.DecimalFormat: int maximumFractionDigits>;
+
+     label1:
+        specialinvoke r0.<java.text.NumberFormat: void setMaximumFractionDigits(int)>($i4);
+        $i5 = r0.<java.text.DecimalFormat: int minimumFractionDigits>;
+        $i6 = r0.<java.text.DecimalFormat: int maximumFractionDigits>;
+        if $i5 <= $i6 goto label4;
+
+        $i7 = r0.<java.text.DecimalFormat: int maximumFractionDigits>;
+        r0.<java.text.DecimalFormat: int minimumFractionDigits> = $i7;
+        $i8 = r0.<java.text.DecimalFormat: int minimumFractionDigits>;
+        if $i8 <= 340 goto label2;
+
+        $i9 = 340;
+        goto label3;
+
+     label2:
+        $i9 = r0.<java.text.DecimalFormat: int minimumFractionDigits>;
+
+     label3:
+        specialinvoke r0.<java.text.NumberFormat: void setMinimumFractionDigits(int)>($i9);
+
+     label4:
+        return;
+    }
+
+    public void setMinimumFractionDigits(int)
+    {
+        java.text.DecimalFormat r0;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9;
+
+        r0 := @this: java.text.DecimalFormat;
+        i0 := @parameter0: int;
+        $i1 = staticinvoke <java.lang.Math: int max(int,int)>(0, i0);
+        $i2 = staticinvoke <java.lang.Math: int min(int,int)>($i1, 2147483647);
+        r0.<java.text.DecimalFormat: int minimumFractionDigits> = $i2;
+        $i3 = r0.<java.text.DecimalFormat: int minimumFractionDigits>;
+        if $i3 <= 340 goto label0;
+
+        $i4 = 340;
+        goto label1;
+
+     label0:
+        $i4 = r0.<java.text.DecimalFormat: int minimumFractionDigits>;
+
+     label1:
+        specialinvoke r0.<java.text.NumberFormat: void setMinimumFractionDigits(int)>($i4);
+        $i5 = r0.<java.text.DecimalFormat: int minimumFractionDigits>;
+        $i6 = r0.<java.text.DecimalFormat: int maximumFractionDigits>;
+        if $i5 <= $i6 goto label4;
+
+        $i7 = r0.<java.text.DecimalFormat: int minimumFractionDigits>;
+        r0.<java.text.DecimalFormat: int maximumFractionDigits> = $i7;
+        $i8 = r0.<java.text.DecimalFormat: int maximumFractionDigits>;
+        if $i8 <= 340 goto label2;
+
+        $i9 = 340;
+        goto label3;
+
+     label2:
+        $i9 = r0.<java.text.DecimalFormat: int maximumFractionDigits>;
+
+     label3:
+        specialinvoke r0.<java.text.NumberFormat: void setMaximumFractionDigits(int)>($i9);
+
+     label4:
+        return;
+    }
+
+    public int getMaximumIntegerDigits()
+    {
+        java.text.DecimalFormat r0;
+        int $i0;
+
+        r0 := @this: java.text.DecimalFormat;
+        $i0 = r0.<java.text.DecimalFormat: int maximumIntegerDigits>;
+        return $i0;
+    }
+
+    public int getMinimumIntegerDigits()
+    {
+        java.text.DecimalFormat r0;
+        int $i0;
+
+        r0 := @this: java.text.DecimalFormat;
+        $i0 = r0.<java.text.DecimalFormat: int minimumIntegerDigits>;
+        return $i0;
+    }
+
+    public int getMaximumFractionDigits()
+    {
+        java.text.DecimalFormat r0;
+        int $i0;
+
+        r0 := @this: java.text.DecimalFormat;
+        $i0 = r0.<java.text.DecimalFormat: int maximumFractionDigits>;
+        return $i0;
+    }
+
+    public int getMinimumFractionDigits()
+    {
+        java.text.DecimalFormat r0;
+        int $i0;
+
+        r0 := @this: java.text.DecimalFormat;
+        $i0 = r0.<java.text.DecimalFormat: int minimumFractionDigits>;
+        return $i0;
+    }
+
+    public java.util.Currency getCurrency()
+    {
+        java.text.DecimalFormat r0;
+        java.text.DecimalFormatSymbols $r1;
+        java.util.Currency $r2;
+
+        r0 := @this: java.text.DecimalFormat;
+        $r1 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $r2 = virtualinvoke $r1.<java.text.DecimalFormatSymbols: java.util.Currency getCurrency()>();
+        return $r2;
+    }
+
+    public void setCurrency(java.util.Currency)
+    {
+        java.text.DecimalFormat r0;
+        java.util.Currency r1, $r3;
+        java.text.DecimalFormatSymbols $r2, $r4;
+        boolean $z0;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.util.Currency;
+        $r2 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $r3 = virtualinvoke $r2.<java.text.DecimalFormatSymbols: java.util.Currency getCurrency()>();
+        if r1 == $r3 goto label0;
+
+        $r4 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        virtualinvoke $r4.<java.text.DecimalFormatSymbols: void setCurrency(java.util.Currency)>(r1);
+        $z0 = r0.<java.text.DecimalFormat: boolean isCurrencyFormat>;
+        if $z0 == 0 goto label0;
+
+        specialinvoke r0.<java.text.DecimalFormat: void expandAffixes()>();
+
+     label0:
+        return;
+    }
+
+    public java.math.RoundingMode getRoundingMode()
+    {
+        java.text.DecimalFormat r0;
+        java.math.RoundingMode $r1;
+
+        r0 := @this: java.text.DecimalFormat;
+        $r1 = r0.<java.text.DecimalFormat: java.math.RoundingMode roundingMode>;
+        return $r1;
+    }
+
+    public void setRoundingMode(java.math.RoundingMode)
+    {
+        java.text.DecimalFormat r0;
+        java.math.RoundingMode r1;
+        java.lang.NullPointerException $r2;
+        java.text.DigitList $r3;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.math.RoundingMode;
+        if r1 != null goto label0;
+
+        $r2 = new java.lang.NullPointerException;
+        specialinvoke $r2.<java.lang.NullPointerException: void <init>()>();
+        throw $r2;
+
+     label0:
+        r0.<java.text.DecimalFormat: java.math.RoundingMode roundingMode> = r1;
+        $r3 = r0.<java.text.DecimalFormat: java.text.DigitList digitList>;
+        virtualinvoke $r3.<java.text.DigitList: void setRoundingMode(java.math.RoundingMode)>(r1);
+        return;
+    }
+
+    void adjustForCurrencyDefaultFractionDigits()
+    {
+        java.text.DecimalFormat r0;
+        java.util.Currency r1;
+        java.lang.IllegalArgumentException r2, $r6;
+        int i0, i1, $i2, $i3;
+        java.text.DecimalFormatSymbols $r3, $r4;
+        java.lang.String $r5;
+
+        r0 := @this: java.text.DecimalFormat;
+        $r3 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        r1 = virtualinvoke $r3.<java.text.DecimalFormatSymbols: java.util.Currency getCurrency()>();
+        if r1 != null goto label3;
+
+     label0:
+        $r4 = r0.<java.text.DecimalFormat: java.text.DecimalFormatSymbols symbols>;
+        $r5 = virtualinvoke $r4.<java.text.DecimalFormatSymbols: java.lang.String getInternationalCurrencySymbol()>();
+        r1 = staticinvoke <java.util.Currency: java.util.Currency getInstance(java.lang.String)>($r5);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r6 := @caughtexception;
+        r2 = $r6;
+
+     label3:
+        if r1 == null goto label5;
+
+        i1 = virtualinvoke r1.<java.util.Currency: int getDefaultFractionDigits()>();
+        if i1 == -1 goto label5;
+
+        i0 = virtualinvoke r0.<java.text.DecimalFormat: int getMinimumFractionDigits()>();
+        $i2 = virtualinvoke r0.<java.text.DecimalFormat: int getMaximumFractionDigits()>();
+        if i0 != $i2 goto label4;
+
+        virtualinvoke r0.<java.text.DecimalFormat: void setMinimumFractionDigits(int)>(i1);
+        virtualinvoke r0.<java.text.DecimalFormat: void setMaximumFractionDigits(int)>(i1);
+        goto label5;
+
+     label4:
+        $i3 = staticinvoke <java.lang.Math: int min(int,int)>(i1, i0);
+        virtualinvoke r0.<java.text.DecimalFormat: void setMinimumFractionDigits(int)>($i3);
+        virtualinvoke r0.<java.text.DecimalFormat: void setMaximumFractionDigits(int)>(i1);
+
+     label5:
+        return;
+
+        catch java.lang.IllegalArgumentException from label0 to label1 with label2;
+    }
+
+    private void readObject(java.io.ObjectInputStream) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        java.text.DecimalFormat r0;
+        java.io.ObjectInputStream r1;
+        java.text.DigitList $r2;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8;
+        java.math.RoundingMode $r3;
+        java.io.InvalidObjectException $r4;
+
+        r0 := @this: java.text.DecimalFormat;
+        r1 := @parameter0: java.io.ObjectInputStream;
+        virtualinvoke r1.<java.io.ObjectInputStream: void defaultReadObject()>();
+        $r2 = new java.text.DigitList;
+        specialinvoke $r2.<java.text.DigitList: void <init>()>();
+        r0.<java.text.DecimalFormat: java.text.DigitList digitList> = $r2;
+        $i0 = r0.<java.text.DecimalFormat: int serialVersionOnStream>;
+        if $i0 >= 4 goto label0;
+
+        $r3 = <java.math.RoundingMode: java.math.RoundingMode HALF_EVEN>;
+        virtualinvoke r0.<java.text.DecimalFormat: void setRoundingMode(java.math.RoundingMode)>($r3);
+
+     label0:
+        $i1 = specialinvoke r0.<java.text.NumberFormat: int getMaximumIntegerDigits()>();
+        if $i1 > 309 goto label1;
+
+        $i2 = specialinvoke r0.<java.text.NumberFormat: int getMaximumFractionDigits()>();
+        if $i2 <= 340 goto label2;
+
+     label1:
+        $r4 = new java.io.InvalidObjectException;
+        specialinvoke $r4.<java.io.InvalidObjectException: void <init>(java.lang.String)>("Digit count out of range");
+        throw $r4;
+
+     label2:
+        $i3 = r0.<java.text.DecimalFormat: int serialVersionOnStream>;
+        if $i3 >= 3 goto label3;
+
+        $i4 = specialinvoke r0.<java.text.NumberFormat: int getMaximumIntegerDigits()>();
+        virtualinvoke r0.<java.text.DecimalFormat: void setMaximumIntegerDigits(int)>($i4);
+        $i5 = specialinvoke r0.<java.text.NumberFormat: int getMinimumIntegerDigits()>();
+        virtualinvoke r0.<java.text.DecimalFormat: void setMinimumIntegerDigits(int)>($i5);
+        $i6 = specialinvoke r0.<java.text.NumberFormat: int getMaximumFractionDigits()>();
+        virtualinvoke r0.<java.text.DecimalFormat: void setMaximumFractionDigits(int)>($i6);
+        $i7 = specialinvoke r0.<java.text.NumberFormat: int getMinimumFractionDigits()>();
+        virtualinvoke r0.<java.text.DecimalFormat: void setMinimumFractionDigits(int)>($i7);
+
+     label3:
+        $i8 = r0.<java.text.DecimalFormat: int serialVersionOnStream>;
+        if $i8 >= 1 goto label4;
+
+        r0.<java.text.DecimalFormat: boolean useExponentialNotation> = 0;
+
+     label4:
+        r0.<java.text.DecimalFormat: int serialVersionOnStream> = 4;
+        return;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        boolean $z0, $z1;
+        java.text.FieldPosition[] $r1;
+        java.util.concurrent.ConcurrentHashMap $r2;
+
+        $r0 = class "java/text/DecimalFormat";
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        <java.text.DecimalFormat: boolean $assertionsDisabled> = $z1;
+        $r1 = newarray (java.text.FieldPosition)[0];
+        <java.text.DecimalFormat: java.text.FieldPosition[] EmptyFieldPositionArray> = $r1;
+        $r2 = new java.util.concurrent.ConcurrentHashMap;
+        specialinvoke $r2.<java.util.concurrent.ConcurrentHashMap: void <init>(int)>(3);
+        <java.text.DecimalFormat: java.util.concurrent.ConcurrentMap cachedLocaleData> = $r2;
+        return;
+    }
+}

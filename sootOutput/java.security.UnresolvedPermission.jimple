@@ -1,0 +1,915 @@
+public final class java.security.UnresolvedPermission extends java.security.Permission implements java.io.Serializable
+{
+    private static final long serialVersionUID;
+    private static final sun.security.util.Debug debug;
+    private java.lang.String type;
+    private java.lang.String name;
+    private java.lang.String actions;
+    private transient java.security.cert.Certificate[] certs;
+    private static final java.lang.Class[] PARAMS0;
+    private static final java.lang.Class[] PARAMS1;
+    private static final java.lang.Class[] PARAMS2;
+
+    public void <init>(java.lang.String, java.lang.String, java.lang.String, java.security.cert.Certificate[])
+    {
+        java.security.UnresolvedPermission r0;
+        java.lang.String r1, r2, r3;
+        java.security.cert.Certificate[] r4, $r9, $r10, $r18, $r19, $r28, $r29;
+        int i0, i1, $i2, i3, $i4, $i5, $i6, $i7, $i8, i9, $i10, $i11, $i12, $i13, $i14;
+        java.util.ArrayList r5, $r20;
+        java.lang.NullPointerException $r6;
+        java.security.cert.Certificate $r7, $r11, $r14, $r21, $r22, $r25;
+        boolean $z0, $z1, $z3;
+        java.lang.Object $r8, $r17;
+        java.security.cert.X509Certificate $r12, $r15, $r23, $r26;
+        java.security.Principal $r13, $r16, $r24, $r27;
+
+        r0 := @this: java.security.UnresolvedPermission;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: java.lang.String;
+        r4 := @parameter3: java.security.cert.Certificate[];
+        specialinvoke r0.<java.security.Permission: void <init>(java.lang.String)>(r1);
+        if r1 != null goto label0;
+
+        $r6 = new java.lang.NullPointerException;
+        specialinvoke $r6.<java.lang.NullPointerException: void <init>(java.lang.String)>("type can\'t be null");
+        throw $r6;
+
+     label0:
+        r0.<java.security.UnresolvedPermission: java.lang.String type> = r1;
+        r0.<java.security.UnresolvedPermission: java.lang.String name> = r2;
+        r0.<java.security.UnresolvedPermission: java.lang.String actions> = r3;
+        if r4 == null goto label13;
+
+        i0 = 0;
+
+     label1:
+        $i2 = lengthof r4;
+        if i0 >= $i2 goto label3;
+
+        $r7 = r4[i0];
+        $z0 = $r7 instanceof java.security.cert.X509Certificate;
+        if $z0 != 0 goto label2;
+
+        $r8 = virtualinvoke r4.<java.lang.Object: java.lang.Object clone()>();
+        $r9 = (java.security.cert.Certificate[]) $r8;
+        r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs> = $r9;
+        goto label3;
+
+     label2:
+        i0 = i0 + 1;
+        goto label1;
+
+     label3:
+        $r10 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        if $r10 != null goto label13;
+
+        i3 = 0;
+        i1 = 0;
+
+     label4:
+        $i4 = lengthof r4;
+        if i3 >= $i4 goto label7;
+
+        i1 = i1 + 1;
+
+     label5:
+        $i5 = i3 + 1;
+        $i6 = lengthof r4;
+        if $i5 >= $i6 goto label6;
+
+        $r11 = r4[i3];
+        $r12 = (java.security.cert.X509Certificate) $r11;
+        $r13 = virtualinvoke $r12.<java.security.cert.X509Certificate: java.security.Principal getIssuerDN()>();
+        $i7 = i3 + 1;
+        $r14 = r4[$i7];
+        $r15 = (java.security.cert.X509Certificate) $r14;
+        $r16 = virtualinvoke $r15.<java.security.cert.X509Certificate: java.security.Principal getSubjectDN()>();
+        $z1 = interfaceinvoke $r13.<java.security.Principal: boolean equals(java.lang.Object)>($r16);
+        if $z1 == 0 goto label6;
+
+        i3 = i3 + 1;
+        goto label5;
+
+     label6:
+        i3 = i3 + 1;
+        goto label4;
+
+     label7:
+        $i8 = lengthof r4;
+        if i1 != $i8 goto label8;
+
+        $r17 = virtualinvoke r4.<java.lang.Object: java.lang.Object clone()>();
+        $r18 = (java.security.cert.Certificate[]) $r17;
+        r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs> = $r18;
+
+     label8:
+        $r19 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        if $r19 != null goto label13;
+
+        $r20 = new java.util.ArrayList;
+        specialinvoke $r20.<java.util.ArrayList: void <init>()>();
+        r5 = $r20;
+        i9 = 0;
+
+     label9:
+        $i10 = lengthof r4;
+        if i9 >= $i10 goto label12;
+
+        $r21 = r4[i9];
+        virtualinvoke r5.<java.util.ArrayList: boolean add(java.lang.Object)>($r21);
+
+     label10:
+        $i11 = i9 + 1;
+        $i12 = lengthof r4;
+        if $i11 >= $i12 goto label11;
+
+        $r22 = r4[i9];
+        $r23 = (java.security.cert.X509Certificate) $r22;
+        $r24 = virtualinvoke $r23.<java.security.cert.X509Certificate: java.security.Principal getIssuerDN()>();
+        $i13 = i9 + 1;
+        $r25 = r4[$i13];
+        $r26 = (java.security.cert.X509Certificate) $r25;
+        $r27 = virtualinvoke $r26.<java.security.cert.X509Certificate: java.security.Principal getSubjectDN()>();
+        $z3 = interfaceinvoke $r24.<java.security.Principal: boolean equals(java.lang.Object)>($r27);
+        if $z3 == 0 goto label11;
+
+        i9 = i9 + 1;
+        goto label10;
+
+     label11:
+        i9 = i9 + 1;
+        goto label9;
+
+     label12:
+        $i14 = virtualinvoke r5.<java.util.ArrayList: int size()>();
+        $r28 = newarray (java.security.cert.Certificate)[$i14];
+        r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs> = $r28;
+        $r29 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        virtualinvoke r5.<java.util.ArrayList: java.lang.Object[] toArray(java.lang.Object[])>($r29);
+
+     label13:
+        return;
+    }
+
+    java.security.Permission resolve(java.security.Permission, java.security.cert.Certificate[])
+    {
+        java.security.UnresolvedPermission r0;
+        java.security.Permission r1, $r16, $r24, $r32, $r40, $r49, $r56;
+        java.security.cert.Certificate[] r2, $r4, $r5, $r6;
+        int i0, i1, $i2, $i3;
+        boolean z0, $z1;
+        java.lang.reflect.Constructor r3, r13, r20, r36, r44, r51;
+        java.security.cert.Certificate $r7, $r8;
+        java.lang.Class r9;
+        java.lang.String $r10, $r11, $r22, $r29, $r30, $r33, $r34, $r38, $r46, $r47, $r53, $r54, $r63, $r65, $r72, $r74;
+        java.lang.Class[] $r12, $r19, $r27, $r35, $r43, $r50;
+        java.lang.Object[] $r14, $r21, $r28, $r37, $r45, $r52;
+        java.lang.Object $r15, $r23, $r31, $r39, $r48, $r55;
+        java.lang.NoSuchMethodException $r17, r18, $r25, r26, $r41, r42, $r57, r58;
+        sun.security.util.Debug $r59, $r60, $r68, $r69;
+        java.lang.StringBuilder $r61, $r62, $r64, $r70, $r71, $r73;
+        java.lang.Exception $r66, r67;
+
+        r0 := @this: java.security.UnresolvedPermission;
+        r1 := @parameter0: java.security.Permission;
+        r2 := @parameter1: java.security.cert.Certificate[];
+        $r4 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        if $r4 == null goto label6;
+
+        if r2 != null goto label0;
+
+        return null;
+
+     label0:
+        i0 = 0;
+
+     label1:
+        $r5 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        $i2 = lengthof $r5;
+        if i0 >= $i2 goto label6;
+
+        z0 = 0;
+        i1 = 0;
+
+     label2:
+        $i3 = lengthof r2;
+        if i1 >= $i3 goto label4;
+
+        $r6 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        $r7 = $r6[i0];
+        $r8 = r2[i1];
+        $z1 = virtualinvoke $r7.<java.security.cert.Certificate: boolean equals(java.lang.Object)>($r8);
+        if $z1 == 0 goto label3;
+
+        z0 = 1;
+        goto label4;
+
+     label3:
+        i1 = i1 + 1;
+        goto label2;
+
+     label4:
+        if z0 != 0 goto label5;
+
+        return null;
+
+     label5:
+        i0 = i0 + 1;
+        goto label1;
+
+     label6:
+        r9 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+        $r10 = r0.<java.security.UnresolvedPermission: java.lang.String name>;
+        if $r10 != null goto label16;
+
+        $r11 = r0.<java.security.UnresolvedPermission: java.lang.String actions>;
+        if $r11 != null goto label16;
+
+     label7:
+        $r12 = <java.security.UnresolvedPermission: java.lang.Class[] PARAMS0>;
+        r13 = virtualinvoke r9.<java.lang.Class: java.lang.reflect.Constructor getConstructor(java.lang.Class[])>($r12);
+        $r14 = newarray (java.lang.Object)[0];
+        $r15 = virtualinvoke r13.<java.lang.reflect.Constructor: java.lang.Object newInstance(java.lang.Object[])>($r14);
+        $r16 = (java.security.Permission) $r15;
+
+     label8:
+        return $r16;
+
+     label9:
+        $r17 := @caughtexception;
+
+     label10:
+        r18 = $r17;
+
+     label11:
+        $r19 = <java.security.UnresolvedPermission: java.lang.Class[] PARAMS1>;
+        r20 = virtualinvoke r9.<java.lang.Class: java.lang.reflect.Constructor getConstructor(java.lang.Class[])>($r19);
+        $r21 = newarray (java.lang.Object)[1];
+        $r22 = r0.<java.security.UnresolvedPermission: java.lang.String name>;
+        $r21[0] = $r22;
+        $r23 = virtualinvoke r20.<java.lang.reflect.Constructor: java.lang.Object newInstance(java.lang.Object[])>($r21);
+        $r24 = (java.security.Permission) $r23;
+
+     label12:
+        return $r24;
+
+     label13:
+        $r25 := @caughtexception;
+
+     label14:
+        r26 = $r25;
+        $r27 = <java.security.UnresolvedPermission: java.lang.Class[] PARAMS2>;
+        r3 = virtualinvoke r9.<java.lang.Class: java.lang.reflect.Constructor getConstructor(java.lang.Class[])>($r27);
+        $r28 = newarray (java.lang.Object)[2];
+        $r29 = r0.<java.security.UnresolvedPermission: java.lang.String name>;
+        $r28[0] = $r29;
+        $r30 = r0.<java.security.UnresolvedPermission: java.lang.String actions>;
+        $r28[1] = $r30;
+        $r31 = virtualinvoke r3.<java.lang.reflect.Constructor: java.lang.Object newInstance(java.lang.Object[])>($r28);
+        $r32 = (java.security.Permission) $r31;
+
+     label15:
+        return $r32;
+
+     label16:
+        $r33 = r0.<java.security.UnresolvedPermission: java.lang.String name>;
+        if $r33 == null goto label22;
+
+        $r34 = r0.<java.security.UnresolvedPermission: java.lang.String actions>;
+        if $r34 != null goto label22;
+
+     label17:
+        $r35 = <java.security.UnresolvedPermission: java.lang.Class[] PARAMS1>;
+        r36 = virtualinvoke r9.<java.lang.Class: java.lang.reflect.Constructor getConstructor(java.lang.Class[])>($r35);
+        $r37 = newarray (java.lang.Object)[1];
+        $r38 = r0.<java.security.UnresolvedPermission: java.lang.String name>;
+        $r37[0] = $r38;
+        $r39 = virtualinvoke r36.<java.lang.reflect.Constructor: java.lang.Object newInstance(java.lang.Object[])>($r37);
+        $r40 = (java.security.Permission) $r39;
+
+     label18:
+        return $r40;
+
+     label19:
+        $r41 := @caughtexception;
+
+     label20:
+        r42 = $r41;
+        $r43 = <java.security.UnresolvedPermission: java.lang.Class[] PARAMS2>;
+        r44 = virtualinvoke r9.<java.lang.Class: java.lang.reflect.Constructor getConstructor(java.lang.Class[])>($r43);
+        $r45 = newarray (java.lang.Object)[2];
+        $r46 = r0.<java.security.UnresolvedPermission: java.lang.String name>;
+        $r45[0] = $r46;
+        $r47 = r0.<java.security.UnresolvedPermission: java.lang.String actions>;
+        $r45[1] = $r47;
+        $r48 = virtualinvoke r44.<java.lang.reflect.Constructor: java.lang.Object newInstance(java.lang.Object[])>($r45);
+        $r49 = (java.security.Permission) $r48;
+
+     label21:
+        return $r49;
+
+     label22:
+        $r50 = <java.security.UnresolvedPermission: java.lang.Class[] PARAMS2>;
+        r51 = virtualinvoke r9.<java.lang.Class: java.lang.reflect.Constructor getConstructor(java.lang.Class[])>($r50);
+        $r52 = newarray (java.lang.Object)[2];
+        $r53 = r0.<java.security.UnresolvedPermission: java.lang.String name>;
+        $r52[0] = $r53;
+        $r54 = r0.<java.security.UnresolvedPermission: java.lang.String actions>;
+        $r52[1] = $r54;
+        $r55 = virtualinvoke r51.<java.lang.reflect.Constructor: java.lang.Object newInstance(java.lang.Object[])>($r52);
+        $r56 = (java.security.Permission) $r55;
+
+     label23:
+        return $r56;
+
+     label24:
+        $r57 := @caughtexception;
+        r58 = $r57;
+        $r59 = <java.security.UnresolvedPermission: sun.security.util.Debug debug>;
+        if $r59 == null goto label25;
+
+        $r60 = <java.security.UnresolvedPermission: sun.security.util.Debug debug>;
+        $r61 = new java.lang.StringBuilder;
+        specialinvoke $r61.<java.lang.StringBuilder: void <init>()>();
+        $r62 = virtualinvoke $r61.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("NoSuchMethodException:\n  could not find proper constructor for ");
+        $r63 = r0.<java.security.UnresolvedPermission: java.lang.String type>;
+        $r64 = virtualinvoke $r62.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r63);
+        $r65 = virtualinvoke $r64.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke $r60.<sun.security.util.Debug: void println(java.lang.String)>($r65);
+        virtualinvoke r58.<java.lang.NoSuchMethodException: void printStackTrace()>();
+
+     label25:
+        return null;
+
+     label26:
+        $r66 := @caughtexception;
+        r67 = $r66;
+        $r68 = <java.security.UnresolvedPermission: sun.security.util.Debug debug>;
+        if $r68 == null goto label27;
+
+        $r69 = <java.security.UnresolvedPermission: sun.security.util.Debug debug>;
+        $r70 = new java.lang.StringBuilder;
+        specialinvoke $r70.<java.lang.StringBuilder: void <init>()>();
+        $r71 = virtualinvoke $r70.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("unable to instantiate ");
+        $r72 = r0.<java.security.UnresolvedPermission: java.lang.String name>;
+        $r73 = virtualinvoke $r71.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r72);
+        $r74 = virtualinvoke $r73.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke $r69.<sun.security.util.Debug: void println(java.lang.String)>($r74);
+        virtualinvoke r67.<java.lang.Exception: void printStackTrace()>();
+
+     label27:
+        return null;
+
+        catch java.lang.NoSuchMethodException from label7 to label8 with label9;
+        catch java.lang.NoSuchMethodException from label11 to label12 with label13;
+        catch java.lang.NoSuchMethodException from label17 to label18 with label19;
+        catch java.lang.NoSuchMethodException from label6 to label8 with label24;
+        catch java.lang.NoSuchMethodException from label10 to label12 with label24;
+        catch java.lang.NoSuchMethodException from label14 to label15 with label24;
+        catch java.lang.NoSuchMethodException from label16 to label18 with label24;
+        catch java.lang.NoSuchMethodException from label20 to label21 with label24;
+        catch java.lang.NoSuchMethodException from label22 to label23 with label24;
+        catch java.lang.Exception from label6 to label8 with label26;
+        catch java.lang.Exception from label10 to label12 with label26;
+        catch java.lang.Exception from label14 to label15 with label26;
+        catch java.lang.Exception from label16 to label18 with label26;
+        catch java.lang.Exception from label20 to label21 with label26;
+        catch java.lang.Exception from label22 to label23 with label26;
+    }
+
+    public boolean implies(java.security.Permission)
+    {
+        java.security.UnresolvedPermission r0;
+        java.security.Permission r1;
+
+        r0 := @this: java.security.UnresolvedPermission;
+        r1 := @parameter0: java.security.Permission;
+        return 0;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        java.security.UnresolvedPermission r0, r2;
+        java.lang.Object r1;
+        int i0, i1, $i2, $i3, $i4, $i5, i6, $i7, i8, $i9;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, z6, $z7;
+        java.lang.String $r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12;
+        java.security.cert.Certificate[] $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r26, $r28, $r29, $r30, $r31, $r33;
+        java.security.cert.Certificate $r25, $r27, $r32, $r34;
+
+        r0 := @this: java.security.UnresolvedPermission;
+        r1 := @parameter0: java.lang.Object;
+        if r1 != r0 goto label0;
+
+        return 1;
+
+     label0:
+        $z1 = r1 instanceof java.security.UnresolvedPermission;
+        if $z1 != 0 goto label1;
+
+        return 0;
+
+     label1:
+        r2 = (java.security.UnresolvedPermission) r1;
+        $r3 = r0.<java.security.UnresolvedPermission: java.lang.String type>;
+        $r4 = r2.<java.security.UnresolvedPermission: java.lang.String type>;
+        $z2 = virtualinvoke $r3.<java.lang.String: boolean equals(java.lang.Object)>($r4);
+        if $z2 != 0 goto label2;
+
+        return 0;
+
+     label2:
+        $r5 = r0.<java.security.UnresolvedPermission: java.lang.String name>;
+        if $r5 != null goto label3;
+
+        $r6 = r2.<java.security.UnresolvedPermission: java.lang.String name>;
+        if $r6 == null goto label4;
+
+        return 0;
+
+     label3:
+        $r7 = r0.<java.security.UnresolvedPermission: java.lang.String name>;
+        $r8 = r2.<java.security.UnresolvedPermission: java.lang.String name>;
+        $z3 = virtualinvoke $r7.<java.lang.String: boolean equals(java.lang.Object)>($r8);
+        if $z3 != 0 goto label4;
+
+        return 0;
+
+     label4:
+        $r9 = r0.<java.security.UnresolvedPermission: java.lang.String actions>;
+        if $r9 != null goto label5;
+
+        $r10 = r2.<java.security.UnresolvedPermission: java.lang.String actions>;
+        if $r10 == null goto label6;
+
+        return 0;
+
+     label5:
+        $r11 = r0.<java.security.UnresolvedPermission: java.lang.String actions>;
+        $r12 = r2.<java.security.UnresolvedPermission: java.lang.String actions>;
+        $z4 = virtualinvoke $r11.<java.lang.String: boolean equals(java.lang.Object)>($r12);
+        if $z4 != 0 goto label6;
+
+        return 0;
+
+     label6:
+        $r13 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        if $r13 != null goto label7;
+
+        $r14 = r2.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        if $r14 != null goto label9;
+
+     label7:
+        $r15 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        if $r15 == null goto label8;
+
+        $r16 = r2.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        if $r16 == null goto label9;
+
+     label8:
+        $r17 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        if $r17 == null goto label10;
+
+        $r18 = r2.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        if $r18 == null goto label10;
+
+        $r19 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        $i2 = lengthof $r19;
+        $r20 = r2.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        $i3 = lengthof $r20;
+        if $i2 == $i3 goto label10;
+
+     label9:
+        return 0;
+
+     label10:
+        i0 = 0;
+
+     label11:
+        $r21 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        if $r21 == null goto label16;
+
+        $r22 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        $i4 = lengthof $r22;
+        if i0 >= $i4 goto label16;
+
+        z0 = 0;
+        i1 = 0;
+
+     label12:
+        $r23 = r2.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        $i5 = lengthof $r23;
+        if i1 >= $i5 goto label14;
+
+        $r24 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        $r25 = $r24[i0];
+        $r26 = r2.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        $r27 = $r26[i1];
+        $z5 = virtualinvoke $r25.<java.security.cert.Certificate: boolean equals(java.lang.Object)>($r27);
+        if $z5 == 0 goto label13;
+
+        z0 = 1;
+        goto label14;
+
+     label13:
+        i1 = i1 + 1;
+        goto label12;
+
+     label14:
+        if z0 != 0 goto label15;
+
+        return 0;
+
+     label15:
+        i0 = i0 + 1;
+        goto label11;
+
+     label16:
+        i6 = 0;
+
+     label17:
+        $r28 = r2.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        if $r28 == null goto label22;
+
+        $r29 = r2.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        $i7 = lengthof $r29;
+        if i6 >= $i7 goto label22;
+
+        z6 = 0;
+        i8 = 0;
+
+     label18:
+        $r30 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        $i9 = lengthof $r30;
+        if i8 >= $i9 goto label20;
+
+        $r31 = r2.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        $r32 = $r31[i6];
+        $r33 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        $r34 = $r33[i8];
+        $z7 = virtualinvoke $r32.<java.security.cert.Certificate: boolean equals(java.lang.Object)>($r34);
+        if $z7 == 0 goto label19;
+
+        z6 = 1;
+        goto label20;
+
+     label19:
+        i8 = i8 + 1;
+        goto label18;
+
+     label20:
+        if z6 != 0 goto label21;
+
+        return 0;
+
+     label21:
+        i6 = i6 + 1;
+        goto label17;
+
+     label22:
+        return 1;
+    }
+
+    public int hashCode()
+    {
+        java.security.UnresolvedPermission r0;
+        int i0, $i1, $i2;
+        java.lang.String $r1, $r2, $r3, $r4, $r5;
+
+        r0 := @this: java.security.UnresolvedPermission;
+        $r1 = r0.<java.security.UnresolvedPermission: java.lang.String type>;
+        i0 = virtualinvoke $r1.<java.lang.String: int hashCode()>();
+        $r2 = r0.<java.security.UnresolvedPermission: java.lang.String name>;
+        if $r2 == null goto label0;
+
+        $r3 = r0.<java.security.UnresolvedPermission: java.lang.String name>;
+        $i1 = virtualinvoke $r3.<java.lang.String: int hashCode()>();
+        i0 = i0 ^ $i1;
+
+     label0:
+        $r4 = r0.<java.security.UnresolvedPermission: java.lang.String actions>;
+        if $r4 == null goto label1;
+
+        $r5 = r0.<java.security.UnresolvedPermission: java.lang.String actions>;
+        $i2 = virtualinvoke $r5.<java.lang.String: int hashCode()>();
+        i0 = i0 ^ $i2;
+
+     label1:
+        return i0;
+    }
+
+    public java.lang.String getActions()
+    {
+        java.security.UnresolvedPermission r0;
+
+        r0 := @this: java.security.UnresolvedPermission;
+        return "";
+    }
+
+    public java.lang.String getUnresolvedType()
+    {
+        java.security.UnresolvedPermission r0;
+        java.lang.String $r1;
+
+        r0 := @this: java.security.UnresolvedPermission;
+        $r1 = r0.<java.security.UnresolvedPermission: java.lang.String type>;
+        return $r1;
+    }
+
+    public java.lang.String getUnresolvedName()
+    {
+        java.security.UnresolvedPermission r0;
+        java.lang.String $r1;
+
+        r0 := @this: java.security.UnresolvedPermission;
+        $r1 = r0.<java.security.UnresolvedPermission: java.lang.String name>;
+        return $r1;
+    }
+
+    public java.lang.String getUnresolvedActions()
+    {
+        java.security.UnresolvedPermission r0;
+        java.lang.String $r1;
+
+        r0 := @this: java.security.UnresolvedPermission;
+        $r1 = r0.<java.security.UnresolvedPermission: java.lang.String actions>;
+        return $r1;
+    }
+
+    public java.security.cert.Certificate[] getUnresolvedCerts()
+    {
+        java.security.UnresolvedPermission r0;
+        java.security.cert.Certificate[] $r1, $r2, $r3;
+        java.lang.Object $r4;
+
+        r0 := @this: java.security.UnresolvedPermission;
+        $r1 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        if $r1 != null goto label0;
+
+        $r2 = null;
+        goto label1;
+
+     label0:
+        $r3 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        $r4 = virtualinvoke $r3.<java.lang.Object: java.lang.Object clone()>();
+        $r2 = (java.security.cert.Certificate[]) $r4;
+
+     label1:
+        return $r2;
+    }
+
+    public java.lang.String toString()
+    {
+        java.security.UnresolvedPermission r0;
+        java.lang.StringBuilder $r1, $r2, $r4, $r5, $r7, $r8, $r10, $r11;
+        java.lang.String $r3, $r6, $r9, $r12;
+
+        r0 := @this: java.security.UnresolvedPermission;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r2 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("(unresolved ");
+        $r3 = r0.<java.security.UnresolvedPermission: java.lang.String type>;
+        $r4 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r3);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" ");
+        $r6 = r0.<java.security.UnresolvedPermission: java.lang.String name>;
+        $r7 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" ");
+        $r9 = r0.<java.security.UnresolvedPermission: java.lang.String actions>;
+        $r10 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r9);
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(")");
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r12;
+    }
+
+    public java.security.PermissionCollection newPermissionCollection()
+    {
+        java.security.UnresolvedPermission r0;
+        java.security.UnresolvedPermissionCollection $r1;
+
+        r0 := @this: java.security.UnresolvedPermission;
+        $r1 = new java.security.UnresolvedPermissionCollection;
+        specialinvoke $r1.<java.security.UnresolvedPermissionCollection: void <init>()>();
+        return $r1;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream) throws java.io.IOException
+    {
+        java.security.UnresolvedPermission r0;
+        java.io.ObjectOutputStream r1;
+        int i0, $i1, $i2, $i3, $i4;
+        java.security.cert.Certificate r2;
+        byte[] r3;
+        java.security.cert.Certificate[] $r4, $r5, $r6, $r7, $r8;
+        java.lang.String $r9, $r13;
+        java.security.cert.CertificateEncodingException $r10, r11;
+        java.io.IOException $r12;
+
+        r0 := @this: java.security.UnresolvedPermission;
+        r1 := @parameter0: java.io.ObjectOutputStream;
+        virtualinvoke r1.<java.io.ObjectOutputStream: void defaultWriteObject()>();
+        $r4 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        if $r4 == null goto label0;
+
+        $r5 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        $i1 = lengthof $r5;
+        if $i1 != 0 goto label1;
+
+     label0:
+        virtualinvoke r1.<java.io.ObjectOutputStream: void writeInt(int)>(0);
+        goto label7;
+
+     label1:
+        $r6 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        $i2 = lengthof $r6;
+        virtualinvoke r1.<java.io.ObjectOutputStream: void writeInt(int)>($i2);
+        i0 = 0;
+
+     label2:
+        $r7 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        $i3 = lengthof $r7;
+        if i0 >= $i3 goto label7;
+
+        $r8 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        r2 = $r8[i0];
+
+     label3:
+        $r9 = virtualinvoke r2.<java.security.cert.Certificate: java.lang.String getType()>();
+        virtualinvoke r1.<java.io.ObjectOutputStream: void writeUTF(java.lang.String)>($r9);
+        r3 = virtualinvoke r2.<java.security.cert.Certificate: byte[] getEncoded()>();
+        $i4 = lengthof r3;
+        virtualinvoke r1.<java.io.ObjectOutputStream: void writeInt(int)>($i4);
+        virtualinvoke r1.<java.io.ObjectOutputStream: void write(byte[])>(r3);
+
+     label4:
+        goto label6;
+
+     label5:
+        $r10 := @caughtexception;
+        r11 = $r10;
+        $r12 = new java.io.IOException;
+        $r13 = virtualinvoke r11.<java.security.cert.CertificateEncodingException: java.lang.String getMessage()>();
+        specialinvoke $r12.<java.io.IOException: void <init>(java.lang.String)>($r13);
+        throw $r12;
+
+     label6:
+        i0 = i0 + 1;
+        goto label2;
+
+     label7:
+        return;
+
+        catch java.security.cert.CertificateEncodingException from label3 to label4 with label5;
+    }
+
+    private void readObject(java.io.ObjectInputStream) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        java.security.UnresolvedPermission r0;
+        java.io.ObjectInputStream r1;
+        java.util.Hashtable r2, $r10;
+        int i0, i1, $i2;
+        java.lang.String r3, $r8, $r19, $r30;
+        java.security.cert.CertificateFactory r4;
+        java.security.cert.CertificateException r5, r7, $r13, $r28;
+        java.lang.OutOfMemoryError r6, $r22;
+        java.lang.NullPointerException $r9;
+        java.security.cert.Certificate[] $r11, $r26;
+        boolean $z0;
+        java.lang.Object $r12;
+        java.lang.ClassNotFoundException $r14;
+        java.lang.StringBuilder $r15, $r16, $r17, $r18;
+        null_type n0;
+        byte[] r21;
+        java.io.IOException $r23, $r29;
+        java.io.ByteArrayInputStream $r24, r25;
+        java.security.cert.Certificate $r27;
+
+        r0 := @this: java.security.UnresolvedPermission;
+        r1 := @parameter0: java.io.ObjectInputStream;
+        r2 = null;
+        virtualinvoke r1.<java.io.ObjectInputStream: void defaultReadObject()>();
+        $r8 = r0.<java.security.UnresolvedPermission: java.lang.String type>;
+        if $r8 != null goto label0;
+
+        $r9 = new java.lang.NullPointerException;
+        specialinvoke $r9.<java.lang.NullPointerException: void <init>(java.lang.String)>("type can\'t be null");
+        throw $r9;
+
+     label0:
+        i0 = virtualinvoke r1.<java.io.ObjectInputStream: int readInt()>();
+        if i0 <= 0 goto label1;
+
+        $r10 = new java.util.Hashtable;
+        specialinvoke $r10.<java.util.Hashtable: void <init>(int)>(3);
+        r2 = $r10;
+        $r11 = newarray (java.security.cert.Certificate)[i0];
+        r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs> = $r11;
+
+     label1:
+        i1 = 0;
+
+     label2:
+        if i1 >= i0 goto label16;
+
+        r3 = virtualinvoke r1.<java.io.ObjectInputStream: java.lang.String readUTF()>();
+        $z0 = virtualinvoke r2.<java.util.Hashtable: boolean containsKey(java.lang.Object)>(r3);
+        if $z0 == 0 goto label3;
+
+        $r12 = virtualinvoke r2.<java.util.Hashtable: java.lang.Object get(java.lang.Object)>(r3);
+        r4 = (java.security.cert.CertificateFactory) $r12;
+        goto label7;
+
+     label3:
+        r4 = staticinvoke <java.security.cert.CertificateFactory: java.security.cert.CertificateFactory getInstance(java.lang.String)>(r3);
+
+     label4:
+        goto label6;
+
+     label5:
+        $r13 := @caughtexception;
+        r5 = $r13;
+        $r14 = new java.lang.ClassNotFoundException;
+        $r15 = new java.lang.StringBuilder;
+        specialinvoke $r15.<java.lang.StringBuilder: void <init>()>();
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Certificate factory for ");
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r3);
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" not found");
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r14.<java.lang.ClassNotFoundException: void <init>(java.lang.String)>($r19);
+        throw $r14;
+
+     label6:
+        virtualinvoke r2.<java.util.Hashtable: java.lang.Object put(java.lang.Object,java.lang.Object)>(r3, r4);
+
+     label7:
+        n0 = null;
+
+     label8:
+        $i2 = virtualinvoke r1.<java.io.ObjectInputStream: int readInt()>();
+        r21 = newarray (byte)[$i2];
+
+     label9:
+        goto label11;
+
+     label10:
+        $r22 := @caughtexception;
+        r6 = $r22;
+        $r23 = new java.io.IOException;
+        specialinvoke $r23.<java.io.IOException: void <init>(java.lang.String)>("Certificate too big");
+        throw $r23;
+
+     label11:
+        virtualinvoke r1.<java.io.ObjectInputStream: void readFully(byte[])>(r21);
+        $r24 = new java.io.ByteArrayInputStream;
+        specialinvoke $r24.<java.io.ByteArrayInputStream: void <init>(byte[])>(r21);
+        r25 = $r24;
+
+     label12:
+        $r26 = r0.<java.security.UnresolvedPermission: java.security.cert.Certificate[] certs>;
+        $r27 = virtualinvoke r4.<java.security.cert.CertificateFactory: java.security.cert.Certificate generateCertificate(java.io.InputStream)>(r25);
+        $r26[i1] = $r27;
+
+     label13:
+        goto label15;
+
+     label14:
+        $r28 := @caughtexception;
+        r7 = $r28;
+        $r29 = new java.io.IOException;
+        $r30 = virtualinvoke r7.<java.security.cert.CertificateException: java.lang.String getMessage()>();
+        specialinvoke $r29.<java.io.IOException: void <init>(java.lang.String)>($r30);
+        throw $r29;
+
+     label15:
+        virtualinvoke r25.<java.io.ByteArrayInputStream: void close()>();
+        i1 = i1 + 1;
+        goto label2;
+
+     label16:
+        return;
+
+        catch java.security.cert.CertificateException from label3 to label4 with label5;
+        catch java.lang.OutOfMemoryError from label8 to label9 with label10;
+        catch java.security.cert.CertificateException from label12 to label13 with label14;
+    }
+
+    static void <clinit>()
+    {
+        sun.security.util.Debug $r0;
+        java.lang.Class[] $r1, $r2, $r3;
+
+        $r0 = staticinvoke <sun.security.util.Debug: sun.security.util.Debug getInstance(java.lang.String,java.lang.String)>("policy,access", "UnresolvedPermission");
+        <java.security.UnresolvedPermission: sun.security.util.Debug debug> = $r0;
+        $r1 = newarray (java.lang.Class)[0];
+        <java.security.UnresolvedPermission: java.lang.Class[] PARAMS0> = $r1;
+        $r2 = newarray (java.lang.Class)[1];
+        $r2[0] = class "java/lang/String";
+        <java.security.UnresolvedPermission: java.lang.Class[] PARAMS1> = $r2;
+        $r3 = newarray (java.lang.Class)[2];
+        $r3[0] = class "java/lang/String";
+        $r3[1] = class "java/lang/String";
+        <java.security.UnresolvedPermission: java.lang.Class[] PARAMS2> = $r3;
+        return;
+    }
+}

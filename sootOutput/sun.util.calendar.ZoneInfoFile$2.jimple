@@ -1,0 +1,80 @@
+final class sun.util.calendar.ZoneInfoFile$2 extends java.lang.Object implements java.security.PrivilegedExceptionAction
+{
+    final java.lang.String val$fileName;
+
+    void <init>(java.lang.String)
+    {
+        sun.util.calendar.ZoneInfoFile$2 r0;
+        java.lang.String r1;
+
+        r0 := @this: sun.util.calendar.ZoneInfoFile$2;
+        r1 := @parameter0: java.lang.String;
+        r0.<sun.util.calendar.ZoneInfoFile$2: java.lang.String val$fileName> = r1;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public java.lang.Object run() throws java.io.IOException
+    {
+        sun.util.calendar.ZoneInfoFile$2 r0;
+        java.io.File $r1, r3;
+        java.lang.String $r2, $r7, $r12, $r14;
+        byte[] r4;
+        int i0, $i2;
+        java.io.FileInputStream r5, $r8;
+        java.lang.Throwable r6, $r15;
+        long $l1;
+        java.io.IOException $r9;
+        java.lang.StringBuilder $r10, $r11, $r13;
+
+        r0 := @this: sun.util.calendar.ZoneInfoFile$2;
+        $r1 = new java.io.File;
+        $r2 = staticinvoke <sun.util.calendar.ZoneInfoFile: java.lang.String access$000()>();
+        $r7 = r0.<sun.util.calendar.ZoneInfoFile$2: java.lang.String val$fileName>;
+        specialinvoke $r1.<java.io.File: void <init>(java.lang.String,java.lang.String)>($r2, $r7);
+        r3 = $r1;
+        r4 = null;
+        $l1 = virtualinvoke r3.<java.io.File: long length()>();
+        i0 = (int) $l1;
+        if i0 <= 0 goto label5;
+
+        $r8 = new java.io.FileInputStream;
+        specialinvoke $r8.<java.io.FileInputStream: void <init>(java.io.File)>(r3);
+        r5 = $r8;
+        r4 = newarray (byte)[i0];
+
+     label0:
+        $i2 = virtualinvoke r5.<java.io.FileInputStream: int read(byte[])>(r4);
+        if $i2 == i0 goto label1;
+
+        $r9 = new java.io.IOException;
+        $r10 = new java.lang.StringBuilder;
+        specialinvoke $r10.<java.lang.StringBuilder: void <init>()>();
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("read error on ");
+        $r12 = r0.<sun.util.calendar.ZoneInfoFile$2: java.lang.String val$fileName>;
+        $r13 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r12);
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r9.<java.io.IOException: void <init>(java.lang.String)>($r14);
+        throw $r9;
+
+     label1:
+        virtualinvoke r5.<java.io.FileInputStream: void close()>();
+        goto label5;
+
+     label2:
+        $r15 := @caughtexception;
+
+     label3:
+        r6 = $r15;
+
+     label4:
+        virtualinvoke r5.<java.io.FileInputStream: void close()>();
+        throw r6;
+
+     label5:
+        return r4;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+}

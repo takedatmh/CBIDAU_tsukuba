@@ -1,0 +1,466 @@
+public class sun.security.x509.PrivateKeyUsageExtension extends sun.security.x509.Extension implements sun.security.x509.CertAttrSet
+{
+    public static final java.lang.String IDENT;
+    public static final java.lang.String NAME;
+    public static final java.lang.String NOT_BEFORE;
+    public static final java.lang.String NOT_AFTER;
+    private static final byte TAG_BEFORE;
+    private static final byte TAG_AFTER;
+    private java.util.Date notBefore;
+    private java.util.Date notAfter;
+
+    private void encodeThis() throws java.io.IOException
+    {
+        sun.security.x509.PrivateKeyUsageExtension r0;
+        sun.security.util.DerOutputStream r1, r2, r3, $r6, $r7, $r9, $r12, r13;
+        java.util.Date $r4, $r5, $r8, $r10, $r11, $r14;
+        byte $b0, $b1;
+        byte[] $r15;
+
+        r0 := @this: sun.security.x509.PrivateKeyUsageExtension;
+        $r4 = r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notBefore>;
+        if $r4 != null goto label0;
+
+        $r5 = r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notAfter>;
+        if $r5 != null goto label0;
+
+        r0.<sun.security.x509.PrivateKeyUsageExtension: byte[] extensionValue> = null;
+        return;
+
+     label0:
+        $r6 = new sun.security.util.DerOutputStream;
+        specialinvoke $r6.<sun.security.util.DerOutputStream: void <init>()>();
+        r1 = $r6;
+        $r7 = new sun.security.util.DerOutputStream;
+        specialinvoke $r7.<sun.security.util.DerOutputStream: void <init>()>();
+        r2 = $r7;
+        $r8 = r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notBefore>;
+        if $r8 == null goto label1;
+
+        $r9 = new sun.security.util.DerOutputStream;
+        specialinvoke $r9.<sun.security.util.DerOutputStream: void <init>()>();
+        r3 = $r9;
+        $r10 = r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notBefore>;
+        virtualinvoke r3.<sun.security.util.DerOutputStream: void putGeneralizedTime(java.util.Date)>($r10);
+        $b0 = staticinvoke <sun.security.util.DerValue: byte createTag(byte,boolean,byte)>(-128, 0, 0);
+        virtualinvoke r2.<sun.security.util.DerOutputStream: void writeImplicit(byte,sun.security.util.DerOutputStream)>($b0, r3);
+
+     label1:
+        $r11 = r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notAfter>;
+        if $r11 == null goto label2;
+
+        $r12 = new sun.security.util.DerOutputStream;
+        specialinvoke $r12.<sun.security.util.DerOutputStream: void <init>()>();
+        r13 = $r12;
+        $r14 = r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notAfter>;
+        virtualinvoke r13.<sun.security.util.DerOutputStream: void putGeneralizedTime(java.util.Date)>($r14);
+        $b1 = staticinvoke <sun.security.util.DerValue: byte createTag(byte,boolean,byte)>(-128, 0, 1);
+        virtualinvoke r2.<sun.security.util.DerOutputStream: void writeImplicit(byte,sun.security.util.DerOutputStream)>($b1, r13);
+
+     label2:
+        virtualinvoke r1.<sun.security.util.DerOutputStream: void write(byte,sun.security.util.DerOutputStream)>(48, r2);
+        $r15 = virtualinvoke r1.<sun.security.util.DerOutputStream: byte[] toByteArray()>();
+        r0.<sun.security.x509.PrivateKeyUsageExtension: byte[] extensionValue> = $r15;
+        return;
+    }
+
+    public void <init>(java.util.Date, java.util.Date) throws java.io.IOException
+    {
+        sun.security.x509.PrivateKeyUsageExtension r0;
+        java.util.Date r1, r2;
+        sun.security.util.ObjectIdentifier $r3;
+
+        r0 := @this: sun.security.x509.PrivateKeyUsageExtension;
+        r1 := @parameter0: java.util.Date;
+        r2 := @parameter1: java.util.Date;
+        specialinvoke r0.<sun.security.x509.Extension: void <init>()>();
+        r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notBefore> = null;
+        r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notAfter> = null;
+        r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notBefore> = r1;
+        r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notAfter> = r2;
+        $r3 = <sun.security.x509.PKIXExtensions: sun.security.util.ObjectIdentifier PrivateKeyUsage_Id>;
+        r0.<sun.security.x509.PrivateKeyUsageExtension: sun.security.util.ObjectIdentifier extensionId> = $r3;
+        r0.<sun.security.x509.PrivateKeyUsageExtension: boolean critical> = 0;
+        specialinvoke r0.<sun.security.x509.PrivateKeyUsageExtension: void encodeThis()>();
+        return;
+    }
+
+    public void <init>(java.lang.Boolean, java.lang.Object) throws java.security.cert.CertificateException, java.io.IOException
+    {
+        sun.security.x509.PrivateKeyUsageExtension r0;
+        java.lang.Boolean r1;
+        java.lang.Object r2;
+        sun.security.util.DerInputStream r3, $r9, $r13, r15, $r19, r21;
+        sun.security.util.DerValue[] r4;
+        int i0, $i1;
+        sun.security.util.DerValue r5;
+        sun.security.util.ObjectIdentifier $r6;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        byte[] $r7, $r8, $r10, $r14, $r20;
+        java.util.Date $r11, $r16, $r17, $r22;
+        java.security.cert.CertificateParsingException $r12, $r18;
+        java.io.IOException $r23;
+
+        r0 := @this: sun.security.x509.PrivateKeyUsageExtension;
+        r1 := @parameter0: java.lang.Boolean;
+        r2 := @parameter1: java.lang.Object;
+        specialinvoke r0.<sun.security.x509.Extension: void <init>()>();
+        r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notBefore> = null;
+        r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notAfter> = null;
+        $r6 = <sun.security.x509.PKIXExtensions: sun.security.util.ObjectIdentifier PrivateKeyUsage_Id>;
+        r0.<sun.security.x509.PrivateKeyUsageExtension: sun.security.util.ObjectIdentifier extensionId> = $r6;
+        $z0 = virtualinvoke r1.<java.lang.Boolean: boolean booleanValue()>();
+        r0.<sun.security.x509.PrivateKeyUsageExtension: boolean critical> = $z0;
+        $r7 = (byte[]) r2;
+        $r8 = (byte[]) $r7;
+        r0.<sun.security.x509.PrivateKeyUsageExtension: byte[] extensionValue> = $r8;
+        $r9 = new sun.security.util.DerInputStream;
+        $r10 = r0.<sun.security.x509.PrivateKeyUsageExtension: byte[] extensionValue>;
+        specialinvoke $r9.<sun.security.util.DerInputStream: void <init>(byte[])>($r10);
+        r3 = $r9;
+        r4 = virtualinvoke r3.<sun.security.util.DerInputStream: sun.security.util.DerValue[] getSequence(int)>(2);
+        i0 = 0;
+
+     label0:
+        $i1 = lengthof r4;
+        if i0 >= $i1 goto label6;
+
+        r5 = r4[i0];
+        $z1 = virtualinvoke r5.<sun.security.util.DerValue: boolean isContextSpecific(byte)>(0);
+        if $z1 == 0 goto label2;
+
+        $z2 = virtualinvoke r5.<sun.security.util.DerValue: boolean isConstructed()>();
+        if $z2 != 0 goto label2;
+
+        $r11 = r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notBefore>;
+        if $r11 == null goto label1;
+
+        $r12 = new java.security.cert.CertificateParsingException;
+        specialinvoke $r12.<java.security.cert.CertificateParsingException: void <init>(java.lang.String)>("Duplicate notBefore in PrivateKeyUsage.");
+        throw $r12;
+
+     label1:
+        virtualinvoke r5.<sun.security.util.DerValue: void resetTag(byte)>(24);
+        $r13 = new sun.security.util.DerInputStream;
+        $r14 = virtualinvoke r5.<sun.security.util.DerValue: byte[] toByteArray()>();
+        specialinvoke $r13.<sun.security.util.DerInputStream: void <init>(byte[])>($r14);
+        r15 = $r13;
+        $r16 = virtualinvoke r15.<sun.security.util.DerInputStream: java.util.Date getGeneralizedTime()>();
+        r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notBefore> = $r16;
+        goto label5;
+
+     label2:
+        $z3 = virtualinvoke r5.<sun.security.util.DerValue: boolean isContextSpecific(byte)>(1);
+        if $z3 == 0 goto label4;
+
+        $z4 = virtualinvoke r5.<sun.security.util.DerValue: boolean isConstructed()>();
+        if $z4 != 0 goto label4;
+
+        $r17 = r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notAfter>;
+        if $r17 == null goto label3;
+
+        $r18 = new java.security.cert.CertificateParsingException;
+        specialinvoke $r18.<java.security.cert.CertificateParsingException: void <init>(java.lang.String)>("Duplicate notAfter in PrivateKeyUsage.");
+        throw $r18;
+
+     label3:
+        virtualinvoke r5.<sun.security.util.DerValue: void resetTag(byte)>(24);
+        $r19 = new sun.security.util.DerInputStream;
+        $r20 = virtualinvoke r5.<sun.security.util.DerValue: byte[] toByteArray()>();
+        specialinvoke $r19.<sun.security.util.DerInputStream: void <init>(byte[])>($r20);
+        r21 = $r19;
+        $r22 = virtualinvoke r21.<sun.security.util.DerInputStream: java.util.Date getGeneralizedTime()>();
+        r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notAfter> = $r22;
+        goto label5;
+
+     label4:
+        $r23 = new java.io.IOException;
+        specialinvoke $r23.<java.io.IOException: void <init>(java.lang.String)>("Invalid encoding of PrivateKeyUsageExtension");
+        throw $r23;
+
+     label5:
+        i0 = i0 + 1;
+        goto label0;
+
+     label6:
+        return;
+    }
+
+    public java.lang.String toString()
+    {
+        sun.security.x509.PrivateKeyUsageExtension r0;
+        java.lang.StringBuilder $r1, $r3, $r4, $r7, $r8, $r11, $r12, $r13, $r16, $r17, $r20, $r21, $r22;
+        java.lang.String $r2, $r6, $r10, $r15, $r19, $r23;
+        java.util.Date $r5, $r9, $r14, $r18;
+
+        r0 := @this: sun.security.x509.PrivateKeyUsageExtension;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r2 = specialinvoke r0.<sun.security.x509.Extension: java.lang.String toString()>();
+        $r3 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r2);
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("PrivateKeyUsage: [\n");
+        $r5 = r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notBefore>;
+        if $r5 != null goto label0;
+
+        $r6 = "";
+        goto label1;
+
+     label0:
+        $r7 = new java.lang.StringBuilder;
+        specialinvoke $r7.<java.lang.StringBuilder: void <init>()>();
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("From: ");
+        $r9 = r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notBefore>;
+        $r10 = virtualinvoke $r9.<java.util.Date: java.lang.String toString()>();
+        $r11 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r10);
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", ");
+        $r6 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+
+     label1:
+        $r13 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+        $r14 = r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notAfter>;
+        if $r14 != null goto label2;
+
+        $r15 = "";
+        goto label3;
+
+     label2:
+        $r16 = new java.lang.StringBuilder;
+        specialinvoke $r16.<java.lang.StringBuilder: void <init>()>();
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("To: ");
+        $r18 = r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notAfter>;
+        $r19 = virtualinvoke $r18.<java.util.Date: java.lang.String toString()>();
+        $r20 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r19);
+        $r15 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.String toString()>();
+
+     label3:
+        $r21 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r15);
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]\n");
+        $r23 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r23;
+    }
+
+    public void valid() throws java.security.cert.CertificateNotYetValidException, java.security.cert.CertificateExpiredException
+    {
+        sun.security.x509.PrivateKeyUsageExtension r0;
+        java.util.Date $r1, r2;
+
+        r0 := @this: sun.security.x509.PrivateKeyUsageExtension;
+        $r1 = new java.util.Date;
+        specialinvoke $r1.<java.util.Date: void <init>()>();
+        r2 = $r1;
+        virtualinvoke r0.<sun.security.x509.PrivateKeyUsageExtension: void valid(java.util.Date)>(r2);
+        return;
+    }
+
+    public void valid(java.util.Date) throws java.security.cert.CertificateNotYetValidException, java.security.cert.CertificateExpiredException
+    {
+        sun.security.x509.PrivateKeyUsageExtension r0;
+        java.util.Date r1, $r3, $r6, $r10, $r14;
+        java.lang.StringBuilder $r2, $r5, $r8, $r12, $r13, $r16;
+        boolean $z0, $z1;
+        java.security.cert.CertificateNotYetValidException $r4;
+        java.lang.String $r7, $r9, $r15, $r17;
+        java.security.cert.CertificateExpiredException $r11;
+
+        r0 := @this: sun.security.x509.PrivateKeyUsageExtension;
+        r1 := @parameter0: java.util.Date;
+        $r3 = r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notBefore>;
+        $z0 = virtualinvoke $r3.<java.util.Date: boolean after(java.util.Date)>(r1);
+        if $z0 == 0 goto label0;
+
+        $r4 = new java.security.cert.CertificateNotYetValidException;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+        $r5 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("NotBefore: ");
+        $r6 = r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notBefore>;
+        $r7 = virtualinvoke $r6.<java.util.Date: java.lang.String toString()>();
+        $r8 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r7);
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r4.<java.security.cert.CertificateNotYetValidException: void <init>(java.lang.String)>($r9);
+        throw $r4;
+
+     label0:
+        $r10 = r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notAfter>;
+        $z1 = virtualinvoke $r10.<java.util.Date: boolean before(java.util.Date)>(r1);
+        if $z1 == 0 goto label1;
+
+        $r11 = new java.security.cert.CertificateExpiredException;
+        $r12 = new java.lang.StringBuilder;
+        specialinvoke $r12.<java.lang.StringBuilder: void <init>()>();
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("NotAfter: ");
+        $r14 = r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notAfter>;
+        $r15 = virtualinvoke $r14.<java.util.Date: java.lang.String toString()>();
+        $r16 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r15);
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r11.<java.security.cert.CertificateExpiredException: void <init>(java.lang.String)>($r17);
+        throw $r11;
+
+     label1:
+        return;
+    }
+
+    public void encode(java.io.OutputStream) throws java.io.IOException
+    {
+        sun.security.x509.PrivateKeyUsageExtension r0;
+        java.io.OutputStream r1;
+        sun.security.util.DerOutputStream $r2, r3;
+        byte[] $r4, $r6;
+        sun.security.util.ObjectIdentifier $r5;
+
+        r0 := @this: sun.security.x509.PrivateKeyUsageExtension;
+        r1 := @parameter0: java.io.OutputStream;
+        $r2 = new sun.security.util.DerOutputStream;
+        specialinvoke $r2.<sun.security.util.DerOutputStream: void <init>()>();
+        r3 = $r2;
+        $r4 = r0.<sun.security.x509.PrivateKeyUsageExtension: byte[] extensionValue>;
+        if $r4 != null goto label0;
+
+        $r5 = <sun.security.x509.PKIXExtensions: sun.security.util.ObjectIdentifier PrivateKeyUsage_Id>;
+        r0.<sun.security.x509.PrivateKeyUsageExtension: sun.security.util.ObjectIdentifier extensionId> = $r5;
+        r0.<sun.security.x509.PrivateKeyUsageExtension: boolean critical> = 0;
+        specialinvoke r0.<sun.security.x509.PrivateKeyUsageExtension: void encodeThis()>();
+
+     label0:
+        specialinvoke r0.<sun.security.x509.Extension: void encode(sun.security.util.DerOutputStream)>(r3);
+        $r6 = virtualinvoke r3.<sun.security.util.DerOutputStream: byte[] toByteArray()>();
+        virtualinvoke r1.<java.io.OutputStream: void write(byte[])>($r6);
+        return;
+    }
+
+    public void set(java.lang.String, java.lang.Object) throws java.security.cert.CertificateException, java.io.IOException
+    {
+        sun.security.x509.PrivateKeyUsageExtension r0;
+        java.lang.String r1;
+        java.lang.Object r2;
+        boolean $z0, $z1, $z2;
+        java.security.cert.CertificateException $r3, $r6;
+        java.util.Date $r4, $r5;
+
+        r0 := @this: sun.security.x509.PrivateKeyUsageExtension;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.Object;
+        $z0 = r2 instanceof java.util.Date;
+        if $z0 != 0 goto label0;
+
+        $r3 = new java.security.cert.CertificateException;
+        specialinvoke $r3.<java.security.cert.CertificateException: void <init>(java.lang.String)>("Attribute must be of type Date.");
+        throw $r3;
+
+     label0:
+        $z1 = virtualinvoke r1.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("not_before");
+        if $z1 == 0 goto label1;
+
+        $r4 = (java.util.Date) r2;
+        r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notBefore> = $r4;
+        goto label3;
+
+     label1:
+        $z2 = virtualinvoke r1.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("not_after");
+        if $z2 == 0 goto label2;
+
+        $r5 = (java.util.Date) r2;
+        r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notAfter> = $r5;
+        goto label3;
+
+     label2:
+        $r6 = new java.security.cert.CertificateException;
+        specialinvoke $r6.<java.security.cert.CertificateException: void <init>(java.lang.String)>("Attribute name not recognized by CertAttrSet:PrivateKeyUsage.");
+        throw $r6;
+
+     label3:
+        specialinvoke r0.<sun.security.x509.PrivateKeyUsageExtension: void encodeThis()>();
+        return;
+    }
+
+    public java.lang.Object get(java.lang.String) throws java.security.cert.CertificateException
+    {
+        sun.security.x509.PrivateKeyUsageExtension r0;
+        java.lang.String r1;
+        boolean $z0, $z1;
+        java.util.Date $r2, $r3, $r4, $r5;
+        long $l0, $l1;
+        java.security.cert.CertificateException $r6;
+
+        r0 := @this: sun.security.x509.PrivateKeyUsageExtension;
+        r1 := @parameter0: java.lang.String;
+        $z0 = virtualinvoke r1.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("not_before");
+        if $z0 == 0 goto label0;
+
+        $r2 = new java.util.Date;
+        $r3 = r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notBefore>;
+        $l0 = virtualinvoke $r3.<java.util.Date: long getTime()>();
+        specialinvoke $r2.<java.util.Date: void <init>(long)>($l0);
+        return $r2;
+
+     label0:
+        $z1 = virtualinvoke r1.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("not_after");
+        if $z1 == 0 goto label1;
+
+        $r4 = new java.util.Date;
+        $r5 = r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notAfter>;
+        $l1 = virtualinvoke $r5.<java.util.Date: long getTime()>();
+        specialinvoke $r4.<java.util.Date: void <init>(long)>($l1);
+        return $r4;
+
+     label1:
+        $r6 = new java.security.cert.CertificateException;
+        specialinvoke $r6.<java.security.cert.CertificateException: void <init>(java.lang.String)>("Attribute name not recognized by CertAttrSet:PrivateKeyUsage.");
+        throw $r6;
+    }
+
+    public void delete(java.lang.String) throws java.security.cert.CertificateException, java.io.IOException
+    {
+        sun.security.x509.PrivateKeyUsageExtension r0;
+        java.lang.String r1;
+        boolean $z0, $z1;
+        java.security.cert.CertificateException $r2;
+
+        r0 := @this: sun.security.x509.PrivateKeyUsageExtension;
+        r1 := @parameter0: java.lang.String;
+        $z0 = virtualinvoke r1.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("not_before");
+        if $z0 == 0 goto label0;
+
+        r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notBefore> = null;
+        goto label2;
+
+     label0:
+        $z1 = virtualinvoke r1.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("not_after");
+        if $z1 == 0 goto label1;
+
+        r0.<sun.security.x509.PrivateKeyUsageExtension: java.util.Date notAfter> = null;
+        goto label2;
+
+     label1:
+        $r2 = new java.security.cert.CertificateException;
+        specialinvoke $r2.<java.security.cert.CertificateException: void <init>(java.lang.String)>("Attribute name not recognized by CertAttrSet:PrivateKeyUsage.");
+        throw $r2;
+
+     label2:
+        specialinvoke r0.<sun.security.x509.PrivateKeyUsageExtension: void encodeThis()>();
+        return;
+    }
+
+    public java.util.Enumeration getElements()
+    {
+        sun.security.x509.PrivateKeyUsageExtension r0;
+        sun.security.x509.AttributeNameEnumeration $r1, r2;
+        java.util.Enumeration $r3;
+
+        r0 := @this: sun.security.x509.PrivateKeyUsageExtension;
+        $r1 = new sun.security.x509.AttributeNameEnumeration;
+        specialinvoke $r1.<sun.security.x509.AttributeNameEnumeration: void <init>()>();
+        r2 = $r1;
+        virtualinvoke r2.<sun.security.x509.AttributeNameEnumeration: void addElement(java.lang.Object)>("not_before");
+        virtualinvoke r2.<sun.security.x509.AttributeNameEnumeration: void addElement(java.lang.Object)>("not_after");
+        $r3 = virtualinvoke r2.<sun.security.x509.AttributeNameEnumeration: java.util.Enumeration elements()>();
+        return $r3;
+    }
+
+    public java.lang.String getName()
+    {
+        sun.security.x509.PrivateKeyUsageExtension r0;
+
+        r0 := @this: sun.security.x509.PrivateKeyUsageExtension;
+        return "PrivateKeyUsage";
+    }
+}

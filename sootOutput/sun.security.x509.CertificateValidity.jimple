@@ -1,0 +1,458 @@
+public class sun.security.x509.CertificateValidity extends java.lang.Object implements sun.security.x509.CertAttrSet
+{
+    public static final java.lang.String IDENT;
+    public static final java.lang.String NAME;
+    public static final java.lang.String NOT_BEFORE;
+    public static final java.lang.String NOT_AFTER;
+    private static final long YR_2050;
+    private java.util.Date notBefore;
+    private java.util.Date notAfter;
+
+    private java.util.Date getNotBefore()
+    {
+        sun.security.x509.CertificateValidity r0;
+        java.util.Date $r1, $r2;
+        long $l0;
+
+        r0 := @this: sun.security.x509.CertificateValidity;
+        $r1 = new java.util.Date;
+        $r2 = r0.<sun.security.x509.CertificateValidity: java.util.Date notBefore>;
+        $l0 = virtualinvoke $r2.<java.util.Date: long getTime()>();
+        specialinvoke $r1.<java.util.Date: void <init>(long)>($l0);
+        return $r1;
+    }
+
+    private java.util.Date getNotAfter()
+    {
+        sun.security.x509.CertificateValidity r0;
+        java.util.Date $r1, $r2;
+        long $l0;
+
+        r0 := @this: sun.security.x509.CertificateValidity;
+        $r1 = new java.util.Date;
+        $r2 = r0.<sun.security.x509.CertificateValidity: java.util.Date notAfter>;
+        $l0 = virtualinvoke $r2.<java.util.Date: long getTime()>();
+        specialinvoke $r1.<java.util.Date: void <init>(long)>($l0);
+        return $r1;
+    }
+
+    private void construct(sun.security.util.DerValue) throws java.io.IOException
+    {
+        sun.security.x509.CertificateValidity r0;
+        sun.security.util.DerValue r1, $r10, $r13, $r17, $r20;
+        sun.security.util.DerInputStream r2, $r5, $r7, $r11, $r14, $r18, $r21;
+        sun.security.util.DerValue[] r3;
+        byte $b0, $b3, $b4, $b5, $b6;
+        java.io.IOException $r4, $r6, $r9, $r16, $r23;
+        int $i1, $i2;
+        byte[] $r8;
+        java.util.Date $r12, $r15, $r19, $r22;
+
+        r0 := @this: sun.security.x509.CertificateValidity;
+        r1 := @parameter0: sun.security.util.DerValue;
+        $b0 = r1.<sun.security.util.DerValue: byte tag>;
+        if $b0 == 48 goto label0;
+
+        $r4 = new java.io.IOException;
+        specialinvoke $r4.<java.io.IOException: void <init>(java.lang.String)>("Invalid encoded CertificateValidity, starting sequence tag missing.");
+        throw $r4;
+
+     label0:
+        $r5 = r1.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $i1 = virtualinvoke $r5.<sun.security.util.DerInputStream: int available()>();
+        if $i1 != 0 goto label1;
+
+        $r6 = new java.io.IOException;
+        specialinvoke $r6.<java.io.IOException: void <init>(java.lang.String)>("No data encoded for CertificateValidity");
+        throw $r6;
+
+     label1:
+        $r7 = new sun.security.util.DerInputStream;
+        $r8 = virtualinvoke r1.<sun.security.util.DerValue: byte[] toByteArray()>();
+        specialinvoke $r7.<sun.security.util.DerInputStream: void <init>(byte[])>($r8);
+        r2 = $r7;
+        r3 = virtualinvoke r2.<sun.security.util.DerInputStream: sun.security.util.DerValue[] getSequence(int)>(2);
+        $i2 = lengthof r3;
+        if $i2 == 2 goto label2;
+
+        $r9 = new java.io.IOException;
+        specialinvoke $r9.<java.io.IOException: void <init>(java.lang.String)>("Invalid encoding for CertificateValidity");
+        throw $r9;
+
+     label2:
+        $r10 = r3[0];
+        $b3 = $r10.<sun.security.util.DerValue: byte tag>;
+        if $b3 != 23 goto label3;
+
+        $r11 = r1.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $r12 = virtualinvoke $r11.<sun.security.util.DerInputStream: java.util.Date getUTCTime()>();
+        r0.<sun.security.x509.CertificateValidity: java.util.Date notBefore> = $r12;
+        goto label5;
+
+     label3:
+        $r13 = r3[0];
+        $b4 = $r13.<sun.security.util.DerValue: byte tag>;
+        if $b4 != 24 goto label4;
+
+        $r14 = r1.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $r15 = virtualinvoke $r14.<sun.security.util.DerInputStream: java.util.Date getGeneralizedTime()>();
+        r0.<sun.security.x509.CertificateValidity: java.util.Date notBefore> = $r15;
+        goto label5;
+
+     label4:
+        $r16 = new java.io.IOException;
+        specialinvoke $r16.<java.io.IOException: void <init>(java.lang.String)>("Invalid encoding for CertificateValidity");
+        throw $r16;
+
+     label5:
+        $r17 = r3[1];
+        $b5 = $r17.<sun.security.util.DerValue: byte tag>;
+        if $b5 != 23 goto label6;
+
+        $r18 = r1.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $r19 = virtualinvoke $r18.<sun.security.util.DerInputStream: java.util.Date getUTCTime()>();
+        r0.<sun.security.x509.CertificateValidity: java.util.Date notAfter> = $r19;
+        goto label8;
+
+     label6:
+        $r20 = r3[1];
+        $b6 = $r20.<sun.security.util.DerValue: byte tag>;
+        if $b6 != 24 goto label7;
+
+        $r21 = r1.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $r22 = virtualinvoke $r21.<sun.security.util.DerInputStream: java.util.Date getGeneralizedTime()>();
+        r0.<sun.security.x509.CertificateValidity: java.util.Date notAfter> = $r22;
+        goto label8;
+
+     label7:
+        $r23 = new java.io.IOException;
+        specialinvoke $r23.<java.io.IOException: void <init>(java.lang.String)>("Invalid encoding for CertificateValidity");
+        throw $r23;
+
+     label8:
+        return;
+    }
+
+    public void <init>()
+    {
+        sun.security.x509.CertificateValidity r0;
+
+        r0 := @this: sun.security.x509.CertificateValidity;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public void <init>(java.util.Date, java.util.Date)
+    {
+        sun.security.x509.CertificateValidity r0;
+        java.util.Date r1, r2;
+
+        r0 := @this: sun.security.x509.CertificateValidity;
+        r1 := @parameter0: java.util.Date;
+        r2 := @parameter1: java.util.Date;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.security.x509.CertificateValidity: java.util.Date notBefore> = r1;
+        r0.<sun.security.x509.CertificateValidity: java.util.Date notAfter> = r2;
+        return;
+    }
+
+    public void <init>(sun.security.util.DerInputStream) throws java.io.IOException
+    {
+        sun.security.x509.CertificateValidity r0;
+        sun.security.util.DerInputStream r1;
+        sun.security.util.DerValue r2;
+
+        r0 := @this: sun.security.x509.CertificateValidity;
+        r1 := @parameter0: sun.security.util.DerInputStream;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r2 = virtualinvoke r1.<sun.security.util.DerInputStream: sun.security.util.DerValue getDerValue()>();
+        specialinvoke r0.<sun.security.x509.CertificateValidity: void construct(sun.security.util.DerValue)>(r2);
+        return;
+    }
+
+    public java.lang.String toString()
+    {
+        sun.security.x509.CertificateValidity r0;
+        java.util.Date $r1, $r2, $r5, $r9;
+        java.lang.StringBuilder $r3, $r4, $r7, $r8, $r11, $r12;
+        java.lang.String $r6, $r10, $r13;
+
+        r0 := @this: sun.security.x509.CertificateValidity;
+        $r1 = r0.<sun.security.x509.CertificateValidity: java.util.Date notBefore>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<sun.security.x509.CertificateValidity: java.util.Date notAfter>;
+        if $r2 != null goto label1;
+
+     label0:
+        return "";
+
+     label1:
+        $r3 = new java.lang.StringBuilder;
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>()>();
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Validity: [From: ");
+        $r5 = r0.<sun.security.x509.CertificateValidity: java.util.Date notBefore>;
+        $r6 = virtualinvoke $r5.<java.util.Date: java.lang.String toString()>();
+        $r7 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(",\n               To: ");
+        $r9 = r0.<sun.security.x509.CertificateValidity: java.util.Date notAfter>;
+        $r10 = virtualinvoke $r9.<java.util.Date: java.lang.String toString()>();
+        $r11 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r10);
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r13;
+    }
+
+    public void encode(java.io.OutputStream) throws java.io.IOException
+    {
+        sun.security.x509.CertificateValidity r0;
+        java.io.OutputStream r1;
+        sun.security.util.DerOutputStream r2, r3, $r7, $r14;
+        java.util.Date $r4, $r5, $r8, $r9, $r10, $r11, $r12, $r13;
+        java.io.IOException $r6;
+        long $l0, $l2;
+        byte $b1, $b3;
+        byte[] $r15;
+
+        r0 := @this: sun.security.x509.CertificateValidity;
+        r1 := @parameter0: java.io.OutputStream;
+        $r4 = r0.<sun.security.x509.CertificateValidity: java.util.Date notBefore>;
+        if $r4 == null goto label0;
+
+        $r5 = r0.<sun.security.x509.CertificateValidity: java.util.Date notAfter>;
+        if $r5 != null goto label1;
+
+     label0:
+        $r6 = new java.io.IOException;
+        specialinvoke $r6.<java.io.IOException: void <init>(java.lang.String)>("CertAttrSet:CertificateValidity: null values to encode.\n");
+        throw $r6;
+
+     label1:
+        $r7 = new sun.security.util.DerOutputStream;
+        specialinvoke $r7.<sun.security.util.DerOutputStream: void <init>()>();
+        r2 = $r7;
+        $r8 = r0.<sun.security.x509.CertificateValidity: java.util.Date notBefore>;
+        $l0 = virtualinvoke $r8.<java.util.Date: long getTime()>();
+        $b1 = $l0 cmp 2524636800000L;
+        if $b1 >= 0 goto label2;
+
+        $r9 = r0.<sun.security.x509.CertificateValidity: java.util.Date notBefore>;
+        virtualinvoke r2.<sun.security.util.DerOutputStream: void putUTCTime(java.util.Date)>($r9);
+        goto label3;
+
+     label2:
+        $r10 = r0.<sun.security.x509.CertificateValidity: java.util.Date notBefore>;
+        virtualinvoke r2.<sun.security.util.DerOutputStream: void putGeneralizedTime(java.util.Date)>($r10);
+
+     label3:
+        $r11 = r0.<sun.security.x509.CertificateValidity: java.util.Date notAfter>;
+        $l2 = virtualinvoke $r11.<java.util.Date: long getTime()>();
+        $b3 = $l2 cmp 2524636800000L;
+        if $b3 >= 0 goto label4;
+
+        $r12 = r0.<sun.security.x509.CertificateValidity: java.util.Date notAfter>;
+        virtualinvoke r2.<sun.security.util.DerOutputStream: void putUTCTime(java.util.Date)>($r12);
+        goto label5;
+
+     label4:
+        $r13 = r0.<sun.security.x509.CertificateValidity: java.util.Date notAfter>;
+        virtualinvoke r2.<sun.security.util.DerOutputStream: void putGeneralizedTime(java.util.Date)>($r13);
+
+     label5:
+        $r14 = new sun.security.util.DerOutputStream;
+        specialinvoke $r14.<sun.security.util.DerOutputStream: void <init>()>();
+        r3 = $r14;
+        virtualinvoke r3.<sun.security.util.DerOutputStream: void write(byte,sun.security.util.DerOutputStream)>(48, r2);
+        $r15 = virtualinvoke r3.<sun.security.util.DerOutputStream: byte[] toByteArray()>();
+        virtualinvoke r1.<java.io.OutputStream: void write(byte[])>($r15);
+        return;
+    }
+
+    public void set(java.lang.String, java.lang.Object) throws java.io.IOException
+    {
+        sun.security.x509.CertificateValidity r0;
+        java.lang.String r1;
+        java.lang.Object r2;
+        boolean $z0, $z1, $z2;
+        java.io.IOException $r3, $r6;
+        java.util.Date $r4, $r5;
+
+        r0 := @this: sun.security.x509.CertificateValidity;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.Object;
+        $z0 = r2 instanceof java.util.Date;
+        if $z0 != 0 goto label0;
+
+        $r3 = new java.io.IOException;
+        specialinvoke $r3.<java.io.IOException: void <init>(java.lang.String)>("Attribute must be of type Date.");
+        throw $r3;
+
+     label0:
+        $z1 = virtualinvoke r1.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("notBefore");
+        if $z1 == 0 goto label1;
+
+        $r4 = (java.util.Date) r2;
+        r0.<sun.security.x509.CertificateValidity: java.util.Date notBefore> = $r4;
+        goto label3;
+
+     label1:
+        $z2 = virtualinvoke r1.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("notAfter");
+        if $z2 == 0 goto label2;
+
+        $r5 = (java.util.Date) r2;
+        r0.<sun.security.x509.CertificateValidity: java.util.Date notAfter> = $r5;
+        goto label3;
+
+     label2:
+        $r6 = new java.io.IOException;
+        specialinvoke $r6.<java.io.IOException: void <init>(java.lang.String)>("Attribute name not recognized by CertAttrSet: CertificateValidity.");
+        throw $r6;
+
+     label3:
+        return;
+    }
+
+    public java.lang.Object get(java.lang.String) throws java.io.IOException
+    {
+        sun.security.x509.CertificateValidity r0;
+        java.lang.String r1;
+        boolean $z0, $z1;
+        java.util.Date $r2, $r3;
+        java.io.IOException $r4;
+
+        r0 := @this: sun.security.x509.CertificateValidity;
+        r1 := @parameter0: java.lang.String;
+        $z0 = virtualinvoke r1.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("notBefore");
+        if $z0 == 0 goto label0;
+
+        $r2 = specialinvoke r0.<sun.security.x509.CertificateValidity: java.util.Date getNotBefore()>();
+        return $r2;
+
+     label0:
+        $z1 = virtualinvoke r1.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("notAfter");
+        if $z1 == 0 goto label1;
+
+        $r3 = specialinvoke r0.<sun.security.x509.CertificateValidity: java.util.Date getNotAfter()>();
+        return $r3;
+
+     label1:
+        $r4 = new java.io.IOException;
+        specialinvoke $r4.<java.io.IOException: void <init>(java.lang.String)>("Attribute name not recognized by CertAttrSet: CertificateValidity.");
+        throw $r4;
+    }
+
+    public void delete(java.lang.String) throws java.io.IOException
+    {
+        sun.security.x509.CertificateValidity r0;
+        java.lang.String r1;
+        boolean $z0, $z1;
+        java.io.IOException $r2;
+
+        r0 := @this: sun.security.x509.CertificateValidity;
+        r1 := @parameter0: java.lang.String;
+        $z0 = virtualinvoke r1.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("notBefore");
+        if $z0 == 0 goto label0;
+
+        r0.<sun.security.x509.CertificateValidity: java.util.Date notBefore> = null;
+        goto label2;
+
+     label0:
+        $z1 = virtualinvoke r1.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("notAfter");
+        if $z1 == 0 goto label1;
+
+        r0.<sun.security.x509.CertificateValidity: java.util.Date notAfter> = null;
+        goto label2;
+
+     label1:
+        $r2 = new java.io.IOException;
+        specialinvoke $r2.<java.io.IOException: void <init>(java.lang.String)>("Attribute name not recognized by CertAttrSet: CertificateValidity.");
+        throw $r2;
+
+     label2:
+        return;
+    }
+
+    public java.util.Enumeration getElements()
+    {
+        sun.security.x509.CertificateValidity r0;
+        sun.security.x509.AttributeNameEnumeration $r1, r2;
+        java.util.Enumeration $r3;
+
+        r0 := @this: sun.security.x509.CertificateValidity;
+        $r1 = new sun.security.x509.AttributeNameEnumeration;
+        specialinvoke $r1.<sun.security.x509.AttributeNameEnumeration: void <init>()>();
+        r2 = $r1;
+        virtualinvoke r2.<sun.security.x509.AttributeNameEnumeration: void addElement(java.lang.Object)>("notBefore");
+        virtualinvoke r2.<sun.security.x509.AttributeNameEnumeration: void addElement(java.lang.Object)>("notAfter");
+        $r3 = virtualinvoke r2.<sun.security.x509.AttributeNameEnumeration: java.util.Enumeration elements()>();
+        return $r3;
+    }
+
+    public java.lang.String getName()
+    {
+        sun.security.x509.CertificateValidity r0;
+
+        r0 := @this: sun.security.x509.CertificateValidity;
+        return "validity";
+    }
+
+    public void valid() throws java.security.cert.CertificateNotYetValidException, java.security.cert.CertificateExpiredException
+    {
+        sun.security.x509.CertificateValidity r0;
+        java.util.Date $r1, r2;
+
+        r0 := @this: sun.security.x509.CertificateValidity;
+        $r1 = new java.util.Date;
+        specialinvoke $r1.<java.util.Date: void <init>()>();
+        r2 = $r1;
+        virtualinvoke r0.<sun.security.x509.CertificateValidity: void valid(java.util.Date)>(r2);
+        return;
+    }
+
+    public void valid(java.util.Date) throws java.security.cert.CertificateNotYetValidException, java.security.cert.CertificateExpiredException
+    {
+        sun.security.x509.CertificateValidity r0;
+        java.util.Date r1, $r3, $r6, $r10, $r14;
+        java.lang.StringBuilder $r2, $r5, $r8, $r12, $r13, $r16;
+        boolean $z0, $z1;
+        java.security.cert.CertificateNotYetValidException $r4;
+        java.lang.String $r7, $r9, $r15, $r17;
+        java.security.cert.CertificateExpiredException $r11;
+
+        r0 := @this: sun.security.x509.CertificateValidity;
+        r1 := @parameter0: java.util.Date;
+        $r3 = r0.<sun.security.x509.CertificateValidity: java.util.Date notBefore>;
+        $z0 = virtualinvoke $r3.<java.util.Date: boolean after(java.util.Date)>(r1);
+        if $z0 == 0 goto label0;
+
+        $r4 = new java.security.cert.CertificateNotYetValidException;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+        $r5 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("NotBefore: ");
+        $r6 = r0.<sun.security.x509.CertificateValidity: java.util.Date notBefore>;
+        $r7 = virtualinvoke $r6.<java.util.Date: java.lang.String toString()>();
+        $r8 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r7);
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r4.<java.security.cert.CertificateNotYetValidException: void <init>(java.lang.String)>($r9);
+        throw $r4;
+
+     label0:
+        $r10 = r0.<sun.security.x509.CertificateValidity: java.util.Date notAfter>;
+        $z1 = virtualinvoke $r10.<java.util.Date: boolean before(java.util.Date)>(r1);
+        if $z1 == 0 goto label1;
+
+        $r11 = new java.security.cert.CertificateExpiredException;
+        $r12 = new java.lang.StringBuilder;
+        specialinvoke $r12.<java.lang.StringBuilder: void <init>()>();
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("NotAfter: ");
+        $r14 = r0.<sun.security.x509.CertificateValidity: java.util.Date notAfter>;
+        $r15 = virtualinvoke $r14.<java.util.Date: java.lang.String toString()>();
+        $r16 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r15);
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r11.<java.security.cert.CertificateExpiredException: void <init>(java.lang.String)>($r17);
+        throw $r11;
+
+     label1:
+        return;
+    }
+}

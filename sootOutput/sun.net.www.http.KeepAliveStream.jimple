@@ -1,0 +1,406 @@
+public class sun.net.www.http.KeepAliveStream extends sun.net.www.MeteredStream implements sun.net.www.http.Hurryable
+{
+    sun.net.www.http.HttpClient hc;
+    boolean hurried;
+    protected boolean queuedForCleanup;
+    private static final sun.net.www.http.KeepAliveStreamCleaner queue;
+    private static java.lang.Thread cleanerThread;
+
+    public void <init>(java.io.InputStream, sun.net.ProgressSource, long, sun.net.www.http.HttpClient)
+    {
+        sun.net.www.http.KeepAliveStream r0;
+        java.io.InputStream r1;
+        sun.net.ProgressSource r2;
+        long l0;
+        sun.net.www.http.HttpClient r3;
+
+        r0 := @this: sun.net.www.http.KeepAliveStream;
+        r1 := @parameter0: java.io.InputStream;
+        r2 := @parameter1: sun.net.ProgressSource;
+        l0 := @parameter2: long;
+        r3 := @parameter3: sun.net.www.http.HttpClient;
+        specialinvoke r0.<sun.net.www.MeteredStream: void <init>(java.io.InputStream,sun.net.ProgressSource,long)>(r1, r2, l0);
+        r0.<sun.net.www.http.KeepAliveStream: boolean queuedForCleanup> = 0;
+        r0.<sun.net.www.http.KeepAliveStream: sun.net.www.http.HttpClient hc> = r3;
+        return;
+    }
+
+    public void close() throws java.io.IOException
+    {
+        sun.net.www.http.KeepAliveStream r0;
+        long l0, l1, $l2, $l3, $l5, $l6, $l8, $l11, $l13;
+        java.lang.Throwable r1, $r8;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+        byte $b4, $b9, $b10, $b14;
+        int $i7, $i12;
+        sun.net.www.http.KeepAliveCleanerEntry $r2;
+        sun.net.www.http.HttpClient $r3, $r4, $r5;
+        sun.net.ProgressSource $r6, $r7, $r9, $r10;
+
+        r0 := @this: sun.net.www.http.KeepAliveStream;
+        $z0 = r0.<sun.net.www.http.KeepAliveStream: boolean closed>;
+        if $z0 == 0 goto label0;
+
+        return;
+
+     label0:
+        $z1 = r0.<sun.net.www.http.KeepAliveStream: boolean queuedForCleanup>;
+        if $z1 == 0 goto label1;
+
+        return;
+
+     label1:
+        $l2 = r0.<sun.net.www.http.KeepAliveStream: long expected>;
+        $l3 = r0.<sun.net.www.http.KeepAliveStream: long count>;
+        $b4 = $l2 cmp $l3;
+        if $b4 <= 0 goto label6;
+
+        $l5 = r0.<sun.net.www.http.KeepAliveStream: long expected>;
+        $l6 = r0.<sun.net.www.http.KeepAliveStream: long count>;
+        l0 = $l5 - $l6;
+        $i7 = virtualinvoke r0.<sun.net.www.http.KeepAliveStream: int available()>();
+        $l8 = (long) $i7;
+        $b9 = l0 cmp $l8;
+        if $b9 > 0 goto label4;
+
+        l1 = 0L;
+
+     label2:
+        $b10 = l1 cmp l0;
+        if $b10 >= 0 goto label3;
+
+        l0 = l0 - l1;
+        l1 = virtualinvoke r0.<sun.net.www.http.KeepAliveStream: long skip(long)>(l0);
+        goto label2;
+
+     label3:
+        goto label6;
+
+     label4:
+        $l11 = r0.<sun.net.www.http.KeepAliveStream: long expected>;
+        $i12 = <sun.net.www.http.KeepAliveStreamCleaner: int MAX_DATA_REMAINING>;
+        $l13 = (long) $i12;
+        $b14 = $l11 cmp $l13;
+        if $b14 > 0 goto label5;
+
+        $z2 = r0.<sun.net.www.http.KeepAliveStream: boolean hurried>;
+        if $z2 != 0 goto label5;
+
+        $r2 = new sun.net.www.http.KeepAliveCleanerEntry;
+        $r3 = r0.<sun.net.www.http.KeepAliveStream: sun.net.www.http.HttpClient hc>;
+        specialinvoke $r2.<sun.net.www.http.KeepAliveCleanerEntry: void <init>(sun.net.www.http.KeepAliveStream,sun.net.www.http.HttpClient)>(r0, $r3);
+        staticinvoke <sun.net.www.http.KeepAliveStream: void queueForCleanup(sun.net.www.http.KeepAliveCleanerEntry)>($r2);
+        goto label6;
+
+     label5:
+        $r4 = r0.<sun.net.www.http.KeepAliveStream: sun.net.www.http.HttpClient hc>;
+        virtualinvoke $r4.<sun.net.www.http.HttpClient: void closeServer()>();
+
+     label6:
+        $z3 = r0.<sun.net.www.http.KeepAliveStream: boolean closed>;
+        if $z3 != 0 goto label7;
+
+        $z4 = r0.<sun.net.www.http.KeepAliveStream: boolean hurried>;
+        if $z4 != 0 goto label7;
+
+        $z5 = r0.<sun.net.www.http.KeepAliveStream: boolean queuedForCleanup>;
+        if $z5 != 0 goto label7;
+
+        $r5 = r0.<sun.net.www.http.KeepAliveStream: sun.net.www.http.HttpClient hc>;
+        virtualinvoke $r5.<sun.net.www.http.HttpClient: void finished()>();
+
+     label7:
+        $r6 = r0.<sun.net.www.http.KeepAliveStream: sun.net.ProgressSource pi>;
+        if $r6 == null goto label8;
+
+        $r7 = r0.<sun.net.www.http.KeepAliveStream: sun.net.ProgressSource pi>;
+        virtualinvoke $r7.<sun.net.ProgressSource: void finishTracking()>();
+
+     label8:
+        $z6 = r0.<sun.net.www.http.KeepAliveStream: boolean queuedForCleanup>;
+        if $z6 != 0 goto label14;
+
+        r0.<sun.net.www.http.KeepAliveStream: java.io.InputStream in> = null;
+        r0.<sun.net.www.http.KeepAliveStream: sun.net.www.http.HttpClient hc> = null;
+        r0.<sun.net.www.http.KeepAliveStream: boolean closed> = 1;
+        goto label14;
+
+     label9:
+        $r8 := @caughtexception;
+
+     label10:
+        r1 = $r8;
+
+     label11:
+        $r9 = r0.<sun.net.www.http.KeepAliveStream: sun.net.ProgressSource pi>;
+        if $r9 == null goto label12;
+
+        $r10 = r0.<sun.net.www.http.KeepAliveStream: sun.net.ProgressSource pi>;
+        virtualinvoke $r10.<sun.net.ProgressSource: void finishTracking()>();
+
+     label12:
+        $z7 = r0.<sun.net.www.http.KeepAliveStream: boolean queuedForCleanup>;
+        if $z7 != 0 goto label13;
+
+        r0.<sun.net.www.http.KeepAliveStream: java.io.InputStream in> = null;
+        r0.<sun.net.www.http.KeepAliveStream: sun.net.www.http.HttpClient hc> = null;
+        r0.<sun.net.www.http.KeepAliveStream: boolean closed> = 1;
+
+     label13:
+        throw r1;
+
+     label14:
+        return;
+
+        catch java.lang.Throwable from label1 to label7 with label9;
+        catch java.lang.Throwable from label10 to label11 with label9;
+    }
+
+    public boolean markSupported()
+    {
+        sun.net.www.http.KeepAliveStream r0;
+
+        r0 := @this: sun.net.www.http.KeepAliveStream;
+        return 0;
+    }
+
+    public void mark(int)
+    {
+        sun.net.www.http.KeepAliveStream r0;
+        int i0;
+
+        r0 := @this: sun.net.www.http.KeepAliveStream;
+        i0 := @parameter0: int;
+        return;
+    }
+
+    public void reset() throws java.io.IOException
+    {
+        sun.net.www.http.KeepAliveStream r0;
+        java.io.IOException $r1;
+
+        r0 := @this: sun.net.www.http.KeepAliveStream;
+        $r1 = new java.io.IOException;
+        specialinvoke $r1.<java.io.IOException: void <init>(java.lang.String)>("mark/reset not supported");
+        throw $r1;
+    }
+
+    public synchronized boolean hurry()
+    {
+        sun.net.www.http.KeepAliveStream r0;
+        int i0, $i4;
+        byte[] r1;
+        java.io.DataInputStream r2, $r4;
+        boolean $z0, $z1, $z2, $z3;
+        long $l1, $l2, $l5, $l6, $l7, $l8, $l10, $l11, $l12;
+        byte $b3, $b9;
+        java.io.InputStream $r3, $r5;
+        java.io.ByteArrayInputStream $r6;
+        java.io.IOException $r7, r8;
+
+        r0 := @this: sun.net.www.http.KeepAliveStream;
+
+     label0:
+        $z0 = r0.<sun.net.www.http.KeepAliveStream: boolean closed>;
+        if $z0 != 0 goto label1;
+
+        $l1 = r0.<sun.net.www.http.KeepAliveStream: long count>;
+        $l2 = r0.<sun.net.www.http.KeepAliveStream: long expected>;
+        $b3 = $l1 cmp $l2;
+        if $b3 < 0 goto label3;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        return $z1;
+
+     label3:
+        $r3 = r0.<sun.net.www.http.KeepAliveStream: java.io.InputStream in>;
+        $i4 = virtualinvoke $r3.<java.io.InputStream: int available()>();
+        $l5 = (long) $i4;
+        $l6 = r0.<sun.net.www.http.KeepAliveStream: long expected>;
+        $l7 = r0.<sun.net.www.http.KeepAliveStream: long count>;
+        $l8 = $l6 - $l7;
+        $b9 = $l5 cmp $l8;
+        if $b9 >= 0 goto label5;
+
+        $z2 = 0;
+
+     label4:
+        return $z2;
+
+     label5:
+        $l10 = r0.<sun.net.www.http.KeepAliveStream: long expected>;
+        $l11 = r0.<sun.net.www.http.KeepAliveStream: long count>;
+        $l12 = $l10 - $l11;
+        i0 = (int) $l12;
+        r1 = newarray (byte)[i0];
+        $r4 = new java.io.DataInputStream;
+        $r5 = r0.<sun.net.www.http.KeepAliveStream: java.io.InputStream in>;
+        specialinvoke $r4.<java.io.DataInputStream: void <init>(java.io.InputStream)>($r5);
+        r2 = $r4;
+        virtualinvoke r2.<java.io.DataInputStream: void readFully(byte[])>(r1);
+        $r6 = new java.io.ByteArrayInputStream;
+        specialinvoke $r6.<java.io.ByteArrayInputStream: void <init>(byte[])>(r1);
+        r0.<sun.net.www.http.KeepAliveStream: java.io.InputStream in> = $r6;
+        r0.<sun.net.www.http.KeepAliveStream: boolean hurried> = 1;
+        $z3 = 1;
+
+     label6:
+        return $z3;
+
+     label7:
+        $r7 := @caughtexception;
+        r8 = $r7;
+        return 0;
+
+        catch java.io.IOException from label0 to label2 with label7;
+        catch java.io.IOException from label3 to label4 with label7;
+        catch java.io.IOException from label5 to label6 with label7;
+    }
+
+    private static void queueForCleanup(sun.net.www.http.KeepAliveCleanerEntry)
+    {
+        sun.net.www.http.KeepAliveCleanerEntry r0;
+        sun.net.www.http.KeepAliveStreamCleaner $r1, r2, $r4, $r6;
+        boolean z0, $z1, $z2, $z3, $z4;
+        java.lang.Throwable r3, $r11;
+        sun.net.www.http.HttpClient $r5;
+        java.lang.Thread $r7, $r8;
+        sun.net.www.http.KeepAliveStream$1 $r9;
+
+        r0 := @parameter0: sun.net.www.http.KeepAliveCleanerEntry;
+        $r1 = <sun.net.www.http.KeepAliveStream: sun.net.www.http.KeepAliveStreamCleaner queue>;
+        r2 = $r1;
+        entermonitor $r1;
+
+     label0:
+        $z1 = virtualinvoke r0.<sun.net.www.http.KeepAliveCleanerEntry: boolean getQueuedForCleanup()>();
+        if $z1 != 0 goto label3;
+
+        $r4 = <sun.net.www.http.KeepAliveStream: sun.net.www.http.KeepAliveStreamCleaner queue>;
+        $z2 = virtualinvoke $r4.<sun.net.www.http.KeepAliveStreamCleaner: boolean offer(sun.net.www.http.KeepAliveCleanerEntry)>(r0);
+        if $z2 != 0 goto label2;
+
+        $r5 = virtualinvoke r0.<sun.net.www.http.KeepAliveCleanerEntry: sun.net.www.http.HttpClient getHttpClient()>();
+        virtualinvoke $r5.<sun.net.www.http.HttpClient: void closeServer()>();
+        exitmonitor r2;
+
+     label1:
+        return;
+
+     label2:
+        virtualinvoke r0.<sun.net.www.http.KeepAliveCleanerEntry: void setQueuedForCleanup()>();
+        $r6 = <sun.net.www.http.KeepAliveStream: sun.net.www.http.KeepAliveStreamCleaner queue>;
+        virtualinvoke $r6.<java.lang.Object: void notifyAll()>();
+
+     label3:
+        $r7 = <sun.net.www.http.KeepAliveStream: java.lang.Thread cleanerThread>;
+        if $r7 != null goto label4;
+
+        $z3 = 1;
+        goto label5;
+
+     label4:
+        $z3 = 0;
+
+     label5:
+        z0 = $z3;
+        if z0 != 0 goto label6;
+
+        $r8 = <sun.net.www.http.KeepAliveStream: java.lang.Thread cleanerThread>;
+        $z4 = virtualinvoke $r8.<java.lang.Thread: boolean isAlive()>();
+        if $z4 != 0 goto label6;
+
+        z0 = 1;
+
+     label6:
+        if z0 == 0 goto label7;
+
+        $r9 = new sun.net.www.http.KeepAliveStream$1;
+        specialinvoke $r9.<sun.net.www.http.KeepAliveStream$1: void <init>()>();
+        staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r9);
+
+     label7:
+        exitmonitor r2;
+
+     label8:
+        goto label12;
+
+     label9:
+        $r11 := @caughtexception;
+
+     label10:
+        r3 = $r11;
+        exitmonitor r2;
+
+     label11:
+        throw r3;
+
+     label12:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label9;
+        catch java.lang.Throwable from label2 to label8 with label9;
+        catch java.lang.Throwable from label10 to label11 with label9;
+    }
+
+    protected long remainingToRead()
+    {
+        sun.net.www.http.KeepAliveStream r0;
+        long $l0, $l1, $l2;
+
+        r0 := @this: sun.net.www.http.KeepAliveStream;
+        $l0 = r0.<sun.net.www.http.KeepAliveStream: long expected>;
+        $l1 = r0.<sun.net.www.http.KeepAliveStream: long count>;
+        $l2 = $l0 - $l1;
+        return $l2;
+    }
+
+    protected void setClosed()
+    {
+        sun.net.www.http.KeepAliveStream r0;
+
+        r0 := @this: sun.net.www.http.KeepAliveStream;
+        r0.<sun.net.www.http.KeepAliveStream: java.io.InputStream in> = null;
+        r0.<sun.net.www.http.KeepAliveStream: sun.net.www.http.HttpClient hc> = null;
+        r0.<sun.net.www.http.KeepAliveStream: boolean closed> = 1;
+        return;
+    }
+
+    static java.lang.Thread access$002(java.lang.Thread)
+    {
+        java.lang.Thread r0;
+
+        r0 := @parameter0: java.lang.Thread;
+        <sun.net.www.http.KeepAliveStream: java.lang.Thread cleanerThread> = r0;
+        return r0;
+    }
+
+    static sun.net.www.http.KeepAliveStreamCleaner access$100()
+    {
+        sun.net.www.http.KeepAliveStreamCleaner $r0;
+
+        $r0 = <sun.net.www.http.KeepAliveStream: sun.net.www.http.KeepAliveStreamCleaner queue>;
+        return $r0;
+    }
+
+    static java.lang.Thread access$000()
+    {
+        java.lang.Thread $r0;
+
+        $r0 = <sun.net.www.http.KeepAliveStream: java.lang.Thread cleanerThread>;
+        return $r0;
+    }
+
+    static void <clinit>()
+    {
+        sun.net.www.http.KeepAliveStreamCleaner $r0;
+
+        $r0 = new sun.net.www.http.KeepAliveStreamCleaner;
+        specialinvoke $r0.<sun.net.www.http.KeepAliveStreamCleaner: void <init>()>();
+        <sun.net.www.http.KeepAliveStream: sun.net.www.http.KeepAliveStreamCleaner queue> = $r0;
+        return;
+    }
+}

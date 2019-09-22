@@ -1,0 +1,64 @@
+public class org.apache.tomcat.util.http.parser.Vary extends java.lang.Object
+{
+
+    private void <init>()
+    {
+        org.apache.tomcat.util.http.parser.Vary r0;
+
+        r0 := @this: org.apache.tomcat.util.http.parser.Vary;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static void parseVary(java.io.StringReader, java.util.Set) throws java.io.IOException
+    {
+        java.io.StringReader r0;
+        java.util.Set r1;
+        java.lang.String r2, $r7, $r10;
+        org.apache.tomcat.util.http.parser.HttpParser$SkipResult r3, $r5, $r8;
+        int $i0;
+        java.util.Locale $r6, $r9;
+
+        r0 := @parameter0: java.io.StringReader;
+        r1 := @parameter1: java.util.Set;
+
+     label0:
+        r2 = staticinvoke <org.apache.tomcat.util.http.parser.HttpParser: java.lang.String readToken(java.io.Reader)>(r0);
+        if r2 != null goto label1;
+
+        staticinvoke <org.apache.tomcat.util.http.parser.HttpParser: org.apache.tomcat.util.http.parser.HttpParser$SkipResult skipUntil(java.io.Reader,int,char)>(r0, 0, 44);
+        goto label0;
+
+     label1:
+        $i0 = virtualinvoke r2.<java.lang.String: int length()>();
+        if $i0 != 0 goto label2;
+
+        goto label5;
+
+     label2:
+        r3 = staticinvoke <org.apache.tomcat.util.http.parser.HttpParser: org.apache.tomcat.util.http.parser.HttpParser$SkipResult skipConstant(java.io.Reader,java.lang.String)>(r0, ",");
+        $r5 = <org.apache.tomcat.util.http.parser.HttpParser$SkipResult: org.apache.tomcat.util.http.parser.HttpParser$SkipResult EOF>;
+        if r3 != $r5 goto label3;
+
+        $r6 = <java.util.Locale: java.util.Locale ENGLISH>;
+        $r7 = virtualinvoke r2.<java.lang.String: java.lang.String toLowerCase(java.util.Locale)>($r6);
+        interfaceinvoke r1.<java.util.Set: boolean add(java.lang.Object)>($r7);
+        goto label5;
+
+     label3:
+        $r8 = <org.apache.tomcat.util.http.parser.HttpParser$SkipResult: org.apache.tomcat.util.http.parser.HttpParser$SkipResult FOUND>;
+        if r3 != $r8 goto label4;
+
+        $r9 = <java.util.Locale: java.util.Locale ENGLISH>;
+        $r10 = virtualinvoke r2.<java.lang.String: java.lang.String toLowerCase(java.util.Locale)>($r9);
+        interfaceinvoke r1.<java.util.Set: boolean add(java.lang.Object)>($r10);
+        goto label0;
+
+     label4:
+        staticinvoke <org.apache.tomcat.util.http.parser.HttpParser: org.apache.tomcat.util.http.parser.HttpParser$SkipResult skipUntil(java.io.Reader,int,char)>(r0, 0, 44);
+        goto label0;
+
+     label5:
+        return;
+    }
+}

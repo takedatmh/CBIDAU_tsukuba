@@ -1,0 +1,403 @@
+public class sun.security.krb5.internal.Authenticator extends java.lang.Object
+{
+    public int authenticator_vno;
+    public sun.security.krb5.Realm crealm;
+    public sun.security.krb5.PrincipalName cname;
+    sun.security.krb5.Checksum cksum;
+    public int cusec;
+    public sun.security.krb5.internal.KerberosTime ctime;
+    sun.security.krb5.EncryptionKey subKey;
+    java.lang.Integer seqNumber;
+    public sun.security.krb5.internal.AuthorizationData authorizationData;
+
+    public void <init>(sun.security.krb5.Realm, sun.security.krb5.PrincipalName, sun.security.krb5.Checksum, int, sun.security.krb5.internal.KerberosTime, sun.security.krb5.EncryptionKey, java.lang.Integer, sun.security.krb5.internal.AuthorizationData)
+    {
+        sun.security.krb5.internal.Authenticator r0;
+        sun.security.krb5.Realm r1;
+        sun.security.krb5.PrincipalName r2;
+        sun.security.krb5.Checksum r3;
+        int i0;
+        sun.security.krb5.internal.KerberosTime r4;
+        sun.security.krb5.EncryptionKey r5;
+        java.lang.Integer r6;
+        sun.security.krb5.internal.AuthorizationData r7;
+
+        r0 := @this: sun.security.krb5.internal.Authenticator;
+        r1 := @parameter0: sun.security.krb5.Realm;
+        r2 := @parameter1: sun.security.krb5.PrincipalName;
+        r3 := @parameter2: sun.security.krb5.Checksum;
+        i0 := @parameter3: int;
+        r4 := @parameter4: sun.security.krb5.internal.KerberosTime;
+        r5 := @parameter5: sun.security.krb5.EncryptionKey;
+        r6 := @parameter6: java.lang.Integer;
+        r7 := @parameter7: sun.security.krb5.internal.AuthorizationData;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.security.krb5.internal.Authenticator: int authenticator_vno> = 5;
+        r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.Realm crealm> = r1;
+        r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.PrincipalName cname> = r2;
+        r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.Checksum cksum> = r3;
+        r0.<sun.security.krb5.internal.Authenticator: int cusec> = i0;
+        r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.internal.KerberosTime ctime> = r4;
+        r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.EncryptionKey subKey> = r5;
+        r0.<sun.security.krb5.internal.Authenticator: java.lang.Integer seqNumber> = r6;
+        r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.internal.AuthorizationData authorizationData> = r7;
+        return;
+    }
+
+    public void <init>(byte[]) throws sun.security.krb5.Asn1Exception, java.io.IOException, sun.security.krb5.internal.KrbApErrException, sun.security.krb5.RealmException
+    {
+        sun.security.krb5.internal.Authenticator r0;
+        byte[] r1;
+        sun.security.util.DerValue $r2;
+
+        r0 := @this: sun.security.krb5.internal.Authenticator;
+        r1 := @parameter0: byte[];
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r2 = new sun.security.util.DerValue;
+        specialinvoke $r2.<sun.security.util.DerValue: void <init>(byte[])>(r1);
+        specialinvoke r0.<sun.security.krb5.internal.Authenticator: void init(sun.security.util.DerValue)>($r2);
+        return;
+    }
+
+    public void <init>(sun.security.util.DerValue) throws sun.security.krb5.Asn1Exception, java.io.IOException, sun.security.krb5.internal.KrbApErrException, sun.security.krb5.RealmException
+    {
+        sun.security.krb5.internal.Authenticator r0;
+        sun.security.util.DerValue r1;
+
+        r0 := @this: sun.security.krb5.internal.Authenticator;
+        r1 := @parameter0: sun.security.util.DerValue;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        specialinvoke r0.<sun.security.krb5.internal.Authenticator: void init(sun.security.util.DerValue)>(r1);
+        return;
+    }
+
+    private void init(sun.security.util.DerValue) throws sun.security.krb5.Asn1Exception, java.io.IOException, sun.security.krb5.internal.KrbApErrException, sun.security.krb5.RealmException
+    {
+        sun.security.krb5.internal.Authenticator r0;
+        sun.security.util.DerValue r1, r2, r3, r19, r31;
+        byte $b0, $b1, $b2, $b3, $b4, $b7, $b8, $b14, $b15;
+        boolean $z0, $z1;
+        sun.security.krb5.Asn1Exception $r4, $r6, $r8, $r22, $r39;
+        sun.security.util.DerInputStream $r5, $r7, $r9, $r12, $r14, $r16, $r18, $r20, $r23, $r25, $r26, $r28, $r29, $r30, $r33, $r35, $r36, $r38;
+        java.math.BigInteger $r10, $r21, $r34;
+        int $i5, $i6, $i9, $i10, $i11, $i12, $i13, $i16, $i17, $i18;
+        sun.security.krb5.internal.KrbApErrException $r11;
+        sun.security.krb5.Realm $r13;
+        sun.security.krb5.PrincipalName $r15;
+        sun.security.krb5.Checksum $r17;
+        sun.security.krb5.internal.KerberosTime $r24;
+        sun.security.krb5.EncryptionKey $r27;
+        java.lang.Integer $r32;
+        sun.security.krb5.internal.AuthorizationData $r37;
+
+        r0 := @this: sun.security.krb5.internal.Authenticator;
+        r1 := @parameter0: sun.security.util.DerValue;
+        $b0 = virtualinvoke r1.<sun.security.util.DerValue: byte getTag()>();
+        $b1 = $b0 & 31;
+        if $b1 != 2 goto label0;
+
+        $z0 = virtualinvoke r1.<sun.security.util.DerValue: boolean isApplication()>();
+        if $z0 != 1 goto label0;
+
+        $z1 = virtualinvoke r1.<sun.security.util.DerValue: boolean isConstructed()>();
+        if $z1 == 1 goto label1;
+
+     label0:
+        $r4 = new sun.security.krb5.Asn1Exception;
+        specialinvoke $r4.<sun.security.krb5.Asn1Exception: void <init>(int)>(906);
+        throw $r4;
+
+     label1:
+        $r5 = virtualinvoke r1.<sun.security.util.DerValue: sun.security.util.DerInputStream getData()>();
+        r2 = virtualinvoke $r5.<sun.security.util.DerInputStream: sun.security.util.DerValue getDerValue()>();
+        $b2 = virtualinvoke r2.<sun.security.util.DerValue: byte getTag()>();
+        if $b2 == 48 goto label2;
+
+        $r6 = new sun.security.krb5.Asn1Exception;
+        specialinvoke $r6.<sun.security.krb5.Asn1Exception: void <init>(int)>(906);
+        throw $r6;
+
+     label2:
+        $r7 = virtualinvoke r2.<sun.security.util.DerValue: sun.security.util.DerInputStream getData()>();
+        r3 = virtualinvoke $r7.<sun.security.util.DerInputStream: sun.security.util.DerValue getDerValue()>();
+        $b3 = virtualinvoke r3.<sun.security.util.DerValue: byte getTag()>();
+        $b4 = $b3 & 31;
+        if $b4 == 0 goto label3;
+
+        $r8 = new sun.security.krb5.Asn1Exception;
+        specialinvoke $r8.<sun.security.krb5.Asn1Exception: void <init>(int)>(906);
+        throw $r8;
+
+     label3:
+        $r9 = virtualinvoke r3.<sun.security.util.DerValue: sun.security.util.DerInputStream getData()>();
+        $r10 = virtualinvoke $r9.<sun.security.util.DerInputStream: java.math.BigInteger getBigInteger()>();
+        $i5 = virtualinvoke $r10.<java.math.BigInteger: int intValue()>();
+        r0.<sun.security.krb5.internal.Authenticator: int authenticator_vno> = $i5;
+        $i6 = r0.<sun.security.krb5.internal.Authenticator: int authenticator_vno>;
+        if $i6 == 5 goto label4;
+
+        $r11 = new sun.security.krb5.internal.KrbApErrException;
+        specialinvoke $r11.<sun.security.krb5.internal.KrbApErrException: void <init>(int)>(39);
+        throw $r11;
+
+     label4:
+        $r12 = virtualinvoke r2.<sun.security.util.DerValue: sun.security.util.DerInputStream getData()>();
+        $r13 = staticinvoke <sun.security.krb5.Realm: sun.security.krb5.Realm parse(sun.security.util.DerInputStream,byte,boolean)>($r12, 1, 0);
+        r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.Realm crealm> = $r13;
+        $r14 = virtualinvoke r2.<sun.security.util.DerValue: sun.security.util.DerInputStream getData()>();
+        $r15 = staticinvoke <sun.security.krb5.PrincipalName: sun.security.krb5.PrincipalName parse(sun.security.util.DerInputStream,byte,boolean)>($r14, 2, 0);
+        r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.PrincipalName cname> = $r15;
+        $r16 = virtualinvoke r2.<sun.security.util.DerValue: sun.security.util.DerInputStream getData()>();
+        $r17 = staticinvoke <sun.security.krb5.Checksum: sun.security.krb5.Checksum parse(sun.security.util.DerInputStream,byte,boolean)>($r16, 3, 1);
+        r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.Checksum cksum> = $r17;
+        $r18 = virtualinvoke r2.<sun.security.util.DerValue: sun.security.util.DerInputStream getData()>();
+        r19 = virtualinvoke $r18.<sun.security.util.DerInputStream: sun.security.util.DerValue getDerValue()>();
+        $b7 = virtualinvoke r19.<sun.security.util.DerValue: byte getTag()>();
+        $b8 = $b7 & 31;
+        if $b8 != 4 goto label5;
+
+        $r20 = virtualinvoke r19.<sun.security.util.DerValue: sun.security.util.DerInputStream getData()>();
+        $r21 = virtualinvoke $r20.<sun.security.util.DerInputStream: java.math.BigInteger getBigInteger()>();
+        $i9 = virtualinvoke $r21.<java.math.BigInteger: int intValue()>();
+        r0.<sun.security.krb5.internal.Authenticator: int cusec> = $i9;
+        goto label6;
+
+     label5:
+        $r22 = new sun.security.krb5.Asn1Exception;
+        specialinvoke $r22.<sun.security.krb5.Asn1Exception: void <init>(int)>(906);
+        throw $r22;
+
+     label6:
+        $r23 = virtualinvoke r2.<sun.security.util.DerValue: sun.security.util.DerInputStream getData()>();
+        $r24 = staticinvoke <sun.security.krb5.internal.KerberosTime: sun.security.krb5.internal.KerberosTime parse(sun.security.util.DerInputStream,byte,boolean)>($r23, 5, 0);
+        r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.internal.KerberosTime ctime> = $r24;
+        $r25 = virtualinvoke r2.<sun.security.util.DerValue: sun.security.util.DerInputStream getData()>();
+        $i10 = virtualinvoke $r25.<sun.security.util.DerInputStream: int available()>();
+        if $i10 <= 0 goto label7;
+
+        $r26 = virtualinvoke r2.<sun.security.util.DerValue: sun.security.util.DerInputStream getData()>();
+        $r27 = staticinvoke <sun.security.krb5.EncryptionKey: sun.security.krb5.EncryptionKey parse(sun.security.util.DerInputStream,byte,boolean)>($r26, 6, 1);
+        r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.EncryptionKey subKey> = $r27;
+        goto label8;
+
+     label7:
+        r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.EncryptionKey subKey> = null;
+        r0.<sun.security.krb5.internal.Authenticator: java.lang.Integer seqNumber> = null;
+        r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.internal.AuthorizationData authorizationData> = null;
+
+     label8:
+        $r28 = virtualinvoke r2.<sun.security.util.DerValue: sun.security.util.DerInputStream getData()>();
+        $i11 = virtualinvoke $r28.<sun.security.util.DerInputStream: int available()>();
+        if $i11 <= 0 goto label9;
+
+        $r29 = virtualinvoke r2.<sun.security.util.DerValue: sun.security.util.DerInputStream getData()>();
+        $i12 = virtualinvoke $r29.<sun.security.util.DerInputStream: int peekByte()>();
+        $i13 = $i12 & 31;
+        if $i13 != 7 goto label10;
+
+        $r30 = virtualinvoke r2.<sun.security.util.DerValue: sun.security.util.DerInputStream getData()>();
+        r31 = virtualinvoke $r30.<sun.security.util.DerInputStream: sun.security.util.DerValue getDerValue()>();
+        $b14 = virtualinvoke r31.<sun.security.util.DerValue: byte getTag()>();
+        $b15 = $b14 & 31;
+        if $b15 != 7 goto label10;
+
+        $r32 = new java.lang.Integer;
+        $r33 = virtualinvoke r31.<sun.security.util.DerValue: sun.security.util.DerInputStream getData()>();
+        $r34 = virtualinvoke $r33.<sun.security.util.DerInputStream: java.math.BigInteger getBigInteger()>();
+        $i16 = virtualinvoke $r34.<java.math.BigInteger: int intValue()>();
+        specialinvoke $r32.<java.lang.Integer: void <init>(int)>($i16);
+        r0.<sun.security.krb5.internal.Authenticator: java.lang.Integer seqNumber> = $r32;
+        goto label10;
+
+     label9:
+        r0.<sun.security.krb5.internal.Authenticator: java.lang.Integer seqNumber> = null;
+        r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.internal.AuthorizationData authorizationData> = null;
+
+     label10:
+        $r35 = virtualinvoke r2.<sun.security.util.DerValue: sun.security.util.DerInputStream getData()>();
+        $i17 = virtualinvoke $r35.<sun.security.util.DerInputStream: int available()>();
+        if $i17 <= 0 goto label11;
+
+        $r36 = virtualinvoke r2.<sun.security.util.DerValue: sun.security.util.DerInputStream getData()>();
+        $r37 = staticinvoke <sun.security.krb5.internal.AuthorizationData: sun.security.krb5.internal.AuthorizationData parse(sun.security.util.DerInputStream,byte,boolean)>($r36, 8, 1);
+        r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.internal.AuthorizationData authorizationData> = $r37;
+        goto label12;
+
+     label11:
+        r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.internal.AuthorizationData authorizationData> = null;
+
+     label12:
+        $r38 = virtualinvoke r2.<sun.security.util.DerValue: sun.security.util.DerInputStream getData()>();
+        $i18 = virtualinvoke $r38.<sun.security.util.DerInputStream: int available()>();
+        if $i18 <= 0 goto label13;
+
+        $r39 = new sun.security.krb5.Asn1Exception;
+        specialinvoke $r39.<sun.security.krb5.Asn1Exception: void <init>(int)>(906);
+        throw $r39;
+
+     label13:
+        return;
+    }
+
+    public byte[] asn1Encode() throws sun.security.krb5.Asn1Exception, java.io.IOException
+    {
+        sun.security.krb5.internal.Authenticator r0;
+        java.util.Vector $r1, r2;
+        sun.security.util.DerOutputStream r3, r5, $r6, $r20, r21, $r33, r34, $r43, r44, $r45;
+        sun.security.util.DerValue[] r4;
+        int $i0, $i6, $i14;
+        long $l1, $l7, $l11;
+        java.math.BigInteger $r7, $r22, $r36;
+        sun.security.util.DerValue $r8, $r10, $r13, $r17, $r23, $r25, $r29, $r37, $r40;
+        byte $b2, $b3, $b4, $b5, $b8, $b9, $b10, $b12, $b13, $b15;
+        byte[] $r9, $r12, $r15, $r19, $r24, $r27, $r31, $r38, $r42, $r46;
+        sun.security.krb5.Realm $r11;
+        sun.security.krb5.PrincipalName $r14;
+        sun.security.krb5.Checksum $r16, $r18;
+        sun.security.krb5.internal.KerberosTime $r26;
+        sun.security.krb5.EncryptionKey $r28, $r30;
+        java.lang.Integer $r32, $r35;
+        sun.security.krb5.internal.AuthorizationData $r39, $r41;
+
+        r0 := @this: sun.security.krb5.internal.Authenticator;
+        $r1 = new java.util.Vector;
+        specialinvoke $r1.<java.util.Vector: void <init>()>();
+        r2 = $r1;
+        $r6 = new sun.security.util.DerOutputStream;
+        specialinvoke $r6.<sun.security.util.DerOutputStream: void <init>()>();
+        r3 = $r6;
+        $i0 = r0.<sun.security.krb5.internal.Authenticator: int authenticator_vno>;
+        $l1 = (long) $i0;
+        $r7 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>($l1);
+        virtualinvoke r3.<sun.security.util.DerOutputStream: void putInteger(java.math.BigInteger)>($r7);
+        $r8 = new sun.security.util.DerValue;
+        $b2 = staticinvoke <sun.security.util.DerValue: byte createTag(byte,boolean,byte)>(-128, 1, 0);
+        $r9 = virtualinvoke r3.<sun.security.util.DerOutputStream: byte[] toByteArray()>();
+        specialinvoke $r8.<sun.security.util.DerValue: void <init>(byte,byte[])>($b2, $r9);
+        virtualinvoke r2.<java.util.Vector: void addElement(java.lang.Object)>($r8);
+        $r10 = new sun.security.util.DerValue;
+        $b3 = staticinvoke <sun.security.util.DerValue: byte createTag(byte,boolean,byte)>(-128, 1, 1);
+        $r11 = r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.Realm crealm>;
+        $r12 = virtualinvoke $r11.<sun.security.krb5.Realm: byte[] asn1Encode()>();
+        specialinvoke $r10.<sun.security.util.DerValue: void <init>(byte,byte[])>($b3, $r12);
+        virtualinvoke r2.<java.util.Vector: void addElement(java.lang.Object)>($r10);
+        $r13 = new sun.security.util.DerValue;
+        $b4 = staticinvoke <sun.security.util.DerValue: byte createTag(byte,boolean,byte)>(-128, 1, 2);
+        $r14 = r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.PrincipalName cname>;
+        $r15 = virtualinvoke $r14.<sun.security.krb5.PrincipalName: byte[] asn1Encode()>();
+        specialinvoke $r13.<sun.security.util.DerValue: void <init>(byte,byte[])>($b4, $r15);
+        virtualinvoke r2.<java.util.Vector: void addElement(java.lang.Object)>($r13);
+        $r16 = r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.Checksum cksum>;
+        if $r16 == null goto label0;
+
+        $r17 = new sun.security.util.DerValue;
+        $b5 = staticinvoke <sun.security.util.DerValue: byte createTag(byte,boolean,byte)>(-128, 1, 3);
+        $r18 = r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.Checksum cksum>;
+        $r19 = virtualinvoke $r18.<sun.security.krb5.Checksum: byte[] asn1Encode()>();
+        specialinvoke $r17.<sun.security.util.DerValue: void <init>(byte,byte[])>($b5, $r19);
+        virtualinvoke r2.<java.util.Vector: void addElement(java.lang.Object)>($r17);
+
+     label0:
+        $r20 = new sun.security.util.DerOutputStream;
+        specialinvoke $r20.<sun.security.util.DerOutputStream: void <init>()>();
+        r21 = $r20;
+        $i6 = r0.<sun.security.krb5.internal.Authenticator: int cusec>;
+        $l7 = (long) $i6;
+        $r22 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>($l7);
+        virtualinvoke r21.<sun.security.util.DerOutputStream: void putInteger(java.math.BigInteger)>($r22);
+        $r23 = new sun.security.util.DerValue;
+        $b8 = staticinvoke <sun.security.util.DerValue: byte createTag(byte,boolean,byte)>(-128, 1, 4);
+        $r24 = virtualinvoke r21.<sun.security.util.DerOutputStream: byte[] toByteArray()>();
+        specialinvoke $r23.<sun.security.util.DerValue: void <init>(byte,byte[])>($b8, $r24);
+        virtualinvoke r2.<java.util.Vector: void addElement(java.lang.Object)>($r23);
+        $r25 = new sun.security.util.DerValue;
+        $b9 = staticinvoke <sun.security.util.DerValue: byte createTag(byte,boolean,byte)>(-128, 1, 5);
+        $r26 = r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.internal.KerberosTime ctime>;
+        $r27 = virtualinvoke $r26.<sun.security.krb5.internal.KerberosTime: byte[] asn1Encode()>();
+        specialinvoke $r25.<sun.security.util.DerValue: void <init>(byte,byte[])>($b9, $r27);
+        virtualinvoke r2.<java.util.Vector: void addElement(java.lang.Object)>($r25);
+        $r28 = r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.EncryptionKey subKey>;
+        if $r28 == null goto label1;
+
+        $r29 = new sun.security.util.DerValue;
+        $b10 = staticinvoke <sun.security.util.DerValue: byte createTag(byte,boolean,byte)>(-128, 1, 6);
+        $r30 = r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.EncryptionKey subKey>;
+        $r31 = virtualinvoke $r30.<sun.security.krb5.EncryptionKey: byte[] asn1Encode()>();
+        specialinvoke $r29.<sun.security.util.DerValue: void <init>(byte,byte[])>($b10, $r31);
+        virtualinvoke r2.<java.util.Vector: void addElement(java.lang.Object)>($r29);
+
+     label1:
+        $r32 = r0.<sun.security.krb5.internal.Authenticator: java.lang.Integer seqNumber>;
+        if $r32 == null goto label2;
+
+        $r33 = new sun.security.util.DerOutputStream;
+        specialinvoke $r33.<sun.security.util.DerOutputStream: void <init>()>();
+        r34 = $r33;
+        $r35 = r0.<sun.security.krb5.internal.Authenticator: java.lang.Integer seqNumber>;
+        $l11 = virtualinvoke $r35.<java.lang.Integer: long longValue()>();
+        $r36 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>($l11);
+        virtualinvoke r34.<sun.security.util.DerOutputStream: void putInteger(java.math.BigInteger)>($r36);
+        $r37 = new sun.security.util.DerValue;
+        $b12 = staticinvoke <sun.security.util.DerValue: byte createTag(byte,boolean,byte)>(-128, 1, 7);
+        $r38 = virtualinvoke r34.<sun.security.util.DerOutputStream: byte[] toByteArray()>();
+        specialinvoke $r37.<sun.security.util.DerValue: void <init>(byte,byte[])>($b12, $r38);
+        virtualinvoke r2.<java.util.Vector: void addElement(java.lang.Object)>($r37);
+
+     label2:
+        $r39 = r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.internal.AuthorizationData authorizationData>;
+        if $r39 == null goto label3;
+
+        $r40 = new sun.security.util.DerValue;
+        $b13 = staticinvoke <sun.security.util.DerValue: byte createTag(byte,boolean,byte)>(-128, 1, 8);
+        $r41 = r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.internal.AuthorizationData authorizationData>;
+        $r42 = virtualinvoke $r41.<sun.security.krb5.internal.AuthorizationData: byte[] asn1Encode()>();
+        specialinvoke $r40.<sun.security.util.DerValue: void <init>(byte,byte[])>($b13, $r42);
+        virtualinvoke r2.<java.util.Vector: void addElement(java.lang.Object)>($r40);
+
+     label3:
+        $i14 = virtualinvoke r2.<java.util.Vector: int size()>();
+        r4 = newarray (sun.security.util.DerValue)[$i14];
+        virtualinvoke r2.<java.util.Vector: void copyInto(java.lang.Object[])>(r4);
+        $r43 = new sun.security.util.DerOutputStream;
+        specialinvoke $r43.<sun.security.util.DerOutputStream: void <init>()>();
+        r44 = $r43;
+        virtualinvoke r44.<sun.security.util.DerOutputStream: void putSequence(sun.security.util.DerValue[])>(r4);
+        $r45 = new sun.security.util.DerOutputStream;
+        specialinvoke $r45.<sun.security.util.DerOutputStream: void <init>()>();
+        r5 = $r45;
+        $b15 = staticinvoke <sun.security.util.DerValue: byte createTag(byte,boolean,byte)>(64, 1, 2);
+        virtualinvoke r5.<sun.security.util.DerOutputStream: void write(byte,sun.security.util.DerOutputStream)>($b15, r44);
+        $r46 = virtualinvoke r5.<sun.security.util.DerOutputStream: byte[] toByteArray()>();
+        return $r46;
+    }
+
+    public final sun.security.krb5.Checksum getChecksum()
+    {
+        sun.security.krb5.internal.Authenticator r0;
+        sun.security.krb5.Checksum $r1;
+
+        r0 := @this: sun.security.krb5.internal.Authenticator;
+        $r1 = r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.Checksum cksum>;
+        return $r1;
+    }
+
+    public final java.lang.Integer getSeqNumber()
+    {
+        sun.security.krb5.internal.Authenticator r0;
+        java.lang.Integer $r1;
+
+        r0 := @this: sun.security.krb5.internal.Authenticator;
+        $r1 = r0.<sun.security.krb5.internal.Authenticator: java.lang.Integer seqNumber>;
+        return $r1;
+    }
+
+    public final sun.security.krb5.EncryptionKey getSubKey()
+    {
+        sun.security.krb5.internal.Authenticator r0;
+        sun.security.krb5.EncryptionKey $r1;
+
+        r0 := @this: sun.security.krb5.internal.Authenticator;
+        $r1 = r0.<sun.security.krb5.internal.Authenticator: sun.security.krb5.EncryptionKey subKey>;
+        return $r1;
+    }
+}

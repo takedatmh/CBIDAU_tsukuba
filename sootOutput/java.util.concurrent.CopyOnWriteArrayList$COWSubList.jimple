@@ -1,0 +1,544 @@
+class java.util.concurrent.CopyOnWriteArrayList$COWSubList extends java.util.AbstractList implements java.util.RandomAccess
+{
+    private final java.util.concurrent.CopyOnWriteArrayList l;
+    private final int offset;
+    private int size;
+    private java.lang.Object[] expectedArray;
+
+    void <init>(java.util.concurrent.CopyOnWriteArrayList, int, int)
+    {
+        java.util.concurrent.CopyOnWriteArrayList$COWSubList r0;
+        java.util.concurrent.CopyOnWriteArrayList r1, $r2;
+        int i0, i1, $i2;
+        java.lang.Object[] $r3;
+
+        r0 := @this: java.util.concurrent.CopyOnWriteArrayList$COWSubList;
+        r1 := @parameter0: java.util.concurrent.CopyOnWriteArrayList;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        specialinvoke r0.<java.util.AbstractList: void <init>()>();
+        r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l> = r1;
+        $r2 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        $r3 = virtualinvoke $r2.<java.util.concurrent.CopyOnWriteArrayList: java.lang.Object[] getArray()>();
+        r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.lang.Object[] expectedArray> = $r3;
+        r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int offset> = i0;
+        $i2 = i1 - i0;
+        r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int size> = $i2;
+        return;
+    }
+
+    private void checkForComodification()
+    {
+        java.util.concurrent.CopyOnWriteArrayList$COWSubList r0;
+        java.util.concurrent.CopyOnWriteArrayList $r1;
+        java.lang.Object[] $r2, $r3;
+        java.util.ConcurrentModificationException $r4;
+
+        r0 := @this: java.util.concurrent.CopyOnWriteArrayList$COWSubList;
+        $r1 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        $r2 = virtualinvoke $r1.<java.util.concurrent.CopyOnWriteArrayList: java.lang.Object[] getArray()>();
+        $r3 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.lang.Object[] expectedArray>;
+        if $r2 == $r3 goto label0;
+
+        $r4 = new java.util.ConcurrentModificationException;
+        specialinvoke $r4.<java.util.ConcurrentModificationException: void <init>()>();
+        throw $r4;
+
+     label0:
+        return;
+    }
+
+    private void rangeCheck(int)
+    {
+        java.util.concurrent.CopyOnWriteArrayList$COWSubList r0;
+        int i0, $i1, $i2;
+        java.lang.StringBuilder $r1, $r3, $r4, $r5, $r6;
+        java.lang.IndexOutOfBoundsException $r2;
+        java.lang.String $r7;
+
+        r0 := @this: java.util.concurrent.CopyOnWriteArrayList$COWSubList;
+        i0 := @parameter0: int;
+        if i0 < 0 goto label0;
+
+        $i1 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int size>;
+        if i0 < $i1 goto label1;
+
+     label0:
+        $r2 = new java.lang.IndexOutOfBoundsException;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r3 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Index: ");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(",Size: ");
+        $i2 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int size>;
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i2);
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r7);
+        throw $r2;
+
+     label1:
+        return;
+    }
+
+    public java.lang.Object set(int, java.lang.Object)
+    {
+        java.util.concurrent.CopyOnWriteArrayList$COWSubList r0;
+        int i0, $i1, $i2;
+        java.lang.Object r1, r3, r4;
+        java.util.concurrent.locks.ReentrantLock r2;
+        java.lang.Throwable r5, $r10;
+        java.util.concurrent.CopyOnWriteArrayList $r6, $r7, $r8;
+        java.lang.Object[] $r9;
+
+        r0 := @this: java.util.concurrent.CopyOnWriteArrayList$COWSubList;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.lang.Object;
+        $r6 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        r2 = $r6.<java.util.concurrent.CopyOnWriteArrayList: java.util.concurrent.locks.ReentrantLock lock>;
+        virtualinvoke r2.<java.util.concurrent.locks.ReentrantLock: void lock()>();
+
+     label0:
+        specialinvoke r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: void rangeCheck(int)>(i0);
+        specialinvoke r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: void checkForComodification()>();
+        $r7 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        $i1 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int offset>;
+        $i2 = i0 + $i1;
+        r3 = virtualinvoke $r7.<java.util.concurrent.CopyOnWriteArrayList: java.lang.Object set(int,java.lang.Object)>($i2, r1);
+        $r8 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        $r9 = virtualinvoke $r8.<java.util.concurrent.CopyOnWriteArrayList: java.lang.Object[] getArray()>();
+        r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.lang.Object[] expectedArray> = $r9;
+        r4 = r3;
+
+     label1:
+        virtualinvoke r2.<java.util.concurrent.locks.ReentrantLock: void unlock()>();
+        return r4;
+
+     label2:
+        $r10 := @caughtexception;
+
+     label3:
+        r5 = $r10;
+
+     label4:
+        virtualinvoke r2.<java.util.concurrent.locks.ReentrantLock: void unlock()>();
+        throw r5;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    public java.lang.Object get(int)
+    {
+        java.util.concurrent.CopyOnWriteArrayList$COWSubList r0;
+        int i0, $i1, $i2;
+        java.util.concurrent.locks.ReentrantLock r1;
+        java.lang.Object r2;
+        java.lang.Throwable r3, $r6;
+        java.util.concurrent.CopyOnWriteArrayList $r4, $r5;
+
+        r0 := @this: java.util.concurrent.CopyOnWriteArrayList$COWSubList;
+        i0 := @parameter0: int;
+        $r4 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        r1 = $r4.<java.util.concurrent.CopyOnWriteArrayList: java.util.concurrent.locks.ReentrantLock lock>;
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void lock()>();
+
+     label0:
+        specialinvoke r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: void rangeCheck(int)>(i0);
+        specialinvoke r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: void checkForComodification()>();
+        $r5 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        $i1 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int offset>;
+        $i2 = i0 + $i1;
+        r2 = virtualinvoke $r5.<java.util.concurrent.CopyOnWriteArrayList: java.lang.Object get(int)>($i2);
+
+     label1:
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void unlock()>();
+        return r2;
+
+     label2:
+        $r6 := @caughtexception;
+
+     label3:
+        r3 = $r6;
+
+     label4:
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void unlock()>();
+        throw r3;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    public int size()
+    {
+        java.util.concurrent.CopyOnWriteArrayList$COWSubList r0;
+        java.util.concurrent.locks.ReentrantLock r1;
+        int i0;
+        java.lang.Throwable r2, $r4;
+        java.util.concurrent.CopyOnWriteArrayList $r3;
+
+        r0 := @this: java.util.concurrent.CopyOnWriteArrayList$COWSubList;
+        $r3 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        r1 = $r3.<java.util.concurrent.CopyOnWriteArrayList: java.util.concurrent.locks.ReentrantLock lock>;
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void lock()>();
+
+     label0:
+        specialinvoke r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: void checkForComodification()>();
+        i0 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int size>;
+
+     label1:
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void unlock()>();
+        return i0;
+
+     label2:
+        $r4 := @caughtexception;
+
+     label3:
+        r2 = $r4;
+
+     label4:
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void unlock()>();
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    public void add(int, java.lang.Object)
+    {
+        java.util.concurrent.CopyOnWriteArrayList$COWSubList r0;
+        int i0, $i1, $i2, $i3, $i4, $i5;
+        java.lang.Object r1;
+        java.util.concurrent.locks.ReentrantLock r2;
+        java.lang.Throwable r3, $r10;
+        java.util.concurrent.CopyOnWriteArrayList $r4, $r6, $r7;
+        java.lang.IndexOutOfBoundsException $r5;
+        java.lang.Object[] $r8;
+
+        r0 := @this: java.util.concurrent.CopyOnWriteArrayList$COWSubList;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.lang.Object;
+        $r4 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        r2 = $r4.<java.util.concurrent.CopyOnWriteArrayList: java.util.concurrent.locks.ReentrantLock lock>;
+        virtualinvoke r2.<java.util.concurrent.locks.ReentrantLock: void lock()>();
+
+     label0:
+        specialinvoke r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: void checkForComodification()>();
+        if i0 < 0 goto label1;
+
+        $i1 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int size>;
+        if i0 <= $i1 goto label2;
+
+     label1:
+        $r5 = new java.lang.IndexOutOfBoundsException;
+        specialinvoke $r5.<java.lang.IndexOutOfBoundsException: void <init>()>();
+        throw $r5;
+
+     label2:
+        $r6 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        $i2 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int offset>;
+        $i3 = i0 + $i2;
+        virtualinvoke $r6.<java.util.concurrent.CopyOnWriteArrayList: void add(int,java.lang.Object)>($i3, r1);
+        $r7 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        $r8 = virtualinvoke $r7.<java.util.concurrent.CopyOnWriteArrayList: java.lang.Object[] getArray()>();
+        r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.lang.Object[] expectedArray> = $r8;
+        $i4 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int size>;
+        $i5 = $i4 + 1;
+        r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int size> = $i5;
+
+     label3:
+        virtualinvoke r2.<java.util.concurrent.locks.ReentrantLock: void unlock()>();
+        goto label7;
+
+     label4:
+        $r10 := @caughtexception;
+
+     label5:
+        r3 = $r10;
+
+     label6:
+        virtualinvoke r2.<java.util.concurrent.locks.ReentrantLock: void unlock()>();
+        throw r3;
+
+     label7:
+        return;
+
+        catch java.lang.Throwable from label0 to label3 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+    }
+
+    public void clear()
+    {
+        java.util.concurrent.CopyOnWriteArrayList$COWSubList r0;
+        java.util.concurrent.locks.ReentrantLock r1;
+        java.lang.Throwable r2, $r7;
+        java.util.concurrent.CopyOnWriteArrayList $r3, $r4, $r5;
+        int $i0, $i1, $i2, $i3;
+        java.lang.Object[] $r6;
+
+        r0 := @this: java.util.concurrent.CopyOnWriteArrayList$COWSubList;
+        $r3 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        r1 = $r3.<java.util.concurrent.CopyOnWriteArrayList: java.util.concurrent.locks.ReentrantLock lock>;
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void lock()>();
+
+     label0:
+        specialinvoke r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: void checkForComodification()>();
+        $r4 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        $i0 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int offset>;
+        $i1 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int offset>;
+        $i2 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int size>;
+        $i3 = $i1 + $i2;
+        staticinvoke <java.util.concurrent.CopyOnWriteArrayList: void access$100(java.util.concurrent.CopyOnWriteArrayList,int,int)>($r4, $i0, $i3);
+        $r5 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        $r6 = virtualinvoke $r5.<java.util.concurrent.CopyOnWriteArrayList: java.lang.Object[] getArray()>();
+        r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.lang.Object[] expectedArray> = $r6;
+        r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int size> = 0;
+
+     label1:
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void unlock()>();
+        goto label5;
+
+     label2:
+        $r7 := @caughtexception;
+
+     label3:
+        r2 = $r7;
+
+     label4:
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void unlock()>();
+        throw r2;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    public java.lang.Object remove(int)
+    {
+        java.util.concurrent.CopyOnWriteArrayList$COWSubList r0;
+        int i0, $i1, $i2, $i3, $i4;
+        java.util.concurrent.locks.ReentrantLock r1;
+        java.lang.Object r2, r3;
+        java.lang.Throwable r4, $r10;
+        java.util.concurrent.CopyOnWriteArrayList $r5, $r6, $r7;
+        java.lang.Object[] $r8;
+
+        r0 := @this: java.util.concurrent.CopyOnWriteArrayList$COWSubList;
+        i0 := @parameter0: int;
+        $r5 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        r1 = $r5.<java.util.concurrent.CopyOnWriteArrayList: java.util.concurrent.locks.ReentrantLock lock>;
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void lock()>();
+
+     label0:
+        specialinvoke r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: void rangeCheck(int)>(i0);
+        specialinvoke r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: void checkForComodification()>();
+        $r6 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        $i1 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int offset>;
+        $i2 = i0 + $i1;
+        r2 = virtualinvoke $r6.<java.util.concurrent.CopyOnWriteArrayList: java.lang.Object remove(int)>($i2);
+        $r7 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        $r8 = virtualinvoke $r7.<java.util.concurrent.CopyOnWriteArrayList: java.lang.Object[] getArray()>();
+        r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.lang.Object[] expectedArray> = $r8;
+        $i3 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int size>;
+        $i4 = $i3 - 1;
+        r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int size> = $i4;
+        r3 = r2;
+
+     label1:
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void unlock()>();
+        return r3;
+
+     label2:
+        $r10 := @caughtexception;
+
+     label3:
+        r4 = $r10;
+
+     label4:
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void unlock()>();
+        throw r4;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    public boolean remove(java.lang.Object)
+    {
+        java.util.concurrent.CopyOnWriteArrayList$COWSubList r0;
+        java.lang.Object r1;
+        int i0;
+
+        r0 := @this: java.util.concurrent.CopyOnWriteArrayList$COWSubList;
+        r1 := @parameter0: java.lang.Object;
+        i0 = virtualinvoke r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int indexOf(java.lang.Object)>(r1);
+        if i0 != -1 goto label0;
+
+        return 0;
+
+     label0:
+        virtualinvoke r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.lang.Object remove(int)>(i0);
+        return 1;
+    }
+
+    public java.util.Iterator iterator()
+    {
+        java.util.concurrent.CopyOnWriteArrayList$COWSubList r0;
+        java.util.concurrent.locks.ReentrantLock r1;
+        java.util.concurrent.CopyOnWriteArrayList$COWSubListIterator r2, $r5;
+        java.lang.Throwable r3, $r7;
+        java.util.concurrent.CopyOnWriteArrayList $r4, $r6;
+        int $i0, $i1;
+
+        r0 := @this: java.util.concurrent.CopyOnWriteArrayList$COWSubList;
+        $r4 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        r1 = $r4.<java.util.concurrent.CopyOnWriteArrayList: java.util.concurrent.locks.ReentrantLock lock>;
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void lock()>();
+
+     label0:
+        specialinvoke r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: void checkForComodification()>();
+        $r5 = new java.util.concurrent.CopyOnWriteArrayList$COWSubListIterator;
+        $r6 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        $i0 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int offset>;
+        $i1 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int size>;
+        specialinvoke $r5.<java.util.concurrent.CopyOnWriteArrayList$COWSubListIterator: void <init>(java.util.List,int,int,int)>($r6, 0, $i0, $i1);
+        r2 = $r5;
+
+     label1:
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void unlock()>();
+        return r2;
+
+     label2:
+        $r7 := @caughtexception;
+
+     label3:
+        r3 = $r7;
+
+     label4:
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void unlock()>();
+        throw r3;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    public java.util.ListIterator listIterator(int)
+    {
+        java.util.concurrent.CopyOnWriteArrayList$COWSubList r0;
+        int i0, $i1, $i2, $i3, $i4;
+        java.util.concurrent.locks.ReentrantLock r1;
+        java.lang.StringBuilder $r2, $r7, $r8, $r9, $r10;
+        java.util.concurrent.CopyOnWriteArrayList$COWSubListIterator r3, $r12;
+        java.lang.Throwable r4, $r14;
+        java.util.concurrent.CopyOnWriteArrayList $r5, $r13;
+        java.lang.IndexOutOfBoundsException $r6;
+        java.lang.String $r11;
+
+        r0 := @this: java.util.concurrent.CopyOnWriteArrayList$COWSubList;
+        i0 := @parameter0: int;
+        $r5 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        r1 = $r5.<java.util.concurrent.CopyOnWriteArrayList: java.util.concurrent.locks.ReentrantLock lock>;
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void lock()>();
+
+     label0:
+        specialinvoke r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: void checkForComodification()>();
+        if i0 < 0 goto label1;
+
+        $i1 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int size>;
+        if i0 <= $i1 goto label2;
+
+     label1:
+        $r6 = new java.lang.IndexOutOfBoundsException;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+        $r7 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Index: ");
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", Size: ");
+        $i2 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int size>;
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i2);
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r6.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r11);
+        throw $r6;
+
+     label2:
+        $r12 = new java.util.concurrent.CopyOnWriteArrayList$COWSubListIterator;
+        $r13 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        $i3 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int offset>;
+        $i4 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int size>;
+        specialinvoke $r12.<java.util.concurrent.CopyOnWriteArrayList$COWSubListIterator: void <init>(java.util.List,int,int,int)>($r13, i0, $i3, $i4);
+        r3 = $r12;
+
+     label3:
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void unlock()>();
+        return r3;
+
+     label4:
+        $r14 := @caughtexception;
+
+     label5:
+        r4 = $r14;
+
+     label6:
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void unlock()>();
+        throw r4;
+
+        catch java.lang.Throwable from label0 to label3 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+    }
+
+    public java.util.List subList(int, int)
+    {
+        java.util.concurrent.CopyOnWriteArrayList$COWSubList r0, r2, $r6;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6;
+        java.util.concurrent.locks.ReentrantLock r1;
+        java.lang.Throwable r3, $r8;
+        java.util.concurrent.CopyOnWriteArrayList $r4, $r7;
+        java.lang.IndexOutOfBoundsException $r5;
+
+        r0 := @this: java.util.concurrent.CopyOnWriteArrayList$COWSubList;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $r4 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        r1 = $r4.<java.util.concurrent.CopyOnWriteArrayList: java.util.concurrent.locks.ReentrantLock lock>;
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void lock()>();
+
+     label0:
+        specialinvoke r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: void checkForComodification()>();
+        if i0 < 0 goto label1;
+
+        $i2 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int size>;
+        if i1 <= $i2 goto label2;
+
+     label1:
+        $r5 = new java.lang.IndexOutOfBoundsException;
+        specialinvoke $r5.<java.lang.IndexOutOfBoundsException: void <init>()>();
+        throw $r5;
+
+     label2:
+        $r6 = new java.util.concurrent.CopyOnWriteArrayList$COWSubList;
+        $r7 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: java.util.concurrent.CopyOnWriteArrayList l>;
+        $i3 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int offset>;
+        $i4 = i0 + $i3;
+        $i5 = r0.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: int offset>;
+        $i6 = i1 + $i5;
+        specialinvoke $r6.<java.util.concurrent.CopyOnWriteArrayList$COWSubList: void <init>(java.util.concurrent.CopyOnWriteArrayList,int,int)>($r7, $i4, $i6);
+        r2 = $r6;
+
+     label3:
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void unlock()>();
+        return r2;
+
+     label4:
+        $r8 := @caughtexception;
+
+     label5:
+        r3 = $r8;
+
+     label6:
+        virtualinvoke r1.<java.util.concurrent.locks.ReentrantLock: void unlock()>();
+        throw r3;
+
+        catch java.lang.Throwable from label0 to label3 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+    }
+}

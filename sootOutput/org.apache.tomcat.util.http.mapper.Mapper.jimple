@@ -1,0 +1,2817 @@
+public final class org.apache.tomcat.util.http.mapper.Mapper extends java.lang.Object
+{
+    private static final org.apache.juli.logging.Log log;
+    static final org.apache.tomcat.util.res.StringManager sm;
+    org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts;
+    java.lang.String defaultHostName;
+    org.apache.tomcat.util.http.mapper.Mapper$ContextVersion context;
+
+    static void <clinit>()
+    {
+        org.apache.juli.logging.Log $r0;
+        java.lang.Class $r1;
+        java.lang.Package $r2;
+        java.lang.String $r3;
+        org.apache.tomcat.util.res.StringManager $r4;
+
+        $r0 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/tomcat/util/http/mapper/Mapper");
+        <org.apache.tomcat.util.http.mapper.Mapper: org.apache.juli.logging.Log log> = $r0;
+        $r1 = class "org/apache/tomcat/util/http/mapper/Mapper";
+        $r2 = virtualinvoke $r1.<java.lang.Class: java.lang.Package getPackage()>();
+        $r3 = virtualinvoke $r2.<java.lang.Package: java.lang.String getName()>();
+        $r4 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String)>($r3);
+        <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.res.StringManager sm> = $r4;
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        org.apache.tomcat.util.http.mapper.Mapper$Host[] $r1;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion $r2;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r1 = newarray (org.apache.tomcat.util.http.mapper.Mapper$Host)[0];
+        r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts> = $r1;
+        r0.<org.apache.tomcat.util.http.mapper.Mapper: java.lang.String defaultHostName> = null;
+        $r2 = new org.apache.tomcat.util.http.mapper.Mapper$ContextVersion;
+        specialinvoke $r2.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: void <init>()>();
+        r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion context> = $r2;
+        return;
+    }
+
+    public void setDefaultHostName(java.lang.String)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.tomcat.util.http.mapper.Mapper: java.lang.String defaultHostName> = r1;
+        return;
+    }
+
+    public synchronized void addHost(java.lang.String, java.lang.String[], java.lang.Object)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.String r1, r8, $r17, $r25, $r29, $r30;
+        java.lang.String[] r2, r7;
+        java.lang.Object r3, $r20;
+        org.apache.tomcat.util.http.mapper.Mapper$Host[] r4, $r10, $r12, $r18, $r19;
+        org.apache.tomcat.util.http.mapper.Mapper$Host r5, r6, r9, $r11, $r34;
+        int i0, i1, $i2, $i3, $i4, $i5;
+        boolean $z0, $z1, $z2, $z3;
+        org.apache.juli.logging.Log $r13, $r14, $r21, $r22, $r26;
+        org.apache.tomcat.util.res.StringManager $r15, $r23, $r27;
+        java.lang.Object[] $r16, $r24, $r28;
+        java.util.ArrayList $r31, r32;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String[];
+        r3 := @parameter2: java.lang.Object;
+        $r10 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts>;
+        $i2 = lengthof $r10;
+        $i3 = $i2 + 1;
+        r4 = newarray (org.apache.tomcat.util.http.mapper.Mapper$Host)[$i3];
+        $r11 = new org.apache.tomcat.util.http.mapper.Mapper$Host;
+        specialinvoke $r11.<org.apache.tomcat.util.http.mapper.Mapper$Host: void <init>(java.lang.String,java.lang.Object)>(r1, r3);
+        r5 = $r11;
+        $r12 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts>;
+        $z0 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: boolean insertMap(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement)>($r12, r4, r5);
+        if $z0 == 0 goto label0;
+
+        r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts> = r4;
+        $r13 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.juli.logging.Log log>;
+        $z1 = interfaceinvoke $r13.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z1 == 0 goto label3;
+
+        $r14 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.juli.logging.Log log>;
+        $r15 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.res.StringManager sm>;
+        $r16 = newarray (java.lang.Object)[1];
+        $r16[0] = r1;
+        $r17 = virtualinvoke $r15.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("mapper.addHost.success", $r16);
+        interfaceinvoke $r14.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r17);
+        goto label3;
+
+     label0:
+        $r18 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts>;
+        $r19 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts>;
+        $i4 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int find(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>($r19, r1);
+        r6 = $r18[$i4];
+        $r20 = r6.<org.apache.tomcat.util.http.mapper.Mapper$Host: java.lang.Object object>;
+        if $r20 != r3 goto label2;
+
+        $r21 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.juli.logging.Log log>;
+        $z2 = interfaceinvoke $r21.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z2 == 0 goto label1;
+
+        $r22 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.juli.logging.Log log>;
+        $r23 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.res.StringManager sm>;
+        $r24 = newarray (java.lang.Object)[1];
+        $r24[0] = r1;
+        $r25 = virtualinvoke $r23.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("mapper.addHost.sameHost", $r24);
+        interfaceinvoke $r22.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r25);
+
+     label1:
+        r5 = r6;
+        goto label3;
+
+     label2:
+        $r26 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.juli.logging.Log log>;
+        $r27 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.res.StringManager sm>;
+        $r28 = newarray (java.lang.Object)[2];
+        $r28[0] = r1;
+        $r29 = virtualinvoke r6.<org.apache.tomcat.util.http.mapper.Mapper$Host: java.lang.String getRealHostName()>();
+        $r28[1] = $r29;
+        $r30 = virtualinvoke $r27.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("mapper.duplicateHost", $r28);
+        interfaceinvoke $r26.<org.apache.juli.logging.Log: void error(java.lang.Object)>($r30);
+        return;
+
+     label3:
+        $r31 = new java.util.ArrayList;
+        $i5 = lengthof r2;
+        specialinvoke $r31.<java.util.ArrayList: void <init>(int)>($i5);
+        r32 = $r31;
+        r7 = r2;
+        i0 = lengthof r2;
+        i1 = 0;
+        goto label6;
+
+     label4:
+        r8 = r7[i1];
+        $r34 = new org.apache.tomcat.util.http.mapper.Mapper$Host;
+        specialinvoke $r34.<org.apache.tomcat.util.http.mapper.Mapper$Host: void <init>(java.lang.String,org.apache.tomcat.util.http.mapper.Mapper$Host)>(r8, r5);
+        r9 = $r34;
+        $z3 = specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: boolean addHostAliasImpl(org.apache.tomcat.util.http.mapper.Mapper$Host)>(r9);
+        if $z3 == 0 goto label5;
+
+        interfaceinvoke r32.<java.util.List: boolean add(java.lang.Object)>(r9);
+
+     label5:
+        i1 = i1 + 1;
+
+     label6:
+        if i1 < i0 goto label4;
+
+        virtualinvoke r5.<org.apache.tomcat.util.http.mapper.Mapper$Host: void addAliases(java.util.Collection)>(r32);
+        return;
+    }
+
+    public synchronized void removeHost(java.lang.String)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.String r1;
+        org.apache.tomcat.util.http.mapper.Mapper$Host r2, $r8, $r9, $r10;
+        org.apache.tomcat.util.http.mapper.Mapper$Host[] r3, $r4, $r6, $r12;
+        int i0, i1, $i2, $i3;
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement $r5;
+        boolean $z0;
+        java.lang.Object $r7;
+        java.lang.Object[] $r11;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.String;
+        $r4 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts>;
+        $r5 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$MapElement exactFind(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>($r4, r1);
+        r2 = (org.apache.tomcat.util.http.mapper.Mapper$Host) $r5;
+        if r2 == null goto label0;
+
+        $z0 = virtualinvoke r2.<org.apache.tomcat.util.http.mapper.Mapper$Host: boolean isAlias()>();
+        if $z0 == 0 goto label1;
+
+     label0:
+        return;
+
+     label1:
+        $r6 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts>;
+        $r7 = virtualinvoke $r6.<java.lang.Object: java.lang.Object clone()>();
+        r3 = (org.apache.tomcat.util.http.mapper.Mapper$Host[]) $r7;
+        i0 = 0;
+        i1 = 0;
+        goto label4;
+
+     label2:
+        $r8 = r3[i1];
+        $r9 = virtualinvoke $r8.<org.apache.tomcat.util.http.mapper.Mapper$Host: org.apache.tomcat.util.http.mapper.Mapper$Host getRealHost()>();
+        if $r9 == r2 goto label3;
+
+        $i2 = i0;
+        i0 = i0 + 1;
+        $r10 = r3[i1];
+        r3[$i2] = $r10;
+
+     label3:
+        i1 = i1 + 1;
+
+     label4:
+        $i3 = lengthof r3;
+        if i1 < $i3 goto label2;
+
+        $r11 = staticinvoke <java.util.Arrays: java.lang.Object[] copyOf(java.lang.Object[],int)>(r3, i0);
+        $r12 = (org.apache.tomcat.util.http.mapper.Mapper$Host[]) $r11;
+        r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts> = $r12;
+        return;
+    }
+
+    public synchronized void addHostAlias(java.lang.String, java.lang.String)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.String r1, r2;
+        org.apache.tomcat.util.http.mapper.Mapper$Host r3, r4, $r7;
+        org.apache.tomcat.util.http.mapper.Mapper$Host[] $r5;
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement $r6;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String;
+        $r5 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts>;
+        $r6 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$MapElement exactFind(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>($r5, r1);
+        r3 = (org.apache.tomcat.util.http.mapper.Mapper$Host) $r6;
+        if r3 != null goto label0;
+
+        return;
+
+     label0:
+        $r7 = new org.apache.tomcat.util.http.mapper.Mapper$Host;
+        specialinvoke $r7.<org.apache.tomcat.util.http.mapper.Mapper$Host: void <init>(java.lang.String,org.apache.tomcat.util.http.mapper.Mapper$Host)>(r2, r3);
+        r4 = $r7;
+        $z0 = specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: boolean addHostAliasImpl(org.apache.tomcat.util.http.mapper.Mapper$Host)>(r4);
+        if $z0 == 0 goto label1;
+
+        virtualinvoke r3.<org.apache.tomcat.util.http.mapper.Mapper$Host: void addAlias(org.apache.tomcat.util.http.mapper.Mapper$Host)>(r4);
+
+     label1:
+        return;
+    }
+
+    private boolean addHostAliasImpl(org.apache.tomcat.util.http.mapper.Mapper$Host)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        org.apache.tomcat.util.http.mapper.Mapper$Host r1, r3, $r16, $r17;
+        org.apache.tomcat.util.http.mapper.Mapper$Host[] r2, $r4, $r5, $r13, $r14;
+        int $i0, $i1, $i2;
+        boolean $z0, $z1, $z2;
+        org.apache.juli.logging.Log $r6, $r7, $r18, $r19, $r25;
+        org.apache.tomcat.util.res.StringManager $r8, $r20, $r26;
+        java.lang.Object[] $r9, $r21, $r27;
+        java.lang.String $r10, $r11, $r12, $r15, $r22, $r23, $r24, $r28, $r29, $r30, $r31;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$Host;
+        $r4 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts>;
+        $i0 = lengthof $r4;
+        $i1 = $i0 + 1;
+        r2 = newarray (org.apache.tomcat.util.http.mapper.Mapper$Host)[$i1];
+        $r5 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts>;
+        $z0 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: boolean insertMap(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement)>($r5, r2, r1);
+        if $z0 == 0 goto label1;
+
+        r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts> = r2;
+        $r6 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.juli.logging.Log log>;
+        $z1 = interfaceinvoke $r6.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z1 == 0 goto label0;
+
+        $r7 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.juli.logging.Log log>;
+        $r8 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.res.StringManager sm>;
+        $r9 = newarray (java.lang.Object)[2];
+        $r10 = r1.<org.apache.tomcat.util.http.mapper.Mapper$Host: java.lang.String name>;
+        $r9[0] = $r10;
+        $r11 = virtualinvoke r1.<org.apache.tomcat.util.http.mapper.Mapper$Host: java.lang.String getRealHostName()>();
+        $r9[1] = $r11;
+        $r12 = virtualinvoke $r8.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("mapper.addHostAlias.success", $r9);
+        interfaceinvoke $r7.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r12);
+
+     label0:
+        return 1;
+
+     label1:
+        $r13 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts>;
+        $r14 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts>;
+        $r15 = r1.<org.apache.tomcat.util.http.mapper.Mapper$Host: java.lang.String name>;
+        $i2 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int find(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>($r14, $r15);
+        r3 = $r13[$i2];
+        $r16 = virtualinvoke r3.<org.apache.tomcat.util.http.mapper.Mapper$Host: org.apache.tomcat.util.http.mapper.Mapper$Host getRealHost()>();
+        $r17 = virtualinvoke r1.<org.apache.tomcat.util.http.mapper.Mapper$Host: org.apache.tomcat.util.http.mapper.Mapper$Host getRealHost()>();
+        if $r16 != $r17 goto label3;
+
+        $r18 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.juli.logging.Log log>;
+        $z2 = interfaceinvoke $r18.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z2 == 0 goto label2;
+
+        $r19 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.juli.logging.Log log>;
+        $r20 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.res.StringManager sm>;
+        $r21 = newarray (java.lang.Object)[2];
+        $r22 = r1.<org.apache.tomcat.util.http.mapper.Mapper$Host: java.lang.String name>;
+        $r21[0] = $r22;
+        $r23 = virtualinvoke r1.<org.apache.tomcat.util.http.mapper.Mapper$Host: java.lang.String getRealHostName()>();
+        $r21[1] = $r23;
+        $r24 = virtualinvoke $r20.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("mapper.addHostAlias.sameHost", $r21);
+        interfaceinvoke $r19.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r24);
+
+     label2:
+        return 0;
+
+     label3:
+        $r25 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.juli.logging.Log log>;
+        $r26 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.res.StringManager sm>;
+        $r27 = newarray (java.lang.Object)[3];
+        $r28 = r1.<org.apache.tomcat.util.http.mapper.Mapper$Host: java.lang.String name>;
+        $r27[0] = $r28;
+        $r29 = virtualinvoke r1.<org.apache.tomcat.util.http.mapper.Mapper$Host: java.lang.String getRealHostName()>();
+        $r27[1] = $r29;
+        $r30 = virtualinvoke r3.<org.apache.tomcat.util.http.mapper.Mapper$Host: java.lang.String getRealHostName()>();
+        $r27[2] = $r30;
+        $r31 = virtualinvoke $r26.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("mapper.duplicateHostAlias", $r27);
+        interfaceinvoke $r25.<org.apache.juli.logging.Log: void error(java.lang.Object)>($r31);
+        return 0;
+    }
+
+    public synchronized void removeHostAlias(java.lang.String)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.String r1;
+        org.apache.tomcat.util.http.mapper.Mapper$Host r2, $r8;
+        org.apache.tomcat.util.http.mapper.Mapper$Host[] r3, $r4, $r6, $r7;
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement $r5;
+        boolean $z0, $z1;
+        int $i0, $i1;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.String;
+        $r4 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts>;
+        $r5 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$MapElement exactFind(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>($r4, r1);
+        r2 = (org.apache.tomcat.util.http.mapper.Mapper$Host) $r5;
+        if r2 == null goto label0;
+
+        $z0 = virtualinvoke r2.<org.apache.tomcat.util.http.mapper.Mapper$Host: boolean isAlias()>();
+        if $z0 != 0 goto label1;
+
+     label0:
+        return;
+
+     label1:
+        $r6 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts>;
+        $i0 = lengthof $r6;
+        $i1 = $i0 - 1;
+        r3 = newarray (org.apache.tomcat.util.http.mapper.Mapper$Host)[$i1];
+        $r7 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts>;
+        $z1 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: boolean removeMap(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>($r7, r3, r1);
+        if $z1 == 0 goto label2;
+
+        r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts> = r3;
+        $r8 = virtualinvoke r2.<org.apache.tomcat.util.http.mapper.Mapper$Host: org.apache.tomcat.util.http.mapper.Mapper$Host getRealHost()>();
+        virtualinvoke $r8.<org.apache.tomcat.util.http.mapper.Mapper$Host: void removeAlias(org.apache.tomcat.util.http.mapper.Mapper$Host)>(r2);
+
+     label2:
+        return;
+    }
+
+    private void updateContextList(org.apache.tomcat.util.http.mapper.Mapper$Host, org.apache.tomcat.util.http.mapper.Mapper$ContextList)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        org.apache.tomcat.util.http.mapper.Mapper$Host r1, r4;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextList r2;
+        java.util.Iterator r3;
+        java.util.Collection $r5;
+        java.lang.Object $r6;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$Host;
+        r2 := @parameter1: org.apache.tomcat.util.http.mapper.Mapper$ContextList;
+        r1.<org.apache.tomcat.util.http.mapper.Mapper$Host: org.apache.tomcat.util.http.mapper.Mapper$ContextList contextList> = r2;
+        $r5 = virtualinvoke r1.<org.apache.tomcat.util.http.mapper.Mapper$Host: java.util.Collection getAliases()>();
+        r3 = interfaceinvoke $r5.<java.util.Collection: java.util.Iterator iterator()>();
+        goto label1;
+
+     label0:
+        $r6 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+        r4 = (org.apache.tomcat.util.http.mapper.Mapper$Host) $r6;
+        r4.<org.apache.tomcat.util.http.mapper.Mapper$Host: org.apache.tomcat.util.http.mapper.Mapper$ContextList contextList> = r2;
+
+     label1:
+        $z0 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label0;
+
+        return;
+    }
+
+    public void setContext(java.lang.String, java.lang.String[], javax.naming.Context)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.String r1;
+        java.lang.String[] r2;
+        javax.naming.Context r3;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion $r4, $r5, $r6;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String[];
+        r3 := @parameter2: javax.naming.Context;
+        $r4 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion context>;
+        $r4.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String path> = r1;
+        $r5 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion context>;
+        $r5.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String[] welcomeResources> = r2;
+        $r6 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion context>;
+        $r6.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: javax.naming.Context resources> = r3;
+        return;
+    }
+
+    public void addContextVersion(java.lang.String, java.lang.Object, java.lang.String, java.lang.String, java.lang.Object, java.lang.String[], javax.naming.Context)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.String r1, r3, r4;
+        java.lang.Object r2, r5;
+        java.lang.String[] r6;
+        javax.naming.Context r7;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.Object;
+        r3 := @parameter2: java.lang.String;
+        r4 := @parameter3: java.lang.String;
+        r5 := @parameter4: java.lang.Object;
+        r6 := @parameter5: java.lang.String[];
+        r7 := @parameter6: javax.naming.Context;
+        virtualinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void addContextVersion(java.lang.String,java.lang.Object,java.lang.String,java.lang.String,java.lang.Object,java.lang.String[],javax.naming.Context,java.util.Collection)>(r1, r2, r3, r4, r5, r6, r7, null);
+        return;
+    }
+
+    public void addContextVersion(java.lang.String, java.lang.Object, java.lang.String, java.lang.String, java.lang.Object, java.lang.String[], javax.naming.Context, java.util.Collection)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.String r1, r3, r4;
+        java.lang.Object r2, r5;
+        java.lang.String[] r6;
+        javax.naming.Context r7;
+        java.util.Collection r8;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.Object;
+        r3 := @parameter2: java.lang.String;
+        r4 := @parameter3: java.lang.String;
+        r5 := @parameter4: java.lang.Object;
+        r6 := @parameter5: java.lang.String[];
+        r7 := @parameter6: javax.naming.Context;
+        r8 := @parameter7: java.util.Collection;
+        virtualinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void addContextVersion(java.lang.String,java.lang.Object,java.lang.String,java.lang.String,java.lang.Object,java.lang.String[],javax.naming.Context,java.util.Collection,boolean,boolean)>(r1, r2, r3, r4, r5, r6, r7, r8, 0, 0);
+        return;
+    }
+
+    public void addContextVersion(java.lang.String, java.lang.Object, java.lang.String, java.lang.String, java.lang.Object, java.lang.String[], javax.naming.Context, java.util.Collection, boolean, boolean)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.String r1, r3, r4, $r24, $r28, $r37;
+        java.lang.Object r2, r5;
+        java.lang.String[] r6, $r18;
+        javax.naming.Context r7;
+        java.util.Collection r8;
+        boolean z0, z1, $z2, $z3, $z4;
+        org.apache.tomcat.util.http.mapper.Mapper$Host r9, r10;
+        int i0, i1, $i2, $i3;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion r11, $r30, $r36;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextList r12, r14;
+        org.apache.tomcat.util.http.mapper.Mapper$Context r13, $r33, r34;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion[] r15, r35;
+        org.apache.tomcat.util.http.mapper.Mapper$Host[] $r16, $r19;
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement $r17, $r20, $r32;
+        org.apache.juli.logging.Log $r21, $r25;
+        java.lang.StringBuilder $r22, $r23, $r26, $r27;
+        org.apache.tomcat.util.http.mapper.Mapper$Context[] $r31;
+        java.lang.Throwable $r38;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.Object;
+        r3 := @parameter2: java.lang.String;
+        r4 := @parameter3: java.lang.String;
+        r5 := @parameter4: java.lang.Object;
+        r6 := @parameter5: java.lang.String[];
+        r7 := @parameter6: javax.naming.Context;
+        r8 := @parameter7: java.util.Collection;
+        z0 := @parameter8: boolean;
+        z1 := @parameter9: boolean;
+        $r16 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts>;
+        $r17 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$MapElement exactFind(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>($r16, r1);
+        r9 = (org.apache.tomcat.util.http.mapper.Mapper$Host) $r17;
+        if r9 != null goto label0;
+
+        $r18 = newarray (java.lang.String)[0];
+        virtualinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void addHost(java.lang.String,java.lang.String[],java.lang.Object)>(r1, $r18, r2);
+        $r19 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts>;
+        $r20 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$MapElement exactFind(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>($r19, r1);
+        r9 = (org.apache.tomcat.util.http.mapper.Mapper$Host) $r20;
+        if r9 != null goto label0;
+
+        $r21 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.juli.logging.Log log>;
+        $r22 = new java.lang.StringBuilder;
+        specialinvoke $r22.<java.lang.StringBuilder: void <init>(java.lang.String)>("No host found: ");
+        $r23 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r21.<org.apache.juli.logging.Log: void error(java.lang.Object)>($r24);
+        return;
+
+     label0:
+        $z2 = virtualinvoke r9.<org.apache.tomcat.util.http.mapper.Mapper$Host: boolean isAlias()>();
+        if $z2 == 0 goto label1;
+
+        $r25 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.juli.logging.Log log>;
+        $r26 = new java.lang.StringBuilder;
+        specialinvoke $r26.<java.lang.StringBuilder: void <init>(java.lang.String)>("No host found: ");
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r25.<org.apache.juli.logging.Log: void error(java.lang.Object)>($r28);
+        return;
+
+     label1:
+        i0 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int slashCount(java.lang.String)>(r3);
+        r10 = r9;
+        entermonitor r9;
+
+     label2:
+        $r30 = new org.apache.tomcat.util.http.mapper.Mapper$ContextVersion;
+        specialinvoke $r30.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: void <init>(java.lang.String,java.lang.Object)>(r4, r5);
+        r11 = $r30;
+        r11.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String path> = r3;
+        r11.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: int slashCount> = i0;
+        r11.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String[] welcomeResources> = r6;
+        r11.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: javax.naming.Context resources> = r7;
+        r11.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: boolean mapperContextRootRedirectEnabled> = z0;
+        r11.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: boolean mapperDirectoryRedirectEnabled> = z1;
+        if r8 == null goto label3;
+
+        specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void addWrappers(org.apache.tomcat.util.http.mapper.Mapper$ContextVersion,java.util.Collection)>(r11, r8);
+
+     label3:
+        r12 = r9.<org.apache.tomcat.util.http.mapper.Mapper$Host: org.apache.tomcat.util.http.mapper.Mapper$ContextList contextList>;
+        $r31 = r12.<org.apache.tomcat.util.http.mapper.Mapper$ContextList: org.apache.tomcat.util.http.mapper.Mapper$Context[] contexts>;
+        $r32 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$MapElement exactFind(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>($r31, r3);
+        r13 = (org.apache.tomcat.util.http.mapper.Mapper$Context) $r32;
+        if r13 != null goto label4;
+
+        $r33 = new org.apache.tomcat.util.http.mapper.Mapper$Context;
+        specialinvoke $r33.<org.apache.tomcat.util.http.mapper.Mapper$Context: void <init>(java.lang.String,org.apache.tomcat.util.http.mapper.Mapper$ContextVersion)>(r3, r11);
+        r34 = $r33;
+        r14 = virtualinvoke r12.<org.apache.tomcat.util.http.mapper.Mapper$ContextList: org.apache.tomcat.util.http.mapper.Mapper$ContextList addContext(org.apache.tomcat.util.http.mapper.Mapper$Context,int)>(r34, i0);
+        if r14 == null goto label6;
+
+        specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void updateContextList(org.apache.tomcat.util.http.mapper.Mapper$Host,org.apache.tomcat.util.http.mapper.Mapper$ContextList)>(r9, r14);
+        goto label6;
+
+     label4:
+        r35 = r13.<org.apache.tomcat.util.http.mapper.Mapper$Context: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion[] versions>;
+        $i2 = lengthof r35;
+        $i3 = $i2 + 1;
+        r15 = newarray (org.apache.tomcat.util.http.mapper.Mapper$ContextVersion)[$i3];
+        $z3 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: boolean insertMap(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement)>(r35, r15, r11);
+        if $z3 == 0 goto label5;
+
+        r13.<org.apache.tomcat.util.http.mapper.Mapper$Context: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion[] versions> = r15;
+        goto label6;
+
+     label5:
+        i1 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int find(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>(r35, r4);
+        if i1 < 0 goto label6;
+
+        $r36 = r35[i1];
+        $r37 = $r36.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String name>;
+        $z4 = virtualinvoke $r37.<java.lang.String: boolean equals(java.lang.Object)>(r4);
+        if $z4 == 0 goto label6;
+
+        r35[i1] = r11;
+
+     label6:
+        exitmonitor r10;
+
+     label7:
+        goto label11;
+
+     label8:
+        $r38 := @caughtexception;
+
+     label9:
+        exitmonitor r10;
+
+     label10:
+        throw $r38;
+
+     label11:
+        return;
+
+        catch java.lang.Throwable from label2 to label7 with label8;
+        catch java.lang.Throwable from label9 to label10 with label8;
+    }
+
+    public void removeContextVersion(java.lang.String, java.lang.String, java.lang.String)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.String r1, r2, r3;
+        org.apache.tomcat.util.http.mapper.Mapper$Host r4, r5;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextList r6, r10;
+        org.apache.tomcat.util.http.mapper.Mapper$Context r7;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion[] r8, r9;
+        org.apache.tomcat.util.http.mapper.Mapper$Host[] $r11;
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement $r12, $r15;
+        boolean $z0, $z1;
+        org.apache.tomcat.util.http.mapper.Mapper$Context[] $r14;
+        int $i0, $i1, $i2;
+        java.lang.Throwable $r16;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: java.lang.String;
+        $r11 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts>;
+        $r12 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$MapElement exactFind(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>($r11, r1);
+        r4 = (org.apache.tomcat.util.http.mapper.Mapper$Host) $r12;
+        if r4 == null goto label0;
+
+        $z0 = virtualinvoke r4.<org.apache.tomcat.util.http.mapper.Mapper$Host: boolean isAlias()>();
+        if $z0 == 0 goto label1;
+
+     label0:
+        return;
+
+     label1:
+        r5 = r4;
+        entermonitor r4;
+
+     label2:
+        r6 = r4.<org.apache.tomcat.util.http.mapper.Mapper$Host: org.apache.tomcat.util.http.mapper.Mapper$ContextList contextList>;
+        $r14 = r6.<org.apache.tomcat.util.http.mapper.Mapper$ContextList: org.apache.tomcat.util.http.mapper.Mapper$Context[] contexts>;
+        $r15 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$MapElement exactFind(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>($r14, r2);
+        r7 = (org.apache.tomcat.util.http.mapper.Mapper$Context) $r15;
+        if r7 != null goto label4;
+
+        exitmonitor r5;
+
+     label3:
+        return;
+
+     label4:
+        r8 = r7.<org.apache.tomcat.util.http.mapper.Mapper$Context: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion[] versions>;
+        $i0 = lengthof r8;
+        $i1 = $i0 - 1;
+        r9 = newarray (org.apache.tomcat.util.http.mapper.Mapper$ContextVersion)[$i1];
+        $z1 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: boolean removeMap(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>(r8, r9, r3);
+        if $z1 == 0 goto label6;
+
+        $i2 = lengthof r9;
+        if $i2 != 0 goto label5;
+
+        r10 = virtualinvoke r6.<org.apache.tomcat.util.http.mapper.Mapper$ContextList: org.apache.tomcat.util.http.mapper.Mapper$ContextList removeContext(java.lang.String)>(r2);
+        if r10 == null goto label6;
+
+        specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void updateContextList(org.apache.tomcat.util.http.mapper.Mapper$Host,org.apache.tomcat.util.http.mapper.Mapper$ContextList)>(r4, r10);
+        goto label6;
+
+     label5:
+        r7.<org.apache.tomcat.util.http.mapper.Mapper$Context: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion[] versions> = r9;
+
+     label6:
+        exitmonitor r5;
+
+     label7:
+        goto label11;
+
+     label8:
+        $r16 := @caughtexception;
+
+     label9:
+        exitmonitor r5;
+
+     label10:
+        throw $r16;
+
+     label11:
+        return;
+
+        catch java.lang.Throwable from label2 to label3 with label8;
+        catch java.lang.Throwable from label4 to label7 with label8;
+        catch java.lang.Throwable from label9 to label10 with label8;
+    }
+
+    public void pauseContextVersion(java.lang.Object, java.lang.String, java.lang.String, java.lang.String)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.Object r1, $r6;
+        java.lang.String r2, r3, r4;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion r5;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.Object;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: java.lang.String;
+        r4 := @parameter3: java.lang.String;
+        r5 = specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion findContextVersion(java.lang.String,java.lang.String,java.lang.String,boolean)>(r2, r3, r4, 1);
+        if r5 == null goto label0;
+
+        $r6 = r5.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.Object object>;
+        $z0 = virtualinvoke r1.<java.lang.Object: boolean equals(java.lang.Object)>($r6);
+        if $z0 != 0 goto label1;
+
+     label0:
+        return;
+
+     label1:
+        virtualinvoke r5.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: void markPaused()>();
+        return;
+    }
+
+    private org.apache.tomcat.util.http.mapper.Mapper$ContextVersion findContextVersion(java.lang.String, java.lang.String, java.lang.String, boolean)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.String r1, r2, r3, $r12, $r19, $r27;
+        boolean z0, $z1;
+        org.apache.tomcat.util.http.mapper.Mapper$Host r4;
+        org.apache.tomcat.util.http.mapper.Mapper$Context r5;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion r6;
+        org.apache.tomcat.util.http.mapper.Mapper$Host[] $r7;
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement $r8, $r15, $r21;
+        org.apache.juli.logging.Log $r9, $r16, $r22;
+        java.lang.StringBuilder $r10, $r11, $r17, $r18, $r23, $r24, $r25, $r26;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextList $r13;
+        org.apache.tomcat.util.http.mapper.Mapper$Context[] $r14;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion[] $r20;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: java.lang.String;
+        z0 := @parameter3: boolean;
+        $r7 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts>;
+        $r8 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$MapElement exactFind(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>($r7, r1);
+        r4 = (org.apache.tomcat.util.http.mapper.Mapper$Host) $r8;
+        if r4 == null goto label0;
+
+        $z1 = virtualinvoke r4.<org.apache.tomcat.util.http.mapper.Mapper$Host: boolean isAlias()>();
+        if $z1 == 0 goto label2;
+
+     label0:
+        if z0 != 0 goto label1;
+
+        $r9 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.juli.logging.Log log>;
+        $r10 = new java.lang.StringBuilder;
+        specialinvoke $r10.<java.lang.StringBuilder: void <init>(java.lang.String)>("No host found: ");
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r9.<org.apache.juli.logging.Log: void error(java.lang.Object)>($r12);
+
+     label1:
+        return null;
+
+     label2:
+        $r13 = r4.<org.apache.tomcat.util.http.mapper.Mapper$Host: org.apache.tomcat.util.http.mapper.Mapper$ContextList contextList>;
+        $r14 = $r13.<org.apache.tomcat.util.http.mapper.Mapper$ContextList: org.apache.tomcat.util.http.mapper.Mapper$Context[] contexts>;
+        $r15 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$MapElement exactFind(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>($r14, r2);
+        r5 = (org.apache.tomcat.util.http.mapper.Mapper$Context) $r15;
+        if r5 != null goto label4;
+
+        if z0 != 0 goto label3;
+
+        $r16 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.juli.logging.Log log>;
+        $r17 = new java.lang.StringBuilder;
+        specialinvoke $r17.<java.lang.StringBuilder: void <init>(java.lang.String)>("No context found: ");
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r16.<org.apache.juli.logging.Log: void error(java.lang.Object)>($r19);
+
+     label3:
+        return null;
+
+     label4:
+        $r20 = r5.<org.apache.tomcat.util.http.mapper.Mapper$Context: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion[] versions>;
+        $r21 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$MapElement exactFind(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>($r20, r3);
+        r6 = (org.apache.tomcat.util.http.mapper.Mapper$ContextVersion) $r21;
+        if r6 != null goto label6;
+
+        if z0 != 0 goto label5;
+
+        $r22 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.juli.logging.Log log>;
+        $r23 = new java.lang.StringBuilder;
+        specialinvoke $r23.<java.lang.StringBuilder: void <init>(java.lang.String)>("No context version found: ");
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" ");
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r3);
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r22.<org.apache.juli.logging.Log: void error(java.lang.Object)>($r27);
+
+     label5:
+        return null;
+
+     label6:
+        return r6;
+    }
+
+    public void addWrapper(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.Object, boolean, boolean)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.String r1, r2, r3, r4;
+        java.lang.Object r5;
+        boolean z0, z1;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion r6;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: java.lang.String;
+        r4 := @parameter3: java.lang.String;
+        r5 := @parameter4: java.lang.Object;
+        z0 := @parameter5: boolean;
+        z1 := @parameter6: boolean;
+        r6 = specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion findContextVersion(java.lang.String,java.lang.String,java.lang.String,boolean)>(r1, r2, r3, 0);
+        if r6 != null goto label0;
+
+        return;
+
+     label0:
+        virtualinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void addWrapper(org.apache.tomcat.util.http.mapper.Mapper$ContextVersion,java.lang.String,java.lang.Object,boolean,boolean)>(r6, r4, r5, z0, z1);
+        return;
+    }
+
+    public void addWrapper(java.lang.String, java.lang.Object, boolean, boolean)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.String r1;
+        java.lang.Object r2;
+        boolean z0, z1;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion $r3;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.Object;
+        z0 := @parameter2: boolean;
+        z1 := @parameter3: boolean;
+        $r3 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion context>;
+        virtualinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void addWrapper(org.apache.tomcat.util.http.mapper.Mapper$ContextVersion,java.lang.String,java.lang.Object,boolean,boolean)>($r3, r1, r2, z0, z1);
+        return;
+    }
+
+    public void addWrappers(java.lang.String, java.lang.String, java.lang.String, java.util.Collection)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.String r1, r2, r3;
+        java.util.Collection r4;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion r5;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: java.lang.String;
+        r4 := @parameter3: java.util.Collection;
+        r5 = specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion findContextVersion(java.lang.String,java.lang.String,java.lang.String,boolean)>(r1, r2, r3, 0);
+        if r5 != null goto label0;
+
+        return;
+
+     label0:
+        specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void addWrappers(org.apache.tomcat.util.http.mapper.Mapper$ContextVersion,java.util.Collection)>(r5, r4);
+        return;
+    }
+
+    private void addWrappers(org.apache.tomcat.util.http.mapper.Mapper$ContextVersion, java.util.Collection)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion r1;
+        java.util.Collection r2;
+        java.util.Iterator r3;
+        org.apache.tomcat.util.http.mapper.WrapperMappingInfo r4;
+        java.lang.Object $r5, $r7;
+        java.lang.String $r6;
+        boolean $z0, $z1, $z2;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion;
+        r2 := @parameter1: java.util.Collection;
+        r3 = interfaceinvoke r2.<java.util.Collection: java.util.Iterator iterator()>();
+        goto label1;
+
+     label0:
+        $r5 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+        r4 = (org.apache.tomcat.util.http.mapper.WrapperMappingInfo) $r5;
+        $r6 = virtualinvoke r4.<org.apache.tomcat.util.http.mapper.WrapperMappingInfo: java.lang.String getMapping()>();
+        $r7 = virtualinvoke r4.<org.apache.tomcat.util.http.mapper.WrapperMappingInfo: java.lang.Object getWrapper()>();
+        $z0 = virtualinvoke r4.<org.apache.tomcat.util.http.mapper.WrapperMappingInfo: boolean isJspWildCard()>();
+        $z1 = virtualinvoke r4.<org.apache.tomcat.util.http.mapper.WrapperMappingInfo: boolean isResourceOnly()>();
+        virtualinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void addWrapper(org.apache.tomcat.util.http.mapper.Mapper$ContextVersion,java.lang.String,java.lang.Object,boolean,boolean)>(r1, $r6, $r7, $z0, $z1);
+
+     label1:
+        $z2 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+        if $z2 != 0 goto label0;
+
+        return;
+    }
+
+    protected void addWrapper(org.apache.tomcat.util.http.mapper.Mapper$ContextVersion, java.lang.String, java.lang.Object, boolean, boolean)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion r1, r5;
+        java.lang.String r2, r6, $r11, r12, r19;
+        java.lang.Object r3;
+        boolean z0, z1, $z2, $z3, $z4, $z5, $z6, $z7;
+        org.apache.tomcat.util.http.mapper.Mapper$Wrapper r7, $r10, $r13, r14, $r17, r18, $r20, r21;
+        org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] r8, r9, r15, r16, r22, r23;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10;
+        java.lang.Throwable $r24;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: java.lang.Object;
+        z0 := @parameter3: boolean;
+        z1 := @parameter4: boolean;
+        r5 = r1;
+        entermonitor r1;
+
+     label0:
+        $z2 = virtualinvoke r2.<java.lang.String: boolean endsWith(java.lang.String)>("/*");
+        if $z2 == 0 goto label1;
+
+        $i1 = virtualinvoke r2.<java.lang.String: int length()>();
+        $i2 = $i1 - 2;
+        r6 = virtualinvoke r2.<java.lang.String: java.lang.String substring(int,int)>(0, $i2);
+        $r10 = new org.apache.tomcat.util.http.mapper.Mapper$Wrapper;
+        specialinvoke $r10.<org.apache.tomcat.util.http.mapper.Mapper$Wrapper: void <init>(java.lang.String,java.lang.Object,boolean,boolean)>(r6, r3, z0, z1);
+        r7 = $r10;
+        r8 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] wildcardWrappers>;
+        $i3 = lengthof r8;
+        $i4 = $i3 + 1;
+        r9 = newarray (org.apache.tomcat.util.http.mapper.Mapper$Wrapper)[$i4];
+        $z3 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: boolean insertMap(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement)>(r8, r9, r7);
+        if $z3 == 0 goto label6;
+
+        r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] wildcardWrappers> = r9;
+        $r11 = r7.<org.apache.tomcat.util.http.mapper.Mapper$Wrapper: java.lang.String name>;
+        i0 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int slashCount(java.lang.String)>($r11);
+        $i5 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: int nesting>;
+        if i0 <= $i5 goto label6;
+
+        r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: int nesting> = i0;
+        goto label6;
+
+     label1:
+        $z4 = virtualinvoke r2.<java.lang.String: boolean startsWith(java.lang.String)>("*.");
+        if $z4 == 0 goto label2;
+
+        r12 = virtualinvoke r2.<java.lang.String: java.lang.String substring(int)>(2);
+        $r13 = new org.apache.tomcat.util.http.mapper.Mapper$Wrapper;
+        specialinvoke $r13.<org.apache.tomcat.util.http.mapper.Mapper$Wrapper: void <init>(java.lang.String,java.lang.Object,boolean,boolean)>(r12, r3, z0, z1);
+        r14 = $r13;
+        r15 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] extensionWrappers>;
+        $i6 = lengthof r15;
+        $i7 = $i6 + 1;
+        r16 = newarray (org.apache.tomcat.util.http.mapper.Mapper$Wrapper)[$i7];
+        $z5 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: boolean insertMap(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement)>(r15, r16, r14);
+        if $z5 == 0 goto label6;
+
+        r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] extensionWrappers> = r16;
+        goto label6;
+
+     label2:
+        $z6 = virtualinvoke r2.<java.lang.String: boolean equals(java.lang.Object)>("/");
+        if $z6 == 0 goto label3;
+
+        $r17 = new org.apache.tomcat.util.http.mapper.Mapper$Wrapper;
+        specialinvoke $r17.<org.apache.tomcat.util.http.mapper.Mapper$Wrapper: void <init>(java.lang.String,java.lang.Object,boolean,boolean)>("", r3, z0, z1);
+        r18 = $r17;
+        r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper defaultWrapper> = r18;
+        goto label6;
+
+     label3:
+        $i8 = virtualinvoke r2.<java.lang.String: int length()>();
+        if $i8 != 0 goto label4;
+
+        r19 = "/";
+        goto label5;
+
+     label4:
+        r19 = r2;
+
+     label5:
+        $r20 = new org.apache.tomcat.util.http.mapper.Mapper$Wrapper;
+        specialinvoke $r20.<org.apache.tomcat.util.http.mapper.Mapper$Wrapper: void <init>(java.lang.String,java.lang.Object,boolean,boolean)>(r19, r3, z0, z1);
+        r21 = $r20;
+        r22 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] exactWrappers>;
+        $i9 = lengthof r22;
+        $i10 = $i9 + 1;
+        r23 = newarray (org.apache.tomcat.util.http.mapper.Mapper$Wrapper)[$i10];
+        $z7 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: boolean insertMap(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement)>(r22, r23, r21);
+        if $z7 == 0 goto label6;
+
+        r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] exactWrappers> = r23;
+
+     label6:
+        exitmonitor r5;
+
+     label7:
+        goto label11;
+
+     label8:
+        $r24 := @caughtexception;
+
+     label9:
+        exitmonitor r5;
+
+     label10:
+        throw $r24;
+
+     label11:
+        return;
+
+        catch java.lang.Throwable from label0 to label7 with label8;
+        catch java.lang.Throwable from label9 to label10 with label8;
+    }
+
+    public void removeWrapper(java.lang.String)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.String r1;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion $r2;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.String;
+        $r2 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion context>;
+        virtualinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void removeWrapper(org.apache.tomcat.util.http.mapper.Mapper$ContextVersion,java.lang.String)>($r2, r1);
+        return;
+    }
+
+    public void removeWrapper(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.String r1, r2, r3, r4;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion r5;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: java.lang.String;
+        r4 := @parameter3: java.lang.String;
+        r5 = specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion findContextVersion(java.lang.String,java.lang.String,java.lang.String,boolean)>(r1, r2, r3, 1);
+        if r5 == null goto label0;
+
+        $z0 = virtualinvoke r5.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: boolean isPaused()>();
+        if $z0 == 0 goto label1;
+
+     label0:
+        return;
+
+     label1:
+        virtualinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void removeWrapper(org.apache.tomcat.util.http.mapper.Mapper$ContextVersion,java.lang.String)>(r5, r4);
+        return;
+    }
+
+    protected void removeWrapper(org.apache.tomcat.util.http.mapper.Mapper$ContextVersion, java.lang.String)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion r1, r5;
+        java.lang.String r2, r6, $r11, $r12, $r15, r16, r19;
+        org.apache.juli.logging.Log $r3, $r9;
+        org.apache.tomcat.util.res.StringManager $r4;
+        org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] r7, r8, r17, r18, r20, r21;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6;
+        java.lang.Object[] $r10;
+        org.apache.tomcat.util.http.mapper.Mapper$Wrapper $r14;
+        java.lang.Throwable $r22;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion;
+        r2 := @parameter1: java.lang.String;
+        $r3 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.juli.logging.Log log>;
+        $z0 = interfaceinvoke $r3.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r9 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.juli.logging.Log log>;
+        $r4 = <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.res.StringManager sm>;
+        $r10 = newarray (java.lang.Object)[2];
+        $r11 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String name>;
+        $r10[0] = $r11;
+        $r10[1] = r2;
+        $r12 = virtualinvoke $r4.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("mapper.removeWrapper", $r10);
+        interfaceinvoke $r9.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r12);
+
+     label0:
+        r5 = r1;
+        entermonitor r1;
+
+     label1:
+        $z1 = virtualinvoke r2.<java.lang.String: boolean endsWith(java.lang.String)>("/*");
+        if $z1 == 0 goto label7;
+
+        $i2 = virtualinvoke r2.<java.lang.String: int length()>();
+        $i3 = $i2 - 2;
+        r6 = virtualinvoke r2.<java.lang.String: java.lang.String substring(int,int)>(0, $i3);
+        r7 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] wildcardWrappers>;
+        $i4 = lengthof r7;
+        if $i4 != 0 goto label3;
+
+        exitmonitor r5;
+
+     label2:
+        return;
+
+     label3:
+        $i5 = lengthof r7;
+        $i6 = $i5 - 1;
+        r8 = newarray (org.apache.tomcat.util.http.mapper.Mapper$Wrapper)[$i6];
+        $z2 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: boolean removeMap(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>(r7, r8, r6);
+        if $z2 == 0 goto label16;
+
+        r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: int nesting> = 0;
+        i0 = 0;
+        goto label6;
+
+     label4:
+        $r14 = r8[i0];
+        $r15 = $r14.<org.apache.tomcat.util.http.mapper.Mapper$Wrapper: java.lang.String name>;
+        i1 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int slashCount(java.lang.String)>($r15);
+        $i7 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: int nesting>;
+        if i1 <= $i7 goto label5;
+
+        r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: int nesting> = i1;
+
+     label5:
+        i0 = i0 + 1;
+
+     label6:
+        $i8 = lengthof r8;
+        if i0 < $i8 goto label4;
+
+        r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] wildcardWrappers> = r8;
+        goto label16;
+
+     label7:
+        $z3 = virtualinvoke r2.<java.lang.String: boolean startsWith(java.lang.String)>("*.");
+        if $z3 == 0 goto label10;
+
+        r16 = virtualinvoke r2.<java.lang.String: java.lang.String substring(int)>(2);
+        r17 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] extensionWrappers>;
+        $i9 = lengthof r17;
+        if $i9 != 0 goto label9;
+
+        exitmonitor r5;
+
+     label8:
+        return;
+
+     label9:
+        $i10 = lengthof r17;
+        $i11 = $i10 - 1;
+        r18 = newarray (org.apache.tomcat.util.http.mapper.Mapper$Wrapper)[$i11];
+        $z4 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: boolean removeMap(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>(r17, r18, r16);
+        if $z4 == 0 goto label16;
+
+        r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] extensionWrappers> = r18;
+        goto label16;
+
+     label10:
+        $z5 = virtualinvoke r2.<java.lang.String: boolean equals(java.lang.Object)>("/");
+        if $z5 == 0 goto label11;
+
+        r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper defaultWrapper> = null;
+        goto label16;
+
+     label11:
+        $i12 = virtualinvoke r2.<java.lang.String: int length()>();
+        if $i12 != 0 goto label12;
+
+        r19 = "/";
+        goto label13;
+
+     label12:
+        r19 = r2;
+
+     label13:
+        r20 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] exactWrappers>;
+        $i13 = lengthof r20;
+        if $i13 != 0 goto label15;
+
+        exitmonitor r5;
+
+     label14:
+        return;
+
+     label15:
+        $i14 = lengthof r20;
+        $i15 = $i14 - 1;
+        r21 = newarray (org.apache.tomcat.util.http.mapper.Mapper$Wrapper)[$i15];
+        $z6 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: boolean removeMap(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>(r20, r21, r19);
+        if $z6 == 0 goto label16;
+
+        r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] exactWrappers> = r21;
+
+     label16:
+        exitmonitor r5;
+
+     label17:
+        goto label21;
+
+     label18:
+        $r22 := @caughtexception;
+
+     label19:
+        exitmonitor r5;
+
+     label20:
+        throw $r22;
+
+     label21:
+        return;
+
+        catch java.lang.Throwable from label1 to label2 with label18;
+        catch java.lang.Throwable from label3 to label8 with label18;
+        catch java.lang.Throwable from label9 to label14 with label18;
+        catch java.lang.Throwable from label15 to label17 with label18;
+        catch java.lang.Throwable from label19 to label20 with label18;
+    }
+
+    public void addWelcomeFile(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.String r1, r2, r3, r4;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion r5;
+        int i0, $i1, $i2, $i3;
+        java.lang.String[] r6, $r7, $r8;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: java.lang.String;
+        r4 := @parameter3: java.lang.String;
+        r5 = specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion findContextVersion(java.lang.String,java.lang.String,java.lang.String,boolean)>(r1, r2, r3, 0);
+        if r5 != null goto label0;
+
+        return;
+
+     label0:
+        $r7 = r5.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String[] welcomeResources>;
+        $i1 = lengthof $r7;
+        i0 = $i1 + 1;
+        r6 = newarray (java.lang.String)[i0];
+        $r8 = r5.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String[] welcomeResources>;
+        $i2 = i0 - 1;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r8, 0, r6, 0, $i2);
+        $i3 = i0 - 1;
+        r6[$i3] = r4;
+        r5.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String[] welcomeResources> = r6;
+        return;
+    }
+
+    public void removeWelcomeFile(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.String r1, r2, r3, r4, $r8;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion r5;
+        int i0, i1, $i2, $i3, i4, $i5, $i6;
+        java.lang.String[] r6, $r7, $r9, $r10, $r11, $r12;
+        boolean $z0, $z1;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: java.lang.String;
+        r4 := @parameter3: java.lang.String;
+        r5 = specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion findContextVersion(java.lang.String,java.lang.String,java.lang.String,boolean)>(r1, r2, r3, 0);
+        if r5 == null goto label0;
+
+        $z0 = virtualinvoke r5.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: boolean isPaused()>();
+        if $z0 == 0 goto label1;
+
+     label0:
+        return;
+
+     label1:
+        i0 = -1;
+        i1 = 0;
+        goto label4;
+
+     label2:
+        $r7 = r5.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String[] welcomeResources>;
+        $r8 = $r7[i1];
+        $z1 = virtualinvoke r4.<java.lang.String: boolean equals(java.lang.Object)>($r8);
+        if $z1 == 0 goto label3;
+
+        i0 = i1;
+        goto label5;
+
+     label3:
+        i1 = i1 + 1;
+
+     label4:
+        $r9 = r5.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String[] welcomeResources>;
+        $i2 = lengthof $r9;
+        if i1 < $i2 goto label2;
+
+     label5:
+        if i0 <= -1 goto label7;
+
+        $r10 = r5.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String[] welcomeResources>;
+        $i3 = lengthof $r10;
+        i4 = $i3 - 1;
+        r6 = newarray (java.lang.String)[i4];
+        $r11 = r5.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String[] welcomeResources>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r11, 0, r6, 0, i0);
+        if i0 >= i4 goto label6;
+
+        $r12 = r5.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String[] welcomeResources>;
+        $i5 = i0 + 1;
+        $i6 = i4 - i0;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r12, $i5, r6, i0, $i6);
+
+     label6:
+        r5.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String[] welcomeResources> = r6;
+
+     label7:
+        return;
+    }
+
+    public void clearWelcomeFiles(java.lang.String, java.lang.String, java.lang.String)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        java.lang.String r1, r2, r3;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion r4;
+        java.lang.String[] $r5;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: java.lang.String;
+        r4 = specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion findContextVersion(java.lang.String,java.lang.String,java.lang.String,boolean)>(r1, r2, r3, 0);
+        if r4 != null goto label0;
+
+        return;
+
+     label0:
+        $r5 = newarray (java.lang.String)[0];
+        r4.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String[] welcomeResources> = $r5;
+        return;
+    }
+
+    public void map(org.apache.tomcat.util.buf.MessageBytes, org.apache.tomcat.util.buf.MessageBytes, java.lang.String, org.apache.tomcat.util.http.mapper.MappingData) throws java.lang.Exception
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        org.apache.tomcat.util.buf.MessageBytes r1, r2;
+        java.lang.String r3, $r6;
+        org.apache.tomcat.util.http.mapper.MappingData r4;
+        boolean $z0;
+        org.apache.tomcat.util.buf.CharChunk $r5, $r7, $r8;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: org.apache.tomcat.util.buf.MessageBytes;
+        r2 := @parameter1: org.apache.tomcat.util.buf.MessageBytes;
+        r3 := @parameter2: java.lang.String;
+        r4 := @parameter3: org.apache.tomcat.util.http.mapper.MappingData;
+        $z0 = virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: boolean isNull()>();
+        if $z0 == 0 goto label0;
+
+        $r5 = virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: org.apache.tomcat.util.buf.CharChunk getCharChunk()>();
+        $r6 = r0.<org.apache.tomcat.util.http.mapper.Mapper: java.lang.String defaultHostName>;
+        virtualinvoke $r5.<org.apache.tomcat.util.buf.CharChunk: void append(java.lang.String)>($r6);
+
+     label0:
+        virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: void toChars()>();
+        virtualinvoke r2.<org.apache.tomcat.util.buf.MessageBytes: void toChars()>();
+        $r7 = virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: org.apache.tomcat.util.buf.CharChunk getCharChunk()>();
+        $r8 = virtualinvoke r2.<org.apache.tomcat.util.buf.MessageBytes: org.apache.tomcat.util.buf.CharChunk getCharChunk()>();
+        specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void internalMap(org.apache.tomcat.util.buf.CharChunk,org.apache.tomcat.util.buf.CharChunk,java.lang.String,org.apache.tomcat.util.http.mapper.MappingData)>($r7, $r8, r3, r4);
+        return;
+    }
+
+    public void map(org.apache.tomcat.util.buf.MessageBytes, org.apache.tomcat.util.http.mapper.MappingData) throws java.lang.Exception
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        org.apache.tomcat.util.buf.MessageBytes r1;
+        org.apache.tomcat.util.http.mapper.MappingData r2;
+        org.apache.tomcat.util.buf.CharChunk r3;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion $r4;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: org.apache.tomcat.util.buf.MessageBytes;
+        r2 := @parameter1: org.apache.tomcat.util.http.mapper.MappingData;
+        virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: void toChars()>();
+        r3 = virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: org.apache.tomcat.util.buf.CharChunk getCharChunk()>();
+        virtualinvoke r3.<org.apache.tomcat.util.buf.CharChunk: void setLimit(int)>(-1);
+        $r4 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion context>;
+        specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void internalMapWrapper(org.apache.tomcat.util.http.mapper.Mapper$ContextVersion,org.apache.tomcat.util.buf.CharChunk,org.apache.tomcat.util.http.mapper.MappingData)>($r4, r3, r2);
+        return;
+    }
+
+    private final void internalMap(org.apache.tomcat.util.buf.CharChunk, org.apache.tomcat.util.buf.CharChunk, java.lang.String, org.apache.tomcat.util.http.mapper.MappingData) throws java.lang.Exception
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        org.apache.tomcat.util.buf.CharChunk r1, r2;
+        java.lang.String r3, $r16, $r17, $r20, $r21, $r23, $r25;
+        org.apache.tomcat.util.http.mapper.MappingData r4;
+        org.apache.tomcat.util.http.mapper.Mapper$Host[] r5;
+        org.apache.tomcat.util.http.mapper.Mapper$Host r6;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextList r7;
+        org.apache.tomcat.util.http.mapper.Mapper$Context[] r8;
+        int i0, i1, i2, i3, i5, i6, i7, $i8, $i9, $i10, $i11, $i12, $i13;
+        byte b4;
+        boolean z0, $z1, $z2, $z3, $z4;
+        org.apache.tomcat.util.http.mapper.Mapper$Context r9, $r22;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion r10, $r26;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion[] r11;
+        java.lang.Object[] r12;
+        java.lang.Object $r13, $r19, $r27, $r29;
+        java.lang.AssertionError $r14;
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement $r15, $r18, $r28;
+        org.apache.tomcat.util.buf.MessageBytes $r24;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: org.apache.tomcat.util.buf.CharChunk;
+        r2 := @parameter1: org.apache.tomcat.util.buf.CharChunk;
+        r3 := @parameter2: java.lang.String;
+        r4 := @parameter3: org.apache.tomcat.util.http.mapper.MappingData;
+        $r13 = r4.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object host>;
+        if $r13 == null goto label0;
+
+        $r14 = new java.lang.AssertionError;
+        specialinvoke $r14.<java.lang.AssertionError: void <init>()>();
+        throw $r14;
+
+     label0:
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setLimit(int)>(-1);
+        r5 = r0.<org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$Host[] hosts>;
+        $r15 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$MapElement exactFindIgnoreCase(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.buf.CharChunk)>(r5, r1);
+        r6 = (org.apache.tomcat.util.http.mapper.Mapper$Host) $r15;
+        if r6 != null goto label2;
+
+        $r16 = r0.<org.apache.tomcat.util.http.mapper.Mapper: java.lang.String defaultHostName>;
+        if $r16 != null goto label1;
+
+        return;
+
+     label1:
+        $r17 = r0.<org.apache.tomcat.util.http.mapper.Mapper: java.lang.String defaultHostName>;
+        $r18 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$MapElement exactFind(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>(r5, $r17);
+        r6 = (org.apache.tomcat.util.http.mapper.Mapper$Host) $r18;
+        if r6 != null goto label2;
+
+        return;
+
+     label2:
+        $r19 = r6.<org.apache.tomcat.util.http.mapper.Mapper$Host: java.lang.Object object>;
+        r4.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object host> = $r19;
+        r7 = r6.<org.apache.tomcat.util.http.mapper.Mapper$Host: org.apache.tomcat.util.http.mapper.Mapper$ContextList contextList>;
+        r8 = r7.<org.apache.tomcat.util.http.mapper.Mapper$ContextList: org.apache.tomcat.util.http.mapper.Mapper$Context[] contexts>;
+        i0 = r7.<org.apache.tomcat.util.http.mapper.Mapper$ContextList: int nesting>;
+        i1 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int find(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.buf.CharChunk)>(r8, r2);
+        if i1 != -1 goto label3;
+
+        return;
+
+     label3:
+        i2 = -1;
+        i3 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getEnd()>();
+        b4 = -1;
+        z0 = 0;
+        r9 = null;
+        goto label9;
+
+     label4:
+        r9 = r8[i1];
+        $r20 = r9.<org.apache.tomcat.util.http.mapper.Mapper$Context: java.lang.String name>;
+        $z1 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: boolean startsWith(java.lang.String)>($r20);
+        if $z1 == 0 goto label6;
+
+        $r21 = r9.<org.apache.tomcat.util.http.mapper.Mapper$Context: java.lang.String name>;
+        i7 = virtualinvoke $r21.<java.lang.String: int length()>();
+        $i8 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getLength()>();
+        if $i8 != i7 goto label5;
+
+        z0 = 1;
+        goto label10;
+
+     label5:
+        $z2 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: boolean startsWithIgnoreCase(java.lang.String,int)>("/", i7);
+        if $z2 == 0 goto label6;
+
+        z0 = 1;
+        goto label10;
+
+     label6:
+        if i2 != -1 goto label7;
+
+        $i9 = i0 + 1;
+        i2 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int nthSlash(org.apache.tomcat.util.buf.CharChunk,int)>(r2, $i9);
+        goto label8;
+
+     label7:
+        i2 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int lastSlash(org.apache.tomcat.util.buf.CharChunk)>(r2);
+
+     label8:
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setEnd(int)>(i2);
+        i1 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int find(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.buf.CharChunk)>(r8, r2);
+
+     label9:
+        if i1 >= 0 goto label4;
+
+     label10:
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setEnd(int)>(i3);
+        if z0 != 0 goto label12;
+
+        $r22 = r8[0];
+        $r23 = $r22.<org.apache.tomcat.util.http.mapper.Mapper$Context: java.lang.String name>;
+        $z3 = virtualinvoke $r23.<java.lang.String: boolean equals(java.lang.Object)>("");
+        if $z3 == 0 goto label11;
+
+        r9 = r8[0];
+        goto label12;
+
+     label11:
+        r9 = null;
+
+     label12:
+        if r9 != null goto label13;
+
+        return;
+
+     label13:
+        $r24 = r4.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes contextPath>;
+        $r25 = r9.<org.apache.tomcat.util.http.mapper.Mapper$Context: java.lang.String name>;
+        virtualinvoke $r24.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>($r25);
+        r10 = null;
+        r11 = r9.<org.apache.tomcat.util.http.mapper.Mapper$Context: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion[] versions>;
+        i5 = lengthof r11;
+        if i5 <= 1 goto label16;
+
+        $i10 = lengthof r11;
+        r12 = newarray (java.lang.Object)[$i10];
+        i6 = 0;
+        goto label15;
+
+     label14:
+        $r26 = r11[i6];
+        $r27 = $r26.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.Object object>;
+        r12[i6] = $r27;
+        i6 = i6 + 1;
+
+     label15:
+        $i11 = lengthof r12;
+        if i6 < $i11 goto label14;
+
+        r4.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object[] contexts> = r12;
+        if r3 == null goto label16;
+
+        $r28 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$MapElement exactFind(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>(r11, r3);
+        r10 = (org.apache.tomcat.util.http.mapper.Mapper$ContextVersion) $r28;
+
+     label16:
+        if r10 != null goto label17;
+
+        $i12 = i5 - 1;
+        r10 = r11[$i12];
+
+     label17:
+        $r29 = r10.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.Object object>;
+        r4.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object context> = $r29;
+        $i13 = r10.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: int slashCount>;
+        r4.<org.apache.tomcat.util.http.mapper.MappingData: int contextSlashCount> = $i13;
+        $z4 = virtualinvoke r10.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: boolean isPaused()>();
+        if $z4 != 0 goto label18;
+
+        specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void internalMapWrapper(org.apache.tomcat.util.http.mapper.Mapper$ContextVersion,org.apache.tomcat.util.buf.CharChunk,org.apache.tomcat.util.http.mapper.MappingData)>(r10, r2, r4);
+
+     label18:
+        return;
+    }
+
+    private final void internalMapWrapper(org.apache.tomcat.util.http.mapper.Mapper$ContextVersion, org.apache.tomcat.util.buf.CharChunk, org.apache.tomcat.util.http.mapper.MappingData) throws java.lang.Exception
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        org.apache.tomcat.util.http.mapper.Mapper$ContextVersion r1;
+        org.apache.tomcat.util.buf.CharChunk r2;
+        org.apache.tomcat.util.http.mapper.MappingData r3;
+        int i0, i1, i2, i3, $i4, $i5, $i6, $i8, $i9, i10, $i11, $i12, $i13, i15, $i16, $i17, $i18, $i19, $i20, $i21, $i22, $i23, i25, $i26, $i27, $i28, $i29, $i30, $i31, $i32, $i34, $i35, $i36;
+        boolean z0, z1, z2, $z3, $z4, $z5, $z6, z7, $z8, $z9, $z10;
+        org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] r4, r5, r19;
+        char[] r6, r7, $r18, $r36, $r38, r44, $r56, $r58, r59, $r68;
+        java.lang.Object r8, $r12, $r13, $r16, $r20, $r21, $r26, $r27, $r31, $r34, $r42, $r43, $r50, $r51, $r54, r61;
+        java.lang.String r9, $r11, $r23, $r25, $r46, $r48, r62;
+        javax.naming.NamingException r10, $r30, $r65, r66;
+        char $c7, $c14, $c24, $c33;
+        org.apache.tomcat.util.buf.MessageBytes $r14, $r15, $r17, $r35, $r37, $r39, $r40, $r55, $r57, $r67, $r69, $r70;
+        java.lang.String[] $r22, $r24, $r41, $r45, $r47, $r49;
+        javax.naming.Context $r28, $r29, $r60, $r63, $r64;
+        org.apache.tomcat.util.http.mapper.Mapper$Wrapper $r32, $r33, $r52, $r53;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$ContextVersion;
+        r2 := @parameter1: org.apache.tomcat.util.buf.CharChunk;
+        r3 := @parameter2: org.apache.tomcat.util.http.mapper.MappingData;
+        i0 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getOffset()>();
+        i1 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getEnd()>();
+        z0 = 0;
+        $r11 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String path>;
+        i2 = virtualinvoke $r11.<java.lang.String: int length()>();
+        $i4 = i1 - i0;
+        if i2 != $i4 goto label0;
+
+        z0 = 1;
+
+     label0:
+        i3 = i0 + i2;
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setOffset(int)>(i3);
+        r4 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] exactWrappers>;
+        specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void internalMapExactWrapper(org.apache.tomcat.util.http.mapper.Mapper$Wrapper[],org.apache.tomcat.util.buf.CharChunk,org.apache.tomcat.util.http.mapper.MappingData)>(r4, r2, r3);
+        z1 = 0;
+        r5 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] wildcardWrappers>;
+        $r12 = r3.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object wrapper>;
+        if $r12 != null goto label2;
+
+        $i5 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: int nesting>;
+        specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void internalMapWildcardWrapper(org.apache.tomcat.util.http.mapper.Mapper$Wrapper[],int,org.apache.tomcat.util.buf.CharChunk,org.apache.tomcat.util.http.mapper.MappingData)>(r5, $i5, r2, r3);
+        $r13 = r3.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object wrapper>;
+        if $r13 == null goto label2;
+
+        $z3 = r3.<org.apache.tomcat.util.http.mapper.MappingData: boolean jspWildCard>;
+        if $z3 == 0 goto label2;
+
+        r6 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        $i6 = i1 - 1;
+        $c7 = r6[$i6];
+        if $c7 != 47 goto label1;
+
+        r3.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object wrapper> = null;
+        z1 = 1;
+        goto label2;
+
+     label1:
+        $r14 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes wrapperPath>;
+        $i8 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getStart()>();
+        $i9 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getLength()>();
+        virtualinvoke $r14.<org.apache.tomcat.util.buf.MessageBytes: void setChars(char[],int,int)>(r6, $i8, $i9);
+        $r15 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes pathInfo>;
+        virtualinvoke $r15.<org.apache.tomcat.util.buf.MessageBytes: void recycle()>();
+
+     label2:
+        $r16 = r3.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object wrapper>;
+        if $r16 != null goto label3;
+
+        if z0 == 0 goto label3;
+
+        $z4 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: boolean mapperContextRootRedirectEnabled>;
+        if $z4 == 0 goto label3;
+
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void append(char)>(47);
+        i10 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getEnd()>();
+        $r17 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes redirectPath>;
+        $r18 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        $i11 = i10 - i0;
+        virtualinvoke $r17.<org.apache.tomcat.util.buf.MessageBytes: void setChars(char[],int,int)>($r18, i0, $i11);
+        $i12 = i10 - 1;
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setEnd(int)>($i12);
+        return;
+
+     label3:
+        r19 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] extensionWrappers>;
+        $r20 = r3.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object wrapper>;
+        if $r20 != null goto label4;
+
+        if z1 != 0 goto label4;
+
+        specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void internalMapExtensionWrapper(org.apache.tomcat.util.http.mapper.Mapper$Wrapper[],org.apache.tomcat.util.buf.CharChunk,org.apache.tomcat.util.http.mapper.MappingData,boolean)>(r19, r2, r3, 1);
+
+     label4:
+        $r21 = r3.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object wrapper>;
+        if $r21 != null goto label17;
+
+        z2 = z1;
+        if z2 != 0 goto label7;
+
+        r7 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        $i13 = i1 - 1;
+        $c14 = r7[$i13];
+        if $c14 != 47 goto label5;
+
+        $z5 = 1;
+        goto label6;
+
+     label5:
+        $z5 = 0;
+
+     label6:
+        z2 = $z5;
+
+     label7:
+        if z2 == 0 goto label17;
+
+        i15 = 0;
+        goto label15;
+
+     label8:
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setOffset(int)>(i0);
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setEnd(int)>(i1);
+        $r22 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String[] welcomeResources>;
+        $r23 = $r22[i15];
+        $r24 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String[] welcomeResources>;
+        $r25 = $r24[i15];
+        $i16 = virtualinvoke $r25.<java.lang.String: int length()>();
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void append(java.lang.String,int,int)>($r23, 0, $i16);
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setOffset(int)>(i3);
+        specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void internalMapExactWrapper(org.apache.tomcat.util.http.mapper.Mapper$Wrapper[],org.apache.tomcat.util.buf.CharChunk,org.apache.tomcat.util.http.mapper.MappingData)>(r4, r2, r3);
+        $r26 = r3.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object wrapper>;
+        if $r26 != null goto label9;
+
+        $i17 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: int nesting>;
+        specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void internalMapWildcardWrapper(org.apache.tomcat.util.http.mapper.Mapper$Wrapper[],int,org.apache.tomcat.util.buf.CharChunk,org.apache.tomcat.util.http.mapper.MappingData)>(r5, $i17, r2, r3);
+
+     label9:
+        $r27 = r3.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object wrapper>;
+        if $r27 != null goto label14;
+
+        $r28 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: javax.naming.Context resources>;
+        if $r28 == null goto label14;
+
+        r8 = null;
+        r9 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: java.lang.String toString()>();
+
+     label10:
+        $r29 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: javax.naming.Context resources>;
+        r8 = interfaceinvoke $r29.<javax.naming.Context: java.lang.Object lookup(java.lang.String)>(r9);
+
+     label11:
+        goto label13;
+
+     label12:
+        $r30 := @caughtexception;
+        r10 = $r30;
+
+     label13:
+        if r8 == null goto label14;
+
+        $z6 = r8 instanceof javax.naming.directory.DirContext;
+        if $z6 != 0 goto label14;
+
+        specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void internalMapExtensionWrapper(org.apache.tomcat.util.http.mapper.Mapper$Wrapper[],org.apache.tomcat.util.buf.CharChunk,org.apache.tomcat.util.http.mapper.MappingData,boolean)>(r19, r2, r3, 1);
+        $r31 = r3.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object wrapper>;
+        if $r31 != null goto label14;
+
+        $r32 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper defaultWrapper>;
+        if $r32 == null goto label14;
+
+        $r33 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper defaultWrapper>;
+        $r34 = $r33.<org.apache.tomcat.util.http.mapper.Mapper$Wrapper: java.lang.Object object>;
+        r3.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object wrapper> = $r34;
+        $r35 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes requestPath>;
+        $r36 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        $i18 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getStart()>();
+        $i19 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getLength()>();
+        virtualinvoke $r35.<org.apache.tomcat.util.buf.MessageBytes: void setChars(char[],int,int)>($r36, $i18, $i19);
+        $r37 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes wrapperPath>;
+        $r38 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        $i20 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getStart()>();
+        $i21 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getLength()>();
+        virtualinvoke $r37.<org.apache.tomcat.util.buf.MessageBytes: void setChars(char[],int,int)>($r38, $i20, $i21);
+        $r39 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes requestPath>;
+        virtualinvoke $r39.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>(r9);
+        $r40 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes wrapperPath>;
+        virtualinvoke $r40.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>(r9);
+
+     label14:
+        i15 = i15 + 1;
+
+     label15:
+        $r41 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String[] welcomeResources>;
+        $i22 = lengthof $r41;
+        if i15 >= $i22 goto label16;
+
+        $r42 = r3.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object wrapper>;
+        if $r42 == null goto label8;
+
+     label16:
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setOffset(int)>(i3);
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setEnd(int)>(i1);
+
+     label17:
+        $r43 = r3.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object wrapper>;
+        if $r43 != null goto label24;
+
+        z7 = z1;
+        if z7 != 0 goto label20;
+
+        r44 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        $i23 = i1 - 1;
+        $c24 = r44[$i23];
+        if $c24 != 47 goto label18;
+
+        $z8 = 1;
+        goto label19;
+
+     label18:
+        $z8 = 0;
+
+     label19:
+        z7 = $z8;
+
+     label20:
+        if z7 == 0 goto label24;
+
+        i25 = 0;
+        goto label22;
+
+     label21:
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setOffset(int)>(i0);
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setEnd(int)>(i1);
+        $r45 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String[] welcomeResources>;
+        $r46 = $r45[i25];
+        $r47 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String[] welcomeResources>;
+        $r48 = $r47[i25];
+        $i26 = virtualinvoke $r48.<java.lang.String: int length()>();
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void append(java.lang.String,int,int)>($r46, 0, $i26);
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setOffset(int)>(i3);
+        specialinvoke r0.<org.apache.tomcat.util.http.mapper.Mapper: void internalMapExtensionWrapper(org.apache.tomcat.util.http.mapper.Mapper$Wrapper[],org.apache.tomcat.util.buf.CharChunk,org.apache.tomcat.util.http.mapper.MappingData,boolean)>(r19, r2, r3, 0);
+        i25 = i25 + 1;
+
+     label22:
+        $r49 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: java.lang.String[] welcomeResources>;
+        $i27 = lengthof $r49;
+        if i25 >= $i27 goto label23;
+
+        $r50 = r3.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object wrapper>;
+        if $r50 == null goto label21;
+
+     label23:
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setOffset(int)>(i3);
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setEnd(int)>(i1);
+
+     label24:
+        $r51 = r3.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object wrapper>;
+        if $r51 != null goto label32;
+
+        if z1 != 0 goto label32;
+
+        $r52 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper defaultWrapper>;
+        if $r52 == null goto label25;
+
+        $r53 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: org.apache.tomcat.util.http.mapper.Mapper$Wrapper defaultWrapper>;
+        $r54 = $r53.<org.apache.tomcat.util.http.mapper.Mapper$Wrapper: java.lang.Object object>;
+        r3.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object wrapper> = $r54;
+        $r55 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes requestPath>;
+        $r56 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        $i28 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getStart()>();
+        $i29 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getLength()>();
+        virtualinvoke $r55.<org.apache.tomcat.util.buf.MessageBytes: void setChars(char[],int,int)>($r56, $i28, $i29);
+        $r57 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes wrapperPath>;
+        $r58 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        $i30 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getStart()>();
+        $i31 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getLength()>();
+        virtualinvoke $r57.<org.apache.tomcat.util.buf.MessageBytes: void setChars(char[],int,int)>($r58, $i30, $i31);
+
+     label25:
+        r59 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        $r60 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: javax.naming.Context resources>;
+        if $r60 == null goto label32;
+
+        $i32 = i1 - 1;
+        $c33 = r59[$i32];
+        if $c33 == 47 goto label32;
+
+        r61 = null;
+        r62 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: java.lang.String toString()>();
+
+     label26:
+        $i34 = virtualinvoke r62.<java.lang.String: int length()>();
+        if $i34 != 0 goto label27;
+
+        $r63 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: javax.naming.Context resources>;
+        r61 = interfaceinvoke $r63.<javax.naming.Context: java.lang.Object lookup(java.lang.String)>("/");
+        goto label30;
+
+     label27:
+        $r64 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: javax.naming.Context resources>;
+        r61 = interfaceinvoke $r64.<javax.naming.Context: java.lang.Object lookup(java.lang.String)>(r62);
+
+     label28:
+        goto label30;
+
+     label29:
+        $r65 := @caughtexception;
+        r66 = $r65;
+
+     label30:
+        if r61 == null goto label31;
+
+        $z9 = r61 instanceof javax.naming.directory.DirContext;
+        if $z9 == 0 goto label31;
+
+        $z10 = r1.<org.apache.tomcat.util.http.mapper.Mapper$ContextVersion: boolean mapperDirectoryRedirectEnabled>;
+        if $z10 == 0 goto label31;
+
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setOffset(int)>(i0);
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void append(char)>(47);
+        $r67 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes redirectPath>;
+        $r68 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        $i35 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getStart()>();
+        $i36 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getLength()>();
+        virtualinvoke $r67.<org.apache.tomcat.util.buf.MessageBytes: void setChars(char[],int,int)>($r68, $i35, $i36);
+        goto label32;
+
+     label31:
+        $r69 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes requestPath>;
+        virtualinvoke $r69.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>(r62);
+        $r70 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes wrapperPath>;
+        virtualinvoke $r70.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>(r62);
+
+     label32:
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setOffset(int)>(i0);
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setEnd(int)>(i1);
+        return;
+
+        catch javax.naming.NamingException from label10 to label11 with label12;
+        catch javax.naming.NamingException from label26 to label28 with label29;
+    }
+
+    private final void internalMapExactWrapper(org.apache.tomcat.util.http.mapper.Mapper$Wrapper[], org.apache.tomcat.util.buf.CharChunk, org.apache.tomcat.util.http.mapper.MappingData)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] r1;
+        org.apache.tomcat.util.buf.CharChunk r2;
+        org.apache.tomcat.util.http.mapper.MappingData r3;
+        org.apache.tomcat.util.http.mapper.Mapper$Wrapper r4;
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement $r5;
+        org.apache.tomcat.util.buf.MessageBytes $r6, $r9, $r10, $r11, $r12;
+        java.lang.String $r7, $r13;
+        java.lang.Object $r8;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$Wrapper[];
+        r2 := @parameter1: org.apache.tomcat.util.buf.CharChunk;
+        r3 := @parameter2: org.apache.tomcat.util.http.mapper.MappingData;
+        $r5 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$MapElement exactFind(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.buf.CharChunk)>(r1, r2);
+        r4 = (org.apache.tomcat.util.http.mapper.Mapper$Wrapper) $r5;
+        if r4 == null goto label1;
+
+        $r6 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes requestPath>;
+        $r7 = r4.<org.apache.tomcat.util.http.mapper.Mapper$Wrapper: java.lang.String name>;
+        virtualinvoke $r6.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>($r7);
+        $r8 = r4.<org.apache.tomcat.util.http.mapper.Mapper$Wrapper: java.lang.Object object>;
+        r3.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object wrapper> = $r8;
+        $z0 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: boolean equals(java.lang.String)>("/");
+        if $z0 == 0 goto label0;
+
+        $r9 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes pathInfo>;
+        virtualinvoke $r9.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>("/");
+        $r10 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes wrapperPath>;
+        virtualinvoke $r10.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>("");
+        $r11 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes contextPath>;
+        virtualinvoke $r11.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>("");
+        goto label1;
+
+     label0:
+        $r12 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes wrapperPath>;
+        $r13 = r4.<org.apache.tomcat.util.http.mapper.Mapper$Wrapper: java.lang.String name>;
+        virtualinvoke $r12.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>($r13);
+
+     label1:
+        return;
+    }
+
+    private final void internalMapWildcardWrapper(org.apache.tomcat.util.http.mapper.Mapper$Wrapper[], int, org.apache.tomcat.util.buf.CharChunk, org.apache.tomcat.util.http.mapper.MappingData)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] r1;
+        int i0, i1, i2, i3, i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13;
+        org.apache.tomcat.util.buf.CharChunk r2;
+        org.apache.tomcat.util.http.mapper.MappingData r3;
+        boolean z0, $z1, $z2, $z3;
+        org.apache.tomcat.util.http.mapper.Mapper$Wrapper $r4, $r6, $r9, $r15, $r17;
+        java.lang.String $r5, $r7, $r10;
+        org.apache.tomcat.util.buf.MessageBytes $r8, $r11, $r13;
+        char[] $r12, $r14;
+        java.lang.Object $r16;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$Wrapper[];
+        i0 := @parameter1: int;
+        r2 := @parameter2: org.apache.tomcat.util.buf.CharChunk;
+        r3 := @parameter3: org.apache.tomcat.util.http.mapper.MappingData;
+        i1 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getEnd()>();
+        i2 = -1;
+        i3 = -1;
+        i4 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int find(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.buf.CharChunk)>(r1, r2);
+        if i4 == -1 goto label8;
+
+        z0 = 0;
+        goto label5;
+
+     label0:
+        $r4 = r1[i4];
+        $r5 = $r4.<org.apache.tomcat.util.http.mapper.Mapper$Wrapper: java.lang.String name>;
+        $z1 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: boolean startsWith(java.lang.String)>($r5);
+        if $z1 == 0 goto label2;
+
+        $r6 = r1[i4];
+        $r7 = $r6.<org.apache.tomcat.util.http.mapper.Mapper$Wrapper: java.lang.String name>;
+        i3 = virtualinvoke $r7.<java.lang.String: int length()>();
+        $i5 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getLength()>();
+        if $i5 != i3 goto label1;
+
+        z0 = 1;
+        goto label6;
+
+     label1:
+        $z2 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: boolean startsWithIgnoreCase(java.lang.String,int)>("/", i3);
+        if $z2 == 0 goto label2;
+
+        z0 = 1;
+        goto label6;
+
+     label2:
+        if i2 != -1 goto label3;
+
+        $i6 = i0 + 1;
+        i2 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int nthSlash(org.apache.tomcat.util.buf.CharChunk,int)>(r2, $i6);
+        goto label4;
+
+     label3:
+        i2 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int lastSlash(org.apache.tomcat.util.buf.CharChunk)>(r2);
+
+     label4:
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setEnd(int)>(i2);
+        i4 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int find(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.buf.CharChunk)>(r1, r2);
+
+     label5:
+        if i4 >= 0 goto label0;
+
+     label6:
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setEnd(int)>(i1);
+        if z0 == 0 goto label8;
+
+        $r8 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes wrapperPath>;
+        $r9 = r1[i4];
+        $r10 = $r9.<org.apache.tomcat.util.http.mapper.Mapper$Wrapper: java.lang.String name>;
+        virtualinvoke $r8.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>($r10);
+        $i7 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getLength()>();
+        if $i7 <= i3 goto label7;
+
+        $r11 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes pathInfo>;
+        $r12 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        $i8 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getOffset()>();
+        $i9 = $i8 + i3;
+        $i10 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getLength()>();
+        $i11 = $i10 - i3;
+        virtualinvoke $r11.<org.apache.tomcat.util.buf.MessageBytes: void setChars(char[],int,int)>($r12, $i9, $i11);
+
+     label7:
+        $r13 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes requestPath>;
+        $r14 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        $i12 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getOffset()>();
+        $i13 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getLength()>();
+        virtualinvoke $r13.<org.apache.tomcat.util.buf.MessageBytes: void setChars(char[],int,int)>($r14, $i12, $i13);
+        $r15 = r1[i4];
+        $r16 = $r15.<org.apache.tomcat.util.http.mapper.Mapper$Wrapper: java.lang.Object object>;
+        r3.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object wrapper> = $r16;
+        $r17 = r1[i4];
+        $z3 = $r17.<org.apache.tomcat.util.http.mapper.Mapper$Wrapper: boolean jspWildCard>;
+        r3.<org.apache.tomcat.util.http.mapper.MappingData: boolean jspWildCard> = $z3;
+
+     label8:
+        return;
+    }
+
+    private final void internalMapExtensionWrapper(org.apache.tomcat.util.http.mapper.Mapper$Wrapper[], org.apache.tomcat.util.buf.CharChunk, org.apache.tomcat.util.http.mapper.MappingData, boolean)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper r0;
+        org.apache.tomcat.util.http.mapper.Mapper$Wrapper[] r1;
+        org.apache.tomcat.util.buf.CharChunk r2;
+        org.apache.tomcat.util.http.mapper.MappingData r3;
+        boolean z0, $z1;
+        char[] r4;
+        int i0, i1, i2, i3, i4, i6, $i8, $i9, $i10;
+        char $c5, $c7;
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement $r5;
+        org.apache.tomcat.util.http.mapper.Mapper$Wrapper r6;
+        org.apache.tomcat.util.buf.MessageBytes $r7, $r8;
+        java.lang.Object $r9;
+
+        r0 := @this: org.apache.tomcat.util.http.mapper.Mapper;
+        r1 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$Wrapper[];
+        r2 := @parameter1: org.apache.tomcat.util.buf.CharChunk;
+        r3 := @parameter2: org.apache.tomcat.util.http.mapper.MappingData;
+        z0 := @parameter3: boolean;
+        r4 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        i0 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getEnd()>();
+        i1 = virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: int getOffset()>();
+        i2 = -1;
+        i3 = i0 - 1;
+        goto label2;
+
+     label0:
+        $c5 = r4[i3];
+        if $c5 != 47 goto label1;
+
+        i2 = i3;
+        goto label3;
+
+     label1:
+        i3 = i3 + -1;
+
+     label2:
+        if i3 >= i1 goto label0;
+
+     label3:
+        if i2 < 0 goto label10;
+
+        i6 = -1;
+        i4 = i0 - 1;
+        goto label6;
+
+     label4:
+        $c7 = r4[i4];
+        if $c7 != 46 goto label5;
+
+        i6 = i4;
+        goto label7;
+
+     label5:
+        i4 = i4 + -1;
+
+     label6:
+        if i4 > i2 goto label4;
+
+     label7:
+        if i6 < 0 goto label10;
+
+        $i8 = i6 + 1;
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setOffset(int)>($i8);
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setEnd(int)>(i0);
+        $r5 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: org.apache.tomcat.util.http.mapper.Mapper$MapElement exactFind(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.buf.CharChunk)>(r1, r2);
+        r6 = (org.apache.tomcat.util.http.mapper.Mapper$Wrapper) $r5;
+        if r6 == null goto label9;
+
+        if z0 != 0 goto label8;
+
+        $z1 = r6.<org.apache.tomcat.util.http.mapper.Mapper$Wrapper: boolean resourceOnly>;
+        if $z1 != 0 goto label9;
+
+     label8:
+        $r7 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes wrapperPath>;
+        $i9 = i0 - i1;
+        virtualinvoke $r7.<org.apache.tomcat.util.buf.MessageBytes: void setChars(char[],int,int)>(r4, i1, $i9);
+        $r8 = r3.<org.apache.tomcat.util.http.mapper.MappingData: org.apache.tomcat.util.buf.MessageBytes requestPath>;
+        $i10 = i0 - i1;
+        virtualinvoke $r8.<org.apache.tomcat.util.buf.MessageBytes: void setChars(char[],int,int)>(r4, i1, $i10);
+        $r9 = r6.<org.apache.tomcat.util.http.mapper.Mapper$Wrapper: java.lang.Object object>;
+        r3.<org.apache.tomcat.util.http.mapper.MappingData: java.lang.Object wrapper> = $r9;
+
+     label9:
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setOffset(int)>(i1);
+        virtualinvoke r2.<org.apache.tomcat.util.buf.CharChunk: void setEnd(int)>(i0);
+
+     label10:
+        return;
+    }
+
+    private static final int find(org.apache.tomcat.util.http.mapper.Mapper$MapElement[], org.apache.tomcat.util.buf.CharChunk)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement[] r0;
+        org.apache.tomcat.util.buf.CharChunk r1;
+        int $i0, $i1, $i2;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$MapElement[];
+        r1 := @parameter1: org.apache.tomcat.util.buf.CharChunk;
+        $i0 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: int getStart()>();
+        $i1 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: int getEnd()>();
+        $i2 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int find(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.buf.CharChunk,int,int)>(r0, r1, $i0, $i1);
+        return $i2;
+    }
+
+    private static final int find(org.apache.tomcat.util.http.mapper.Mapper$MapElement[], org.apache.tomcat.util.buf.CharChunk, int, int)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement[] r0;
+        org.apache.tomcat.util.buf.CharChunk r1;
+        int i0, i1, i2, i3, i4, i5, $i6, $i7, $i8, i9, $i10;
+        boolean z0;
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement $r2, $r4, $r6;
+        java.lang.String $r3, $r5, $r7;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$MapElement[];
+        r1 := @parameter1: org.apache.tomcat.util.buf.CharChunk;
+        i0 := @parameter2: int;
+        i1 := @parameter3: int;
+        i2 = 0;
+        $i6 = lengthof r0;
+        i3 = $i6 - 1;
+        if i3 != -1 goto label0;
+
+        return -1;
+
+     label0:
+        $r2 = r0[0];
+        $r3 = $r2.<org.apache.tomcat.util.http.mapper.Mapper$MapElement: java.lang.String name>;
+        $i7 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int compare(org.apache.tomcat.util.buf.CharChunk,int,int,java.lang.String)>(r1, i0, i1, $r3);
+        if $i7 >= 0 goto label1;
+
+        return -1;
+
+     label1:
+        if i3 != 0 goto label2;
+
+        return 0;
+
+     label2:
+        z0 = 0;
+
+     label3:
+        $i8 = i3 + i2;
+        i9 = $i8 / 2;
+        $r4 = r0[i9];
+        $r5 = $r4.<org.apache.tomcat.util.http.mapper.Mapper$MapElement: java.lang.String name>;
+        i4 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int compare(org.apache.tomcat.util.buf.CharChunk,int,int,java.lang.String)>(r1, i0, i1, $r5);
+        if i4 != 1 goto label4;
+
+        i2 = i9;
+        goto label6;
+
+     label4:
+        if i4 != 0 goto label5;
+
+        return i9;
+
+     label5:
+        i3 = i9;
+
+     label6:
+        $i10 = i3 - i2;
+        if $i10 != 1 goto label3;
+
+        $r6 = r0[i3];
+        $r7 = $r6.<org.apache.tomcat.util.http.mapper.Mapper$MapElement: java.lang.String name>;
+        i5 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int compare(org.apache.tomcat.util.buf.CharChunk,int,int,java.lang.String)>(r1, i0, i1, $r7);
+        if i5 >= 0 goto label7;
+
+        return i2;
+
+     label7:
+        return i3;
+    }
+
+    private static final int findIgnoreCase(org.apache.tomcat.util.http.mapper.Mapper$MapElement[], org.apache.tomcat.util.buf.CharChunk)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement[] r0;
+        org.apache.tomcat.util.buf.CharChunk r1;
+        int $i0, $i1, $i2;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$MapElement[];
+        r1 := @parameter1: org.apache.tomcat.util.buf.CharChunk;
+        $i0 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: int getStart()>();
+        $i1 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: int getEnd()>();
+        $i2 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int findIgnoreCase(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.buf.CharChunk,int,int)>(r0, r1, $i0, $i1);
+        return $i2;
+    }
+
+    private static final int findIgnoreCase(org.apache.tomcat.util.http.mapper.Mapper$MapElement[], org.apache.tomcat.util.buf.CharChunk, int, int)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement[] r0;
+        org.apache.tomcat.util.buf.CharChunk r1;
+        int i0, i1, i2, i3, i4, i5, $i6, $i7, $i8, i9, $i10;
+        boolean z0;
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement $r2, $r4, $r6;
+        java.lang.String $r3, $r5, $r7;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$MapElement[];
+        r1 := @parameter1: org.apache.tomcat.util.buf.CharChunk;
+        i0 := @parameter2: int;
+        i1 := @parameter3: int;
+        i2 = 0;
+        $i6 = lengthof r0;
+        i3 = $i6 - 1;
+        if i3 != -1 goto label0;
+
+        return -1;
+
+     label0:
+        $r2 = r0[0];
+        $r3 = $r2.<org.apache.tomcat.util.http.mapper.Mapper$MapElement: java.lang.String name>;
+        $i7 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int compareIgnoreCase(org.apache.tomcat.util.buf.CharChunk,int,int,java.lang.String)>(r1, i0, i1, $r3);
+        if $i7 >= 0 goto label1;
+
+        return -1;
+
+     label1:
+        if i3 != 0 goto label2;
+
+        return 0;
+
+     label2:
+        z0 = 0;
+
+     label3:
+        $i8 = i3 + i2;
+        i9 = $i8 / 2;
+        $r4 = r0[i9];
+        $r5 = $r4.<org.apache.tomcat.util.http.mapper.Mapper$MapElement: java.lang.String name>;
+        i4 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int compareIgnoreCase(org.apache.tomcat.util.buf.CharChunk,int,int,java.lang.String)>(r1, i0, i1, $r5);
+        if i4 != 1 goto label4;
+
+        i2 = i9;
+        goto label6;
+
+     label4:
+        if i4 != 0 goto label5;
+
+        return i9;
+
+     label5:
+        i3 = i9;
+
+     label6:
+        $i10 = i3 - i2;
+        if $i10 != 1 goto label3;
+
+        $r6 = r0[i3];
+        $r7 = $r6.<org.apache.tomcat.util.http.mapper.Mapper$MapElement: java.lang.String name>;
+        i5 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int compareIgnoreCase(org.apache.tomcat.util.buf.CharChunk,int,int,java.lang.String)>(r1, i0, i1, $r7);
+        if i5 >= 0 goto label7;
+
+        return i2;
+
+     label7:
+        return i3;
+    }
+
+    private static final int find(org.apache.tomcat.util.http.mapper.Mapper$MapElement[], java.lang.String)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement[] r0;
+        java.lang.String r1, $r3, $r5, $r7;
+        int i0, i1, i2, i3, $i4, $i5, $i6, i7, $i8;
+        boolean z0;
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement $r2, $r4, $r6;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$MapElement[];
+        r1 := @parameter1: java.lang.String;
+        i0 = 0;
+        $i4 = lengthof r0;
+        i1 = $i4 - 1;
+        if i1 != -1 goto label0;
+
+        return -1;
+
+     label0:
+        $r2 = r0[0];
+        $r3 = $r2.<org.apache.tomcat.util.http.mapper.Mapper$MapElement: java.lang.String name>;
+        $i5 = virtualinvoke r1.<java.lang.String: int compareTo(java.lang.String)>($r3);
+        if $i5 >= 0 goto label1;
+
+        return -1;
+
+     label1:
+        if i1 != 0 goto label2;
+
+        return 0;
+
+     label2:
+        z0 = 0;
+
+     label3:
+        $i6 = i1 + i0;
+        i7 = $i6 / 2;
+        $r4 = r0[i7];
+        $r5 = $r4.<org.apache.tomcat.util.http.mapper.Mapper$MapElement: java.lang.String name>;
+        i2 = virtualinvoke r1.<java.lang.String: int compareTo(java.lang.String)>($r5);
+        if i2 <= 0 goto label4;
+
+        i0 = i7;
+        goto label6;
+
+     label4:
+        if i2 != 0 goto label5;
+
+        return i7;
+
+     label5:
+        i1 = i7;
+
+     label6:
+        $i8 = i1 - i0;
+        if $i8 != 1 goto label3;
+
+        $r6 = r0[i1];
+        $r7 = $r6.<org.apache.tomcat.util.http.mapper.Mapper$MapElement: java.lang.String name>;
+        i3 = virtualinvoke r1.<java.lang.String: int compareTo(java.lang.String)>($r7);
+        if i3 >= 0 goto label7;
+
+        return i0;
+
+     label7:
+        return i1;
+    }
+
+    private static final org.apache.tomcat.util.http.mapper.Mapper$MapElement exactFind(org.apache.tomcat.util.http.mapper.Mapper$MapElement[], java.lang.String)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement[] r0;
+        java.lang.String r1, $r3;
+        int i0;
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement r2;
+        boolean $z0;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$MapElement[];
+        r1 := @parameter1: java.lang.String;
+        i0 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int find(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>(r0, r1);
+        if i0 < 0 goto label0;
+
+        r2 = r0[i0];
+        $r3 = r2.<org.apache.tomcat.util.http.mapper.Mapper$MapElement: java.lang.String name>;
+        $z0 = virtualinvoke r1.<java.lang.String: boolean equals(java.lang.Object)>($r3);
+        if $z0 == 0 goto label0;
+
+        return r2;
+
+     label0:
+        return null;
+    }
+
+    private static final org.apache.tomcat.util.http.mapper.Mapper$MapElement exactFind(org.apache.tomcat.util.http.mapper.Mapper$MapElement[], org.apache.tomcat.util.buf.CharChunk)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement[] r0;
+        org.apache.tomcat.util.buf.CharChunk r1;
+        int i0;
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement r2;
+        java.lang.String $r3;
+        boolean $z0;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$MapElement[];
+        r1 := @parameter1: org.apache.tomcat.util.buf.CharChunk;
+        i0 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int find(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.buf.CharChunk)>(r0, r1);
+        if i0 < 0 goto label0;
+
+        r2 = r0[i0];
+        $r3 = r2.<org.apache.tomcat.util.http.mapper.Mapper$MapElement: java.lang.String name>;
+        $z0 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: boolean equals(java.lang.String)>($r3);
+        if $z0 == 0 goto label0;
+
+        return r2;
+
+     label0:
+        return null;
+    }
+
+    private static final org.apache.tomcat.util.http.mapper.Mapper$MapElement exactFindIgnoreCase(org.apache.tomcat.util.http.mapper.Mapper$MapElement[], org.apache.tomcat.util.buf.CharChunk)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement[] r0;
+        org.apache.tomcat.util.buf.CharChunk r1;
+        int i0;
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement r2;
+        java.lang.String $r3;
+        boolean $z0;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$MapElement[];
+        r1 := @parameter1: org.apache.tomcat.util.buf.CharChunk;
+        i0 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int findIgnoreCase(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.buf.CharChunk)>(r0, r1);
+        if i0 < 0 goto label0;
+
+        r2 = r0[i0];
+        $r3 = r2.<org.apache.tomcat.util.http.mapper.Mapper$MapElement: java.lang.String name>;
+        $z0 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: boolean equalsIgnoreCase(java.lang.String)>($r3);
+        if $z0 == 0 goto label0;
+
+        return r2;
+
+     label0:
+        return null;
+    }
+
+    private static final int compare(org.apache.tomcat.util.buf.CharChunk, int, int, java.lang.String)
+    {
+        org.apache.tomcat.util.buf.CharChunk r0;
+        int i0, i1, i3, i4, $i5, $i6, $i9, $i12, $i13, $i14, $i15;
+        java.lang.String r1;
+        byte b2;
+        char[] r2;
+        char $c7, $c8, $c10, $c11;
+
+        r0 := @parameter0: org.apache.tomcat.util.buf.CharChunk;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        r1 := @parameter3: java.lang.String;
+        b2 = 0;
+        r2 = virtualinvoke r0.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        i3 = virtualinvoke r1.<java.lang.String: int length()>();
+        $i5 = i1 - i0;
+        if $i5 >= i3 goto label0;
+
+        i3 = i1 - i0;
+
+     label0:
+        i4 = 0;
+        goto label4;
+
+     label1:
+        $i6 = i4 + i0;
+        $c7 = r2[$i6];
+        $c8 = virtualinvoke r1.<java.lang.String: char charAt(int)>(i4);
+        if $c7 <= $c8 goto label2;
+
+        b2 = 1;
+        goto label3;
+
+     label2:
+        $i9 = i4 + i0;
+        $c10 = r2[$i9];
+        $c11 = virtualinvoke r1.<java.lang.String: char charAt(int)>(i4);
+        if $c10 >= $c11 goto label3;
+
+        b2 = -1;
+
+     label3:
+        i4 = i4 + 1;
+
+     label4:
+        if i4 >= i3 goto label5;
+
+        if b2 == 0 goto label1;
+
+     label5:
+        if b2 != 0 goto label7;
+
+        $i12 = virtualinvoke r1.<java.lang.String: int length()>();
+        $i13 = i1 - i0;
+        if $i12 <= $i13 goto label6;
+
+        b2 = -1;
+        goto label7;
+
+     label6:
+        $i14 = virtualinvoke r1.<java.lang.String: int length()>();
+        $i15 = i1 - i0;
+        if $i14 >= $i15 goto label7;
+
+        b2 = 1;
+
+     label7:
+        return b2;
+    }
+
+    private static final int compareIgnoreCase(org.apache.tomcat.util.buf.CharChunk, int, int, java.lang.String)
+    {
+        org.apache.tomcat.util.buf.CharChunk r0;
+        int i0, i1, i3, i4, $i5, $i6, $i8, $i10, $i11, $i13, $i15, $i16, $i17, $i18, $i19;
+        java.lang.String r1;
+        byte b2;
+        char[] r2;
+        char $c7, $c9, $c12, $c14;
+
+        r0 := @parameter0: org.apache.tomcat.util.buf.CharChunk;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        r1 := @parameter3: java.lang.String;
+        b2 = 0;
+        r2 = virtualinvoke r0.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        i3 = virtualinvoke r1.<java.lang.String: int length()>();
+        $i5 = i1 - i0;
+        if $i5 >= i3 goto label0;
+
+        i3 = i1 - i0;
+
+     label0:
+        i4 = 0;
+        goto label4;
+
+     label1:
+        $i6 = i4 + i0;
+        $c7 = r2[$i6];
+        $i8 = staticinvoke <org.apache.tomcat.util.buf.Ascii: int toLower(int)>($c7);
+        $c9 = virtualinvoke r1.<java.lang.String: char charAt(int)>(i4);
+        $i10 = staticinvoke <org.apache.tomcat.util.buf.Ascii: int toLower(int)>($c9);
+        if $i8 <= $i10 goto label2;
+
+        b2 = 1;
+        goto label3;
+
+     label2:
+        $i11 = i4 + i0;
+        $c12 = r2[$i11];
+        $i13 = staticinvoke <org.apache.tomcat.util.buf.Ascii: int toLower(int)>($c12);
+        $c14 = virtualinvoke r1.<java.lang.String: char charAt(int)>(i4);
+        $i15 = staticinvoke <org.apache.tomcat.util.buf.Ascii: int toLower(int)>($c14);
+        if $i13 >= $i15 goto label3;
+
+        b2 = -1;
+
+     label3:
+        i4 = i4 + 1;
+
+     label4:
+        if i4 >= i3 goto label5;
+
+        if b2 == 0 goto label1;
+
+     label5:
+        if b2 != 0 goto label7;
+
+        $i16 = virtualinvoke r1.<java.lang.String: int length()>();
+        $i17 = i1 - i0;
+        if $i16 <= $i17 goto label6;
+
+        b2 = -1;
+        goto label7;
+
+     label6:
+        $i18 = virtualinvoke r1.<java.lang.String: int length()>();
+        $i19 = i1 - i0;
+        if $i18 >= $i19 goto label7;
+
+        b2 = 1;
+
+     label7:
+        return b2;
+    }
+
+    private static final int lastSlash(org.apache.tomcat.util.buf.CharChunk)
+    {
+        org.apache.tomcat.util.buf.CharChunk r0;
+        char[] r1;
+        int i0, i1, i2;
+        char $c3;
+
+        r0 := @parameter0: org.apache.tomcat.util.buf.CharChunk;
+        r1 = virtualinvoke r0.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        i0 = virtualinvoke r0.<org.apache.tomcat.util.buf.CharChunk: int getEnd()>();
+        i1 = virtualinvoke r0.<org.apache.tomcat.util.buf.CharChunk: int getStart()>();
+        i2 = i0;
+        goto label1;
+
+     label0:
+        i2 = i2 + -1;
+        $c3 = r1[i2];
+        if $c3 != 47 goto label1;
+
+        goto label2;
+
+     label1:
+        if i2 > i1 goto label0;
+
+     label2:
+        return i2;
+    }
+
+    private static final int nthSlash(org.apache.tomcat.util.buf.CharChunk, int)
+    {
+        org.apache.tomcat.util.buf.CharChunk r0;
+        int i0, i1, i2, i3, i4, $i5;
+        char[] r1;
+        char $c6;
+
+        r0 := @parameter0: org.apache.tomcat.util.buf.CharChunk;
+        i0 := @parameter1: int;
+        r1 = virtualinvoke r0.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        i1 = virtualinvoke r0.<org.apache.tomcat.util.buf.CharChunk: int getEnd()>();
+        i2 = virtualinvoke r0.<org.apache.tomcat.util.buf.CharChunk: int getStart()>();
+        i3 = i2;
+        i4 = 0;
+        goto label1;
+
+     label0:
+        $i5 = i3;
+        i3 = i3 + 1;
+        $c6 = r1[$i5];
+        if $c6 != 47 goto label1;
+
+        i4 = i4 + 1;
+        if i4 != i0 goto label1;
+
+        i3 = i3 + -1;
+        goto label2;
+
+     label1:
+        if i3 < i1 goto label0;
+
+     label2:
+        return i3;
+    }
+
+    private static final int slashCount(java.lang.String)
+    {
+        java.lang.String r0;
+        int i0, i1, $i2, $i3;
+
+        r0 := @parameter0: java.lang.String;
+        i0 = -1;
+        i1 = 0;
+        goto label1;
+
+     label0:
+        i1 = i1 + 1;
+
+     label1:
+        $i2 = i0 + 1;
+        $i3 = virtualinvoke r0.<java.lang.String: int indexOf(int,int)>(47, $i2);
+        i0 = $i3;
+        if $i3 != -1 goto label0;
+
+        return i1;
+    }
+
+    private static final boolean insertMap(org.apache.tomcat.util.http.mapper.Mapper$MapElement[], org.apache.tomcat.util.http.mapper.Mapper$MapElement[], org.apache.tomcat.util.http.mapper.Mapper$MapElement)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement[] r0, r1;
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement r2, $r5;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7;
+        java.lang.String $r3, $r4, $r6;
+        boolean $z0;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$MapElement[];
+        r1 := @parameter1: org.apache.tomcat.util.http.mapper.Mapper$MapElement[];
+        r2 := @parameter2: org.apache.tomcat.util.http.mapper.Mapper$MapElement;
+        $r3 = r2.<org.apache.tomcat.util.http.mapper.Mapper$MapElement: java.lang.String name>;
+        i0 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int find(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>(r0, $r3);
+        if i0 == -1 goto label0;
+
+        $r4 = r2.<org.apache.tomcat.util.http.mapper.Mapper$MapElement: java.lang.String name>;
+        $r5 = r0[i0];
+        $r6 = $r5.<org.apache.tomcat.util.http.mapper.Mapper$MapElement: java.lang.String name>;
+        $z0 = virtualinvoke $r4.<java.lang.String: boolean equals(java.lang.Object)>($r6);
+        if $z0 == 0 goto label0;
+
+        return 0;
+
+     label0:
+        $i1 = i0 + 1;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r0, 0, r1, 0, $i1);
+        $i2 = i0 + 1;
+        r1[$i2] = r2;
+        $i3 = i0 + 1;
+        $i4 = i0 + 2;
+        $i5 = lengthof r0;
+        $i6 = $i5 - i0;
+        $i7 = $i6 - 1;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r0, $i3, r1, $i4, $i7);
+        return 1;
+    }
+
+    private static final boolean removeMap(org.apache.tomcat.util.http.mapper.Mapper$MapElement[], org.apache.tomcat.util.http.mapper.Mapper$MapElement[], java.lang.String)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement[] r0, r1;
+        java.lang.String r2, $r4;
+        int i0, $i1, $i2, $i3, $i4;
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement $r3;
+        boolean $z0;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$MapElement[];
+        r1 := @parameter1: org.apache.tomcat.util.http.mapper.Mapper$MapElement[];
+        r2 := @parameter2: java.lang.String;
+        i0 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int find(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>(r0, r2);
+        if i0 == -1 goto label0;
+
+        $r3 = r0[i0];
+        $r4 = $r3.<org.apache.tomcat.util.http.mapper.Mapper$MapElement: java.lang.String name>;
+        $z0 = virtualinvoke r2.<java.lang.String: boolean equals(java.lang.Object)>($r4);
+        if $z0 == 0 goto label0;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r0, 0, r1, 0, i0);
+        $i1 = i0 + 1;
+        $i2 = lengthof r0;
+        $i3 = $i2 - i0;
+        $i4 = $i3 - 1;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r0, $i1, r1, i0, $i4);
+        return 1;
+
+     label0:
+        return 0;
+    }
+
+    static boolean access$0(org.apache.tomcat.util.http.mapper.Mapper$MapElement[], org.apache.tomcat.util.http.mapper.Mapper$MapElement[], org.apache.tomcat.util.http.mapper.Mapper$MapElement)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement[] r0, r1;
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement r2;
+        boolean $z0;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$MapElement[];
+        r1 := @parameter1: org.apache.tomcat.util.http.mapper.Mapper$MapElement[];
+        r2 := @parameter2: org.apache.tomcat.util.http.mapper.Mapper$MapElement;
+        $z0 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: boolean insertMap(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement)>(r0, r1, r2);
+        return $z0;
+    }
+
+    static boolean access$1(org.apache.tomcat.util.http.mapper.Mapper$MapElement[], org.apache.tomcat.util.http.mapper.Mapper$MapElement[], java.lang.String)
+    {
+        org.apache.tomcat.util.http.mapper.Mapper$MapElement[] r0, r1;
+        java.lang.String r2;
+        boolean $z0;
+
+        r0 := @parameter0: org.apache.tomcat.util.http.mapper.Mapper$MapElement[];
+        r1 := @parameter1: org.apache.tomcat.util.http.mapper.Mapper$MapElement[];
+        r2 := @parameter2: java.lang.String;
+        $z0 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: boolean removeMap(org.apache.tomcat.util.http.mapper.Mapper$MapElement[],org.apache.tomcat.util.http.mapper.Mapper$MapElement[],java.lang.String)>(r0, r1, r2);
+        return $z0;
+    }
+
+    static int access$2(java.lang.String)
+    {
+        java.lang.String r0;
+        int $i0;
+
+        r0 := @parameter0: java.lang.String;
+        $i0 = staticinvoke <org.apache.tomcat.util.http.mapper.Mapper: int slashCount(java.lang.String)>(r0);
+        return $i0;
+    }
+}

@@ -1,0 +1,279 @@
+public class sun.security.util.PolicyUtil extends java.lang.Object
+{
+    private static final java.lang.String P11KEYSTORE;
+    private static final java.lang.String NONE;
+
+    public void <init>()
+    {
+        sun.security.util.PolicyUtil r0;
+
+        r0 := @this: sun.security.util.PolicyUtil;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static java.io.InputStream getInputStream(java.net.URL) throws java.io.IOException
+    {
+        java.net.URL r0;
+        java.lang.String $r1, r2, $r3, $r4, r5;
+        char $c0;
+        boolean $z0;
+        java.io.FileInputStream $r6;
+        java.io.InputStream $r7;
+
+        r0 := @parameter0: java.net.URL;
+        $r1 = "file";
+        $r3 = virtualinvoke r0.<java.net.URL: java.lang.String getProtocol()>();
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>($r3);
+        if $z0 == 0 goto label0;
+
+        $r4 = virtualinvoke r0.<java.net.URL: java.lang.String getFile()>();
+        $c0 = <java.io.File: char separatorChar>;
+        r2 = virtualinvoke $r4.<java.lang.String: java.lang.String replace(char,char)>(47, $c0);
+        r5 = staticinvoke <sun.net.www.ParseUtil: java.lang.String decode(java.lang.String)>(r2);
+        $r6 = new java.io.FileInputStream;
+        specialinvoke $r6.<java.io.FileInputStream: void <init>(java.lang.String)>(r5);
+        return $r6;
+
+     label0:
+        $r7 = virtualinvoke r0.<java.net.URL: java.io.InputStream openStream()>();
+        return $r7;
+    }
+
+    public static java.security.KeyStore getKeyStore(java.net.URL, java.lang.String, java.lang.String, java.lang.String, java.lang.String, sun.security.util.Debug) throws java.security.KeyStoreException, java.net.MalformedURLException, java.io.IOException, java.security.NoSuchProviderException, java.security.NoSuchAlgorithmException, java.security.cert.CertificateException
+    {
+        java.net.URL r0, r8, $r26, $r28, $r37, r38, $r41;
+        java.lang.String r1, r2, r3, r4, $r14, $r15, $r25, $r32, $r35, $r45;
+        sun.security.util.Debug r5;
+        char[] r6;
+        java.security.KeyStore r7, r36, r50;
+        java.net.MalformedURLException r9, $r27, $r39, r40;
+        java.lang.Throwable r10, r11, r12, $r34, $r49, $r51;
+        java.lang.IllegalArgumentException $r13, $r16;
+        boolean $z0, $z1, $z2;
+        java.lang.StringBuilder $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r29, $r30, $r31, $r42, $r43, $r44;
+        java.io.InputStream r33, $r48;
+        null_type n0;
+        java.io.BufferedInputStream r46, $r47;
+
+        r0 := @parameter0: java.net.URL;
+        r1 := @parameter1: java.lang.String;
+        r2 := @parameter2: java.lang.String;
+        r3 := @parameter3: java.lang.String;
+        r4 := @parameter4: java.lang.String;
+        r5 := @parameter5: sun.security.util.Debug;
+        if r1 != null goto label0;
+
+        $r13 = new java.lang.IllegalArgumentException;
+        specialinvoke $r13.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("null KeyStore name");
+        throw $r13;
+
+     label0:
+        r6 = null;
+
+     label1:
+        if r2 != null goto label2;
+
+        r2 = staticinvoke <java.security.KeyStore: java.lang.String getDefaultType()>();
+
+     label2:
+        $r14 = "PKCS11";
+        $z0 = virtualinvoke $r14.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>(r2);
+        if $z0 == 0 goto label3;
+
+        $r15 = "NONE";
+        $z1 = virtualinvoke $r15.<java.lang.String: boolean equals(java.lang.Object)>(r1);
+        if $z1 != 0 goto label3;
+
+        $r16 = new java.lang.IllegalArgumentException;
+        $r17 = new java.lang.StringBuilder;
+        specialinvoke $r17.<java.lang.StringBuilder: void <init>()>();
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Invalid value (");
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(") for keystore URL.  If the keystore type is \"");
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("PKCS11");
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\", the keystore url must be \"");
+        $r23 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("NONE");
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\"");
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r16.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r25);
+        throw $r16;
+
+     label3:
+        if r3 == null goto label4;
+
+        r7 = staticinvoke <java.security.KeyStore: java.security.KeyStore getInstance(java.lang.String,java.lang.String)>(r2, r3);
+        goto label5;
+
+     label4:
+        r7 = staticinvoke <java.security.KeyStore: java.security.KeyStore getInstance(java.lang.String)>(r2);
+
+     label5:
+        if r4 == null goto label18;
+
+     label6:
+        $r26 = new java.net.URL;
+        specialinvoke $r26.<java.net.URL: void <init>(java.lang.String)>(r4);
+        r8 = $r26;
+
+     label7:
+        goto label10;
+
+     label8:
+        $r27 := @caughtexception;
+        r9 = $r27;
+        if r0 != null goto label9;
+
+        throw r9;
+
+     label9:
+        $r28 = new java.net.URL;
+        specialinvoke $r28.<java.net.URL: void <init>(java.net.URL,java.lang.String)>(r0, r4);
+        r8 = $r28;
+
+     label10:
+        if r5 == null goto label11;
+
+        $r29 = new java.lang.StringBuilder;
+        specialinvoke $r29.<java.lang.StringBuilder: void <init>()>();
+        $r30 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("reading password");
+        $r31 = virtualinvoke $r30.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r8);
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r5.<sun.security.util.Debug: void println(java.lang.String)>($r32);
+
+     label11:
+        r33 = null;
+
+     label12:
+        r33 = virtualinvoke r8.<java.net.URL: java.io.InputStream openStream()>();
+        r6 = staticinvoke <sun.security.util.Password: char[] readPassword(java.io.InputStream)>(r33);
+
+     label13:
+        if r33 == null goto label18;
+
+        virtualinvoke r33.<java.io.InputStream: void close()>();
+        goto label18;
+
+     label14:
+        $r34 := @caughtexception;
+
+     label15:
+        r10 = $r34;
+
+     label16:
+        if r33 == null goto label17;
+
+        virtualinvoke r33.<java.io.InputStream: void close()>();
+
+     label17:
+        throw r10;
+
+     label18:
+        $r35 = "NONE";
+        $z2 = virtualinvoke $r35.<java.lang.String: boolean equals(java.lang.Object)>(r1);
+        if $z2 == 0 goto label21;
+
+        virtualinvoke r7.<java.security.KeyStore: void load(java.io.InputStream,char[])>(null, r6);
+        r36 = r7;
+
+     label19:
+        if r6 == null goto label20;
+
+        staticinvoke <java.util.Arrays: void fill(char[],char)>(r6, 32);
+
+     label20:
+        return r36;
+
+     label21:
+        n0 = null;
+
+     label22:
+        $r37 = new java.net.URL;
+        specialinvoke $r37.<java.net.URL: void <init>(java.lang.String)>(r1);
+        r38 = $r37;
+
+     label23:
+        goto label26;
+
+     label24:
+        $r39 := @caughtexception;
+        r40 = $r39;
+        if r0 != null goto label25;
+
+        throw r40;
+
+     label25:
+        $r41 = new java.net.URL;
+        specialinvoke $r41.<java.net.URL: void <init>(java.net.URL,java.lang.String)>(r0, r1);
+        r38 = $r41;
+
+     label26:
+        if r5 == null goto label27;
+
+        $r42 = new java.lang.StringBuilder;
+        specialinvoke $r42.<java.lang.StringBuilder: void <init>()>();
+        $r43 = virtualinvoke $r42.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("reading keystore");
+        $r44 = virtualinvoke $r43.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r38);
+        $r45 = virtualinvoke $r44.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r5.<sun.security.util.Debug: void println(java.lang.String)>($r45);
+
+     label27:
+        r46 = null;
+
+     label28:
+        $r47 = new java.io.BufferedInputStream;
+        $r48 = staticinvoke <sun.security.util.PolicyUtil: java.io.InputStream getInputStream(java.net.URL)>(r38);
+        specialinvoke $r47.<java.io.BufferedInputStream: void <init>(java.io.InputStream)>($r48);
+        r46 = $r47;
+        virtualinvoke r7.<java.security.KeyStore: void load(java.io.InputStream,char[])>(r46, r6);
+
+     label29:
+        virtualinvoke r46.<java.io.InputStream: void close()>();
+        goto label33;
+
+     label30:
+        $r49 := @caughtexception;
+
+     label31:
+        r11 = $r49;
+
+     label32:
+        virtualinvoke r46.<java.io.InputStream: void close()>();
+        throw r11;
+
+     label33:
+        r50 = r7;
+
+     label34:
+        if r6 == null goto label35;
+
+        staticinvoke <java.util.Arrays: void fill(char[],char)>(r6, 32);
+
+     label35:
+        return r50;
+
+     label36:
+        $r51 := @caughtexception;
+
+     label37:
+        r12 = $r51;
+
+     label38:
+        if r6 == null goto label39;
+
+        staticinvoke <java.util.Arrays: void fill(char[],char)>(r6, 32);
+
+     label39:
+        throw r12;
+
+        catch java.net.MalformedURLException from label6 to label7 with label8;
+        catch java.lang.Throwable from label12 to label13 with label14;
+        catch java.lang.Throwable from label15 to label16 with label14;
+        catch java.net.MalformedURLException from label22 to label23 with label24;
+        catch java.lang.Throwable from label28 to label29 with label30;
+        catch java.lang.Throwable from label31 to label32 with label30;
+        catch java.lang.Throwable from label1 to label19 with label36;
+        catch java.lang.Throwable from label21 to label34 with label36;
+        catch java.lang.Throwable from label37 to label38 with label36;
+    }
+}

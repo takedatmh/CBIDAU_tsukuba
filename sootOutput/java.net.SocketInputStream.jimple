@@ -1,0 +1,515 @@
+class java.net.SocketInputStream extends java.io.FileInputStream
+{
+    private boolean eof;
+    private java.net.AbstractPlainSocketImpl impl;
+    private byte[] temp;
+    private java.net.Socket socket;
+    private boolean closing;
+
+    void <init>(java.net.AbstractPlainSocketImpl) throws java.io.IOException
+    {
+        java.net.SocketInputStream r0;
+        java.net.AbstractPlainSocketImpl r1;
+        java.io.FileDescriptor $r2;
+        java.net.Socket $r3;
+
+        r0 := @this: java.net.SocketInputStream;
+        r1 := @parameter0: java.net.AbstractPlainSocketImpl;
+        $r2 = virtualinvoke r1.<java.net.AbstractPlainSocketImpl: java.io.FileDescriptor getFileDescriptor()>();
+        specialinvoke r0.<java.io.FileInputStream: void <init>(java.io.FileDescriptor)>($r2);
+        r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl> = null;
+        r0.<java.net.SocketInputStream: java.net.Socket socket> = null;
+        r0.<java.net.SocketInputStream: boolean closing> = 0;
+        r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl> = r1;
+        $r3 = virtualinvoke r1.<java.net.AbstractPlainSocketImpl: java.net.Socket getSocket()>();
+        r0.<java.net.SocketInputStream: java.net.Socket socket> = $r3;
+        return;
+    }
+
+    public final java.nio.channels.FileChannel getChannel()
+    {
+        java.net.SocketInputStream r0;
+
+        r0 := @this: java.net.SocketInputStream;
+        return null;
+    }
+
+    private native int socketRead0(java.io.FileDescriptor, byte[], int, int, int) throws java.io.IOException;
+
+    public int read(byte[]) throws java.io.IOException
+    {
+        java.net.SocketInputStream r0;
+        byte[] r1;
+        int $i0, $i1;
+
+        r0 := @this: java.net.SocketInputStream;
+        r1 := @parameter0: byte[];
+        $i0 = lengthof r1;
+        $i1 = virtualinvoke r0.<java.net.SocketInputStream: int read(byte[],int,int)>(r1, 0, $i0);
+        return $i1;
+    }
+
+    public int read(byte[], int, int) throws java.io.IOException
+    {
+        java.net.SocketInputStream r0;
+        byte[] r1;
+        int i0, i1, $i2, $i3;
+        java.net.AbstractPlainSocketImpl $r2;
+
+        r0 := @this: java.net.SocketInputStream;
+        r1 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        $r2 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $i2 = virtualinvoke $r2.<java.net.AbstractPlainSocketImpl: int getTimeout()>();
+        $i3 = virtualinvoke r0.<java.net.SocketInputStream: int read(byte[],int,int,int)>(r1, i0, i1, $i2);
+        return $i3;
+    }
+
+    int read(byte[], int, int, int) throws java.io.IOException
+    {
+        java.net.SocketInputStream r0;
+        byte[] r1;
+        int i0, i1, i2, i3, i4, $i5, $i6, $i7, $i10, $i13, $i16, i19, $i20, $i23, $i26, $i29;
+        boolean z0, $z1, $z2, $z3, $z4, $z5;
+        java.lang.Object r2, r33;
+        java.io.FileDescriptor r3;
+        java.lang.Throwable r4, r5, $r27, $r54;
+        java.net.AbstractPlainSocketImpl $r6, $r9, $r10, $r12, $r14, $r15, $r17, $r19, $r22, $r24, $r26, $r28, $r30, $r32, $r34, $r35, $r37, $r39, $r41, $r42, $r44, $r46, $r49, $r51, $r53, $r55, $r57, $r59, $r60, $r62, $r63, $r64;
+        java.net.SocketException $r7, $r61, $r65;
+        java.lang.ArrayIndexOutOfBoundsException $r8;
+        java.net.InetAddress $r13, $r18, $r25, $r31, $r40, $r45, $r52, $r58;
+        long $l9, $l12, $l15, $l18, $l22, $l25, $l28, $l31;
+        sun.net.ConnectionResetException $r20, r21, $r47, r48;
+
+        r0 := @this: java.net.SocketInputStream;
+        r1 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        i2 := @parameter3: int;
+        i3 = 0;
+        $z1 = r0.<java.net.SocketInputStream: boolean eof>;
+        if $z1 == 0 goto label0;
+
+        return -1;
+
+     label0:
+        $r6 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $z2 = virtualinvoke $r6.<java.net.AbstractPlainSocketImpl: boolean isConnectionReset()>();
+        if $z2 == 0 goto label1;
+
+        $r7 = new java.net.SocketException;
+        specialinvoke $r7.<java.net.SocketException: void <init>(java.lang.String)>("Connection reset");
+        throw $r7;
+
+     label1:
+        if i1 <= 0 goto label2;
+
+        if i0 < 0 goto label2;
+
+        $i5 = i0 + i1;
+        $i6 = lengthof r1;
+        if $i5 <= $i6 goto label4;
+
+     label2:
+        if i1 != 0 goto label3;
+
+        return 0;
+
+     label3:
+        $r8 = new java.lang.ArrayIndexOutOfBoundsException;
+        specialinvoke $r8.<java.lang.ArrayIndexOutOfBoundsException: void <init>()>();
+        throw $r8;
+
+     label4:
+        z0 = 0;
+        r2 = staticinvoke <sun.misc.IoTrace: java.lang.Object socketReadBegin()>();
+        $r9 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        r3 = virtualinvoke $r9.<java.net.AbstractPlainSocketImpl: java.io.FileDescriptor acquireFD()>();
+
+     label5:
+        i3 = specialinvoke r0.<java.net.SocketInputStream: int socketRead0(java.io.FileDescriptor,byte[],int,int,int)>(r3, r1, i0, i1, i2);
+        if i3 <= 0 goto label9;
+
+        i4 = i3;
+
+     label6:
+        $r10 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        virtualinvoke $r10.<java.net.AbstractPlainSocketImpl: void releaseFD()>();
+        $r12 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $r13 = $r12.<java.net.AbstractPlainSocketImpl: java.net.InetAddress address>;
+        $r14 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $i7 = $r14.<java.net.AbstractPlainSocketImpl: int port>;
+        if i3 <= 0 goto label7;
+
+        $l9 = (long) i3;
+        goto label8;
+
+     label7:
+        $l9 = 0L;
+
+     label8:
+        staticinvoke <sun.misc.IoTrace: void socketReadEnd(java.lang.Object,java.net.InetAddress,int,int,long)>(r2, $r13, $i7, i2, $l9);
+        return i4;
+
+     label9:
+        $r15 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        virtualinvoke $r15.<java.net.AbstractPlainSocketImpl: void releaseFD()>();
+        $r17 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $r18 = $r17.<java.net.AbstractPlainSocketImpl: java.net.InetAddress address>;
+        $r19 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $i10 = $r19.<java.net.AbstractPlainSocketImpl: int port>;
+        if i3 <= 0 goto label10;
+
+        $l12 = (long) i3;
+        goto label11;
+
+     label10:
+        $l12 = 0L;
+
+     label11:
+        staticinvoke <sun.misc.IoTrace: void socketReadEnd(java.lang.Object,java.net.InetAddress,int,int,long)>(r2, $r18, $i10, i2, $l12);
+        goto label22;
+
+     label12:
+        $r20 := @caughtexception;
+
+     label13:
+        r21 = $r20;
+        z0 = 1;
+
+     label14:
+        $r22 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        virtualinvoke $r22.<java.net.AbstractPlainSocketImpl: void releaseFD()>();
+        $r24 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $r25 = $r24.<java.net.AbstractPlainSocketImpl: java.net.InetAddress address>;
+        $r26 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $i13 = $r26.<java.net.AbstractPlainSocketImpl: int port>;
+        if i3 <= 0 goto label15;
+
+        $l15 = (long) i3;
+        goto label16;
+
+     label15:
+        $l15 = 0L;
+
+     label16:
+        staticinvoke <sun.misc.IoTrace: void socketReadEnd(java.lang.Object,java.net.InetAddress,int,int,long)>(r2, $r25, $i13, i2, $l15);
+        goto label22;
+
+     label17:
+        $r27 := @caughtexception;
+
+     label18:
+        r4 = $r27;
+
+     label19:
+        $r28 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        virtualinvoke $r28.<java.net.AbstractPlainSocketImpl: void releaseFD()>();
+        $r30 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $r31 = $r30.<java.net.AbstractPlainSocketImpl: java.net.InetAddress address>;
+        $r32 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $i16 = $r32.<java.net.AbstractPlainSocketImpl: int port>;
+        if i3 <= 0 goto label20;
+
+        $l18 = (long) i3;
+        goto label21;
+
+     label20:
+        $l18 = 0L;
+
+     label21:
+        staticinvoke <sun.misc.IoTrace: void socketReadEnd(java.lang.Object,java.net.InetAddress,int,int,long)>(r2, $r31, $i16, i2, $l18);
+        throw r4;
+
+     label22:
+        if z0 == 0 goto label40;
+
+        r33 = staticinvoke <sun.misc.IoTrace: java.lang.Object socketReadBegin()>();
+        $r34 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        virtualinvoke $r34.<java.net.AbstractPlainSocketImpl: void setConnectionResetPending()>();
+        $r35 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        virtualinvoke $r35.<java.net.AbstractPlainSocketImpl: java.io.FileDescriptor acquireFD()>();
+
+     label23:
+        i3 = specialinvoke r0.<java.net.SocketInputStream: int socketRead0(java.io.FileDescriptor,byte[],int,int,int)>(r3, r1, i0, i1, i2);
+        if i3 <= 0 goto label27;
+
+        i19 = i3;
+
+     label24:
+        $r37 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        virtualinvoke $r37.<java.net.AbstractPlainSocketImpl: void releaseFD()>();
+        $r39 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $r40 = $r39.<java.net.AbstractPlainSocketImpl: java.net.InetAddress address>;
+        $r41 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $i20 = $r41.<java.net.AbstractPlainSocketImpl: int port>;
+        if i3 <= 0 goto label25;
+
+        $l22 = (long) i3;
+        goto label26;
+
+     label25:
+        $l22 = 0L;
+
+     label26:
+        staticinvoke <sun.misc.IoTrace: void socketReadEnd(java.lang.Object,java.net.InetAddress,int,int,long)>(r33, $r40, $i20, i2, $l22);
+        return i19;
+
+     label27:
+        $r42 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        virtualinvoke $r42.<java.net.AbstractPlainSocketImpl: void releaseFD()>();
+        $r44 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $r45 = $r44.<java.net.AbstractPlainSocketImpl: java.net.InetAddress address>;
+        $r46 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $i23 = $r46.<java.net.AbstractPlainSocketImpl: int port>;
+        if i3 <= 0 goto label28;
+
+        $l25 = (long) i3;
+        goto label29;
+
+     label28:
+        $l25 = 0L;
+
+     label29:
+        staticinvoke <sun.misc.IoTrace: void socketReadEnd(java.lang.Object,java.net.InetAddress,int,int,long)>(r33, $r45, $i23, i2, $l25);
+        goto label40;
+
+     label30:
+        $r47 := @caughtexception;
+
+     label31:
+        r48 = $r47;
+
+     label32:
+        $r49 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        virtualinvoke $r49.<java.net.AbstractPlainSocketImpl: void releaseFD()>();
+        $r51 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $r52 = $r51.<java.net.AbstractPlainSocketImpl: java.net.InetAddress address>;
+        $r53 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $i26 = $r53.<java.net.AbstractPlainSocketImpl: int port>;
+        if i3 <= 0 goto label33;
+
+        $l28 = (long) i3;
+        goto label34;
+
+     label33:
+        $l28 = 0L;
+
+     label34:
+        staticinvoke <sun.misc.IoTrace: void socketReadEnd(java.lang.Object,java.net.InetAddress,int,int,long)>(r33, $r52, $i26, i2, $l28);
+        goto label40;
+
+     label35:
+        $r54 := @caughtexception;
+
+     label36:
+        r5 = $r54;
+
+     label37:
+        $r55 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        virtualinvoke $r55.<java.net.AbstractPlainSocketImpl: void releaseFD()>();
+        $r57 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $r58 = $r57.<java.net.AbstractPlainSocketImpl: java.net.InetAddress address>;
+        $r59 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $i29 = $r59.<java.net.AbstractPlainSocketImpl: int port>;
+        if i3 <= 0 goto label38;
+
+        $l31 = (long) i3;
+        goto label39;
+
+     label38:
+        $l31 = 0L;
+
+     label39:
+        staticinvoke <sun.misc.IoTrace: void socketReadEnd(java.lang.Object,java.net.InetAddress,int,int,long)>(r33, $r58, $i29, i2, $l31);
+        throw r5;
+
+     label40:
+        $r60 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $z3 = virtualinvoke $r60.<java.net.AbstractPlainSocketImpl: boolean isClosedOrPending()>();
+        if $z3 == 0 goto label41;
+
+        $r61 = new java.net.SocketException;
+        specialinvoke $r61.<java.net.SocketException: void <init>(java.lang.String)>("Socket closed");
+        throw $r61;
+
+     label41:
+        $r62 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $z4 = virtualinvoke $r62.<java.net.AbstractPlainSocketImpl: boolean isConnectionResetPending()>();
+        if $z4 == 0 goto label42;
+
+        $r63 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        virtualinvoke $r63.<java.net.AbstractPlainSocketImpl: void setConnectionReset()>();
+
+     label42:
+        $r64 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $z5 = virtualinvoke $r64.<java.net.AbstractPlainSocketImpl: boolean isConnectionReset()>();
+        if $z5 == 0 goto label43;
+
+        $r65 = new java.net.SocketException;
+        specialinvoke $r65.<java.net.SocketException: void <init>(java.lang.String)>("Connection reset");
+        throw $r65;
+
+     label43:
+        r0.<java.net.SocketInputStream: boolean eof> = 1;
+        return -1;
+
+        catch sun.net.ConnectionResetException from label5 to label6 with label12;
+        catch java.lang.Throwable from label5 to label6 with label17;
+        catch java.lang.Throwable from label13 to label14 with label17;
+        catch java.lang.Throwable from label18 to label19 with label17;
+        catch sun.net.ConnectionResetException from label23 to label24 with label30;
+        catch java.lang.Throwable from label23 to label24 with label35;
+        catch java.lang.Throwable from label31 to label32 with label35;
+        catch java.lang.Throwable from label36 to label37 with label35;
+    }
+
+    public int read() throws java.io.IOException
+    {
+        java.net.SocketInputStream r0;
+        int i0;
+        boolean $z0;
+        byte[] $r1, $r2, $r3;
+        byte $b1;
+        short $s2;
+
+        r0 := @this: java.net.SocketInputStream;
+        $z0 = r0.<java.net.SocketInputStream: boolean eof>;
+        if $z0 == 0 goto label0;
+
+        return -1;
+
+     label0:
+        $r1 = newarray (byte)[1];
+        r0.<java.net.SocketInputStream: byte[] temp> = $r1;
+        $r2 = r0.<java.net.SocketInputStream: byte[] temp>;
+        i0 = virtualinvoke r0.<java.net.SocketInputStream: int read(byte[],int,int)>($r2, 0, 1);
+        if i0 > 0 goto label1;
+
+        return -1;
+
+     label1:
+        $r3 = r0.<java.net.SocketInputStream: byte[] temp>;
+        $b1 = $r3[0];
+        $s2 = $b1 & 255;
+        return $s2;
+    }
+
+    public long skip(long) throws java.io.IOException
+    {
+        java.net.SocketInputStream r0;
+        long l0, l1, $l5, $l7, $l8, $l10, $l11;
+        int i2, i3, $i9;
+        byte[] r1;
+        byte $b4, $b6;
+
+        r0 := @this: java.net.SocketInputStream;
+        l0 := @parameter0: long;
+        $b4 = l0 cmp 0L;
+        if $b4 > 0 goto label0;
+
+        return 0L;
+
+     label0:
+        l1 = l0;
+        $l5 = staticinvoke <java.lang.Math: long min(long,long)>(1024L, l1);
+        i2 = (int) $l5;
+        r1 = newarray (byte)[i2];
+
+     label1:
+        $b6 = l1 cmp 0L;
+        if $b6 <= 0 goto label3;
+
+        $l7 = (long) i2;
+        $l8 = staticinvoke <java.lang.Math: long min(long,long)>($l7, l1);
+        $i9 = (int) $l8;
+        i3 = virtualinvoke r0.<java.net.SocketInputStream: int read(byte[],int,int)>(r1, 0, $i9);
+        if i3 >= 0 goto label2;
+
+        goto label3;
+
+     label2:
+        $l10 = (long) i3;
+        l1 = l1 - $l10;
+        goto label1;
+
+     label3:
+        $l11 = l0 - l1;
+        return $l11;
+    }
+
+    public int available() throws java.io.IOException
+    {
+        java.net.SocketInputStream r0;
+        java.net.AbstractPlainSocketImpl $r1;
+        int $i0;
+
+        r0 := @this: java.net.SocketInputStream;
+        $r1 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        $i0 = virtualinvoke $r1.<java.net.AbstractPlainSocketImpl: int available()>();
+        return $i0;
+    }
+
+    public void close() throws java.io.IOException
+    {
+        java.net.SocketInputStream r0;
+        boolean $z0, $z1;
+        java.net.Socket $r1, $r2, $r3;
+        java.net.AbstractPlainSocketImpl $r4;
+
+        r0 := @this: java.net.SocketInputStream;
+        $z0 = r0.<java.net.SocketInputStream: boolean closing>;
+        if $z0 == 0 goto label0;
+
+        return;
+
+     label0:
+        r0.<java.net.SocketInputStream: boolean closing> = 1;
+        $r1 = r0.<java.net.SocketInputStream: java.net.Socket socket>;
+        if $r1 == null goto label1;
+
+        $r2 = r0.<java.net.SocketInputStream: java.net.Socket socket>;
+        $z1 = virtualinvoke $r2.<java.net.Socket: boolean isClosed()>();
+        if $z1 != 0 goto label2;
+
+        $r3 = r0.<java.net.SocketInputStream: java.net.Socket socket>;
+        virtualinvoke $r3.<java.net.Socket: void close()>();
+        goto label2;
+
+     label1:
+        $r4 = r0.<java.net.SocketInputStream: java.net.AbstractPlainSocketImpl impl>;
+        virtualinvoke $r4.<java.net.AbstractPlainSocketImpl: void close()>();
+
+     label2:
+        r0.<java.net.SocketInputStream: boolean closing> = 0;
+        return;
+    }
+
+    void setEOF(boolean)
+    {
+        java.net.SocketInputStream r0;
+        boolean z0;
+
+        r0 := @this: java.net.SocketInputStream;
+        z0 := @parameter0: boolean;
+        r0.<java.net.SocketInputStream: boolean eof> = z0;
+        return;
+    }
+
+    protected void finalize()
+    {
+        java.net.SocketInputStream r0;
+
+        r0 := @this: java.net.SocketInputStream;
+        return;
+    }
+
+    private static native void init();
+
+    static void <clinit>()
+    {
+        staticinvoke <java.net.SocketInputStream: void init()>();
+        return;
+    }
+}

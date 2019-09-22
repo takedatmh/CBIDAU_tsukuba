@@ -1,0 +1,597 @@
+class sun.nio.fs.UnixUriUtils extends java.lang.Object
+{
+    private static final long L_DIGIT;
+    private static final long H_DIGIT;
+    private static final long L_UPALPHA;
+    private static final long H_UPALPHA;
+    private static final long L_LOWALPHA;
+    private static final long H_LOWALPHA;
+    private static final long L_ALPHA;
+    private static final long H_ALPHA;
+    private static final long L_ALPHANUM;
+    private static final long H_ALPHANUM;
+    private static final long L_MARK;
+    private static final long H_MARK;
+    private static final long L_UNRESERVED;
+    private static final long H_UNRESERVED;
+    private static final long L_PCHAR;
+    private static final long H_PCHAR;
+    private static final long L_PATH;
+    private static final long H_PATH;
+    private static final char[] hexDigits;
+    static final boolean $assertionsDisabled;
+
+    private void <init>()
+    {
+        sun.nio.fs.UnixUriUtils r0;
+
+        r0 := @this: sun.nio.fs.UnixUriUtils;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    static java.nio.file.Path fromUri(sun.nio.fs.UnixFileSystem, java.net.URI)
+    {
+        sun.nio.fs.UnixFileSystem r0;
+        java.net.URI r1;
+        java.lang.String r2, r3, $r8, $r10, $r12, $r14;
+        int i0, i1, i2, $i7, $i8, i9, $i10, $i11, $i12, $i13, $i14, $i15;
+        byte[] r4;
+        char c3, c4, c5;
+        byte b6;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6;
+        java.lang.IllegalArgumentException $r5, $r6, $r7, $r9, $r11, $r13, $r17, $r19;
+        java.io.File $r15;
+        java.nio.file.Path $r16;
+        java.lang.AssertionError $r18, $r20;
+        sun.nio.fs.UnixPath $r21;
+
+        r0 := @parameter0: sun.nio.fs.UnixFileSystem;
+        r1 := @parameter1: java.net.URI;
+        $z0 = virtualinvoke r1.<java.net.URI: boolean isAbsolute()>();
+        if $z0 != 0 goto label0;
+
+        $r5 = new java.lang.IllegalArgumentException;
+        specialinvoke $r5.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("URI is not absolute");
+        throw $r5;
+
+     label0:
+        $z1 = virtualinvoke r1.<java.net.URI: boolean isOpaque()>();
+        if $z1 == 0 goto label1;
+
+        $r6 = new java.lang.IllegalArgumentException;
+        specialinvoke $r6.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("URI is not hierarchical");
+        throw $r6;
+
+     label1:
+        r2 = virtualinvoke r1.<java.net.URI: java.lang.String getScheme()>();
+        if r2 == null goto label2;
+
+        $z2 = virtualinvoke r2.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("file");
+        if $z2 != 0 goto label3;
+
+     label2:
+        $r7 = new java.lang.IllegalArgumentException;
+        specialinvoke $r7.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("URI scheme is not \"file\"");
+        throw $r7;
+
+     label3:
+        $r8 = virtualinvoke r1.<java.net.URI: java.lang.String getAuthority()>();
+        if $r8 == null goto label4;
+
+        $r9 = new java.lang.IllegalArgumentException;
+        specialinvoke $r9.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("URI has an authority component");
+        throw $r9;
+
+     label4:
+        $r10 = virtualinvoke r1.<java.net.URI: java.lang.String getFragment()>();
+        if $r10 == null goto label5;
+
+        $r11 = new java.lang.IllegalArgumentException;
+        specialinvoke $r11.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("URI has a fragment component");
+        throw $r11;
+
+     label5:
+        $r12 = virtualinvoke r1.<java.net.URI: java.lang.String getQuery()>();
+        if $r12 == null goto label6;
+
+        $r13 = new java.lang.IllegalArgumentException;
+        specialinvoke $r13.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("URI has a query component");
+        throw $r13;
+
+     label6:
+        $r14 = virtualinvoke r1.<java.net.URI: java.lang.String toString()>();
+        $z3 = virtualinvoke $r14.<java.lang.String: boolean startsWith(java.lang.String)>("file:///");
+        if $z3 != 0 goto label7;
+
+        $r15 = new java.io.File;
+        specialinvoke $r15.<java.io.File: void <init>(java.net.URI)>(r1);
+        $r16 = virtualinvoke $r15.<java.io.File: java.nio.file.Path toPath()>();
+        return $r16;
+
+     label7:
+        r3 = virtualinvoke r1.<java.net.URI: java.lang.String getRawPath()>();
+        i0 = virtualinvoke r3.<java.lang.String: int length()>();
+        if i0 != 0 goto label8;
+
+        $r17 = new java.lang.IllegalArgumentException;
+        specialinvoke $r17.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("URI path component is empty");
+        throw $r17;
+
+     label8:
+        $z4 = virtualinvoke r3.<java.lang.String: boolean endsWith(java.lang.String)>("/");
+        if $z4 == 0 goto label9;
+
+        if i0 <= 1 goto label9;
+
+        i0 = i0 + -1;
+
+     label9:
+        r4 = newarray (byte)[i0];
+        i1 = 0;
+        i2 = 0;
+
+     label10:
+        if i2 >= i0 goto label16;
+
+        $i7 = i2;
+        i2 = i2 + 1;
+        c3 = virtualinvoke r3.<java.lang.String: char charAt(int)>($i7);
+        if c3 != 37 goto label13;
+
+        $z5 = <sun.nio.fs.UnixUriUtils: boolean $assertionsDisabled>;
+        if $z5 != 0 goto label11;
+
+        $i8 = i2 + 2;
+        if $i8 <= i0 goto label11;
+
+        $r18 = new java.lang.AssertionError;
+        specialinvoke $r18.<java.lang.AssertionError: void <init>()>();
+        throw $r18;
+
+     label11:
+        i9 = i2 + 1;
+        c4 = virtualinvoke r3.<java.lang.String: char charAt(int)>(i2);
+        i2 = i9 + 1;
+        c5 = virtualinvoke r3.<java.lang.String: char charAt(int)>(i9);
+        $i10 = staticinvoke <sun.nio.fs.UnixUriUtils: int decode(char)>(c4);
+        $i11 = $i10 << 4;
+        $i12 = staticinvoke <sun.nio.fs.UnixUriUtils: int decode(char)>(c5);
+        $i13 = $i11 | $i12;
+        b6 = (byte) $i13;
+        if b6 != 0 goto label12;
+
+        $r19 = new java.lang.IllegalArgumentException;
+        specialinvoke $r19.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Nul character not allowed");
+        throw $r19;
+
+     label12:
+        goto label15;
+
+     label13:
+        $z6 = <sun.nio.fs.UnixUriUtils: boolean $assertionsDisabled>;
+        if $z6 != 0 goto label14;
+
+        if c3 < 128 goto label14;
+
+        $r20 = new java.lang.AssertionError;
+        specialinvoke $r20.<java.lang.AssertionError: void <init>()>();
+        throw $r20;
+
+     label14:
+        b6 = (byte) c3;
+
+     label15:
+        $i14 = i1;
+        i1 = i1 + 1;
+        r4[$i14] = b6;
+        goto label10;
+
+     label16:
+        $i15 = lengthof r4;
+        if i1 == $i15 goto label17;
+
+        r4 = staticinvoke <java.util.Arrays: byte[] copyOf(byte[],int)>(r4, i1);
+
+     label17:
+        $r21 = new sun.nio.fs.UnixPath;
+        specialinvoke $r21.<sun.nio.fs.UnixPath: void <init>(sun.nio.fs.UnixFileSystem,byte[])>(r0, r4);
+        return $r21;
+    }
+
+    static java.net.URI toUri(sun.nio.fs.UnixPath)
+    {
+        sun.nio.fs.UnixPath r0, $r3;
+        byte[] r1;
+        java.lang.StringBuilder r2, $r4;
+        int i0, $i4, $i13, $i14;
+        char c1, $c8, $c9, $c10, $c11, $c12, $c15;
+        long $l2, $l7;
+        boolean $z0, $z1, $z2;
+        byte $b3, $b5;
+        java.lang.AssertionError $r5, $r20;
+        short $s6;
+        char[] $r8, $r10;
+        sun.nio.fs.UnixFileAttributes $r12;
+        sun.nio.fs.UnixException $r14, r15;
+        java.net.URI $r16;
+        java.lang.String $r17;
+        java.net.URISyntaxException $r18, r19;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        $r3 = virtualinvoke r0.<sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toAbsolutePath()>();
+        r1 = virtualinvoke $r3.<sun.nio.fs.UnixPath: byte[] asByteArray()>();
+        $r4 = new java.lang.StringBuilder;
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>("file:///");
+        r2 = $r4;
+        $z0 = <sun.nio.fs.UnixUriUtils: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label0;
+
+        $b3 = r1[0];
+        if $b3 == 47 goto label0;
+
+        $r5 = new java.lang.AssertionError;
+        specialinvoke $r5.<java.lang.AssertionError: void <init>()>();
+        throw $r5;
+
+     label0:
+        i0 = 1;
+
+     label1:
+        $i4 = lengthof r1;
+        if i0 >= $i4 goto label4;
+
+        $b5 = r1[i0];
+        $s6 = $b5 & 255;
+        c1 = (char) $s6;
+        $l7 = <sun.nio.fs.UnixUriUtils: long L_PATH>;
+        $l2 = <sun.nio.fs.UnixUriUtils: long H_PATH>;
+        $z1 = staticinvoke <sun.nio.fs.UnixUriUtils: boolean match(char,long,long)>(c1, $l7, $l2);
+        if $z1 == 0 goto label2;
+
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(c1);
+        goto label3;
+
+     label2:
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(37);
+        $r8 = <sun.nio.fs.UnixUriUtils: char[] hexDigits>;
+        $c8 = c1 >> 4;
+        $c9 = $c8 & 15;
+        $c10 = $r8[$c9];
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>($c10);
+        $r10 = <sun.nio.fs.UnixUriUtils: char[] hexDigits>;
+        $c11 = c1 & 15;
+        $c12 = $r10[$c11];
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>($c12);
+
+     label3:
+        i0 = i0 + 1;
+        goto label1;
+
+     label4:
+        $i13 = virtualinvoke r2.<java.lang.StringBuilder: int length()>();
+        $i14 = $i13 - 1;
+        $c15 = virtualinvoke r2.<java.lang.StringBuilder: char charAt(int)>($i14);
+        if $c15 == 47 goto label8;
+
+     label5:
+        $r12 = staticinvoke <sun.nio.fs.UnixFileAttributes: sun.nio.fs.UnixFileAttributes get(sun.nio.fs.UnixPath,boolean)>(r0, 1);
+        $z2 = virtualinvoke $r12.<sun.nio.fs.UnixFileAttributes: boolean isDirectory()>();
+        if $z2 == 0 goto label6;
+
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(47);
+
+     label6:
+        goto label8;
+
+     label7:
+        $r14 := @caughtexception;
+        r15 = $r14;
+
+     label8:
+        $r16 = new java.net.URI;
+        $r17 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r16.<java.net.URI: void <init>(java.lang.String)>($r17);
+
+     label9:
+        return $r16;
+
+     label10:
+        $r18 := @caughtexception;
+        r19 = $r18;
+        $r20 = new java.lang.AssertionError;
+        specialinvoke $r20.<java.lang.AssertionError: void <init>(java.lang.Object)>(r19);
+        throw $r20;
+
+        catch sun.nio.fs.UnixException from label5 to label6 with label7;
+        catch java.net.URISyntaxException from label8 to label9 with label10;
+    }
+
+    private static long lowMask(java.lang.String)
+    {
+        java.lang.String r0;
+        int i0, i2;
+        long l1, $l4;
+        char c3;
+
+        r0 := @parameter0: java.lang.String;
+        i0 = virtualinvoke r0.<java.lang.String: int length()>();
+        l1 = 0L;
+        i2 = 0;
+
+     label0:
+        if i2 >= i0 goto label2;
+
+        c3 = virtualinvoke r0.<java.lang.String: char charAt(int)>(i2);
+        if c3 >= 64 goto label1;
+
+        $l4 = 1L << c3;
+        l1 = l1 | $l4;
+
+     label1:
+        i2 = i2 + 1;
+        goto label0;
+
+     label2:
+        return l1;
+    }
+
+    private static long highMask(java.lang.String)
+    {
+        java.lang.String r0;
+        int i0, i2, $i4;
+        long l1, $l5;
+        char c3;
+
+        r0 := @parameter0: java.lang.String;
+        i0 = virtualinvoke r0.<java.lang.String: int length()>();
+        l1 = 0L;
+        i2 = 0;
+
+     label0:
+        if i2 >= i0 goto label2;
+
+        c3 = virtualinvoke r0.<java.lang.String: char charAt(int)>(i2);
+        if c3 < 64 goto label1;
+
+        if c3 >= 128 goto label1;
+
+        $i4 = c3 - 64;
+        $l5 = 1L << $i4;
+        l1 = l1 | $l5;
+
+     label1:
+        i2 = i2 + 1;
+        goto label0;
+
+     label2:
+        return l1;
+    }
+
+    private static long lowMask(char, char)
+    {
+        char c0, c1;
+        long l2, $l8;
+        int i3, i4, i5, $i6, $i7;
+
+        c0 := @parameter0: char;
+        c1 := @parameter1: char;
+        l2 = 0L;
+        $i6 = staticinvoke <java.lang.Math: int min(int,int)>(c0, 63);
+        i3 = staticinvoke <java.lang.Math: int max(int,int)>($i6, 0);
+        $i7 = staticinvoke <java.lang.Math: int min(int,int)>(c1, 63);
+        i4 = staticinvoke <java.lang.Math: int max(int,int)>($i7, 0);
+        i5 = i3;
+
+     label0:
+        if i5 > i4 goto label1;
+
+        $l8 = 1L << i5;
+        l2 = l2 | $l8;
+        i5 = i5 + 1;
+        goto label0;
+
+     label1:
+        return l2;
+    }
+
+    private static long highMask(char, char)
+    {
+        char c0, c1;
+        long l2, $l10;
+        int i3, i4, i5, $i6, $i7, $i8, $i9;
+
+        c0 := @parameter0: char;
+        c1 := @parameter1: char;
+        l2 = 0L;
+        $i6 = staticinvoke <java.lang.Math: int min(int,int)>(c0, 127);
+        $i7 = staticinvoke <java.lang.Math: int max(int,int)>($i6, 64);
+        i3 = $i7 - 64;
+        $i8 = staticinvoke <java.lang.Math: int min(int,int)>(c1, 127);
+        $i9 = staticinvoke <java.lang.Math: int max(int,int)>($i8, 64);
+        i4 = $i9 - 64;
+        i5 = i3;
+
+     label0:
+        if i5 > i4 goto label1;
+
+        $l10 = 1L << i5;
+        l2 = l2 | $l10;
+        i5 = i5 + 1;
+        goto label0;
+
+     label1:
+        return l2;
+    }
+
+    private static boolean match(char, long, long)
+    {
+        char c0;
+        long l1, l2, $l3, $l4, $l7, $l8;
+        byte $b5, $b9;
+        boolean $z0, $z1;
+        int $i6;
+
+        c0 := @parameter0: char;
+        l1 := @parameter1: long;
+        l2 := @parameter2: long;
+        if c0 >= 64 goto label2;
+
+        $l3 = 1L << c0;
+        $l4 = $l3 & l1;
+        $b5 = $l4 cmp 0L;
+        if $b5 == 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+
+     label2:
+        if c0 >= 128 goto label5;
+
+        $i6 = c0 - 64;
+        $l7 = 1L << $i6;
+        $l8 = $l7 & l2;
+        $b9 = $l8 cmp 0L;
+        if $b9 == 0 goto label3;
+
+        $z1 = 1;
+        goto label4;
+
+     label3:
+        $z1 = 0;
+
+     label4:
+        return $z1;
+
+     label5:
+        return 0;
+    }
+
+    private static int decode(char)
+    {
+        char c0;
+        int $i1, $i2, $i3, $i4, $i5;
+        java.lang.AssertionError $r0;
+
+        c0 := @parameter0: char;
+        if c0 < 48 goto label0;
+
+        if c0 > 57 goto label0;
+
+        $i1 = c0 - 48;
+        return $i1;
+
+     label0:
+        if c0 < 97 goto label1;
+
+        if c0 > 102 goto label1;
+
+        $i2 = c0 - 97;
+        $i3 = $i2 + 10;
+        return $i3;
+
+     label1:
+        if c0 < 65 goto label2;
+
+        if c0 > 70 goto label2;
+
+        $i4 = c0 - 65;
+        $i5 = $i4 + 10;
+        return $i5;
+
+     label2:
+        $r0 = new java.lang.AssertionError;
+        specialinvoke $r0.<java.lang.AssertionError: void <init>()>();
+        throw $r0;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        long $l0, $l1, $l2, $l3, $l4, $l5, $l6, $l7, $l8, $l9, $l10, $l11, $l12, $l13, $l14, $l15, $l16, $l17, $l18, $l19, $l20, $l21, $l22, $l23, $l24, $l25, $l26, $l27, $l28, $l29;
+        boolean $z0, $z1;
+        char[] $r1;
+
+        $r0 = class "sun/nio/fs/UnixUriUtils";
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        <sun.nio.fs.UnixUriUtils: boolean $assertionsDisabled> = $z1;
+        $l1 = staticinvoke <sun.nio.fs.UnixUriUtils: long lowMask(char,char)>(48, 57);
+        <sun.nio.fs.UnixUriUtils: long L_DIGIT> = $l1;
+        $l2 = staticinvoke <sun.nio.fs.UnixUriUtils: long highMask(char,char)>(65, 90);
+        <sun.nio.fs.UnixUriUtils: long H_UPALPHA> = $l2;
+        $l3 = staticinvoke <sun.nio.fs.UnixUriUtils: long highMask(char,char)>(97, 122);
+        <sun.nio.fs.UnixUriUtils: long H_LOWALPHA> = $l3;
+        $l4 = <sun.nio.fs.UnixUriUtils: long H_LOWALPHA>;
+        $l0 = <sun.nio.fs.UnixUriUtils: long H_UPALPHA>;
+        $l5 = $l4 | $l0;
+        <sun.nio.fs.UnixUriUtils: long H_ALPHA> = $l5;
+        $l6 = <sun.nio.fs.UnixUriUtils: long L_DIGIT>;
+        $l7 = $l6 | 0L;
+        <sun.nio.fs.UnixUriUtils: long L_ALPHANUM> = $l7;
+        $l8 = <sun.nio.fs.UnixUriUtils: long H_ALPHA>;
+        $l9 = 0L | $l8;
+        <sun.nio.fs.UnixUriUtils: long H_ALPHANUM> = $l9;
+        $l10 = staticinvoke <sun.nio.fs.UnixUriUtils: long lowMask(java.lang.String)>("-_.!~*\'()");
+        <sun.nio.fs.UnixUriUtils: long L_MARK> = $l10;
+        $l11 = staticinvoke <sun.nio.fs.UnixUriUtils: long highMask(java.lang.String)>("-_.!~*\'()");
+        <sun.nio.fs.UnixUriUtils: long H_MARK> = $l11;
+        $l12 = <sun.nio.fs.UnixUriUtils: long L_ALPHANUM>;
+        $l13 = <sun.nio.fs.UnixUriUtils: long L_MARK>;
+        $l14 = $l12 | $l13;
+        <sun.nio.fs.UnixUriUtils: long L_UNRESERVED> = $l14;
+        $l15 = <sun.nio.fs.UnixUriUtils: long H_ALPHANUM>;
+        $l16 = <sun.nio.fs.UnixUriUtils: long H_MARK>;
+        $l17 = $l15 | $l16;
+        <sun.nio.fs.UnixUriUtils: long H_UNRESERVED> = $l17;
+        $l18 = <sun.nio.fs.UnixUriUtils: long L_UNRESERVED>;
+        $l19 = staticinvoke <sun.nio.fs.UnixUriUtils: long lowMask(java.lang.String)>(":@&=+$,");
+        $l20 = $l18 | $l19;
+        <sun.nio.fs.UnixUriUtils: long L_PCHAR> = $l20;
+        $l21 = <sun.nio.fs.UnixUriUtils: long H_UNRESERVED>;
+        $l22 = staticinvoke <sun.nio.fs.UnixUriUtils: long highMask(java.lang.String)>(":@&=+$,");
+        $l23 = $l21 | $l22;
+        <sun.nio.fs.UnixUriUtils: long H_PCHAR> = $l23;
+        $l24 = <sun.nio.fs.UnixUriUtils: long L_PCHAR>;
+        $l25 = staticinvoke <sun.nio.fs.UnixUriUtils: long lowMask(java.lang.String)>(";/");
+        $l26 = $l24 | $l25;
+        <sun.nio.fs.UnixUriUtils: long L_PATH> = $l26;
+        $l27 = <sun.nio.fs.UnixUriUtils: long H_PCHAR>;
+        $l28 = staticinvoke <sun.nio.fs.UnixUriUtils: long highMask(java.lang.String)>(";/");
+        $l29 = $l27 | $l28;
+        <sun.nio.fs.UnixUriUtils: long H_PATH> = $l29;
+        $r1 = newarray (char)[16];
+        $r1[0] = 48;
+        $r1[1] = 49;
+        $r1[2] = 50;
+        $r1[3] = 51;
+        $r1[4] = 52;
+        $r1[5] = 53;
+        $r1[6] = 54;
+        $r1[7] = 55;
+        $r1[8] = 56;
+        $r1[9] = 57;
+        $r1[10] = 65;
+        $r1[11] = 66;
+        $r1[12] = 67;
+        $r1[13] = 68;
+        $r1[14] = 69;
+        $r1[15] = 70;
+        <sun.nio.fs.UnixUriUtils: char[] hexDigits> = $r1;
+        return;
+    }
+}

@@ -1,0 +1,658 @@
+class java.lang.ThreadLocal$ThreadLocalMap extends java.lang.Object
+{
+    private static final int INITIAL_CAPACITY;
+    private java.lang.ThreadLocal$ThreadLocalMap$Entry[] table;
+    private int size;
+    private int threshold;
+
+    private void setThreshold(int)
+    {
+        java.lang.ThreadLocal$ThreadLocalMap r0;
+        int i0, $i1, $i2;
+
+        r0 := @this: java.lang.ThreadLocal$ThreadLocalMap;
+        i0 := @parameter0: int;
+        $i1 = i0 * 2;
+        $i2 = $i1 / 3;
+        r0.<java.lang.ThreadLocal$ThreadLocalMap: int threshold> = $i2;
+        return;
+    }
+
+    private static int nextIndex(int, int)
+    {
+        int i0, i1, $i2, $i3;
+
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $i2 = i0 + 1;
+        if $i2 >= i1 goto label0;
+
+        $i3 = i0 + 1;
+        goto label1;
+
+     label0:
+        $i3 = 0;
+
+     label1:
+        return $i3;
+    }
+
+    private static int prevIndex(int, int)
+    {
+        int i0, i1, $i2, $i3;
+
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $i2 = i0 - 1;
+        if $i2 < 0 goto label0;
+
+        $i3 = i0 - 1;
+        goto label1;
+
+     label0:
+        $i3 = i1 - 1;
+
+     label1:
+        return $i3;
+    }
+
+    void <init>(java.lang.ThreadLocal, java.lang.Object)
+    {
+        java.lang.ThreadLocal$ThreadLocalMap r0;
+        java.lang.ThreadLocal r1;
+        java.lang.Object r2;
+        int i0, $i1;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry $r3;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry[] $r4, $r5;
+
+        r0 := @this: java.lang.ThreadLocal$ThreadLocalMap;
+        r1 := @parameter0: java.lang.ThreadLocal;
+        r2 := @parameter1: java.lang.Object;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.lang.ThreadLocal$ThreadLocalMap: int size> = 0;
+        $r4 = newarray (java.lang.ThreadLocal$ThreadLocalMap$Entry)[16];
+        r0.<java.lang.ThreadLocal$ThreadLocalMap: java.lang.ThreadLocal$ThreadLocalMap$Entry[] table> = $r4;
+        $i1 = staticinvoke <java.lang.ThreadLocal: int access$400(java.lang.ThreadLocal)>(r1);
+        i0 = $i1 & 15;
+        $r5 = r0.<java.lang.ThreadLocal$ThreadLocalMap: java.lang.ThreadLocal$ThreadLocalMap$Entry[] table>;
+        $r3 = new java.lang.ThreadLocal$ThreadLocalMap$Entry;
+        specialinvoke $r3.<java.lang.ThreadLocal$ThreadLocalMap$Entry: void <init>(java.lang.ThreadLocal,java.lang.Object)>(r1, r2);
+        $r5[i0] = $r3;
+        r0.<java.lang.ThreadLocal$ThreadLocalMap: int size> = 1;
+        specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: void setThreshold(int)>(16);
+        return;
+    }
+
+    private void <init>(java.lang.ThreadLocal$ThreadLocalMap)
+    {
+        java.lang.ThreadLocal$ThreadLocalMap r0, r1;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry[] r2, $r7, $r11, $r13;
+        int i0, i1, i2, $i3, $i4, $i5, $i6;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry r3, r6, $r10, $r12;
+        java.lang.ThreadLocal r4;
+        java.lang.Object r5, $r8, $r9;
+
+        r0 := @this: java.lang.ThreadLocal$ThreadLocalMap;
+        r1 := @parameter0: java.lang.ThreadLocal$ThreadLocalMap;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.lang.ThreadLocal$ThreadLocalMap: int size> = 0;
+        r2 = r1.<java.lang.ThreadLocal$ThreadLocalMap: java.lang.ThreadLocal$ThreadLocalMap$Entry[] table>;
+        i0 = lengthof r2;
+        specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: void setThreshold(int)>(i0);
+        $r7 = newarray (java.lang.ThreadLocal$ThreadLocalMap$Entry)[i0];
+        r0.<java.lang.ThreadLocal$ThreadLocalMap: java.lang.ThreadLocal$ThreadLocalMap$Entry[] table> = $r7;
+        i1 = 0;
+
+     label0:
+        if i1 >= i0 goto label4;
+
+        r3 = r2[i1];
+        if r3 == null goto label3;
+
+        $r8 = virtualinvoke r3.<java.lang.ThreadLocal$ThreadLocalMap$Entry: java.lang.Object get()>();
+        r4 = (java.lang.ThreadLocal) $r8;
+        if r4 == null goto label3;
+
+        $r9 = r3.<java.lang.ThreadLocal$ThreadLocalMap$Entry: java.lang.Object value>;
+        r5 = virtualinvoke r4.<java.lang.ThreadLocal: java.lang.Object childValue(java.lang.Object)>($r9);
+        $r10 = new java.lang.ThreadLocal$ThreadLocalMap$Entry;
+        specialinvoke $r10.<java.lang.ThreadLocal$ThreadLocalMap$Entry: void <init>(java.lang.ThreadLocal,java.lang.Object)>(r4, r5);
+        r6 = $r10;
+        $i3 = staticinvoke <java.lang.ThreadLocal: int access$400(java.lang.ThreadLocal)>(r4);
+        $i4 = i0 - 1;
+        i2 = $i3 & $i4;
+
+     label1:
+        $r11 = r0.<java.lang.ThreadLocal$ThreadLocalMap: java.lang.ThreadLocal$ThreadLocalMap$Entry[] table>;
+        $r12 = $r11[i2];
+        if $r12 == null goto label2;
+
+        i2 = staticinvoke <java.lang.ThreadLocal$ThreadLocalMap: int nextIndex(int,int)>(i2, i0);
+        goto label1;
+
+     label2:
+        $r13 = r0.<java.lang.ThreadLocal$ThreadLocalMap: java.lang.ThreadLocal$ThreadLocalMap$Entry[] table>;
+        $r13[i2] = r6;
+        $i5 = r0.<java.lang.ThreadLocal$ThreadLocalMap: int size>;
+        $i6 = $i5 + 1;
+        r0.<java.lang.ThreadLocal$ThreadLocalMap: int size> = $i6;
+
+     label3:
+        i1 = i1 + 1;
+        goto label0;
+
+     label4:
+        return;
+    }
+
+    private java.lang.ThreadLocal$ThreadLocalMap$Entry getEntry(java.lang.ThreadLocal)
+    {
+        java.lang.ThreadLocal$ThreadLocalMap r0;
+        java.lang.ThreadLocal r1;
+        int i0, $i1, $i2, $i3;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry r2, $r6;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry[] $r3, $r4;
+        java.lang.Object $r5;
+
+        r0 := @this: java.lang.ThreadLocal$ThreadLocalMap;
+        r1 := @parameter0: java.lang.ThreadLocal;
+        $i1 = staticinvoke <java.lang.ThreadLocal: int access$400(java.lang.ThreadLocal)>(r1);
+        $r3 = r0.<java.lang.ThreadLocal$ThreadLocalMap: java.lang.ThreadLocal$ThreadLocalMap$Entry[] table>;
+        $i2 = lengthof $r3;
+        $i3 = $i2 - 1;
+        i0 = $i1 & $i3;
+        $r4 = r0.<java.lang.ThreadLocal$ThreadLocalMap: java.lang.ThreadLocal$ThreadLocalMap$Entry[] table>;
+        r2 = $r4[i0];
+        if r2 == null goto label0;
+
+        $r5 = virtualinvoke r2.<java.lang.ThreadLocal$ThreadLocalMap$Entry: java.lang.Object get()>();
+        if $r5 != r1 goto label0;
+
+        return r2;
+
+     label0:
+        $r6 = specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: java.lang.ThreadLocal$ThreadLocalMap$Entry getEntryAfterMiss(java.lang.ThreadLocal,int,java.lang.ThreadLocal$ThreadLocalMap$Entry)>(r1, i0, r2);
+        return $r6;
+    }
+
+    private java.lang.ThreadLocal$ThreadLocalMap$Entry getEntryAfterMiss(java.lang.ThreadLocal, int, java.lang.ThreadLocal$ThreadLocalMap$Entry)
+    {
+        java.lang.ThreadLocal$ThreadLocalMap r0;
+        java.lang.ThreadLocal r1, r4;
+        int i0, i1;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry r2;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry[] r3;
+        java.lang.Object $r5;
+
+        r0 := @this: java.lang.ThreadLocal$ThreadLocalMap;
+        r1 := @parameter0: java.lang.ThreadLocal;
+        i0 := @parameter1: int;
+        r2 := @parameter2: java.lang.ThreadLocal$ThreadLocalMap$Entry;
+        r3 = r0.<java.lang.ThreadLocal$ThreadLocalMap: java.lang.ThreadLocal$ThreadLocalMap$Entry[] table>;
+        i1 = lengthof r3;
+
+     label0:
+        if r2 == null goto label4;
+
+        $r5 = virtualinvoke r2.<java.lang.ThreadLocal$ThreadLocalMap$Entry: java.lang.Object get()>();
+        r4 = (java.lang.ThreadLocal) $r5;
+        if r4 != r1 goto label1;
+
+        return r2;
+
+     label1:
+        if r4 != null goto label2;
+
+        specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: int expungeStaleEntry(int)>(i0);
+        goto label3;
+
+     label2:
+        i0 = staticinvoke <java.lang.ThreadLocal$ThreadLocalMap: int nextIndex(int,int)>(i0, i1);
+
+     label3:
+        r2 = r3[i0];
+        goto label0;
+
+     label4:
+        return null;
+    }
+
+    private void set(java.lang.ThreadLocal, java.lang.Object)
+    {
+        java.lang.ThreadLocal$ThreadLocalMap r0;
+        java.lang.ThreadLocal r1, r5;
+        java.lang.Object r2, $r6;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry[] r3;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, i7, $i8;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry r4, $r7;
+        boolean $z0;
+
+        r0 := @this: java.lang.ThreadLocal$ThreadLocalMap;
+        r1 := @parameter0: java.lang.ThreadLocal;
+        r2 := @parameter1: java.lang.Object;
+        r3 = r0.<java.lang.ThreadLocal$ThreadLocalMap: java.lang.ThreadLocal$ThreadLocalMap$Entry[] table>;
+        i0 = lengthof r3;
+        $i2 = staticinvoke <java.lang.ThreadLocal: int access$400(java.lang.ThreadLocal)>(r1);
+        $i3 = i0 - 1;
+        i1 = $i2 & $i3;
+        r4 = r3[i1];
+
+     label0:
+        if r4 == null goto label3;
+
+        $r6 = virtualinvoke r4.<java.lang.ThreadLocal$ThreadLocalMap$Entry: java.lang.Object get()>();
+        r5 = (java.lang.ThreadLocal) $r6;
+        if r5 != r1 goto label1;
+
+        r4.<java.lang.ThreadLocal$ThreadLocalMap$Entry: java.lang.Object value> = r2;
+        return;
+
+     label1:
+        if r5 != null goto label2;
+
+        specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: void replaceStaleEntry(java.lang.ThreadLocal,java.lang.Object,int)>(r1, r2, i1);
+        return;
+
+     label2:
+        $i4 = staticinvoke <java.lang.ThreadLocal$ThreadLocalMap: int nextIndex(int,int)>(i1, i0);
+        i1 = $i4;
+        r4 = r3[$i4];
+        goto label0;
+
+     label3:
+        $r7 = new java.lang.ThreadLocal$ThreadLocalMap$Entry;
+        specialinvoke $r7.<java.lang.ThreadLocal$ThreadLocalMap$Entry: void <init>(java.lang.ThreadLocal,java.lang.Object)>(r1, r2);
+        r3[i1] = $r7;
+        $i5 = r0.<java.lang.ThreadLocal$ThreadLocalMap: int size>;
+        $i6 = $i5 + 1;
+        r0.<java.lang.ThreadLocal$ThreadLocalMap: int size> = $i6;
+        i7 = $i6;
+        $z0 = specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: boolean cleanSomeSlots(int,int)>(i1, i7);
+        if $z0 != 0 goto label4;
+
+        $i8 = r0.<java.lang.ThreadLocal$ThreadLocalMap: int threshold>;
+        if i7 < $i8 goto label4;
+
+        specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: void rehash()>();
+
+     label4:
+        return;
+    }
+
+    private void remove(java.lang.ThreadLocal)
+    {
+        java.lang.ThreadLocal$ThreadLocalMap r0;
+        java.lang.ThreadLocal r1;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry[] r2;
+        int i0, i1, $i2, $i3, $i5;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry r3;
+        java.lang.Object $r4;
+
+        r0 := @this: java.lang.ThreadLocal$ThreadLocalMap;
+        r1 := @parameter0: java.lang.ThreadLocal;
+        r2 = r0.<java.lang.ThreadLocal$ThreadLocalMap: java.lang.ThreadLocal$ThreadLocalMap$Entry[] table>;
+        i0 = lengthof r2;
+        $i2 = staticinvoke <java.lang.ThreadLocal: int access$400(java.lang.ThreadLocal)>(r1);
+        $i3 = i0 - 1;
+        i1 = $i2 & $i3;
+        r3 = r2[i1];
+
+     label0:
+        if r3 == null goto label2;
+
+        $r4 = virtualinvoke r3.<java.lang.ThreadLocal$ThreadLocalMap$Entry: java.lang.Object get()>();
+        if $r4 != r1 goto label1;
+
+        virtualinvoke r3.<java.lang.ThreadLocal$ThreadLocalMap$Entry: void clear()>();
+        specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: int expungeStaleEntry(int)>(i1);
+        return;
+
+     label1:
+        $i5 = staticinvoke <java.lang.ThreadLocal$ThreadLocalMap: int nextIndex(int,int)>(i1, i0);
+        i1 = $i5;
+        r3 = r2[$i5];
+        goto label0;
+
+     label2:
+        return;
+    }
+
+    private void replaceStaleEntry(java.lang.ThreadLocal, java.lang.Object, int)
+    {
+        java.lang.ThreadLocal$ThreadLocalMap r0;
+        java.lang.ThreadLocal r1, r5;
+        java.lang.Object r2, $r7, $r10;
+        int i0, i1, i2, i3, i4, $i5, $i6;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry[] r3;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry r4, $r6, $r8, r9, $r11, $r12, $r13;
+
+        r0 := @this: java.lang.ThreadLocal$ThreadLocalMap;
+        r1 := @parameter0: java.lang.ThreadLocal;
+        r2 := @parameter1: java.lang.Object;
+        i0 := @parameter2: int;
+        r3 = r0.<java.lang.ThreadLocal$ThreadLocalMap: java.lang.ThreadLocal$ThreadLocalMap$Entry[] table>;
+        i1 = lengthof r3;
+        i2 = i0;
+        i3 = staticinvoke <java.lang.ThreadLocal$ThreadLocalMap: int prevIndex(int,int)>(i0, i1);
+
+     label0:
+        $r6 = r3[i3];
+        r4 = $r6;
+        if $r6 == null goto label2;
+
+        $r7 = virtualinvoke r4.<java.lang.ThreadLocal$ThreadLocalMap$Entry: java.lang.Object get()>();
+        if $r7 != null goto label1;
+
+        i2 = i3;
+
+     label1:
+        i3 = staticinvoke <java.lang.ThreadLocal$ThreadLocalMap: int prevIndex(int,int)>(i3, i1);
+        goto label0;
+
+     label2:
+        i4 = staticinvoke <java.lang.ThreadLocal$ThreadLocalMap: int nextIndex(int,int)>(i0, i1);
+
+     label3:
+        $r8 = r3[i4];
+        r9 = $r8;
+        if $r8 == null goto label7;
+
+        $r10 = virtualinvoke r9.<java.lang.ThreadLocal$ThreadLocalMap$Entry: java.lang.Object get()>();
+        r5 = (java.lang.ThreadLocal) $r10;
+        if r5 != r1 goto label5;
+
+        r9.<java.lang.ThreadLocal$ThreadLocalMap$Entry: java.lang.Object value> = r2;
+        $r11 = r3[i0];
+        r3[i4] = $r11;
+        r3[i0] = r9;
+        if i2 != i0 goto label4;
+
+        i2 = i4;
+
+     label4:
+        $i5 = specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: int expungeStaleEntry(int)>(i2);
+        specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: boolean cleanSomeSlots(int,int)>($i5, i1);
+        return;
+
+     label5:
+        if r5 != null goto label6;
+
+        if i2 != i0 goto label6;
+
+        i2 = i4;
+
+     label6:
+        i4 = staticinvoke <java.lang.ThreadLocal$ThreadLocalMap: int nextIndex(int,int)>(i4, i1);
+        goto label3;
+
+     label7:
+        $r12 = r3[i0];
+        $r12.<java.lang.ThreadLocal$ThreadLocalMap$Entry: java.lang.Object value> = null;
+        $r13 = new java.lang.ThreadLocal$ThreadLocalMap$Entry;
+        specialinvoke $r13.<java.lang.ThreadLocal$ThreadLocalMap$Entry: void <init>(java.lang.ThreadLocal,java.lang.Object)>(r1, r2);
+        r3[i0] = $r13;
+        if i2 == i0 goto label8;
+
+        $i6 = specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: int expungeStaleEntry(int)>(i2);
+        specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: boolean cleanSomeSlots(int,int)>($i6, i1);
+
+     label8:
+        return;
+    }
+
+    private int expungeStaleEntry(int)
+    {
+        java.lang.ThreadLocal$ThreadLocalMap r0;
+        int i0, i1, i2, i3, $i4, $i5, $i6, $i7, $i8, $i9;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry[] r1;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry r2, $r4, $r6, $r9;
+        java.lang.ThreadLocal r3;
+        java.lang.Object $r7;
+
+        r0 := @this: java.lang.ThreadLocal$ThreadLocalMap;
+        i0 := @parameter0: int;
+        r1 = r0.<java.lang.ThreadLocal$ThreadLocalMap: java.lang.ThreadLocal$ThreadLocalMap$Entry[] table>;
+        i1 = lengthof r1;
+        $r4 = r1[i0];
+        $r4.<java.lang.ThreadLocal$ThreadLocalMap$Entry: java.lang.Object value> = null;
+        r1[i0] = null;
+        $i4 = r0.<java.lang.ThreadLocal$ThreadLocalMap: int size>;
+        $i5 = $i4 - 1;
+        r0.<java.lang.ThreadLocal$ThreadLocalMap: int size> = $i5;
+        i2 = staticinvoke <java.lang.ThreadLocal$ThreadLocalMap: int nextIndex(int,int)>(i0, i1);
+
+     label0:
+        $r6 = r1[i2];
+        r2 = $r6;
+        if $r6 == null goto label5;
+
+        $r7 = virtualinvoke r2.<java.lang.ThreadLocal$ThreadLocalMap$Entry: java.lang.Object get()>();
+        r3 = (java.lang.ThreadLocal) $r7;
+        if r3 != null goto label1;
+
+        r2.<java.lang.ThreadLocal$ThreadLocalMap$Entry: java.lang.Object value> = null;
+        r1[i2] = null;
+        $i6 = r0.<java.lang.ThreadLocal$ThreadLocalMap: int size>;
+        $i7 = $i6 - 1;
+        r0.<java.lang.ThreadLocal$ThreadLocalMap: int size> = $i7;
+        goto label4;
+
+     label1:
+        $i8 = staticinvoke <java.lang.ThreadLocal: int access$400(java.lang.ThreadLocal)>(r3);
+        $i9 = i1 - 1;
+        i3 = $i8 & $i9;
+        if i3 == i2 goto label4;
+
+        r1[i2] = null;
+
+     label2:
+        $r9 = r1[i3];
+        if $r9 == null goto label3;
+
+        i3 = staticinvoke <java.lang.ThreadLocal$ThreadLocalMap: int nextIndex(int,int)>(i3, i1);
+        goto label2;
+
+     label3:
+        r1[i3] = r2;
+
+     label4:
+        i2 = staticinvoke <java.lang.ThreadLocal$ThreadLocalMap: int nextIndex(int,int)>(i2, i1);
+        goto label0;
+
+     label5:
+        return i2;
+    }
+
+    private boolean cleanSomeSlots(int, int)
+    {
+        java.lang.ThreadLocal$ThreadLocalMap r0;
+        int i0, i1, i2, $i3;
+        boolean z0;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry[] r1;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry r2;
+        java.lang.Object $r3;
+
+        r0 := @this: java.lang.ThreadLocal$ThreadLocalMap;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        z0 = 0;
+        r1 = r0.<java.lang.ThreadLocal$ThreadLocalMap: java.lang.ThreadLocal$ThreadLocalMap$Entry[] table>;
+        i2 = lengthof r1;
+
+     label0:
+        i0 = staticinvoke <java.lang.ThreadLocal$ThreadLocalMap: int nextIndex(int,int)>(i0, i2);
+        r2 = r1[i0];
+        if r2 == null goto label1;
+
+        $r3 = virtualinvoke r2.<java.lang.ThreadLocal$ThreadLocalMap$Entry: java.lang.Object get()>();
+        if $r3 != null goto label1;
+
+        i1 = i2;
+        z0 = 1;
+        i0 = specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: int expungeStaleEntry(int)>(i0);
+
+     label1:
+        $i3 = i1 >>> 1;
+        i1 = $i3;
+        if $i3 != 0 goto label0;
+
+        return z0;
+    }
+
+    private void rehash()
+    {
+        java.lang.ThreadLocal$ThreadLocalMap r0;
+        int $i0, $i1, $i2, $i3, $i4;
+
+        r0 := @this: java.lang.ThreadLocal$ThreadLocalMap;
+        specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: void expungeStaleEntries()>();
+        $i0 = r0.<java.lang.ThreadLocal$ThreadLocalMap: int size>;
+        $i1 = r0.<java.lang.ThreadLocal$ThreadLocalMap: int threshold>;
+        $i2 = r0.<java.lang.ThreadLocal$ThreadLocalMap: int threshold>;
+        $i3 = $i2 / 4;
+        $i4 = $i1 - $i3;
+        if $i0 < $i4 goto label0;
+
+        specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: void resize()>();
+
+     label0:
+        return;
+    }
+
+    private void resize()
+    {
+        java.lang.ThreadLocal$ThreadLocalMap r0;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry[] r1, r2;
+        int i0, i1, i2, i3, i4, $i5, $i6;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry r3, $r6;
+        java.lang.ThreadLocal r4;
+        java.lang.Object $r5;
+
+        r0 := @this: java.lang.ThreadLocal$ThreadLocalMap;
+        r1 = r0.<java.lang.ThreadLocal$ThreadLocalMap: java.lang.ThreadLocal$ThreadLocalMap$Entry[] table>;
+        i0 = lengthof r1;
+        i1 = i0 * 2;
+        r2 = newarray (java.lang.ThreadLocal$ThreadLocalMap$Entry)[i1];
+        i2 = 0;
+        i3 = 0;
+
+     label0:
+        if i3 >= i0 goto label5;
+
+        r3 = r1[i3];
+        if r3 == null goto label4;
+
+        $r5 = virtualinvoke r3.<java.lang.ThreadLocal$ThreadLocalMap$Entry: java.lang.Object get()>();
+        r4 = (java.lang.ThreadLocal) $r5;
+        if r4 != null goto label1;
+
+        r3.<java.lang.ThreadLocal$ThreadLocalMap$Entry: java.lang.Object value> = null;
+        goto label4;
+
+     label1:
+        $i5 = staticinvoke <java.lang.ThreadLocal: int access$400(java.lang.ThreadLocal)>(r4);
+        $i6 = i1 - 1;
+        i4 = $i5 & $i6;
+
+     label2:
+        $r6 = r2[i4];
+        if $r6 == null goto label3;
+
+        i4 = staticinvoke <java.lang.ThreadLocal$ThreadLocalMap: int nextIndex(int,int)>(i4, i1);
+        goto label2;
+
+     label3:
+        r2[i4] = r3;
+        i2 = i2 + 1;
+
+     label4:
+        i3 = i3 + 1;
+        goto label0;
+
+     label5:
+        specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: void setThreshold(int)>(i1);
+        r0.<java.lang.ThreadLocal$ThreadLocalMap: int size> = i2;
+        r0.<java.lang.ThreadLocal$ThreadLocalMap: java.lang.ThreadLocal$ThreadLocalMap$Entry[] table> = r2;
+        return;
+    }
+
+    private void expungeStaleEntries()
+    {
+        java.lang.ThreadLocal$ThreadLocalMap r0;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry[] r1;
+        int i0, i1;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry r2;
+        java.lang.Object $r3;
+
+        r0 := @this: java.lang.ThreadLocal$ThreadLocalMap;
+        r1 = r0.<java.lang.ThreadLocal$ThreadLocalMap: java.lang.ThreadLocal$ThreadLocalMap$Entry[] table>;
+        i0 = lengthof r1;
+        i1 = 0;
+
+     label0:
+        if i1 >= i0 goto label2;
+
+        r2 = r1[i1];
+        if r2 == null goto label1;
+
+        $r3 = virtualinvoke r2.<java.lang.ThreadLocal$ThreadLocalMap$Entry: java.lang.Object get()>();
+        if $r3 != null goto label1;
+
+        specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: int expungeStaleEntry(int)>(i1);
+
+     label1:
+        i1 = i1 + 1;
+        goto label0;
+
+     label2:
+        return;
+    }
+
+    static java.lang.ThreadLocal$ThreadLocalMap$Entry access$000(java.lang.ThreadLocal$ThreadLocalMap, java.lang.ThreadLocal)
+    {
+        java.lang.ThreadLocal$ThreadLocalMap r0;
+        java.lang.ThreadLocal r1;
+        java.lang.ThreadLocal$ThreadLocalMap$Entry $r2;
+
+        r0 := @parameter0: java.lang.ThreadLocal$ThreadLocalMap;
+        r1 := @parameter1: java.lang.ThreadLocal;
+        $r2 = specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: java.lang.ThreadLocal$ThreadLocalMap$Entry getEntry(java.lang.ThreadLocal)>(r1);
+        return $r2;
+    }
+
+    static void access$100(java.lang.ThreadLocal$ThreadLocalMap, java.lang.ThreadLocal, java.lang.Object)
+    {
+        java.lang.ThreadLocal$ThreadLocalMap r0;
+        java.lang.ThreadLocal r1;
+        java.lang.Object r2;
+
+        r0 := @parameter0: java.lang.ThreadLocal$ThreadLocalMap;
+        r1 := @parameter1: java.lang.ThreadLocal;
+        r2 := @parameter2: java.lang.Object;
+        specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: void set(java.lang.ThreadLocal,java.lang.Object)>(r1, r2);
+        return;
+    }
+
+    static void access$200(java.lang.ThreadLocal$ThreadLocalMap, java.lang.ThreadLocal)
+    {
+        java.lang.ThreadLocal$ThreadLocalMap r0;
+        java.lang.ThreadLocal r1;
+
+        r0 := @parameter0: java.lang.ThreadLocal$ThreadLocalMap;
+        r1 := @parameter1: java.lang.ThreadLocal;
+        specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: void remove(java.lang.ThreadLocal)>(r1);
+        return;
+    }
+
+    void <init>(java.lang.ThreadLocal$ThreadLocalMap, java.lang.ThreadLocal$1)
+    {
+        java.lang.ThreadLocal$ThreadLocalMap r0, r1;
+        java.lang.ThreadLocal$1 r2;
+
+        r0 := @this: java.lang.ThreadLocal$ThreadLocalMap;
+        r1 := @parameter0: java.lang.ThreadLocal$ThreadLocalMap;
+        r2 := @parameter1: java.lang.ThreadLocal$1;
+        specialinvoke r0.<java.lang.ThreadLocal$ThreadLocalMap: void <init>(java.lang.ThreadLocal$ThreadLocalMap)>(r1);
+        return;
+    }
+}

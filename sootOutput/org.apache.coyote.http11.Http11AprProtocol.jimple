@@ -1,0 +1,679 @@
+public class org.apache.coyote.http11.Http11AprProtocol extends org.apache.coyote.http11.AbstractHttp11Protocol
+{
+    private static final org.apache.juli.logging.Log log;
+    private final org.apache.coyote.http11.Http11AprProtocol$Http11ConnectionHandler cHandler;
+
+    static void <clinit>()
+    {
+        org.apache.juli.logging.Log $r0;
+
+        $r0 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/coyote/http11/Http11AprProtocol");
+        <org.apache.coyote.http11.Http11AprProtocol: org.apache.juli.logging.Log log> = $r0;
+        return;
+    }
+
+    protected org.apache.juli.logging.Log getLog()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.juli.logging.Log $r1;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = <org.apache.coyote.http11.Http11AprProtocol: org.apache.juli.logging.Log log>;
+        return $r1;
+    }
+
+    protected org.apache.tomcat.util.net.AbstractEndpoint$Handler getHandler()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.coyote.http11.Http11AprProtocol$Http11ConnectionHandler $r1;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.coyote.http11.Http11AprProtocol$Http11ConnectionHandler cHandler>;
+        return $r1;
+    }
+
+    public boolean isAprRequired()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        return 1;
+    }
+
+    public void <init>()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AprEndpoint $r1, $r4;
+        org.apache.coyote.http11.Http11AprProtocol$Http11ConnectionHandler $r2, $r5;
+        org.apache.tomcat.util.net.AbstractEndpoint $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        specialinvoke r0.<org.apache.coyote.http11.AbstractHttp11Protocol: void <init>()>();
+        $r1 = new org.apache.tomcat.util.net.AprEndpoint;
+        specialinvoke $r1.<org.apache.tomcat.util.net.AprEndpoint: void <init>()>();
+        r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint> = $r1;
+        $r2 = new org.apache.coyote.http11.Http11AprProtocol$Http11ConnectionHandler;
+        specialinvoke $r2.<org.apache.coyote.http11.Http11AprProtocol$Http11ConnectionHandler: void <init>(org.apache.coyote.http11.Http11AprProtocol)>(r0);
+        r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.coyote.http11.Http11AprProtocol$Http11ConnectionHandler cHandler> = $r2;
+        $r3 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r4 = (org.apache.tomcat.util.net.AprEndpoint) $r3;
+        $r5 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.coyote.http11.Http11AprProtocol$Http11ConnectionHandler cHandler>;
+        virtualinvoke $r4.<org.apache.tomcat.util.net.AprEndpoint: void setHandler(org.apache.tomcat.util.net.AprEndpoint$Handler)>($r5);
+        virtualinvoke r0.<org.apache.coyote.http11.Http11AprProtocol: void setSoLinger(int)>(-1);
+        virtualinvoke r0.<org.apache.coyote.http11.Http11AprProtocol: void setSoTimeout(int)>(60000);
+        virtualinvoke r0.<org.apache.coyote.http11.Http11AprProtocol: void setTcpNoDelay(boolean)>(1);
+        return;
+    }
+
+    public boolean getUseSendfile()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+        boolean $z0;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        $z0 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: boolean getUseSendfile()>();
+        return $z0;
+    }
+
+    public void setUseSendfile(boolean)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        boolean z0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        z0 := @parameter0: boolean;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: void setUseSendfile(boolean)>(z0);
+        return;
+    }
+
+    public int getPollTime()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        $i0 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: int getPollTime()>();
+        return $i0;
+    }
+
+    public void setPollTime(int)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        int i0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        i0 := @parameter0: int;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: void setPollTime(int)>(i0);
+        return;
+    }
+
+    public void setPollerSize(int)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        int i0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        i0 := @parameter0: int;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        virtualinvoke $r1.<org.apache.tomcat.util.net.AbstractEndpoint: void setMaxConnections(int)>(i0);
+        return;
+    }
+
+    public int getPollerSize()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $i0 = virtualinvoke $r1.<org.apache.tomcat.util.net.AbstractEndpoint: int getMaxConnections()>();
+        return $i0;
+    }
+
+    public int getSendfileSize()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        $i0 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: int getSendfileSize()>();
+        return $i0;
+    }
+
+    public void setSendfileSize(int)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        int i0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        i0 := @parameter0: int;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: void setSendfileSize(int)>(i0);
+        return;
+    }
+
+    public void setSendfileThreadCount(int)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        int i0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        i0 := @parameter0: int;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: void setSendfileThreadCount(int)>(i0);
+        return;
+    }
+
+    public int getSendfileThreadCount()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        $i0 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: int getSendfileThreadCount()>();
+        return $i0;
+    }
+
+    public boolean getDeferAccept()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+        boolean $z0;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        $z0 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: boolean getDeferAccept()>();
+        return $z0;
+    }
+
+    public void setDeferAccept(boolean)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        boolean z0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        z0 := @parameter0: boolean;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: void setDeferAccept(boolean)>(z0);
+        return;
+    }
+
+    public java.lang.String getSSLProtocol()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String getSSLProtocol()>();
+        return $r3;
+    }
+
+    public void setSSLProtocol(java.lang.String)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        java.lang.String r1;
+        org.apache.tomcat.util.net.AbstractEndpoint $r2;
+        org.apache.tomcat.util.net.AprEndpoint $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        r1 := @parameter0: java.lang.String;
+        $r2 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r3 = (org.apache.tomcat.util.net.AprEndpoint) $r2;
+        virtualinvoke $r3.<org.apache.tomcat.util.net.AprEndpoint: void setSSLProtocol(java.lang.String)>(r1);
+        return;
+    }
+
+    public java.lang.String getSSLPassword()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String getSSLPassword()>();
+        return $r3;
+    }
+
+    public void setSSLPassword(java.lang.String)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        java.lang.String r1;
+        org.apache.tomcat.util.net.AbstractEndpoint $r2;
+        org.apache.tomcat.util.net.AprEndpoint $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        r1 := @parameter0: java.lang.String;
+        $r2 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r3 = (org.apache.tomcat.util.net.AprEndpoint) $r2;
+        virtualinvoke $r3.<org.apache.tomcat.util.net.AprEndpoint: void setSSLPassword(java.lang.String)>(r1);
+        return;
+    }
+
+    public java.lang.String getSSLCipherSuite()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String getSSLCipherSuite()>();
+        return $r3;
+    }
+
+    public void setSSLCipherSuite(java.lang.String)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        java.lang.String r1;
+        org.apache.tomcat.util.net.AbstractEndpoint $r2;
+        org.apache.tomcat.util.net.AprEndpoint $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        r1 := @parameter0: java.lang.String;
+        $r2 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r3 = (org.apache.tomcat.util.net.AprEndpoint) $r2;
+        virtualinvoke $r3.<org.apache.tomcat.util.net.AprEndpoint: void setSSLCipherSuite(java.lang.String)>(r1);
+        return;
+    }
+
+    public boolean getSSLHonorCipherOrder()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+        boolean $z0;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        $z0 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: boolean getSSLHonorCipherOrder()>();
+        return $z0;
+    }
+
+    public void setSSLHonorCipherOrder(boolean)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        boolean z0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        z0 := @parameter0: boolean;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: void setSSLHonorCipherOrder(boolean)>(z0);
+        return;
+    }
+
+    public java.lang.String getSSLCertificateFile()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String getSSLCertificateFile()>();
+        return $r3;
+    }
+
+    public void setSSLCertificateFile(java.lang.String)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        java.lang.String r1;
+        org.apache.tomcat.util.net.AbstractEndpoint $r2;
+        org.apache.tomcat.util.net.AprEndpoint $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        r1 := @parameter0: java.lang.String;
+        $r2 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r3 = (org.apache.tomcat.util.net.AprEndpoint) $r2;
+        virtualinvoke $r3.<org.apache.tomcat.util.net.AprEndpoint: void setSSLCertificateFile(java.lang.String)>(r1);
+        return;
+    }
+
+    public java.lang.String getSSLCertificateKeyFile()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String getSSLCertificateKeyFile()>();
+        return $r3;
+    }
+
+    public void setSSLCertificateKeyFile(java.lang.String)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        java.lang.String r1;
+        org.apache.tomcat.util.net.AbstractEndpoint $r2;
+        org.apache.tomcat.util.net.AprEndpoint $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        r1 := @parameter0: java.lang.String;
+        $r2 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r3 = (org.apache.tomcat.util.net.AprEndpoint) $r2;
+        virtualinvoke $r3.<org.apache.tomcat.util.net.AprEndpoint: void setSSLCertificateKeyFile(java.lang.String)>(r1);
+        return;
+    }
+
+    public java.lang.String getSSLCertificateChainFile()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String getSSLCertificateChainFile()>();
+        return $r3;
+    }
+
+    public void setSSLCertificateChainFile(java.lang.String)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        java.lang.String r1;
+        org.apache.tomcat.util.net.AbstractEndpoint $r2;
+        org.apache.tomcat.util.net.AprEndpoint $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        r1 := @parameter0: java.lang.String;
+        $r2 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r3 = (org.apache.tomcat.util.net.AprEndpoint) $r2;
+        virtualinvoke $r3.<org.apache.tomcat.util.net.AprEndpoint: void setSSLCertificateChainFile(java.lang.String)>(r1);
+        return;
+    }
+
+    public java.lang.String getSSLCACertificatePath()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String getSSLCACertificatePath()>();
+        return $r3;
+    }
+
+    public void setSSLCACertificatePath(java.lang.String)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        java.lang.String r1;
+        org.apache.tomcat.util.net.AbstractEndpoint $r2;
+        org.apache.tomcat.util.net.AprEndpoint $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        r1 := @parameter0: java.lang.String;
+        $r2 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r3 = (org.apache.tomcat.util.net.AprEndpoint) $r2;
+        virtualinvoke $r3.<org.apache.tomcat.util.net.AprEndpoint: void setSSLCACertificatePath(java.lang.String)>(r1);
+        return;
+    }
+
+    public java.lang.String getSSLCACertificateFile()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String getSSLCACertificateFile()>();
+        return $r3;
+    }
+
+    public void setSSLCACertificateFile(java.lang.String)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        java.lang.String r1;
+        org.apache.tomcat.util.net.AbstractEndpoint $r2;
+        org.apache.tomcat.util.net.AprEndpoint $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        r1 := @parameter0: java.lang.String;
+        $r2 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r3 = (org.apache.tomcat.util.net.AprEndpoint) $r2;
+        virtualinvoke $r3.<org.apache.tomcat.util.net.AprEndpoint: void setSSLCACertificateFile(java.lang.String)>(r1);
+        return;
+    }
+
+    public java.lang.String getSSLCARevocationPath()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String getSSLCARevocationPath()>();
+        return $r3;
+    }
+
+    public void setSSLCARevocationPath(java.lang.String)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        java.lang.String r1;
+        org.apache.tomcat.util.net.AbstractEndpoint $r2;
+        org.apache.tomcat.util.net.AprEndpoint $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        r1 := @parameter0: java.lang.String;
+        $r2 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r3 = (org.apache.tomcat.util.net.AprEndpoint) $r2;
+        virtualinvoke $r3.<org.apache.tomcat.util.net.AprEndpoint: void setSSLCARevocationPath(java.lang.String)>(r1);
+        return;
+    }
+
+    public java.lang.String getSSLCARevocationFile()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String getSSLCARevocationFile()>();
+        return $r3;
+    }
+
+    public void setSSLCARevocationFile(java.lang.String)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        java.lang.String r1;
+        org.apache.tomcat.util.net.AbstractEndpoint $r2;
+        org.apache.tomcat.util.net.AprEndpoint $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        r1 := @parameter0: java.lang.String;
+        $r2 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r3 = (org.apache.tomcat.util.net.AprEndpoint) $r2;
+        virtualinvoke $r3.<org.apache.tomcat.util.net.AprEndpoint: void setSSLCARevocationFile(java.lang.String)>(r1);
+        return;
+    }
+
+    public java.lang.String getSSLVerifyClient()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: java.lang.String getSSLVerifyClient()>();
+        return $r3;
+    }
+
+    public void setSSLVerifyClient(java.lang.String)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        java.lang.String r1;
+        org.apache.tomcat.util.net.AbstractEndpoint $r2;
+        org.apache.tomcat.util.net.AprEndpoint $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        r1 := @parameter0: java.lang.String;
+        $r2 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r3 = (org.apache.tomcat.util.net.AprEndpoint) $r2;
+        virtualinvoke $r3.<org.apache.tomcat.util.net.AprEndpoint: void setSSLVerifyClient(java.lang.String)>(r1);
+        return;
+    }
+
+    public int getSSLVerifyDepth()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        $i0 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: int getSSLVerifyDepth()>();
+        return $i0;
+    }
+
+    public void setSSLVerifyDepth(int)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        int i0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        i0 := @parameter0: int;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: void setSSLVerifyDepth(int)>(i0);
+        return;
+    }
+
+    public boolean getSSLDisableCompression()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+        boolean $z0;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        $z0 = virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: boolean getSSLDisableCompression()>();
+        return $z0;
+    }
+
+    public void setSSLDisableCompression(boolean)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        boolean z0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        org.apache.tomcat.util.net.AprEndpoint $r2;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        z0 := @parameter0: boolean;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = (org.apache.tomcat.util.net.AprEndpoint) $r1;
+        virtualinvoke $r2.<org.apache.tomcat.util.net.AprEndpoint: void setSSLDisableCompression(boolean)>(z0);
+        return;
+    }
+
+    protected java.lang.String getNamePrefix()
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+
+        r0 := @this: org.apache.coyote.http11.Http11AprProtocol;
+        return "http-apr";
+    }
+
+    static org.apache.juli.logging.Log access$0()
+    {
+        org.apache.juli.logging.Log $r0;
+
+        $r0 = <org.apache.coyote.http11.Http11AprProtocol: org.apache.juli.logging.Log log>;
+        return $r0;
+    }
+
+    static org.apache.tomcat.util.net.AbstractEndpoint access$1(org.apache.coyote.http11.Http11AprProtocol)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+
+        r0 := @parameter0: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        return $r1;
+    }
+
+    static org.apache.coyote.Adapter access$2(org.apache.coyote.http11.Http11AprProtocol)
+    {
+        org.apache.coyote.http11.Http11AprProtocol r0;
+        org.apache.coyote.Adapter $r1;
+
+        r0 := @parameter0: org.apache.coyote.http11.Http11AprProtocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11AprProtocol: org.apache.coyote.Adapter adapter>;
+        return $r1;
+    }
+}

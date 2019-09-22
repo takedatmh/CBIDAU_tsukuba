@@ -1,0 +1,92 @@
+public class sun.net.ResourceManager extends java.lang.Object
+{
+    private static final int DEFAULT_MAX_SOCKETS;
+    private static final int maxSockets;
+    private static final java.util.concurrent.atomic.AtomicInteger numSockets;
+
+    public void <init>()
+    {
+        sun.net.ResourceManager r0;
+
+        r0 := @this: sun.net.ResourceManager;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static void beforeUdpCreate() throws java.net.SocketException
+    {
+        java.lang.SecurityManager $r0;
+        int $i0, $i1;
+        java.util.concurrent.atomic.AtomicInteger $r1, $r2;
+        java.net.SocketException $r3;
+
+        $r0 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if $r0 == null goto label0;
+
+        $r1 = <sun.net.ResourceManager: java.util.concurrent.atomic.AtomicInteger numSockets>;
+        $i1 = virtualinvoke $r1.<java.util.concurrent.atomic.AtomicInteger: int incrementAndGet()>();
+        $i0 = <sun.net.ResourceManager: int maxSockets>;
+        if $i1 <= $i0 goto label0;
+
+        $r2 = <sun.net.ResourceManager: java.util.concurrent.atomic.AtomicInteger numSockets>;
+        virtualinvoke $r2.<java.util.concurrent.atomic.AtomicInteger: int decrementAndGet()>();
+        $r3 = new java.net.SocketException;
+        specialinvoke $r3.<java.net.SocketException: void <init>(java.lang.String)>("maximum number of DatagramSockets reached");
+        throw $r3;
+
+     label0:
+        return;
+    }
+
+    public static void afterUdpClose()
+    {
+        java.lang.SecurityManager $r0;
+        java.util.concurrent.atomic.AtomicInteger $r1;
+
+        $r0 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if $r0 == null goto label0;
+
+        $r1 = <sun.net.ResourceManager: java.util.concurrent.atomic.AtomicInteger numSockets>;
+        virtualinvoke $r1.<java.util.concurrent.atomic.AtomicInteger: int decrementAndGet()>();
+
+     label0:
+        return;
+    }
+
+    static void <clinit>()
+    {
+        sun.security.action.GetPropertyAction $r0;
+        java.lang.String r1;
+        int i0;
+        java.lang.NumberFormatException r2, $r4;
+        java.lang.Object $r3;
+        java.util.concurrent.atomic.AtomicInteger $r5;
+
+        $r0 = new sun.security.action.GetPropertyAction;
+        specialinvoke $r0.<sun.security.action.GetPropertyAction: void <init>(java.lang.String)>("sun.net.maxDatagramSockets");
+        $r3 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r0);
+        r1 = (java.lang.String) $r3;
+        i0 = 25;
+
+     label0:
+        if r1 == null goto label1;
+
+        i0 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>(r1);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r4 := @caughtexception;
+        r2 = $r4;
+
+     label3:
+        <sun.net.ResourceManager: int maxSockets> = i0;
+        $r5 = new java.util.concurrent.atomic.AtomicInteger;
+        specialinvoke $r5.<java.util.concurrent.atomic.AtomicInteger: void <init>(int)>(0);
+        <sun.net.ResourceManager: java.util.concurrent.atomic.AtomicInteger numSockets> = $r5;
+        return;
+
+        catch java.lang.NumberFormatException from label0 to label1 with label2;
+    }
+}

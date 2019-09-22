@@ -1,0 +1,1318 @@
+public class java.util.Vector extends java.util.AbstractList implements java.util.List, java.util.RandomAccess, java.lang.Cloneable, java.io.Serializable
+{
+    protected java.lang.Object[] elementData;
+    protected int elementCount;
+    protected int capacityIncrement;
+    private static final long serialVersionUID;
+    private static final int MAX_ARRAY_SIZE;
+
+    public void <init>(int, int)
+    {
+        java.util.Vector r0;
+        int i0, i1;
+        java.lang.StringBuilder $r1, $r3, $r4;
+        java.lang.IllegalArgumentException $r2;
+        java.lang.String $r5;
+        java.lang.Object[] $r6;
+
+        r0 := @this: java.util.Vector;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        specialinvoke r0.<java.util.AbstractList: void <init>()>();
+        if i0 >= 0 goto label0;
+
+        $r2 = new java.lang.IllegalArgumentException;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r3 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Illegal Capacity: ");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r5);
+        throw $r2;
+
+     label0:
+        $r6 = newarray (java.lang.Object)[i0];
+        r0.<java.util.Vector: java.lang.Object[] elementData> = $r6;
+        r0.<java.util.Vector: int capacityIncrement> = i1;
+        return;
+    }
+
+    public void <init>(int)
+    {
+        java.util.Vector r0;
+        int i0;
+
+        r0 := @this: java.util.Vector;
+        i0 := @parameter0: int;
+        specialinvoke r0.<java.util.Vector: void <init>(int,int)>(i0, 0);
+        return;
+    }
+
+    public void <init>()
+    {
+        java.util.Vector r0;
+
+        r0 := @this: java.util.Vector;
+        specialinvoke r0.<java.util.Vector: void <init>(int)>(10);
+        return;
+    }
+
+    public void <init>(java.util.Collection)
+    {
+        java.util.Vector r0;
+        java.util.Collection r1;
+        java.lang.Object[] $r2, $r3, $r4, $r6, $r7;
+        int $i0, $i1;
+        java.lang.Class $r5;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.util.Collection;
+        specialinvoke r0.<java.util.AbstractList: void <init>()>();
+        $r2 = interfaceinvoke r1.<java.util.Collection: java.lang.Object[] toArray()>();
+        r0.<java.util.Vector: java.lang.Object[] elementData> = $r2;
+        $r3 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i0 = lengthof $r3;
+        r0.<java.util.Vector: int elementCount> = $i0;
+        $r4 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $r5 = virtualinvoke $r4.<java.lang.Object: java.lang.Class getClass()>();
+        if $r5 == class "[Ljava/lang/Object;" goto label0;
+
+        $r6 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i1 = r0.<java.util.Vector: int elementCount>;
+        $r7 = staticinvoke <java.util.Arrays: java.lang.Object[] copyOf(java.lang.Object[],int,java.lang.Class)>($r6, $i1, class "[Ljava/lang/Object;");
+        r0.<java.util.Vector: java.lang.Object[] elementData> = $r7;
+
+     label0:
+        return;
+    }
+
+    public synchronized void copyInto(java.lang.Object[])
+    {
+        java.util.Vector r0;
+        java.lang.Object[] r1, $r2;
+        int $i0;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.lang.Object[];
+        $r2 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i0 = r0.<java.util.Vector: int elementCount>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r2, 0, r1, 0, $i0);
+        return;
+    }
+
+    public synchronized void trimToSize()
+    {
+        java.util.Vector r0;
+        int i0, $i1, $i2, $i3, $i4;
+        java.lang.Object[] $r2, $r3, $r4;
+
+        r0 := @this: java.util.Vector;
+        $i1 = r0.<java.util.Vector: int modCount>;
+        $i2 = $i1 + 1;
+        r0.<java.util.Vector: int modCount> = $i2;
+        $r2 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        i0 = lengthof $r2;
+        $i3 = r0.<java.util.Vector: int elementCount>;
+        if $i3 >= i0 goto label0;
+
+        $r3 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i4 = r0.<java.util.Vector: int elementCount>;
+        $r4 = staticinvoke <java.util.Arrays: java.lang.Object[] copyOf(java.lang.Object[],int)>($r3, $i4);
+        r0.<java.util.Vector: java.lang.Object[] elementData> = $r4;
+
+     label0:
+        return;
+    }
+
+    public synchronized void ensureCapacity(int)
+    {
+        java.util.Vector r0;
+        int i0, $i1, $i2;
+
+        r0 := @this: java.util.Vector;
+        i0 := @parameter0: int;
+        if i0 <= 0 goto label0;
+
+        $i1 = r0.<java.util.Vector: int modCount>;
+        $i2 = $i1 + 1;
+        r0.<java.util.Vector: int modCount> = $i2;
+        specialinvoke r0.<java.util.Vector: void ensureCapacityHelper(int)>(i0);
+
+     label0:
+        return;
+    }
+
+    private void ensureCapacityHelper(int)
+    {
+        java.util.Vector r0;
+        int i0, $i1, $i2;
+        java.lang.Object[] $r1;
+
+        r0 := @this: java.util.Vector;
+        i0 := @parameter0: int;
+        $r1 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i1 = lengthof $r1;
+        $i2 = i0 - $i1;
+        if $i2 <= 0 goto label0;
+
+        specialinvoke r0.<java.util.Vector: void grow(int)>(i0);
+
+     label0:
+        return;
+    }
+
+    private void grow(int)
+    {
+        java.util.Vector r0;
+        int i0, i1, i2, $i4, $i5, $i6, $i7;
+        java.lang.Object[] $r1, $r2, $r3;
+
+        r0 := @this: java.util.Vector;
+        i0 := @parameter0: int;
+        $r1 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        i1 = lengthof $r1;
+        $i4 = r0.<java.util.Vector: int capacityIncrement>;
+        if $i4 <= 0 goto label0;
+
+        $i5 = r0.<java.util.Vector: int capacityIncrement>;
+        goto label1;
+
+     label0:
+        $i5 = i1;
+
+     label1:
+        i2 = i1 + $i5;
+        $i6 = i2 - i0;
+        if $i6 >= 0 goto label2;
+
+        i2 = i0;
+
+     label2:
+        $i7 = i2 - 2147483639;
+        if $i7 <= 0 goto label3;
+
+        i2 = staticinvoke <java.util.Vector: int hugeCapacity(int)>(i0);
+
+     label3:
+        $r2 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $r3 = staticinvoke <java.util.Arrays: java.lang.Object[] copyOf(java.lang.Object[],int)>($r2, i2);
+        r0.<java.util.Vector: java.lang.Object[] elementData> = $r3;
+        return;
+    }
+
+    private static int hugeCapacity(int)
+    {
+        int i0, $i1;
+        java.lang.OutOfMemoryError $r0;
+
+        i0 := @parameter0: int;
+        if i0 >= 0 goto label0;
+
+        $r0 = new java.lang.OutOfMemoryError;
+        specialinvoke $r0.<java.lang.OutOfMemoryError: void <init>()>();
+        throw $r0;
+
+     label0:
+        if i0 <= 2147483639 goto label1;
+
+        $i1 = 2147483647;
+        goto label2;
+
+     label1:
+        $i1 = 2147483639;
+
+     label2:
+        return $i1;
+    }
+
+    public synchronized void setSize(int)
+    {
+        java.util.Vector r0;
+        int i0, i1, $i2, $i3, $i4, $i5;
+        java.lang.Object[] $r2;
+
+        r0 := @this: java.util.Vector;
+        i0 := @parameter0: int;
+        $i2 = r0.<java.util.Vector: int modCount>;
+        $i3 = $i2 + 1;
+        r0.<java.util.Vector: int modCount> = $i3;
+        $i4 = r0.<java.util.Vector: int elementCount>;
+        if i0 <= $i4 goto label0;
+
+        specialinvoke r0.<java.util.Vector: void ensureCapacityHelper(int)>(i0);
+        goto label2;
+
+     label0:
+        i1 = i0;
+
+     label1:
+        $i5 = r0.<java.util.Vector: int elementCount>;
+        if i1 >= $i5 goto label2;
+
+        $r2 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $r2[i1] = null;
+        i1 = i1 + 1;
+        goto label1;
+
+     label2:
+        r0.<java.util.Vector: int elementCount> = i0;
+        return;
+    }
+
+    public synchronized int capacity()
+    {
+        java.util.Vector r0;
+        java.lang.Object[] $r1;
+        int $i0;
+
+        r0 := @this: java.util.Vector;
+        $r1 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i0 = lengthof $r1;
+        return $i0;
+    }
+
+    public synchronized int size()
+    {
+        java.util.Vector r0;
+        int $i0;
+
+        r0 := @this: java.util.Vector;
+        $i0 = r0.<java.util.Vector: int elementCount>;
+        return $i0;
+    }
+
+    public synchronized boolean isEmpty()
+    {
+        java.util.Vector r0;
+        int $i0;
+        boolean $z0;
+
+        r0 := @this: java.util.Vector;
+        $i0 = r0.<java.util.Vector: int elementCount>;
+        if $i0 != 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public java.util.Enumeration elements()
+    {
+        java.util.Vector r0;
+        java.util.Vector$1 $r1;
+
+        r0 := @this: java.util.Vector;
+        $r1 = new java.util.Vector$1;
+        specialinvoke $r1.<java.util.Vector$1: void <init>(java.util.Vector)>(r0);
+        return $r1;
+    }
+
+    public boolean contains(java.lang.Object)
+    {
+        java.util.Vector r0;
+        java.lang.Object r1;
+        int $i0;
+        boolean $z0;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.lang.Object;
+        $i0 = virtualinvoke r0.<java.util.Vector: int indexOf(java.lang.Object,int)>(r1, 0);
+        if $i0 < 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public int indexOf(java.lang.Object)
+    {
+        java.util.Vector r0;
+        java.lang.Object r1;
+        int $i0;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.lang.Object;
+        $i0 = virtualinvoke r0.<java.util.Vector: int indexOf(java.lang.Object,int)>(r1, 0);
+        return $i0;
+    }
+
+    public synchronized int indexOf(java.lang.Object, int)
+    {
+        java.util.Vector r0;
+        java.lang.Object r1, $r3, $r5;
+        int i0, i1, $i2, i3, $i4;
+        java.lang.Object[] $r2, $r4;
+        boolean $z0;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.lang.Object;
+        i0 := @parameter1: int;
+        if r1 != null goto label3;
+
+        i1 = i0;
+
+     label0:
+        $i2 = r0.<java.util.Vector: int elementCount>;
+        if i1 >= $i2 goto label2;
+
+        $r2 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $r3 = $r2[i1];
+        if $r3 != null goto label1;
+
+        return i1;
+
+     label1:
+        i1 = i1 + 1;
+        goto label0;
+
+     label2:
+        goto label6;
+
+     label3:
+        i3 = i0;
+
+     label4:
+        $i4 = r0.<java.util.Vector: int elementCount>;
+        if i3 >= $i4 goto label6;
+
+        $r4 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $r5 = $r4[i3];
+        $z0 = virtualinvoke r1.<java.lang.Object: boolean equals(java.lang.Object)>($r5);
+        if $z0 == 0 goto label5;
+
+        return i3;
+
+     label5:
+        i3 = i3 + 1;
+        goto label4;
+
+     label6:
+        return -1;
+    }
+
+    public synchronized int lastIndexOf(java.lang.Object)
+    {
+        java.util.Vector r0;
+        java.lang.Object r1;
+        int $i0, $i1, $i2;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.lang.Object;
+        $i0 = r0.<java.util.Vector: int elementCount>;
+        $i1 = $i0 - 1;
+        $i2 = virtualinvoke r0.<java.util.Vector: int lastIndexOf(java.lang.Object,int)>(r1, $i1);
+        return $i2;
+    }
+
+    public synchronized int lastIndexOf(java.lang.Object, int)
+    {
+        java.util.Vector r0;
+        java.lang.Object r1, $r9, $r11;
+        int i0, i1, $i2, $i3, i4;
+        java.lang.StringBuilder $r2, $r4, $r5, $r6;
+        java.lang.IndexOutOfBoundsException $r3;
+        java.lang.String $r7;
+        java.lang.Object[] $r8, $r10;
+        boolean $z0;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.lang.Object;
+        i0 := @parameter1: int;
+        $i2 = r0.<java.util.Vector: int elementCount>;
+        if i0 < $i2 goto label0;
+
+        $r3 = new java.lang.IndexOutOfBoundsException;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+        $r4 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" >= ");
+        $i3 = r0.<java.util.Vector: int elementCount>;
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i3);
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r3.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r7);
+        throw $r3;
+
+     label0:
+        if r1 != null goto label4;
+
+        i1 = i0;
+
+     label1:
+        if i1 < 0 goto label3;
+
+        $r8 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $r9 = $r8[i1];
+        if $r9 != null goto label2;
+
+        return i1;
+
+     label2:
+        i1 = i1 + -1;
+        goto label1;
+
+     label3:
+        goto label7;
+
+     label4:
+        i4 = i0;
+
+     label5:
+        if i4 < 0 goto label7;
+
+        $r10 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $r11 = $r10[i4];
+        $z0 = virtualinvoke r1.<java.lang.Object: boolean equals(java.lang.Object)>($r11);
+        if $z0 == 0 goto label6;
+
+        return i4;
+
+     label6:
+        i4 = i4 + -1;
+        goto label5;
+
+     label7:
+        return -1;
+    }
+
+    public synchronized java.lang.Object elementAt(int)
+    {
+        java.util.Vector r0;
+        int i0, $i1, $i2;
+        java.lang.StringBuilder $r1, $r3, $r4, $r5;
+        java.lang.ArrayIndexOutOfBoundsException $r2;
+        java.lang.String $r6;
+        java.lang.Object $r7;
+
+        r0 := @this: java.util.Vector;
+        i0 := @parameter0: int;
+        $i1 = r0.<java.util.Vector: int elementCount>;
+        if i0 < $i1 goto label0;
+
+        $r2 = new java.lang.ArrayIndexOutOfBoundsException;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r3 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" >= ");
+        $i2 = r0.<java.util.Vector: int elementCount>;
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i2);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.ArrayIndexOutOfBoundsException: void <init>(java.lang.String)>($r6);
+        throw $r2;
+
+     label0:
+        $r7 = virtualinvoke r0.<java.util.Vector: java.lang.Object elementData(int)>(i0);
+        return $r7;
+    }
+
+    public synchronized java.lang.Object firstElement()
+    {
+        java.util.Vector r0;
+        int $i0;
+        java.util.NoSuchElementException $r1;
+        java.lang.Object $r2;
+
+        r0 := @this: java.util.Vector;
+        $i0 = r0.<java.util.Vector: int elementCount>;
+        if $i0 != 0 goto label0;
+
+        $r1 = new java.util.NoSuchElementException;
+        specialinvoke $r1.<java.util.NoSuchElementException: void <init>()>();
+        throw $r1;
+
+     label0:
+        $r2 = virtualinvoke r0.<java.util.Vector: java.lang.Object elementData(int)>(0);
+        return $r2;
+    }
+
+    public synchronized java.lang.Object lastElement()
+    {
+        java.util.Vector r0;
+        int $i0, $i1, $i2;
+        java.util.NoSuchElementException $r1;
+        java.lang.Object $r2;
+
+        r0 := @this: java.util.Vector;
+        $i0 = r0.<java.util.Vector: int elementCount>;
+        if $i0 != 0 goto label0;
+
+        $r1 = new java.util.NoSuchElementException;
+        specialinvoke $r1.<java.util.NoSuchElementException: void <init>()>();
+        throw $r1;
+
+     label0:
+        $i1 = r0.<java.util.Vector: int elementCount>;
+        $i2 = $i1 - 1;
+        $r2 = virtualinvoke r0.<java.util.Vector: java.lang.Object elementData(int)>($i2);
+        return $r2;
+    }
+
+    public synchronized void setElementAt(java.lang.Object, int)
+    {
+        java.util.Vector r0;
+        java.lang.Object r1;
+        int i0, $i1, $i2;
+        java.lang.StringBuilder $r2, $r4, $r5, $r6;
+        java.lang.ArrayIndexOutOfBoundsException $r3;
+        java.lang.String $r7;
+        java.lang.Object[] $r8;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.lang.Object;
+        i0 := @parameter1: int;
+        $i1 = r0.<java.util.Vector: int elementCount>;
+        if i0 < $i1 goto label0;
+
+        $r3 = new java.lang.ArrayIndexOutOfBoundsException;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+        $r4 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" >= ");
+        $i2 = r0.<java.util.Vector: int elementCount>;
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i2);
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r3.<java.lang.ArrayIndexOutOfBoundsException: void <init>(java.lang.String)>($r7);
+        throw $r3;
+
+     label0:
+        $r8 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $r8[i0] = r1;
+        return;
+    }
+
+    public synchronized void removeElementAt(int)
+    {
+        java.util.Vector r0;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11;
+        java.lang.ArrayIndexOutOfBoundsException $r2, $r8;
+        java.lang.StringBuilder $r3, $r4, $r5, $r6;
+        java.lang.String $r7;
+        java.lang.Object[] $r9, $r10, $r12;
+
+        r0 := @this: java.util.Vector;
+        i0 := @parameter0: int;
+        $i2 = r0.<java.util.Vector: int modCount>;
+        $i3 = $i2 + 1;
+        r0.<java.util.Vector: int modCount> = $i3;
+        $i4 = r0.<java.util.Vector: int elementCount>;
+        if i0 < $i4 goto label0;
+
+        $r2 = new java.lang.ArrayIndexOutOfBoundsException;
+        $r3 = new java.lang.StringBuilder;
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>()>();
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" >= ");
+        $i5 = r0.<java.util.Vector: int elementCount>;
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i5);
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.ArrayIndexOutOfBoundsException: void <init>(java.lang.String)>($r7);
+        throw $r2;
+
+     label0:
+        if i0 >= 0 goto label1;
+
+        $r8 = new java.lang.ArrayIndexOutOfBoundsException;
+        specialinvoke $r8.<java.lang.ArrayIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r8;
+
+     label1:
+        $i6 = r0.<java.util.Vector: int elementCount>;
+        $i7 = $i6 - i0;
+        i1 = $i7 - 1;
+        if i1 <= 0 goto label2;
+
+        $r9 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i8 = i0 + 1;
+        $r10 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r9, $i8, $r10, i0, i1);
+
+     label2:
+        $i9 = r0.<java.util.Vector: int elementCount>;
+        $i10 = $i9 - 1;
+        r0.<java.util.Vector: int elementCount> = $i10;
+        $r12 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i11 = r0.<java.util.Vector: int elementCount>;
+        $r12[$i11] = null;
+        return;
+    }
+
+    public synchronized void insertElementAt(java.lang.Object, int)
+    {
+        java.util.Vector r0;
+        java.lang.Object r1;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11;
+        java.lang.ArrayIndexOutOfBoundsException $r3;
+        java.lang.StringBuilder $r4, $r5, $r6, $r7;
+        java.lang.String $r8;
+        java.lang.Object[] $r9, $r10, $r11;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.lang.Object;
+        i0 := @parameter1: int;
+        $i1 = r0.<java.util.Vector: int modCount>;
+        $i2 = $i1 + 1;
+        r0.<java.util.Vector: int modCount> = $i2;
+        $i3 = r0.<java.util.Vector: int elementCount>;
+        if i0 <= $i3 goto label0;
+
+        $r3 = new java.lang.ArrayIndexOutOfBoundsException;
+        $r4 = new java.lang.StringBuilder;
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>()>();
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" > ");
+        $i4 = r0.<java.util.Vector: int elementCount>;
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i4);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r3.<java.lang.ArrayIndexOutOfBoundsException: void <init>(java.lang.String)>($r8);
+        throw $r3;
+
+     label0:
+        $i5 = r0.<java.util.Vector: int elementCount>;
+        $i6 = $i5 + 1;
+        specialinvoke r0.<java.util.Vector: void ensureCapacityHelper(int)>($i6);
+        $r9 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $r10 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i7 = i0 + 1;
+        $i8 = r0.<java.util.Vector: int elementCount>;
+        $i9 = $i8 - i0;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r9, i0, $r10, $i7, $i9);
+        $r11 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $r11[i0] = r1;
+        $i10 = r0.<java.util.Vector: int elementCount>;
+        $i11 = $i10 + 1;
+        r0.<java.util.Vector: int elementCount> = $i11;
+        return;
+    }
+
+    public synchronized void addElement(java.lang.Object)
+    {
+        java.util.Vector r0;
+        java.lang.Object r1;
+        int $i0, $i1, $i2, $i3, $i4, $i5;
+        java.lang.Object[] $r3;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.lang.Object;
+        $i1 = r0.<java.util.Vector: int modCount>;
+        $i2 = $i1 + 1;
+        r0.<java.util.Vector: int modCount> = $i2;
+        $i3 = r0.<java.util.Vector: int elementCount>;
+        $i4 = $i3 + 1;
+        specialinvoke r0.<java.util.Vector: void ensureCapacityHelper(int)>($i4);
+        $r3 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i0 = r0.<java.util.Vector: int elementCount>;
+        $i5 = $i0 + 1;
+        r0.<java.util.Vector: int elementCount> = $i5;
+        $r3[$i0] = r1;
+        return;
+    }
+
+    public synchronized boolean removeElement(java.lang.Object)
+    {
+        java.util.Vector r0;
+        java.lang.Object r1;
+        int i0, $i1, $i2;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.lang.Object;
+        $i1 = r0.<java.util.Vector: int modCount>;
+        $i2 = $i1 + 1;
+        r0.<java.util.Vector: int modCount> = $i2;
+        i0 = virtualinvoke r0.<java.util.Vector: int indexOf(java.lang.Object)>(r1);
+        if i0 < 0 goto label0;
+
+        virtualinvoke r0.<java.util.Vector: void removeElementAt(int)>(i0);
+        return 1;
+
+     label0:
+        return 0;
+    }
+
+    public synchronized void removeAllElements()
+    {
+        java.util.Vector r0;
+        int i0, $i1, $i2, $i3;
+        java.lang.Object[] $r2;
+
+        r0 := @this: java.util.Vector;
+        $i1 = r0.<java.util.Vector: int modCount>;
+        $i2 = $i1 + 1;
+        r0.<java.util.Vector: int modCount> = $i2;
+        i0 = 0;
+
+     label0:
+        $i3 = r0.<java.util.Vector: int elementCount>;
+        if i0 >= $i3 goto label1;
+
+        $r2 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $r2[i0] = null;
+        i0 = i0 + 1;
+        goto label0;
+
+     label1:
+        r0.<java.util.Vector: int elementCount> = 0;
+        return;
+    }
+
+    public synchronized java.lang.Object clone()
+    {
+        java.util.Vector r0, r1;
+        java.lang.Object $r2;
+        java.lang.Object[] $r3, $r4;
+        int $i0;
+        java.lang.CloneNotSupportedException $r6, r7;
+        java.lang.InternalError $r8;
+
+        r0 := @this: java.util.Vector;
+
+     label0:
+        $r2 = specialinvoke r0.<java.lang.Object: java.lang.Object clone()>();
+        r1 = (java.util.Vector) $r2;
+        $r3 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i0 = r0.<java.util.Vector: int elementCount>;
+        $r4 = staticinvoke <java.util.Arrays: java.lang.Object[] copyOf(java.lang.Object[],int)>($r3, $i0);
+        r1.<java.util.Vector: java.lang.Object[] elementData> = $r4;
+        r1.<java.util.Vector: int modCount> = 0;
+
+     label1:
+        return r1;
+
+     label2:
+        $r6 := @caughtexception;
+        r7 = $r6;
+        $r8 = new java.lang.InternalError;
+        specialinvoke $r8.<java.lang.InternalError: void <init>()>();
+        throw $r8;
+
+        catch java.lang.CloneNotSupportedException from label0 to label1 with label2;
+    }
+
+    public synchronized java.lang.Object[] toArray()
+    {
+        java.util.Vector r0;
+        java.lang.Object[] $r1, $r2;
+        int $i0;
+
+        r0 := @this: java.util.Vector;
+        $r1 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i0 = r0.<java.util.Vector: int elementCount>;
+        $r2 = staticinvoke <java.util.Arrays: java.lang.Object[] copyOf(java.lang.Object[],int)>($r1, $i0);
+        return $r2;
+    }
+
+    public synchronized java.lang.Object[] toArray(java.lang.Object[])
+    {
+        java.util.Vector r0;
+        java.lang.Object[] r1, $r2, $r4, $r5, $r6;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6;
+        java.lang.Class $r3;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.lang.Object[];
+        $i0 = lengthof r1;
+        $i1 = r0.<java.util.Vector: int elementCount>;
+        if $i0 >= $i1 goto label0;
+
+        $r2 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i2 = r0.<java.util.Vector: int elementCount>;
+        $r3 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+        $r4 = staticinvoke <java.util.Arrays: java.lang.Object[] copyOf(java.lang.Object[],int,java.lang.Class)>($r2, $i2, $r3);
+        $r5 = (java.lang.Object[]) $r4;
+        return $r5;
+
+     label0:
+        $r6 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i3 = r0.<java.util.Vector: int elementCount>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r6, 0, r1, 0, $i3);
+        $i4 = lengthof r1;
+        $i5 = r0.<java.util.Vector: int elementCount>;
+        if $i4 <= $i5 goto label1;
+
+        $i6 = r0.<java.util.Vector: int elementCount>;
+        r1[$i6] = null;
+
+     label1:
+        return r1;
+    }
+
+    java.lang.Object elementData(int)
+    {
+        java.util.Vector r0;
+        int i0;
+        java.lang.Object[] $r1;
+        java.lang.Object $r2;
+
+        r0 := @this: java.util.Vector;
+        i0 := @parameter0: int;
+        $r1 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $r2 = $r1[i0];
+        return $r2;
+    }
+
+    public synchronized java.lang.Object get(int)
+    {
+        java.util.Vector r0;
+        int i0, $i1;
+        java.lang.ArrayIndexOutOfBoundsException $r1;
+        java.lang.Object $r2;
+
+        r0 := @this: java.util.Vector;
+        i0 := @parameter0: int;
+        $i1 = r0.<java.util.Vector: int elementCount>;
+        if i0 < $i1 goto label0;
+
+        $r1 = new java.lang.ArrayIndexOutOfBoundsException;
+        specialinvoke $r1.<java.lang.ArrayIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r1;
+
+     label0:
+        $r2 = virtualinvoke r0.<java.util.Vector: java.lang.Object elementData(int)>(i0);
+        return $r2;
+    }
+
+    public synchronized java.lang.Object set(int, java.lang.Object)
+    {
+        java.util.Vector r0;
+        int i0, $i1;
+        java.lang.Object r1, r2;
+        java.lang.ArrayIndexOutOfBoundsException $r3;
+        java.lang.Object[] $r4;
+
+        r0 := @this: java.util.Vector;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.lang.Object;
+        $i1 = r0.<java.util.Vector: int elementCount>;
+        if i0 < $i1 goto label0;
+
+        $r3 = new java.lang.ArrayIndexOutOfBoundsException;
+        specialinvoke $r3.<java.lang.ArrayIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r3;
+
+     label0:
+        r2 = virtualinvoke r0.<java.util.Vector: java.lang.Object elementData(int)>(i0);
+        $r4 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $r4[i0] = r1;
+        return r2;
+    }
+
+    public synchronized boolean add(java.lang.Object)
+    {
+        java.util.Vector r0;
+        java.lang.Object r1;
+        int $i0, $i1, $i2, $i3, $i4, $i5;
+        java.lang.Object[] $r3;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.lang.Object;
+        $i1 = r0.<java.util.Vector: int modCount>;
+        $i2 = $i1 + 1;
+        r0.<java.util.Vector: int modCount> = $i2;
+        $i3 = r0.<java.util.Vector: int elementCount>;
+        $i4 = $i3 + 1;
+        specialinvoke r0.<java.util.Vector: void ensureCapacityHelper(int)>($i4);
+        $r3 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i0 = r0.<java.util.Vector: int elementCount>;
+        $i5 = $i0 + 1;
+        r0.<java.util.Vector: int elementCount> = $i5;
+        $r3[$i0] = r1;
+        return 1;
+    }
+
+    public boolean remove(java.lang.Object)
+    {
+        java.util.Vector r0;
+        java.lang.Object r1;
+        boolean $z0;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.lang.Object;
+        $z0 = virtualinvoke r0.<java.util.Vector: boolean removeElement(java.lang.Object)>(r1);
+        return $z0;
+    }
+
+    public void add(int, java.lang.Object)
+    {
+        java.util.Vector r0;
+        int i0;
+        java.lang.Object r1;
+
+        r0 := @this: java.util.Vector;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.lang.Object;
+        virtualinvoke r0.<java.util.Vector: void insertElementAt(java.lang.Object,int)>(r1, i0);
+        return;
+    }
+
+    public synchronized java.lang.Object remove(int)
+    {
+        java.util.Vector r0;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9;
+        java.lang.Object r2;
+        java.lang.ArrayIndexOutOfBoundsException $r3;
+        java.lang.Object[] $r4, $r5, $r6;
+
+        r0 := @this: java.util.Vector;
+        i0 := @parameter0: int;
+        $i2 = r0.<java.util.Vector: int modCount>;
+        $i3 = $i2 + 1;
+        r0.<java.util.Vector: int modCount> = $i3;
+        $i4 = r0.<java.util.Vector: int elementCount>;
+        if i0 < $i4 goto label0;
+
+        $r3 = new java.lang.ArrayIndexOutOfBoundsException;
+        specialinvoke $r3.<java.lang.ArrayIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r3;
+
+     label0:
+        r2 = virtualinvoke r0.<java.util.Vector: java.lang.Object elementData(int)>(i0);
+        $i5 = r0.<java.util.Vector: int elementCount>;
+        $i6 = $i5 - i0;
+        i1 = $i6 - 1;
+        if i1 <= 0 goto label1;
+
+        $r4 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i7 = i0 + 1;
+        $r5 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r4, $i7, $r5, i0, i1);
+
+     label1:
+        $r6 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i8 = r0.<java.util.Vector: int elementCount>;
+        $i9 = $i8 - 1;
+        r0.<java.util.Vector: int elementCount> = $i9;
+        $r6[$i9] = null;
+        return r2;
+    }
+
+    public void clear()
+    {
+        java.util.Vector r0;
+
+        r0 := @this: java.util.Vector;
+        virtualinvoke r0.<java.util.Vector: void removeAllElements()>();
+        return;
+    }
+
+    public synchronized boolean containsAll(java.util.Collection)
+    {
+        java.util.Vector r0;
+        java.util.Collection r1;
+        boolean $z0;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.util.Collection;
+        $z0 = specialinvoke r0.<java.util.AbstractList: boolean containsAll(java.util.Collection)>(r1);
+        return $z0;
+    }
+
+    public synchronized boolean addAll(java.util.Collection)
+    {
+        java.util.Vector r0;
+        java.util.Collection r1;
+        java.lang.Object[] r3, $r4;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7;
+        boolean $z0;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.util.Collection;
+        $i1 = r0.<java.util.Vector: int modCount>;
+        $i2 = $i1 + 1;
+        r0.<java.util.Vector: int modCount> = $i2;
+        r3 = interfaceinvoke r1.<java.util.Collection: java.lang.Object[] toArray()>();
+        i0 = lengthof r3;
+        $i3 = r0.<java.util.Vector: int elementCount>;
+        $i4 = $i3 + i0;
+        specialinvoke r0.<java.util.Vector: void ensureCapacityHelper(int)>($i4);
+        $r4 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i5 = r0.<java.util.Vector: int elementCount>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r3, 0, $r4, $i5, i0);
+        $i6 = r0.<java.util.Vector: int elementCount>;
+        $i7 = $i6 + i0;
+        r0.<java.util.Vector: int elementCount> = $i7;
+        if i0 == 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public synchronized boolean removeAll(java.util.Collection)
+    {
+        java.util.Vector r0;
+        java.util.Collection r1;
+        boolean $z0;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.util.Collection;
+        $z0 = specialinvoke r0.<java.util.AbstractList: boolean removeAll(java.util.Collection)>(r1);
+        return $z0;
+    }
+
+    public synchronized boolean retainAll(java.util.Collection)
+    {
+        java.util.Vector r0;
+        java.util.Collection r1;
+        boolean $z0;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.util.Collection;
+        $z0 = specialinvoke r0.<java.util.AbstractList: boolean retainAll(java.util.Collection)>(r1);
+        return $z0;
+    }
+
+    public synchronized boolean addAll(int, java.util.Collection)
+    {
+        java.util.Vector r0;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11;
+        java.util.Collection r1;
+        java.lang.Object[] r3, $r5, $r6, $r7;
+        java.lang.ArrayIndexOutOfBoundsException $r4;
+        boolean $z0;
+
+        r0 := @this: java.util.Vector;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.util.Collection;
+        $i3 = r0.<java.util.Vector: int modCount>;
+        $i4 = $i3 + 1;
+        r0.<java.util.Vector: int modCount> = $i4;
+        if i0 < 0 goto label0;
+
+        $i5 = r0.<java.util.Vector: int elementCount>;
+        if i0 <= $i5 goto label1;
+
+     label0:
+        $r4 = new java.lang.ArrayIndexOutOfBoundsException;
+        specialinvoke $r4.<java.lang.ArrayIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r4;
+
+     label1:
+        r3 = interfaceinvoke r1.<java.util.Collection: java.lang.Object[] toArray()>();
+        i1 = lengthof r3;
+        $i6 = r0.<java.util.Vector: int elementCount>;
+        $i7 = $i6 + i1;
+        specialinvoke r0.<java.util.Vector: void ensureCapacityHelper(int)>($i7);
+        $i8 = r0.<java.util.Vector: int elementCount>;
+        i2 = $i8 - i0;
+        if i2 <= 0 goto label2;
+
+        $r5 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $r6 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i9 = i0 + i1;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r5, i0, $r6, $i9, i2);
+
+     label2:
+        $r7 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r3, 0, $r7, i0, i1);
+        $i10 = r0.<java.util.Vector: int elementCount>;
+        $i11 = $i10 + i1;
+        r0.<java.util.Vector: int elementCount> = $i11;
+        if i1 == 0 goto label3;
+
+        $z0 = 1;
+        goto label4;
+
+     label3:
+        $z0 = 0;
+
+     label4:
+        return $z0;
+    }
+
+    public synchronized boolean equals(java.lang.Object)
+    {
+        java.util.Vector r0;
+        java.lang.Object r1;
+        boolean $z0;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.lang.Object;
+        $z0 = specialinvoke r0.<java.util.AbstractList: boolean equals(java.lang.Object)>(r1);
+        return $z0;
+    }
+
+    public synchronized int hashCode()
+    {
+        java.util.Vector r0;
+        int $i0;
+
+        r0 := @this: java.util.Vector;
+        $i0 = specialinvoke r0.<java.util.AbstractList: int hashCode()>();
+        return $i0;
+    }
+
+    public synchronized java.lang.String toString()
+    {
+        java.util.Vector r0;
+        java.lang.String $r1;
+
+        r0 := @this: java.util.Vector;
+        $r1 = specialinvoke r0.<java.util.AbstractList: java.lang.String toString()>();
+        return $r1;
+    }
+
+    public synchronized java.util.List subList(int, int)
+    {
+        java.util.Vector r0;
+        int i0, i1;
+        java.util.List $r1, $r2;
+
+        r0 := @this: java.util.Vector;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $r1 = specialinvoke r0.<java.util.AbstractList: java.util.List subList(int,int)>(i0, i1);
+        $r2 = staticinvoke <java.util.Collections: java.util.List synchronizedList(java.util.List,java.lang.Object)>($r1, r0);
+        return $r2;
+    }
+
+    protected synchronized void removeRange(int, int)
+    {
+        java.util.Vector r0;
+        int i0, i1, i2, i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11;
+        java.lang.Object[] $r2, $r3, $r4;
+
+        r0 := @this: java.util.Vector;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $i4 = r0.<java.util.Vector: int modCount>;
+        $i5 = $i4 + 1;
+        r0.<java.util.Vector: int modCount> = $i5;
+        $i6 = r0.<java.util.Vector: int elementCount>;
+        i2 = $i6 - i1;
+        $r2 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $r3 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r2, i1, $r3, i0, i2);
+        $i7 = r0.<java.util.Vector: int elementCount>;
+        $i8 = i1 - i0;
+        i3 = $i7 - $i8;
+
+     label0:
+        $i9 = r0.<java.util.Vector: int elementCount>;
+        if $i9 == i3 goto label1;
+
+        $r4 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $i10 = r0.<java.util.Vector: int elementCount>;
+        $i11 = $i10 - 1;
+        r0.<java.util.Vector: int elementCount> = $i11;
+        $r4[$i11] = null;
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream) throws java.io.IOException
+    {
+        java.util.Vector r0, r3;
+        java.io.ObjectOutputStream r1;
+        java.io.ObjectOutputStream$PutField r2;
+        java.lang.Object[] r4, $r7;
+        java.lang.Throwable r5, $r9;
+        int $i0, $i1;
+        java.lang.Object $r8;
+
+        r0 := @this: java.util.Vector;
+        r1 := @parameter0: java.io.ObjectOutputStream;
+        r2 = virtualinvoke r1.<java.io.ObjectOutputStream: java.io.ObjectOutputStream$PutField putFields()>();
+        r3 = r0;
+        entermonitor r0;
+
+     label0:
+        $i0 = r0.<java.util.Vector: int capacityIncrement>;
+        virtualinvoke r2.<java.io.ObjectOutputStream$PutField: void put(java.lang.String,int)>("capacityIncrement", $i0);
+        $i1 = r0.<java.util.Vector: int elementCount>;
+        virtualinvoke r2.<java.io.ObjectOutputStream$PutField: void put(java.lang.String,int)>("elementCount", $i1);
+        $r7 = r0.<java.util.Vector: java.lang.Object[] elementData>;
+        $r8 = virtualinvoke $r7.<java.lang.Object: java.lang.Object clone()>();
+        r4 = (java.lang.Object[]) $r8;
+        exitmonitor r3;
+
+     label1:
+        goto label5;
+
+     label2:
+        $r9 := @caughtexception;
+
+     label3:
+        r5 = $r9;
+        exitmonitor r3;
+
+     label4:
+        throw r5;
+
+     label5:
+        virtualinvoke r2.<java.io.ObjectOutputStream$PutField: void put(java.lang.String,java.lang.Object)>("elementData", r4);
+        virtualinvoke r1.<java.io.ObjectOutputStream: void writeFields()>();
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    public synchronized java.util.ListIterator listIterator(int)
+    {
+        java.util.Vector r0;
+        int i0, $i1;
+        java.lang.StringBuilder $r1, $r3, $r4;
+        java.lang.IndexOutOfBoundsException $r2;
+        java.lang.String $r5;
+        java.util.Vector$ListItr $r6;
+
+        r0 := @this: java.util.Vector;
+        i0 := @parameter0: int;
+        if i0 < 0 goto label0;
+
+        $i1 = r0.<java.util.Vector: int elementCount>;
+        if i0 <= $i1 goto label1;
+
+     label0:
+        $r2 = new java.lang.IndexOutOfBoundsException;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r3 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Index: ");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r5);
+        throw $r2;
+
+     label1:
+        $r6 = new java.util.Vector$ListItr;
+        specialinvoke $r6.<java.util.Vector$ListItr: void <init>(java.util.Vector,int)>(r0, i0);
+        return $r6;
+    }
+
+    public synchronized java.util.ListIterator listIterator()
+    {
+        java.util.Vector r0;
+        java.util.Vector$ListItr $r1;
+
+        r0 := @this: java.util.Vector;
+        $r1 = new java.util.Vector$ListItr;
+        specialinvoke $r1.<java.util.Vector$ListItr: void <init>(java.util.Vector,int)>(r0, 0);
+        return $r1;
+    }
+
+    public synchronized java.util.Iterator iterator()
+    {
+        java.util.Vector r0;
+        java.util.Vector$Itr $r1;
+
+        r0 := @this: java.util.Vector;
+        $r1 = new java.util.Vector$Itr;
+        specialinvoke $r1.<java.util.Vector$Itr: void <init>(java.util.Vector,java.util.Vector$1)>(r0, null);
+        return $r1;
+    }
+}

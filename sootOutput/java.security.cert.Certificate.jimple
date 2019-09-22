@@ -1,0 +1,150 @@
+public abstract class java.security.cert.Certificate extends java.lang.Object implements java.io.Serializable
+{
+    private static final long serialVersionUID;
+    private final java.lang.String type;
+
+    protected void <init>(java.lang.String)
+    {
+        java.security.cert.Certificate r0;
+        java.lang.String r1;
+
+        r0 := @this: java.security.cert.Certificate;
+        r1 := @parameter0: java.lang.String;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.security.cert.Certificate: java.lang.String type> = r1;
+        return;
+    }
+
+    public final java.lang.String getType()
+    {
+        java.security.cert.Certificate r0;
+        java.lang.String $r1;
+
+        r0 := @this: java.security.cert.Certificate;
+        $r1 = r0.<java.security.cert.Certificate: java.lang.String type>;
+        return $r1;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        java.security.cert.Certificate r0, $r4;
+        java.lang.Object r1;
+        byte[] r2, r3;
+        boolean $z0, $z1;
+        java.security.cert.CertificateException $r5, r6;
+
+        r0 := @this: java.security.cert.Certificate;
+        r1 := @parameter0: java.lang.Object;
+        if r0 != r1 goto label0;
+
+        return 1;
+
+     label0:
+        $z0 = r1 instanceof java.security.cert.Certificate;
+        if $z0 != 0 goto label1;
+
+        return 0;
+
+     label1:
+        r2 = staticinvoke <sun.security.x509.X509CertImpl: byte[] getEncodedInternal(java.security.cert.Certificate)>(r0);
+        $r4 = (java.security.cert.Certificate) r1;
+        r3 = staticinvoke <sun.security.x509.X509CertImpl: byte[] getEncodedInternal(java.security.cert.Certificate)>($r4);
+        $z1 = staticinvoke <java.util.Arrays: boolean equals(byte[],byte[])>(r2, r3);
+
+     label2:
+        return $z1;
+
+     label3:
+        $r5 := @caughtexception;
+        r6 = $r5;
+        return 0;
+
+        catch java.security.cert.CertificateException from label1 to label2 with label3;
+    }
+
+    public int hashCode()
+    {
+        java.security.cert.Certificate r0;
+        int i0, i1, $i2, $i4;
+        byte[] r1;
+        byte $b3;
+        java.security.cert.CertificateException $r2, r3;
+
+        r0 := @this: java.security.cert.Certificate;
+        i0 = 0;
+
+     label0:
+        r1 = staticinvoke <sun.security.x509.X509CertImpl: byte[] getEncodedInternal(java.security.cert.Certificate)>(r0);
+        i1 = 1;
+
+     label1:
+        $i2 = lengthof r1;
+        if i1 >= $i2 goto label2;
+
+        $b3 = r1[i1];
+        $i4 = $b3 * i1;
+        i0 = i0 + $i4;
+        i1 = i1 + 1;
+        goto label1;
+
+     label2:
+        return i0;
+
+     label3:
+        $r2 := @caughtexception;
+        r3 = $r2;
+        return i0;
+
+        catch java.security.cert.CertificateException from label0 to label2 with label3;
+    }
+
+    public abstract byte[] getEncoded() throws java.security.cert.CertificateEncodingException;
+
+    public abstract void verify(java.security.PublicKey) throws java.security.cert.CertificateException, java.security.NoSuchAlgorithmException, java.security.InvalidKeyException, java.security.NoSuchProviderException, java.security.SignatureException;
+
+    public abstract void verify(java.security.PublicKey, java.lang.String) throws java.security.cert.CertificateException, java.security.NoSuchAlgorithmException, java.security.InvalidKeyException, java.security.NoSuchProviderException, java.security.SignatureException;
+
+    public abstract java.lang.String toString();
+
+    public abstract java.security.PublicKey getPublicKey();
+
+    protected java.lang.Object writeReplace() throws java.io.ObjectStreamException
+    {
+        java.security.cert.Certificate r0;
+        java.security.cert.Certificate$CertificateRep $r1;
+        java.security.cert.CertificateException r2, $r5;
+        java.lang.String $r3, $r9, $r12, $r14;
+        byte[] $r4;
+        java.io.NotSerializableException $r6;
+        java.lang.StringBuilder $r7, $r8, $r10, $r11, $r13;
+
+        r0 := @this: java.security.cert.Certificate;
+
+     label0:
+        $r1 = new java.security.cert.Certificate$CertificateRep;
+        $r3 = r0.<java.security.cert.Certificate: java.lang.String type>;
+        $r4 = virtualinvoke r0.<java.security.cert.Certificate: byte[] getEncoded()>();
+        specialinvoke $r1.<java.security.cert.Certificate$CertificateRep: void <init>(java.lang.String,byte[])>($r3, $r4);
+
+     label1:
+        return $r1;
+
+     label2:
+        $r5 := @caughtexception;
+        r2 = $r5;
+        $r6 = new java.io.NotSerializableException;
+        $r7 = new java.lang.StringBuilder;
+        specialinvoke $r7.<java.lang.StringBuilder: void <init>()>();
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("java.security.cert.Certificate: ");
+        $r9 = r0.<java.security.cert.Certificate: java.lang.String type>;
+        $r10 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r9);
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(": ");
+        $r12 = virtualinvoke r2.<java.security.cert.CertificateException: java.lang.String getMessage()>();
+        $r13 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r12);
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r6.<java.io.NotSerializableException: void <init>(java.lang.String)>($r14);
+        throw $r6;
+
+        catch java.security.cert.CertificateException from label0 to label1 with label2;
+    }
+}

@@ -1,0 +1,112 @@
+public class org.apache.catalina.util.StandardSessionIdGenerator extends org.apache.catalina.util.SessionIdGeneratorBase
+{
+
+    public void <init>()
+    {
+        org.apache.catalina.util.StandardSessionIdGenerator r0;
+
+        r0 := @this: org.apache.catalina.util.StandardSessionIdGenerator;
+        specialinvoke r0.<org.apache.catalina.util.SessionIdGeneratorBase: void <init>()>();
+        return;
+    }
+
+    public java.lang.String generateSessionId(java.lang.String)
+    {
+        org.apache.catalina.util.StandardSessionIdGenerator r0;
+        java.lang.String r1, r11, $r14;
+        byte[] r2;
+        int i0, i1, i2, $i5, $i6, $i12, $i14, $i15, $i17, $i19, $i20, $i22, $i23, $i24;
+        java.lang.StringBuilder r3, $r4, $r9, $r12;
+        byte b3, b4, $b7, $b10, $b11;
+        short $s8, $s9;
+        char $c13, $c16, $c18, $c21;
+
+        r0 := @this: org.apache.catalina.util.StandardSessionIdGenerator;
+        r1 := @parameter0: java.lang.String;
+        r2 = newarray (byte)[16];
+        i0 = virtualinvoke r0.<org.apache.catalina.util.StandardSessionIdGenerator: int getSessionIdLength()>();
+        $r4 = new java.lang.StringBuilder;
+        $i5 = 2 * i0;
+        $i6 = $i5 + 20;
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(int)>($i6);
+        r3 = $r4;
+        i1 = 0;
+        goto label7;
+
+     label0:
+        virtualinvoke r0.<org.apache.catalina.util.StandardSessionIdGenerator: void getRandomBytes(byte[])>(r2);
+        i2 = 0;
+        goto label6;
+
+     label1:
+        $b7 = r2[i2];
+        $s8 = $b7 & 240;
+        $s9 = $s8 >> 4;
+        b3 = (byte) $s9;
+        $b10 = r2[i2];
+        $b11 = $b10 & 15;
+        b4 = (byte) $b11;
+        if b3 >= 10 goto label2;
+
+        $i12 = 48 + b3;
+        $c13 = (char) $i12;
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>($c13);
+        goto label3;
+
+     label2:
+        $i14 = b3 - 10;
+        $i15 = 65 + $i14;
+        $c16 = (char) $i15;
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>($c16);
+
+     label3:
+        if b4 >= 10 goto label4;
+
+        $i17 = 48 + b4;
+        $c18 = (char) $i17;
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>($c18);
+        goto label5;
+
+     label4:
+        $i19 = b4 - 10;
+        $i20 = 65 + $i19;
+        $c21 = (char) $i20;
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>($c21);
+
+     label5:
+        i1 = i1 + 1;
+        i2 = i2 + 1;
+
+     label6:
+        $i22 = lengthof r2;
+        if i2 >= $i22 goto label7;
+
+        if i1 < i0 goto label1;
+
+     label7:
+        if i1 < i0 goto label0;
+
+        if r1 == null goto label8;
+
+        $i23 = virtualinvoke r1.<java.lang.String: int length()>();
+        if $i23 <= 0 goto label8;
+
+        $r9 = virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(46);
+        virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        goto label9;
+
+     label8:
+        r11 = virtualinvoke r0.<org.apache.catalina.util.StandardSessionIdGenerator: java.lang.String getJvmRoute()>();
+        if r11 == null goto label9;
+
+        $i24 = virtualinvoke r11.<java.lang.String: int length()>();
+        if $i24 <= 0 goto label9;
+
+        $r12 = virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(46);
+        virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r11);
+
+     label9:
+        $r14 = virtualinvoke r3.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r14;
+    }
+}

@@ -1,0 +1,274 @@
+public abstract class java.io.Writer extends java.lang.Object implements java.lang.Appendable, java.io.Closeable, java.io.Flushable
+{
+    private char[] writeBuffer;
+    private final int writeBufferSize;
+    protected java.lang.Object lock;
+
+    protected void <init>()
+    {
+        java.io.Writer r0;
+
+        r0 := @this: java.io.Writer;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.io.Writer: int writeBufferSize> = 1024;
+        r0.<java.io.Writer: java.lang.Object lock> = r0;
+        return;
+    }
+
+    protected void <init>(java.lang.Object)
+    {
+        java.io.Writer r0;
+        java.lang.Object r1;
+        java.lang.NullPointerException $r2;
+
+        r0 := @this: java.io.Writer;
+        r1 := @parameter0: java.lang.Object;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.io.Writer: int writeBufferSize> = 1024;
+        if r1 != null goto label0;
+
+        $r2 = new java.lang.NullPointerException;
+        specialinvoke $r2.<java.lang.NullPointerException: void <init>()>();
+        throw $r2;
+
+     label0:
+        r0.<java.io.Writer: java.lang.Object lock> = r1;
+        return;
+    }
+
+    public void write(int) throws java.io.IOException
+    {
+        java.io.Writer r0;
+        int i0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r8;
+        char[] $r4, $r5, $r6, $r7;
+        char $c1;
+
+        r0 := @this: java.io.Writer;
+        i0 := @parameter0: int;
+        $r3 = r0.<java.io.Writer: java.lang.Object lock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $r4 = r0.<java.io.Writer: char[] writeBuffer>;
+        if $r4 != null goto label1;
+
+        $r5 = newarray (char)[1024];
+        r0.<java.io.Writer: char[] writeBuffer> = $r5;
+
+     label1:
+        $r6 = r0.<java.io.Writer: char[] writeBuffer>;
+        $c1 = (char) i0;
+        $r6[0] = $c1;
+        $r7 = r0.<java.io.Writer: char[] writeBuffer>;
+        virtualinvoke r0.<java.io.Writer: void write(char[],int,int)>($r7, 0, 1);
+        exitmonitor r1;
+
+     label2:
+        goto label6;
+
+     label3:
+        $r8 := @caughtexception;
+
+     label4:
+        r2 = $r8;
+        exitmonitor r1;
+
+     label5:
+        throw r2;
+
+     label6:
+        return;
+
+        catch java.lang.Throwable from label0 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    public void write(char[]) throws java.io.IOException
+    {
+        java.io.Writer r0;
+        char[] r1;
+        int $i0;
+
+        r0 := @this: java.io.Writer;
+        r1 := @parameter0: char[];
+        $i0 = lengthof r1;
+        virtualinvoke r0.<java.io.Writer: void write(char[],int,int)>(r1, 0, $i0);
+        return;
+    }
+
+    public abstract void write(char[], int, int) throws java.io.IOException;
+
+    public void write(java.lang.String) throws java.io.IOException
+    {
+        java.io.Writer r0;
+        java.lang.String r1;
+        int $i0;
+
+        r0 := @this: java.io.Writer;
+        r1 := @parameter0: java.lang.String;
+        $i0 = virtualinvoke r1.<java.lang.String: int length()>();
+        virtualinvoke r0.<java.io.Writer: void write(java.lang.String,int,int)>(r1, 0, $i0);
+        return;
+    }
+
+    public void write(java.lang.String, int, int) throws java.io.IOException
+    {
+        java.io.Writer r0;
+        java.lang.String r1;
+        int i0, i1, $i2;
+        java.lang.Object r2, $r5;
+        char[] r3, $r6, $r7;
+        java.lang.Throwable r4, $r8;
+
+        r0 := @this: java.io.Writer;
+        r1 := @parameter0: java.lang.String;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        $r5 = r0.<java.io.Writer: java.lang.Object lock>;
+        r2 = $r5;
+        entermonitor $r5;
+
+     label0:
+        if i1 > 1024 goto label2;
+
+        $r6 = r0.<java.io.Writer: char[] writeBuffer>;
+        if $r6 != null goto label1;
+
+        $r7 = newarray (char)[1024];
+        r0.<java.io.Writer: char[] writeBuffer> = $r7;
+
+     label1:
+        r3 = r0.<java.io.Writer: char[] writeBuffer>;
+        goto label3;
+
+     label2:
+        r3 = newarray (char)[i1];
+
+     label3:
+        $i2 = i0 + i1;
+        virtualinvoke r1.<java.lang.String: void getChars(int,int,char[],int)>(i0, $i2, r3, 0);
+        virtualinvoke r0.<java.io.Writer: void write(char[],int,int)>(r3, 0, i1);
+        exitmonitor r2;
+
+     label4:
+        goto label8;
+
+     label5:
+        $r8 := @caughtexception;
+
+     label6:
+        r4 = $r8;
+        exitmonitor r2;
+
+     label7:
+        throw r4;
+
+     label8:
+        return;
+
+        catch java.lang.Throwable from label0 to label4 with label5;
+        catch java.lang.Throwable from label6 to label7 with label5;
+    }
+
+    public java.io.Writer append(java.lang.CharSequence) throws java.io.IOException
+    {
+        java.io.Writer r0;
+        java.lang.CharSequence r1;
+        java.lang.String $r2;
+
+        r0 := @this: java.io.Writer;
+        r1 := @parameter0: java.lang.CharSequence;
+        if r1 != null goto label0;
+
+        virtualinvoke r0.<java.io.Writer: void write(java.lang.String)>("null");
+        goto label1;
+
+     label0:
+        $r2 = interfaceinvoke r1.<java.lang.CharSequence: java.lang.String toString()>();
+        virtualinvoke r0.<java.io.Writer: void write(java.lang.String)>($r2);
+
+     label1:
+        return r0;
+    }
+
+    public java.io.Writer append(java.lang.CharSequence, int, int) throws java.io.IOException
+    {
+        java.io.Writer r0;
+        java.lang.CharSequence r1, r2, $r3, $r4;
+        int i0, i1;
+        java.lang.String $r5;
+
+        r0 := @this: java.io.Writer;
+        r1 := @parameter0: java.lang.CharSequence;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        if r1 != null goto label0;
+
+        $r3 = "null";
+        goto label1;
+
+     label0:
+        $r3 = r1;
+
+     label1:
+        r2 = $r3;
+        $r4 = interfaceinvoke r2.<java.lang.CharSequence: java.lang.CharSequence subSequence(int,int)>(i0, i1);
+        $r5 = interfaceinvoke $r4.<java.lang.CharSequence: java.lang.String toString()>();
+        virtualinvoke r0.<java.io.Writer: void write(java.lang.String)>($r5);
+        return r0;
+    }
+
+    public java.io.Writer append(char) throws java.io.IOException
+    {
+        java.io.Writer r0;
+        char c0;
+
+        r0 := @this: java.io.Writer;
+        c0 := @parameter0: char;
+        virtualinvoke r0.<java.io.Writer: void write(int)>(c0);
+        return r0;
+    }
+
+    public abstract void flush() throws java.io.IOException;
+
+    public abstract void close() throws java.io.IOException;
+
+    public volatile java.lang.Appendable append(char) throws java.io.IOException
+    {
+        java.io.Writer r0, $r1;
+        char c0;
+
+        r0 := @this: java.io.Writer;
+        c0 := @parameter0: char;
+        $r1 = virtualinvoke r0.<java.io.Writer: java.io.Writer append(char)>(c0);
+        return $r1;
+    }
+
+    public volatile java.lang.Appendable append(java.lang.CharSequence, int, int) throws java.io.IOException
+    {
+        java.io.Writer r0, $r2;
+        java.lang.CharSequence r1;
+        int i0, i1;
+
+        r0 := @this: java.io.Writer;
+        r1 := @parameter0: java.lang.CharSequence;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        $r2 = virtualinvoke r0.<java.io.Writer: java.io.Writer append(java.lang.CharSequence,int,int)>(r1, i0, i1);
+        return $r2;
+    }
+
+    public volatile java.lang.Appendable append(java.lang.CharSequence) throws java.io.IOException
+    {
+        java.io.Writer r0, $r2;
+        java.lang.CharSequence r1;
+
+        r0 := @this: java.io.Writer;
+        r1 := @parameter0: java.lang.CharSequence;
+        $r2 = virtualinvoke r0.<java.io.Writer: java.io.Writer append(java.lang.CharSequence)>(r1);
+        return $r2;
+    }
+}

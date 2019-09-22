@@ -1,0 +1,216 @@
+class sun.nio.ch.MembershipRegistry extends java.lang.Object
+{
+    private java.util.Map groups;
+
+    void <init>()
+    {
+        sun.nio.ch.MembershipRegistry r0;
+
+        r0 := @this: sun.nio.ch.MembershipRegistry;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.nio.ch.MembershipRegistry: java.util.Map groups> = null;
+        return;
+    }
+
+    java.nio.channels.MembershipKey checkMembership(java.net.InetAddress, java.net.NetworkInterface, java.net.InetAddress)
+    {
+        sun.nio.ch.MembershipRegistry r0;
+        java.net.InetAddress r1, r3, $r12, $r14, $r16;
+        java.net.NetworkInterface r2, $r11;
+        java.util.List r4;
+        java.util.Iterator r5;
+        sun.nio.ch.MembershipKeyImpl r6;
+        java.util.Map $r7, $r8;
+        java.lang.Object $r9, $r10;
+        boolean $z0, $z1, $z2;
+        java.lang.IllegalStateException $r13, $r15;
+
+        r0 := @this: sun.nio.ch.MembershipRegistry;
+        r1 := @parameter0: java.net.InetAddress;
+        r2 := @parameter1: java.net.NetworkInterface;
+        r3 := @parameter2: java.net.InetAddress;
+        $r7 = r0.<sun.nio.ch.MembershipRegistry: java.util.Map groups>;
+        if $r7 == null goto label5;
+
+        $r8 = r0.<sun.nio.ch.MembershipRegistry: java.util.Map groups>;
+        $r9 = interfaceinvoke $r8.<java.util.Map: java.lang.Object get(java.lang.Object)>(r1);
+        r4 = (java.util.List) $r9;
+        if r4 == null goto label5;
+
+        r5 = interfaceinvoke r4.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke r5.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label5;
+
+        $r10 = interfaceinvoke r5.<java.util.Iterator: java.lang.Object next()>();
+        r6 = (sun.nio.ch.MembershipKeyImpl) $r10;
+        $r11 = virtualinvoke r6.<sun.nio.ch.MembershipKeyImpl: java.net.NetworkInterface networkInterface()>();
+        $z1 = virtualinvoke $r11.<java.net.NetworkInterface: boolean equals(java.lang.Object)>(r2);
+        if $z1 == 0 goto label4;
+
+        if r3 != null goto label2;
+
+        $r12 = virtualinvoke r6.<sun.nio.ch.MembershipKeyImpl: java.net.InetAddress sourceAddress()>();
+        if $r12 != null goto label1;
+
+        return r6;
+
+     label1:
+        $r13 = new java.lang.IllegalStateException;
+        specialinvoke $r13.<java.lang.IllegalStateException: void <init>(java.lang.String)>("Already a member to receive all packets");
+        throw $r13;
+
+     label2:
+        $r14 = virtualinvoke r6.<sun.nio.ch.MembershipKeyImpl: java.net.InetAddress sourceAddress()>();
+        if $r14 != null goto label3;
+
+        $r15 = new java.lang.IllegalStateException;
+        specialinvoke $r15.<java.lang.IllegalStateException: void <init>(java.lang.String)>("Already have source-specific membership");
+        throw $r15;
+
+     label3:
+        $r16 = virtualinvoke r6.<sun.nio.ch.MembershipKeyImpl: java.net.InetAddress sourceAddress()>();
+        $z2 = virtualinvoke r3.<java.net.InetAddress: boolean equals(java.lang.Object)>($r16);
+        if $z2 == 0 goto label4;
+
+        return r6;
+
+     label4:
+        goto label0;
+
+     label5:
+        return null;
+    }
+
+    void add(sun.nio.ch.MembershipKeyImpl)
+    {
+        sun.nio.ch.MembershipRegistry r0;
+        sun.nio.ch.MembershipKeyImpl r1;
+        java.net.InetAddress r2;
+        java.util.HashMap $r3;
+        java.util.List r4;
+        java.util.Map $r5, $r6, $r9;
+        java.lang.Object $r7;
+        java.util.LinkedList $r8;
+
+        r0 := @this: sun.nio.ch.MembershipRegistry;
+        r1 := @parameter0: sun.nio.ch.MembershipKeyImpl;
+        r2 = virtualinvoke r1.<sun.nio.ch.MembershipKeyImpl: java.net.InetAddress group()>();
+        $r5 = r0.<sun.nio.ch.MembershipRegistry: java.util.Map groups>;
+        if $r5 != null goto label0;
+
+        $r3 = new java.util.HashMap;
+        specialinvoke $r3.<java.util.HashMap: void <init>()>();
+        r0.<sun.nio.ch.MembershipRegistry: java.util.Map groups> = $r3;
+        r4 = null;
+        goto label1;
+
+     label0:
+        $r6 = r0.<sun.nio.ch.MembershipRegistry: java.util.Map groups>;
+        $r7 = interfaceinvoke $r6.<java.util.Map: java.lang.Object get(java.lang.Object)>(r2);
+        r4 = (java.util.List) $r7;
+
+     label1:
+        if r4 != null goto label2;
+
+        $r8 = new java.util.LinkedList;
+        specialinvoke $r8.<java.util.LinkedList: void <init>()>();
+        r4 = $r8;
+        $r9 = r0.<sun.nio.ch.MembershipRegistry: java.util.Map groups>;
+        interfaceinvoke $r9.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(r2, r4);
+
+     label2:
+        interfaceinvoke r4.<java.util.List: boolean add(java.lang.Object)>(r1);
+        return;
+    }
+
+    void remove(sun.nio.ch.MembershipKeyImpl)
+    {
+        sun.nio.ch.MembershipRegistry r0;
+        sun.nio.ch.MembershipKeyImpl r1;
+        java.net.InetAddress r2;
+        java.util.List r3;
+        java.util.Iterator r4;
+        java.util.Map $r5, $r8;
+        java.lang.Object $r6, $r7;
+        boolean $z0, $z1;
+
+        r0 := @this: sun.nio.ch.MembershipRegistry;
+        r1 := @parameter0: sun.nio.ch.MembershipKeyImpl;
+        r2 = virtualinvoke r1.<sun.nio.ch.MembershipKeyImpl: java.net.InetAddress group()>();
+        $r5 = r0.<sun.nio.ch.MembershipRegistry: java.util.Map groups>;
+        $r6 = interfaceinvoke $r5.<java.util.Map: java.lang.Object get(java.lang.Object)>(r2);
+        r3 = (java.util.List) $r6;
+        if r3 == null goto label2;
+
+        r4 = interfaceinvoke r3.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke r4.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r7 = interfaceinvoke r4.<java.util.Iterator: java.lang.Object next()>();
+        if $r7 != r1 goto label0;
+
+        interfaceinvoke r4.<java.util.Iterator: void remove()>();
+        goto label1;
+
+     label1:
+        $z1 = interfaceinvoke r3.<java.util.List: boolean isEmpty()>();
+        if $z1 == 0 goto label2;
+
+        $r8 = r0.<sun.nio.ch.MembershipRegistry: java.util.Map groups>;
+        interfaceinvoke $r8.<java.util.Map: java.lang.Object remove(java.lang.Object)>(r2);
+
+     label2:
+        return;
+    }
+
+    void invalidateAll()
+    {
+        sun.nio.ch.MembershipRegistry r0;
+        java.util.Iterator r1, r3;
+        java.net.InetAddress r2;
+        sun.nio.ch.MembershipKeyImpl r4;
+        java.util.Map $r5, $r6, $r9;
+        java.util.Set $r7;
+        boolean $z0, $z1;
+        java.lang.Object $r8, $r10, $r12;
+        java.util.List $r11;
+
+        r0 := @this: sun.nio.ch.MembershipRegistry;
+        $r5 = r0.<sun.nio.ch.MembershipRegistry: java.util.Map groups>;
+        if $r5 == null goto label3;
+
+        $r6 = r0.<sun.nio.ch.MembershipRegistry: java.util.Map groups>;
+        $r7 = interfaceinvoke $r6.<java.util.Map: java.util.Set keySet()>();
+        r1 = interfaceinvoke $r7.<java.util.Set: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke r1.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r8 = interfaceinvoke r1.<java.util.Iterator: java.lang.Object next()>();
+        r2 = (java.net.InetAddress) $r8;
+        $r9 = r0.<sun.nio.ch.MembershipRegistry: java.util.Map groups>;
+        $r10 = interfaceinvoke $r9.<java.util.Map: java.lang.Object get(java.lang.Object)>(r2);
+        $r11 = (java.util.List) $r10;
+        r3 = interfaceinvoke $r11.<java.util.List: java.util.Iterator iterator()>();
+
+     label1:
+        $z1 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+        if $z1 == 0 goto label2;
+
+        $r12 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+        r4 = (sun.nio.ch.MembershipKeyImpl) $r12;
+        virtualinvoke r4.<sun.nio.ch.MembershipKeyImpl: void invalidate()>();
+        goto label1;
+
+     label2:
+        goto label0;
+
+     label3:
+        return;
+    }
+}

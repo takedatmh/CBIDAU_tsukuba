@@ -1,0 +1,499 @@
+class sun.security.util.MemoryCache extends sun.security.util.Cache
+{
+    private static final float LOAD_FACTOR;
+    private static final boolean DEBUG;
+    private final java.util.Map cacheMap;
+    private int maxSize;
+    private long lifetime;
+    private final java.lang.ref.ReferenceQueue queue;
+
+    public void <init>(boolean, int)
+    {
+        sun.security.util.MemoryCache r0;
+        boolean z0;
+        int i0;
+
+        r0 := @this: sun.security.util.MemoryCache;
+        z0 := @parameter0: boolean;
+        i0 := @parameter1: int;
+        specialinvoke r0.<sun.security.util.MemoryCache: void <init>(boolean,int,int)>(z0, i0, 0);
+        return;
+    }
+
+    public void <init>(boolean, int, int)
+    {
+        sun.security.util.MemoryCache r0;
+        boolean z0;
+        int i0, i1, i2, $i3, $i5;
+        long $l4;
+        java.lang.ref.ReferenceQueue $r2;
+        float $f0, $f1;
+        java.util.LinkedHashMap $r3;
+
+        r0 := @this: sun.security.util.MemoryCache;
+        z0 := @parameter0: boolean;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        specialinvoke r0.<sun.security.util.Cache: void <init>()>();
+        r0.<sun.security.util.MemoryCache: int maxSize> = i0;
+        $i3 = i1 * 1000;
+        $l4 = (long) $i3;
+        r0.<sun.security.util.MemoryCache: long lifetime> = $l4;
+        if z0 == 0 goto label0;
+
+        $r2 = new java.lang.ref.ReferenceQueue;
+        specialinvoke $r2.<java.lang.ref.ReferenceQueue: void <init>()>();
+        goto label1;
+
+     label0:
+        $r2 = null;
+
+     label1:
+        r0.<sun.security.util.MemoryCache: java.lang.ref.ReferenceQueue queue> = $r2;
+        $f0 = (float) i0;
+        $f1 = $f0 / 0.75F;
+        $i5 = (int) $f1;
+        i2 = $i5 + 1;
+        $r3 = new java.util.LinkedHashMap;
+        specialinvoke $r3.<java.util.LinkedHashMap: void <init>(int,float,boolean)>(i2, 0.75F, 1);
+        r0.<sun.security.util.MemoryCache: java.util.Map cacheMap> = $r3;
+        return;
+    }
+
+    private void emptyQueue()
+    {
+        sun.security.util.MemoryCache r0;
+        sun.security.util.MemoryCache$CacheEntry r1, r3;
+        java.lang.Object r2, $r9;
+        java.lang.ref.ReferenceQueue $r4, $r6;
+        java.util.Map $r5, $r8, $r10;
+        java.lang.ref.Reference $r7;
+
+        r0 := @this: sun.security.util.MemoryCache;
+        $r4 = r0.<sun.security.util.MemoryCache: java.lang.ref.ReferenceQueue queue>;
+        if $r4 != null goto label0;
+
+        return;
+
+     label0:
+        $r5 = r0.<sun.security.util.MemoryCache: java.util.Map cacheMap>;
+        interfaceinvoke $r5.<java.util.Map: int size()>();
+
+     label1:
+        $r6 = r0.<sun.security.util.MemoryCache: java.lang.ref.ReferenceQueue queue>;
+        $r7 = virtualinvoke $r6.<java.lang.ref.ReferenceQueue: java.lang.ref.Reference poll()>();
+        r1 = (sun.security.util.MemoryCache$CacheEntry) $r7;
+        if r1 != null goto label2;
+
+        goto label5;
+
+     label2:
+        r2 = interfaceinvoke r1.<sun.security.util.MemoryCache$CacheEntry: java.lang.Object getKey()>();
+        if r2 != null goto label3;
+
+        goto label1;
+
+     label3:
+        $r8 = r0.<sun.security.util.MemoryCache: java.util.Map cacheMap>;
+        $r9 = interfaceinvoke $r8.<java.util.Map: java.lang.Object remove(java.lang.Object)>(r2);
+        r3 = (sun.security.util.MemoryCache$CacheEntry) $r9;
+        if r3 == null goto label4;
+
+        if r1 == r3 goto label4;
+
+        $r10 = r0.<sun.security.util.MemoryCache: java.util.Map cacheMap>;
+        interfaceinvoke $r10.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(r2, r3);
+
+     label4:
+        goto label1;
+
+     label5:
+        return;
+    }
+
+    private void expungeExpiredEntries()
+    {
+        sun.security.util.MemoryCache r0;
+        int i0;
+        long l1, $l2;
+        java.util.Iterator r1;
+        sun.security.util.MemoryCache$CacheEntry r2;
+        byte $b3;
+        java.util.Map $r3;
+        java.util.Collection $r4;
+        boolean $z0, $z1;
+        java.lang.Object $r5;
+
+        r0 := @this: sun.security.util.MemoryCache;
+        specialinvoke r0.<sun.security.util.MemoryCache: void emptyQueue()>();
+        $l2 = r0.<sun.security.util.MemoryCache: long lifetime>;
+        $b3 = $l2 cmp 0L;
+        if $b3 != 0 goto label0;
+
+        return;
+
+     label0:
+        i0 = 0;
+        l1 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        $r3 = r0.<sun.security.util.MemoryCache: java.util.Map cacheMap>;
+        $r4 = interfaceinvoke $r3.<java.util.Map: java.util.Collection values()>();
+        r1 = interfaceinvoke $r4.<java.util.Collection: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r1.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r5 = interfaceinvoke r1.<java.util.Iterator: java.lang.Object next()>();
+        r2 = (sun.security.util.MemoryCache$CacheEntry) $r5;
+        $z1 = interfaceinvoke r2.<sun.security.util.MemoryCache$CacheEntry: boolean isValid(long)>(l1);
+        if $z1 != 0 goto label2;
+
+        interfaceinvoke r1.<java.util.Iterator: void remove()>();
+        i0 = i0 + 1;
+
+     label2:
+        goto label1;
+
+     label3:
+        return;
+    }
+
+    public synchronized int size()
+    {
+        sun.security.util.MemoryCache r0;
+        java.util.Map $r1;
+        int $i0;
+
+        r0 := @this: sun.security.util.MemoryCache;
+        specialinvoke r0.<sun.security.util.MemoryCache: void expungeExpiredEntries()>();
+        $r1 = r0.<sun.security.util.MemoryCache: java.util.Map cacheMap>;
+        $i0 = interfaceinvoke $r1.<java.util.Map: int size()>();
+        return $i0;
+    }
+
+    public synchronized void clear()
+    {
+        sun.security.util.MemoryCache r0;
+        java.util.Iterator r1;
+        sun.security.util.MemoryCache$CacheEntry r2;
+        java.lang.ref.ReferenceQueue $r3, $r7;
+        java.util.Map $r4, $r9;
+        java.util.Collection $r5;
+        boolean $z0;
+        java.lang.Object $r6;
+        java.lang.ref.Reference $r8;
+
+        r0 := @this: sun.security.util.MemoryCache;
+        $r3 = r0.<sun.security.util.MemoryCache: java.lang.ref.ReferenceQueue queue>;
+        if $r3 == null goto label2;
+
+        $r4 = r0.<sun.security.util.MemoryCache: java.util.Map cacheMap>;
+        $r5 = interfaceinvoke $r4.<java.util.Map: java.util.Collection values()>();
+        r1 = interfaceinvoke $r5.<java.util.Collection: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke r1.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r6 = interfaceinvoke r1.<java.util.Iterator: java.lang.Object next()>();
+        r2 = (sun.security.util.MemoryCache$CacheEntry) $r6;
+        interfaceinvoke r2.<sun.security.util.MemoryCache$CacheEntry: void invalidate()>();
+        goto label0;
+
+     label1:
+        $r7 = r0.<sun.security.util.MemoryCache: java.lang.ref.ReferenceQueue queue>;
+        $r8 = virtualinvoke $r7.<java.lang.ref.ReferenceQueue: java.lang.ref.Reference poll()>();
+        if $r8 == null goto label2;
+
+        goto label1;
+
+     label2:
+        $r9 = r0.<sun.security.util.MemoryCache: java.util.Map cacheMap>;
+        interfaceinvoke $r9.<java.util.Map: void clear()>();
+        return;
+    }
+
+    public synchronized void put(java.lang.Object, java.lang.Object)
+    {
+        sun.security.util.MemoryCache r0;
+        java.lang.Object r1, r2, $r9, $r14;
+        long l0, $l1, $l3, $l4, $l5;
+        sun.security.util.MemoryCache$CacheEntry r3, r4, r6;
+        java.util.Iterator r5;
+        byte $b2;
+        java.lang.ref.ReferenceQueue $r7;
+        java.util.Map $r8, $r10, $r11, $r12;
+        int $i6, $i7, $i8, $i9, $i10;
+        java.util.Collection $r13;
+
+        r0 := @this: sun.security.util.MemoryCache;
+        r1 := @parameter0: java.lang.Object;
+        r2 := @parameter1: java.lang.Object;
+        specialinvoke r0.<sun.security.util.MemoryCache: void emptyQueue()>();
+        $l1 = r0.<sun.security.util.MemoryCache: long lifetime>;
+        $b2 = $l1 cmp 0L;
+        if $b2 != 0 goto label0;
+
+        $l3 = 0L;
+        goto label1;
+
+     label0:
+        $l4 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        $l5 = r0.<sun.security.util.MemoryCache: long lifetime>;
+        $l3 = $l4 + $l5;
+
+     label1:
+        l0 = $l3;
+        $r7 = r0.<sun.security.util.MemoryCache: java.lang.ref.ReferenceQueue queue>;
+        r3 = virtualinvoke r0.<sun.security.util.MemoryCache: sun.security.util.MemoryCache$CacheEntry newEntry(java.lang.Object,java.lang.Object,long,java.lang.ref.ReferenceQueue)>(r1, r2, l0, $r7);
+        $r8 = r0.<sun.security.util.MemoryCache: java.util.Map cacheMap>;
+        $r9 = interfaceinvoke $r8.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(r1, r3);
+        r4 = (sun.security.util.MemoryCache$CacheEntry) $r9;
+        if r4 == null goto label2;
+
+        interfaceinvoke r4.<sun.security.util.MemoryCache$CacheEntry: void invalidate()>();
+        return;
+
+     label2:
+        $i6 = r0.<sun.security.util.MemoryCache: int maxSize>;
+        if $i6 <= 0 goto label3;
+
+        $r10 = r0.<sun.security.util.MemoryCache: java.util.Map cacheMap>;
+        $i7 = interfaceinvoke $r10.<java.util.Map: int size()>();
+        $i8 = r0.<sun.security.util.MemoryCache: int maxSize>;
+        if $i7 <= $i8 goto label3;
+
+        specialinvoke r0.<sun.security.util.MemoryCache: void expungeExpiredEntries()>();
+        $r11 = r0.<sun.security.util.MemoryCache: java.util.Map cacheMap>;
+        $i9 = interfaceinvoke $r11.<java.util.Map: int size()>();
+        $i10 = r0.<sun.security.util.MemoryCache: int maxSize>;
+        if $i9 <= $i10 goto label3;
+
+        $r12 = r0.<sun.security.util.MemoryCache: java.util.Map cacheMap>;
+        $r13 = interfaceinvoke $r12.<java.util.Map: java.util.Collection values()>();
+        r5 = interfaceinvoke $r13.<java.util.Collection: java.util.Iterator iterator()>();
+        $r14 = interfaceinvoke r5.<java.util.Iterator: java.lang.Object next()>();
+        r6 = (sun.security.util.MemoryCache$CacheEntry) $r14;
+        interfaceinvoke r5.<java.util.Iterator: void remove()>();
+        interfaceinvoke r6.<sun.security.util.MemoryCache$CacheEntry: void invalidate()>();
+
+     label3:
+        return;
+    }
+
+    public synchronized java.lang.Object get(java.lang.Object)
+    {
+        sun.security.util.MemoryCache r0;
+        java.lang.Object r1, $r4, $r7;
+        sun.security.util.MemoryCache$CacheEntry r2;
+        long l0, $l1, $l3;
+        java.util.Map $r3, $r5;
+        byte $b2;
+        boolean $z0;
+
+        r0 := @this: sun.security.util.MemoryCache;
+        r1 := @parameter0: java.lang.Object;
+        specialinvoke r0.<sun.security.util.MemoryCache: void emptyQueue()>();
+        $r3 = r0.<sun.security.util.MemoryCache: java.util.Map cacheMap>;
+        $r4 = interfaceinvoke $r3.<java.util.Map: java.lang.Object get(java.lang.Object)>(r1);
+        r2 = (sun.security.util.MemoryCache$CacheEntry) $r4;
+        if r2 != null goto label0;
+
+        return null;
+
+     label0:
+        $l1 = r0.<sun.security.util.MemoryCache: long lifetime>;
+        $b2 = $l1 cmp 0L;
+        if $b2 != 0 goto label1;
+
+        $l3 = 0L;
+        goto label2;
+
+     label1:
+        $l3 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+
+     label2:
+        l0 = $l3;
+        $z0 = interfaceinvoke r2.<sun.security.util.MemoryCache$CacheEntry: boolean isValid(long)>(l0);
+        if $z0 != 0 goto label3;
+
+        $r5 = r0.<sun.security.util.MemoryCache: java.util.Map cacheMap>;
+        interfaceinvoke $r5.<java.util.Map: java.lang.Object remove(java.lang.Object)>(r1);
+        return null;
+
+     label3:
+        $r7 = interfaceinvoke r2.<sun.security.util.MemoryCache$CacheEntry: java.lang.Object getValue()>();
+        return $r7;
+    }
+
+    public synchronized void remove(java.lang.Object)
+    {
+        sun.security.util.MemoryCache r0;
+        java.lang.Object r1, $r4;
+        sun.security.util.MemoryCache$CacheEntry r2;
+        java.util.Map $r3;
+
+        r0 := @this: sun.security.util.MemoryCache;
+        r1 := @parameter0: java.lang.Object;
+        specialinvoke r0.<sun.security.util.MemoryCache: void emptyQueue()>();
+        $r3 = r0.<sun.security.util.MemoryCache: java.util.Map cacheMap>;
+        $r4 = interfaceinvoke $r3.<java.util.Map: java.lang.Object remove(java.lang.Object)>(r1);
+        r2 = (sun.security.util.MemoryCache$CacheEntry) $r4;
+        if r2 == null goto label0;
+
+        interfaceinvoke r2.<sun.security.util.MemoryCache$CacheEntry: void invalidate()>();
+
+     label0:
+        return;
+    }
+
+    public synchronized void setCapacity(int)
+    {
+        sun.security.util.MemoryCache r0;
+        int i0, i1, $i2, $i3, $i4;
+        java.util.Iterator r1;
+        sun.security.util.MemoryCache$CacheEntry r2;
+        java.util.Map $r3, $r4, $r6;
+        java.util.Collection $r5;
+        java.lang.Object $r7;
+
+        r0 := @this: sun.security.util.MemoryCache;
+        i0 := @parameter0: int;
+        specialinvoke r0.<sun.security.util.MemoryCache: void expungeExpiredEntries()>();
+        if i0 <= 0 goto label1;
+
+        $r3 = r0.<sun.security.util.MemoryCache: java.util.Map cacheMap>;
+        $i2 = interfaceinvoke $r3.<java.util.Map: int size()>();
+        if $i2 <= i0 goto label1;
+
+        $r4 = r0.<sun.security.util.MemoryCache: java.util.Map cacheMap>;
+        $r5 = interfaceinvoke $r4.<java.util.Map: java.util.Collection values()>();
+        r1 = interfaceinvoke $r5.<java.util.Collection: java.util.Iterator iterator()>();
+        $r6 = r0.<sun.security.util.MemoryCache: java.util.Map cacheMap>;
+        $i3 = interfaceinvoke $r6.<java.util.Map: int size()>();
+        i1 = $i3 - i0;
+
+     label0:
+        if i1 <= 0 goto label1;
+
+        $r7 = interfaceinvoke r1.<java.util.Iterator: java.lang.Object next()>();
+        r2 = (sun.security.util.MemoryCache$CacheEntry) $r7;
+        interfaceinvoke r1.<java.util.Iterator: void remove()>();
+        interfaceinvoke r2.<sun.security.util.MemoryCache$CacheEntry: void invalidate()>();
+        i1 = i1 + -1;
+        goto label0;
+
+     label1:
+        if i0 <= 0 goto label2;
+
+        $i4 = i0;
+        goto label3;
+
+     label2:
+        $i4 = 0;
+
+     label3:
+        r0.<sun.security.util.MemoryCache: int maxSize> = $i4;
+        return;
+    }
+
+    public synchronized void setTimeout(int)
+    {
+        sun.security.util.MemoryCache r0;
+        int i0;
+        long $l1, $l2;
+
+        r0 := @this: sun.security.util.MemoryCache;
+        i0 := @parameter0: int;
+        specialinvoke r0.<sun.security.util.MemoryCache: void emptyQueue()>();
+        if i0 <= 0 goto label0;
+
+        $l1 = (long) i0;
+        $l2 = $l1 * 1000L;
+        goto label1;
+
+     label0:
+        $l2 = 0L;
+
+     label1:
+        r0.<sun.security.util.MemoryCache: long lifetime> = $l2;
+        return;
+    }
+
+    public synchronized void accept(sun.security.util.Cache$CacheVisitor)
+    {
+        sun.security.util.MemoryCache r0;
+        sun.security.util.Cache$CacheVisitor r1;
+        java.util.Map r2;
+
+        r0 := @this: sun.security.util.MemoryCache;
+        r1 := @parameter0: sun.security.util.Cache$CacheVisitor;
+        specialinvoke r0.<sun.security.util.MemoryCache: void expungeExpiredEntries()>();
+        r2 = specialinvoke r0.<sun.security.util.MemoryCache: java.util.Map getCachedEntries()>();
+        interfaceinvoke r1.<sun.security.util.Cache$CacheVisitor: void visit(java.util.Map)>(r2);
+        return;
+    }
+
+    private java.util.Map getCachedEntries()
+    {
+        sun.security.util.MemoryCache r0;
+        java.util.HashMap $r1, r2;
+        java.util.Iterator r3;
+        sun.security.util.MemoryCache$CacheEntry r4;
+        java.util.Map $r5, $r6;
+        int $i0;
+        java.util.Collection $r7;
+        boolean $z0;
+        java.lang.Object $r8, $r9, $r10;
+
+        r0 := @this: sun.security.util.MemoryCache;
+        $r1 = new java.util.HashMap;
+        $r5 = r0.<sun.security.util.MemoryCache: java.util.Map cacheMap>;
+        $i0 = interfaceinvoke $r5.<java.util.Map: int size()>();
+        specialinvoke $r1.<java.util.HashMap: void <init>(int)>($i0);
+        r2 = $r1;
+        $r6 = r0.<sun.security.util.MemoryCache: java.util.Map cacheMap>;
+        $r7 = interfaceinvoke $r6.<java.util.Map: java.util.Collection values()>();
+        r3 = interfaceinvoke $r7.<java.util.Collection: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r8 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+        r4 = (sun.security.util.MemoryCache$CacheEntry) $r8;
+        $r9 = interfaceinvoke r4.<sun.security.util.MemoryCache$CacheEntry: java.lang.Object getKey()>();
+        $r10 = interfaceinvoke r4.<sun.security.util.MemoryCache$CacheEntry: java.lang.Object getValue()>();
+        interfaceinvoke r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r9, $r10);
+        goto label0;
+
+     label1:
+        return r2;
+    }
+
+    protected sun.security.util.MemoryCache$CacheEntry newEntry(java.lang.Object, java.lang.Object, long, java.lang.ref.ReferenceQueue)
+    {
+        sun.security.util.MemoryCache r0;
+        java.lang.Object r1, r2;
+        long l0;
+        java.lang.ref.ReferenceQueue r3;
+        sun.security.util.MemoryCache$SoftCacheEntry $r4;
+        sun.security.util.MemoryCache$HardCacheEntry $r5;
+
+        r0 := @this: sun.security.util.MemoryCache;
+        r1 := @parameter0: java.lang.Object;
+        r2 := @parameter1: java.lang.Object;
+        l0 := @parameter2: long;
+        r3 := @parameter3: java.lang.ref.ReferenceQueue;
+        if r3 == null goto label0;
+
+        $r4 = new sun.security.util.MemoryCache$SoftCacheEntry;
+        specialinvoke $r4.<sun.security.util.MemoryCache$SoftCacheEntry: void <init>(java.lang.Object,java.lang.Object,long,java.lang.ref.ReferenceQueue)>(r1, r2, l0, r3);
+        return $r4;
+
+     label0:
+        $r5 = new sun.security.util.MemoryCache$HardCacheEntry;
+        specialinvoke $r5.<sun.security.util.MemoryCache$HardCacheEntry: void <init>(java.lang.Object,java.lang.Object,long)>(r1, r2, l0);
+        return $r5;
+    }
+}

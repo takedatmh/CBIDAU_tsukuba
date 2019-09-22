@@ -1,0 +1,578 @@
+public abstract class org.apache.coyote.AbstractProcessor extends java.lang.Object implements org.apache.coyote.ActionHook, org.apache.coyote.Processor
+{
+    protected static final org.apache.tomcat.util.res.StringManager sm;
+    protected char[] hostNameC;
+    protected org.apache.coyote.Adapter adapter;
+    protected org.apache.coyote.AsyncStateMachine asyncStateMachine;
+    protected org.apache.tomcat.util.net.AbstractEndpoint endpoint;
+    protected org.apache.coyote.Request request;
+    protected org.apache.coyote.Response response;
+    protected org.apache.tomcat.util.net.SocketWrapper socketWrapper;
+    private int maxCookieCount;
+    private org.apache.coyote.ErrorState errorState;
+    protected final org.apache.tomcat.util.log.UserDataHelper userDataHelper;
+    private static int[] $SWITCH_TABLE$org$apache$tomcat$util$log$UserDataHelper$Mode;
+
+    static void <clinit>()
+    {
+        org.apache.tomcat.util.res.StringManager $r0;
+
+        $r0 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String)>("org.apache.coyote");
+        <org.apache.coyote.AbstractProcessor: org.apache.tomcat.util.res.StringManager sm> = $r0;
+        return;
+    }
+
+    protected void <init>()
+    {
+        org.apache.coyote.AbstractProcessor r0;
+        char[] $r1;
+        org.apache.coyote.ErrorState $r2;
+
+        r0 := @this: org.apache.coyote.AbstractProcessor;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r1 = newarray (char)[0];
+        r0.<org.apache.coyote.AbstractProcessor: char[] hostNameC> = $r1;
+        r0.<org.apache.coyote.AbstractProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper> = null;
+        r0.<org.apache.coyote.AbstractProcessor: int maxCookieCount> = 200;
+        $r2 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState NONE>;
+        r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.ErrorState errorState> = $r2;
+        r0.<org.apache.coyote.AbstractProcessor: org.apache.tomcat.util.log.UserDataHelper userDataHelper> = null;
+        return;
+    }
+
+    public void <init>(org.apache.tomcat.util.net.AbstractEndpoint)
+    {
+        org.apache.coyote.AbstractProcessor r0;
+        org.apache.tomcat.util.net.AbstractEndpoint r1;
+        char[] $r2;
+        org.apache.coyote.ErrorState $r3;
+        org.apache.coyote.AsyncStateMachine $r4;
+        org.apache.coyote.Request $r5, $r8;
+        org.apache.coyote.Response $r6, $r7, $r9;
+        org.apache.tomcat.util.log.UserDataHelper $r10;
+        org.apache.juli.logging.Log $r11;
+
+        r0 := @this: org.apache.coyote.AbstractProcessor;
+        r1 := @parameter0: org.apache.tomcat.util.net.AbstractEndpoint;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r2 = newarray (char)[0];
+        r0.<org.apache.coyote.AbstractProcessor: char[] hostNameC> = $r2;
+        r0.<org.apache.coyote.AbstractProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper> = null;
+        r0.<org.apache.coyote.AbstractProcessor: int maxCookieCount> = 200;
+        $r3 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState NONE>;
+        r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.ErrorState errorState> = $r3;
+        r0.<org.apache.coyote.AbstractProcessor: org.apache.tomcat.util.net.AbstractEndpoint endpoint> = r1;
+        $r4 = new org.apache.coyote.AsyncStateMachine;
+        specialinvoke $r4.<org.apache.coyote.AsyncStateMachine: void <init>(org.apache.coyote.Processor)>(r0);
+        r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.AsyncStateMachine asyncStateMachine> = $r4;
+        $r5 = new org.apache.coyote.Request;
+        specialinvoke $r5.<org.apache.coyote.Request: void <init>()>();
+        r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.Request request> = $r5;
+        $r6 = new org.apache.coyote.Response;
+        specialinvoke $r6.<org.apache.coyote.Response: void <init>()>();
+        r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.Response response> = $r6;
+        $r7 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.Response response>;
+        virtualinvoke $r7.<org.apache.coyote.Response: void setHook(org.apache.coyote.ActionHook)>(r0);
+        $r8 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.Request request>;
+        $r9 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.Response response>;
+        virtualinvoke $r8.<org.apache.coyote.Request: void setResponse(org.apache.coyote.Response)>($r9);
+        $r10 = new org.apache.tomcat.util.log.UserDataHelper;
+        $r11 = virtualinvoke r0.<org.apache.coyote.AbstractProcessor: org.apache.juli.logging.Log getLog()>();
+        specialinvoke $r10.<org.apache.tomcat.util.log.UserDataHelper: void <init>(org.apache.juli.logging.Log)>($r11);
+        r0.<org.apache.coyote.AbstractProcessor: org.apache.tomcat.util.log.UserDataHelper userDataHelper> = $r10;
+        return;
+    }
+
+    protected void setErrorState(org.apache.coyote.ErrorState, java.lang.Throwable)
+    {
+        org.apache.coyote.AbstractProcessor r0;
+        org.apache.coyote.ErrorState r1, $r3, $r4, $r5;
+        java.lang.Throwable r2;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+        org.apache.coyote.Response $r6, $r7;
+        int $i0;
+        org.apache.coyote.Request $r8;
+        org.apache.coyote.AsyncStateMachine $r9;
+        org.apache.juli.logging.Log $r10, $r11;
+        org.apache.tomcat.util.res.StringManager $r12;
+        java.lang.String $r13;
+        org.apache.tomcat.util.net.AbstractEndpoint $r14;
+        org.apache.tomcat.util.net.SocketWrapper $r15;
+        org.apache.tomcat.util.net.SocketStatus $r16;
+
+        r0 := @this: org.apache.coyote.AbstractProcessor;
+        r1 := @parameter0: org.apache.coyote.ErrorState;
+        r2 := @parameter1: java.lang.Throwable;
+        $r3 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.ErrorState errorState>;
+        $z1 = virtualinvoke $r3.<org.apache.coyote.ErrorState: boolean isIoAllowed()>();
+        if $z1 == 0 goto label0;
+
+        $z2 = virtualinvoke r1.<org.apache.coyote.ErrorState: boolean isIoAllowed()>();
+        if $z2 != 0 goto label0;
+
+        $z3 = 1;
+        goto label1;
+
+     label0:
+        $z3 = 0;
+
+     label1:
+        z0 = $z3;
+        $r4 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.ErrorState errorState>;
+        $r5 = virtualinvoke $r4.<org.apache.coyote.ErrorState: org.apache.coyote.ErrorState getMostSevere(org.apache.coyote.ErrorState)>(r1);
+        r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.ErrorState errorState> = $r5;
+        $r6 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.Response response>;
+        $i0 = virtualinvoke $r6.<org.apache.coyote.Response: int getStatus()>();
+        if $i0 >= 400 goto label2;
+
+        $z4 = r2 instanceof java.io.IOException;
+        if $z4 != 0 goto label2;
+
+        $r7 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.Response response>;
+        virtualinvoke $r7.<org.apache.coyote.Response: void setStatus(int)>(500);
+
+     label2:
+        if r2 == null goto label3;
+
+        $r8 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.Request request>;
+        virtualinvoke $r8.<org.apache.coyote.Request: void setAttribute(java.lang.String,java.lang.Object)>("javax.servlet.error.exception", r2);
+
+     label3:
+        if z0 == 0 goto label5;
+
+        $z5 = staticinvoke <org.apache.coyote.ContainerThreadMarker: boolean isContainerThread()>();
+        if $z5 != 0 goto label5;
+
+        $z6 = virtualinvoke r0.<org.apache.coyote.AbstractProcessor: boolean isAsync()>();
+        if $z6 == 0 goto label5;
+
+        $r9 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        virtualinvoke $r9.<org.apache.coyote.AsyncStateMachine: void asyncMustError()>();
+        $r10 = virtualinvoke r0.<org.apache.coyote.AbstractProcessor: org.apache.juli.logging.Log getLog()>();
+        $z7 = interfaceinvoke $r10.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z7 == 0 goto label4;
+
+        $r11 = virtualinvoke r0.<org.apache.coyote.AbstractProcessor: org.apache.juli.logging.Log getLog()>();
+        $r12 = <org.apache.coyote.AbstractProcessor: org.apache.tomcat.util.res.StringManager sm>;
+        $r13 = virtualinvoke $r12.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("abstractProcessor.nonContainerThreadError");
+        interfaceinvoke $r11.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r13, r2);
+
+     label4:
+        $r14 = virtualinvoke r0.<org.apache.coyote.AbstractProcessor: org.apache.tomcat.util.net.AbstractEndpoint getEndpoint()>();
+        $r15 = r0.<org.apache.coyote.AbstractProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r16 = <org.apache.tomcat.util.net.SocketStatus: org.apache.tomcat.util.net.SocketStatus ERROR>;
+        virtualinvoke $r14.<org.apache.tomcat.util.net.AbstractEndpoint: void processSocketAsync(org.apache.tomcat.util.net.SocketWrapper,org.apache.tomcat.util.net.SocketStatus)>($r15, $r16);
+
+     label5:
+        return;
+    }
+
+    protected void resetErrorState()
+    {
+        org.apache.coyote.AbstractProcessor r0;
+        org.apache.coyote.ErrorState $r1;
+
+        r0 := @this: org.apache.coyote.AbstractProcessor;
+        $r1 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState NONE>;
+        r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.ErrorState errorState> = $r1;
+        return;
+    }
+
+    protected org.apache.coyote.ErrorState getErrorState()
+    {
+        org.apache.coyote.AbstractProcessor r0;
+        org.apache.coyote.ErrorState $r1;
+
+        r0 := @this: org.apache.coyote.AbstractProcessor;
+        $r1 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.ErrorState errorState>;
+        return $r1;
+    }
+
+    protected org.apache.tomcat.util.net.AbstractEndpoint getEndpoint()
+    {
+        org.apache.coyote.AbstractProcessor r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+
+        r0 := @this: org.apache.coyote.AbstractProcessor;
+        $r1 = r0.<org.apache.coyote.AbstractProcessor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        return $r1;
+    }
+
+    public org.apache.coyote.Request getRequest()
+    {
+        org.apache.coyote.AbstractProcessor r0;
+        org.apache.coyote.Request $r1;
+
+        r0 := @this: org.apache.coyote.AbstractProcessor;
+        $r1 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.Request request>;
+        return $r1;
+    }
+
+    public void setAdapter(org.apache.coyote.Adapter)
+    {
+        org.apache.coyote.AbstractProcessor r0;
+        org.apache.coyote.Adapter r1;
+
+        r0 := @this: org.apache.coyote.AbstractProcessor;
+        r1 := @parameter0: org.apache.coyote.Adapter;
+        r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.Adapter adapter> = r1;
+        return;
+    }
+
+    public org.apache.coyote.Adapter getAdapter()
+    {
+        org.apache.coyote.AbstractProcessor r0;
+        org.apache.coyote.Adapter $r1;
+
+        r0 := @this: org.apache.coyote.AbstractProcessor;
+        $r1 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.Adapter adapter>;
+        return $r1;
+    }
+
+    protected final void setSocketWrapper(org.apache.tomcat.util.net.SocketWrapper)
+    {
+        org.apache.coyote.AbstractProcessor r0;
+        org.apache.tomcat.util.net.SocketWrapper r1;
+
+        r0 := @this: org.apache.coyote.AbstractProcessor;
+        r1 := @parameter0: org.apache.tomcat.util.net.SocketWrapper;
+        r0.<org.apache.coyote.AbstractProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper> = r1;
+        return;
+    }
+
+    protected final org.apache.tomcat.util.net.SocketWrapper getSocketWrapper()
+    {
+        org.apache.coyote.AbstractProcessor r0;
+        org.apache.tomcat.util.net.SocketWrapper $r1;
+
+        r0 := @this: org.apache.coyote.AbstractProcessor;
+        $r1 = r0.<org.apache.coyote.AbstractProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        return $r1;
+    }
+
+    public java.util.concurrent.Executor getExecutor()
+    {
+        org.apache.coyote.AbstractProcessor r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+        java.util.concurrent.Executor $r2;
+
+        r0 := @this: org.apache.coyote.AbstractProcessor;
+        $r1 = r0.<org.apache.coyote.AbstractProcessor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r2 = virtualinvoke $r1.<org.apache.tomcat.util.net.AbstractEndpoint: java.util.concurrent.Executor getExecutor()>();
+        return $r2;
+    }
+
+    public boolean isAsync()
+    {
+        org.apache.coyote.AbstractProcessor r0;
+        org.apache.coyote.AsyncStateMachine $r1, $r2;
+        boolean $z0;
+
+        r0 := @this: org.apache.coyote.AbstractProcessor;
+        $r1 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        $z0 = virtualinvoke $r2.<org.apache.coyote.AsyncStateMachine: boolean isAsync()>();
+        if $z0 == 0 goto label0;
+
+        return 1;
+
+     label0:
+        return 0;
+    }
+
+    public org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState asyncPostProcess()
+    {
+        org.apache.coyote.AbstractProcessor r0;
+        org.apache.coyote.AsyncStateMachine $r1;
+        org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState $r2;
+
+        r0 := @this: org.apache.coyote.AbstractProcessor;
+        $r1 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        $r2 = virtualinvoke $r1.<org.apache.coyote.AsyncStateMachine: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState asyncPostProcess()>();
+        return $r2;
+    }
+
+    public void errorDispatch()
+    {
+        org.apache.coyote.AbstractProcessor r0;
+        org.apache.coyote.Adapter $r1;
+        org.apache.coyote.Request $r2;
+        org.apache.coyote.Response $r3;
+
+        r0 := @this: org.apache.coyote.AbstractProcessor;
+        $r1 = virtualinvoke r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.Adapter getAdapter()>();
+        $r2 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.Request request>;
+        $r3 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.Response response>;
+        interfaceinvoke $r1.<org.apache.coyote.Adapter: void errorDispatch(org.apache.coyote.Request,org.apache.coyote.Response)>($r2, $r3);
+        return;
+    }
+
+    public abstract boolean isComet();
+
+    protected void parseHost(org.apache.tomcat.util.buf.MessageBytes)
+    {
+        org.apache.coyote.AbstractProcessor r0;
+        org.apache.tomcat.util.buf.MessageBytes r1, $r11;
+        org.apache.tomcat.util.buf.ByteChunk r2;
+        byte[] r3;
+        int i0, i1, i2, i3, i4, $i6, $i7, $i9, $i10, i11, $i12, $i15, $i16;
+        char c5, $c14;
+        boolean $z0;
+        char[] $r4, $r5, $r9, $r12;
+        byte $b8, $b13;
+        org.apache.coyote.Response $r6, $r29;
+        org.apache.coyote.ErrorState $r7, $r30;
+        org.apache.coyote.Request $r8, $r10;
+        java.lang.IllegalArgumentException $r13, r14;
+        org.apache.tomcat.util.log.UserDataHelper $r15;
+        org.apache.tomcat.util.log.UserDataHelper$Mode r16;
+        org.apache.tomcat.util.res.StringManager $r17, $r24;
+        java.lang.Object[] $r18;
+        java.lang.String $r19, r20, $r23, $r25;
+        int[] $r21;
+        java.lang.StringBuilder $r22, $r26;
+        org.apache.juli.logging.Log $r27, $r28;
+
+        r0 := @this: org.apache.coyote.AbstractProcessor;
+        r1 := @parameter0: org.apache.tomcat.util.buf.MessageBytes;
+        if r1 == null goto label0;
+
+        $z0 = virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: boolean isNull()>();
+        if $z0 == 0 goto label1;
+
+     label0:
+        virtualinvoke r0.<org.apache.coyote.AbstractProcessor: void populateHost()>();
+        return;
+
+     label1:
+        r2 = virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: org.apache.tomcat.util.buf.ByteChunk getByteChunk()>();
+        r3 = virtualinvoke r2.<org.apache.tomcat.util.buf.ByteChunk: byte[] getBytes()>();
+        i0 = virtualinvoke r2.<org.apache.tomcat.util.buf.ByteChunk: int getLength()>();
+        i1 = virtualinvoke r2.<org.apache.tomcat.util.buf.ByteChunk: int getStart()>();
+        $r4 = r0.<org.apache.coyote.AbstractProcessor: char[] hostNameC>;
+        $i6 = lengthof $r4;
+        if $i6 >= i0 goto label2;
+
+        $r5 = newarray (char)[i0];
+        r0.<org.apache.coyote.AbstractProcessor: char[] hostNameC> = $r5;
+
+     label2:
+        i2 = staticinvoke <org.apache.tomcat.util.http.parser.Host: int parse(org.apache.tomcat.util.buf.MessageBytes)>(r1);
+        if i2 == -1 goto label8;
+
+        i3 = 0;
+        i4 = i2 + 1;
+        goto label7;
+
+     label3:
+        $i7 = i4 + i1;
+        $b8 = r3[$i7];
+        c5 = (char) $b8;
+        if c5 < 48 goto label4;
+
+        if c5 <= 57 goto label6;
+
+     label4:
+        $r6 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.Response response>;
+        virtualinvoke $r6.<org.apache.coyote.Response: void setStatus(int)>(400);
+        $r7 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.AbstractProcessor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r7, null);
+
+     label5:
+        return;
+
+     label6:
+        $i9 = i3 * 10;
+        $i10 = $i9 + c5;
+        i3 = $i10 - 48;
+        i4 = i4 + 1;
+
+     label7:
+        if i4 < i0 goto label3;
+
+        $r8 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.Request request>;
+        virtualinvoke $r8.<org.apache.coyote.Request: void setServerPort(int)>(i3);
+        i0 = i2;
+
+     label8:
+        i11 = 0;
+        goto label10;
+
+     label9:
+        $r9 = r0.<org.apache.coyote.AbstractProcessor: char[] hostNameC>;
+        $i12 = i11 + i1;
+        $b13 = r3[$i12];
+        $c14 = (char) $b13;
+        $r9[i11] = $c14;
+        i11 = i11 + 1;
+
+     label10:
+        if i11 < i0 goto label9;
+
+        $r10 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.Request request>;
+        $r11 = virtualinvoke $r10.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes serverName()>();
+        $r12 = r0.<org.apache.coyote.AbstractProcessor: char[] hostNameC>;
+        virtualinvoke $r11.<org.apache.tomcat.util.buf.MessageBytes: void setChars(char[],int,int)>($r12, 0, i0);
+
+     label11:
+        goto label17;
+
+     label12:
+        $r13 := @caughtexception;
+        r14 = $r13;
+        $r15 = r0.<org.apache.coyote.AbstractProcessor: org.apache.tomcat.util.log.UserDataHelper userDataHelper>;
+        r16 = virtualinvoke $r15.<org.apache.tomcat.util.log.UserDataHelper: org.apache.tomcat.util.log.UserDataHelper$Mode getNextMode()>();
+        if r16 == null goto label16;
+
+        $r17 = <org.apache.coyote.AbstractProcessor: org.apache.tomcat.util.res.StringManager sm>;
+        $r18 = newarray (java.lang.Object)[1];
+        $r19 = virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: java.lang.String toString()>();
+        $r18[0] = $r19;
+        r20 = virtualinvoke $r17.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("abstractProcessor.hostInvalid", $r18);
+        $r21 = staticinvoke <org.apache.coyote.AbstractProcessor: int[] $SWITCH_TABLE$org$apache$tomcat$util$log$UserDataHelper$Mode()>();
+        $i15 = virtualinvoke r16.<org.apache.tomcat.util.log.UserDataHelper$Mode: int ordinal()>();
+        $i16 = $r21[$i15];
+        tableswitch($i16)
+        {
+            case 1: goto label15;
+            case 2: goto label13;
+            case 3: goto label14;
+            default: goto label16;
+        };
+
+     label13:
+        $r22 = new java.lang.StringBuilder;
+        $r23 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r20);
+        specialinvoke $r22.<java.lang.StringBuilder: void <init>(java.lang.String)>($r23);
+        $r24 = <org.apache.coyote.AbstractProcessor: org.apache.tomcat.util.res.StringManager sm>;
+        $r25 = virtualinvoke $r24.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("abstractProcessor.fallToDebug");
+        $r26 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r25);
+        r20 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.String toString()>();
+
+     label14:
+        $r27 = virtualinvoke r0.<org.apache.coyote.AbstractProcessor: org.apache.juli.logging.Log getLog()>();
+        interfaceinvoke $r27.<org.apache.juli.logging.Log: void info(java.lang.Object,java.lang.Throwable)>(r20, r14);
+        goto label16;
+
+     label15:
+        $r28 = virtualinvoke r0.<org.apache.coyote.AbstractProcessor: org.apache.juli.logging.Log getLog()>();
+        interfaceinvoke $r28.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>(r20, r14);
+
+     label16:
+        $r29 = r0.<org.apache.coyote.AbstractProcessor: org.apache.coyote.Response response>;
+        virtualinvoke $r29.<org.apache.coyote.Response: void setStatus(int)>(400);
+        $r30 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.AbstractProcessor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r30, r14);
+
+     label17:
+        return;
+
+        catch java.lang.IllegalArgumentException from label2 to label5 with label12;
+        catch java.lang.IllegalArgumentException from label6 to label11 with label12;
+    }
+
+    protected void populateHost()
+    {
+        org.apache.coyote.AbstractProcessor r0;
+
+        r0 := @this: org.apache.coyote.AbstractProcessor;
+        return;
+    }
+
+    public abstract boolean isUpgrade();
+
+    public abstract org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState process(org.apache.tomcat.util.net.SocketWrapper) throws java.io.IOException;
+
+    public abstract org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState event(org.apache.tomcat.util.net.SocketStatus) throws java.io.IOException;
+
+    public abstract org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState asyncDispatch(org.apache.tomcat.util.net.SocketStatus);
+
+    public abstract org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState upgradeDispatch() throws java.io.IOException;
+
+    public int getMaxCookieCount()
+    {
+        org.apache.coyote.AbstractProcessor r0;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.AbstractProcessor;
+        $i0 = r0.<org.apache.coyote.AbstractProcessor: int maxCookieCount>;
+        return $i0;
+    }
+
+    public void setMaxCookieCount(int)
+    {
+        org.apache.coyote.AbstractProcessor r0;
+        int i0;
+
+        r0 := @this: org.apache.coyote.AbstractProcessor;
+        i0 := @parameter0: int;
+        r0.<org.apache.coyote.AbstractProcessor: int maxCookieCount> = i0;
+        return;
+    }
+
+    public abstract org.apache.coyote.http11.upgrade.UpgradeInbound getUpgradeInbound();
+
+    protected abstract org.apache.juli.logging.Log getLog();
+
+    static int[] $SWITCH_TABLE$org$apache$tomcat$util$log$UserDataHelper$Mode()
+    {
+        int[] $r0, r1;
+        org.apache.tomcat.util.log.UserDataHelper$Mode[] $r2;
+        int $i0, $i1, $i2, $i3;
+        org.apache.tomcat.util.log.UserDataHelper$Mode $r3, $r5, $r7;
+        java.lang.NoSuchFieldError $r4, $r6, $r8;
+
+        $r0 = <org.apache.coyote.AbstractProcessor: int[] $SWITCH_TABLE$org$apache$tomcat$util$log$UserDataHelper$Mode>;
+        if $r0 == null goto label0;
+
+        return $r0;
+
+     label0:
+        $r2 = staticinvoke <org.apache.tomcat.util.log.UserDataHelper$Mode: org.apache.tomcat.util.log.UserDataHelper$Mode[] values()>();
+        $i0 = lengthof $r2;
+        r1 = newarray (int)[$i0];
+
+     label1:
+        $r3 = <org.apache.tomcat.util.log.UserDataHelper$Mode: org.apache.tomcat.util.log.UserDataHelper$Mode DEBUG>;
+        $i1 = virtualinvoke $r3.<org.apache.tomcat.util.log.UserDataHelper$Mode: int ordinal()>();
+        r1[$i1] = 1;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r4 := @caughtexception;
+
+     label4:
+        $r5 = <org.apache.tomcat.util.log.UserDataHelper$Mode: org.apache.tomcat.util.log.UserDataHelper$Mode INFO>;
+        $i2 = virtualinvoke $r5.<org.apache.tomcat.util.log.UserDataHelper$Mode: int ordinal()>();
+        r1[$i2] = 3;
+
+     label5:
+        goto label7;
+
+     label6:
+        $r6 := @caughtexception;
+
+     label7:
+        $r7 = <org.apache.tomcat.util.log.UserDataHelper$Mode: org.apache.tomcat.util.log.UserDataHelper$Mode INFO_THEN_DEBUG>;
+        $i3 = virtualinvoke $r7.<org.apache.tomcat.util.log.UserDataHelper$Mode: int ordinal()>();
+        r1[$i3] = 2;
+
+     label8:
+        goto label10;
+
+     label9:
+        $r8 := @caughtexception;
+
+     label10:
+        <org.apache.coyote.AbstractProcessor: int[] $SWITCH_TABLE$org$apache$tomcat$util$log$UserDataHelper$Mode> = r1;
+        return r1;
+
+        catch java.lang.NoSuchFieldError from label1 to label2 with label3;
+        catch java.lang.NoSuchFieldError from label4 to label5 with label6;
+        catch java.lang.NoSuchFieldError from label7 to label8 with label9;
+    }
+}

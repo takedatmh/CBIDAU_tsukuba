@@ -1,0 +1,373 @@
+class sun.net.www.protocol.http.NegotiateAuthentication extends sun.net.www.protocol.http.AuthenticationInfo
+{
+    private static final long serialVersionUID;
+    private static final sun.util.logging.PlatformLogger logger;
+    private final sun.net.www.protocol.http.HttpCallerInfo hci;
+    static java.util.HashMap supported;
+    static java.util.HashMap cache;
+    private sun.net.www.protocol.http.Negotiator negotiator;
+
+    public void <init>(sun.net.www.protocol.http.HttpCallerInfo)
+    {
+        sun.net.www.protocol.http.NegotiateAuthentication r0;
+        sun.net.www.protocol.http.HttpCallerInfo r1;
+        java.net.Authenticator$RequestorType $r3, $r4;
+        char $c0;
+        java.lang.String $r5;
+        boolean $z0;
+        sun.net.www.protocol.http.AuthScheme $r6;
+        java.net.URL $r7;
+
+        r0 := @this: sun.net.www.protocol.http.NegotiateAuthentication;
+        r1 := @parameter0: sun.net.www.protocol.http.HttpCallerInfo;
+        $r3 = <java.net.Authenticator$RequestorType: java.net.Authenticator$RequestorType PROXY>;
+        $r4 = r1.<sun.net.www.protocol.http.HttpCallerInfo: java.net.Authenticator$RequestorType authType>;
+        if $r3 != $r4 goto label0;
+
+        $c0 = 112;
+        goto label1;
+
+     label0:
+        $c0 = 115;
+
+     label1:
+        $r5 = r1.<sun.net.www.protocol.http.HttpCallerInfo: java.lang.String scheme>;
+        $z0 = virtualinvoke $r5.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("Negotiate");
+        if $z0 == 0 goto label2;
+
+        $r6 = <sun.net.www.protocol.http.AuthScheme: sun.net.www.protocol.http.AuthScheme NEGOTIATE>;
+        goto label3;
+
+     label2:
+        $r6 = <sun.net.www.protocol.http.AuthScheme: sun.net.www.protocol.http.AuthScheme KERBEROS>;
+
+     label3:
+        $r7 = r1.<sun.net.www.protocol.http.HttpCallerInfo: java.net.URL url>;
+        specialinvoke r0.<sun.net.www.protocol.http.AuthenticationInfo: void <init>(char,sun.net.www.protocol.http.AuthScheme,java.net.URL,java.lang.String)>($c0, $r6, $r7, "");
+        r0.<sun.net.www.protocol.http.NegotiateAuthentication: sun.net.www.protocol.http.Negotiator negotiator> = null;
+        r0.<sun.net.www.protocol.http.NegotiateAuthentication: sun.net.www.protocol.http.HttpCallerInfo hci> = r1;
+        return;
+    }
+
+    public boolean supportsPreemptiveAuthorization()
+    {
+        sun.net.www.protocol.http.NegotiateAuthentication r0;
+
+        r0 := @this: sun.net.www.protocol.http.NegotiateAuthentication;
+        return 0;
+    }
+
+    public static boolean isSupported(sun.net.www.protocol.http.HttpCallerInfo)
+    {
+        sun.net.www.protocol.http.HttpCallerInfo r0;
+        java.lang.ClassLoader r1, r14;
+        java.lang.SecurityException r2, $r6;
+        sun.util.logging.PlatformLogger$Level $r3;
+        java.lang.Throwable r4, $r15;
+        java.lang.Thread $r5;
+        sun.util.logging.PlatformLogger $r7, $r8;
+        boolean $z0, $z1, $z2;
+        java.lang.StringBuilder $r9, $r10, $r11;
+        java.lang.String $r12;
+
+        r0 := @parameter0: sun.net.www.protocol.http.HttpCallerInfo;
+        r1 = null;
+
+     label0:
+        $r5 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        r1 = virtualinvoke $r5.<java.lang.Thread: java.lang.ClassLoader getContextClassLoader()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r6 := @caughtexception;
+        r2 = $r6;
+        $r7 = <sun.net.www.protocol.http.NegotiateAuthentication: sun.util.logging.PlatformLogger logger>;
+        $r3 = <sun.util.logging.PlatformLogger$Level: sun.util.logging.PlatformLogger$Level FINER>;
+        $z0 = virtualinvoke $r7.<sun.util.logging.PlatformLogger: boolean isLoggable(sun.util.logging.PlatformLogger$Level)>($r3);
+        if $z0 == 0 goto label3;
+
+        $r8 = <sun.net.www.protocol.http.NegotiateAuthentication: sun.util.logging.PlatformLogger logger>;
+        $r9 = new java.lang.StringBuilder;
+        specialinvoke $r9.<java.lang.StringBuilder: void <init>()>();
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("NegotiateAuthentication: Attempt to get the context class loader failed - ");
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r2);
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke $r8.<sun.util.logging.PlatformLogger: void finer(java.lang.String)>($r12);
+
+     label3:
+        if r1 == null goto label9;
+
+        r14 = r1;
+        entermonitor r1;
+
+     label4:
+        $z1 = staticinvoke <sun.net.www.protocol.http.NegotiateAuthentication: boolean isSupportedImpl(sun.net.www.protocol.http.HttpCallerInfo)>(r0);
+        exitmonitor r14;
+
+     label5:
+        return $z1;
+
+     label6:
+        $r15 := @caughtexception;
+
+     label7:
+        r4 = $r15;
+        exitmonitor r14;
+
+     label8:
+        throw r4;
+
+     label9:
+        $z2 = staticinvoke <sun.net.www.protocol.http.NegotiateAuthentication: boolean isSupportedImpl(sun.net.www.protocol.http.HttpCallerInfo)>(r0);
+        return $z2;
+
+        catch java.lang.SecurityException from label0 to label1 with label2;
+        catch java.lang.Throwable from label4 to label5 with label6;
+        catch java.lang.Throwable from label7 to label8 with label6;
+    }
+
+    private static synchronized boolean isSupportedImpl(sun.net.www.protocol.http.HttpCallerInfo)
+    {
+        sun.net.www.protocol.http.HttpCallerInfo r0;
+        java.util.HashMap $r1, $r4, $r5, $r7, $r8, $r11, $r14, $r16;
+        java.lang.String r2, r6;
+        sun.net.www.protocol.http.Negotiator r3;
+        boolean $z0, $z1;
+        java.lang.Object $r9;
+        java.lang.Boolean $r10, $r12, $r17;
+
+        r0 := @parameter0: sun.net.www.protocol.http.HttpCallerInfo;
+        $r1 = <sun.net.www.protocol.http.NegotiateAuthentication: java.util.HashMap supported>;
+        if $r1 != null goto label0;
+
+        $r4 = new java.util.HashMap;
+        specialinvoke $r4.<java.util.HashMap: void <init>()>();
+        <sun.net.www.protocol.http.NegotiateAuthentication: java.util.HashMap supported> = $r4;
+        $r5 = new java.util.HashMap;
+        specialinvoke $r5.<java.util.HashMap: void <init>()>();
+        <sun.net.www.protocol.http.NegotiateAuthentication: java.util.HashMap cache> = $r5;
+
+     label0:
+        r2 = r0.<sun.net.www.protocol.http.HttpCallerInfo: java.lang.String host>;
+        r6 = virtualinvoke r2.<java.lang.String: java.lang.String toLowerCase()>();
+        $r7 = <sun.net.www.protocol.http.NegotiateAuthentication: java.util.HashMap supported>;
+        $z0 = virtualinvoke $r7.<java.util.HashMap: boolean containsKey(java.lang.Object)>(r6);
+        if $z0 == 0 goto label1;
+
+        $r8 = <sun.net.www.protocol.http.NegotiateAuthentication: java.util.HashMap supported>;
+        $r9 = virtualinvoke $r8.<java.util.HashMap: java.lang.Object get(java.lang.Object)>(r6);
+        $r10 = (java.lang.Boolean) $r9;
+        $z1 = virtualinvoke $r10.<java.lang.Boolean: boolean booleanValue()>();
+        return $z1;
+
+     label1:
+        r3 = staticinvoke <sun.net.www.protocol.http.Negotiator: sun.net.www.protocol.http.Negotiator getNegotiator(sun.net.www.protocol.http.HttpCallerInfo)>(r0);
+        if r3 == null goto label2;
+
+        $r11 = <sun.net.www.protocol.http.NegotiateAuthentication: java.util.HashMap supported>;
+        $r12 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(boolean)>(1);
+        virtualinvoke $r11.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(r6, $r12);
+        $r14 = <sun.net.www.protocol.http.NegotiateAuthentication: java.util.HashMap cache>;
+        virtualinvoke $r14.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(r6, r3);
+        return 1;
+
+     label2:
+        $r16 = <sun.net.www.protocol.http.NegotiateAuthentication: java.util.HashMap supported>;
+        $r17 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(boolean)>(0);
+        virtualinvoke $r16.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(r6, $r17);
+        return 0;
+    }
+
+    public java.lang.String getHeaderValue(java.net.URL, java.lang.String)
+    {
+        sun.net.www.protocol.http.NegotiateAuthentication r0;
+        java.net.URL r1;
+        java.lang.String r2;
+        java.lang.RuntimeException $r3;
+
+        r0 := @this: sun.net.www.protocol.http.NegotiateAuthentication;
+        r1 := @parameter0: java.net.URL;
+        r2 := @parameter1: java.lang.String;
+        $r3 = new java.lang.RuntimeException;
+        specialinvoke $r3.<java.lang.RuntimeException: void <init>(java.lang.String)>("getHeaderValue not supported");
+        throw $r3;
+    }
+
+    public boolean isAuthorizationStale(java.lang.String)
+    {
+        sun.net.www.protocol.http.NegotiateAuthentication r0;
+        java.lang.String r1;
+
+        r0 := @this: sun.net.www.protocol.http.NegotiateAuthentication;
+        r1 := @parameter0: java.lang.String;
+        return 0;
+    }
+
+    public synchronized boolean setHeaders(sun.net.www.protocol.http.HttpURLConnection, sun.net.www.HeaderParser, java.lang.String)
+    {
+        sun.net.www.protocol.http.NegotiateAuthentication r0;
+        sun.net.www.protocol.http.HttpURLConnection r1;
+        sun.net.www.HeaderParser r2;
+        java.lang.String r3, r6, $r8, $r11, $r16, $r18;
+        byte[] r4, $r15;
+        java.lang.String[] r5;
+        int $i0;
+        sun.misc.BASE64Decoder $r7;
+        java.lang.StringBuilder $r9, $r12, $r13, $r17;
+        sun.net.www.protocol.http.HttpCallerInfo $r10;
+        sun.net.www.protocol.http.NegotiateAuthentication$B64Encoder $r14;
+        boolean $z0;
+        java.io.IOException $r19, r20;
+
+        r0 := @this: sun.net.www.protocol.http.NegotiateAuthentication;
+        r1 := @parameter0: sun.net.www.protocol.http.HttpURLConnection;
+        r2 := @parameter1: sun.net.www.HeaderParser;
+        r3 := @parameter2: java.lang.String;
+
+     label0:
+        r4 = null;
+        r5 = virtualinvoke r3.<java.lang.String: java.lang.String[] split(java.lang.String)>("\\s+");
+        $i0 = lengthof r5;
+        if $i0 <= 1 goto label1;
+
+        $r7 = new sun.misc.BASE64Decoder;
+        specialinvoke $r7.<sun.misc.BASE64Decoder: void <init>()>();
+        $r8 = r5[1];
+        r4 = virtualinvoke $r7.<sun.misc.BASE64Decoder: byte[] decodeBuffer(java.lang.String)>($r8);
+
+     label1:
+        $r9 = new java.lang.StringBuilder;
+        specialinvoke $r9.<java.lang.StringBuilder: void <init>()>();
+        $r10 = r0.<sun.net.www.protocol.http.NegotiateAuthentication: sun.net.www.protocol.http.HttpCallerInfo hci>;
+        $r11 = $r10.<sun.net.www.protocol.http.HttpCallerInfo: java.lang.String scheme>;
+        $r12 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r11);
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" ");
+        $r14 = new sun.net.www.protocol.http.NegotiateAuthentication$B64Encoder;
+        specialinvoke $r14.<sun.net.www.protocol.http.NegotiateAuthentication$B64Encoder: void <init>(sun.net.www.protocol.http.NegotiateAuthentication)>(r0);
+        if r4 != null goto label2;
+
+        $r15 = specialinvoke r0.<sun.net.www.protocol.http.NegotiateAuthentication: byte[] firstToken()>();
+        goto label3;
+
+     label2:
+        $r15 = specialinvoke r0.<sun.net.www.protocol.http.NegotiateAuthentication: byte[] nextToken(byte[])>(r4);
+
+     label3:
+        $r16 = virtualinvoke $r14.<sun.net.www.protocol.http.NegotiateAuthentication$B64Encoder: java.lang.String encode(byte[])>($r15);
+        $r17 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r16);
+        r6 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r18 = virtualinvoke r0.<sun.net.www.protocol.http.NegotiateAuthentication: java.lang.String getHeaderName()>();
+        virtualinvoke r1.<sun.net.www.protocol.http.HttpURLConnection: void setAuthenticationProperty(java.lang.String,java.lang.String)>($r18, r6);
+        $z0 = 1;
+
+     label4:
+        return $z0;
+
+     label5:
+        $r19 := @caughtexception;
+        r20 = $r19;
+        return 0;
+
+        catch java.io.IOException from label0 to label4 with label5;
+    }
+
+    private byte[] firstToken() throws java.io.IOException
+    {
+        sun.net.www.protocol.http.NegotiateAuthentication r0;
+        java.util.HashMap r1, $r3, $r4, $r5, $r10;
+        java.lang.Throwable r2, $r13;
+        java.lang.String $r6, $r11;
+        java.lang.Object $r7;
+        sun.net.www.protocol.http.Negotiator $r8, $r9, $r14, $r16, $r17, $r20;
+        sun.net.www.protocol.http.HttpCallerInfo $r15;
+        java.io.IOException $r18, r19;
+        byte[] $r21;
+
+        r0 := @this: sun.net.www.protocol.http.NegotiateAuthentication;
+        r0.<sun.net.www.protocol.http.NegotiateAuthentication: sun.net.www.protocol.http.Negotiator negotiator> = null;
+        $r3 = <sun.net.www.protocol.http.NegotiateAuthentication: java.util.HashMap cache>;
+        if $r3 == null goto label6;
+
+        $r4 = <sun.net.www.protocol.http.NegotiateAuthentication: java.util.HashMap cache>;
+        r1 = $r4;
+        entermonitor $r4;
+
+     label0:
+        $r5 = <sun.net.www.protocol.http.NegotiateAuthentication: java.util.HashMap cache>;
+        $r6 = virtualinvoke r0.<sun.net.www.protocol.http.NegotiateAuthentication: java.lang.String getHost()>();
+        $r7 = virtualinvoke $r5.<java.util.HashMap: java.lang.Object get(java.lang.Object)>($r6);
+        $r8 = (sun.net.www.protocol.http.Negotiator) $r7;
+        r0.<sun.net.www.protocol.http.NegotiateAuthentication: sun.net.www.protocol.http.Negotiator negotiator> = $r8;
+        $r9 = r0.<sun.net.www.protocol.http.NegotiateAuthentication: sun.net.www.protocol.http.Negotiator negotiator>;
+        if $r9 == null goto label1;
+
+        $r10 = <sun.net.www.protocol.http.NegotiateAuthentication: java.util.HashMap cache>;
+        $r11 = virtualinvoke r0.<sun.net.www.protocol.http.NegotiateAuthentication: java.lang.String getHost()>();
+        virtualinvoke $r10.<java.util.HashMap: java.lang.Object remove(java.lang.Object)>($r11);
+
+     label1:
+        exitmonitor r1;
+
+     label2:
+        goto label6;
+
+     label3:
+        $r13 := @caughtexception;
+
+     label4:
+        r2 = $r13;
+        exitmonitor r1;
+
+     label5:
+        throw r2;
+
+     label6:
+        $r14 = r0.<sun.net.www.protocol.http.NegotiateAuthentication: sun.net.www.protocol.http.Negotiator negotiator>;
+        if $r14 != null goto label7;
+
+        $r15 = r0.<sun.net.www.protocol.http.NegotiateAuthentication: sun.net.www.protocol.http.HttpCallerInfo hci>;
+        $r16 = staticinvoke <sun.net.www.protocol.http.Negotiator: sun.net.www.protocol.http.Negotiator getNegotiator(sun.net.www.protocol.http.HttpCallerInfo)>($r15);
+        r0.<sun.net.www.protocol.http.NegotiateAuthentication: sun.net.www.protocol.http.Negotiator negotiator> = $r16;
+        $r17 = r0.<sun.net.www.protocol.http.NegotiateAuthentication: sun.net.www.protocol.http.Negotiator negotiator>;
+        if $r17 != null goto label7;
+
+        $r18 = new java.io.IOException;
+        specialinvoke $r18.<java.io.IOException: void <init>(java.lang.String)>("Cannot initialize Negotiator");
+        r19 = $r18;
+        throw r19;
+
+     label7:
+        $r20 = r0.<sun.net.www.protocol.http.NegotiateAuthentication: sun.net.www.protocol.http.Negotiator negotiator>;
+        $r21 = virtualinvoke $r20.<sun.net.www.protocol.http.Negotiator: byte[] firstToken()>();
+        return $r21;
+
+        catch java.lang.Throwable from label0 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    private byte[] nextToken(byte[]) throws java.io.IOException
+    {
+        sun.net.www.protocol.http.NegotiateAuthentication r0;
+        byte[] r1, $r3;
+        sun.net.www.protocol.http.Negotiator $r2;
+
+        r0 := @this: sun.net.www.protocol.http.NegotiateAuthentication;
+        r1 := @parameter0: byte[];
+        $r2 = r0.<sun.net.www.protocol.http.NegotiateAuthentication: sun.net.www.protocol.http.Negotiator negotiator>;
+        $r3 = virtualinvoke $r2.<sun.net.www.protocol.http.Negotiator: byte[] nextToken(byte[])>(r1);
+        return $r3;
+    }
+
+    static void <clinit>()
+    {
+        sun.util.logging.PlatformLogger $r0;
+
+        $r0 = staticinvoke <sun.net.www.protocol.http.HttpURLConnection: sun.util.logging.PlatformLogger getHttpLogger()>();
+        <sun.net.www.protocol.http.NegotiateAuthentication: sun.util.logging.PlatformLogger logger> = $r0;
+        <sun.net.www.protocol.http.NegotiateAuthentication: java.util.HashMap supported> = null;
+        <sun.net.www.protocol.http.NegotiateAuthentication: java.util.HashMap cache> = null;
+        return;
+    }
+}

@@ -1,0 +1,178 @@
+public class org.apache.tomcat.util.net.AprEndpoint$SocketProcessor extends java.lang.Object implements java.lang.Runnable
+{
+    private final org.apache.tomcat.util.net.SocketWrapper socket;
+    private final org.apache.tomcat.util.net.SocketStatus status;
+    final org.apache.tomcat.util.net.AprEndpoint this$0;
+
+    public void <init>(org.apache.tomcat.util.net.AprEndpoint, org.apache.tomcat.util.net.SocketWrapper, org.apache.tomcat.util.net.SocketStatus)
+    {
+        org.apache.tomcat.util.net.AprEndpoint$SocketProcessor r0;
+        org.apache.tomcat.util.net.AprEndpoint r1;
+        org.apache.tomcat.util.net.SocketWrapper r2;
+        org.apache.tomcat.util.net.SocketStatus r3;
+        java.lang.NullPointerException $r4;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint$SocketProcessor;
+        r1 := @parameter0: org.apache.tomcat.util.net.AprEndpoint;
+        r2 := @parameter1: org.apache.tomcat.util.net.SocketWrapper;
+        r3 := @parameter2: org.apache.tomcat.util.net.SocketStatus;
+        r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.AprEndpoint this$0> = r1;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket> = r2;
+        if r3 != null goto label0;
+
+        $r4 = new java.lang.NullPointerException;
+        specialinvoke $r4.<java.lang.NullPointerException: void <init>()>();
+        throw $r4;
+
+     label0:
+        r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketStatus status> = r3;
+        return;
+    }
+
+    public void run()
+    {
+        org.apache.tomcat.util.net.AprEndpoint$SocketProcessor r0;
+        java.lang.Object r1, $r6;
+        org.apache.tomcat.util.net.SocketWrapper $r2, $r5, $r8, r9;
+        boolean $z0;
+        org.apache.tomcat.util.net.SocketStatus $r3, $r4;
+        java.lang.Throwable $r7, $r10;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint$SocketProcessor;
+        $r2 = r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        $z0 = virtualinvoke $r2.<org.apache.tomcat.util.net.SocketWrapper: boolean isUpgraded()>();
+        if $z0 == 0 goto label5;
+
+        $r3 = <org.apache.tomcat.util.net.SocketStatus: org.apache.tomcat.util.net.SocketStatus OPEN_WRITE>;
+        $r4 = r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketStatus status>;
+        if $r3 != $r4 goto label5;
+
+        $r5 = r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        $r6 = virtualinvoke $r5.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getWriteThreadLock()>();
+        r1 = $r6;
+        entermonitor $r6;
+
+     label0:
+        specialinvoke r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: void doRun()>();
+        exitmonitor r1;
+
+     label1:
+        goto label11;
+
+     label2:
+        $r7 := @caughtexception;
+
+     label3:
+        exitmonitor r1;
+
+     label4:
+        throw $r7;
+
+     label5:
+        $r8 = r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        r9 = $r8;
+        entermonitor $r8;
+
+     label6:
+        specialinvoke r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: void doRun()>();
+        exitmonitor r9;
+
+     label7:
+        goto label11;
+
+     label8:
+        $r10 := @caughtexception;
+
+     label9:
+        exitmonitor r9;
+
+     label10:
+        throw $r10;
+
+     label11:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+        catch java.lang.Throwable from label6 to label7 with label8;
+        catch java.lang.Throwable from label9 to label10 with label8;
+    }
+
+    private void doRun()
+    {
+        org.apache.tomcat.util.net.AprEndpoint$SocketProcessor r0, r3, $r24;
+        org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState r1, $r10, $r16, $r22;
+        org.apache.tomcat.util.net.SocketStatus $r2, $r9;
+        org.apache.tomcat.util.net.SocketWrapper $r4, $r8, $r12, $r15, $r17, $r18, $r21, $r23, $r26;
+        java.lang.Object $r5, $r13;
+        org.apache.tomcat.util.net.AprEndpoint $r6, $r11, $r19, $r25, $r27;
+        org.apache.tomcat.util.net.AprEndpoint$Handler $r7;
+        java.lang.Long $r14;
+        long $l0;
+        boolean $z0;
+        java.util.concurrent.ConcurrentLinkedQueue $r20;
+        java.util.concurrent.Executor $r28;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint$SocketProcessor;
+        $r4 = r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        $r5 = virtualinvoke $r4.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        if $r5 != null goto label0;
+
+        return;
+
+     label0:
+        $r6 = r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.AprEndpoint this$0>;
+        $r7 = $r6.<org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.net.AprEndpoint$Handler handler>;
+        $r8 = r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        $r9 = r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketStatus status>;
+        r1 = interfaceinvoke $r7.<org.apache.tomcat.util.net.AprEndpoint$Handler: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState process(org.apache.tomcat.util.net.SocketWrapper,org.apache.tomcat.util.net.SocketStatus)>($r8, $r9);
+        $r10 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState CLOSED>;
+        if r1 != $r10 goto label1;
+
+        $r11 = r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.AprEndpoint this$0>;
+        $r12 = r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        $r13 = virtualinvoke $r12.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r14 = (java.lang.Long) $r13;
+        $l0 = virtualinvoke $r14.<java.lang.Long: long longValue()>();
+        staticinvoke <org.apache.tomcat.util.net.AprEndpoint: void access$0(org.apache.tomcat.util.net.AprEndpoint,long)>($r11, $l0);
+        $r15 = r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        $r15.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object socket> = null;
+        goto label3;
+
+     label1:
+        $r16 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState LONG>;
+        if r1 != $r16 goto label2;
+
+        $r17 = r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        virtualinvoke $r17.<org.apache.tomcat.util.net.SocketWrapper: void access()>();
+        $r18 = r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        $z0 = $r18.<org.apache.tomcat.util.net.SocketWrapper: boolean async>;
+        if $z0 == 0 goto label3;
+
+        $r19 = r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.AprEndpoint this$0>;
+        $r20 = $r19.<org.apache.tomcat.util.net.AprEndpoint: java.util.concurrent.ConcurrentLinkedQueue waitingRequests>;
+        $r21 = r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        virtualinvoke $r20.<java.util.concurrent.ConcurrentLinkedQueue: boolean add(java.lang.Object)>($r21);
+        goto label3;
+
+     label2:
+        $r22 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState ASYNC_END>;
+        if r1 != $r22 goto label3;
+
+        $r23 = r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        virtualinvoke $r23.<org.apache.tomcat.util.net.SocketWrapper: void access()>();
+        $r24 = new org.apache.tomcat.util.net.AprEndpoint$SocketProcessor;
+        $r25 = r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.AprEndpoint this$0>;
+        $r26 = r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.SocketWrapper socket>;
+        $r2 = <org.apache.tomcat.util.net.SocketStatus: org.apache.tomcat.util.net.SocketStatus OPEN_READ>;
+        specialinvoke $r24.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: void <init>(org.apache.tomcat.util.net.AprEndpoint,org.apache.tomcat.util.net.SocketWrapper,org.apache.tomcat.util.net.SocketStatus)>($r25, $r26, $r2);
+        r3 = $r24;
+        $r27 = r0.<org.apache.tomcat.util.net.AprEndpoint$SocketProcessor: org.apache.tomcat.util.net.AprEndpoint this$0>;
+        $r28 = virtualinvoke $r27.<org.apache.tomcat.util.net.AprEndpoint: java.util.concurrent.Executor getExecutor()>();
+        interfaceinvoke $r28.<java.util.concurrent.Executor: void execute(java.lang.Runnable)>(r3);
+
+     label3:
+        return;
+    }
+}

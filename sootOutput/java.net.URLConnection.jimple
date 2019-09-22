@@ -1,0 +1,1777 @@
+public abstract class java.net.URLConnection extends java.lang.Object
+{
+    protected java.net.URL url;
+    protected boolean doInput;
+    protected boolean doOutput;
+    private static boolean defaultAllowUserInteraction;
+    protected boolean allowUserInteraction;
+    private static boolean defaultUseCaches;
+    protected boolean useCaches;
+    protected long ifModifiedSince;
+    protected boolean connected;
+    private int connectTimeout;
+    private int readTimeout;
+    private sun.net.www.MessageHeader requests;
+    private static java.net.FileNameMap fileNameMap;
+    private static boolean fileNameMapLoaded;
+    static java.net.ContentHandlerFactory factory;
+    private static java.util.Hashtable handlers;
+    private static final java.lang.String contentClassPrefix;
+    private static final java.lang.String contentPathProp;
+
+    public static synchronized java.net.FileNameMap getFileNameMap()
+    {
+        java.net.FileNameMap $r0, $r1;
+        boolean $z0;
+        java.net.URLConnection$1 $r2;
+
+        $r0 = <java.net.URLConnection: java.net.FileNameMap fileNameMap>;
+        if $r0 != null goto label0;
+
+        $z0 = <java.net.URLConnection: boolean fileNameMapLoaded>;
+        if $z0 != 0 goto label0;
+
+        $r1 = staticinvoke <sun.net.www.MimeTable: java.net.FileNameMap loadTable()>();
+        <java.net.URLConnection: java.net.FileNameMap fileNameMap> = $r1;
+        <java.net.URLConnection: boolean fileNameMapLoaded> = 1;
+
+     label0:
+        $r2 = new java.net.URLConnection$1;
+        specialinvoke $r2.<java.net.URLConnection$1: void <init>()>();
+        return $r2;
+    }
+
+    public static void setFileNameMap(java.net.FileNameMap)
+    {
+        java.net.FileNameMap r0;
+        java.lang.SecurityManager r1;
+
+        r0 := @parameter0: java.net.FileNameMap;
+        r1 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r1 == null goto label0;
+
+        virtualinvoke r1.<java.lang.SecurityManager: void checkSetFactory()>();
+
+     label0:
+        <java.net.URLConnection: java.net.FileNameMap fileNameMap> = r0;
+        return;
+    }
+
+    public abstract void connect() throws java.io.IOException;
+
+    public void setConnectTimeout(int)
+    {
+        java.net.URLConnection r0;
+        int i0;
+        java.lang.IllegalArgumentException $r1;
+
+        r0 := @this: java.net.URLConnection;
+        i0 := @parameter0: int;
+        if i0 >= 0 goto label0;
+
+        $r1 = new java.lang.IllegalArgumentException;
+        specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("timeout can not be negative");
+        throw $r1;
+
+     label0:
+        r0.<java.net.URLConnection: int connectTimeout> = i0;
+        return;
+    }
+
+    public int getConnectTimeout()
+    {
+        java.net.URLConnection r0;
+        int $i0;
+
+        r0 := @this: java.net.URLConnection;
+        $i0 = r0.<java.net.URLConnection: int connectTimeout>;
+        return $i0;
+    }
+
+    public void setReadTimeout(int)
+    {
+        java.net.URLConnection r0;
+        int i0;
+        java.lang.IllegalArgumentException $r1;
+
+        r0 := @this: java.net.URLConnection;
+        i0 := @parameter0: int;
+        if i0 >= 0 goto label0;
+
+        $r1 = new java.lang.IllegalArgumentException;
+        specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("timeout can not be negative");
+        throw $r1;
+
+     label0:
+        r0.<java.net.URLConnection: int readTimeout> = i0;
+        return;
+    }
+
+    public int getReadTimeout()
+    {
+        java.net.URLConnection r0;
+        int $i0;
+
+        r0 := @this: java.net.URLConnection;
+        $i0 = r0.<java.net.URLConnection: int readTimeout>;
+        return $i0;
+    }
+
+    protected void <init>(java.net.URL)
+    {
+        java.net.URLConnection r0;
+        java.net.URL r1;
+        boolean $z0, $z1;
+
+        r0 := @this: java.net.URLConnection;
+        r1 := @parameter0: java.net.URL;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.net.URLConnection: boolean doInput> = 1;
+        r0.<java.net.URLConnection: boolean doOutput> = 0;
+        $z0 = <java.net.URLConnection: boolean defaultAllowUserInteraction>;
+        r0.<java.net.URLConnection: boolean allowUserInteraction> = $z0;
+        $z1 = <java.net.URLConnection: boolean defaultUseCaches>;
+        r0.<java.net.URLConnection: boolean useCaches> = $z1;
+        r0.<java.net.URLConnection: long ifModifiedSince> = 0L;
+        r0.<java.net.URLConnection: boolean connected> = 0;
+        r0.<java.net.URLConnection: java.net.URL url> = r1;
+        return;
+    }
+
+    public java.net.URL getURL()
+    {
+        java.net.URLConnection r0;
+        java.net.URL $r1;
+
+        r0 := @this: java.net.URLConnection;
+        $r1 = r0.<java.net.URLConnection: java.net.URL url>;
+        return $r1;
+    }
+
+    public int getContentLength()
+    {
+        java.net.URLConnection r0;
+        long l0;
+        byte $b1;
+        int $i2;
+
+        r0 := @this: java.net.URLConnection;
+        l0 = virtualinvoke r0.<java.net.URLConnection: long getContentLengthLong()>();
+        $b1 = l0 cmp 2147483647L;
+        if $b1 <= 0 goto label0;
+
+        return -1;
+
+     label0:
+        $i2 = (int) l0;
+        return $i2;
+    }
+
+    public long getContentLengthLong()
+    {
+        java.net.URLConnection r0;
+        long $l0;
+
+        r0 := @this: java.net.URLConnection;
+        $l0 = virtualinvoke r0.<java.net.URLConnection: long getHeaderFieldLong(java.lang.String,long)>("content-length", -1L);
+        return $l0;
+    }
+
+    public java.lang.String getContentType()
+    {
+        java.net.URLConnection r0;
+        java.lang.String $r1;
+
+        r0 := @this: java.net.URLConnection;
+        $r1 = virtualinvoke r0.<java.net.URLConnection: java.lang.String getHeaderField(java.lang.String)>("content-type");
+        return $r1;
+    }
+
+    public java.lang.String getContentEncoding()
+    {
+        java.net.URLConnection r0;
+        java.lang.String $r1;
+
+        r0 := @this: java.net.URLConnection;
+        $r1 = virtualinvoke r0.<java.net.URLConnection: java.lang.String getHeaderField(java.lang.String)>("content-encoding");
+        return $r1;
+    }
+
+    public long getExpiration()
+    {
+        java.net.URLConnection r0;
+        long $l0;
+
+        r0 := @this: java.net.URLConnection;
+        $l0 = virtualinvoke r0.<java.net.URLConnection: long getHeaderFieldDate(java.lang.String,long)>("expires", 0L);
+        return $l0;
+    }
+
+    public long getDate()
+    {
+        java.net.URLConnection r0;
+        long $l0;
+
+        r0 := @this: java.net.URLConnection;
+        $l0 = virtualinvoke r0.<java.net.URLConnection: long getHeaderFieldDate(java.lang.String,long)>("date", 0L);
+        return $l0;
+    }
+
+    public long getLastModified()
+    {
+        java.net.URLConnection r0;
+        long $l0;
+
+        r0 := @this: java.net.URLConnection;
+        $l0 = virtualinvoke r0.<java.net.URLConnection: long getHeaderFieldDate(java.lang.String,long)>("last-modified", 0L);
+        return $l0;
+    }
+
+    public java.lang.String getHeaderField(java.lang.String)
+    {
+        java.net.URLConnection r0;
+        java.lang.String r1;
+
+        r0 := @this: java.net.URLConnection;
+        r1 := @parameter0: java.lang.String;
+        return null;
+    }
+
+    public java.util.Map getHeaderFields()
+    {
+        java.net.URLConnection r0;
+        java.util.Map $r1;
+
+        r0 := @this: java.net.URLConnection;
+        $r1 = <java.util.Collections: java.util.Map EMPTY_MAP>;
+        return $r1;
+    }
+
+    public int getHeaderFieldInt(java.lang.String, int)
+    {
+        java.net.URLConnection r0;
+        java.lang.String r1, r2;
+        int i0, $i1;
+        java.lang.Exception r3, $r4;
+
+        r0 := @this: java.net.URLConnection;
+        r1 := @parameter0: java.lang.String;
+        i0 := @parameter1: int;
+        r2 = virtualinvoke r0.<java.net.URLConnection: java.lang.String getHeaderField(java.lang.String)>(r1);
+
+     label0:
+        $i1 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>(r2);
+
+     label1:
+        return $i1;
+
+     label2:
+        $r4 := @caughtexception;
+        r3 = $r4;
+        return i0;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    public long getHeaderFieldLong(java.lang.String, long)
+    {
+        java.net.URLConnection r0;
+        java.lang.String r1, r2;
+        long l0, $l1;
+        java.lang.Exception r3, $r4;
+
+        r0 := @this: java.net.URLConnection;
+        r1 := @parameter0: java.lang.String;
+        l0 := @parameter1: long;
+        r2 = virtualinvoke r0.<java.net.URLConnection: java.lang.String getHeaderField(java.lang.String)>(r1);
+
+     label0:
+        $l1 = staticinvoke <java.lang.Long: long parseLong(java.lang.String)>(r2);
+
+     label1:
+        return $l1;
+
+     label2:
+        $r4 := @caughtexception;
+        r3 = $r4;
+        return l0;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    public long getHeaderFieldDate(java.lang.String, long)
+    {
+        java.net.URLConnection r0;
+        java.lang.String r1, r2;
+        long l0, $l1;
+        java.lang.Exception r3, $r4;
+
+        r0 := @this: java.net.URLConnection;
+        r1 := @parameter0: java.lang.String;
+        l0 := @parameter1: long;
+        r2 = virtualinvoke r0.<java.net.URLConnection: java.lang.String getHeaderField(java.lang.String)>(r1);
+
+     label0:
+        $l1 = staticinvoke <java.util.Date: long parse(java.lang.String)>(r2);
+
+     label1:
+        return $l1;
+
+     label2:
+        $r4 := @caughtexception;
+        r3 = $r4;
+        return l0;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    public java.lang.String getHeaderFieldKey(int)
+    {
+        java.net.URLConnection r0;
+        int i0;
+
+        r0 := @this: java.net.URLConnection;
+        i0 := @parameter0: int;
+        return null;
+    }
+
+    public java.lang.String getHeaderField(int)
+    {
+        java.net.URLConnection r0;
+        int i0;
+
+        r0 := @this: java.net.URLConnection;
+        i0 := @parameter0: int;
+        return null;
+    }
+
+    public java.lang.Object getContent() throws java.io.IOException
+    {
+        java.net.URLConnection r0;
+        java.net.ContentHandler $r2;
+        java.lang.Object $r3;
+
+        r0 := @this: java.net.URLConnection;
+        virtualinvoke r0.<java.net.URLConnection: java.io.InputStream getInputStream()>();
+        $r2 = virtualinvoke r0.<java.net.URLConnection: java.net.ContentHandler getContentHandler()>();
+        $r3 = virtualinvoke $r2.<java.net.ContentHandler: java.lang.Object getContent(java.net.URLConnection)>(r0);
+        return $r3;
+    }
+
+    public java.lang.Object getContent(java.lang.Class[]) throws java.io.IOException
+    {
+        java.net.URLConnection r0;
+        java.lang.Class[] r1;
+        java.net.ContentHandler $r3;
+        java.lang.Object $r4;
+
+        r0 := @this: java.net.URLConnection;
+        r1 := @parameter0: java.lang.Class[];
+        virtualinvoke r0.<java.net.URLConnection: java.io.InputStream getInputStream()>();
+        $r3 = virtualinvoke r0.<java.net.URLConnection: java.net.ContentHandler getContentHandler()>();
+        $r4 = virtualinvoke $r3.<java.net.ContentHandler: java.lang.Object getContent(java.net.URLConnection,java.lang.Class[])>(r0, r1);
+        return $r4;
+    }
+
+    public java.security.Permission getPermission() throws java.io.IOException
+    {
+        java.net.URLConnection r0;
+        java.security.AllPermission $r1;
+
+        r0 := @this: java.net.URLConnection;
+        $r1 = <sun.security.util.SecurityConstants: java.security.AllPermission ALL_PERMISSION>;
+        return $r1;
+    }
+
+    public java.io.InputStream getInputStream() throws java.io.IOException
+    {
+        java.net.URLConnection r0;
+        java.net.UnknownServiceException $r1;
+
+        r0 := @this: java.net.URLConnection;
+        $r1 = new java.net.UnknownServiceException;
+        specialinvoke $r1.<java.net.UnknownServiceException: void <init>(java.lang.String)>("protocol doesn\'t support input");
+        throw $r1;
+    }
+
+    public java.io.OutputStream getOutputStream() throws java.io.IOException
+    {
+        java.net.URLConnection r0;
+        java.net.UnknownServiceException $r1;
+
+        r0 := @this: java.net.URLConnection;
+        $r1 = new java.net.UnknownServiceException;
+        specialinvoke $r1.<java.net.UnknownServiceException: void <init>(java.lang.String)>("protocol doesn\'t support output");
+        throw $r1;
+    }
+
+    public java.lang.String toString()
+    {
+        java.net.URLConnection r0;
+        java.lang.StringBuilder $r1, $r4, $r5, $r7;
+        java.lang.Class $r2;
+        java.lang.String $r3, $r8;
+        java.net.URL $r6;
+
+        r0 := @this: java.net.URLConnection;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r2 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+        $r3 = virtualinvoke $r2.<java.lang.Class: java.lang.String getName()>();
+        $r4 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r3);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(":");
+        $r6 = r0.<java.net.URLConnection: java.net.URL url>;
+        $r7 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r6);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r8;
+    }
+
+    public void setDoInput(boolean)
+    {
+        java.net.URLConnection r0;
+        boolean z0, $z1;
+        java.lang.IllegalStateException $r1;
+
+        r0 := @this: java.net.URLConnection;
+        z0 := @parameter0: boolean;
+        $z1 = r0.<java.net.URLConnection: boolean connected>;
+        if $z1 == 0 goto label0;
+
+        $r1 = new java.lang.IllegalStateException;
+        specialinvoke $r1.<java.lang.IllegalStateException: void <init>(java.lang.String)>("Already connected");
+        throw $r1;
+
+     label0:
+        r0.<java.net.URLConnection: boolean doInput> = z0;
+        return;
+    }
+
+    public boolean getDoInput()
+    {
+        java.net.URLConnection r0;
+        boolean $z0;
+
+        r0 := @this: java.net.URLConnection;
+        $z0 = r0.<java.net.URLConnection: boolean doInput>;
+        return $z0;
+    }
+
+    public void setDoOutput(boolean)
+    {
+        java.net.URLConnection r0;
+        boolean z0, $z1;
+        java.lang.IllegalStateException $r1;
+
+        r0 := @this: java.net.URLConnection;
+        z0 := @parameter0: boolean;
+        $z1 = r0.<java.net.URLConnection: boolean connected>;
+        if $z1 == 0 goto label0;
+
+        $r1 = new java.lang.IllegalStateException;
+        specialinvoke $r1.<java.lang.IllegalStateException: void <init>(java.lang.String)>("Already connected");
+        throw $r1;
+
+     label0:
+        r0.<java.net.URLConnection: boolean doOutput> = z0;
+        return;
+    }
+
+    public boolean getDoOutput()
+    {
+        java.net.URLConnection r0;
+        boolean $z0;
+
+        r0 := @this: java.net.URLConnection;
+        $z0 = r0.<java.net.URLConnection: boolean doOutput>;
+        return $z0;
+    }
+
+    public void setAllowUserInteraction(boolean)
+    {
+        java.net.URLConnection r0;
+        boolean z0, $z1;
+        java.lang.IllegalStateException $r1;
+
+        r0 := @this: java.net.URLConnection;
+        z0 := @parameter0: boolean;
+        $z1 = r0.<java.net.URLConnection: boolean connected>;
+        if $z1 == 0 goto label0;
+
+        $r1 = new java.lang.IllegalStateException;
+        specialinvoke $r1.<java.lang.IllegalStateException: void <init>(java.lang.String)>("Already connected");
+        throw $r1;
+
+     label0:
+        r0.<java.net.URLConnection: boolean allowUserInteraction> = z0;
+        return;
+    }
+
+    public boolean getAllowUserInteraction()
+    {
+        java.net.URLConnection r0;
+        boolean $z0;
+
+        r0 := @this: java.net.URLConnection;
+        $z0 = r0.<java.net.URLConnection: boolean allowUserInteraction>;
+        return $z0;
+    }
+
+    public static void setDefaultAllowUserInteraction(boolean)
+    {
+        boolean z0;
+
+        z0 := @parameter0: boolean;
+        <java.net.URLConnection: boolean defaultAllowUserInteraction> = z0;
+        return;
+    }
+
+    public static boolean getDefaultAllowUserInteraction()
+    {
+        boolean $z0;
+
+        $z0 = <java.net.URLConnection: boolean defaultAllowUserInteraction>;
+        return $z0;
+    }
+
+    public void setUseCaches(boolean)
+    {
+        java.net.URLConnection r0;
+        boolean z0, $z1;
+        java.lang.IllegalStateException $r1;
+
+        r0 := @this: java.net.URLConnection;
+        z0 := @parameter0: boolean;
+        $z1 = r0.<java.net.URLConnection: boolean connected>;
+        if $z1 == 0 goto label0;
+
+        $r1 = new java.lang.IllegalStateException;
+        specialinvoke $r1.<java.lang.IllegalStateException: void <init>(java.lang.String)>("Already connected");
+        throw $r1;
+
+     label0:
+        r0.<java.net.URLConnection: boolean useCaches> = z0;
+        return;
+    }
+
+    public boolean getUseCaches()
+    {
+        java.net.URLConnection r0;
+        boolean $z0;
+
+        r0 := @this: java.net.URLConnection;
+        $z0 = r0.<java.net.URLConnection: boolean useCaches>;
+        return $z0;
+    }
+
+    public void setIfModifiedSince(long)
+    {
+        java.net.URLConnection r0;
+        long l0;
+        boolean $z0;
+        java.lang.IllegalStateException $r1;
+
+        r0 := @this: java.net.URLConnection;
+        l0 := @parameter0: long;
+        $z0 = r0.<java.net.URLConnection: boolean connected>;
+        if $z0 == 0 goto label0;
+
+        $r1 = new java.lang.IllegalStateException;
+        specialinvoke $r1.<java.lang.IllegalStateException: void <init>(java.lang.String)>("Already connected");
+        throw $r1;
+
+     label0:
+        r0.<java.net.URLConnection: long ifModifiedSince> = l0;
+        return;
+    }
+
+    public long getIfModifiedSince()
+    {
+        java.net.URLConnection r0;
+        long $l0;
+
+        r0 := @this: java.net.URLConnection;
+        $l0 = r0.<java.net.URLConnection: long ifModifiedSince>;
+        return $l0;
+    }
+
+    public boolean getDefaultUseCaches()
+    {
+        java.net.URLConnection r0;
+        boolean $z0;
+
+        r0 := @this: java.net.URLConnection;
+        $z0 = <java.net.URLConnection: boolean defaultUseCaches>;
+        return $z0;
+    }
+
+    public void setDefaultUseCaches(boolean)
+    {
+        java.net.URLConnection r0;
+        boolean z0;
+
+        r0 := @this: java.net.URLConnection;
+        z0 := @parameter0: boolean;
+        <java.net.URLConnection: boolean defaultUseCaches> = z0;
+        return;
+    }
+
+    public void setRequestProperty(java.lang.String, java.lang.String)
+    {
+        java.net.URLConnection r0;
+        java.lang.String r1, r2;
+        boolean $z0;
+        java.lang.IllegalStateException $r3;
+        java.lang.NullPointerException $r4;
+        sun.net.www.MessageHeader $r5, $r6, $r7;
+
+        r0 := @this: java.net.URLConnection;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String;
+        $z0 = r0.<java.net.URLConnection: boolean connected>;
+        if $z0 == 0 goto label0;
+
+        $r3 = new java.lang.IllegalStateException;
+        specialinvoke $r3.<java.lang.IllegalStateException: void <init>(java.lang.String)>("Already connected");
+        throw $r3;
+
+     label0:
+        if r1 != null goto label1;
+
+        $r4 = new java.lang.NullPointerException;
+        specialinvoke $r4.<java.lang.NullPointerException: void <init>(java.lang.String)>("key is null");
+        throw $r4;
+
+     label1:
+        $r5 = r0.<java.net.URLConnection: sun.net.www.MessageHeader requests>;
+        if $r5 != null goto label2;
+
+        $r6 = new sun.net.www.MessageHeader;
+        specialinvoke $r6.<sun.net.www.MessageHeader: void <init>()>();
+        r0.<java.net.URLConnection: sun.net.www.MessageHeader requests> = $r6;
+
+     label2:
+        $r7 = r0.<java.net.URLConnection: sun.net.www.MessageHeader requests>;
+        virtualinvoke $r7.<sun.net.www.MessageHeader: void set(java.lang.String,java.lang.String)>(r1, r2);
+        return;
+    }
+
+    public void addRequestProperty(java.lang.String, java.lang.String)
+    {
+        java.net.URLConnection r0;
+        java.lang.String r1, r2;
+        boolean $z0;
+        java.lang.IllegalStateException $r3;
+        java.lang.NullPointerException $r4;
+        sun.net.www.MessageHeader $r5, $r6, $r7;
+
+        r0 := @this: java.net.URLConnection;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String;
+        $z0 = r0.<java.net.URLConnection: boolean connected>;
+        if $z0 == 0 goto label0;
+
+        $r3 = new java.lang.IllegalStateException;
+        specialinvoke $r3.<java.lang.IllegalStateException: void <init>(java.lang.String)>("Already connected");
+        throw $r3;
+
+     label0:
+        if r1 != null goto label1;
+
+        $r4 = new java.lang.NullPointerException;
+        specialinvoke $r4.<java.lang.NullPointerException: void <init>(java.lang.String)>("key is null");
+        throw $r4;
+
+     label1:
+        $r5 = r0.<java.net.URLConnection: sun.net.www.MessageHeader requests>;
+        if $r5 != null goto label2;
+
+        $r6 = new sun.net.www.MessageHeader;
+        specialinvoke $r6.<sun.net.www.MessageHeader: void <init>()>();
+        r0.<java.net.URLConnection: sun.net.www.MessageHeader requests> = $r6;
+
+     label2:
+        $r7 = r0.<java.net.URLConnection: sun.net.www.MessageHeader requests>;
+        virtualinvoke $r7.<sun.net.www.MessageHeader: void add(java.lang.String,java.lang.String)>(r1, r2);
+        return;
+    }
+
+    public java.lang.String getRequestProperty(java.lang.String)
+    {
+        java.net.URLConnection r0;
+        java.lang.String r1, $r5;
+        boolean $z0;
+        java.lang.IllegalStateException $r2;
+        sun.net.www.MessageHeader $r3, $r4;
+
+        r0 := @this: java.net.URLConnection;
+        r1 := @parameter0: java.lang.String;
+        $z0 = r0.<java.net.URLConnection: boolean connected>;
+        if $z0 == 0 goto label0;
+
+        $r2 = new java.lang.IllegalStateException;
+        specialinvoke $r2.<java.lang.IllegalStateException: void <init>(java.lang.String)>("Already connected");
+        throw $r2;
+
+     label0:
+        $r3 = r0.<java.net.URLConnection: sun.net.www.MessageHeader requests>;
+        if $r3 != null goto label1;
+
+        return null;
+
+     label1:
+        $r4 = r0.<java.net.URLConnection: sun.net.www.MessageHeader requests>;
+        $r5 = virtualinvoke $r4.<sun.net.www.MessageHeader: java.lang.String findValue(java.lang.String)>(r1);
+        return $r5;
+    }
+
+    public java.util.Map getRequestProperties()
+    {
+        java.net.URLConnection r0;
+        boolean $z0;
+        java.lang.IllegalStateException $r1;
+        sun.net.www.MessageHeader $r2, $r4;
+        java.util.Map $r3, $r5;
+
+        r0 := @this: java.net.URLConnection;
+        $z0 = r0.<java.net.URLConnection: boolean connected>;
+        if $z0 == 0 goto label0;
+
+        $r1 = new java.lang.IllegalStateException;
+        specialinvoke $r1.<java.lang.IllegalStateException: void <init>(java.lang.String)>("Already connected");
+        throw $r1;
+
+     label0:
+        $r2 = r0.<java.net.URLConnection: sun.net.www.MessageHeader requests>;
+        if $r2 != null goto label1;
+
+        $r3 = <java.util.Collections: java.util.Map EMPTY_MAP>;
+        return $r3;
+
+     label1:
+        $r4 = r0.<java.net.URLConnection: sun.net.www.MessageHeader requests>;
+        $r5 = virtualinvoke $r4.<sun.net.www.MessageHeader: java.util.Map getHeaders(java.lang.String[])>(null);
+        return $r5;
+    }
+
+    public static void setDefaultRequestProperty(java.lang.String, java.lang.String)
+    {
+        java.lang.String r0, r1;
+
+        r0 := @parameter0: java.lang.String;
+        r1 := @parameter1: java.lang.String;
+        return;
+    }
+
+    public static java.lang.String getDefaultRequestProperty(java.lang.String)
+    {
+        java.lang.String r0;
+
+        r0 := @parameter0: java.lang.String;
+        return null;
+    }
+
+    public static synchronized void setContentHandlerFactory(java.net.ContentHandlerFactory)
+    {
+        java.net.ContentHandlerFactory r0, $r1;
+        java.lang.SecurityManager r2;
+        java.lang.Error $r3;
+
+        r0 := @parameter0: java.net.ContentHandlerFactory;
+        $r1 = <java.net.URLConnection: java.net.ContentHandlerFactory factory>;
+        if $r1 == null goto label0;
+
+        $r3 = new java.lang.Error;
+        specialinvoke $r3.<java.lang.Error: void <init>(java.lang.String)>("factory already defined");
+        throw $r3;
+
+     label0:
+        r2 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r2 == null goto label1;
+
+        virtualinvoke r2.<java.lang.SecurityManager: void checkSetFactory()>();
+
+     label1:
+        <java.net.URLConnection: java.net.ContentHandlerFactory factory> = r0;
+        return;
+    }
+
+    synchronized java.net.ContentHandler getContentHandler() throws java.net.UnknownServiceException
+    {
+        java.net.URLConnection r0;
+        java.lang.String r1, $r4;
+        java.net.ContentHandler r2;
+        java.lang.Exception r3, $r9, $r12, r13;
+        java.net.UnknownServiceException $r5;
+        java.util.Hashtable $r6, $r14;
+        java.lang.Object $r7;
+        java.net.ContentHandlerFactory $r10, $r11;
+
+        r0 := @this: java.net.URLConnection;
+        $r4 = virtualinvoke r0.<java.net.URLConnection: java.lang.String getContentType()>();
+        r1 = specialinvoke r0.<java.net.URLConnection: java.lang.String stripOffParameters(java.lang.String)>($r4);
+        r2 = null;
+        if r1 != null goto label0;
+
+        $r5 = new java.net.UnknownServiceException;
+        specialinvoke $r5.<java.net.UnknownServiceException: void <init>(java.lang.String)>("no content-type");
+        throw $r5;
+
+     label0:
+        $r6 = <java.net.URLConnection: java.util.Hashtable handlers>;
+        $r7 = virtualinvoke $r6.<java.util.Hashtable: java.lang.Object get(java.lang.Object)>(r1);
+        r2 = (java.net.ContentHandler) $r7;
+        if r2 == null goto label2;
+
+     label1:
+        return r2;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r9 := @caughtexception;
+        r3 = $r9;
+
+     label4:
+        $r10 = <java.net.URLConnection: java.net.ContentHandlerFactory factory>;
+        if $r10 == null goto label5;
+
+        $r11 = <java.net.URLConnection: java.net.ContentHandlerFactory factory>;
+        r2 = interfaceinvoke $r11.<java.net.ContentHandlerFactory: java.net.ContentHandler createContentHandler(java.lang.String)>(r1);
+
+     label5:
+        if r2 != null goto label10;
+
+     label6:
+        r2 = specialinvoke r0.<java.net.URLConnection: java.net.ContentHandler lookupContentHandlerClassFor(java.lang.String)>(r1);
+
+     label7:
+        goto label9;
+
+     label8:
+        $r12 := @caughtexception;
+        r13 = $r12;
+        virtualinvoke r13.<java.lang.Exception: void printStackTrace()>();
+        r2 = <java.net.UnknownContentHandler: java.net.ContentHandler INSTANCE>;
+
+     label9:
+        $r14 = <java.net.URLConnection: java.util.Hashtable handlers>;
+        virtualinvoke $r14.<java.util.Hashtable: java.lang.Object put(java.lang.Object,java.lang.Object)>(r1, r2);
+
+     label10:
+        return r2;
+
+        catch java.lang.Exception from label0 to label1 with label3;
+        catch java.lang.Exception from label6 to label7 with label8;
+    }
+
+    private java.lang.String stripOffParameters(java.lang.String)
+    {
+        java.net.URLConnection r0;
+        java.lang.String r1, $r2;
+        int i0;
+
+        r0 := @this: java.net.URLConnection;
+        r1 := @parameter0: java.lang.String;
+        if r1 != null goto label0;
+
+        return null;
+
+     label0:
+        i0 = virtualinvoke r1.<java.lang.String: int indexOf(int)>(59);
+        if i0 <= 0 goto label1;
+
+        $r2 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int,int)>(0, i0);
+        return $r2;
+
+     label1:
+        return r1;
+    }
+
+    private java.net.ContentHandler lookupContentHandlerClassFor(java.lang.String) throws java.lang.InstantiationException, java.lang.IllegalAccessException, java.lang.ClassNotFoundException
+    {
+        java.net.URLConnection r0;
+        java.lang.String r1, r2, r3, r5, r6, $r11;
+        java.util.StringTokenizer r4, $r10;
+        java.lang.Class r7;
+        java.lang.ClassNotFoundException r8, $r16;
+        java.lang.ClassLoader r9;
+        boolean $z0;
+        java.lang.StringBuilder $r12, $r13, $r14, $r15;
+        java.lang.Object $r17;
+        java.net.ContentHandler r18, $r22;
+        java.lang.Exception $r20, r21;
+
+        r0 := @this: java.net.URLConnection;
+        r1 := @parameter0: java.lang.String;
+        r2 = specialinvoke r0.<java.net.URLConnection: java.lang.String typeToPackageName(java.lang.String)>(r1);
+        r3 = specialinvoke r0.<java.net.URLConnection: java.lang.String getContentHandlerPkgPrefixes()>();
+        $r10 = new java.util.StringTokenizer;
+        specialinvoke $r10.<java.util.StringTokenizer: void <init>(java.lang.String,java.lang.String)>(r3, "|");
+        r4 = $r10;
+
+     label0:
+        $z0 = virtualinvoke r4.<java.util.StringTokenizer: boolean hasMoreTokens()>();
+        if $z0 == 0 goto label10;
+
+        $r11 = virtualinvoke r4.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        r5 = virtualinvoke $r11.<java.lang.String: java.lang.String trim()>();
+
+     label1:
+        $r12 = new java.lang.StringBuilder;
+        specialinvoke $r12.<java.lang.StringBuilder: void <init>()>();
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r5);
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".");
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        r6 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+        r7 = null;
+
+     label2:
+        r7 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(r6);
+
+     label3:
+        goto label5;
+
+     label4:
+        $r16 := @caughtexception;
+        r8 = $r16;
+        r9 = staticinvoke <java.lang.ClassLoader: java.lang.ClassLoader getSystemClassLoader()>();
+        if r9 == null goto label5;
+
+        r7 = virtualinvoke r9.<java.lang.ClassLoader: java.lang.Class loadClass(java.lang.String)>(r6);
+
+     label5:
+        if r7 == null goto label7;
+
+        $r17 = virtualinvoke r7.<java.lang.Class: java.lang.Object newInstance()>();
+        r18 = (java.net.ContentHandler) $r17;
+
+     label6:
+        return r18;
+
+     label7:
+        goto label9;
+
+     label8:
+        $r20 := @caughtexception;
+        r21 = $r20;
+
+     label9:
+        goto label0;
+
+     label10:
+        $r22 = <java.net.UnknownContentHandler: java.net.ContentHandler INSTANCE>;
+        return $r22;
+
+        catch java.lang.ClassNotFoundException from label2 to label3 with label4;
+        catch java.lang.Exception from label1 to label6 with label8;
+    }
+
+    private java.lang.String typeToPackageName(java.lang.String)
+    {
+        java.net.URLConnection r0;
+        java.lang.String r1, r3, $r4;
+        int i0, i1;
+        char[] r2;
+        char c2;
+
+        r0 := @this: java.net.URLConnection;
+        r1 := @parameter0: java.lang.String;
+        r3 = virtualinvoke r1.<java.lang.String: java.lang.String toLowerCase()>();
+        i0 = virtualinvoke r3.<java.lang.String: int length()>();
+        r2 = newarray (char)[i0];
+        virtualinvoke r3.<java.lang.String: void getChars(int,int,char[],int)>(0, i0, r2, 0);
+        i1 = 0;
+
+     label0:
+        if i1 >= i0 goto label6;
+
+        c2 = r2[i1];
+        if c2 != 47 goto label1;
+
+        r2[i1] = 46;
+        goto label5;
+
+     label1:
+        if 65 > c2 goto label2;
+
+        if c2 <= 90 goto label5;
+
+     label2:
+        if 97 > c2 goto label3;
+
+        if c2 <= 122 goto label5;
+
+     label3:
+        if 48 > c2 goto label4;
+
+        if c2 <= 57 goto label5;
+
+     label4:
+        r2[i1] = 95;
+
+     label5:
+        i1 = i1 + 1;
+        goto label0;
+
+     label6:
+        $r4 = new java.lang.String;
+        specialinvoke $r4.<java.lang.String: void <init>(char[])>(r2);
+        return $r4;
+    }
+
+    private java.lang.String getContentHandlerPkgPrefixes()
+    {
+        java.net.URLConnection r0;
+        sun.security.action.GetPropertyAction $r1;
+        java.lang.String r2, $r10;
+        java.lang.Object $r3;
+        java.lang.StringBuilder $r4, $r5, $r6, $r7, $r8, $r9;
+
+        r0 := @this: java.net.URLConnection;
+        $r1 = new sun.security.action.GetPropertyAction;
+        specialinvoke $r1.<sun.security.action.GetPropertyAction: void <init>(java.lang.String,java.lang.String)>("java.content.handler.pkgs", "");
+        $r3 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r1);
+        r2 = (java.lang.String) $r3;
+        if r2 == "" goto label0;
+
+        $r4 = new java.lang.StringBuilder;
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>()>();
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("|");
+        r2 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.String toString()>();
+
+     label0:
+        $r7 = new java.lang.StringBuilder;
+        specialinvoke $r7.<java.lang.StringBuilder: void <init>()>();
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("sun.net.www.content");
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r10;
+    }
+
+    public static java.lang.String guessContentTypeFromName(java.lang.String)
+    {
+        java.lang.String r0, $r2;
+        java.net.FileNameMap $r1;
+
+        r0 := @parameter0: java.lang.String;
+        $r1 = staticinvoke <java.net.URLConnection: java.net.FileNameMap getFileNameMap()>();
+        $r2 = interfaceinvoke $r1.<java.net.FileNameMap: java.lang.String getContentTypeFor(java.lang.String)>(r0);
+        return $r2;
+    }
+
+    public static java.lang.String guessContentTypeFromStream(java.io.InputStream) throws java.io.IOException
+    {
+        java.io.InputStream r0;
+        int i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15;
+        boolean $z0, $z1;
+
+        r0 := @parameter0: java.io.InputStream;
+        $z0 = virtualinvoke r0.<java.io.InputStream: boolean markSupported()>();
+        if $z0 != 0 goto label0;
+
+        return null;
+
+     label0:
+        virtualinvoke r0.<java.io.InputStream: void mark(int)>(16);
+        i0 = virtualinvoke r0.<java.io.InputStream: int read()>();
+        i1 = virtualinvoke r0.<java.io.InputStream: int read()>();
+        i2 = virtualinvoke r0.<java.io.InputStream: int read()>();
+        i3 = virtualinvoke r0.<java.io.InputStream: int read()>();
+        i4 = virtualinvoke r0.<java.io.InputStream: int read()>();
+        i5 = virtualinvoke r0.<java.io.InputStream: int read()>();
+        i6 = virtualinvoke r0.<java.io.InputStream: int read()>();
+        i7 = virtualinvoke r0.<java.io.InputStream: int read()>();
+        i8 = virtualinvoke r0.<java.io.InputStream: int read()>();
+        i9 = virtualinvoke r0.<java.io.InputStream: int read()>();
+        i10 = virtualinvoke r0.<java.io.InputStream: int read()>();
+        i11 = virtualinvoke r0.<java.io.InputStream: int read()>();
+        i12 = virtualinvoke r0.<java.io.InputStream: int read()>();
+        i13 = virtualinvoke r0.<java.io.InputStream: int read()>();
+        i14 = virtualinvoke r0.<java.io.InputStream: int read()>();
+        i15 = virtualinvoke r0.<java.io.InputStream: int read()>();
+        virtualinvoke r0.<java.io.InputStream: void reset()>();
+        if i0 != 202 goto label1;
+
+        if i1 != 254 goto label1;
+
+        if i2 != 186 goto label1;
+
+        if i3 != 190 goto label1;
+
+        return "application/java-vm";
+
+     label1:
+        if i0 != 172 goto label2;
+
+        if i1 != 237 goto label2;
+
+        return "application/x-java-serialized-object";
+
+     label2:
+        if i0 != 60 goto label10;
+
+        if i1 == 33 goto label8;
+
+        if i1 != 104 goto label4;
+
+        if i2 != 116 goto label3;
+
+        if i3 != 109 goto label3;
+
+        if i4 == 108 goto label8;
+
+     label3:
+        if i2 != 101 goto label4;
+
+        if i3 != 97 goto label4;
+
+        if i4 == 100 goto label8;
+
+     label4:
+        if i1 != 98 goto label5;
+
+        if i2 != 111 goto label5;
+
+        if i3 != 100 goto label5;
+
+        if i4 == 121 goto label8;
+
+     label5:
+        if i1 != 72 goto label7;
+
+        if i2 != 84 goto label6;
+
+        if i3 != 77 goto label6;
+
+        if i4 == 76 goto label8;
+
+     label6:
+        if i2 != 69 goto label7;
+
+        if i3 != 65 goto label7;
+
+        if i4 == 68 goto label8;
+
+     label7:
+        if i1 != 66 goto label9;
+
+        if i2 != 79 goto label9;
+
+        if i3 != 68 goto label9;
+
+        if i4 != 89 goto label9;
+
+     label8:
+        return "text/html";
+
+     label9:
+        if i1 != 63 goto label10;
+
+        if i2 != 120 goto label10;
+
+        if i3 != 109 goto label10;
+
+        if i4 != 108 goto label10;
+
+        if i5 != 32 goto label10;
+
+        return "application/xml";
+
+     label10:
+        if i0 != 239 goto label11;
+
+        if i1 != 187 goto label11;
+
+        if i2 != 191 goto label11;
+
+        if i3 != 60 goto label11;
+
+        if i4 != 63 goto label11;
+
+        if i5 != 120 goto label11;
+
+        return "application/xml";
+
+     label11:
+        if i0 != 254 goto label12;
+
+        if i1 != 255 goto label12;
+
+        if i2 != 0 goto label12;
+
+        if i3 != 60 goto label12;
+
+        if i4 != 0 goto label12;
+
+        if i5 != 63 goto label12;
+
+        if i6 != 0 goto label12;
+
+        if i7 != 120 goto label12;
+
+        return "application/xml";
+
+     label12:
+        if i0 != 255 goto label13;
+
+        if i1 != 254 goto label13;
+
+        if i2 != 60 goto label13;
+
+        if i3 != 0 goto label13;
+
+        if i4 != 63 goto label13;
+
+        if i5 != 0 goto label13;
+
+        if i6 != 120 goto label13;
+
+        if i7 != 0 goto label13;
+
+        return "application/xml";
+
+     label13:
+        if i0 != 0 goto label14;
+
+        if i1 != 0 goto label14;
+
+        if i2 != 254 goto label14;
+
+        if i3 != 255 goto label14;
+
+        if i4 != 0 goto label14;
+
+        if i5 != 0 goto label14;
+
+        if i6 != 0 goto label14;
+
+        if i7 != 60 goto label14;
+
+        if i8 != 0 goto label14;
+
+        if i9 != 0 goto label14;
+
+        if i10 != 0 goto label14;
+
+        if i11 != 63 goto label14;
+
+        if i12 != 0 goto label14;
+
+        if i13 != 0 goto label14;
+
+        if i14 != 0 goto label14;
+
+        if i15 != 120 goto label14;
+
+        return "application/xml";
+
+     label14:
+        if i0 != 255 goto label15;
+
+        if i1 != 254 goto label15;
+
+        if i2 != 0 goto label15;
+
+        if i3 != 0 goto label15;
+
+        if i4 != 60 goto label15;
+
+        if i5 != 0 goto label15;
+
+        if i6 != 0 goto label15;
+
+        if i7 != 0 goto label15;
+
+        if i8 != 63 goto label15;
+
+        if i9 != 0 goto label15;
+
+        if i10 != 0 goto label15;
+
+        if i11 != 0 goto label15;
+
+        if i12 != 120 goto label15;
+
+        if i13 != 0 goto label15;
+
+        if i14 != 0 goto label15;
+
+        if i15 != 0 goto label15;
+
+        return "application/xml";
+
+     label15:
+        if i0 != 71 goto label16;
+
+        if i1 != 73 goto label16;
+
+        if i2 != 70 goto label16;
+
+        if i3 != 56 goto label16;
+
+        return "image/gif";
+
+     label16:
+        if i0 != 35 goto label17;
+
+        if i1 != 100 goto label17;
+
+        if i2 != 101 goto label17;
+
+        if i3 != 102 goto label17;
+
+        return "image/x-bitmap";
+
+     label17:
+        if i0 != 33 goto label18;
+
+        if i1 != 32 goto label18;
+
+        if i2 != 88 goto label18;
+
+        if i3 != 80 goto label18;
+
+        if i4 != 77 goto label18;
+
+        if i5 != 50 goto label18;
+
+        return "image/x-pixmap";
+
+     label18:
+        if i0 != 137 goto label19;
+
+        if i1 != 80 goto label19;
+
+        if i2 != 78 goto label19;
+
+        if i3 != 71 goto label19;
+
+        if i4 != 13 goto label19;
+
+        if i5 != 10 goto label19;
+
+        if i6 != 26 goto label19;
+
+        if i7 != 10 goto label19;
+
+        return "image/png";
+
+     label19:
+        if i0 != 255 goto label22;
+
+        if i1 != 216 goto label22;
+
+        if i2 != 255 goto label22;
+
+        if i3 != 224 goto label20;
+
+        return "image/jpeg";
+
+     label20:
+        if i3 != 225 goto label21;
+
+        if i6 != 69 goto label21;
+
+        if i7 != 120 goto label21;
+
+        if i8 != 105 goto label21;
+
+        if i9 != 102 goto label21;
+
+        if i10 != 0 goto label21;
+
+        return "image/jpeg";
+
+     label21:
+        if i3 != 238 goto label22;
+
+        return "image/jpg";
+
+     label22:
+        if i0 != 208 goto label23;
+
+        if i1 != 207 goto label23;
+
+        if i2 != 17 goto label23;
+
+        if i3 != 224 goto label23;
+
+        if i4 != 161 goto label23;
+
+        if i5 != 177 goto label23;
+
+        if i6 != 26 goto label23;
+
+        if i7 != 225 goto label23;
+
+        $z1 = staticinvoke <java.net.URLConnection: boolean checkfpx(java.io.InputStream)>(r0);
+        if $z1 == 0 goto label23;
+
+        return "image/vnd.fpx";
+
+     label23:
+        if i0 != 46 goto label24;
+
+        if i1 != 115 goto label24;
+
+        if i2 != 110 goto label24;
+
+        if i3 != 100 goto label24;
+
+        return "audio/basic";
+
+     label24:
+        if i0 != 100 goto label25;
+
+        if i1 != 110 goto label25;
+
+        if i2 != 115 goto label25;
+
+        if i3 != 46 goto label25;
+
+        return "audio/basic";
+
+     label25:
+        if i0 != 82 goto label26;
+
+        if i1 != 73 goto label26;
+
+        if i2 != 70 goto label26;
+
+        if i3 != 70 goto label26;
+
+        return "audio/x-wav";
+
+     label26:
+        return null;
+    }
+
+    private static boolean checkfpx(java.io.InputStream) throws java.io.IOException
+    {
+        java.io.InputStream r0;
+        long l0, l1, l4, $l6, l9, l17, l18, $l19, l20, l22, l42, $l44, $l45, $l46, $l47, l48, $l52;
+        int[] r1;
+        int i2, i3, i5, $i8, $i10, $i11, $i12, i13, $i14, i15, $i16, $i23, $i24, $i25, i26, $i27, $i28, i29, $i30, $i31, i32, $i33, i34, $i35, $i36, i37, $i38, $i39, i40, $i41, $i43, $i50, $i51, $i54, $i55, $i56, $i57, $i58, $i59, $i60, $i61, $i62, $i63, $i64, $i65, $i66, $i67, $i68, $i69, $i70, $i71, $i72, $i73, $i74, $i75, $i76, $i77, $i78, $i79, $i80, $i81, $i82, $i83, $i84;
+        byte $b7, $b21, $b49, $b53;
+
+        r0 := @parameter0: java.io.InputStream;
+        virtualinvoke r0.<java.io.InputStream: void mark(int)>(256);
+        l0 = 28L;
+        $l6 = staticinvoke <java.net.URLConnection: long skipForward(java.io.InputStream,long)>(r0, l0);
+        l1 = $l6;
+        $b7 = $l6 cmp l0;
+        if $b7 >= 0 goto label0;
+
+        virtualinvoke r0.<java.io.InputStream: void reset()>();
+        return 0;
+
+     label0:
+        r1 = newarray (int)[16];
+        $i8 = staticinvoke <java.net.URLConnection: int readBytes(int[],int,java.io.InputStream)>(r1, 2, r0);
+        if $i8 >= 0 goto label1;
+
+        virtualinvoke r0.<java.io.InputStream: void reset()>();
+        return 0;
+
+     label1:
+        i2 = r1[0];
+        l9 = l1 + 2L;
+        $i10 = staticinvoke <java.net.URLConnection: int readBytes(int[],int,java.io.InputStream)>(r1, 2, r0);
+        if $i10 >= 0 goto label2;
+
+        virtualinvoke r0.<java.io.InputStream: void reset()>();
+        return 0;
+
+     label2:
+        if i2 != 254 goto label3;
+
+        i3 = r1[0];
+        $i11 = r1[1];
+        $i12 = $i11 << 8;
+        i13 = i3 + $i12;
+        goto label4;
+
+     label3:
+        $i14 = r1[0];
+        i15 = $i14 << 8;
+        $i16 = r1[1];
+        i13 = i15 + $i16;
+
+     label4:
+        l17 = l9 + 2L;
+        l18 = 48L - l17;
+        l4 = 0L;
+        $l19 = staticinvoke <java.net.URLConnection: long skipForward(java.io.InputStream,long)>(r0, l18);
+        l20 = $l19;
+        $b21 = $l19 cmp l18;
+        if $b21 >= 0 goto label5;
+
+        virtualinvoke r0.<java.io.InputStream: void reset()>();
+        return 0;
+
+     label5:
+        l22 = l17 + l20;
+        $i23 = staticinvoke <java.net.URLConnection: int readBytes(int[],int,java.io.InputStream)>(r1, 4, r0);
+        if $i23 >= 0 goto label6;
+
+        virtualinvoke r0.<java.io.InputStream: void reset()>();
+        return 0;
+
+     label6:
+        if i2 != 254 goto label7;
+
+        i5 = r1[0];
+        $i24 = r1[1];
+        $i25 = $i24 << 8;
+        i26 = i5 + $i25;
+        $i27 = r1[2];
+        $i28 = $i27 << 16;
+        i29 = i26 + $i28;
+        $i30 = r1[3];
+        $i31 = $i30 << 24;
+        i32 = i29 + $i31;
+        goto label8;
+
+     label7:
+        $i33 = r1[0];
+        i34 = $i33 << 24;
+        $i35 = r1[1];
+        $i36 = $i35 << 16;
+        i37 = i34 + $i36;
+        $i38 = r1[2];
+        $i39 = $i38 << 8;
+        i40 = i37 + $i39;
+        $i41 = r1[3];
+        i32 = i40 + $i41;
+
+     label8:
+        l42 = l22 + 4L;
+        virtualinvoke r0.<java.io.InputStream: void reset()>();
+        $i43 = 1 << i13;
+        $l44 = (long) $i43;
+        $l45 = (long) i32;
+        $l46 = $l44 * $l45;
+        $l47 = 512L + $l46;
+        l48 = $l47 + 80L;
+        $b49 = l48 cmp 0L;
+        if $b49 >= 0 goto label9;
+
+        return 0;
+
+     label9:
+        $i50 = (int) l48;
+        $i51 = $i50 + 48;
+        virtualinvoke r0.<java.io.InputStream: void mark(int)>($i51);
+        $l52 = staticinvoke <java.net.URLConnection: long skipForward(java.io.InputStream,long)>(r0, l48);
+        $b53 = $l52 cmp l48;
+        if $b53 >= 0 goto label10;
+
+        virtualinvoke r0.<java.io.InputStream: void reset()>();
+        return 0;
+
+     label10:
+        $i54 = staticinvoke <java.net.URLConnection: int readBytes(int[],int,java.io.InputStream)>(r1, 16, r0);
+        if $i54 >= 0 goto label11;
+
+        virtualinvoke r0.<java.io.InputStream: void reset()>();
+        return 0;
+
+     label11:
+        if i2 != 254 goto label12;
+
+        $i55 = r1[0];
+        if $i55 != 0 goto label12;
+
+        $i56 = r1[2];
+        if $i56 != 97 goto label12;
+
+        $i57 = r1[3];
+        if $i57 != 86 goto label12;
+
+        $i58 = r1[4];
+        if $i58 != 84 goto label12;
+
+        $i59 = r1[5];
+        if $i59 != 193 goto label12;
+
+        $i60 = r1[6];
+        if $i60 != 206 goto label12;
+
+        $i61 = r1[7];
+        if $i61 != 17 goto label12;
+
+        $i62 = r1[8];
+        if $i62 != 133 goto label12;
+
+        $i63 = r1[9];
+        if $i63 != 83 goto label12;
+
+        $i64 = r1[10];
+        if $i64 != 0 goto label12;
+
+        $i65 = r1[11];
+        if $i65 != 170 goto label12;
+
+        $i66 = r1[12];
+        if $i66 != 0 goto label12;
+
+        $i67 = r1[13];
+        if $i67 != 161 goto label12;
+
+        $i68 = r1[14];
+        if $i68 != 249 goto label12;
+
+        $i69 = r1[15];
+        if $i69 != 91 goto label12;
+
+        virtualinvoke r0.<java.io.InputStream: void reset()>();
+        return 1;
+
+     label12:
+        $i70 = r1[3];
+        if $i70 != 0 goto label13;
+
+        $i71 = r1[1];
+        if $i71 != 97 goto label13;
+
+        $i72 = r1[0];
+        if $i72 != 86 goto label13;
+
+        $i73 = r1[5];
+        if $i73 != 84 goto label13;
+
+        $i74 = r1[4];
+        if $i74 != 193 goto label13;
+
+        $i75 = r1[7];
+        if $i75 != 206 goto label13;
+
+        $i76 = r1[6];
+        if $i76 != 17 goto label13;
+
+        $i77 = r1[8];
+        if $i77 != 133 goto label13;
+
+        $i78 = r1[9];
+        if $i78 != 83 goto label13;
+
+        $i79 = r1[10];
+        if $i79 != 0 goto label13;
+
+        $i80 = r1[11];
+        if $i80 != 170 goto label13;
+
+        $i81 = r1[12];
+        if $i81 != 0 goto label13;
+
+        $i82 = r1[13];
+        if $i82 != 161 goto label13;
+
+        $i83 = r1[14];
+        if $i83 != 249 goto label13;
+
+        $i84 = r1[15];
+        if $i84 != 91 goto label13;
+
+        virtualinvoke r0.<java.io.InputStream: void reset()>();
+        return 1;
+
+     label13:
+        virtualinvoke r0.<java.io.InputStream: void reset()>();
+        return 0;
+    }
+
+    private static int readBytes(int[], int, java.io.InputStream) throws java.io.IOException
+    {
+        int[] r0;
+        int i0, i1, $i2;
+        java.io.InputStream r1;
+        byte[] r2;
+        byte $b3;
+        short $s4;
+
+        r0 := @parameter0: int[];
+        i0 := @parameter1: int;
+        r1 := @parameter2: java.io.InputStream;
+        r2 = newarray (byte)[i0];
+        $i2 = virtualinvoke r1.<java.io.InputStream: int read(byte[],int,int)>(r2, 0, i0);
+        if $i2 >= i0 goto label0;
+
+        return -1;
+
+     label0:
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $b3 = r2[i1];
+        $s4 = $b3 & 255;
+        r0[i1] = $s4;
+        i1 = i1 + 1;
+        goto label1;
+
+     label2:
+        return 0;
+    }
+
+    private static long skipForward(java.io.InputStream, long) throws java.io.IOException
+    {
+        java.io.InputStream r0;
+        long l0, l1, l2, $l4, l5;
+        byte $b3, $b6;
+        int $i7;
+
+        r0 := @parameter0: java.io.InputStream;
+        l0 := @parameter1: long;
+        l1 = 0L;
+        l2 = 0L;
+
+     label0:
+        $b3 = l2 cmp l0;
+        if $b3 == 0 goto label3;
+
+        $l4 = l0 - l2;
+        l5 = virtualinvoke r0.<java.io.InputStream: long skip(long)>($l4);
+        $b6 = l5 cmp 0L;
+        if $b6 > 0 goto label2;
+
+        $i7 = virtualinvoke r0.<java.io.InputStream: int read()>();
+        if $i7 != -1 goto label1;
+
+        return l2;
+
+     label1:
+        l2 = l2 + 1L;
+
+     label2:
+        l2 = l2 + l5;
+        goto label0;
+
+     label3:
+        return l2;
+    }
+
+    static java.net.FileNameMap access$000()
+    {
+        java.net.FileNameMap $r0;
+
+        $r0 = <java.net.URLConnection: java.net.FileNameMap fileNameMap>;
+        return $r0;
+    }
+
+    static void <clinit>()
+    {
+        java.util.Hashtable $r0;
+
+        <java.net.URLConnection: boolean defaultAllowUserInteraction> = 0;
+        <java.net.URLConnection: boolean defaultUseCaches> = 1;
+        <java.net.URLConnection: boolean fileNameMapLoaded> = 0;
+        $r0 = new java.util.Hashtable;
+        specialinvoke $r0.<java.util.Hashtable: void <init>()>();
+        <java.net.URLConnection: java.util.Hashtable handlers> = $r0;
+        return;
+    }
+}

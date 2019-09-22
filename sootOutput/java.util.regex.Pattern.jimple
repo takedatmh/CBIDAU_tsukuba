@@ -1,0 +1,5029 @@
+public final class java.util.regex.Pattern extends java.lang.Object implements java.io.Serializable
+{
+    public static final int UNIX_LINES;
+    public static final int CASE_INSENSITIVE;
+    public static final int COMMENTS;
+    public static final int MULTILINE;
+    public static final int LITERAL;
+    public static final int DOTALL;
+    public static final int UNICODE_CASE;
+    public static final int CANON_EQ;
+    public static final int UNICODE_CHARACTER_CLASS;
+    private static final long serialVersionUID;
+    private java.lang.String pattern;
+    private int flags;
+    private transient volatile boolean compiled;
+    private transient java.lang.String normalizedPattern;
+    transient java.util.regex.Pattern$Node root;
+    transient java.util.regex.Pattern$Node matchRoot;
+    transient int[] buffer;
+    transient volatile java.util.Map namedGroups;
+    transient java.util.regex.Pattern$GroupHead[] groupNodes;
+    private transient int[] temp;
+    transient int capturingGroupCount;
+    transient int localCount;
+    private transient int cursor;
+    private transient int patternLength;
+    private transient boolean hasSupplementary;
+    static final int MAX_REPS;
+    static final int GREEDY;
+    static final int LAZY;
+    static final int POSSESSIVE;
+    static final int INDEPENDENT;
+    static java.util.regex.Pattern$Node lookbehindEnd;
+    static java.util.regex.Pattern$Node accept;
+    static java.util.regex.Pattern$Node lastAccept;
+    static final boolean $assertionsDisabled;
+
+    public static java.util.regex.Pattern compile(java.lang.String)
+    {
+        java.lang.String r0;
+        java.util.regex.Pattern $r1;
+
+        r0 := @parameter0: java.lang.String;
+        $r1 = new java.util.regex.Pattern;
+        specialinvoke $r1.<java.util.regex.Pattern: void <init>(java.lang.String,int)>(r0, 0);
+        return $r1;
+    }
+
+    public static java.util.regex.Pattern compile(java.lang.String, int)
+    {
+        java.lang.String r0;
+        int i0;
+        java.util.regex.Pattern $r1;
+
+        r0 := @parameter0: java.lang.String;
+        i0 := @parameter1: int;
+        $r1 = new java.util.regex.Pattern;
+        specialinvoke $r1.<java.util.regex.Pattern: void <init>(java.lang.String,int)>(r0, i0);
+        return $r1;
+    }
+
+    public java.lang.String pattern()
+    {
+        java.util.regex.Pattern r0;
+        java.lang.String $r1;
+
+        r0 := @this: java.util.regex.Pattern;
+        $r1 = r0.<java.util.regex.Pattern: java.lang.String pattern>;
+        return $r1;
+    }
+
+    public java.lang.String toString()
+    {
+        java.util.regex.Pattern r0;
+        java.lang.String $r1;
+
+        r0 := @this: java.util.regex.Pattern;
+        $r1 = r0.<java.util.regex.Pattern: java.lang.String pattern>;
+        return $r1;
+    }
+
+    public java.util.regex.Matcher matcher(java.lang.CharSequence)
+    {
+        java.util.regex.Pattern r0, r2;
+        java.lang.CharSequence r1;
+        java.lang.Throwable r3, $r5;
+        boolean $z0, $z1;
+        java.util.regex.Matcher $r6, r7;
+
+        r0 := @this: java.util.regex.Pattern;
+        r1 := @parameter0: java.lang.CharSequence;
+        $z0 = r0.<java.util.regex.Pattern: boolean compiled>;
+        if $z0 != 0 goto label6;
+
+        r2 = r0;
+        entermonitor r0;
+
+     label0:
+        $z1 = r0.<java.util.regex.Pattern: boolean compiled>;
+        if $z1 != 0 goto label1;
+
+        specialinvoke r0.<java.util.regex.Pattern: void compile()>();
+
+     label1:
+        exitmonitor r2;
+
+     label2:
+        goto label6;
+
+     label3:
+        $r5 := @caughtexception;
+
+     label4:
+        r3 = $r5;
+        exitmonitor r2;
+
+     label5:
+        throw r3;
+
+     label6:
+        $r6 = new java.util.regex.Matcher;
+        specialinvoke $r6.<java.util.regex.Matcher: void <init>(java.util.regex.Pattern,java.lang.CharSequence)>(r0, r1);
+        r7 = $r6;
+        return r7;
+
+        catch java.lang.Throwable from label0 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    public int flags()
+    {
+        java.util.regex.Pattern r0;
+        int $i0;
+
+        r0 := @this: java.util.regex.Pattern;
+        $i0 = r0.<java.util.regex.Pattern: int flags>;
+        return $i0;
+    }
+
+    public static boolean matches(java.lang.String, java.lang.CharSequence)
+    {
+        java.lang.String r0;
+        java.lang.CharSequence r1;
+        java.util.regex.Pattern r2;
+        java.util.regex.Matcher r3;
+        boolean $z0;
+
+        r0 := @parameter0: java.lang.String;
+        r1 := @parameter1: java.lang.CharSequence;
+        r2 = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern compile(java.lang.String)>(r0);
+        r3 = virtualinvoke r2.<java.util.regex.Pattern: java.util.regex.Matcher matcher(java.lang.CharSequence)>(r1);
+        $z0 = virtualinvoke r3.<java.util.regex.Matcher: boolean matches()>();
+        return $z0;
+    }
+
+    public java.lang.String[] split(java.lang.CharSequence, int)
+    {
+        java.util.regex.Pattern r0;
+        java.lang.CharSequence r1, $r7, $r8, $r12;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, i10, $i11;
+        boolean z0, $z1, $z2, $z6;
+        java.util.ArrayList r2, $r6;
+        java.util.regex.Matcher r3;
+        java.lang.String r4, r9, $r11, $r13, $r15;
+        java.lang.String[] r5, $r10, $r18;
+        java.lang.Object $r14;
+        java.util.List $r16;
+        java.lang.Object[] $r17;
+
+        r0 := @this: java.util.regex.Pattern;
+        r1 := @parameter0: java.lang.CharSequence;
+        i0 := @parameter1: int;
+        i1 = 0;
+        if i0 <= 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        z0 = $z1;
+        $r6 = new java.util.ArrayList;
+        specialinvoke $r6.<java.util.ArrayList: void <init>()>();
+        r2 = $r6;
+        r3 = virtualinvoke r0.<java.util.regex.Pattern: java.util.regex.Matcher matcher(java.lang.CharSequence)>(r1);
+
+     label2:
+        $z2 = virtualinvoke r3.<java.util.regex.Matcher: boolean find()>();
+        if $z2 == 0 goto label5;
+
+        if z0 == 0 goto label3;
+
+        $i2 = virtualinvoke r2.<java.util.ArrayList: int size()>();
+        $i3 = i0 - 1;
+        if $i2 >= $i3 goto label4;
+
+     label3:
+        $i4 = virtualinvoke r3.<java.util.regex.Matcher: int start()>();
+        $r7 = interfaceinvoke r1.<java.lang.CharSequence: java.lang.CharSequence subSequence(int,int)>(i1, $i4);
+        r4 = interfaceinvoke $r7.<java.lang.CharSequence: java.lang.String toString()>();
+        virtualinvoke r2.<java.util.ArrayList: boolean add(java.lang.Object)>(r4);
+        i1 = virtualinvoke r3.<java.util.regex.Matcher: int end()>();
+        goto label2;
+
+     label4:
+        $i5 = virtualinvoke r2.<java.util.ArrayList: int size()>();
+        $i6 = i0 - 1;
+        if $i5 != $i6 goto label2;
+
+        $i7 = interfaceinvoke r1.<java.lang.CharSequence: int length()>();
+        $r8 = interfaceinvoke r1.<java.lang.CharSequence: java.lang.CharSequence subSequence(int,int)>(i1, $i7);
+        r9 = interfaceinvoke $r8.<java.lang.CharSequence: java.lang.String toString()>();
+        virtualinvoke r2.<java.util.ArrayList: boolean add(java.lang.Object)>(r9);
+        i1 = virtualinvoke r3.<java.util.regex.Matcher: int end()>();
+        goto label2;
+
+     label5:
+        if i1 != 0 goto label6;
+
+        $r10 = newarray (java.lang.String)[1];
+        $r11 = interfaceinvoke r1.<java.lang.CharSequence: java.lang.String toString()>();
+        $r10[0] = $r11;
+        return $r10;
+
+     label6:
+        if z0 == 0 goto label7;
+
+        $i8 = virtualinvoke r2.<java.util.ArrayList: int size()>();
+        if $i8 >= i0 goto label8;
+
+     label7:
+        $i9 = interfaceinvoke r1.<java.lang.CharSequence: int length()>();
+        $r12 = interfaceinvoke r1.<java.lang.CharSequence: java.lang.CharSequence subSequence(int,int)>(i1, $i9);
+        $r13 = interfaceinvoke $r12.<java.lang.CharSequence: java.lang.String toString()>();
+        virtualinvoke r2.<java.util.ArrayList: boolean add(java.lang.Object)>($r13);
+
+     label8:
+        i10 = virtualinvoke r2.<java.util.ArrayList: int size()>();
+        if i0 != 0 goto label10;
+
+     label9:
+        if i10 <= 0 goto label10;
+
+        $i11 = i10 - 1;
+        $r14 = virtualinvoke r2.<java.util.ArrayList: java.lang.Object get(int)>($i11);
+        $r15 = (java.lang.String) $r14;
+        $z6 = virtualinvoke $r15.<java.lang.String: boolean equals(java.lang.Object)>("");
+        if $z6 == 0 goto label10;
+
+        i10 = i10 + -1;
+        goto label9;
+
+     label10:
+        r5 = newarray (java.lang.String)[i10];
+        $r16 = virtualinvoke r2.<java.util.ArrayList: java.util.List subList(int,int)>(0, i10);
+        $r17 = interfaceinvoke $r16.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>(r5);
+        $r18 = (java.lang.String[]) $r17;
+        return $r18;
+    }
+
+    public java.lang.String[] split(java.lang.CharSequence)
+    {
+        java.util.regex.Pattern r0;
+        java.lang.CharSequence r1;
+        java.lang.String[] $r2;
+
+        r0 := @this: java.util.regex.Pattern;
+        r1 := @parameter0: java.lang.CharSequence;
+        $r2 = virtualinvoke r0.<java.util.regex.Pattern: java.lang.String[] split(java.lang.CharSequence,int)>(r1, 0);
+        return $r2;
+    }
+
+    public static java.lang.String quote(java.lang.String)
+    {
+        java.lang.String r0, $r6, $r9, $r12, $r15;
+        int i0, i1, $i2, $i3, $i4, i5, $i6;
+        java.lang.StringBuilder r1, $r2, $r3, $r4, $r5, $r7;
+        boolean z0;
+
+        r0 := @parameter0: java.lang.String;
+        i0 = virtualinvoke r0.<java.lang.String: int indexOf(java.lang.String)>("\\E");
+        if i0 != -1 goto label0;
+
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\\Q");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r0);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\\E");
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r6;
+
+     label0:
+        $r7 = new java.lang.StringBuilder;
+        $i2 = virtualinvoke r0.<java.lang.String: int length()>();
+        $i3 = $i2 * 2;
+        specialinvoke $r7.<java.lang.StringBuilder: void <init>(int)>($i3);
+        r1 = $r7;
+        virtualinvoke r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\\Q");
+        z0 = 0;
+        i1 = 0;
+
+     label1:
+        $i4 = virtualinvoke r0.<java.lang.String: int indexOf(java.lang.String,int)>("\\E", i1);
+        i5 = $i4;
+        if $i4 == -1 goto label2;
+
+        $r9 = virtualinvoke r0.<java.lang.String: java.lang.String substring(int,int)>(i1, i5);
+        virtualinvoke r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r9);
+        i1 = i5 + 2;
+        virtualinvoke r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\\E\\\\E\\Q");
+        goto label1;
+
+     label2:
+        $i6 = virtualinvoke r0.<java.lang.String: int length()>();
+        $r12 = virtualinvoke r0.<java.lang.String: java.lang.String substring(int,int)>(i1, $i6);
+        virtualinvoke r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r12);
+        virtualinvoke r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\\E");
+        $r15 = virtualinvoke r1.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r15;
+    }
+
+    private void readObject(java.io.ObjectInputStream) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        java.util.regex.Pattern r0;
+        java.io.ObjectInputStream r1;
+        java.util.regex.Pattern$Node $r2, $r5;
+        java.lang.String $r3;
+        int $i0;
+        java.util.regex.Pattern$Start $r4;
+
+        r0 := @this: java.util.regex.Pattern;
+        r1 := @parameter0: java.io.ObjectInputStream;
+        virtualinvoke r1.<java.io.ObjectInputStream: void defaultReadObject()>();
+        r0.<java.util.regex.Pattern: int capturingGroupCount> = 1;
+        r0.<java.util.regex.Pattern: int localCount> = 0;
+        r0.<java.util.regex.Pattern: boolean compiled> = 0;
+        $r3 = r0.<java.util.regex.Pattern: java.lang.String pattern>;
+        $i0 = virtualinvoke $r3.<java.lang.String: int length()>();
+        if $i0 != 0 goto label0;
+
+        $r4 = new java.util.regex.Pattern$Start;
+        $r2 = <java.util.regex.Pattern: java.util.regex.Pattern$Node lastAccept>;
+        specialinvoke $r4.<java.util.regex.Pattern$Start: void <init>(java.util.regex.Pattern$Node)>($r2);
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = $r4;
+        $r5 = <java.util.regex.Pattern: java.util.regex.Pattern$Node lastAccept>;
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node matchRoot> = $r5;
+        r0.<java.util.regex.Pattern: boolean compiled> = 1;
+
+     label0:
+        return;
+    }
+
+    private void <init>(java.lang.String, int)
+    {
+        java.util.regex.Pattern r0;
+        java.lang.String r1, $r4;
+        int i0, $i1, $i2, $i3, $i4, $i5;
+        java.util.regex.Pattern$Node $r2, $r6;
+        java.util.regex.Pattern$Start $r5;
+
+        r0 := @this: java.util.regex.Pattern;
+        r1 := @parameter0: java.lang.String;
+        i0 := @parameter1: int;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.util.regex.Pattern: boolean compiled> = 0;
+        r0.<java.util.regex.Pattern: java.lang.String pattern> = r1;
+        r0.<java.util.regex.Pattern: int flags> = i0;
+        $i1 = r0.<java.util.regex.Pattern: int flags>;
+        $i2 = $i1 & 256;
+        if $i2 == 0 goto label0;
+
+        $i3 = r0.<java.util.regex.Pattern: int flags>;
+        $i4 = $i3 | 64;
+        r0.<java.util.regex.Pattern: int flags> = $i4;
+
+     label0:
+        r0.<java.util.regex.Pattern: int capturingGroupCount> = 1;
+        r0.<java.util.regex.Pattern: int localCount> = 0;
+        $r4 = r0.<java.util.regex.Pattern: java.lang.String pattern>;
+        $i5 = virtualinvoke $r4.<java.lang.String: int length()>();
+        if $i5 <= 0 goto label1;
+
+        specialinvoke r0.<java.util.regex.Pattern: void compile()>();
+        goto label2;
+
+     label1:
+        $r5 = new java.util.regex.Pattern$Start;
+        $r2 = <java.util.regex.Pattern: java.util.regex.Pattern$Node lastAccept>;
+        specialinvoke $r5.<java.util.regex.Pattern$Start: void <init>(java.util.regex.Pattern$Node)>($r2);
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = $r5;
+        $r6 = <java.util.regex.Pattern: java.util.regex.Pattern$Node lastAccept>;
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node matchRoot> = $r6;
+
+     label2:
+        return;
+    }
+
+    private void normalize()
+    {
+        java.util.regex.Pattern r0;
+        boolean z0;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13;
+        java.text.Normalizer$Form $r1;
+        java.lang.StringBuilder r2, r3, $r8, $r10, $r16, $r17;
+        java.lang.String r4, $r5, $r6, $r7, $r9, $r13, $r15, $r20;
+
+        r0 := @this: java.util.regex.Pattern;
+        z0 = 0;
+        i0 = -1;
+        $r5 = r0.<java.util.regex.Pattern: java.lang.String pattern>;
+        $r1 = <java.text.Normalizer$Form: java.text.Normalizer$Form NFD>;
+        $r6 = staticinvoke <java.text.Normalizer: java.lang.String normalize(java.lang.CharSequence,java.text.Normalizer$Form)>($r5, $r1);
+        r0.<java.util.regex.Pattern: java.lang.String normalizedPattern> = $r6;
+        $r7 = r0.<java.util.regex.Pattern: java.lang.String normalizedPattern>;
+        $i3 = virtualinvoke $r7.<java.lang.String: int length()>();
+        r0.<java.util.regex.Pattern: int patternLength> = $i3;
+        $r8 = new java.lang.StringBuilder;
+        $i4 = r0.<java.util.regex.Pattern: int patternLength>;
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>(int)>($i4);
+        r2 = $r8;
+        i1 = 0;
+
+     label0:
+        $i5 = r0.<java.util.regex.Pattern: int patternLength>;
+        if i1 >= $i5 goto label7;
+
+        $r9 = r0.<java.util.regex.Pattern: java.lang.String normalizedPattern>;
+        i2 = virtualinvoke $r9.<java.lang.String: int codePointAt(int)>(i1);
+        $i6 = staticinvoke <java.lang.Character: int getType(int)>(i2);
+        if $i6 != 6 goto label4;
+
+        if i0 == -1 goto label4;
+
+        $r10 = new java.lang.StringBuilder;
+        specialinvoke $r10.<java.lang.StringBuilder: void <init>()>();
+        r3 = $r10;
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder appendCodePoint(int)>(i0);
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder appendCodePoint(int)>(i2);
+
+     label1:
+        $i7 = staticinvoke <java.lang.Character: int getType(int)>(i2);
+        if $i7 != 6 goto label3;
+
+        $i8 = staticinvoke <java.lang.Character: int charCount(int)>(i2);
+        i1 = i1 + $i8;
+        $i9 = r0.<java.util.regex.Pattern: int patternLength>;
+        if i1 < $i9 goto label2;
+
+        goto label3;
+
+     label2:
+        $r13 = r0.<java.util.regex.Pattern: java.lang.String normalizedPattern>;
+        i2 = virtualinvoke $r13.<java.lang.String: int codePointAt(int)>(i1);
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder appendCodePoint(int)>(i2);
+        goto label1;
+
+     label3:
+        $r15 = virtualinvoke r3.<java.lang.StringBuilder: java.lang.String toString()>();
+        r4 = specialinvoke r0.<java.util.regex.Pattern: java.lang.String produceEquivalentAlternation(java.lang.String)>($r15);
+        $i10 = virtualinvoke r2.<java.lang.StringBuilder: int length()>();
+        $i11 = staticinvoke <java.lang.Character: int charCount(int)>(i0);
+        $i12 = $i10 - $i11;
+        virtualinvoke r2.<java.lang.StringBuilder: void setLength(int)>($i12);
+        $r16 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("(?:");
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r4);
+        virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(")");
+        goto label6;
+
+     label4:
+        if i2 != 91 goto label5;
+
+        if i0 == 92 goto label5;
+
+        i1 = specialinvoke r0.<java.util.regex.Pattern: int normalizeCharClass(java.lang.StringBuilder,int)>(r2, i1);
+        goto label6;
+
+     label5:
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder appendCodePoint(int)>(i2);
+
+     label6:
+        i0 = i2;
+        $i13 = staticinvoke <java.lang.Character: int charCount(int)>(i2);
+        i1 = i1 + $i13;
+        goto label0;
+
+     label7:
+        $r20 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        r0.<java.util.regex.Pattern: java.lang.String normalizedPattern> = $r20;
+        return;
+    }
+
+    private int normalizeCharClass(java.lang.StringBuilder, int)
+    {
+        java.util.regex.Pattern r0;
+        java.lang.StringBuilder r1, $r2, r3, r4, r5, $r11, $r17, $r23, $r24, $r26, $r28, $r29;
+        int i0, i1, i2, i3, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12;
+        java.lang.String r6, r7, $r9, $r14, $r15, $r16, $r21, $r25, $r27;
+        char $c4;
+        java.util.regex.PatternSyntaxException $r22;
+
+        r0 := @this: java.util.regex.Pattern;
+        r1 := @parameter0: java.lang.StringBuilder;
+        i0 := @parameter1: int;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+        r3 = $r2;
+        r4 = null;
+        i1 = -1;
+        i3 = i0 + 1;
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("[");
+
+     label0:
+        $r9 = r0.<java.util.regex.Pattern: java.lang.String normalizedPattern>;
+        i2 = virtualinvoke $r9.<java.lang.String: int codePointAt(int)>(i3);
+        if i2 != 93 goto label1;
+
+        if i1 == 92 goto label1;
+
+        $c4 = (char) i2;
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>($c4);
+        goto label9;
+
+     label1:
+        $i5 = staticinvoke <java.lang.Character: int getType(int)>(i2);
+        if $i5 != 6 goto label6;
+
+        $r11 = new java.lang.StringBuilder;
+        specialinvoke $r11.<java.lang.StringBuilder: void <init>()>();
+        r5 = $r11;
+        virtualinvoke r5.<java.lang.StringBuilder: java.lang.StringBuilder appendCodePoint(int)>(i1);
+
+     label2:
+        $i6 = staticinvoke <java.lang.Character: int getType(int)>(i2);
+        if $i6 != 6 goto label4;
+
+        virtualinvoke r5.<java.lang.StringBuilder: java.lang.StringBuilder appendCodePoint(int)>(i2);
+        $i7 = staticinvoke <java.lang.Character: int charCount(int)>(i2);
+        i3 = i3 + $i7;
+        $r14 = r0.<java.util.regex.Pattern: java.lang.String normalizedPattern>;
+        $i8 = virtualinvoke $r14.<java.lang.String: int length()>();
+        if i3 < $i8 goto label3;
+
+        goto label4;
+
+     label3:
+        $r15 = r0.<java.util.regex.Pattern: java.lang.String normalizedPattern>;
+        i2 = virtualinvoke $r15.<java.lang.String: int codePointAt(int)>(i3);
+        goto label2;
+
+     label4:
+        $r16 = virtualinvoke r5.<java.lang.StringBuilder: java.lang.String toString()>();
+        r6 = specialinvoke r0.<java.util.regex.Pattern: java.lang.String produceEquivalentAlternation(java.lang.String)>($r16);
+        $i9 = virtualinvoke r3.<java.lang.StringBuilder: int length()>();
+        $i10 = staticinvoke <java.lang.Character: int charCount(int)>(i1);
+        $i11 = $i9 - $i10;
+        virtualinvoke r3.<java.lang.StringBuilder: void setLength(int)>($i11);
+        if r4 != null goto label5;
+
+        $r17 = new java.lang.StringBuilder;
+        specialinvoke $r17.<java.lang.StringBuilder: void <init>()>();
+        r4 = $r17;
+
+     label5:
+        virtualinvoke r4.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(124);
+        virtualinvoke r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r6);
+        goto label7;
+
+     label6:
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder appendCodePoint(int)>(i2);
+        i3 = i3 + 1;
+
+     label7:
+        $r21 = r0.<java.util.regex.Pattern: java.lang.String normalizedPattern>;
+        $i12 = virtualinvoke $r21.<java.lang.String: int length()>();
+        if i3 != $i12 goto label8;
+
+        $r22 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Unclosed character class");
+        throw $r22;
+
+     label8:
+        i1 = i2;
+        goto label0;
+
+     label9:
+        if r4 == null goto label10;
+
+        $r23 = new java.lang.StringBuilder;
+        specialinvoke $r23.<java.lang.StringBuilder: void <init>()>();
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("(?:");
+        $r25 = virtualinvoke r3.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r26 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r25);
+        $r27 = virtualinvoke r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r28 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r27);
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(")");
+        r7 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.String toString()>();
+        goto label11;
+
+     label10:
+        r7 = virtualinvoke r3.<java.lang.StringBuilder: java.lang.String toString()>();
+
+     label11:
+        virtualinvoke r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r7);
+        return i3;
+    }
+
+    private java.lang.String produceEquivalentAlternation(java.lang.String)
+    {
+        java.util.regex.Pattern r0;
+        java.lang.String r1, r2, r3, r6, $r10, $r15, r17, $r20, $r22, $r24;
+        int i0, i1, $i2, $i3;
+        java.lang.String[] r4;
+        java.lang.StringBuilder r5, $r7, $r8, $r9, $r11, $r12, $r13, $r14, $r18, $r19, $r21;
+
+        r0 := @this: java.util.regex.Pattern;
+        r1 := @parameter0: java.lang.String;
+        i0 = staticinvoke <java.util.regex.Pattern: int countChars(java.lang.CharSequence,int,int)>(r1, 0, 1);
+        $i2 = virtualinvoke r1.<java.lang.String: int length()>();
+        if $i2 != i0 goto label0;
+
+        return r1;
+
+     label0:
+        r2 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int,int)>(0, i0);
+        r3 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int)>(i0);
+        r4 = specialinvoke r0.<java.util.regex.Pattern: java.lang.String[] producePermutations(java.lang.String)>(r3);
+        $r7 = new java.lang.StringBuilder;
+        specialinvoke $r7.<java.lang.StringBuilder: void <init>(java.lang.String)>(r1);
+        r5 = $r7;
+        i1 = 0;
+
+     label1:
+        $i3 = lengthof r4;
+        if i1 >= $i3 goto label4;
+
+        $r8 = new java.lang.StringBuilder;
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>()>();
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r10 = r4[i1];
+        $r11 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r10);
+        r6 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.String toString()>();
+        if i1 <= 0 goto label2;
+
+        $r12 = new java.lang.StringBuilder;
+        specialinvoke $r12.<java.lang.StringBuilder: void <init>()>();
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("|");
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r6);
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r15);
+
+     label2:
+        r17 = specialinvoke r0.<java.util.regex.Pattern: java.lang.String composeOneStep(java.lang.String)>(r6);
+        if r17 == null goto label3;
+
+        $r18 = new java.lang.StringBuilder;
+        specialinvoke $r18.<java.lang.StringBuilder: void <init>()>();
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("|");
+        $r20 = specialinvoke r0.<java.util.regex.Pattern: java.lang.String produceEquivalentAlternation(java.lang.String)>(r17);
+        $r21 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r20);
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r22);
+
+     label3:
+        i1 = i1 + 1;
+        goto label1;
+
+     label4:
+        $r24 = virtualinvoke r5.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r24;
+    }
+
+    private java.lang.String[] producePermutations(java.lang.String)
+    {
+        java.util.regex.Pattern r0;
+        java.lang.String r1, r4, r6, $r12, $r20, $r22, $r24;
+        int i0, i1, i2, i3, i4, i5, i6, i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, i15, i16, i17, $i18, $i19, $i20, i21, i22, i23, $i24, $i25, $i26, $i27, $i28, $i29, i30;
+        java.lang.String[] r2, r5, $r7, $r8, r13, r23;
+        java.lang.StringBuilder r3, $r9, $r15, r16, $r17, $r18, $r19, $r21;
+        boolean z0;
+        int[] r14;
+
+        r0 := @this: java.util.regex.Pattern;
+        r1 := @parameter0: java.lang.String;
+        $i8 = virtualinvoke r1.<java.lang.String: int length()>();
+        $i9 = staticinvoke <java.util.regex.Pattern: int countChars(java.lang.CharSequence,int,int)>(r1, 0, 1);
+        if $i8 != $i9 goto label0;
+
+        $r7 = newarray (java.lang.String)[1];
+        $r7[0] = r1;
+        return $r7;
+
+     label0:
+        $i10 = virtualinvoke r1.<java.lang.String: int length()>();
+        $i11 = staticinvoke <java.util.regex.Pattern: int countChars(java.lang.CharSequence,int,int)>(r1, 0, 2);
+        if $i10 != $i11 goto label2;
+
+        i0 = staticinvoke <java.lang.Character: int codePointAt(java.lang.CharSequence,int)>(r1, 0);
+        $i12 = staticinvoke <java.lang.Character: int charCount(int)>(i0);
+        i1 = staticinvoke <java.lang.Character: int codePointAt(java.lang.CharSequence,int)>(r1, $i12);
+        $i13 = specialinvoke r0.<java.util.regex.Pattern: int getClass(int)>(i1);
+        $i14 = specialinvoke r0.<java.util.regex.Pattern: int getClass(int)>(i0);
+        if $i13 != $i14 goto label1;
+
+        $r8 = newarray (java.lang.String)[1];
+        $r8[0] = r1;
+        return $r8;
+
+     label1:
+        r2 = newarray (java.lang.String)[2];
+        r2[0] = r1;
+        $r9 = new java.lang.StringBuilder;
+        specialinvoke $r9.<java.lang.StringBuilder: void <init>(int)>(2);
+        r3 = $r9;
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder appendCodePoint(int)>(i1);
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder appendCodePoint(int)>(i0);
+        $r12 = virtualinvoke r3.<java.lang.StringBuilder: java.lang.String toString()>();
+        r2[1] = $r12;
+        return r2;
+
+     label2:
+        i15 = 1;
+        i16 = staticinvoke <java.util.regex.Pattern: int countCodePoints(java.lang.CharSequence)>(r1);
+        i17 = 1;
+
+     label3:
+        if i17 >= i16 goto label4;
+
+        $i18 = i17 + 1;
+        i15 = i15 * $i18;
+        i17 = i17 + 1;
+        goto label3;
+
+     label4:
+        r13 = newarray (java.lang.String)[i15];
+        r14 = newarray (int)[i16];
+        i2 = 0;
+        i3 = 0;
+
+     label5:
+        if i2 >= i16 goto label6;
+
+        i4 = staticinvoke <java.lang.Character: int codePointAt(java.lang.CharSequence,int)>(r1, i3);
+        $i19 = specialinvoke r0.<java.util.regex.Pattern: int getClass(int)>(i4);
+        r14[i2] = $i19;
+        $i20 = staticinvoke <java.lang.Character: int charCount(int)>(i4);
+        i3 = i3 + $i20;
+        i2 = i2 + 1;
+        goto label5;
+
+     label6:
+        i21 = 0;
+        i22 = 0;
+        i5 = 0;
+
+     label7:
+        if i22 >= i16 goto label13;
+
+        i23 = staticinvoke <java.util.regex.Pattern: int countChars(java.lang.CharSequence,int,int)>(r1, i5, 1);
+        z0 = 0;
+        i6 = i22 - 1;
+
+     label8:
+        if i6 < 0 goto label10;
+
+        $i24 = r14[i6];
+        $i25 = r14[i22];
+        if $i24 != $i25 goto label9;
+
+        goto label12;
+
+     label9:
+        i6 = i6 + -1;
+        goto label8;
+
+     label10:
+        $r15 = new java.lang.StringBuilder;
+        specialinvoke $r15.<java.lang.StringBuilder: void <init>(java.lang.String)>(r1);
+        r16 = $r15;
+        $i26 = i5 + i23;
+        $r17 = virtualinvoke r16.<java.lang.StringBuilder: java.lang.StringBuilder delete(int,int)>(i5, $i26);
+        r4 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+        r5 = specialinvoke r0.<java.util.regex.Pattern: java.lang.String[] producePermutations(java.lang.String)>(r4);
+        $i27 = i5 + i23;
+        r6 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int,int)>(i5, $i27);
+        i7 = 0;
+
+     label11:
+        $i28 = lengthof r5;
+        if i7 >= $i28 goto label12;
+
+        $i29 = i21;
+        i21 = i21 + 1;
+        $r18 = new java.lang.StringBuilder;
+        specialinvoke $r18.<java.lang.StringBuilder: void <init>()>();
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r6);
+        $r20 = r5[i7];
+        $r21 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r20);
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.String toString()>();
+        r13[$i29] = $r22;
+        i7 = i7 + 1;
+        goto label11;
+
+     label12:
+        i22 = i22 + 1;
+        i5 = i5 + i23;
+        goto label7;
+
+     label13:
+        r23 = newarray (java.lang.String)[i21];
+        i30 = 0;
+
+     label14:
+        if i30 >= i21 goto label15;
+
+        $r24 = r13[i30];
+        r23[i30] = $r24;
+        i30 = i30 + 1;
+        goto label14;
+
+     label15:
+        return r23;
+    }
+
+    private int getClass(int)
+    {
+        java.util.regex.Pattern r0;
+        int i0, $i1;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 := @parameter0: int;
+        $i1 = staticinvoke <sun.text.Normalizer: int getCombiningClass(int)>(i0);
+        return $i1;
+    }
+
+    private java.lang.String composeOneStep(java.lang.String)
+    {
+        java.util.regex.Pattern r0;
+        java.lang.String r1, r2, r3, r4, $r9;
+        int i0;
+        java.text.Normalizer$Form $r5;
+        boolean $z0;
+        java.lang.StringBuilder $r6, $r7, $r8;
+
+        r0 := @this: java.util.regex.Pattern;
+        r1 := @parameter0: java.lang.String;
+        i0 = staticinvoke <java.util.regex.Pattern: int countChars(java.lang.CharSequence,int,int)>(r1, 0, 2);
+        r2 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int,int)>(0, i0);
+        $r5 = <java.text.Normalizer$Form: java.text.Normalizer$Form NFC>;
+        r3 = staticinvoke <java.text.Normalizer: java.lang.String normalize(java.lang.CharSequence,java.text.Normalizer$Form)>(r2, $r5);
+        $z0 = virtualinvoke r3.<java.lang.String: boolean equals(java.lang.Object)>(r2);
+        if $z0 == 0 goto label0;
+
+        return null;
+
+     label0:
+        r4 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int)>(i0);
+        $r6 = new java.lang.StringBuilder;
+        specialinvoke $r6.<java.lang.StringBuilder: void <init>()>();
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r3);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r4);
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r9;
+    }
+
+    private void RemoveQEQuoting()
+    {
+        java.util.regex.Pattern r0;
+        int i0, i1, i2, i3, $i4, $i5, $i6, $i7, $i8, i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, i19, $i20, $i21, $i22, $i23, $i24, $i25;
+        int[] r1, $r2, $r3, $r4, $r5, $r6, $r7, $r8, $r9;
+        boolean z0, $z1, $z2;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 = r0.<java.util.regex.Pattern: int patternLength>;
+        i1 = 0;
+
+     label0:
+        $i4 = i0 - 1;
+        if i1 >= $i4 goto label2;
+
+        $r2 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i5 = $r2[i1];
+        if $i5 == 92 goto label1;
+
+        i1 = i1 + 1;
+        goto label0;
+
+     label1:
+        $r3 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i6 = i1 + 1;
+        $i7 = $r3[$i6];
+        if $i7 == 81 goto label2;
+
+        i1 = i1 + 2;
+        goto label0;
+
+     label2:
+        $i8 = i0 - 1;
+        if i1 < $i8 goto label3;
+
+        return;
+
+     label3:
+        i2 = i1;
+        i9 = i1 + 2;
+        $i10 = i0 - i9;
+        $i11 = 2 * $i10;
+        $i12 = i2 + $i11;
+        $i13 = $i12 + 2;
+        r1 = newarray (int)[$i13];
+        $r4 = r0.<java.util.regex.Pattern: int[] temp>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r4, 0, r1, 0, i2);
+        z0 = 1;
+
+     label4:
+        if i9 >= i0 goto label13;
+
+        $r5 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i14 = i9;
+        i9 = i9 + 1;
+        i3 = $r5[$i14];
+        $z1 = staticinvoke <java.util.regex.ASCII: boolean isAscii(int)>(i3);
+        if $z1 == 0 goto label5;
+
+        $z2 = staticinvoke <java.util.regex.ASCII: boolean isAlnum(int)>(i3);
+        if $z2 == 0 goto label6;
+
+     label5:
+        $i15 = i2;
+        i2 = i2 + 1;
+        r1[$i15] = i3;
+        goto label12;
+
+     label6:
+        if i3 == 92 goto label8;
+
+        if z0 == 0 goto label7;
+
+        $i16 = i2;
+        i2 = i2 + 1;
+        r1[$i16] = 92;
+
+     label7:
+        $i17 = i2;
+        i2 = i2 + 1;
+        r1[$i17] = i3;
+        goto label12;
+
+     label8:
+        if z0 == 0 goto label10;
+
+        $r6 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i18 = $r6[i9];
+        if $i18 != 69 goto label9;
+
+        i9 = i9 + 1;
+        z0 = 0;
+        goto label12;
+
+     label9:
+        i19 = i2 + 1;
+        r1[i2] = 92;
+        i2 = i19 + 1;
+        r1[i19] = 92;
+        goto label12;
+
+     label10:
+        $r7 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i20 = $r7[i9];
+        if $i20 != 81 goto label11;
+
+        i9 = i9 + 1;
+        z0 = 1;
+        goto label12;
+
+     label11:
+        $i21 = i2;
+        i2 = i2 + 1;
+        r1[$i21] = i3;
+        if i9 == i0 goto label12;
+
+        $i22 = i2;
+        i2 = i2 + 1;
+        $r8 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i23 = i9;
+        i9 = i9 + 1;
+        $i24 = $r8[$i23];
+        r1[$i22] = $i24;
+
+     label12:
+        goto label4;
+
+     label13:
+        r0.<java.util.regex.Pattern: int patternLength> = i2;
+        $i25 = i2 + 2;
+        $r9 = staticinvoke <java.util.Arrays: int[] copyOf(int[],int)>(r1, $i25);
+        r0.<java.util.regex.Pattern: int[] temp> = $r9;
+        return;
+    }
+
+    private void compile()
+    {
+        java.util.regex.Pattern r0;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10;
+        java.lang.String $r1, $r2, $r4;
+        int[] $r3, $r5, $r6, $r8;
+        java.util.regex.Pattern$GroupHead[] $r7;
+        java.util.regex.Pattern$Node $r9, $r10, $r11, $r12, $r13, $r16, $r17, $r18, $r19, $r20, $r23, $r24, $r25, $r26, $r27, $r30, $r31;
+        java.util.regex.PatternSyntaxException $r14, $r15;
+        java.util.regex.Pattern$Start $r22, $r29, r33, r35;
+        java.util.regex.Pattern$StartS r32, r34;
+
+        r0 := @this: java.util.regex.Pattern;
+        $z0 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(128);
+        if $z0 == 0 goto label0;
+
+        $z1 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(16);
+        if $z1 != 0 goto label0;
+
+        specialinvoke r0.<java.util.regex.Pattern: void normalize()>();
+        goto label1;
+
+     label0:
+        $r1 = r0.<java.util.regex.Pattern: java.lang.String pattern>;
+        r0.<java.util.regex.Pattern: java.lang.String normalizedPattern> = $r1;
+
+     label1:
+        $r2 = r0.<java.util.regex.Pattern: java.lang.String normalizedPattern>;
+        $i3 = virtualinvoke $r2.<java.lang.String: int length()>();
+        r0.<java.util.regex.Pattern: int patternLength> = $i3;
+        $i4 = r0.<java.util.regex.Pattern: int patternLength>;
+        $i5 = $i4 + 2;
+        $r3 = newarray (int)[$i5];
+        r0.<java.util.regex.Pattern: int[] temp> = $r3;
+        r0.<java.util.regex.Pattern: boolean hasSupplementary> = 0;
+        i0 = 0;
+        i1 = 0;
+
+     label2:
+        $i6 = r0.<java.util.regex.Pattern: int patternLength>;
+        if i1 >= $i6 goto label4;
+
+        $r4 = r0.<java.util.regex.Pattern: java.lang.String normalizedPattern>;
+        i2 = virtualinvoke $r4.<java.lang.String: int codePointAt(int)>(i1);
+        $z2 = staticinvoke <java.util.regex.Pattern: boolean isSupplementary(int)>(i2);
+        if $z2 == 0 goto label3;
+
+        r0.<java.util.regex.Pattern: boolean hasSupplementary> = 1;
+
+     label3:
+        $r5 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i7 = i0;
+        i0 = i0 + 1;
+        $r5[$i7] = i2;
+        $i8 = staticinvoke <java.lang.Character: int charCount(int)>(i2);
+        i1 = i1 + $i8;
+        goto label2;
+
+     label4:
+        r0.<java.util.regex.Pattern: int patternLength> = i0;
+        $z3 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(16);
+        if $z3 != 0 goto label5;
+
+        specialinvoke r0.<java.util.regex.Pattern: void RemoveQEQuoting()>();
+
+     label5:
+        $r6 = newarray (int)[32];
+        r0.<java.util.regex.Pattern: int[] buffer> = $r6;
+        $r7 = newarray (java.util.regex.Pattern$GroupHead)[10];
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$GroupHead[] groupNodes> = $r7;
+        r0.<java.util.regex.Pattern: java.util.Map namedGroups> = null;
+        $z4 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(16);
+        if $z4 == 0 goto label6;
+
+        $r8 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i9 = r0.<java.util.regex.Pattern: int patternLength>;
+        $z5 = r0.<java.util.regex.Pattern: boolean hasSupplementary>;
+        $r9 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node newSlice(int[],int,boolean)>($r8, $i9, $z5);
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node matchRoot> = $r9;
+        $r10 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node matchRoot>;
+        $r11 = <java.util.regex.Pattern: java.util.regex.Pattern$Node lastAccept>;
+        $r10.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next> = $r11;
+        goto label8;
+
+     label6:
+        $r12 = <java.util.regex.Pattern: java.util.regex.Pattern$Node lastAccept>;
+        $r13 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node expr(java.util.regex.Pattern$Node)>($r12);
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node matchRoot> = $r13;
+        $i10 = r0.<java.util.regex.Pattern: int patternLength>;
+        $i11 = r0.<java.util.regex.Pattern: int cursor>;
+        if $i10 == $i11 goto label8;
+
+        $i12 = specialinvoke r0.<java.util.regex.Pattern: int peek()>();
+        if $i12 != 41 goto label7;
+
+        $r14 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Unmatched closing \')\'");
+        throw $r14;
+
+     label7:
+        $r15 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Unexpected internal error");
+        throw $r15;
+
+     label8:
+        $r16 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node matchRoot>;
+        $z6 = $r16 instanceof java.util.regex.Pattern$Slice;
+        if $z6 == 0 goto label11;
+
+        $r17 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node matchRoot>;
+        $r18 = staticinvoke <java.util.regex.Pattern$BnM: java.util.regex.Pattern$Node optimize(java.util.regex.Pattern$Node)>($r17);
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = $r18;
+        $r19 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root>;
+        $r20 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node matchRoot>;
+        if $r19 != $r20 goto label16;
+
+        $z7 = r0.<java.util.regex.Pattern: boolean hasSupplementary>;
+        if $z7 == 0 goto label9;
+
+        r32 = new java.util.regex.Pattern$StartS;
+        $r22 = r32;
+        $r23 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node matchRoot>;
+        specialinvoke r32.<java.util.regex.Pattern$StartS: void <init>(java.util.regex.Pattern$Node)>($r23);
+        goto label10;
+
+     label9:
+        r33 = new java.util.regex.Pattern$Start;
+        $r22 = r33;
+        $r24 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node matchRoot>;
+        specialinvoke r33.<java.util.regex.Pattern$Start: void <init>(java.util.regex.Pattern$Node)>($r24);
+
+     label10:
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = $r22;
+        goto label16;
+
+     label11:
+        $r25 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node matchRoot>;
+        $z8 = $r25 instanceof java.util.regex.Pattern$Begin;
+        if $z8 != 0 goto label12;
+
+        $r26 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node matchRoot>;
+        $z9 = $r26 instanceof java.util.regex.Pattern$First;
+        if $z9 == 0 goto label13;
+
+     label12:
+        $r27 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node matchRoot>;
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = $r27;
+        goto label16;
+
+     label13:
+        $z10 = r0.<java.util.regex.Pattern: boolean hasSupplementary>;
+        if $z10 == 0 goto label14;
+
+        r34 = new java.util.regex.Pattern$StartS;
+        $r29 = r34;
+        $r30 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node matchRoot>;
+        specialinvoke r34.<java.util.regex.Pattern$StartS: void <init>(java.util.regex.Pattern$Node)>($r30);
+        goto label15;
+
+     label14:
+        r35 = new java.util.regex.Pattern$Start;
+        $r29 = r35;
+        $r31 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node matchRoot>;
+        specialinvoke r35.<java.util.regex.Pattern$Start: void <init>(java.util.regex.Pattern$Node)>($r31);
+
+     label15:
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = $r29;
+
+     label16:
+        r0.<java.util.regex.Pattern: int[] temp> = null;
+        r0.<java.util.regex.Pattern: int[] buffer> = null;
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$GroupHead[] groupNodes> = null;
+        r0.<java.util.regex.Pattern: int patternLength> = 0;
+        r0.<java.util.regex.Pattern: boolean compiled> = 1;
+        return;
+    }
+
+    java.util.Map namedGroups()
+    {
+        java.util.regex.Pattern r0;
+        java.util.HashMap $r1;
+        java.util.Map $r2, $r3;
+
+        r0 := @this: java.util.regex.Pattern;
+        $r2 = r0.<java.util.regex.Pattern: java.util.Map namedGroups>;
+        if $r2 != null goto label0;
+
+        $r1 = new java.util.HashMap;
+        specialinvoke $r1.<java.util.HashMap: void <init>(int)>(2);
+        r0.<java.util.regex.Pattern: java.util.Map namedGroups> = $r1;
+
+     label0:
+        $r3 = r0.<java.util.regex.Pattern: java.util.Map namedGroups>;
+        return $r3;
+    }
+
+    private static void printObjectTree(java.util.regex.Pattern$Node)
+    {
+        java.util.regex.Pattern$Node r0, $r7, $r11, $r15, $r21, $r26;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        java.io.PrintStream $r1, $r4, $r5, $r8, $r9, $r12, $r13, $r16, $r17, $r18, $r24, $r25, $r27;
+        java.util.regex.Pattern$Prolog $r2;
+        java.util.regex.Pattern$Loop $r3, $r6;
+        java.util.regex.Pattern$Curly $r10;
+        java.util.regex.Pattern$GroupCurly $r14;
+        java.lang.StringBuilder $r19, $r20, $r22;
+        java.lang.String $r23;
+
+        r0 := @parameter0: java.util.regex.Pattern$Node;
+
+     label0:
+        if r0 == null goto label8;
+
+        $z0 = r0 instanceof java.util.regex.Pattern$Prolog;
+        if $z0 == 0 goto label1;
+
+        $r1 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r1.<java.io.PrintStream: void println(java.lang.Object)>(r0);
+        $r2 = (java.util.regex.Pattern$Prolog) r0;
+        $r3 = $r2.<java.util.regex.Pattern$Prolog: java.util.regex.Pattern$Loop loop>;
+        staticinvoke <java.util.regex.Pattern: void printObjectTree(java.util.regex.Pattern$Node)>($r3);
+        $r4 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r4.<java.io.PrintStream: void println(java.lang.String)>("**** end contents prolog loop");
+        goto label6;
+
+     label1:
+        $z1 = r0 instanceof java.util.regex.Pattern$Loop;
+        if $z1 == 0 goto label2;
+
+        $r5 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r5.<java.io.PrintStream: void println(java.lang.Object)>(r0);
+        $r6 = (java.util.regex.Pattern$Loop) r0;
+        $r7 = $r6.<java.util.regex.Pattern$Loop: java.util.regex.Pattern$Node body>;
+        staticinvoke <java.util.regex.Pattern: void printObjectTree(java.util.regex.Pattern$Node)>($r7);
+        $r8 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r8.<java.io.PrintStream: void println(java.lang.String)>("**** end contents Loop body");
+        goto label6;
+
+     label2:
+        $z2 = r0 instanceof java.util.regex.Pattern$Curly;
+        if $z2 == 0 goto label3;
+
+        $r9 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r9.<java.io.PrintStream: void println(java.lang.Object)>(r0);
+        $r10 = (java.util.regex.Pattern$Curly) r0;
+        $r11 = $r10.<java.util.regex.Pattern$Curly: java.util.regex.Pattern$Node atom>;
+        staticinvoke <java.util.regex.Pattern: void printObjectTree(java.util.regex.Pattern$Node)>($r11);
+        $r12 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r12.<java.io.PrintStream: void println(java.lang.String)>("**** end contents Curly body");
+        goto label6;
+
+     label3:
+        $z3 = r0 instanceof java.util.regex.Pattern$GroupCurly;
+        if $z3 == 0 goto label4;
+
+        $r13 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r13.<java.io.PrintStream: void println(java.lang.Object)>(r0);
+        $r14 = (java.util.regex.Pattern$GroupCurly) r0;
+        $r15 = $r14.<java.util.regex.Pattern$GroupCurly: java.util.regex.Pattern$Node atom>;
+        staticinvoke <java.util.regex.Pattern: void printObjectTree(java.util.regex.Pattern$Node)>($r15);
+        $r16 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r16.<java.io.PrintStream: void println(java.lang.String)>("**** end contents GroupCurly body");
+        goto label6;
+
+     label4:
+        $z4 = r0 instanceof java.util.regex.Pattern$GroupTail;
+        if $z4 == 0 goto label5;
+
+        $r17 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r17.<java.io.PrintStream: void println(java.lang.Object)>(r0);
+        $r18 = <java.lang.System: java.io.PrintStream out>;
+        $r19 = new java.lang.StringBuilder;
+        specialinvoke $r19.<java.lang.StringBuilder: void <init>()>();
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Tail next is ");
+        $r21 = r0.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next>;
+        $r22 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r21);
+        $r23 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke $r18.<java.io.PrintStream: void println(java.lang.String)>($r23);
+        return;
+
+     label5:
+        $r24 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r24.<java.io.PrintStream: void println(java.lang.Object)>(r0);
+
+     label6:
+        r0 = r0.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next>;
+        if r0 == null goto label7;
+
+        $r25 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r25.<java.io.PrintStream: void println(java.lang.String)>("->next:");
+
+     label7:
+        $r26 = <java.util.regex.Pattern: java.util.regex.Pattern$Node accept>;
+        if r0 != $r26 goto label0;
+
+        $r27 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r27.<java.io.PrintStream: void println(java.lang.String)>("Accept Node");
+        r0 = null;
+        goto label0;
+
+     label8:
+        return;
+    }
+
+    private boolean has(int)
+    {
+        java.util.regex.Pattern r0;
+        int i0, $i1, $i2;
+        boolean $z0;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 := @parameter0: int;
+        $i1 = r0.<java.util.regex.Pattern: int flags>;
+        $i2 = $i1 & i0;
+        if $i2 == 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    private void accept(int, java.lang.String)
+    {
+        java.util.regex.Pattern r0;
+        int i0, $i1, i2, $i3;
+        java.lang.String r1;
+        int[] $r3;
+        boolean $z0;
+        java.util.regex.PatternSyntaxException $r4;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.lang.String;
+        $r3 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i1 = r0.<java.util.regex.Pattern: int cursor>;
+        $i3 = $i1 + 1;
+        r0.<java.util.regex.Pattern: int cursor> = $i3;
+        i2 = $r3[$i1];
+        $z0 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(4);
+        if $z0 == 0 goto label0;
+
+        i2 = specialinvoke r0.<java.util.regex.Pattern: int parsePastWhitespace(int)>(i2);
+
+     label0:
+        if i0 == i2 goto label1;
+
+        $r4 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>(r1);
+        throw $r4;
+
+     label1:
+        return;
+    }
+
+    private void mark(int)
+    {
+        java.util.regex.Pattern r0;
+        int i0, $i1;
+        int[] $r1;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 := @parameter0: int;
+        $r1 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i1 = r0.<java.util.regex.Pattern: int patternLength>;
+        $r1[$i1] = i0;
+        return;
+    }
+
+    private int peek()
+    {
+        java.util.regex.Pattern r0;
+        int i0, $i1;
+        int[] $r1;
+        boolean $z0;
+
+        r0 := @this: java.util.regex.Pattern;
+        $r1 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i1 = r0.<java.util.regex.Pattern: int cursor>;
+        i0 = $r1[$i1];
+        $z0 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(4);
+        if $z0 == 0 goto label0;
+
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int peekPastWhitespace(int)>(i0);
+
+     label0:
+        return i0;
+    }
+
+    private int read()
+    {
+        java.util.regex.Pattern r0;
+        int $i0, i1, $i2;
+        int[] $r2;
+        boolean $z0;
+
+        r0 := @this: java.util.regex.Pattern;
+        $r2 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i0 = r0.<java.util.regex.Pattern: int cursor>;
+        $i2 = $i0 + 1;
+        r0.<java.util.regex.Pattern: int cursor> = $i2;
+        i1 = $r2[$i0];
+        $z0 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(4);
+        if $z0 == 0 goto label0;
+
+        i1 = specialinvoke r0.<java.util.regex.Pattern: int parsePastWhitespace(int)>(i1);
+
+     label0:
+        return i1;
+    }
+
+    private int readEscaped()
+    {
+        java.util.regex.Pattern r0;
+        int $i0, i1, $i2;
+        int[] $r2;
+
+        r0 := @this: java.util.regex.Pattern;
+        $r2 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i0 = r0.<java.util.regex.Pattern: int cursor>;
+        $i2 = $i0 + 1;
+        r0.<java.util.regex.Pattern: int cursor> = $i2;
+        i1 = $r2[$i0];
+        return i1;
+    }
+
+    private int next()
+    {
+        java.util.regex.Pattern r0;
+        int i0, $i1, $i2;
+        int[] $r2;
+        boolean $z0;
+
+        r0 := @this: java.util.regex.Pattern;
+        $r2 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i1 = r0.<java.util.regex.Pattern: int cursor>;
+        $i2 = $i1 + 1;
+        r0.<java.util.regex.Pattern: int cursor> = $i2;
+        i0 = $r2[$i2];
+        $z0 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(4);
+        if $z0 == 0 goto label0;
+
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int peekPastWhitespace(int)>(i0);
+
+     label0:
+        return i0;
+    }
+
+    private int nextEscaped()
+    {
+        java.util.regex.Pattern r0;
+        int i0, $i1, $i2;
+        int[] $r2;
+
+        r0 := @this: java.util.regex.Pattern;
+        $r2 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i1 = r0.<java.util.regex.Pattern: int cursor>;
+        $i2 = $i1 + 1;
+        r0.<java.util.regex.Pattern: int cursor> = $i2;
+        i0 = $r2[$i2];
+        return i0;
+    }
+
+    private int peekPastWhitespace(int)
+    {
+        java.util.regex.Pattern r0;
+        int i0, $i1, $i2;
+        boolean $z0, $z1;
+        int[] $r1;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 := @parameter0: int;
+
+     label0:
+        $z0 = staticinvoke <java.util.regex.ASCII: boolean isSpace(int)>(i0);
+        if $z0 != 0 goto label1;
+
+        if i0 != 35 goto label3;
+
+     label1:
+        $z1 = staticinvoke <java.util.regex.ASCII: boolean isSpace(int)>(i0);
+        if $z1 == 0 goto label2;
+
+        $r1 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i1 = r0.<java.util.regex.Pattern: int cursor>;
+        $i2 = $i1 + 1;
+        r0.<java.util.regex.Pattern: int cursor> = $i2;
+        i0 = $r1[$i2];
+        goto label1;
+
+     label2:
+        if i0 != 35 goto label0;
+
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int peekPastLine()>();
+        goto label0;
+
+     label3:
+        return i0;
+    }
+
+    private int parsePastWhitespace(int)
+    {
+        java.util.regex.Pattern r0;
+        int i0, $i1, $i2;
+        boolean $z0, $z1;
+        int[] $r1;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 := @parameter0: int;
+
+     label0:
+        $z0 = staticinvoke <java.util.regex.ASCII: boolean isSpace(int)>(i0);
+        if $z0 != 0 goto label1;
+
+        if i0 != 35 goto label3;
+
+     label1:
+        $z1 = staticinvoke <java.util.regex.ASCII: boolean isSpace(int)>(i0);
+        if $z1 == 0 goto label2;
+
+        $r1 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i1 = r0.<java.util.regex.Pattern: int cursor>;
+        $i2 = $i1 + 1;
+        r0.<java.util.regex.Pattern: int cursor> = $i2;
+        i0 = $r1[$i1];
+        goto label1;
+
+     label2:
+        if i0 != 35 goto label0;
+
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int parsePastLine()>();
+        goto label0;
+
+     label3:
+        return i0;
+    }
+
+    private int parsePastLine()
+    {
+        java.util.regex.Pattern r0;
+        int $i0, i1, $i2, $i3, $i4;
+        int[] $r2, $r3;
+        boolean $z0;
+
+        r0 := @this: java.util.regex.Pattern;
+        $r2 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i0 = r0.<java.util.regex.Pattern: int cursor>;
+        $i2 = $i0 + 1;
+        r0.<java.util.regex.Pattern: int cursor> = $i2;
+        i1 = $r2[$i0];
+
+     label0:
+        if i1 == 0 goto label1;
+
+        $z0 = specialinvoke r0.<java.util.regex.Pattern: boolean isLineSeparator(int)>(i1);
+        if $z0 != 0 goto label1;
+
+        $r3 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i3 = r0.<java.util.regex.Pattern: int cursor>;
+        $i4 = $i3 + 1;
+        r0.<java.util.regex.Pattern: int cursor> = $i4;
+        i1 = $r3[$i3];
+        goto label0;
+
+     label1:
+        return i1;
+    }
+
+    private int peekPastLine()
+    {
+        java.util.regex.Pattern r0;
+        int i0, $i1, $i2, $i3, $i4;
+        int[] $r2, $r3;
+        boolean $z0;
+
+        r0 := @this: java.util.regex.Pattern;
+        $r2 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i1 = r0.<java.util.regex.Pattern: int cursor>;
+        $i2 = $i1 + 1;
+        r0.<java.util.regex.Pattern: int cursor> = $i2;
+        i0 = $r2[$i2];
+
+     label0:
+        if i0 == 0 goto label1;
+
+        $z0 = specialinvoke r0.<java.util.regex.Pattern: boolean isLineSeparator(int)>(i0);
+        if $z0 != 0 goto label1;
+
+        $r3 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i3 = r0.<java.util.regex.Pattern: int cursor>;
+        $i4 = $i3 + 1;
+        r0.<java.util.regex.Pattern: int cursor> = $i4;
+        i0 = $r3[$i4];
+        goto label0;
+
+     label1:
+        return i0;
+    }
+
+    private boolean isLineSeparator(int)
+    {
+        java.util.regex.Pattern r0;
+        int i0, $i1;
+        boolean $z0, $z1, $z2;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 := @parameter0: int;
+        $z0 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(1);
+        if $z0 == 0 goto label2;
+
+        if i0 != 10 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        return $z1;
+
+     label2:
+        if i0 == 10 goto label3;
+
+        if i0 == 13 goto label3;
+
+        $i1 = i0 | 1;
+        if $i1 == 8233 goto label3;
+
+        if i0 != 133 goto label4;
+
+     label3:
+        $z2 = 1;
+        goto label5;
+
+     label4:
+        $z2 = 0;
+
+     label5:
+        return $z2;
+    }
+
+    private int skip()
+    {
+        java.util.regex.Pattern r0;
+        int i0, i1, $i2, $i3;
+        int[] $r1;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 = r0.<java.util.regex.Pattern: int cursor>;
+        $r1 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i2 = i0 + 1;
+        i1 = $r1[$i2];
+        $i3 = i0 + 2;
+        r0.<java.util.regex.Pattern: int cursor> = $i3;
+        return i1;
+    }
+
+    private void unread()
+    {
+        java.util.regex.Pattern r0;
+        int $i0, $i1;
+
+        r0 := @this: java.util.regex.Pattern;
+        $i0 = r0.<java.util.regex.Pattern: int cursor>;
+        $i1 = $i0 - 1;
+        r0.<java.util.regex.Pattern: int cursor> = $i1;
+        return;
+    }
+
+    private java.util.regex.PatternSyntaxException error(java.lang.String)
+    {
+        java.util.regex.Pattern r0;
+        java.lang.String r1, $r3;
+        java.util.regex.PatternSyntaxException $r2;
+        int $i0, $i1;
+
+        r0 := @this: java.util.regex.Pattern;
+        r1 := @parameter0: java.lang.String;
+        $r2 = new java.util.regex.PatternSyntaxException;
+        $r3 = r0.<java.util.regex.Pattern: java.lang.String normalizedPattern>;
+        $i0 = r0.<java.util.regex.Pattern: int cursor>;
+        $i1 = $i0 - 1;
+        specialinvoke $r2.<java.util.regex.PatternSyntaxException: void <init>(java.lang.String,java.lang.String,int)>(r1, $r3, $i1);
+        return $r2;
+    }
+
+    private boolean findSupplementary(int, int)
+    {
+        java.util.regex.Pattern r0;
+        int i0, i1, i2, $i3;
+        int[] $r1;
+        boolean $z0;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        i2 = i0;
+
+     label0:
+        if i2 >= i1 goto label2;
+
+        $r1 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i3 = $r1[i2];
+        $z0 = staticinvoke <java.util.regex.Pattern: boolean isSupplementary(int)>($i3);
+        if $z0 == 0 goto label1;
+
+        return 1;
+
+     label1:
+        i2 = i2 + 1;
+        goto label0;
+
+     label2:
+        return 0;
+    }
+
+    private static final boolean isSupplementary(int)
+    {
+        int i0;
+        char $c1;
+        boolean $z0, $z1;
+
+        i0 := @parameter0: int;
+        if i0 >= 65536 goto label0;
+
+        $c1 = (char) i0;
+        $z0 = staticinvoke <java.lang.Character: boolean isSurrogate(char)>($c1);
+        if $z0 == 0 goto label1;
+
+     label0:
+        $z1 = 1;
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        return $z1;
+    }
+
+    private java.util.regex.Pattern$Node expr(java.util.regex.Pattern$Node)
+    {
+        java.util.regex.Pattern r0;
+        java.util.regex.Pattern$Node r1, r2, r3, r5, r6;
+        java.util.regex.Pattern$BranchConn r4, $r7;
+        boolean $z0;
+        java.util.regex.Pattern$Branch $r8, $r9;
+        int $i0;
+
+        r0 := @this: java.util.regex.Pattern;
+        r1 := @parameter0: java.util.regex.Pattern$Node;
+        r2 = null;
+        r3 = null;
+        r4 = null;
+
+     label0:
+        r5 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node sequence(java.util.regex.Pattern$Node)>(r1);
+        r6 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root>;
+        if r2 != null goto label1;
+
+        r2 = r5;
+        r3 = r6;
+        goto label8;
+
+     label1:
+        if r4 != null goto label2;
+
+        $r7 = new java.util.regex.Pattern$BranchConn;
+        specialinvoke $r7.<java.util.regex.Pattern$BranchConn: void <init>()>();
+        r4 = $r7;
+        r4.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next> = r1;
+
+     label2:
+        if r5 != r1 goto label3;
+
+        r5 = null;
+        goto label4;
+
+     label3:
+        r6.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next> = r4;
+
+     label4:
+        $z0 = r2 instanceof java.util.regex.Pattern$Branch;
+        if $z0 == 0 goto label5;
+
+        $r8 = (java.util.regex.Pattern$Branch) r2;
+        virtualinvoke $r8.<java.util.regex.Pattern$Branch: void add(java.util.regex.Pattern$Node)>(r5);
+        goto label8;
+
+     label5:
+        if r2 != r1 goto label6;
+
+        r2 = null;
+        goto label7;
+
+     label6:
+        r3.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next> = r4;
+
+     label7:
+        $r9 = new java.util.regex.Pattern$Branch;
+        specialinvoke $r9.<java.util.regex.Pattern$Branch: void <init>(java.util.regex.Pattern$Node,java.util.regex.Pattern$Node,java.util.regex.Pattern$Node)>(r2, r5, r4);
+        r2 = $r9;
+
+     label8:
+        $i0 = specialinvoke r0.<java.util.regex.Pattern: int peek()>();
+        if $i0 == 124 goto label9;
+
+        return r2;
+
+     label9:
+        specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        goto label0;
+    }
+
+    private java.util.regex.Pattern$Node sequence(java.util.regex.Pattern$Node)
+    {
+        java.util.regex.Pattern r0;
+        java.util.regex.Pattern$Node r1, r2, r3, r4, r5, r20;
+        null_type n0;
+        int i0, i1, i2, $i8, $i9;
+        boolean z0, z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9;
+        java.util.regex.Pattern$UnixCaret $r6;
+        java.util.regex.Pattern$Caret $r7;
+        java.util.regex.Pattern$Begin $r8;
+        java.util.regex.Pattern$UnixDollar $r9;
+        java.util.regex.Pattern$Dollar $r10;
+        java.util.regex.Pattern$All $r11;
+        java.util.regex.Pattern$UnixDot $r12;
+        java.util.regex.Pattern$Dot $r13;
+        java.lang.StringBuilder $r14, $r15, $r16, $r17;
+        char $c7;
+        java.lang.String $r18;
+        java.util.regex.PatternSyntaxException $r19;
+
+        r0 := @this: java.util.regex.Pattern;
+        r1 := @parameter0: java.util.regex.Pattern$Node;
+        r2 = null;
+        r3 = null;
+        n0 = null;
+
+     label0:
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int peek()>();
+        lookupswitch(i0)
+        {
+            case 0: goto label24;
+            case 36: goto label16;
+            case 40: goto label1;
+            case 41: goto label21;
+            case 42: goto label23;
+            case 43: goto label23;
+            case 46: goto label18;
+            case 63: goto label23;
+            case 91: goto label5;
+            case 92: goto label6;
+            case 93: goto label22;
+            case 94: goto label13;
+            case 124: goto label21;
+            case 125: goto label22;
+            default: goto label25;
+        };
+
+     label1:
+        r4 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node group0()>();
+        if r4 != null goto label2;
+
+        goto label0;
+
+     label2:
+        if r2 != null goto label3;
+
+        r2 = r4;
+        goto label4;
+
+     label3:
+        r3.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next> = r4;
+
+     label4:
+        r3 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root>;
+        goto label0;
+
+     label5:
+        r5 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty clazz(boolean)>(1);
+        goto label26;
+
+     label6:
+        i1 = specialinvoke r0.<java.util.regex.Pattern: int nextEscaped()>();
+        if i1 == 112 goto label7;
+
+        if i1 != 80 goto label12;
+
+     label7:
+        z0 = 1;
+        if i1 != 80 goto label8;
+
+        $z2 = 1;
+        goto label9;
+
+     label8:
+        $z2 = 0;
+
+     label9:
+        z1 = $z2;
+        i2 = specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        if i2 == 123 goto label10;
+
+        specialinvoke r0.<java.util.regex.Pattern: void unread()>();
+        goto label11;
+
+     label10:
+        z0 = 0;
+
+     label11:
+        r5 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty family(boolean,boolean)>(z0, z1);
+        goto label26;
+
+     label12:
+        specialinvoke r0.<java.util.regex.Pattern: void unread()>();
+        r5 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node atom()>();
+        goto label26;
+
+     label13:
+        specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        $z3 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(8);
+        if $z3 == 0 goto label15;
+
+        $z4 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(1);
+        if $z4 == 0 goto label14;
+
+        $r6 = new java.util.regex.Pattern$UnixCaret;
+        specialinvoke $r6.<java.util.regex.Pattern$UnixCaret: void <init>()>();
+        r5 = $r6;
+        goto label26;
+
+     label14:
+        $r7 = new java.util.regex.Pattern$Caret;
+        specialinvoke $r7.<java.util.regex.Pattern$Caret: void <init>()>();
+        r5 = $r7;
+        goto label26;
+
+     label15:
+        $r8 = new java.util.regex.Pattern$Begin;
+        specialinvoke $r8.<java.util.regex.Pattern$Begin: void <init>()>();
+        r5 = $r8;
+        goto label26;
+
+     label16:
+        specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        $z5 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(1);
+        if $z5 == 0 goto label17;
+
+        $r9 = new java.util.regex.Pattern$UnixDollar;
+        $z6 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(8);
+        specialinvoke $r9.<java.util.regex.Pattern$UnixDollar: void <init>(boolean)>($z6);
+        r5 = $r9;
+        goto label26;
+
+     label17:
+        $r10 = new java.util.regex.Pattern$Dollar;
+        $z7 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(8);
+        specialinvoke $r10.<java.util.regex.Pattern$Dollar: void <init>(boolean)>($z7);
+        r5 = $r10;
+        goto label26;
+
+     label18:
+        specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        $z8 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(32);
+        if $z8 == 0 goto label19;
+
+        $r11 = new java.util.regex.Pattern$All;
+        specialinvoke $r11.<java.util.regex.Pattern$All: void <init>()>();
+        r5 = $r11;
+        goto label26;
+
+     label19:
+        $z9 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(1);
+        if $z9 == 0 goto label20;
+
+        $r12 = new java.util.regex.Pattern$UnixDot;
+        specialinvoke $r12.<java.util.regex.Pattern$UnixDot: void <init>()>();
+        r5 = $r12;
+        goto label26;
+
+     label20:
+        $r13 = new java.util.regex.Pattern$Dot;
+        specialinvoke $r13.<java.util.regex.Pattern$Dot: void <init>()>();
+        r5 = $r13;
+        goto label26;
+
+     label21:
+        goto label29;
+
+     label22:
+        r5 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node atom()>();
+        goto label26;
+
+     label23:
+        specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        $r14 = new java.lang.StringBuilder;
+        specialinvoke $r14.<java.lang.StringBuilder: void <init>()>();
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Dangling meta character \'");
+        $c7 = (char) i0;
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>($c7);
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r19 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>($r18);
+        throw $r19;
+
+     label24:
+        $i8 = r0.<java.util.regex.Pattern: int cursor>;
+        $i9 = r0.<java.util.regex.Pattern: int patternLength>;
+        if $i8 < $i9 goto label25;
+
+        goto label29;
+
+     label25:
+        r5 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node atom()>();
+
+     label26:
+        r20 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node closure(java.util.regex.Pattern$Node)>(r5);
+        if r2 != null goto label27;
+
+        r3 = r20;
+        r2 = r20;
+        goto label28;
+
+     label27:
+        r3.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next> = r20;
+        r3 = r20;
+
+     label28:
+        goto label0;
+
+     label29:
+        if r2 != null goto label30;
+
+        return r1;
+
+     label30:
+        r3.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next> = r1;
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = r3;
+        return r2;
+    }
+
+    private java.util.regex.Pattern$Node atom()
+    {
+        java.util.regex.Pattern r0;
+        int i0, i1, i2, i3, i4, i5, $i6, $i7, $i8;
+        boolean z0, z1, z2, $z3, $z4, $z5, $z6, $z7;
+        java.util.regex.Pattern$CharProperty $r1, $r5;
+        java.util.regex.Pattern$Node $r3, $r7;
+        int[] $r4, $r6;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 = 0;
+        i1 = -1;
+        z0 = 0;
+        i2 = specialinvoke r0.<java.util.regex.Pattern: int peek()>();
+
+     label0:
+        lookupswitch(i2)
+        {
+            case 0: goto label16;
+            case 36: goto label2;
+            case 40: goto label2;
+            case 41: goto label2;
+            case 42: goto label1;
+            case 43: goto label1;
+            case 46: goto label2;
+            case 63: goto label1;
+            case 91: goto label2;
+            case 92: goto label3;
+            case 94: goto label2;
+            case 123: goto label1;
+            case 124: goto label2;
+            default: goto label17;
+        };
+
+     label1:
+        if i0 <= 1 goto label19;
+
+        r0.<java.util.regex.Pattern: int cursor> = i1;
+        i0 = i0 + -1;
+        goto label19;
+
+     label2:
+        goto label19;
+
+     label3:
+        i3 = specialinvoke r0.<java.util.regex.Pattern: int nextEscaped()>();
+        if i3 == 112 goto label4;
+
+        if i3 != 80 goto label10;
+
+     label4:
+        if i0 <= 0 goto label5;
+
+        specialinvoke r0.<java.util.regex.Pattern: void unread()>();
+        goto label19;
+
+     label5:
+        if i3 != 80 goto label6;
+
+        $z3 = 1;
+        goto label7;
+
+     label6:
+        $z3 = 0;
+
+     label7:
+        z1 = $z3;
+        z2 = 1;
+        i4 = specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        if i4 == 123 goto label8;
+
+        specialinvoke r0.<java.util.regex.Pattern: void unread()>();
+        goto label9;
+
+     label8:
+        z2 = 0;
+
+     label9:
+        $r1 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty family(boolean,boolean)>(z2, z1);
+        return $r1;
+
+     label10:
+        specialinvoke r0.<java.util.regex.Pattern: void unread()>();
+        i1 = r0.<java.util.regex.Pattern: int cursor>;
+        $z4 = 0;
+        if i0 != 0 goto label11;
+
+        $z5 = 1;
+        goto label12;
+
+     label11:
+        $z5 = 0;
+
+     label12:
+        i5 = specialinvoke r0.<java.util.regex.Pattern: int escape(boolean,boolean)>($z4, $z5);
+        if i5 < 0 goto label14;
+
+        specialinvoke r0.<java.util.regex.Pattern: void append(int,int)>(i5, i0);
+        i0 = i0 + 1;
+        $z6 = staticinvoke <java.util.regex.Pattern: boolean isSupplementary(int)>(i5);
+        if $z6 == 0 goto label13;
+
+        z0 = 1;
+
+     label13:
+        i2 = specialinvoke r0.<java.util.regex.Pattern: int peek()>();
+        goto label0;
+
+     label14:
+        if i0 != 0 goto label15;
+
+        $r3 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root>;
+        return $r3;
+
+     label15:
+        r0.<java.util.regex.Pattern: int cursor> = i1;
+        goto label19;
+
+     label16:
+        $i6 = r0.<java.util.regex.Pattern: int cursor>;
+        $i7 = r0.<java.util.regex.Pattern: int patternLength>;
+        if $i6 < $i7 goto label17;
+
+        goto label19;
+
+     label17:
+        i1 = r0.<java.util.regex.Pattern: int cursor>;
+        specialinvoke r0.<java.util.regex.Pattern: void append(int,int)>(i2, i0);
+        i0 = i0 + 1;
+        $z7 = staticinvoke <java.util.regex.Pattern: boolean isSupplementary(int)>(i2);
+        if $z7 == 0 goto label18;
+
+        z0 = 1;
+
+     label18:
+        i2 = specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        goto label0;
+
+     label19:
+        if i0 != 1 goto label20;
+
+        $r4 = r0.<java.util.regex.Pattern: int[] buffer>;
+        $i8 = $r4[0];
+        $r5 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty newSingle(int)>($i8);
+        return $r5;
+
+     label20:
+        $r6 = r0.<java.util.regex.Pattern: int[] buffer>;
+        $r7 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node newSlice(int[],int,boolean)>($r6, i0, z0);
+        return $r7;
+    }
+
+    private void append(int, int)
+    {
+        java.util.regex.Pattern r0;
+        int i0, i1, $i2, $i3;
+        int[] r1, $r2, $r3, $r4;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $r2 = r0.<java.util.regex.Pattern: int[] buffer>;
+        $i2 = lengthof $r2;
+        if i1 < $i2 goto label0;
+
+        $i3 = i1 + i1;
+        r1 = newarray (int)[$i3];
+        $r3 = r0.<java.util.regex.Pattern: int[] buffer>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r3, 0, r1, 0, i1);
+        r0.<java.util.regex.Pattern: int[] buffer> = r1;
+
+     label0:
+        $r4 = r0.<java.util.regex.Pattern: int[] buffer>;
+        $r4[i1] = i0;
+        return;
+    }
+
+    private java.util.regex.Pattern$Node ref(int)
+    {
+        java.util.regex.Pattern r0;
+        int i0, i1, i2, $i3, $i4, $i5, $i6;
+        boolean z0, $z1, $z2;
+        java.util.regex.Pattern$CIBackRef $r1;
+        java.util.regex.Pattern$BackRef $r2;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 := @parameter0: int;
+        z0 = 0;
+
+     label0:
+        if z0 != 0 goto label5;
+
+        i1 = specialinvoke r0.<java.util.regex.Pattern: int peek()>();
+        tableswitch(i1)
+        {
+            case 48: goto label1;
+            case 49: goto label1;
+            case 50: goto label1;
+            case 51: goto label1;
+            case 52: goto label1;
+            case 53: goto label1;
+            case 54: goto label1;
+            case 55: goto label1;
+            case 56: goto label1;
+            case 57: goto label1;
+            default: goto label3;
+        };
+
+     label1:
+        $i3 = i0 * 10;
+        $i4 = i1 - 48;
+        i2 = $i3 + $i4;
+        $i5 = r0.<java.util.regex.Pattern: int capturingGroupCount>;
+        $i6 = $i5 - 1;
+        if $i6 >= i2 goto label2;
+
+        z0 = 1;
+        goto label4;
+
+     label2:
+        i0 = i2;
+        specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        goto label4;
+
+     label3:
+        z0 = 1;
+
+     label4:
+        goto label0;
+
+     label5:
+        $z1 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(2);
+        if $z1 == 0 goto label6;
+
+        $r1 = new java.util.regex.Pattern$CIBackRef;
+        $z2 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(64);
+        specialinvoke $r1.<java.util.regex.Pattern$CIBackRef: void <init>(int,boolean)>(i0, $z2);
+        return $r1;
+
+     label6:
+        $r2 = new java.util.regex.Pattern$BackRef;
+        specialinvoke $r2.<java.util.regex.Pattern$BackRef: void <init>(int)>(i0);
+        return $r2;
+    }
+
+    private int escape(boolean, boolean)
+    {
+        java.util.regex.Pattern r0;
+        boolean z0, z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11;
+        java.lang.String r1, $r33;
+        java.util.regex.Pattern$Node $r2;
+        java.util.regex.UnicodeProp $r7, $r13, $r18, $r26, $r45, $r48;
+        java.util.regex.Pattern$CharProperty $r8, $r14, $r19, $r25, $r44, $r47;
+        java.util.regex.PatternSyntaxException $r27, $r34, $r50;
+        java.util.Map $r28, $r36, $r40;
+        java.lang.StringBuilder $r30, $r31, $r32, r65;
+        java.lang.Object $r37, $r41;
+        java.lang.Integer $r38, $r42;
+        java.util.regex.Pattern$Begin r51;
+        java.util.regex.Pattern$Bound r52, r62;
+        java.util.regex.Pattern$Utype r53, r56, r58, r63, r68, r70;
+        java.util.regex.Pattern$Ctype r54, r57, r59, r64, r69, r71;
+        java.util.regex.Pattern$LastMatch r55;
+        java.util.regex.Pattern$UnixDollar r60;
+        java.util.regex.Pattern$Dollar r61;
+        java.util.regex.Pattern$CIBackRef r66;
+        java.util.regex.Pattern$BackRef r67;
+        java.util.regex.Pattern$End r72;
+
+        r0 := @this: java.util.regex.Pattern;
+        z0 := @parameter0: boolean;
+        z1 := @parameter1: boolean;
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int skip()>();
+        tableswitch(i0)
+        {
+            case 48: goto label0;
+            case 49: goto label1;
+            case 50: goto label1;
+            case 51: goto label1;
+            case 52: goto label1;
+            case 53: goto label1;
+            case 54: goto label1;
+            case 55: goto label1;
+            case 56: goto label1;
+            case 57: goto label1;
+            case 58: goto label72;
+            case 59: goto label72;
+            case 60: goto label72;
+            case 61: goto label72;
+            case 62: goto label72;
+            case 63: goto label72;
+            case 64: goto label72;
+            case 65: goto label4;
+            case 66: goto label7;
+            case 67: goto label10;
+            case 68: goto label11;
+            case 69: goto label15;
+            case 70: goto label15;
+            case 71: goto label16;
+            case 72: goto label19;
+            case 73: goto label19;
+            case 74: goto label19;
+            case 75: goto label19;
+            case 76: goto label19;
+            case 77: goto label19;
+            case 78: goto label19;
+            case 79: goto label19;
+            case 80: goto label19;
+            case 81: goto label19;
+            case 82: goto label19;
+            case 83: goto label20;
+            case 84: goto label24;
+            case 85: goto label24;
+            case 86: goto label24;
+            case 87: goto label25;
+            case 88: goto label29;
+            case 89: goto label29;
+            case 90: goto label30;
+            case 91: goto label72;
+            case 92: goto label72;
+            case 93: goto label72;
+            case 94: goto label72;
+            case 95: goto label72;
+            case 96: goto label72;
+            case 97: goto label34;
+            case 98: goto label35;
+            case 99: goto label38;
+            case 100: goto label39;
+            case 101: goto label43;
+            case 102: goto label44;
+            case 103: goto label45;
+            case 104: goto label45;
+            case 105: goto label45;
+            case 106: goto label45;
+            case 107: goto label46;
+            case 108: goto label52;
+            case 109: goto label52;
+            case 110: goto label53;
+            case 111: goto label54;
+            case 112: goto label54;
+            case 113: goto label54;
+            case 114: goto label55;
+            case 115: goto label56;
+            case 116: goto label60;
+            case 117: goto label61;
+            case 118: goto label62;
+            case 119: goto label63;
+            case 120: goto label67;
+            case 121: goto label68;
+            case 122: goto label69;
+            default: goto label72;
+        };
+
+     label0:
+        $i1 = specialinvoke r0.<java.util.regex.Pattern: int o()>();
+        return $i1;
+
+     label1:
+        if z0 == 0 goto label2;
+
+        goto label73;
+
+     label2:
+        if z1 == 0 goto label3;
+
+        $i2 = i0 - 48;
+        $r2 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node ref(int)>($i2);
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = $r2;
+
+     label3:
+        return -1;
+
+     label4:
+        if z0 == 0 goto label5;
+
+        goto label73;
+
+     label5:
+        if z1 == 0 goto label6;
+
+        r51 = new java.util.regex.Pattern$Begin;
+        specialinvoke r51.<java.util.regex.Pattern$Begin: void <init>()>();
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = r51;
+
+     label6:
+        return -1;
+
+     label7:
+        if z0 == 0 goto label8;
+
+        goto label73;
+
+     label8:
+        if z1 == 0 goto label9;
+
+        r52 = new java.util.regex.Pattern$Bound;
+        $i3 = <java.util.regex.Pattern$Bound: int NONE>;
+        $z2 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(256);
+        specialinvoke r52.<java.util.regex.Pattern$Bound: void <init>(int,boolean)>($i3, $z2);
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = r52;
+
+     label9:
+        return -1;
+
+     label10:
+        goto label73;
+
+     label11:
+        if z1 == 0 goto label14;
+
+        $z3 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(256);
+        if $z3 == 0 goto label12;
+
+        r53 = new java.util.regex.Pattern$Utype;
+        $r7 = <java.util.regex.UnicodeProp: java.util.regex.UnicodeProp DIGIT>;
+        specialinvoke r53.<java.util.regex.Pattern$Utype: void <init>(java.util.regex.UnicodeProp)>($r7);
+        $r8 = virtualinvoke r53.<java.util.regex.Pattern$Utype: java.util.regex.Pattern$CharProperty complement()>();
+        goto label13;
+
+     label12:
+        r54 = new java.util.regex.Pattern$Ctype;
+        specialinvoke r54.<java.util.regex.Pattern$Ctype: void <init>(int)>(1024);
+        $r8 = virtualinvoke r54.<java.util.regex.Pattern$Ctype: java.util.regex.Pattern$CharProperty complement()>();
+
+     label13:
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = $r8;
+
+     label14:
+        return -1;
+
+     label15:
+        goto label73;
+
+     label16:
+        if z0 == 0 goto label17;
+
+        goto label73;
+
+     label17:
+        if z1 == 0 goto label18;
+
+        r55 = new java.util.regex.Pattern$LastMatch;
+        specialinvoke r55.<java.util.regex.Pattern$LastMatch: void <init>()>();
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = r55;
+
+     label18:
+        return -1;
+
+     label19:
+        goto label73;
+
+     label20:
+        if z1 == 0 goto label23;
+
+        $z4 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(256);
+        if $z4 == 0 goto label21;
+
+        r56 = new java.util.regex.Pattern$Utype;
+        $r13 = <java.util.regex.UnicodeProp: java.util.regex.UnicodeProp WHITE_SPACE>;
+        specialinvoke r56.<java.util.regex.Pattern$Utype: void <init>(java.util.regex.UnicodeProp)>($r13);
+        $r14 = virtualinvoke r56.<java.util.regex.Pattern$Utype: java.util.regex.Pattern$CharProperty complement()>();
+        goto label22;
+
+     label21:
+        r57 = new java.util.regex.Pattern$Ctype;
+        specialinvoke r57.<java.util.regex.Pattern$Ctype: void <init>(int)>(2048);
+        $r14 = virtualinvoke r57.<java.util.regex.Pattern$Ctype: java.util.regex.Pattern$CharProperty complement()>();
+
+     label22:
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = $r14;
+
+     label23:
+        return -1;
+
+     label24:
+        goto label73;
+
+     label25:
+        if z1 == 0 goto label28;
+
+        $z5 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(256);
+        if $z5 == 0 goto label26;
+
+        r58 = new java.util.regex.Pattern$Utype;
+        $r18 = <java.util.regex.UnicodeProp: java.util.regex.UnicodeProp WORD>;
+        specialinvoke r58.<java.util.regex.Pattern$Utype: void <init>(java.util.regex.UnicodeProp)>($r18);
+        $r19 = virtualinvoke r58.<java.util.regex.Pattern$Utype: java.util.regex.Pattern$CharProperty complement()>();
+        goto label27;
+
+     label26:
+        r59 = new java.util.regex.Pattern$Ctype;
+        specialinvoke r59.<java.util.regex.Pattern$Ctype: void <init>(int)>(67328);
+        $r19 = virtualinvoke r59.<java.util.regex.Pattern$Ctype: java.util.regex.Pattern$CharProperty complement()>();
+
+     label27:
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = $r19;
+
+     label28:
+        return -1;
+
+     label29:
+        goto label73;
+
+     label30:
+        if z0 == 0 goto label31;
+
+        goto label73;
+
+     label31:
+        if z1 == 0 goto label33;
+
+        $z6 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(1);
+        if $z6 == 0 goto label32;
+
+        r60 = new java.util.regex.Pattern$UnixDollar;
+        specialinvoke r60.<java.util.regex.Pattern$UnixDollar: void <init>(boolean)>(0);
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = r60;
+        goto label33;
+
+     label32:
+        r61 = new java.util.regex.Pattern$Dollar;
+        specialinvoke r61.<java.util.regex.Pattern$Dollar: void <init>(boolean)>(0);
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = r61;
+
+     label33:
+        return -1;
+
+     label34:
+        return 7;
+
+     label35:
+        if z0 == 0 goto label36;
+
+        goto label73;
+
+     label36:
+        if z1 == 0 goto label37;
+
+        r62 = new java.util.regex.Pattern$Bound;
+        $i4 = <java.util.regex.Pattern$Bound: int BOTH>;
+        $z7 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(256);
+        specialinvoke r62.<java.util.regex.Pattern$Bound: void <init>(int,boolean)>($i4, $z7);
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = r62;
+
+     label37:
+        return -1;
+
+     label38:
+        $i5 = specialinvoke r0.<java.util.regex.Pattern: int c()>();
+        return $i5;
+
+     label39:
+        if z1 == 0 goto label42;
+
+        $z8 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(256);
+        if $z8 == 0 goto label40;
+
+        r63 = new java.util.regex.Pattern$Utype;
+        $r25 = r63;
+        $r26 = <java.util.regex.UnicodeProp: java.util.regex.UnicodeProp DIGIT>;
+        specialinvoke r63.<java.util.regex.Pattern$Utype: void <init>(java.util.regex.UnicodeProp)>($r26);
+        goto label41;
+
+     label40:
+        r64 = new java.util.regex.Pattern$Ctype;
+        $r25 = r64;
+        specialinvoke r64.<java.util.regex.Pattern$Ctype: void <init>(int)>(1024);
+
+     label41:
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = $r25;
+
+     label42:
+        return -1;
+
+     label43:
+        return 27;
+
+     label44:
+        return 12;
+
+     label45:
+        goto label73;
+
+     label46:
+        if z0 == 0 goto label47;
+
+        goto label73;
+
+     label47:
+        $i6 = specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        if $i6 == 60 goto label48;
+
+        $r27 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("\\k is not followed by \'<\' for named capturing group");
+        throw $r27;
+
+     label48:
+        $i7 = specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        r1 = specialinvoke r0.<java.util.regex.Pattern: java.lang.String groupname(int)>($i7);
+        $r28 = virtualinvoke r0.<java.util.regex.Pattern: java.util.Map namedGroups()>();
+        $z9 = interfaceinvoke $r28.<java.util.Map: boolean containsKey(java.lang.Object)>(r1);
+        if $z9 != 0 goto label49;
+
+        r65 = new java.lang.StringBuilder;
+        specialinvoke r65.<java.lang.StringBuilder: void <init>()>();
+        $r30 = virtualinvoke r65.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("(named capturing group <");
+        $r31 = virtualinvoke $r30.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("> does not exit");
+        $r33 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r34 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>($r33);
+        throw $r34;
+
+     label49:
+        if z1 == 0 goto label51;
+
+        $z10 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(2);
+        if $z10 == 0 goto label50;
+
+        r66 = new java.util.regex.Pattern$CIBackRef;
+        $r36 = virtualinvoke r0.<java.util.regex.Pattern: java.util.Map namedGroups()>();
+        $r37 = interfaceinvoke $r36.<java.util.Map: java.lang.Object get(java.lang.Object)>(r1);
+        $r38 = (java.lang.Integer) $r37;
+        $i8 = virtualinvoke $r38.<java.lang.Integer: int intValue()>();
+        $z11 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(64);
+        specialinvoke r66.<java.util.regex.Pattern$CIBackRef: void <init>(int,boolean)>($i8, $z11);
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = r66;
+        goto label51;
+
+     label50:
+        r67 = new java.util.regex.Pattern$BackRef;
+        $r40 = virtualinvoke r0.<java.util.regex.Pattern: java.util.Map namedGroups()>();
+        $r41 = interfaceinvoke $r40.<java.util.Map: java.lang.Object get(java.lang.Object)>(r1);
+        $r42 = (java.lang.Integer) $r41;
+        $i9 = virtualinvoke $r42.<java.lang.Integer: int intValue()>();
+        specialinvoke r67.<java.util.regex.Pattern$BackRef: void <init>(int)>($i9);
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = r67;
+
+     label51:
+        return -1;
+
+     label52:
+        goto label73;
+
+     label53:
+        return 10;
+
+     label54:
+        goto label73;
+
+     label55:
+        return 13;
+
+     label56:
+        if z1 == 0 goto label59;
+
+        $z12 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(256);
+        if $z12 == 0 goto label57;
+
+        r68 = new java.util.regex.Pattern$Utype;
+        $r44 = r68;
+        $r45 = <java.util.regex.UnicodeProp: java.util.regex.UnicodeProp WHITE_SPACE>;
+        specialinvoke r68.<java.util.regex.Pattern$Utype: void <init>(java.util.regex.UnicodeProp)>($r45);
+        goto label58;
+
+     label57:
+        r69 = new java.util.regex.Pattern$Ctype;
+        $r44 = r69;
+        specialinvoke r69.<java.util.regex.Pattern$Ctype: void <init>(int)>(2048);
+
+     label58:
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = $r44;
+
+     label59:
+        return -1;
+
+     label60:
+        return 9;
+
+     label61:
+        $i10 = specialinvoke r0.<java.util.regex.Pattern: int u()>();
+        return $i10;
+
+     label62:
+        return 11;
+
+     label63:
+        if z1 == 0 goto label66;
+
+        $z13 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(256);
+        if $z13 == 0 goto label64;
+
+        r70 = new java.util.regex.Pattern$Utype;
+        $r47 = r70;
+        $r48 = <java.util.regex.UnicodeProp: java.util.regex.UnicodeProp WORD>;
+        specialinvoke r70.<java.util.regex.Pattern$Utype: void <init>(java.util.regex.UnicodeProp)>($r48);
+        goto label65;
+
+     label64:
+        r71 = new java.util.regex.Pattern$Ctype;
+        $r47 = r71;
+        specialinvoke r71.<java.util.regex.Pattern$Ctype: void <init>(int)>(67328);
+
+     label65:
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = $r47;
+
+     label66:
+        return -1;
+
+     label67:
+        $i11 = specialinvoke r0.<java.util.regex.Pattern: int x()>();
+        return $i11;
+
+     label68:
+        goto label73;
+
+     label69:
+        if z0 == 0 goto label70;
+
+        goto label73;
+
+     label70:
+        if z1 == 0 goto label71;
+
+        r72 = new java.util.regex.Pattern$End;
+        specialinvoke r72.<java.util.regex.Pattern$End: void <init>()>();
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = r72;
+
+     label71:
+        return -1;
+
+     label72:
+        return i0;
+
+     label73:
+        $r50 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Illegal/unsupported escape sequence");
+        throw $r50;
+    }
+
+    private java.util.regex.Pattern$CharProperty clazz(boolean)
+    {
+        java.util.regex.Pattern r0;
+        boolean z0, z1, z2, $z3;
+        java.util.regex.Pattern$CharProperty r1, r2, r4, $r7;
+        java.util.regex.Pattern$BitClass r3, $r5;
+        int i0, $i1, $i2, $i3, i4, $i5, $i6;
+        int[] $r6;
+        java.util.regex.PatternSyntaxException $r8, $r9;
+
+        r0 := @this: java.util.regex.Pattern;
+        z0 := @parameter0: boolean;
+        r1 = null;
+        r2 = null;
+        $r5 = new java.util.regex.Pattern$BitClass;
+        specialinvoke $r5.<java.util.regex.Pattern$BitClass: void <init>()>();
+        r3 = $r5;
+        z1 = 1;
+        z2 = 1;
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int next()>();
+
+     label0:
+        lookupswitch(i0)
+        {
+            case 0: goto label19;
+            case 38: goto label8;
+            case 91: goto label5;
+            case 93: goto label20;
+            case 94: goto label1;
+            default: goto label22;
+        };
+
+     label1:
+        if z2 == 0 goto label23;
+
+        $r6 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i1 = r0.<java.util.regex.Pattern: int cursor>;
+        $i2 = $i1 - 1;
+        $i3 = $r6[$i2];
+        if $i3 == 91 goto label2;
+
+        goto label23;
+
+     label2:
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        if z1 != 0 goto label3;
+
+        $z3 = 1;
+        goto label4;
+
+     label3:
+        $z3 = 0;
+
+     label4:
+        z1 = $z3;
+        goto label0;
+
+     label5:
+        z2 = 0;
+        r2 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty clazz(boolean)>(1);
+        if r1 != null goto label6;
+
+        r1 = r2;
+        goto label7;
+
+     label6:
+        r1 = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern$CharProperty union(java.util.regex.Pattern$CharProperty,java.util.regex.Pattern$CharProperty)>(r1, r2);
+
+     label7:
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int peek()>();
+        goto label0;
+
+     label8:
+        z2 = 0;
+        i4 = specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        if i4 != 38 goto label18;
+
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        r4 = null;
+
+     label9:
+        if i0 == 93 goto label13;
+
+        if i0 == 38 goto label13;
+
+        if i0 != 91 goto label11;
+
+        if r4 != null goto label10;
+
+        r4 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty clazz(boolean)>(1);
+        goto label12;
+
+     label10:
+        $r7 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty clazz(boolean)>(1);
+        r4 = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern$CharProperty union(java.util.regex.Pattern$CharProperty,java.util.regex.Pattern$CharProperty)>(r4, $r7);
+        goto label12;
+
+     label11:
+        specialinvoke r0.<java.util.regex.Pattern: void unread()>();
+        r4 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty clazz(boolean)>(0);
+
+     label12:
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int peek()>();
+        goto label9;
+
+     label13:
+        if r4 == null goto label14;
+
+        r2 = r4;
+
+     label14:
+        if r1 != null goto label16;
+
+        if r4 != null goto label15;
+
+        $r8 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Bad class syntax");
+        throw $r8;
+
+     label15:
+        r1 = r4;
+        goto label17;
+
+     label16:
+        r1 = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern$CharProperty intersection(java.util.regex.Pattern$CharProperty,java.util.regex.Pattern$CharProperty)>(r1, r2);
+
+     label17:
+        goto label0;
+
+     label18:
+        specialinvoke r0.<java.util.regex.Pattern: void unread()>();
+        goto label23;
+
+     label19:
+        z2 = 0;
+        $i5 = r0.<java.util.regex.Pattern: int cursor>;
+        $i6 = r0.<java.util.regex.Pattern: int patternLength>;
+        if $i5 < $i6 goto label23;
+
+        $r9 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Unclosed character class");
+        throw $r9;
+
+     label20:
+        z2 = 0;
+        if r1 == null goto label23;
+
+        if z0 == 0 goto label21;
+
+        specialinvoke r0.<java.util.regex.Pattern: int next()>();
+
+     label21:
+        return r1;
+
+     label22:
+        z2 = 0;
+
+     label23:
+        r2 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty range(java.util.regex.Pattern$BitClass)>(r3);
+        if z1 == 0 goto label25;
+
+        if r1 != null goto label24;
+
+        r1 = r2;
+        goto label27;
+
+     label24:
+        if r1 == r2 goto label27;
+
+        r1 = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern$CharProperty union(java.util.regex.Pattern$CharProperty,java.util.regex.Pattern$CharProperty)>(r1, r2);
+        goto label27;
+
+     label25:
+        if r1 != null goto label26;
+
+        r1 = virtualinvoke r2.<java.util.regex.Pattern$CharProperty: java.util.regex.Pattern$CharProperty complement()>();
+        goto label27;
+
+     label26:
+        if r1 == r2 goto label27;
+
+        r1 = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern$CharProperty setDifference(java.util.regex.Pattern$CharProperty,java.util.regex.Pattern$CharProperty)>(r1, r2);
+
+     label27:
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int peek()>();
+        goto label0;
+    }
+
+    private java.util.regex.Pattern$CharProperty bitsOrSingle(java.util.regex.Pattern$BitClass, int)
+    {
+        java.util.regex.Pattern r0;
+        java.util.regex.Pattern$BitClass r1, $r2;
+        int i0, $i1;
+        boolean $z0, $z1;
+        java.util.regex.Pattern$CharProperty $r3;
+
+        r0 := @this: java.util.regex.Pattern;
+        r1 := @parameter0: java.util.regex.Pattern$BitClass;
+        i0 := @parameter1: int;
+        if i0 >= 256 goto label1;
+
+        $z0 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(2);
+        if $z0 == 0 goto label0;
+
+        $z1 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(64);
+        if $z1 == 0 goto label0;
+
+        if i0 == 255 goto label1;
+
+        if i0 == 181 goto label1;
+
+        if i0 == 73 goto label1;
+
+        if i0 == 105 goto label1;
+
+        if i0 == 83 goto label1;
+
+        if i0 == 115 goto label1;
+
+        if i0 == 75 goto label1;
+
+        if i0 == 107 goto label1;
+
+        if i0 == 197 goto label1;
+
+        if i0 == 229 goto label1;
+
+     label0:
+        $i1 = virtualinvoke r0.<java.util.regex.Pattern: int flags()>();
+        $r2 = virtualinvoke r1.<java.util.regex.Pattern$BitClass: java.util.regex.Pattern$BitClass add(int,int)>(i0, $i1);
+        return $r2;
+
+     label1:
+        $r3 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty newSingle(int)>(i0);
+        return $r3;
+    }
+
+    private java.util.regex.Pattern$CharProperty range(java.util.regex.Pattern$BitClass)
+    {
+        java.util.regex.Pattern r0;
+        java.util.regex.Pattern$BitClass r1;
+        int i0, i1, i2, i3, $i4, $i5, $i6, i7, i9;
+        boolean z0, z1, $z2, $z3;
+        java.util.regex.Pattern$CharProperty $r2, $r4, $r6, $r8, $r9, $r10;
+        java.util.regex.Pattern$Node $r3;
+        int[] $r5;
+        java.util.regex.PatternSyntaxException $r7, $r16;
+        java.lang.StringBuilder $r11, $r12, $r13, $r14;
+        char $c10;
+        java.lang.String $r15;
+
+        r0 := @this: java.util.regex.Pattern;
+        r1 := @parameter0: java.util.regex.Pattern$BitClass;
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int peek()>();
+        if i0 != 92 goto label6;
+
+        i1 = specialinvoke r0.<java.util.regex.Pattern: int nextEscaped()>();
+        if i1 == 112 goto label0;
+
+        if i1 != 80 goto label5;
+
+     label0:
+        if i1 != 80 goto label1;
+
+        $z2 = 1;
+        goto label2;
+
+     label1:
+        $z2 = 0;
+
+     label2:
+        z0 = $z2;
+        z1 = 1;
+        i2 = specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        if i2 == 123 goto label3;
+
+        specialinvoke r0.<java.util.regex.Pattern: void unread()>();
+        goto label4;
+
+     label3:
+        z1 = 0;
+
+     label4:
+        $r2 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty family(boolean,boolean)>(z1, z0);
+        return $r2;
+
+     label5:
+        specialinvoke r0.<java.util.regex.Pattern: void unread()>();
+        i3 = specialinvoke r0.<java.util.regex.Pattern: int escape(boolean,boolean)>(1, 1);
+        if i3 != -1 goto label7;
+
+        $r3 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root>;
+        $r4 = (java.util.regex.Pattern$CharProperty) $r3;
+        return $r4;
+
+     label6:
+        i3 = specialinvoke r0.<java.util.regex.Pattern: int single()>();
+
+     label7:
+        if i3 < 0 goto label12;
+
+        $i4 = specialinvoke r0.<java.util.regex.Pattern: int peek()>();
+        if $i4 != 45 goto label11;
+
+        $r5 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i5 = r0.<java.util.regex.Pattern: int cursor>;
+        $i6 = $i5 + 1;
+        i7 = $r5[$i6];
+        if i7 != 91 goto label8;
+
+        $r6 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty bitsOrSingle(java.util.regex.Pattern$BitClass,int)>(r1, i3);
+        return $r6;
+
+     label8:
+        if i7 == 93 goto label11;
+
+        specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        i9 = specialinvoke r0.<java.util.regex.Pattern: int single()>();
+        if i9 >= i3 goto label9;
+
+        $r7 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Illegal character range");
+        throw $r7;
+
+     label9:
+        $z3 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(2);
+        if $z3 == 0 goto label10;
+
+        $r8 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty caseInsensitiveRangeFor(int,int)>(i3, i9);
+        return $r8;
+
+     label10:
+        $r9 = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern$CharProperty rangeFor(int,int)>(i3, i9);
+        return $r9;
+
+     label11:
+        $r10 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty bitsOrSingle(java.util.regex.Pattern$BitClass,int)>(r1, i3);
+        return $r10;
+
+     label12:
+        $r11 = new java.lang.StringBuilder;
+        specialinvoke $r11.<java.lang.StringBuilder: void <init>()>();
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Unexpected character \'");
+        $c10 = (char) i3;
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>($c10);
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r16 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>($r15);
+        throw $r16;
+    }
+
+    private int single()
+    {
+        java.util.regex.Pattern r0;
+        int i0, $i1;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int peek()>();
+        lookupswitch(i0)
+        {
+            case 92: goto label0;
+            default: goto label1;
+        };
+
+     label0:
+        $i1 = specialinvoke r0.<java.util.regex.Pattern: int escape(boolean,boolean)>(1, 0);
+        return $i1;
+
+     label1:
+        specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        return i0;
+    }
+
+    private java.util.regex.Pattern$CharProperty family(boolean, boolean)
+    {
+        java.util.regex.Pattern r0;
+        boolean z0, z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13;
+        java.util.regex.Pattern$CharProperty r1;
+        int i0, i1, $i3, $i5, i7, $i8, $i9, $i10, $i11, $i12, i13, $i14;
+        java.lang.String r2, $r4, $r8, r10, $r11, r13, $r14, $r15, $r16, $r17, $r18, $r19, $r27, $r29, r30;
+        int[] $r3, $r5, $r9;
+        char $c4;
+        java.util.regex.PatternSyntaxException $r6, $r7, $r28;
+        java.util.Locale $r12;
+        java.lang.StringBuilder $r20, $r21, $r22, $r23, $r24, $r25, $r26;
+        java.util.regex.UnicodeProp r31, r33;
+        java.util.regex.Pattern$Utype $r32, $r34;
+
+        r0 := @this: java.util.regex.Pattern;
+        z0 := @parameter0: boolean;
+        z1 := @parameter1: boolean;
+        specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        r1 = null;
+        if z0 == 0 goto label2;
+
+        $r3 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i3 = r0.<java.util.regex.Pattern: int cursor>;
+        i0 = $r3[$i3];
+        $z2 = staticinvoke <java.lang.Character: boolean isSupplementaryCodePoint(int)>(i0);
+        if $z2 != 0 goto label0;
+
+        $c4 = (char) i0;
+        r2 = staticinvoke <java.lang.String: java.lang.String valueOf(char)>($c4);
+        goto label1;
+
+     label0:
+        $r4 = new java.lang.String;
+        $r5 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i5 = r0.<java.util.regex.Pattern: int cursor>;
+        specialinvoke $r4.<java.lang.String: void <init>(int[],int,int)>($r5, $i5, 1);
+        r2 = $r4;
+
+     label1:
+        specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        goto label7;
+
+     label2:
+        i7 = r0.<java.util.regex.Pattern: int cursor>;
+        specialinvoke r0.<java.util.regex.Pattern: void mark(int)>(125);
+
+     label3:
+        $i8 = specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        if $i8 == 125 goto label4;
+
+        goto label3;
+
+     label4:
+        specialinvoke r0.<java.util.regex.Pattern: void mark(int)>(0);
+        i1 = r0.<java.util.regex.Pattern: int cursor>;
+        $i9 = r0.<java.util.regex.Pattern: int patternLength>;
+        if i1 <= $i9 goto label5;
+
+        $r6 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Unclosed character family");
+        throw $r6;
+
+     label5:
+        $i10 = i7 + 1;
+        if $i10 < i1 goto label6;
+
+        $r7 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Empty character family");
+        throw $r7;
+
+     label6:
+        $r8 = new java.lang.String;
+        $r9 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i11 = i1 - i7;
+        $i12 = $i11 - 1;
+        specialinvoke $r8.<java.lang.String: void <init>(int[],int,int)>($r9, i7, $i12);
+        r2 = $r8;
+
+     label7:
+        i13 = virtualinvoke r2.<java.lang.String: int indexOf(int)>(61);
+        if i13 == -1 goto label15;
+
+        $i14 = i13 + 1;
+        r10 = virtualinvoke r2.<java.lang.String: java.lang.String substring(int)>($i14);
+        $r11 = virtualinvoke r2.<java.lang.String: java.lang.String substring(int,int)>(0, i13);
+        $r12 = <java.util.Locale: java.util.Locale ENGLISH>;
+        r13 = virtualinvoke $r11.<java.lang.String: java.lang.String toLowerCase(java.util.Locale)>($r12);
+        $r14 = "sc";
+        $z3 = virtualinvoke $r14.<java.lang.String: boolean equals(java.lang.Object)>(r13);
+        if $z3 != 0 goto label8;
+
+        $r15 = "script";
+        $z4 = virtualinvoke $r15.<java.lang.String: boolean equals(java.lang.Object)>(r13);
+        if $z4 == 0 goto label9;
+
+     label8:
+        r1 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty unicodeScriptPropertyFor(java.lang.String)>(r10);
+        goto label14;
+
+     label9:
+        $r16 = "blk";
+        $z5 = virtualinvoke $r16.<java.lang.String: boolean equals(java.lang.Object)>(r13);
+        if $z5 != 0 goto label10;
+
+        $r17 = "block";
+        $z6 = virtualinvoke $r17.<java.lang.String: boolean equals(java.lang.Object)>(r13);
+        if $z6 == 0 goto label11;
+
+     label10:
+        r1 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty unicodeBlockPropertyFor(java.lang.String)>(r10);
+        goto label14;
+
+     label11:
+        $r18 = "gc";
+        $z7 = virtualinvoke $r18.<java.lang.String: boolean equals(java.lang.Object)>(r13);
+        if $z7 != 0 goto label12;
+
+        $r19 = "general_category";
+        $z8 = virtualinvoke $r19.<java.lang.String: boolean equals(java.lang.Object)>(r13);
+        if $z8 == 0 goto label13;
+
+     label12:
+        r1 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty charPropertyNodeFor(java.lang.String)>(r10);
+        goto label14;
+
+     label13:
+        $r20 = new java.lang.StringBuilder;
+        specialinvoke $r20.<java.lang.StringBuilder: void <init>()>();
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Unknown Unicode property {name=<");
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r13);
+        $r23 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(">, ");
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("value=<");
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r10);
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(">}");
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r28 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>($r27);
+        throw $r28;
+
+     label14:
+        goto label22;
+
+     label15:
+        $z9 = virtualinvoke r2.<java.lang.String: boolean startsWith(java.lang.String)>("In");
+        if $z9 == 0 goto label16;
+
+        $r29 = virtualinvoke r2.<java.lang.String: java.lang.String substring(int)>(2);
+        r1 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty unicodeBlockPropertyFor(java.lang.String)>($r29);
+        goto label22;
+
+     label16:
+        $z10 = virtualinvoke r2.<java.lang.String: boolean startsWith(java.lang.String)>("Is");
+        if $z10 == 0 goto label20;
+
+        r30 = virtualinvoke r2.<java.lang.String: java.lang.String substring(int)>(2);
+        r31 = staticinvoke <java.util.regex.UnicodeProp: java.util.regex.UnicodeProp forName(java.lang.String)>(r30);
+        if r31 == null goto label17;
+
+        $r32 = new java.util.regex.Pattern$Utype;
+        specialinvoke $r32.<java.util.regex.Pattern$Utype: void <init>(java.util.regex.UnicodeProp)>(r31);
+        r1 = $r32;
+
+     label17:
+        if r1 != null goto label18;
+
+        r1 = staticinvoke <java.util.regex.Pattern$CharPropertyNames: java.util.regex.Pattern$CharProperty charPropertyFor(java.lang.String)>(r30);
+
+     label18:
+        if r1 != null goto label19;
+
+        r1 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty unicodeScriptPropertyFor(java.lang.String)>(r30);
+
+     label19:
+        goto label22;
+
+     label20:
+        $z11 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(256);
+        if $z11 == 0 goto label21;
+
+        r33 = staticinvoke <java.util.regex.UnicodeProp: java.util.regex.UnicodeProp forPOSIXName(java.lang.String)>(r2);
+        if r33 == null goto label21;
+
+        $r34 = new java.util.regex.Pattern$Utype;
+        specialinvoke $r34.<java.util.regex.Pattern$Utype: void <init>(java.util.regex.UnicodeProp)>(r33);
+        r1 = $r34;
+
+     label21:
+        if r1 != null goto label22;
+
+        r1 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$CharProperty charPropertyNodeFor(java.lang.String)>(r2);
+
+     label22:
+        if z1 == 0 goto label25;
+
+        $z12 = r1 instanceof java.util.regex.Pattern$Category;
+        if $z12 != 0 goto label23;
+
+        $z13 = r1 instanceof java.util.regex.Pattern$Block;
+        if $z13 == 0 goto label24;
+
+     label23:
+        r0.<java.util.regex.Pattern: boolean hasSupplementary> = 1;
+
+     label24:
+        r1 = virtualinvoke r1.<java.util.regex.Pattern$CharProperty: java.util.regex.Pattern$CharProperty complement()>();
+
+     label25:
+        return r1;
+    }
+
+    private java.util.regex.Pattern$CharProperty unicodeScriptPropertyFor(java.lang.String)
+    {
+        java.util.regex.Pattern r0;
+        java.lang.String r1, $r9;
+        java.lang.Character$UnicodeScript r2;
+        java.lang.IllegalArgumentException r3, $r5;
+        java.lang.StringBuilder $r4, $r6, $r7, $r8;
+        java.util.regex.PatternSyntaxException $r10;
+        java.util.regex.Pattern$Script $r11;
+
+        r0 := @this: java.util.regex.Pattern;
+        r1 := @parameter0: java.lang.String;
+
+     label0:
+        r2 = staticinvoke <java.lang.Character$UnicodeScript: java.lang.Character$UnicodeScript forName(java.lang.String)>(r1);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r5 := @caughtexception;
+        r3 = $r5;
+        $r4 = new java.lang.StringBuilder;
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>()>();
+        $r6 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Unknown character script name {");
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("}");
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r10 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>($r9);
+        throw $r10;
+
+     label3:
+        $r11 = new java.util.regex.Pattern$Script;
+        specialinvoke $r11.<java.util.regex.Pattern$Script: void <init>(java.lang.Character$UnicodeScript)>(r2);
+        return $r11;
+
+        catch java.lang.IllegalArgumentException from label0 to label1 with label2;
+    }
+
+    private java.util.regex.Pattern$CharProperty unicodeBlockPropertyFor(java.lang.String)
+    {
+        java.util.regex.Pattern r0;
+        java.lang.String r1, $r9;
+        java.lang.Character$UnicodeBlock r2;
+        java.lang.IllegalArgumentException r3, $r5;
+        java.lang.StringBuilder $r4, $r6, $r7, $r8;
+        java.util.regex.PatternSyntaxException $r10;
+        java.util.regex.Pattern$Block $r11;
+
+        r0 := @this: java.util.regex.Pattern;
+        r1 := @parameter0: java.lang.String;
+
+     label0:
+        r2 = staticinvoke <java.lang.Character$UnicodeBlock: java.lang.Character$UnicodeBlock forName(java.lang.String)>(r1);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r5 := @caughtexception;
+        r3 = $r5;
+        $r4 = new java.lang.StringBuilder;
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>()>();
+        $r6 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Unknown character block name {");
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("}");
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r10 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>($r9);
+        throw $r10;
+
+     label3:
+        $r11 = new java.util.regex.Pattern$Block;
+        specialinvoke $r11.<java.util.regex.Pattern$Block: void <init>(java.lang.Character$UnicodeBlock)>(r2);
+        return $r11;
+
+        catch java.lang.IllegalArgumentException from label0 to label1 with label2;
+    }
+
+    private java.util.regex.Pattern$CharProperty charPropertyNodeFor(java.lang.String)
+    {
+        java.util.regex.Pattern r0;
+        java.lang.String r1, $r7;
+        java.util.regex.Pattern$CharProperty r2;
+        java.lang.StringBuilder $r3, $r4, $r5, $r6;
+        java.util.regex.PatternSyntaxException $r8;
+
+        r0 := @this: java.util.regex.Pattern;
+        r1 := @parameter0: java.lang.String;
+        r2 = staticinvoke <java.util.regex.Pattern$CharPropertyNames: java.util.regex.Pattern$CharProperty charPropertyFor(java.lang.String)>(r1);
+        if r2 != null goto label0;
+
+        $r3 = new java.lang.StringBuilder;
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>()>();
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Unknown character property name {");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("}");
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r8 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>($r7);
+        throw $r8;
+
+     label0:
+        return r2;
+    }
+
+    private java.lang.String groupname(int)
+    {
+        java.util.regex.Pattern r0;
+        int i0, $i1, i2, $i3;
+        java.lang.StringBuilder $r1, r2;
+        char[] $r3, $r5;
+        boolean $z0, $z1, $z2;
+        java.util.regex.PatternSyntaxException $r7, $r8;
+        java.lang.String $r9;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 := @parameter0: int;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        r2 = $r1;
+        $r3 = staticinvoke <java.lang.Character: char[] toChars(int)>(i0);
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char[])>($r3);
+
+     label0:
+        $i1 = specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        i2 = $i1;
+        $z0 = staticinvoke <java.util.regex.ASCII: boolean isLower(int)>($i1);
+        if $z0 != 0 goto label1;
+
+        $z1 = staticinvoke <java.util.regex.ASCII: boolean isUpper(int)>(i2);
+        if $z1 != 0 goto label1;
+
+        $z2 = staticinvoke <java.util.regex.ASCII: boolean isDigit(int)>(i2);
+        if $z2 == 0 goto label2;
+
+     label1:
+        $r5 = staticinvoke <java.lang.Character: char[] toChars(int)>(i2);
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char[])>($r5);
+        goto label0;
+
+     label2:
+        $i3 = virtualinvoke r2.<java.lang.StringBuilder: int length()>();
+        if $i3 != 0 goto label3;
+
+        $r7 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("named capturing group has 0 length name");
+        throw $r7;
+
+     label3:
+        if i2 == 62 goto label4;
+
+        $r8 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("named capturing group is missing trailing \'>\'");
+        throw $r8;
+
+     label4:
+        $r9 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r9;
+    }
+
+    private java.util.regex.Pattern$Node group0()
+    {
+        java.util.regex.Pattern r0;
+        boolean z0, z1, $z2, $z3, $z4, $z6, $z7, $z8, $z9;
+        null_type n0, n1;
+        int i0, i1, i2, i3, $i4, $i5, i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, i16, $i17, $i18, $i19, $i20, $i21, $i22, $i23, $i24, i25, $i26, $i27, $i28, $i29, $i30, $i31, $i32;
+        java.lang.String r1, $r23;
+        java.util.regex.Pattern$TreeInfo r2, r51, r68, r76;
+        java.util.regex.Pattern$GroupTail r3, $r54, $r55;
+        java.util.regex.Pattern$Loop r4, r78;
+        java.util.regex.Pattern$Prolog r5, r80;
+        java.util.regex.Pattern$Node r6, r7, $r8, r9, r10, $r11, r14, r15, $r16, $r28, r29, r30, $r31, $r32, $r40, $r41, r42, r45, $r53;
+        java.util.Map $r18, $r25;
+        java.lang.StringBuilder $r20, $r21, $r22, r67;
+        java.util.regex.PatternSyntaxException $r24, $r34, $r37, $r38, $r39, $r63;
+        java.lang.Integer $r26;
+        java.util.regex.Pattern$Behind $r35, r70;
+        java.util.regex.Pattern$NotBehind $r36, r72;
+        java.util.regex.Pattern$Ques r43, r66;
+        java.util.regex.Pattern$Branch r47, r74, r75;
+        java.util.regex.Pattern$Curly r49;
+        java.util.regex.Pattern$GroupCurly r57, r77;
+        java.util.regex.Pattern$GroupHead $r58;
+        java.util.regex.Pattern$Pos r64;
+        java.util.regex.Pattern$Neg r65;
+        java.util.regex.Pattern$BehindS r69;
+        java.util.regex.Pattern$NotBehindS r71;
+        java.util.regex.Pattern$BranchConn r73;
+        java.util.regex.Pattern$LazyLoop r79;
+
+        r0 := @this: java.util.regex.Pattern;
+        z0 = 0;
+        n0 = null;
+        n1 = null;
+        i0 = r0.<java.util.regex.Pattern: int flags>;
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = null;
+        i1 = specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        if i1 != 63 goto label20;
+
+        i2 = specialinvoke r0.<java.util.regex.Pattern: int skip()>();
+        lookupswitch(i2)
+        {
+            case 33: goto label1;
+            case 36: goto label15;
+            case 58: goto label0;
+            case 60: goto label4;
+            case 61: goto label1;
+            case 62: goto label3;
+            case 64: goto label15;
+            default: goto label16;
+        };
+
+     label0:
+        r6 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node createGroup(boolean)>(1);
+        r7 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root>;
+        $r8 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node expr(java.util.regex.Pattern$Node)>(r7);
+        r6.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next> = $r8;
+        goto label19;
+
+     label1:
+        r9 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node createGroup(boolean)>(1);
+        r10 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root>;
+        $r11 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node expr(java.util.regex.Pattern$Node)>(r10);
+        r9.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next> = $r11;
+        if i2 != 61 goto label2;
+
+        r64 = new java.util.regex.Pattern$Pos;
+        specialinvoke r64.<java.util.regex.Pattern$Pos: void <init>(java.util.regex.Pattern$Node)>(r9);
+        r7 = r64;
+        r6 = r64;
+        goto label19;
+
+     label2:
+        r65 = new java.util.regex.Pattern$Neg;
+        specialinvoke r65.<java.util.regex.Pattern$Neg: void <init>(java.util.regex.Pattern$Node)>(r9);
+        r7 = r65;
+        r6 = r65;
+        goto label19;
+
+     label3:
+        r14 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node createGroup(boolean)>(1);
+        r15 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root>;
+        $r16 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node expr(java.util.regex.Pattern$Node)>(r15);
+        r14.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next> = $r16;
+        r66 = new java.util.regex.Pattern$Ques;
+        specialinvoke r66.<java.util.regex.Pattern$Ques: void <init>(java.util.regex.Pattern$Node,int)>(r14, 3);
+        r7 = r66;
+        r6 = r66;
+        goto label19;
+
+     label4:
+        i3 = specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        $z2 = staticinvoke <java.util.regex.ASCII: boolean isLower(int)>(i3);
+        if $z2 != 0 goto label5;
+
+        $z3 = staticinvoke <java.util.regex.ASCII: boolean isUpper(int)>(i3);
+        if $z3 == 0 goto label7;
+
+     label5:
+        r1 = specialinvoke r0.<java.util.regex.Pattern: java.lang.String groupname(int)>(i3);
+        $r18 = virtualinvoke r0.<java.util.regex.Pattern: java.util.Map namedGroups()>();
+        $z4 = interfaceinvoke $r18.<java.util.Map: boolean containsKey(java.lang.Object)>(r1);
+        if $z4 == 0 goto label6;
+
+        r67 = new java.lang.StringBuilder;
+        specialinvoke r67.<java.lang.StringBuilder: void <init>()>();
+        $r20 = virtualinvoke r67.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Named capturing group <");
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("> is already defined");
+        $r23 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r24 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>($r23);
+        throw $r24;
+
+     label6:
+        z0 = 1;
+        r6 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node createGroup(boolean)>(0);
+        r7 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root>;
+        $r25 = virtualinvoke r0.<java.util.regex.Pattern: java.util.Map namedGroups()>();
+        $i4 = r0.<java.util.regex.Pattern: int capturingGroupCount>;
+        $i5 = $i4 - 1;
+        $r26 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i5);
+        interfaceinvoke $r25.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(r1, $r26);
+        $r28 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node expr(java.util.regex.Pattern$Node)>(r7);
+        r6.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next> = $r28;
+        goto label19;
+
+     label7:
+        i6 = r0.<java.util.regex.Pattern: int cursor>;
+        r29 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node createGroup(boolean)>(1);
+        r30 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root>;
+        $r31 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node expr(java.util.regex.Pattern$Node)>(r30);
+        r29.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next> = $r31;
+        $r32 = <java.util.regex.Pattern: java.util.regex.Pattern$Node lookbehindEnd>;
+        r30.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next> = $r32;
+        r68 = new java.util.regex.Pattern$TreeInfo;
+        specialinvoke r68.<java.util.regex.Pattern$TreeInfo: void <init>()>();
+        r2 = r68;
+        virtualinvoke r29.<java.util.regex.Pattern$Node: boolean study(java.util.regex.Pattern$TreeInfo)>(r2);
+        $z6 = r2.<java.util.regex.Pattern$TreeInfo: boolean maxValid>;
+        if $z6 != 0 goto label8;
+
+        $r34 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Look-behind group does not have an obvious maximum length");
+        throw $r34;
+
+     label8:
+        $i7 = r0.<java.util.regex.Pattern: int patternLength>;
+        z1 = specialinvoke r0.<java.util.regex.Pattern: boolean findSupplementary(int,int)>(i6, $i7);
+        if i3 != 61 goto label11;
+
+        if z1 == 0 goto label9;
+
+        r69 = new java.util.regex.Pattern$BehindS;
+        $r35 = r69;
+        $i8 = r2.<java.util.regex.Pattern$TreeInfo: int maxLength>;
+        $i9 = r2.<java.util.regex.Pattern$TreeInfo: int minLength>;
+        specialinvoke r69.<java.util.regex.Pattern$BehindS: void <init>(java.util.regex.Pattern$Node,int,int)>(r29, $i8, $i9);
+        goto label10;
+
+     label9:
+        r70 = new java.util.regex.Pattern$Behind;
+        $r35 = r70;
+        $i10 = r2.<java.util.regex.Pattern$TreeInfo: int maxLength>;
+        $i11 = r2.<java.util.regex.Pattern$TreeInfo: int minLength>;
+        specialinvoke r70.<java.util.regex.Pattern$Behind: void <init>(java.util.regex.Pattern$Node,int,int)>(r29, $i10, $i11);
+
+     label10:
+        r7 = $r35;
+        r6 = $r35;
+        goto label19;
+
+     label11:
+        if i3 != 33 goto label14;
+
+        if z1 == 0 goto label12;
+
+        r71 = new java.util.regex.Pattern$NotBehindS;
+        $r36 = r71;
+        $i12 = r2.<java.util.regex.Pattern$TreeInfo: int maxLength>;
+        $i13 = r2.<java.util.regex.Pattern$TreeInfo: int minLength>;
+        specialinvoke r71.<java.util.regex.Pattern$NotBehindS: void <init>(java.util.regex.Pattern$Node,int,int)>(r29, $i12, $i13);
+        goto label13;
+
+     label12:
+        r72 = new java.util.regex.Pattern$NotBehind;
+        $r36 = r72;
+        $i14 = r2.<java.util.regex.Pattern$TreeInfo: int maxLength>;
+        $i15 = r2.<java.util.regex.Pattern$TreeInfo: int minLength>;
+        specialinvoke r72.<java.util.regex.Pattern$NotBehind: void <init>(java.util.regex.Pattern$Node,int,int)>(r29, $i14, $i15);
+
+     label13:
+        r7 = $r36;
+        r6 = $r36;
+        goto label19;
+
+     label14:
+        $r37 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Unknown look-behind group");
+        throw $r37;
+
+     label15:
+        $r38 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Unknown group type");
+        throw $r38;
+
+     label16:
+        specialinvoke r0.<java.util.regex.Pattern: void unread()>();
+        specialinvoke r0.<java.util.regex.Pattern: void addFlag()>();
+        i16 = specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        if i16 != 41 goto label17;
+
+        return null;
+
+     label17:
+        if i16 == 58 goto label18;
+
+        $r39 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Unknown inline modifier");
+        throw $r39;
+
+     label18:
+        r6 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node createGroup(boolean)>(1);
+        r7 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root>;
+        $r40 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node expr(java.util.regex.Pattern$Node)>(r7);
+        r6.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next> = $r40;
+
+     label19:
+        goto label21;
+
+     label20:
+        z0 = 1;
+        r6 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node createGroup(boolean)>(0);
+        r7 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root>;
+        $r41 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node expr(java.util.regex.Pattern$Node)>(r7);
+        r6.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next> = $r41;
+
+     label21:
+        specialinvoke r0.<java.util.regex.Pattern: void accept(int,java.lang.String)>(41, "Unclosed group");
+        r0.<java.util.regex.Pattern: int flags> = i0;
+        r42 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node closure(java.util.regex.Pattern$Node)>(r6);
+        if r42 != r6 goto label22;
+
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = r7;
+        return r42;
+
+     label22:
+        if r6 != r7 goto label23;
+
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = r42;
+        return r42;
+
+     label23:
+        $z7 = r42 instanceof java.util.regex.Pattern$Ques;
+        if $z7 == 0 goto label27;
+
+        r43 = (java.util.regex.Pattern$Ques) r42;
+        $i17 = r43.<java.util.regex.Pattern$Ques: int type>;
+        if $i17 != 2 goto label24;
+
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = r42;
+        return r42;
+
+     label24:
+        r73 = new java.util.regex.Pattern$BranchConn;
+        specialinvoke r73.<java.util.regex.Pattern$BranchConn: void <init>()>();
+        r7.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next> = r73;
+        r45 = r7.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next>;
+        $i18 = r43.<java.util.regex.Pattern$Ques: int type>;
+        if $i18 != 0 goto label25;
+
+        r74 = new java.util.regex.Pattern$Branch;
+        specialinvoke r74.<java.util.regex.Pattern$Branch: void <init>(java.util.regex.Pattern$Node,java.util.regex.Pattern$Node,java.util.regex.Pattern$Node)>(r6, null, r45);
+        r47 = r74;
+        goto label26;
+
+     label25:
+        r75 = new java.util.regex.Pattern$Branch;
+        specialinvoke r75.<java.util.regex.Pattern$Branch: void <init>(java.util.regex.Pattern$Node,java.util.regex.Pattern$Node,java.util.regex.Pattern$Node)>(null, r6, r45);
+        r47 = r75;
+
+     label26:
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = r45;
+        return r47;
+
+     label27:
+        $z8 = r42 instanceof java.util.regex.Pattern$Curly;
+        if $z8 == 0 goto label32;
+
+        r49 = (java.util.regex.Pattern$Curly) r42;
+        $i19 = r49.<java.util.regex.Pattern$Curly: int type>;
+        if $i19 != 2 goto label28;
+
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = r42;
+        return r42;
+
+     label28:
+        r76 = new java.util.regex.Pattern$TreeInfo;
+        specialinvoke r76.<java.util.regex.Pattern$TreeInfo: void <init>()>();
+        r51 = r76;
+        $z9 = virtualinvoke r6.<java.util.regex.Pattern$Node: boolean study(java.util.regex.Pattern$TreeInfo)>(r51);
+        if $z9 == 0 goto label29;
+
+        r3 = (java.util.regex.Pattern$GroupTail) r7;
+        r77 = new java.util.regex.Pattern$GroupCurly;
+        $r53 = r6.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next>;
+        $i20 = r49.<java.util.regex.Pattern$Curly: int cmin>;
+        $i21 = r49.<java.util.regex.Pattern$Curly: int cmax>;
+        $i22 = r49.<java.util.regex.Pattern$Curly: int type>;
+        $r54 = (java.util.regex.Pattern$GroupTail) r7;
+        $i23 = $r54.<java.util.regex.Pattern$GroupTail: int localIndex>;
+        $r55 = (java.util.regex.Pattern$GroupTail) r7;
+        $i24 = $r55.<java.util.regex.Pattern$GroupTail: int groupIndex>;
+        specialinvoke r77.<java.util.regex.Pattern$GroupCurly: void <init>(java.util.regex.Pattern$Node,int,int,int,int,int,boolean)>($r53, $i20, $i21, $i22, $i23, $i24, z0);
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = r77;
+        r57 = r77;
+        return r57;
+
+     label29:
+        $r58 = (java.util.regex.Pattern$GroupHead) r6;
+        i25 = $r58.<java.util.regex.Pattern$GroupHead: int localIndex>;
+        $i26 = r49.<java.util.regex.Pattern$Curly: int type>;
+        if $i26 != 0 goto label30;
+
+        r78 = new java.util.regex.Pattern$Loop;
+        $i27 = r0.<java.util.regex.Pattern: int localCount>;
+        specialinvoke r78.<java.util.regex.Pattern$Loop: void <init>(int,int)>($i27, i25);
+        r4 = r78;
+        goto label31;
+
+     label30:
+        r79 = new java.util.regex.Pattern$LazyLoop;
+        $i28 = r0.<java.util.regex.Pattern: int localCount>;
+        specialinvoke r79.<java.util.regex.Pattern$LazyLoop: void <init>(int,int)>($i28, i25);
+        r4 = r79;
+
+     label31:
+        r80 = new java.util.regex.Pattern$Prolog;
+        specialinvoke r80.<java.util.regex.Pattern$Prolog: void <init>(java.util.regex.Pattern$Loop)>(r4);
+        r5 = r80;
+        $i29 = r0.<java.util.regex.Pattern: int localCount>;
+        $i30 = $i29 + 1;
+        r0.<java.util.regex.Pattern: int localCount> = $i30;
+        $i31 = r49.<java.util.regex.Pattern$Curly: int cmin>;
+        r4.<java.util.regex.Pattern$Loop: int cmin> = $i31;
+        $i32 = r49.<java.util.regex.Pattern$Curly: int cmax>;
+        r4.<java.util.regex.Pattern$Loop: int cmax> = $i32;
+        r4.<java.util.regex.Pattern$Loop: java.util.regex.Pattern$Node body> = r6;
+        r7.<java.util.regex.Pattern$Node: java.util.regex.Pattern$Node next> = r4;
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = r4;
+        return r5;
+
+     label32:
+        $r63 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Internal logic error");
+        throw $r63;
+    }
+
+    private java.util.regex.Pattern$Node createGroup(boolean)
+    {
+        java.util.regex.Pattern r0;
+        boolean z0;
+        int $i0, i1, i2, $i3, $i4, $i5;
+        java.util.regex.Pattern$GroupHead r2, $r4;
+        java.util.regex.Pattern$GroupTail $r5;
+        java.util.regex.Pattern$GroupHead[] $r6;
+
+        r0 := @this: java.util.regex.Pattern;
+        z0 := @parameter0: boolean;
+        $i0 = r0.<java.util.regex.Pattern: int localCount>;
+        $i3 = $i0 + 1;
+        r0.<java.util.regex.Pattern: int localCount> = $i3;
+        i1 = $i0;
+        i2 = 0;
+        if z0 != 0 goto label0;
+
+        $i4 = r0.<java.util.regex.Pattern: int capturingGroupCount>;
+        $i5 = $i4 + 1;
+        r0.<java.util.regex.Pattern: int capturingGroupCount> = $i5;
+        i2 = $i4;
+
+     label0:
+        $r4 = new java.util.regex.Pattern$GroupHead;
+        specialinvoke $r4.<java.util.regex.Pattern$GroupHead: void <init>(int)>(i1);
+        r2 = $r4;
+        $r5 = new java.util.regex.Pattern$GroupTail;
+        specialinvoke $r5.<java.util.regex.Pattern$GroupTail: void <init>(int,int)>(i1, i2);
+        r0.<java.util.regex.Pattern: java.util.regex.Pattern$Node root> = $r5;
+        if z0 != 0 goto label1;
+
+        if i2 >= 10 goto label1;
+
+        $r6 = r0.<java.util.regex.Pattern: java.util.regex.Pattern$GroupHead[] groupNodes>;
+        $r6[i2] = r2;
+
+     label1:
+        return r2;
+    }
+
+    private void addFlag()
+    {
+        java.util.regex.Pattern r0;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int peek()>();
+
+     label0:
+        lookupswitch(i0)
+        {
+            case 45: goto label9;
+            case 85: goto label8;
+            case 99: goto label6;
+            case 100: goto label4;
+            case 105: goto label1;
+            case 109: goto label2;
+            case 115: goto label3;
+            case 117: goto label5;
+            case 120: goto label7;
+            default: goto label10;
+        };
+
+     label1:
+        $i1 = r0.<java.util.regex.Pattern: int flags>;
+        $i2 = $i1 | 2;
+        r0.<java.util.regex.Pattern: int flags> = $i2;
+        goto label11;
+
+     label2:
+        $i3 = r0.<java.util.regex.Pattern: int flags>;
+        $i4 = $i3 | 8;
+        r0.<java.util.regex.Pattern: int flags> = $i4;
+        goto label11;
+
+     label3:
+        $i5 = r0.<java.util.regex.Pattern: int flags>;
+        $i6 = $i5 | 32;
+        r0.<java.util.regex.Pattern: int flags> = $i6;
+        goto label11;
+
+     label4:
+        $i7 = r0.<java.util.regex.Pattern: int flags>;
+        $i8 = $i7 | 1;
+        r0.<java.util.regex.Pattern: int flags> = $i8;
+        goto label11;
+
+     label5:
+        $i9 = r0.<java.util.regex.Pattern: int flags>;
+        $i10 = $i9 | 64;
+        r0.<java.util.regex.Pattern: int flags> = $i10;
+        goto label11;
+
+     label6:
+        $i11 = r0.<java.util.regex.Pattern: int flags>;
+        $i12 = $i11 | 128;
+        r0.<java.util.regex.Pattern: int flags> = $i12;
+        goto label11;
+
+     label7:
+        $i13 = r0.<java.util.regex.Pattern: int flags>;
+        $i14 = $i13 | 4;
+        r0.<java.util.regex.Pattern: int flags> = $i14;
+        goto label11;
+
+     label8:
+        $i15 = r0.<java.util.regex.Pattern: int flags>;
+        $i16 = $i15 | 320;
+        r0.<java.util.regex.Pattern: int flags> = $i16;
+        goto label11;
+
+     label9:
+        specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        specialinvoke r0.<java.util.regex.Pattern: void subFlag()>();
+
+     label10:
+        return;
+
+     label11:
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        goto label0;
+    }
+
+    private void subFlag()
+    {
+        java.util.regex.Pattern r0;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int peek()>();
+
+     label0:
+        lookupswitch(i0)
+        {
+            case 85: goto label8;
+            case 99: goto label6;
+            case 100: goto label4;
+            case 105: goto label1;
+            case 109: goto label2;
+            case 115: goto label3;
+            case 117: goto label5;
+            case 120: goto label7;
+            default: goto label9;
+        };
+
+     label1:
+        $i1 = r0.<java.util.regex.Pattern: int flags>;
+        $i2 = $i1 & -3;
+        r0.<java.util.regex.Pattern: int flags> = $i2;
+        goto label10;
+
+     label2:
+        $i3 = r0.<java.util.regex.Pattern: int flags>;
+        $i4 = $i3 & -9;
+        r0.<java.util.regex.Pattern: int flags> = $i4;
+        goto label10;
+
+     label3:
+        $i5 = r0.<java.util.regex.Pattern: int flags>;
+        $i6 = $i5 & -33;
+        r0.<java.util.regex.Pattern: int flags> = $i6;
+        goto label10;
+
+     label4:
+        $i7 = r0.<java.util.regex.Pattern: int flags>;
+        $i8 = $i7 & -2;
+        r0.<java.util.regex.Pattern: int flags> = $i8;
+        goto label10;
+
+     label5:
+        $i9 = r0.<java.util.regex.Pattern: int flags>;
+        $i10 = $i9 & -65;
+        r0.<java.util.regex.Pattern: int flags> = $i10;
+        goto label10;
+
+     label6:
+        $i11 = r0.<java.util.regex.Pattern: int flags>;
+        $i12 = $i11 & -129;
+        r0.<java.util.regex.Pattern: int flags> = $i12;
+        goto label10;
+
+     label7:
+        $i13 = r0.<java.util.regex.Pattern: int flags>;
+        $i14 = $i13 & -5;
+        r0.<java.util.regex.Pattern: int flags> = $i14;
+        goto label10;
+
+     label8:
+        $i15 = r0.<java.util.regex.Pattern: int flags>;
+        $i16 = $i15 & -321;
+        r0.<java.util.regex.Pattern: int flags> = $i16;
+
+     label9:
+        return;
+
+     label10:
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        goto label0;
+    }
+
+    private java.util.regex.Pattern$Node closure(java.util.regex.Pattern$Node)
+    {
+        java.util.regex.Pattern r0;
+        java.util.regex.Pattern$Node r1;
+        int i0, i1, i2, i3, i6, i9, $i12, $i13, i14, $i16, $i17, $i18, $i19, $i20, $i21, $i22, $i23, i24;
+        java.util.regex.Pattern$Curly r2, $r6, $r7, $r8, $r9, $r10, $r11, $r15, $r16, $r17;
+        java.util.regex.Pattern$Ques $r3, $r4, $r5;
+        int[] $r12;
+        boolean $z0, $z1, $z2;
+        java.util.regex.PatternSyntaxException $r13, $r14, $r18;
+
+        r0 := @this: java.util.regex.Pattern;
+        r1 := @parameter0: java.util.regex.Pattern$Node;
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int peek()>();
+        lookupswitch(i0)
+        {
+            case 42: goto label3;
+            case 43: goto label6;
+            case 63: goto label0;
+            case 123: goto label9;
+            default: goto label19;
+        };
+
+     label0:
+        i3 = specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        if i3 != 63 goto label1;
+
+        specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        $r3 = new java.util.regex.Pattern$Ques;
+        specialinvoke $r3.<java.util.regex.Pattern$Ques: void <init>(java.util.regex.Pattern$Node,int)>(r1, 1);
+        return $r3;
+
+     label1:
+        if i3 != 43 goto label2;
+
+        specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        $r4 = new java.util.regex.Pattern$Ques;
+        specialinvoke $r4.<java.util.regex.Pattern$Ques: void <init>(java.util.regex.Pattern$Node,int)>(r1, 2);
+        return $r4;
+
+     label2:
+        $r5 = new java.util.regex.Pattern$Ques;
+        specialinvoke $r5.<java.util.regex.Pattern$Ques: void <init>(java.util.regex.Pattern$Node,int)>(r1, 0);
+        return $r5;
+
+     label3:
+        i6 = specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        if i6 != 63 goto label4;
+
+        specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        $r6 = new java.util.regex.Pattern$Curly;
+        specialinvoke $r6.<java.util.regex.Pattern$Curly: void <init>(java.util.regex.Pattern$Node,int,int,int)>(r1, 0, 2147483647, 1);
+        return $r6;
+
+     label4:
+        if i6 != 43 goto label5;
+
+        specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        $r7 = new java.util.regex.Pattern$Curly;
+        specialinvoke $r7.<java.util.regex.Pattern$Curly: void <init>(java.util.regex.Pattern$Node,int,int,int)>(r1, 0, 2147483647, 2);
+        return $r7;
+
+     label5:
+        $r8 = new java.util.regex.Pattern$Curly;
+        specialinvoke $r8.<java.util.regex.Pattern$Curly: void <init>(java.util.regex.Pattern$Node,int,int,int)>(r1, 0, 2147483647, 0);
+        return $r8;
+
+     label6:
+        i9 = specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        if i9 != 63 goto label7;
+
+        specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        $r9 = new java.util.regex.Pattern$Curly;
+        specialinvoke $r9.<java.util.regex.Pattern$Curly: void <init>(java.util.regex.Pattern$Node,int,int,int)>(r1, 1, 2147483647, 1);
+        return $r9;
+
+     label7:
+        if i9 != 43 goto label8;
+
+        specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        $r10 = new java.util.regex.Pattern$Curly;
+        specialinvoke $r10.<java.util.regex.Pattern$Curly: void <init>(java.util.regex.Pattern$Node,int,int,int)>(r1, 1, 2147483647, 2);
+        return $r10;
+
+     label8:
+        $r11 = new java.util.regex.Pattern$Curly;
+        specialinvoke $r11.<java.util.regex.Pattern$Curly: void <init>(java.util.regex.Pattern$Node,int,int,int)>(r1, 1, 2147483647, 0);
+        return $r11;
+
+     label9:
+        $r12 = r0.<java.util.regex.Pattern: int[] temp>;
+        $i12 = r0.<java.util.regex.Pattern: int cursor>;
+        $i13 = $i12 + 1;
+        i14 = $r12[$i13];
+        $z0 = staticinvoke <java.util.regex.ASCII: boolean isDigit(int)>(i14);
+        if $z0 == 0 goto label18;
+
+        specialinvoke r0.<java.util.regex.Pattern: int skip()>();
+        i1 = 0;
+
+     label10:
+        $i16 = i1 * 10;
+        $i17 = i14 - 48;
+        i1 = $i16 + $i17;
+        $i18 = specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        i14 = $i18;
+        $z1 = staticinvoke <java.util.regex.ASCII: boolean isDigit(int)>($i18);
+        if $z1 != 0 goto label10;
+
+        i2 = i1;
+        if i14 != 44 goto label12;
+
+        i14 = specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        i2 = 2147483647;
+        if i14 == 125 goto label12;
+
+        i2 = 0;
+
+     label11:
+        $z2 = staticinvoke <java.util.regex.ASCII: boolean isDigit(int)>(i14);
+        if $z2 == 0 goto label12;
+
+        $i19 = i2 * 10;
+        $i20 = i14 - 48;
+        i2 = $i19 + $i20;
+        i14 = specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        goto label11;
+
+     label12:
+        if i14 == 125 goto label13;
+
+        $r13 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Unclosed counted closure");
+        throw $r13;
+
+     label13:
+        $i21 = i1 | i2;
+        $i22 = i2 - i1;
+        $i23 = $i21 | $i22;
+        if $i23 >= 0 goto label14;
+
+        $r14 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Illegal repetition range");
+        throw $r14;
+
+     label14:
+        i24 = specialinvoke r0.<java.util.regex.Pattern: int peek()>();
+        if i24 != 63 goto label15;
+
+        specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        $r15 = new java.util.regex.Pattern$Curly;
+        specialinvoke $r15.<java.util.regex.Pattern$Curly: void <init>(java.util.regex.Pattern$Node,int,int,int)>(r1, i1, i2, 1);
+        r2 = $r15;
+        goto label17;
+
+     label15:
+        if i24 != 43 goto label16;
+
+        specialinvoke r0.<java.util.regex.Pattern: int next()>();
+        $r16 = new java.util.regex.Pattern$Curly;
+        specialinvoke $r16.<java.util.regex.Pattern$Curly: void <init>(java.util.regex.Pattern$Node,int,int,int)>(r1, i1, i2, 2);
+        r2 = $r16;
+        goto label17;
+
+     label16:
+        $r17 = new java.util.regex.Pattern$Curly;
+        specialinvoke $r17.<java.util.regex.Pattern$Curly: void <init>(java.util.regex.Pattern$Node,int,int,int)>(r1, i1, i2, 0);
+        r2 = $r17;
+
+     label17:
+        return r2;
+
+     label18:
+        $r18 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Illegal repetition");
+        throw $r18;
+
+     label19:
+        return r1;
+    }
+
+    private int c()
+    {
+        java.util.regex.Pattern r0;
+        int $i0, $i1, $i2, $i3;
+        java.util.regex.PatternSyntaxException $r1;
+
+        r0 := @this: java.util.regex.Pattern;
+        $i0 = r0.<java.util.regex.Pattern: int cursor>;
+        $i1 = r0.<java.util.regex.Pattern: int patternLength>;
+        if $i0 >= $i1 goto label0;
+
+        $i2 = specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        $i3 = $i2 ^ 64;
+        return $i3;
+
+     label0:
+        $r1 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Illegal control escape sequence");
+        throw $r1;
+    }
+
+    private int o()
+    {
+        java.util.regex.Pattern r0;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i22, $i23, $i24, $i25, $i26;
+        java.util.regex.PatternSyntaxException $r1;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        $i3 = i0 - 48;
+        $i4 = 55 - i0;
+        $i5 = $i3 | $i4;
+        if $i5 < 0 goto label2;
+
+        i1 = specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        $i6 = i1 - 48;
+        $i7 = 55 - i1;
+        $i8 = $i6 | $i7;
+        if $i8 < 0 goto label1;
+
+        i2 = specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        $i9 = i2 - 48;
+        $i10 = 55 - i2;
+        $i11 = $i9 | $i10;
+        if $i11 < 0 goto label0;
+
+        $i12 = i0 - 48;
+        $i13 = 51 - i0;
+        $i14 = $i12 | $i13;
+        if $i14 < 0 goto label0;
+
+        $i15 = i0 - 48;
+        $i16 = $i15 * 64;
+        $i17 = i1 - 48;
+        $i18 = $i17 * 8;
+        $i19 = $i16 + $i18;
+        $i20 = i2 - 48;
+        $i21 = $i19 + $i20;
+        return $i21;
+
+     label0:
+        specialinvoke r0.<java.util.regex.Pattern: void unread()>();
+        $i22 = i0 - 48;
+        $i23 = $i22 * 8;
+        $i24 = i1 - 48;
+        $i25 = $i23 + $i24;
+        return $i25;
+
+     label1:
+        specialinvoke r0.<java.util.regex.Pattern: void unread()>();
+        $i26 = i0 - 48;
+        return $i26;
+
+     label2:
+        $r1 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Illegal octal escape sequence");
+        throw $r1;
+    }
+
+    private int x()
+    {
+        java.util.regex.Pattern r0;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, i7, $i8, i9, $i10, $i11;
+        boolean $z0, $z1, $z2, $z3;
+        java.util.regex.PatternSyntaxException $r1, $r2, $r3;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        $z0 = staticinvoke <java.util.regex.ASCII: boolean isHexDigit(int)>(i0);
+        if $z0 == 0 goto label1;
+
+        i1 = specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        $z1 = staticinvoke <java.util.regex.ASCII: boolean isHexDigit(int)>(i1);
+        if $z1 == 0 goto label0;
+
+        $i2 = staticinvoke <java.util.regex.ASCII: int toDigit(int)>(i0);
+        $i3 = $i2 * 16;
+        $i4 = staticinvoke <java.util.regex.ASCII: int toDigit(int)>(i1);
+        $i5 = $i3 + $i4;
+        return $i5;
+
+     label0:
+        goto label5;
+
+     label1:
+        if i0 != 123 goto label5;
+
+        $i6 = specialinvoke r0.<java.util.regex.Pattern: int peek()>();
+        $z2 = staticinvoke <java.util.regex.ASCII: boolean isHexDigit(int)>($i6);
+        if $z2 == 0 goto label5;
+
+        i7 = 0;
+
+     label2:
+        $i8 = specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        i9 = $i8;
+        $z3 = staticinvoke <java.util.regex.ASCII: boolean isHexDigit(int)>($i8);
+        if $z3 == 0 goto label3;
+
+        $i10 = i7 << 4;
+        $i11 = staticinvoke <java.util.regex.ASCII: int toDigit(int)>(i9);
+        i7 = $i10 + $i11;
+        if i7 <= 1114111 goto label2;
+
+        $r1 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Hexadecimal codepoint is too big");
+        throw $r1;
+
+     label3:
+        if i9 == 125 goto label4;
+
+        $r2 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Unclosed hexadecimal escape sequence");
+        throw $r2;
+
+     label4:
+        return i7;
+
+     label5:
+        $r3 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Illegal hexadecimal escape sequence");
+        throw $r3;
+    }
+
+    private int cursor()
+    {
+        java.util.regex.Pattern r0;
+        int $i0;
+
+        r0 := @this: java.util.regex.Pattern;
+        $i0 = r0.<java.util.regex.Pattern: int cursor>;
+        return $i0;
+    }
+
+    private void setcursor(int)
+    {
+        java.util.regex.Pattern r0;
+        int i0;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 := @parameter0: int;
+        r0.<java.util.regex.Pattern: int cursor> = i0;
+        return;
+    }
+
+    private int uxxxx()
+    {
+        java.util.regex.Pattern r0;
+        int i0, i1, i2, $i3, $i4;
+        boolean $z0;
+        java.util.regex.PatternSyntaxException $r1;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 = 0;
+        i1 = 0;
+
+     label0:
+        if i1 >= 4 goto label2;
+
+        i2 = specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        $z0 = staticinvoke <java.util.regex.ASCII: boolean isHexDigit(int)>(i2);
+        if $z0 != 0 goto label1;
+
+        $r1 = specialinvoke r0.<java.util.regex.Pattern: java.util.regex.PatternSyntaxException error(java.lang.String)>("Illegal Unicode escape sequence");
+        throw $r1;
+
+     label1:
+        $i3 = i0 * 16;
+        $i4 = staticinvoke <java.util.regex.ASCII: int toDigit(int)>(i2);
+        i0 = $i3 + $i4;
+        i1 = i1 + 1;
+        goto label0;
+
+     label2:
+        return i0;
+    }
+
+    private int u()
+    {
+        java.util.regex.Pattern r0;
+        int i0, i1, i2, $i4, $i5, $i9;
+        char $c3, $c6, $c7, $c8;
+        boolean $z0, $z1;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 = specialinvoke r0.<java.util.regex.Pattern: int uxxxx()>();
+        $c3 = (char) i0;
+        $z0 = staticinvoke <java.lang.Character: boolean isHighSurrogate(char)>($c3);
+        if $z0 == 0 goto label1;
+
+        i1 = specialinvoke r0.<java.util.regex.Pattern: int cursor()>();
+        $i4 = specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        if $i4 != 92 goto label0;
+
+        $i5 = specialinvoke r0.<java.util.regex.Pattern: int read()>();
+        if $i5 != 117 goto label0;
+
+        i2 = specialinvoke r0.<java.util.regex.Pattern: int uxxxx()>();
+        $c6 = (char) i2;
+        $z1 = staticinvoke <java.lang.Character: boolean isLowSurrogate(char)>($c6);
+        if $z1 == 0 goto label0;
+
+        $c7 = (char) i0;
+        $c8 = (char) i2;
+        $i9 = staticinvoke <java.lang.Character: int toCodePoint(char,char)>($c7, $c8);
+        return $i9;
+
+     label0:
+        specialinvoke r0.<java.util.regex.Pattern: void setcursor(int)>(i1);
+
+     label1:
+        return i0;
+    }
+
+    private static final int countChars(java.lang.CharSequence, int, int)
+    {
+        java.lang.CharSequence r0;
+        int i0, i1, i2, i3, i4, i5, $i7, $i8, $i11, i12, $i14, $i16;
+        char $c6, $c9, $c10, $c13, $c15;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+        java.lang.AssertionError $r1, $r2, $r3;
+
+        r0 := @parameter0: java.lang.CharSequence;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        if i1 != 1 goto label2;
+
+        $c6 = interfaceinvoke r0.<java.lang.CharSequence: char charAt(int)>(i0);
+        $z0 = staticinvoke <java.lang.Character: boolean isHighSurrogate(char)>($c6);
+        if $z0 != 0 goto label2;
+
+        $z1 = <java.util.regex.Pattern: boolean $assertionsDisabled>;
+        if $z1 != 0 goto label1;
+
+        if i0 < 0 goto label0;
+
+        $i7 = interfaceinvoke r0.<java.lang.CharSequence: int length()>();
+        if i0 < $i7 goto label1;
+
+     label0:
+        $r1 = new java.lang.AssertionError;
+        specialinvoke $r1.<java.lang.AssertionError: void <init>()>();
+        throw $r1;
+
+     label1:
+        return 1;
+
+     label2:
+        i2 = interfaceinvoke r0.<java.lang.CharSequence: int length()>();
+        i3 = i0;
+        if i1 < 0 goto label8;
+
+        $z2 = <java.util.regex.Pattern: boolean $assertionsDisabled>;
+        if $z2 != 0 goto label4;
+
+        if i0 < 0 goto label3;
+
+        if i0 < i2 goto label4;
+
+     label3:
+        $r2 = new java.lang.AssertionError;
+        specialinvoke $r2.<java.lang.AssertionError: void <init>()>();
+        throw $r2;
+
+     label4:
+        i4 = 0;
+
+     label5:
+        if i3 >= i2 goto label7;
+
+        if i4 >= i1 goto label7;
+
+        $i8 = i3;
+        i3 = i3 + 1;
+        $c9 = interfaceinvoke r0.<java.lang.CharSequence: char charAt(int)>($i8);
+        $z3 = staticinvoke <java.lang.Character: boolean isHighSurrogate(char)>($c9);
+        if $z3 == 0 goto label6;
+
+        if i3 >= i2 goto label6;
+
+        $c10 = interfaceinvoke r0.<java.lang.CharSequence: char charAt(int)>(i3);
+        $z4 = staticinvoke <java.lang.Character: boolean isLowSurrogate(char)>($c10);
+        if $z4 == 0 goto label6;
+
+        i3 = i3 + 1;
+
+     label6:
+        i4 = i4 + 1;
+        goto label5;
+
+     label7:
+        $i11 = i3 - i0;
+        return $i11;
+
+     label8:
+        $z5 = <java.util.regex.Pattern: boolean $assertionsDisabled>;
+        if $z5 != 0 goto label10;
+
+        if i0 < 0 goto label9;
+
+        if i0 <= i2 goto label10;
+
+     label9:
+        $r3 = new java.lang.AssertionError;
+        specialinvoke $r3.<java.lang.AssertionError: void <init>()>();
+        throw $r3;
+
+     label10:
+        if i0 != 0 goto label11;
+
+        return 0;
+
+     label11:
+        i12 = neg i1;
+        i5 = 0;
+
+     label12:
+        if i3 <= 0 goto label14;
+
+        if i5 >= i12 goto label14;
+
+        i3 = i3 + -1;
+        $c13 = interfaceinvoke r0.<java.lang.CharSequence: char charAt(int)>(i3);
+        $z6 = staticinvoke <java.lang.Character: boolean isLowSurrogate(char)>($c13);
+        if $z6 == 0 goto label13;
+
+        if i3 <= 0 goto label13;
+
+        $i14 = i3 - 1;
+        $c15 = interfaceinvoke r0.<java.lang.CharSequence: char charAt(int)>($i14);
+        $z7 = staticinvoke <java.lang.Character: boolean isHighSurrogate(char)>($c15);
+        if $z7 == 0 goto label13;
+
+        i3 = i3 + -1;
+
+     label13:
+        i5 = i5 + 1;
+        goto label12;
+
+     label14:
+        $i16 = i0 - i3;
+        return $i16;
+    }
+
+    private static final int countCodePoints(java.lang.CharSequence)
+    {
+        java.lang.CharSequence r0;
+        int i0, i1, i2, $i3;
+        char $c4, $c5;
+        boolean $z0, $z1;
+
+        r0 := @parameter0: java.lang.CharSequence;
+        i0 = interfaceinvoke r0.<java.lang.CharSequence: int length()>();
+        i1 = 0;
+        i2 = 0;
+
+     label0:
+        if i2 >= i0 goto label1;
+
+        i1 = i1 + 1;
+        $i3 = i2;
+        i2 = i2 + 1;
+        $c4 = interfaceinvoke r0.<java.lang.CharSequence: char charAt(int)>($i3);
+        $z0 = staticinvoke <java.lang.Character: boolean isHighSurrogate(char)>($c4);
+        if $z0 == 0 goto label0;
+
+        if i2 >= i0 goto label0;
+
+        $c5 = interfaceinvoke r0.<java.lang.CharSequence: char charAt(int)>(i2);
+        $z1 = staticinvoke <java.lang.Character: boolean isLowSurrogate(char)>($c5);
+        if $z1 == 0 goto label0;
+
+        i2 = i2 + 1;
+        goto label0;
+
+     label1:
+        return i1;
+    }
+
+    private java.util.regex.Pattern$CharProperty newSingle(int)
+    {
+        java.util.regex.Pattern r0;
+        int i0, i1, i2, i3, i4;
+        boolean $z0, $z1, $z2, $z3;
+        java.util.regex.Pattern$SingleU $r1;
+        java.util.regex.Pattern$SingleI $r2;
+        java.util.regex.Pattern$SingleS $r3;
+        java.util.regex.Pattern$Single $r4;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 := @parameter0: int;
+        $z0 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(2);
+        if $z0 == 0 goto label1;
+
+        $z1 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(64);
+        if $z1 == 0 goto label0;
+
+        i1 = staticinvoke <java.lang.Character: int toUpperCase(int)>(i0);
+        i2 = staticinvoke <java.lang.Character: int toLowerCase(int)>(i1);
+        if i1 == i2 goto label1;
+
+        $r1 = new java.util.regex.Pattern$SingleU;
+        specialinvoke $r1.<java.util.regex.Pattern$SingleU: void <init>(int)>(i2);
+        return $r1;
+
+     label0:
+        $z2 = staticinvoke <java.util.regex.ASCII: boolean isAscii(int)>(i0);
+        if $z2 == 0 goto label1;
+
+        i3 = staticinvoke <java.util.regex.ASCII: int toLower(int)>(i0);
+        i4 = staticinvoke <java.util.regex.ASCII: int toUpper(int)>(i0);
+        if i3 == i4 goto label1;
+
+        $r2 = new java.util.regex.Pattern$SingleI;
+        specialinvoke $r2.<java.util.regex.Pattern$SingleI: void <init>(int,int)>(i3, i4);
+        return $r2;
+
+     label1:
+        $z3 = staticinvoke <java.util.regex.Pattern: boolean isSupplementary(int)>(i0);
+        if $z3 == 0 goto label2;
+
+        $r3 = new java.util.regex.Pattern$SingleS;
+        specialinvoke $r3.<java.util.regex.Pattern$SingleS: void <init>(int)>(i0);
+        return $r3;
+
+     label2:
+        $r4 = new java.util.regex.Pattern$Single;
+        specialinvoke $r4.<java.util.regex.Pattern$Single: void <init>(int)>(i0);
+        return $r4;
+    }
+
+    private java.util.regex.Pattern$Node newSlice(int[], int, boolean)
+    {
+        java.util.regex.Pattern r0;
+        int[] r1, r2;
+        int i0, i1, $i2, $i3, $i4, i5, $i6, $i7, i8, $i9;
+        boolean z0, $z1, $z2;
+        java.util.regex.Pattern$SliceNode $r3, $r4, $r5;
+        java.util.regex.Pattern$SliceUS r6;
+        java.util.regex.Pattern$SliceU r7;
+        java.util.regex.Pattern$SliceIS r8;
+        java.util.regex.Pattern$SliceI r9;
+        java.util.regex.Pattern$SliceS r10;
+        java.util.regex.Pattern$Slice r11;
+
+        r0 := @this: java.util.regex.Pattern;
+        r1 := @parameter0: int[];
+        i0 := @parameter1: int;
+        z0 := @parameter2: boolean;
+        r2 = newarray (int)[i0];
+        $z1 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(2);
+        if $z1 == 0 goto label9;
+
+        $z2 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(64);
+        if $z2 == 0 goto label4;
+
+        i1 = 0;
+
+     label0:
+        if i1 >= i0 goto label1;
+
+        $i2 = r1[i1];
+        $i3 = staticinvoke <java.lang.Character: int toUpperCase(int)>($i2);
+        $i4 = staticinvoke <java.lang.Character: int toLowerCase(int)>($i3);
+        r2[i1] = $i4;
+        i1 = i1 + 1;
+        goto label0;
+
+     label1:
+        if z0 == 0 goto label2;
+
+        r6 = new java.util.regex.Pattern$SliceUS;
+        $r3 = r6;
+        specialinvoke r6.<java.util.regex.Pattern$SliceUS: void <init>(int[])>(r2);
+        goto label3;
+
+     label2:
+        r7 = new java.util.regex.Pattern$SliceU;
+        $r3 = r7;
+        specialinvoke r7.<java.util.regex.Pattern$SliceU: void <init>(int[])>(r2);
+
+     label3:
+        return $r3;
+
+     label4:
+        i5 = 0;
+
+     label5:
+        if i5 >= i0 goto label6;
+
+        $i6 = r1[i5];
+        $i7 = staticinvoke <java.util.regex.ASCII: int toLower(int)>($i6);
+        r2[i5] = $i7;
+        i5 = i5 + 1;
+        goto label5;
+
+     label6:
+        if z0 == 0 goto label7;
+
+        r8 = new java.util.regex.Pattern$SliceIS;
+        $r4 = r8;
+        specialinvoke r8.<java.util.regex.Pattern$SliceIS: void <init>(int[])>(r2);
+        goto label8;
+
+     label7:
+        r9 = new java.util.regex.Pattern$SliceI;
+        $r4 = r9;
+        specialinvoke r9.<java.util.regex.Pattern$SliceI: void <init>(int[])>(r2);
+
+     label8:
+        return $r4;
+
+     label9:
+        i8 = 0;
+
+     label10:
+        if i8 >= i0 goto label11;
+
+        $i9 = r1[i8];
+        r2[i8] = $i9;
+        i8 = i8 + 1;
+        goto label10;
+
+     label11:
+        if z0 == 0 goto label12;
+
+        r10 = new java.util.regex.Pattern$SliceS;
+        $r5 = r10;
+        specialinvoke r10.<java.util.regex.Pattern$SliceS: void <init>(int[])>(r2);
+        goto label13;
+
+     label12:
+        r11 = new java.util.regex.Pattern$Slice;
+        $r5 = r11;
+        specialinvoke r11.<java.util.regex.Pattern$Slice: void <init>(int[])>(r2);
+
+     label13:
+        return $r5;
+    }
+
+    private static boolean inRange(int, int, int)
+    {
+        int i0, i1, i2;
+        boolean $z0;
+
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        i2 := @parameter2: int;
+        if i0 > i1 goto label0;
+
+        if i1 > i2 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    private static java.util.regex.Pattern$CharProperty rangeFor(int, int)
+    {
+        int i0, i1;
+        java.util.regex.Pattern$1 $r0;
+
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $r0 = new java.util.regex.Pattern$1;
+        specialinvoke $r0.<java.util.regex.Pattern$1: void <init>(int,int)>(i0, i1);
+        return $r0;
+    }
+
+    private java.util.regex.Pattern$CharProperty caseInsensitiveRangeFor(int, int)
+    {
+        java.util.regex.Pattern r0;
+        int i0, i1;
+        boolean $z0;
+        java.util.regex.Pattern$2 $r1;
+        java.util.regex.Pattern$3 $r2;
+
+        r0 := @this: java.util.regex.Pattern;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $z0 = specialinvoke r0.<java.util.regex.Pattern: boolean has(int)>(64);
+        if $z0 == 0 goto label0;
+
+        $r1 = new java.util.regex.Pattern$2;
+        specialinvoke $r1.<java.util.regex.Pattern$2: void <init>(java.util.regex.Pattern,int,int)>(r0, i0, i1);
+        return $r1;
+
+     label0:
+        $r2 = new java.util.regex.Pattern$3;
+        specialinvoke $r2.<java.util.regex.Pattern$3: void <init>(java.util.regex.Pattern,int,int)>(r0, i0, i1);
+        return $r2;
+    }
+
+    private static java.util.regex.Pattern$CharProperty union(java.util.regex.Pattern$CharProperty, java.util.regex.Pattern$CharProperty)
+    {
+        java.util.regex.Pattern$CharProperty r0, r1;
+        java.util.regex.Pattern$5 $r2;
+
+        r0 := @parameter0: java.util.regex.Pattern$CharProperty;
+        r1 := @parameter1: java.util.regex.Pattern$CharProperty;
+        $r2 = new java.util.regex.Pattern$5;
+        specialinvoke $r2.<java.util.regex.Pattern$5: void <init>(java.util.regex.Pattern$CharProperty,java.util.regex.Pattern$CharProperty)>(r0, r1);
+        return $r2;
+    }
+
+    private static java.util.regex.Pattern$CharProperty intersection(java.util.regex.Pattern$CharProperty, java.util.regex.Pattern$CharProperty)
+    {
+        java.util.regex.Pattern$CharProperty r0, r1;
+        java.util.regex.Pattern$6 $r2;
+
+        r0 := @parameter0: java.util.regex.Pattern$CharProperty;
+        r1 := @parameter1: java.util.regex.Pattern$CharProperty;
+        $r2 = new java.util.regex.Pattern$6;
+        specialinvoke $r2.<java.util.regex.Pattern$6: void <init>(java.util.regex.Pattern$CharProperty,java.util.regex.Pattern$CharProperty)>(r0, r1);
+        return $r2;
+    }
+
+    private static java.util.regex.Pattern$CharProperty setDifference(java.util.regex.Pattern$CharProperty, java.util.regex.Pattern$CharProperty)
+    {
+        java.util.regex.Pattern$CharProperty r0, r1;
+        java.util.regex.Pattern$7 $r2;
+
+        r0 := @parameter0: java.util.regex.Pattern$CharProperty;
+        r1 := @parameter1: java.util.regex.Pattern$CharProperty;
+        $r2 = new java.util.regex.Pattern$7;
+        specialinvoke $r2.<java.util.regex.Pattern$7: void <init>(java.util.regex.Pattern$CharProperty,java.util.regex.Pattern$CharProperty)>(r1, r0);
+        return $r2;
+    }
+
+    private static boolean hasBaseCharacter(java.util.regex.Matcher, int, java.lang.CharSequence)
+    {
+        java.util.regex.Matcher r0;
+        int i0, i1, i2, i3, $i4, $i5;
+        java.lang.CharSequence r1;
+        boolean $z0, $z1;
+
+        r0 := @parameter0: java.util.regex.Matcher;
+        i0 := @parameter1: int;
+        r1 := @parameter2: java.lang.CharSequence;
+        $z0 = r0.<java.util.regex.Matcher: boolean transparentBounds>;
+        if $z0 != 0 goto label0;
+
+        $i4 = r0.<java.util.regex.Matcher: int 'from'>;
+        goto label1;
+
+     label0:
+        $i4 = 0;
+
+     label1:
+        i1 = $i4;
+        i2 = i0;
+
+     label2:
+        if i2 < i1 goto label6;
+
+        i3 = staticinvoke <java.lang.Character: int codePointAt(java.lang.CharSequence,int)>(r1, i2);
+        $z1 = staticinvoke <java.lang.Character: boolean isLetterOrDigit(int)>(i3);
+        if $z1 == 0 goto label3;
+
+        return 1;
+
+     label3:
+        $i5 = staticinvoke <java.lang.Character: int getType(int)>(i3);
+        if $i5 != 6 goto label4;
+
+        goto label5;
+
+     label4:
+        return 0;
+
+     label5:
+        i2 = i2 + -1;
+        goto label2;
+
+     label6:
+        return 0;
+    }
+
+    static boolean access$200(int, int, int)
+    {
+        int i0, i1, i2;
+        boolean $z0;
+
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        i2 := @parameter2: int;
+        $z0 = staticinvoke <java.util.regex.Pattern: boolean inRange(int,int,int)>(i0, i1, i2);
+        return $z0;
+    }
+
+    static int access$300(java.lang.CharSequence, int, int)
+    {
+        java.lang.CharSequence r0;
+        int i0, i1, $i2;
+
+        r0 := @parameter0: java.lang.CharSequence;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        $i2 = staticinvoke <java.util.regex.Pattern: int countChars(java.lang.CharSequence,int,int)>(r0, i0, i1);
+        return $i2;
+    }
+
+    static boolean access$400(java.util.regex.Matcher, int, java.lang.CharSequence)
+    {
+        java.util.regex.Matcher r0;
+        int i0;
+        java.lang.CharSequence r1;
+        boolean $z0;
+
+        r0 := @parameter0: java.util.regex.Matcher;
+        i0 := @parameter1: int;
+        r1 := @parameter2: java.lang.CharSequence;
+        $z0 = staticinvoke <java.util.regex.Pattern: boolean hasBaseCharacter(java.util.regex.Matcher,int,java.lang.CharSequence)>(r0, i0, r1);
+        return $z0;
+    }
+
+    static java.util.regex.Pattern$CharProperty access$600(int, int)
+    {
+        int i0, i1;
+        java.util.regex.Pattern$CharProperty $r0;
+
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $r0 = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern$CharProperty rangeFor(int,int)>(i0, i1);
+        return $r0;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        boolean $z0, $z1;
+        java.util.regex.Pattern$4 $r1;
+        java.util.regex.Pattern$Node $r2;
+        java.util.regex.Pattern$LastNode $r3;
+
+        $r0 = class "java/util/regex/Pattern";
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        <java.util.regex.Pattern: boolean $assertionsDisabled> = $z1;
+        $r1 = new java.util.regex.Pattern$4;
+        specialinvoke $r1.<java.util.regex.Pattern$4: void <init>()>();
+        <java.util.regex.Pattern: java.util.regex.Pattern$Node lookbehindEnd> = $r1;
+        $r2 = new java.util.regex.Pattern$Node;
+        specialinvoke $r2.<java.util.regex.Pattern$Node: void <init>()>();
+        <java.util.regex.Pattern: java.util.regex.Pattern$Node accept> = $r2;
+        $r3 = new java.util.regex.Pattern$LastNode;
+        specialinvoke $r3.<java.util.regex.Pattern$LastNode: void <init>()>();
+        <java.util.regex.Pattern: java.util.regex.Pattern$Node lastAccept> = $r3;
+        return;
+    }
+}

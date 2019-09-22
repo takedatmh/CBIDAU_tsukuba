@@ -1,0 +1,331 @@
+public class sun.net.www.protocol.http.AuthenticationHeader extends java.lang.Object
+{
+    sun.net.www.MessageHeader rsp;
+    sun.net.www.HeaderParser preferred;
+    java.lang.String preferred_r;
+    private final sun.net.www.protocol.http.HttpCallerInfo hci;
+    boolean dontUseNegotiate;
+    static java.lang.String authPref;
+    java.lang.String hdrname;
+    java.util.HashMap schemes;
+
+    public java.lang.String toString()
+    {
+        sun.net.www.protocol.http.AuthenticationHeader r0;
+        java.lang.StringBuilder $r1, $r2, $r4;
+        java.lang.String $r3, $r5;
+
+        r0 := @this: sun.net.www.protocol.http.AuthenticationHeader;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r2 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("AuthenticationHeader: prefer ");
+        $r3 = r0.<sun.net.www.protocol.http.AuthenticationHeader: java.lang.String preferred_r>;
+        $r4 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r3);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r5;
+    }
+
+    public void <init>(java.lang.String, sun.net.www.MessageHeader, sun.net.www.protocol.http.HttpCallerInfo, boolean)
+    {
+        sun.net.www.protocol.http.AuthenticationHeader r0;
+        java.lang.String r1;
+        sun.net.www.MessageHeader r2;
+        sun.net.www.protocol.http.HttpCallerInfo r3;
+        boolean z0;
+        java.util.HashMap $r4;
+
+        r0 := @this: sun.net.www.protocol.http.AuthenticationHeader;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: sun.net.www.MessageHeader;
+        r3 := @parameter2: sun.net.www.protocol.http.HttpCallerInfo;
+        z0 := @parameter3: boolean;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.net.www.protocol.http.AuthenticationHeader: boolean dontUseNegotiate> = 0;
+        r0.<sun.net.www.protocol.http.AuthenticationHeader: sun.net.www.protocol.http.HttpCallerInfo hci> = r3;
+        r0.<sun.net.www.protocol.http.AuthenticationHeader: boolean dontUseNegotiate> = z0;
+        r0.<sun.net.www.protocol.http.AuthenticationHeader: sun.net.www.MessageHeader rsp> = r2;
+        r0.<sun.net.www.protocol.http.AuthenticationHeader: java.lang.String hdrname> = r1;
+        $r4 = new java.util.HashMap;
+        specialinvoke $r4.<java.util.HashMap: void <init>()>();
+        r0.<sun.net.www.protocol.http.AuthenticationHeader: java.util.HashMap schemes> = $r4;
+        specialinvoke r0.<sun.net.www.protocol.http.AuthenticationHeader: void parse()>();
+        return;
+    }
+
+    public sun.net.www.protocol.http.HttpCallerInfo getHttpCallerInfo()
+    {
+        sun.net.www.protocol.http.AuthenticationHeader r0;
+        sun.net.www.protocol.http.HttpCallerInfo $r1;
+
+        r0 := @this: sun.net.www.protocol.http.AuthenticationHeader;
+        $r1 = r0.<sun.net.www.protocol.http.AuthenticationHeader: sun.net.www.protocol.http.HttpCallerInfo hci>;
+        return $r1;
+    }
+
+    private void parse()
+    {
+        sun.net.www.protocol.http.AuthenticationHeader r0;
+        java.util.Iterator r1, r4;
+        java.lang.String r2, r6, $r8, $r12, r17, $r22, $r24, $r47, $r49;
+        sun.net.www.HeaderParser r3, r5, $r10, r16, $r48;
+        int i0, i1;
+        sun.net.www.MessageHeader $r7;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+        java.lang.Object $r9, $r25, $r28, $r34, $r40, $r43, $r46;
+        java.util.HashMap $r13, $r18, $r23, $r27, $r33, $r39, $r42, $r45;
+        sun.net.www.protocol.http.AuthenticationHeader$SchemeMapValue $r14, $r19, r21, $r26, r29, r35, $r41, $r44;
+        sun.net.www.protocol.http.HttpCallerInfo $r30, $r31, $r32, $r36, $r37, $r38;
+
+        r0 := @this: sun.net.www.protocol.http.AuthenticationHeader;
+        $r7 = r0.<sun.net.www.protocol.http.AuthenticationHeader: sun.net.www.MessageHeader rsp>;
+        $r8 = r0.<sun.net.www.protocol.http.AuthenticationHeader: java.lang.String hdrname>;
+        r1 = virtualinvoke $r7.<sun.net.www.MessageHeader: java.util.Iterator multiValueIterator(java.lang.String)>($r8);
+
+     label0:
+        $z0 = interfaceinvoke r1.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label6;
+
+        $r9 = interfaceinvoke r1.<java.util.Iterator: java.lang.Object next()>();
+        r2 = (java.lang.String) $r9;
+        $r10 = new sun.net.www.HeaderParser;
+        specialinvoke $r10.<sun.net.www.HeaderParser: void <init>(java.lang.String)>(r2);
+        r3 = $r10;
+        r4 = virtualinvoke r3.<sun.net.www.HeaderParser: java.util.Iterator keys()>();
+        i0 = 0;
+        i1 = -1;
+
+     label1:
+        $z1 = interfaceinvoke r4.<java.util.Iterator: boolean hasNext()>();
+        if $z1 == 0 goto label4;
+
+        interfaceinvoke r4.<java.util.Iterator: java.lang.Object next()>();
+        $r12 = virtualinvoke r3.<sun.net.www.HeaderParser: java.lang.String findValue(int)>(i0);
+        if $r12 != null goto label3;
+
+        if i1 == -1 goto label2;
+
+        r5 = virtualinvoke r3.<sun.net.www.HeaderParser: sun.net.www.HeaderParser subsequence(int,int)>(i1, i0);
+        r6 = virtualinvoke r5.<sun.net.www.HeaderParser: java.lang.String findKey(int)>(0);
+        $r13 = r0.<sun.net.www.protocol.http.AuthenticationHeader: java.util.HashMap schemes>;
+        $r14 = new sun.net.www.protocol.http.AuthenticationHeader$SchemeMapValue;
+        specialinvoke $r14.<sun.net.www.protocol.http.AuthenticationHeader$SchemeMapValue: void <init>(sun.net.www.HeaderParser,java.lang.String)>(r5, r2);
+        virtualinvoke $r13.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(r6, $r14);
+
+     label2:
+        i1 = i0;
+
+     label3:
+        i0 = i0 + 1;
+        goto label1;
+
+     label4:
+        if i0 <= i1 goto label5;
+
+        r16 = virtualinvoke r3.<sun.net.www.HeaderParser: sun.net.www.HeaderParser subsequence(int,int)>(i1, i0);
+        r17 = virtualinvoke r16.<sun.net.www.HeaderParser: java.lang.String findKey(int)>(0);
+        $r18 = r0.<sun.net.www.protocol.http.AuthenticationHeader: java.util.HashMap schemes>;
+        $r19 = new sun.net.www.protocol.http.AuthenticationHeader$SchemeMapValue;
+        specialinvoke $r19.<sun.net.www.protocol.http.AuthenticationHeader$SchemeMapValue: void <init>(sun.net.www.HeaderParser,java.lang.String)>(r16, r2);
+        virtualinvoke $r18.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(r17, $r19);
+
+     label5:
+        goto label0;
+
+     label6:
+        r21 = null;
+        $r22 = <sun.net.www.protocol.http.AuthenticationHeader: java.lang.String authPref>;
+        if $r22 == null goto label7;
+
+        $r23 = r0.<sun.net.www.protocol.http.AuthenticationHeader: java.util.HashMap schemes>;
+        $r24 = <sun.net.www.protocol.http.AuthenticationHeader: java.lang.String authPref>;
+        $r25 = virtualinvoke $r23.<java.util.HashMap: java.lang.Object get(java.lang.Object)>($r24);
+        $r26 = (sun.net.www.protocol.http.AuthenticationHeader$SchemeMapValue) $r25;
+        r21 = $r26;
+        if $r26 != null goto label14;
+
+     label7:
+        if r21 != null goto label10;
+
+        $z2 = r0.<sun.net.www.protocol.http.AuthenticationHeader: boolean dontUseNegotiate>;
+        if $z2 != 0 goto label10;
+
+        $r27 = r0.<sun.net.www.protocol.http.AuthenticationHeader: java.util.HashMap schemes>;
+        $r28 = virtualinvoke $r27.<java.util.HashMap: java.lang.Object get(java.lang.Object)>("negotiate");
+        r29 = (sun.net.www.protocol.http.AuthenticationHeader$SchemeMapValue) $r28;
+        if r29 == null goto label10;
+
+        $r30 = r0.<sun.net.www.protocol.http.AuthenticationHeader: sun.net.www.protocol.http.HttpCallerInfo hci>;
+        if $r30 == null goto label8;
+
+        $r31 = new sun.net.www.protocol.http.HttpCallerInfo;
+        $r32 = r0.<sun.net.www.protocol.http.AuthenticationHeader: sun.net.www.protocol.http.HttpCallerInfo hci>;
+        specialinvoke $r31.<sun.net.www.protocol.http.HttpCallerInfo: void <init>(sun.net.www.protocol.http.HttpCallerInfo,java.lang.String)>($r32, "Negotiate");
+        $z3 = staticinvoke <sun.net.www.protocol.http.NegotiateAuthentication: boolean isSupported(sun.net.www.protocol.http.HttpCallerInfo)>($r31);
+        if $z3 != 0 goto label9;
+
+     label8:
+        r29 = null;
+
+     label9:
+        r21 = r29;
+
+     label10:
+        if r21 != null goto label13;
+
+        $z4 = r0.<sun.net.www.protocol.http.AuthenticationHeader: boolean dontUseNegotiate>;
+        if $z4 != 0 goto label13;
+
+        $r33 = r0.<sun.net.www.protocol.http.AuthenticationHeader: java.util.HashMap schemes>;
+        $r34 = virtualinvoke $r33.<java.util.HashMap: java.lang.Object get(java.lang.Object)>("kerberos");
+        r35 = (sun.net.www.protocol.http.AuthenticationHeader$SchemeMapValue) $r34;
+        if r35 == null goto label13;
+
+        $r36 = r0.<sun.net.www.protocol.http.AuthenticationHeader: sun.net.www.protocol.http.HttpCallerInfo hci>;
+        if $r36 == null goto label11;
+
+        $r37 = new sun.net.www.protocol.http.HttpCallerInfo;
+        $r38 = r0.<sun.net.www.protocol.http.AuthenticationHeader: sun.net.www.protocol.http.HttpCallerInfo hci>;
+        specialinvoke $r37.<sun.net.www.protocol.http.HttpCallerInfo: void <init>(sun.net.www.protocol.http.HttpCallerInfo,java.lang.String)>($r38, "Kerberos");
+        $z5 = staticinvoke <sun.net.www.protocol.http.NegotiateAuthentication: boolean isSupported(sun.net.www.protocol.http.HttpCallerInfo)>($r37);
+        if $z5 != 0 goto label12;
+
+     label11:
+        r35 = null;
+
+     label12:
+        r21 = r35;
+
+     label13:
+        if r21 != null goto label15;
+
+        $r39 = r0.<sun.net.www.protocol.http.AuthenticationHeader: java.util.HashMap schemes>;
+        $r40 = virtualinvoke $r39.<java.util.HashMap: java.lang.Object get(java.lang.Object)>("digest");
+        $r41 = (sun.net.www.protocol.http.AuthenticationHeader$SchemeMapValue) $r40;
+        r21 = $r41;
+        if $r41 != null goto label15;
+
+        $r42 = r0.<sun.net.www.protocol.http.AuthenticationHeader: java.util.HashMap schemes>;
+        $r43 = virtualinvoke $r42.<java.util.HashMap: java.lang.Object get(java.lang.Object)>("ntlm");
+        $r44 = (sun.net.www.protocol.http.AuthenticationHeader$SchemeMapValue) $r43;
+        r21 = $r44;
+        if $r44 != null goto label15;
+
+        $r45 = r0.<sun.net.www.protocol.http.AuthenticationHeader: java.util.HashMap schemes>;
+        $r46 = virtualinvoke $r45.<java.util.HashMap: java.lang.Object get(java.lang.Object)>("basic");
+        r21 = (sun.net.www.protocol.http.AuthenticationHeader$SchemeMapValue) $r46;
+        goto label15;
+
+     label14:
+        $z6 = r0.<sun.net.www.protocol.http.AuthenticationHeader: boolean dontUseNegotiate>;
+        if $z6 == 0 goto label15;
+
+        $r47 = <sun.net.www.protocol.http.AuthenticationHeader: java.lang.String authPref>;
+        $z7 = virtualinvoke $r47.<java.lang.String: boolean equals(java.lang.Object)>("negotiate");
+        if $z7 == 0 goto label15;
+
+        r21 = null;
+
+     label15:
+        if r21 == null goto label16;
+
+        $r48 = r21.<sun.net.www.protocol.http.AuthenticationHeader$SchemeMapValue: sun.net.www.HeaderParser parser>;
+        r0.<sun.net.www.protocol.http.AuthenticationHeader: sun.net.www.HeaderParser preferred> = $r48;
+        $r49 = r21.<sun.net.www.protocol.http.AuthenticationHeader$SchemeMapValue: java.lang.String raw>;
+        r0.<sun.net.www.protocol.http.AuthenticationHeader: java.lang.String preferred_r> = $r49;
+
+     label16:
+        return;
+    }
+
+    public sun.net.www.HeaderParser headerParser()
+    {
+        sun.net.www.protocol.http.AuthenticationHeader r0;
+        sun.net.www.HeaderParser $r1;
+
+        r0 := @this: sun.net.www.protocol.http.AuthenticationHeader;
+        $r1 = r0.<sun.net.www.protocol.http.AuthenticationHeader: sun.net.www.HeaderParser preferred>;
+        return $r1;
+    }
+
+    public java.lang.String scheme()
+    {
+        sun.net.www.protocol.http.AuthenticationHeader r0;
+        sun.net.www.HeaderParser $r1, $r2;
+        java.lang.String $r3;
+
+        r0 := @this: sun.net.www.protocol.http.AuthenticationHeader;
+        $r1 = r0.<sun.net.www.protocol.http.AuthenticationHeader: sun.net.www.HeaderParser preferred>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<sun.net.www.protocol.http.AuthenticationHeader: sun.net.www.HeaderParser preferred>;
+        $r3 = virtualinvoke $r2.<sun.net.www.HeaderParser: java.lang.String findKey(int)>(0);
+        return $r3;
+
+     label0:
+        return null;
+    }
+
+    public java.lang.String raw()
+    {
+        sun.net.www.protocol.http.AuthenticationHeader r0;
+        java.lang.String $r1;
+
+        r0 := @this: sun.net.www.protocol.http.AuthenticationHeader;
+        $r1 = r0.<sun.net.www.protocol.http.AuthenticationHeader: java.lang.String preferred_r>;
+        return $r1;
+    }
+
+    public boolean isPresent()
+    {
+        sun.net.www.protocol.http.AuthenticationHeader r0;
+        sun.net.www.HeaderParser $r1;
+        boolean $z0;
+
+        r0 := @this: sun.net.www.protocol.http.AuthenticationHeader;
+        $r1 = r0.<sun.net.www.protocol.http.AuthenticationHeader: sun.net.www.HeaderParser preferred>;
+        if $r1 == null goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    static void <clinit>()
+    {
+        sun.security.action.GetPropertyAction $r0;
+        java.lang.Object $r1;
+        java.lang.String $r2, $r3, $r4, $r5, $r6, $r7;
+        boolean $z0, $z1;
+
+        <sun.net.www.protocol.http.AuthenticationHeader: java.lang.String authPref> = null;
+        $r0 = new sun.security.action.GetPropertyAction;
+        specialinvoke $r0.<sun.security.action.GetPropertyAction: void <init>(java.lang.String)>("http.auth.preference");
+        $r1 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r0);
+        $r2 = (java.lang.String) $r1;
+        <sun.net.www.protocol.http.AuthenticationHeader: java.lang.String authPref> = $r2;
+        $r3 = <sun.net.www.protocol.http.AuthenticationHeader: java.lang.String authPref>;
+        if $r3 == null goto label1;
+
+        $r4 = <sun.net.www.protocol.http.AuthenticationHeader: java.lang.String authPref>;
+        $r5 = virtualinvoke $r4.<java.lang.String: java.lang.String toLowerCase()>();
+        <sun.net.www.protocol.http.AuthenticationHeader: java.lang.String authPref> = $r5;
+        $r6 = <sun.net.www.protocol.http.AuthenticationHeader: java.lang.String authPref>;
+        $z0 = virtualinvoke $r6.<java.lang.String: boolean equals(java.lang.Object)>("spnego");
+        if $z0 != 0 goto label0;
+
+        $r7 = <sun.net.www.protocol.http.AuthenticationHeader: java.lang.String authPref>;
+        $z1 = virtualinvoke $r7.<java.lang.String: boolean equals(java.lang.Object)>("kerberos");
+        if $z1 == 0 goto label1;
+
+     label0:
+        <sun.net.www.protocol.http.AuthenticationHeader: java.lang.String authPref> = "negotiate";
+
+     label1:
+        return;
+    }
+}

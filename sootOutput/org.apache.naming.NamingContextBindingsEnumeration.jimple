@@ -1,0 +1,174 @@
+public class org.apache.naming.NamingContextBindingsEnumeration extends java.lang.Object implements javax.naming.NamingEnumeration
+{
+    protected java.util.Iterator iterator;
+    private javax.naming.Context ctx;
+
+    public void <init>(java.util.Iterator, javax.naming.Context)
+    {
+        org.apache.naming.NamingContextBindingsEnumeration r0;
+        java.util.Iterator r1;
+        javax.naming.Context r2;
+
+        r0 := @this: org.apache.naming.NamingContextBindingsEnumeration;
+        r1 := @parameter0: java.util.Iterator;
+        r2 := @parameter1: javax.naming.Context;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<org.apache.naming.NamingContextBindingsEnumeration: java.util.Iterator iterator> = r1;
+        r0.<org.apache.naming.NamingContextBindingsEnumeration: javax.naming.Context ctx> = r2;
+        return;
+    }
+
+    public javax.naming.Binding next() throws javax.naming.NamingException
+    {
+        org.apache.naming.NamingContextBindingsEnumeration r0;
+        javax.naming.Binding $r1;
+
+        r0 := @this: org.apache.naming.NamingContextBindingsEnumeration;
+        $r1 = specialinvoke r0.<org.apache.naming.NamingContextBindingsEnumeration: javax.naming.Binding nextElementInternal()>();
+        return $r1;
+    }
+
+    public boolean hasMore() throws javax.naming.NamingException
+    {
+        org.apache.naming.NamingContextBindingsEnumeration r0;
+        java.util.Iterator $r1;
+        boolean $z0;
+
+        r0 := @this: org.apache.naming.NamingContextBindingsEnumeration;
+        $r1 = r0.<org.apache.naming.NamingContextBindingsEnumeration: java.util.Iterator iterator>;
+        $z0 = interfaceinvoke $r1.<java.util.Iterator: boolean hasNext()>();
+        return $z0;
+    }
+
+    public void close() throws javax.naming.NamingException
+    {
+        org.apache.naming.NamingContextBindingsEnumeration r0;
+
+        r0 := @this: org.apache.naming.NamingContextBindingsEnumeration;
+        return;
+    }
+
+    public boolean hasMoreElements()
+    {
+        org.apache.naming.NamingContextBindingsEnumeration r0;
+        java.util.Iterator $r1;
+        boolean $z0;
+
+        r0 := @this: org.apache.naming.NamingContextBindingsEnumeration;
+        $r1 = r0.<org.apache.naming.NamingContextBindingsEnumeration: java.util.Iterator iterator>;
+        $z0 = interfaceinvoke $r1.<java.util.Iterator: boolean hasNext()>();
+        return $z0;
+    }
+
+    public javax.naming.Binding nextElement()
+    {
+        org.apache.naming.NamingContextBindingsEnumeration r0;
+        javax.naming.NamingException r1, $r3;
+        javax.naming.Binding $r2;
+        java.lang.RuntimeException $r4;
+        java.lang.String $r5;
+
+        r0 := @this: org.apache.naming.NamingContextBindingsEnumeration;
+
+     label0:
+        $r2 = specialinvoke r0.<org.apache.naming.NamingContextBindingsEnumeration: javax.naming.Binding nextElementInternal()>();
+
+     label1:
+        return $r2;
+
+     label2:
+        $r3 := @caughtexception;
+        r1 = $r3;
+        $r4 = new java.lang.RuntimeException;
+        $r5 = virtualinvoke r1.<javax.naming.NamingException: java.lang.String getMessage()>();
+        specialinvoke $r4.<java.lang.RuntimeException: void <init>(java.lang.String,java.lang.Throwable)>($r5, r1);
+        throw $r4;
+
+        catch javax.naming.NamingException from label0 to label1 with label2;
+    }
+
+    private javax.naming.Binding nextElementInternal() throws javax.naming.NamingException
+    {
+        org.apache.naming.NamingContextBindingsEnumeration r0;
+        org.apache.naming.NamingEntry r1;
+        java.lang.Object r2, $r6;
+        javax.naming.NamingException r3, r4, $r10, $r13;
+        java.util.Iterator $r5;
+        int $i0, $i1;
+        javax.naming.Context $r7;
+        javax.naming.CompositeName $r8;
+        java.lang.String $r9, $r14, $r17, $r19;
+        java.lang.Exception $r11, r12;
+        javax.naming.Binding $r16;
+        java.lang.Class $r18;
+
+        r0 := @this: org.apache.naming.NamingContextBindingsEnumeration;
+        $r5 = r0.<org.apache.naming.NamingContextBindingsEnumeration: java.util.Iterator iterator>;
+        $r6 = interfaceinvoke $r5.<java.util.Iterator: java.lang.Object next()>();
+        r1 = (org.apache.naming.NamingEntry) $r6;
+        $i0 = r1.<org.apache.naming.NamingEntry: int type>;
+        if $i0 == 2 goto label0;
+
+        $i1 = r1.<org.apache.naming.NamingEntry: int type>;
+        if $i1 != 1 goto label4;
+
+     label0:
+        $r7 = r0.<org.apache.naming.NamingContextBindingsEnumeration: javax.naming.Context ctx>;
+        $r8 = new javax.naming.CompositeName;
+        $r9 = r1.<org.apache.naming.NamingEntry: java.lang.String name>;
+        specialinvoke $r8.<javax.naming.CompositeName: void <init>(java.lang.String)>($r9);
+        r2 = interfaceinvoke $r7.<javax.naming.Context: java.lang.Object lookup(javax.naming.Name)>($r8);
+
+     label1:
+        goto label5;
+
+     label2:
+        $r10 := @caughtexception;
+        r3 = $r10;
+        throw r3;
+
+     label3:
+        $r11 := @caughtexception;
+        r12 = $r11;
+        $r13 = new javax.naming.NamingException;
+        $r14 = virtualinvoke r12.<java.lang.Exception: java.lang.String getMessage()>();
+        specialinvoke $r13.<javax.naming.NamingException: void <init>(java.lang.String)>($r14);
+        r4 = $r13;
+        virtualinvoke r4.<javax.naming.NamingException: java.lang.Throwable initCause(java.lang.Throwable)>(r12);
+        throw r4;
+
+     label4:
+        r2 = r1.<org.apache.naming.NamingEntry: java.lang.Object value>;
+
+     label5:
+        $r16 = new javax.naming.Binding;
+        $r17 = r1.<org.apache.naming.NamingEntry: java.lang.String name>;
+        $r18 = virtualinvoke r2.<java.lang.Object: java.lang.Class getClass()>();
+        $r19 = virtualinvoke $r18.<java.lang.Class: java.lang.String getName()>();
+        specialinvoke $r16.<javax.naming.Binding: void <init>(java.lang.String,java.lang.String,java.lang.Object,boolean)>($r17, $r19, r2, 1);
+        return $r16;
+
+        catch javax.naming.NamingException from label0 to label1 with label2;
+        catch java.lang.Exception from label0 to label1 with label3;
+    }
+
+    public volatile java.lang.Object next() throws javax.naming.NamingException
+    {
+        org.apache.naming.NamingContextBindingsEnumeration r0;
+        javax.naming.Binding $r1;
+
+        r0 := @this: org.apache.naming.NamingContextBindingsEnumeration;
+        $r1 = virtualinvoke r0.<org.apache.naming.NamingContextBindingsEnumeration: javax.naming.Binding next()>();
+        return $r1;
+    }
+
+    public volatile java.lang.Object nextElement()
+    {
+        org.apache.naming.NamingContextBindingsEnumeration r0;
+        javax.naming.Binding $r1;
+
+        r0 := @this: org.apache.naming.NamingContextBindingsEnumeration;
+        $r1 = virtualinvoke r0.<org.apache.naming.NamingContextBindingsEnumeration: javax.naming.Binding nextElement()>();
+        return $r1;
+    }
+}

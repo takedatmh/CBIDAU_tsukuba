@@ -1,0 +1,212 @@
+public class org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor extends java.lang.Object implements java.lang.Runnable
+{
+    final org.apache.catalina.core.ContainerBase this$0;
+
+    protected void <init>(org.apache.catalina.core.ContainerBase)
+    {
+        org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor r0;
+        org.apache.catalina.core.ContainerBase r1;
+
+        r0 := @this: org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor;
+        r1 := @parameter0: org.apache.catalina.core.ContainerBase;
+        r0.<org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor: org.apache.catalina.core.ContainerBase this$0> = r1;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public void run()
+    {
+        org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor r0;
+        java.lang.Throwable r1, r6, $r24;
+        java.lang.Thread $r2, $r16;
+        java.lang.String r3, $r9;
+        java.lang.InterruptedException r4, $r11;
+        java.lang.ClassLoader r5;
+        org.apache.tomcat.util.res.StringManager $r7;
+        java.lang.Object[] $r8;
+        org.apache.catalina.core.ContainerBase $r10, $r12, $r13, $r19, $r25, $r27;
+        int $i0;
+        long $l1, $l2;
+        boolean $z0, $z1, $z2, $z3;
+        java.lang.Object $r14;
+        org.apache.catalina.Container r15;
+        org.apache.catalina.Loader $r17, $r18;
+        java.lang.RuntimeException $r20, r21;
+        java.lang.Error $r22, r23;
+        org.apache.juli.logging.Log $r26, $r28;
+
+        r0 := @this: org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor;
+        r1 = null;
+        $r7 = <org.apache.catalina.core.ContainerBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r8 = newarray (java.lang.Object)[1];
+        $r2 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        $r9 = virtualinvoke $r2.<java.lang.Thread: java.lang.String getName()>();
+        $r8[0] = $r9;
+        r3 = virtualinvoke $r7.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("containerBase.backgroundProcess.unexpectedThreadDeath", $r8);
+
+     label0:
+        goto label6;
+
+     label1:
+        $r10 = r0.<org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor: org.apache.catalina.core.ContainerBase this$0>;
+        $i0 = $r10.<org.apache.catalina.core.ContainerBase: int backgroundProcessorDelay>;
+        $l1 = (long) $i0;
+        $l2 = $l1 * 1000L;
+        staticinvoke <java.lang.Thread: void sleep(long)>($l2);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r11 := @caughtexception;
+        r4 = $r11;
+
+     label4:
+        $r12 = r0.<org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor: org.apache.catalina.core.ContainerBase this$0>;
+        $z0 = staticinvoke <org.apache.catalina.core.ContainerBase: boolean access$1(org.apache.catalina.core.ContainerBase)>($r12);
+        if $z0 != 0 goto label6;
+
+        $r13 = r0.<org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor: org.apache.catalina.core.ContainerBase this$0>;
+        $r14 = virtualinvoke $r13.<org.apache.catalina.core.ContainerBase: java.lang.Object getMappingObject()>();
+        r15 = (org.apache.catalina.Container) $r14;
+        $r16 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        r5 = virtualinvoke $r16.<java.lang.Thread: java.lang.ClassLoader getContextClassLoader()>();
+        $r17 = interfaceinvoke r15.<org.apache.catalina.Container: org.apache.catalina.Loader getLoader()>();
+        if $r17 == null goto label5;
+
+        $r18 = interfaceinvoke r15.<org.apache.catalina.Container: org.apache.catalina.Loader getLoader()>();
+        r5 = interfaceinvoke $r18.<org.apache.catalina.Loader: java.lang.ClassLoader getClassLoader()>();
+
+     label5:
+        virtualinvoke r0.<org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor: void processChildren(org.apache.catalina.Container,java.lang.ClassLoader)>(r15, r5);
+
+     label6:
+        $r19 = r0.<org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor: org.apache.catalina.core.ContainerBase this$0>;
+        $z1 = staticinvoke <org.apache.catalina.core.ContainerBase: boolean access$1(org.apache.catalina.core.ContainerBase)>($r19);
+        if $z1 == 0 goto label1;
+
+     label7:
+        goto label12;
+
+     label8:
+        $r20 := @caughtexception;
+        r21 = $r20;
+        r1 = r21;
+        throw r21;
+
+     label9:
+        $r22 := @caughtexception;
+        r23 = $r22;
+        r1 = r23;
+        throw r23;
+
+     label10:
+        $r24 := @caughtexception;
+        r6 = $r24;
+        $r25 = r0.<org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor: org.apache.catalina.core.ContainerBase this$0>;
+        $z2 = staticinvoke <org.apache.catalina.core.ContainerBase: boolean access$1(org.apache.catalina.core.ContainerBase)>($r25);
+        if $z2 != 0 goto label11;
+
+        $r26 = staticinvoke <org.apache.catalina.core.ContainerBase: org.apache.juli.logging.Log access$2()>();
+        interfaceinvoke $r26.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>(r3, r1);
+
+     label11:
+        throw r6;
+
+     label12:
+        $r27 = r0.<org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor: org.apache.catalina.core.ContainerBase this$0>;
+        $z3 = staticinvoke <org.apache.catalina.core.ContainerBase: boolean access$1(org.apache.catalina.core.ContainerBase)>($r27);
+        if $z3 != 0 goto label13;
+
+        $r28 = staticinvoke <org.apache.catalina.core.ContainerBase: org.apache.juli.logging.Log access$2()>();
+        interfaceinvoke $r28.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>(r3, r1);
+
+     label13:
+        return;
+
+        catch java.lang.InterruptedException from label1 to label2 with label3;
+        catch java.lang.RuntimeException from label0 to label7 with label8;
+        catch java.lang.Error from label0 to label7 with label9;
+        catch java.lang.Throwable from label0 to label10 with label10;
+    }
+
+    protected void processChildren(org.apache.catalina.Container, java.lang.ClassLoader)
+    {
+        org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor r0;
+        org.apache.catalina.Container r1, $r16, $r17;
+        java.lang.ClassLoader r2, $r8;
+        java.lang.Throwable r3, r4, $r9, $r12;
+        org.apache.catalina.Loader $r5, $r7;
+        java.lang.Thread $r6, $r11, $r13, $r14;
+        org.apache.juli.logging.Log $r10;
+        org.apache.catalina.Container[] r15;
+        int i0, $i1, $i2;
+
+        r0 := @this: org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor;
+        r1 := @parameter0: org.apache.catalina.Container;
+        r2 := @parameter1: java.lang.ClassLoader;
+
+     label0:
+        $r5 = interfaceinvoke r1.<org.apache.catalina.Container: org.apache.catalina.Loader getLoader()>();
+        if $r5 == null goto label1;
+
+        $r6 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        $r7 = interfaceinvoke r1.<org.apache.catalina.Container: org.apache.catalina.Loader getLoader()>();
+        $r8 = interfaceinvoke $r7.<org.apache.catalina.Loader: java.lang.ClassLoader getClassLoader()>();
+        virtualinvoke $r6.<java.lang.Thread: void setContextClassLoader(java.lang.ClassLoader)>($r8);
+
+     label1:
+        interfaceinvoke r1.<org.apache.catalina.Container: void backgroundProcess()>();
+
+     label2:
+        goto label6;
+
+     label3:
+        $r9 := @caughtexception;
+        r3 = $r9;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r3);
+        $r10 = staticinvoke <org.apache.catalina.core.ContainerBase: org.apache.juli.logging.Log access$2()>();
+        interfaceinvoke $r10.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Exception invoking periodic operation: ", r3);
+
+     label4:
+        $r11 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        virtualinvoke $r11.<java.lang.Thread: void setContextClassLoader(java.lang.ClassLoader)>(r2);
+        goto label7;
+
+     label5:
+        $r12 := @caughtexception;
+        r4 = $r12;
+        $r13 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        virtualinvoke $r13.<java.lang.Thread: void setContextClassLoader(java.lang.ClassLoader)>(r2);
+        throw r4;
+
+     label6:
+        $r14 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        virtualinvoke $r14.<java.lang.Thread: void setContextClassLoader(java.lang.ClassLoader)>(r2);
+
+     label7:
+        r15 = interfaceinvoke r1.<org.apache.catalina.Container: org.apache.catalina.Container[] findChildren()>();
+        i0 = 0;
+        goto label10;
+
+     label8:
+        $r16 = r15[i0];
+        $i1 = interfaceinvoke $r16.<org.apache.catalina.Container: int getBackgroundProcessorDelay()>();
+        if $i1 > 0 goto label9;
+
+        $r17 = r15[i0];
+        virtualinvoke r0.<org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor: void processChildren(org.apache.catalina.Container,java.lang.ClassLoader)>($r17, r2);
+
+     label9:
+        i0 = i0 + 1;
+
+     label10:
+        $i2 = lengthof r15;
+        if i0 < $i2 goto label8;
+
+        return;
+
+        catch java.lang.Throwable from label0 to label2 with label3;
+        catch java.lang.Throwable from label0 to label4 with label5;
+    }
+}

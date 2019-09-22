@@ -1,0 +1,99 @@
+public class org.apache.naming.resources.DirContextURLStreamHandlerFactory extends java.lang.Object implements java.net.URLStreamHandlerFactory
+{
+    private static org.apache.naming.resources.DirContextURLStreamHandlerFactory instance;
+    private java.util.List userFactories;
+
+    static void <clinit>()
+    {
+        org.apache.naming.resources.DirContextURLStreamHandlerFactory $r0;
+
+        $r0 = new org.apache.naming.resources.DirContextURLStreamHandlerFactory;
+        specialinvoke $r0.<org.apache.naming.resources.DirContextURLStreamHandlerFactory: void <init>()>();
+        <org.apache.naming.resources.DirContextURLStreamHandlerFactory: org.apache.naming.resources.DirContextURLStreamHandlerFactory instance> = $r0;
+        return;
+    }
+
+    public static org.apache.naming.resources.DirContextURLStreamHandlerFactory getInstance()
+    {
+        org.apache.naming.resources.DirContextURLStreamHandlerFactory $r0;
+
+        $r0 = <org.apache.naming.resources.DirContextURLStreamHandlerFactory: org.apache.naming.resources.DirContextURLStreamHandlerFactory instance>;
+        return $r0;
+    }
+
+    public static void addUserFactory(java.net.URLStreamHandlerFactory)
+    {
+        java.net.URLStreamHandlerFactory r0;
+        org.apache.naming.resources.DirContextURLStreamHandlerFactory $r1;
+        java.util.List $r2;
+
+        r0 := @parameter0: java.net.URLStreamHandlerFactory;
+        $r1 = <org.apache.naming.resources.DirContextURLStreamHandlerFactory: org.apache.naming.resources.DirContextURLStreamHandlerFactory instance>;
+        $r2 = $r1.<org.apache.naming.resources.DirContextURLStreamHandlerFactory: java.util.List userFactories>;
+        interfaceinvoke $r2.<java.util.List: boolean add(java.lang.Object)>(r0);
+        return;
+    }
+
+    private void <init>()
+    {
+        org.apache.naming.resources.DirContextURLStreamHandlerFactory r0;
+        java.util.concurrent.CopyOnWriteArrayList $r1;
+
+        r0 := @this: org.apache.naming.resources.DirContextURLStreamHandlerFactory;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r1 = new java.util.concurrent.CopyOnWriteArrayList;
+        specialinvoke $r1.<java.util.concurrent.CopyOnWriteArrayList: void <init>()>();
+        r0.<org.apache.naming.resources.DirContextURLStreamHandlerFactory: java.util.List userFactories> = $r1;
+        return;
+    }
+
+    public java.net.URLStreamHandler createURLStreamHandler(java.lang.String)
+    {
+        org.apache.naming.resources.DirContextURLStreamHandlerFactory r0;
+        java.lang.String r1;
+        java.util.Iterator r2;
+        java.net.URLStreamHandlerFactory r3;
+        java.net.URLStreamHandler r4;
+        boolean $z0, $z1, $z2;
+        org.apache.naming.resources.DirContextURLStreamHandler $r5;
+        org.apache.naming.resources.ClasspathURLStreamHandler $r6;
+        java.util.List $r7;
+        java.lang.Object $r8;
+
+        r0 := @this: org.apache.naming.resources.DirContextURLStreamHandlerFactory;
+        r1 := @parameter0: java.lang.String;
+        $z0 = virtualinvoke r1.<java.lang.String: boolean equals(java.lang.Object)>("jndi");
+        if $z0 == 0 goto label0;
+
+        $r5 = new org.apache.naming.resources.DirContextURLStreamHandler;
+        specialinvoke $r5.<org.apache.naming.resources.DirContextURLStreamHandler: void <init>()>();
+        return $r5;
+
+     label0:
+        $z1 = virtualinvoke r1.<java.lang.String: boolean equals(java.lang.Object)>("classpath");
+        if $z1 == 0 goto label1;
+
+        $r6 = new org.apache.naming.resources.ClasspathURLStreamHandler;
+        specialinvoke $r6.<org.apache.naming.resources.ClasspathURLStreamHandler: void <init>()>();
+        return $r6;
+
+     label1:
+        $r7 = r0.<org.apache.naming.resources.DirContextURLStreamHandlerFactory: java.util.List userFactories>;
+        r2 = interfaceinvoke $r7.<java.util.List: java.util.Iterator iterator()>();
+        goto label3;
+
+     label2:
+        $r8 = interfaceinvoke r2.<java.util.Iterator: java.lang.Object next()>();
+        r3 = (java.net.URLStreamHandlerFactory) $r8;
+        r4 = interfaceinvoke r3.<java.net.URLStreamHandlerFactory: java.net.URLStreamHandler createURLStreamHandler(java.lang.String)>(r1);
+        if r4 == null goto label3;
+
+        return r4;
+
+     label3:
+        $z2 = interfaceinvoke r2.<java.util.Iterator: boolean hasNext()>();
+        if $z2 != 0 goto label2;
+
+        return null;
+    }
+}

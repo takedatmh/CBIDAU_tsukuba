@@ -1,0 +1,174 @@
+abstract class java.util.concurrent.ConcurrentHashMap$HashIterator extends java.lang.Object
+{
+    int nextSegmentIndex;
+    int nextTableIndex;
+    java.util.concurrent.ConcurrentHashMap$HashEntry[] currentTable;
+    java.util.concurrent.ConcurrentHashMap$HashEntry nextEntry;
+    java.util.concurrent.ConcurrentHashMap$HashEntry lastReturned;
+    final java.util.concurrent.ConcurrentHashMap this$0;
+
+    void <init>(java.util.concurrent.ConcurrentHashMap)
+    {
+        java.util.concurrent.ConcurrentHashMap$HashIterator r0;
+        java.util.concurrent.ConcurrentHashMap r1;
+        java.util.concurrent.ConcurrentHashMap$Segment[] $r2;
+        int $i0, $i1;
+
+        r0 := @this: java.util.concurrent.ConcurrentHashMap$HashIterator;
+        r1 := @parameter0: java.util.concurrent.ConcurrentHashMap;
+        r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: java.util.concurrent.ConcurrentHashMap this$0> = r1;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r2 = r1.<java.util.concurrent.ConcurrentHashMap: java.util.concurrent.ConcurrentHashMap$Segment[] segments>;
+        $i0 = lengthof $r2;
+        $i1 = $i0 - 1;
+        r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: int nextSegmentIndex> = $i1;
+        r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: int nextTableIndex> = -1;
+        virtualinvoke r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: void advance()>();
+        return;
+    }
+
+    final void advance()
+    {
+        java.util.concurrent.ConcurrentHashMap$HashIterator r0;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7;
+        java.util.concurrent.ConcurrentHashMap$Segment r2;
+        java.util.concurrent.ConcurrentHashMap$HashEntry[] $r3, $r8, $r9;
+        java.util.concurrent.ConcurrentHashMap$HashEntry $r4;
+        java.util.concurrent.ConcurrentHashMap $r5;
+        java.util.concurrent.ConcurrentHashMap$Segment[] $r6;
+
+        r0 := @this: java.util.concurrent.ConcurrentHashMap$HashIterator;
+
+     label0:
+        $i1 = r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: int nextTableIndex>;
+        if $i1 < 0 goto label1;
+
+        $r3 = r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: java.util.concurrent.ConcurrentHashMap$HashEntry[] currentTable>;
+        $i0 = r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: int nextTableIndex>;
+        $i2 = $i0 - 1;
+        r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: int nextTableIndex> = $i2;
+        $r4 = staticinvoke <java.util.concurrent.ConcurrentHashMap: java.util.concurrent.ConcurrentHashMap$HashEntry entryAt(java.util.concurrent.ConcurrentHashMap$HashEntry[],int)>($r3, $i0);
+        r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: java.util.concurrent.ConcurrentHashMap$HashEntry nextEntry> = $r4;
+        if $r4 == null goto label0;
+
+        goto label3;
+
+     label1:
+        $i3 = r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: int nextSegmentIndex>;
+        if $i3 < 0 goto label3;
+
+        $r5 = r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: java.util.concurrent.ConcurrentHashMap this$0>;
+        $r6 = $r5.<java.util.concurrent.ConcurrentHashMap: java.util.concurrent.ConcurrentHashMap$Segment[] segments>;
+        $i4 = r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: int nextSegmentIndex>;
+        $i5 = $i4 - 1;
+        r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: int nextSegmentIndex> = $i5;
+        r2 = staticinvoke <java.util.concurrent.ConcurrentHashMap: java.util.concurrent.ConcurrentHashMap$Segment segmentAt(java.util.concurrent.ConcurrentHashMap$Segment[],int)>($r6, $i4);
+        if r2 == null goto label2;
+
+        $r8 = r2.<java.util.concurrent.ConcurrentHashMap$Segment: java.util.concurrent.ConcurrentHashMap$HashEntry[] table>;
+        r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: java.util.concurrent.ConcurrentHashMap$HashEntry[] currentTable> = $r8;
+        if $r8 == null goto label2;
+
+        $r9 = r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: java.util.concurrent.ConcurrentHashMap$HashEntry[] currentTable>;
+        $i6 = lengthof $r9;
+        $i7 = $i6 - 1;
+        r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: int nextTableIndex> = $i7;
+
+     label2:
+        goto label0;
+
+     label3:
+        return;
+    }
+
+    final java.util.concurrent.ConcurrentHashMap$HashEntry nextEntry()
+    {
+        java.util.concurrent.ConcurrentHashMap$HashIterator r0;
+        java.util.concurrent.ConcurrentHashMap$HashEntry r1, $r2;
+        java.util.NoSuchElementException $r3;
+
+        r0 := @this: java.util.concurrent.ConcurrentHashMap$HashIterator;
+        r1 = r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: java.util.concurrent.ConcurrentHashMap$HashEntry nextEntry>;
+        if r1 != null goto label0;
+
+        $r3 = new java.util.NoSuchElementException;
+        specialinvoke $r3.<java.util.NoSuchElementException: void <init>()>();
+        throw $r3;
+
+     label0:
+        r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: java.util.concurrent.ConcurrentHashMap$HashEntry lastReturned> = r1;
+        $r2 = r1.<java.util.concurrent.ConcurrentHashMap$HashEntry: java.util.concurrent.ConcurrentHashMap$HashEntry next>;
+        r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: java.util.concurrent.ConcurrentHashMap$HashEntry nextEntry> = $r2;
+        if $r2 != null goto label1;
+
+        virtualinvoke r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: void advance()>();
+
+     label1:
+        return r1;
+    }
+
+    public final boolean hasNext()
+    {
+        java.util.concurrent.ConcurrentHashMap$HashIterator r0;
+        java.util.concurrent.ConcurrentHashMap$HashEntry $r1;
+        boolean $z0;
+
+        r0 := @this: java.util.concurrent.ConcurrentHashMap$HashIterator;
+        $r1 = r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: java.util.concurrent.ConcurrentHashMap$HashEntry nextEntry>;
+        if $r1 == null goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public final boolean hasMoreElements()
+    {
+        java.util.concurrent.ConcurrentHashMap$HashIterator r0;
+        java.util.concurrent.ConcurrentHashMap$HashEntry $r1;
+        boolean $z0;
+
+        r0 := @this: java.util.concurrent.ConcurrentHashMap$HashIterator;
+        $r1 = r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: java.util.concurrent.ConcurrentHashMap$HashEntry nextEntry>;
+        if $r1 == null goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public final void remove()
+    {
+        java.util.concurrent.ConcurrentHashMap$HashIterator r0;
+        java.util.concurrent.ConcurrentHashMap$HashEntry $r1, $r4;
+        java.lang.IllegalStateException $r2;
+        java.util.concurrent.ConcurrentHashMap $r3;
+        java.lang.Object $r5;
+
+        r0 := @this: java.util.concurrent.ConcurrentHashMap$HashIterator;
+        $r1 = r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: java.util.concurrent.ConcurrentHashMap$HashEntry lastReturned>;
+        if $r1 != null goto label0;
+
+        $r2 = new java.lang.IllegalStateException;
+        specialinvoke $r2.<java.lang.IllegalStateException: void <init>()>();
+        throw $r2;
+
+     label0:
+        $r3 = r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: java.util.concurrent.ConcurrentHashMap this$0>;
+        $r4 = r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: java.util.concurrent.ConcurrentHashMap$HashEntry lastReturned>;
+        $r5 = $r4.<java.util.concurrent.ConcurrentHashMap$HashEntry: java.lang.Object key>;
+        virtualinvoke $r3.<java.util.concurrent.ConcurrentHashMap: java.lang.Object remove(java.lang.Object)>($r5);
+        r0.<java.util.concurrent.ConcurrentHashMap$HashIterator: java.util.concurrent.ConcurrentHashMap$HashEntry lastReturned> = null;
+        return;
+    }
+}

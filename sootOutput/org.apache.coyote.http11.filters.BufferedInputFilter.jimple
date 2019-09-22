@@ -1,0 +1,218 @@
+public class org.apache.coyote.http11.filters.BufferedInputFilter extends java.lang.Object implements org.apache.coyote.http11.InputFilter
+{
+    private static final java.lang.String ENCODING_NAME;
+    private static final org.apache.tomcat.util.buf.ByteChunk ENCODING;
+    private org.apache.tomcat.util.buf.ByteChunk buffered;
+    private org.apache.tomcat.util.buf.ByteChunk tempRead;
+    private org.apache.coyote.InputBuffer buffer;
+    private boolean hasRead;
+
+    static void <clinit>()
+    {
+        org.apache.tomcat.util.buf.ByteChunk $r0, $r3;
+        java.nio.charset.Charset $r1;
+        java.lang.String $r2, $r4;
+        byte[] $r5;
+        int $i0;
+
+        $r0 = new org.apache.tomcat.util.buf.ByteChunk;
+        specialinvoke $r0.<org.apache.tomcat.util.buf.ByteChunk: void <init>()>();
+        <org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk ENCODING> = $r0;
+        $r3 = <org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk ENCODING>;
+        $r4 = "buffered";
+        $r1 = staticinvoke <java.nio.charset.Charset: java.nio.charset.Charset defaultCharset()>();
+        $r5 = virtualinvoke $r4.<java.lang.String: byte[] getBytes(java.nio.charset.Charset)>($r1);
+        $r2 = "buffered";
+        $i0 = virtualinvoke $r2.<java.lang.String: int length()>();
+        virtualinvoke $r3.<org.apache.tomcat.util.buf.ByteChunk: void setBytes(byte[],int,int)>($r5, 0, $i0);
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.coyote.http11.filters.BufferedInputFilter r0;
+        org.apache.tomcat.util.buf.ByteChunk $r1;
+
+        r0 := @this: org.apache.coyote.http11.filters.BufferedInputFilter;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk buffered> = null;
+        $r1 = new org.apache.tomcat.util.buf.ByteChunk;
+        specialinvoke $r1.<org.apache.tomcat.util.buf.ByteChunk: void <init>(int)>(1024);
+        r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk tempRead> = $r1;
+        r0.<org.apache.coyote.http11.filters.BufferedInputFilter: boolean hasRead> = 0;
+        return;
+    }
+
+    public void setLimit(int)
+    {
+        org.apache.coyote.http11.filters.BufferedInputFilter r0;
+        int i0;
+        org.apache.tomcat.util.buf.ByteChunk $r1, $r2, $r3;
+
+        r0 := @this: org.apache.coyote.http11.filters.BufferedInputFilter;
+        i0 := @parameter0: int;
+        $r2 = r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk buffered>;
+        if $r2 != null goto label0;
+
+        $r1 = new org.apache.tomcat.util.buf.ByteChunk;
+        specialinvoke $r1.<org.apache.tomcat.util.buf.ByteChunk: void <init>(int)>(4048);
+        r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk buffered> = $r1;
+        $r3 = r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk buffered>;
+        virtualinvoke $r3.<org.apache.tomcat.util.buf.ByteChunk: void setLimit(int)>(i0);
+
+     label0:
+        return;
+    }
+
+    public void setRequest(org.apache.coyote.Request)
+    {
+        org.apache.coyote.http11.filters.BufferedInputFilter r0;
+        org.apache.coyote.Request r1;
+        java.io.IOException r2, $r8;
+        org.apache.tomcat.util.buf.ByteChunk $r3, $r4, $r5, $r7;
+        org.apache.coyote.InputBuffer $r6;
+        int $i0;
+        java.lang.IllegalStateException $r9;
+
+        r0 := @this: org.apache.coyote.http11.filters.BufferedInputFilter;
+        r1 := @parameter0: org.apache.coyote.Request;
+
+     label0:
+        goto label2;
+
+     label1:
+        $r3 = r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk buffered>;
+        $r4 = r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk tempRead>;
+        virtualinvoke $r3.<org.apache.tomcat.util.buf.ByteChunk: void append(org.apache.tomcat.util.buf.ByteChunk)>($r4);
+        $r5 = r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk tempRead>;
+        virtualinvoke $r5.<org.apache.tomcat.util.buf.ByteChunk: void recycle()>();
+
+     label2:
+        $r6 = r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.coyote.InputBuffer buffer>;
+        $r7 = r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk tempRead>;
+        $i0 = interfaceinvoke $r6.<org.apache.coyote.InputBuffer: int doRead(org.apache.tomcat.util.buf.ByteChunk,org.apache.coyote.Request)>($r7, r1);
+        if $i0 >= 0 goto label1;
+
+     label3:
+        goto label5;
+
+     label4:
+        $r8 := @caughtexception;
+        r2 = $r8;
+        $r9 = new java.lang.IllegalStateException;
+        specialinvoke $r9.<java.lang.IllegalStateException: void <init>(java.lang.String)>("Request body too large for buffer");
+        throw $r9;
+
+     label5:
+        return;
+
+        catch java.io.IOException from label0 to label3 with label4;
+    }
+
+    public int doRead(org.apache.tomcat.util.buf.ByteChunk, org.apache.coyote.Request) throws java.io.IOException
+    {
+        org.apache.coyote.http11.filters.BufferedInputFilter r0;
+        org.apache.tomcat.util.buf.ByteChunk r1, $r3, $r4, $r6, $r7;
+        org.apache.coyote.Request r2;
+        boolean $z0;
+        int $i0, $i1, $i2, $i3;
+        byte[] $r5;
+
+        r0 := @this: org.apache.coyote.http11.filters.BufferedInputFilter;
+        r1 := @parameter0: org.apache.tomcat.util.buf.ByteChunk;
+        r2 := @parameter1: org.apache.coyote.Request;
+        $z0 = r0.<org.apache.coyote.http11.filters.BufferedInputFilter: boolean hasRead>;
+        if $z0 != 0 goto label0;
+
+        $r3 = r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk buffered>;
+        $i0 = virtualinvoke $r3.<org.apache.tomcat.util.buf.ByteChunk: int getLength()>();
+        if $i0 > 0 goto label1;
+
+     label0:
+        return -1;
+
+     label1:
+        $r4 = r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk buffered>;
+        $r5 = virtualinvoke $r4.<org.apache.tomcat.util.buf.ByteChunk: byte[] getBytes()>();
+        $r6 = r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk buffered>;
+        $i1 = virtualinvoke $r6.<org.apache.tomcat.util.buf.ByteChunk: int getStart()>();
+        $r7 = r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk buffered>;
+        $i2 = virtualinvoke $r7.<org.apache.tomcat.util.buf.ByteChunk: int getLength()>();
+        virtualinvoke r1.<org.apache.tomcat.util.buf.ByteChunk: void setBytes(byte[],int,int)>($r5, $i1, $i2);
+        r0.<org.apache.coyote.http11.filters.BufferedInputFilter: boolean hasRead> = 1;
+        $i3 = virtualinvoke r1.<org.apache.tomcat.util.buf.ByteChunk: int getLength()>();
+        return $i3;
+    }
+
+    public void setBuffer(org.apache.coyote.InputBuffer)
+    {
+        org.apache.coyote.http11.filters.BufferedInputFilter r0;
+        org.apache.coyote.InputBuffer r1;
+
+        r0 := @this: org.apache.coyote.http11.filters.BufferedInputFilter;
+        r1 := @parameter0: org.apache.coyote.InputBuffer;
+        r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.coyote.InputBuffer buffer> = r1;
+        return;
+    }
+
+    public void recycle()
+    {
+        org.apache.coyote.http11.filters.BufferedInputFilter r0;
+        org.apache.tomcat.util.buf.ByteChunk $r1, $r2, $r4, $r5;
+        byte[] $r3;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.http11.filters.BufferedInputFilter;
+        $r1 = r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk buffered>;
+        if $r1 == null goto label1;
+
+        $r2 = r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk buffered>;
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.buf.ByteChunk: byte[] getBuffer()>();
+        $i0 = lengthof $r3;
+        if $i0 <= 65536 goto label0;
+
+        r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk buffered> = null;
+        goto label1;
+
+     label0:
+        $r4 = r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk buffered>;
+        virtualinvoke $r4.<org.apache.tomcat.util.buf.ByteChunk: void recycle()>();
+
+     label1:
+        $r5 = r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk tempRead>;
+        virtualinvoke $r5.<org.apache.tomcat.util.buf.ByteChunk: void recycle()>();
+        r0.<org.apache.coyote.http11.filters.BufferedInputFilter: boolean hasRead> = 0;
+        r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.coyote.InputBuffer buffer> = null;
+        return;
+    }
+
+    public org.apache.tomcat.util.buf.ByteChunk getEncodingName()
+    {
+        org.apache.coyote.http11.filters.BufferedInputFilter r0;
+        org.apache.tomcat.util.buf.ByteChunk $r1;
+
+        r0 := @this: org.apache.coyote.http11.filters.BufferedInputFilter;
+        $r1 = <org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk ENCODING>;
+        return $r1;
+    }
+
+    public long end() throws java.io.IOException
+    {
+        org.apache.coyote.http11.filters.BufferedInputFilter r0;
+
+        r0 := @this: org.apache.coyote.http11.filters.BufferedInputFilter;
+        return 0L;
+    }
+
+    public int available()
+    {
+        org.apache.coyote.http11.filters.BufferedInputFilter r0;
+        org.apache.tomcat.util.buf.ByteChunk $r1;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.http11.filters.BufferedInputFilter;
+        $r1 = r0.<org.apache.coyote.http11.filters.BufferedInputFilter: org.apache.tomcat.util.buf.ByteChunk buffered>;
+        $i0 = virtualinvoke $r1.<org.apache.tomcat.util.buf.ByteChunk: int getLength()>();
+        return $i0;
+    }
+}

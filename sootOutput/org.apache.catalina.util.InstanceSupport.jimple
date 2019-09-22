@@ -1,0 +1,540 @@
+public final class org.apache.catalina.util.InstanceSupport extends java.lang.Object
+{
+    private org.apache.catalina.InstanceListener[] listeners;
+    private final java.lang.Object listenersLock;
+    private org.apache.catalina.Wrapper wrapper;
+
+    public void <init>(org.apache.catalina.Wrapper)
+    {
+        org.apache.catalina.util.InstanceSupport r0;
+        org.apache.catalina.Wrapper r1;
+        org.apache.catalina.InstanceListener[] $r2;
+        java.lang.Object $r3;
+
+        r0 := @this: org.apache.catalina.util.InstanceSupport;
+        r1 := @parameter0: org.apache.catalina.Wrapper;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r2 = newarray (org.apache.catalina.InstanceListener)[0];
+        r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners> = $r2;
+        $r3 = new java.lang.Object;
+        specialinvoke $r3.<java.lang.Object: void <init>()>();
+        r0.<org.apache.catalina.util.InstanceSupport: java.lang.Object listenersLock> = $r3;
+        r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.Wrapper wrapper> = null;
+        r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.Wrapper wrapper> = r1;
+        return;
+    }
+
+    public org.apache.catalina.Wrapper getWrapper()
+    {
+        org.apache.catalina.util.InstanceSupport r0;
+        org.apache.catalina.Wrapper $r1;
+
+        r0 := @this: org.apache.catalina.util.InstanceSupport;
+        $r1 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.Wrapper wrapper>;
+        return $r1;
+    }
+
+    public void addInstanceListener(org.apache.catalina.InstanceListener)
+    {
+        org.apache.catalina.util.InstanceSupport r0;
+        org.apache.catalina.InstanceListener r1, $r7;
+        java.lang.Object r2, $r4;
+        org.apache.catalina.InstanceListener[] r3, $r5, $r6, $r8, $r9;
+        int i0, $i1, $i2, $i3, $i4;
+        java.lang.Throwable $r10;
+
+        r0 := @this: org.apache.catalina.util.InstanceSupport;
+        r1 := @parameter0: org.apache.catalina.InstanceListener;
+        $r4 = r0.<org.apache.catalina.util.InstanceSupport: java.lang.Object listenersLock>;
+        r2 = $r4;
+        entermonitor $r4;
+
+     label0:
+        $r5 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        $i1 = lengthof $r5;
+        $i2 = $i1 + 1;
+        r3 = newarray (org.apache.catalina.InstanceListener)[$i2];
+        i0 = 0;
+        goto label2;
+
+     label1:
+        $r6 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        $r7 = $r6[i0];
+        r3[i0] = $r7;
+        i0 = i0 + 1;
+
+     label2:
+        $r8 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        $i3 = lengthof $r8;
+        if i0 < $i3 goto label1;
+
+        $r9 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        $i4 = lengthof $r9;
+        r3[$i4] = r1;
+        r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners> = r3;
+        exitmonitor r2;
+
+     label3:
+        goto label7;
+
+     label4:
+        $r10 := @caughtexception;
+
+     label5:
+        exitmonitor r2;
+
+     label6:
+        throw $r10;
+
+     label7:
+        return;
+
+        catch java.lang.Throwable from label0 to label3 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+    }
+
+    public void fireInstanceEvent(java.lang.String, javax.servlet.Filter)
+    {
+        org.apache.catalina.util.InstanceSupport r0;
+        java.lang.String r1;
+        javax.servlet.Filter r2;
+        org.apache.catalina.InstanceEvent r3, $r6;
+        org.apache.catalina.InstanceListener[] r4, $r5;
+        int i0, $i1, $i2;
+        org.apache.catalina.Wrapper $r7;
+        org.apache.catalina.InstanceListener $r8;
+
+        r0 := @this: org.apache.catalina.util.InstanceSupport;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: javax.servlet.Filter;
+        $r5 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        $i1 = lengthof $r5;
+        if $i1 != 0 goto label0;
+
+        return;
+
+     label0:
+        $r6 = new org.apache.catalina.InstanceEvent;
+        $r7 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.Wrapper wrapper>;
+        specialinvoke $r6.<org.apache.catalina.InstanceEvent: void <init>(org.apache.catalina.Wrapper,javax.servlet.Filter,java.lang.String)>($r7, r2, r1);
+        r3 = $r6;
+        r4 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        i0 = 0;
+        goto label2;
+
+     label1:
+        $r8 = r4[i0];
+        interfaceinvoke $r8.<org.apache.catalina.InstanceListener: void instanceEvent(org.apache.catalina.InstanceEvent)>(r3);
+        i0 = i0 + 1;
+
+     label2:
+        $i2 = lengthof r4;
+        if i0 < $i2 goto label1;
+
+        return;
+    }
+
+    public void fireInstanceEvent(java.lang.String, javax.servlet.Filter, java.lang.Throwable)
+    {
+        org.apache.catalina.util.InstanceSupport r0;
+        java.lang.String r1;
+        javax.servlet.Filter r2;
+        java.lang.Throwable r3;
+        org.apache.catalina.InstanceEvent r4, $r7;
+        org.apache.catalina.InstanceListener[] r5, $r6;
+        int i0, $i1, $i2;
+        org.apache.catalina.Wrapper $r8;
+        org.apache.catalina.InstanceListener $r9;
+
+        r0 := @this: org.apache.catalina.util.InstanceSupport;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: javax.servlet.Filter;
+        r3 := @parameter2: java.lang.Throwable;
+        $r6 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        $i1 = lengthof $r6;
+        if $i1 != 0 goto label0;
+
+        return;
+
+     label0:
+        $r7 = new org.apache.catalina.InstanceEvent;
+        $r8 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.Wrapper wrapper>;
+        specialinvoke $r7.<org.apache.catalina.InstanceEvent: void <init>(org.apache.catalina.Wrapper,javax.servlet.Filter,java.lang.String,java.lang.Throwable)>($r8, r2, r1, r3);
+        r4 = $r7;
+        r5 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        i0 = 0;
+        goto label2;
+
+     label1:
+        $r9 = r5[i0];
+        interfaceinvoke $r9.<org.apache.catalina.InstanceListener: void instanceEvent(org.apache.catalina.InstanceEvent)>(r4);
+        i0 = i0 + 1;
+
+     label2:
+        $i2 = lengthof r5;
+        if i0 < $i2 goto label1;
+
+        return;
+    }
+
+    public void fireInstanceEvent(java.lang.String, javax.servlet.Filter, javax.servlet.ServletRequest, javax.servlet.ServletResponse)
+    {
+        org.apache.catalina.util.InstanceSupport r0;
+        java.lang.String r1;
+        javax.servlet.Filter r2;
+        javax.servlet.ServletRequest r3;
+        javax.servlet.ServletResponse r4;
+        org.apache.catalina.InstanceEvent r5, $r8;
+        org.apache.catalina.InstanceListener[] r6, $r7;
+        int i0, $i1, $i2;
+        org.apache.catalina.Wrapper $r9;
+        org.apache.catalina.InstanceListener $r10;
+
+        r0 := @this: org.apache.catalina.util.InstanceSupport;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: javax.servlet.Filter;
+        r3 := @parameter2: javax.servlet.ServletRequest;
+        r4 := @parameter3: javax.servlet.ServletResponse;
+        $r7 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        $i1 = lengthof $r7;
+        if $i1 != 0 goto label0;
+
+        return;
+
+     label0:
+        $r8 = new org.apache.catalina.InstanceEvent;
+        $r9 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.Wrapper wrapper>;
+        specialinvoke $r8.<org.apache.catalina.InstanceEvent: void <init>(org.apache.catalina.Wrapper,javax.servlet.Filter,java.lang.String,javax.servlet.ServletRequest,javax.servlet.ServletResponse)>($r9, r2, r1, r3, r4);
+        r5 = $r8;
+        r6 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        i0 = 0;
+        goto label2;
+
+     label1:
+        $r10 = r6[i0];
+        interfaceinvoke $r10.<org.apache.catalina.InstanceListener: void instanceEvent(org.apache.catalina.InstanceEvent)>(r5);
+        i0 = i0 + 1;
+
+     label2:
+        $i2 = lengthof r6;
+        if i0 < $i2 goto label1;
+
+        return;
+    }
+
+    public void fireInstanceEvent(java.lang.String, javax.servlet.Filter, javax.servlet.ServletRequest, javax.servlet.ServletResponse, java.lang.Throwable)
+    {
+        org.apache.catalina.util.InstanceSupport r0;
+        java.lang.String r1;
+        javax.servlet.Filter r2;
+        javax.servlet.ServletRequest r3;
+        javax.servlet.ServletResponse r4;
+        java.lang.Throwable r5;
+        org.apache.catalina.InstanceEvent r6, $r9;
+        org.apache.catalina.InstanceListener[] r7, $r8;
+        int i0, $i1, $i2;
+        org.apache.catalina.Wrapper $r10;
+        org.apache.catalina.InstanceListener $r11;
+
+        r0 := @this: org.apache.catalina.util.InstanceSupport;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: javax.servlet.Filter;
+        r3 := @parameter2: javax.servlet.ServletRequest;
+        r4 := @parameter3: javax.servlet.ServletResponse;
+        r5 := @parameter4: java.lang.Throwable;
+        $r8 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        $i1 = lengthof $r8;
+        if $i1 != 0 goto label0;
+
+        return;
+
+     label0:
+        $r9 = new org.apache.catalina.InstanceEvent;
+        $r10 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.Wrapper wrapper>;
+        specialinvoke $r9.<org.apache.catalina.InstanceEvent: void <init>(org.apache.catalina.Wrapper,javax.servlet.Filter,java.lang.String,javax.servlet.ServletRequest,javax.servlet.ServletResponse,java.lang.Throwable)>($r10, r2, r1, r3, r4, r5);
+        r6 = $r9;
+        r7 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        i0 = 0;
+        goto label2;
+
+     label1:
+        $r11 = r7[i0];
+        interfaceinvoke $r11.<org.apache.catalina.InstanceListener: void instanceEvent(org.apache.catalina.InstanceEvent)>(r6);
+        i0 = i0 + 1;
+
+     label2:
+        $i2 = lengthof r7;
+        if i0 < $i2 goto label1;
+
+        return;
+    }
+
+    public void fireInstanceEvent(java.lang.String, javax.servlet.Servlet)
+    {
+        org.apache.catalina.util.InstanceSupport r0;
+        java.lang.String r1;
+        javax.servlet.Servlet r2;
+        org.apache.catalina.InstanceEvent r3, $r6;
+        org.apache.catalina.InstanceListener[] r4, $r5;
+        int i0, $i1, $i2;
+        org.apache.catalina.Wrapper $r7;
+        org.apache.catalina.InstanceListener $r8;
+
+        r0 := @this: org.apache.catalina.util.InstanceSupport;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: javax.servlet.Servlet;
+        $r5 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        $i1 = lengthof $r5;
+        if $i1 != 0 goto label0;
+
+        return;
+
+     label0:
+        $r6 = new org.apache.catalina.InstanceEvent;
+        $r7 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.Wrapper wrapper>;
+        specialinvoke $r6.<org.apache.catalina.InstanceEvent: void <init>(org.apache.catalina.Wrapper,javax.servlet.Servlet,java.lang.String)>($r7, r2, r1);
+        r3 = $r6;
+        r4 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        i0 = 0;
+        goto label2;
+
+     label1:
+        $r8 = r4[i0];
+        interfaceinvoke $r8.<org.apache.catalina.InstanceListener: void instanceEvent(org.apache.catalina.InstanceEvent)>(r3);
+        i0 = i0 + 1;
+
+     label2:
+        $i2 = lengthof r4;
+        if i0 < $i2 goto label1;
+
+        return;
+    }
+
+    public void fireInstanceEvent(java.lang.String, javax.servlet.Servlet, java.lang.Throwable)
+    {
+        org.apache.catalina.util.InstanceSupport r0;
+        java.lang.String r1;
+        javax.servlet.Servlet r2;
+        java.lang.Throwable r3;
+        org.apache.catalina.InstanceEvent r4, $r7;
+        org.apache.catalina.InstanceListener[] r5, $r6;
+        int i0, $i1, $i2;
+        org.apache.catalina.Wrapper $r8;
+        org.apache.catalina.InstanceListener $r9;
+
+        r0 := @this: org.apache.catalina.util.InstanceSupport;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: javax.servlet.Servlet;
+        r3 := @parameter2: java.lang.Throwable;
+        $r6 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        $i1 = lengthof $r6;
+        if $i1 != 0 goto label0;
+
+        return;
+
+     label0:
+        $r7 = new org.apache.catalina.InstanceEvent;
+        $r8 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.Wrapper wrapper>;
+        specialinvoke $r7.<org.apache.catalina.InstanceEvent: void <init>(org.apache.catalina.Wrapper,javax.servlet.Servlet,java.lang.String,java.lang.Throwable)>($r8, r2, r1, r3);
+        r4 = $r7;
+        r5 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        i0 = 0;
+        goto label2;
+
+     label1:
+        $r9 = r5[i0];
+        interfaceinvoke $r9.<org.apache.catalina.InstanceListener: void instanceEvent(org.apache.catalina.InstanceEvent)>(r4);
+        i0 = i0 + 1;
+
+     label2:
+        $i2 = lengthof r5;
+        if i0 < $i2 goto label1;
+
+        return;
+    }
+
+    public void fireInstanceEvent(java.lang.String, javax.servlet.Servlet, javax.servlet.ServletRequest, javax.servlet.ServletResponse)
+    {
+        org.apache.catalina.util.InstanceSupport r0;
+        java.lang.String r1;
+        javax.servlet.Servlet r2;
+        javax.servlet.ServletRequest r3;
+        javax.servlet.ServletResponse r4;
+        org.apache.catalina.InstanceEvent r5, $r8;
+        org.apache.catalina.InstanceListener[] r6, $r7;
+        int i0, $i1, $i2;
+        org.apache.catalina.Wrapper $r9;
+        org.apache.catalina.InstanceListener $r10;
+
+        r0 := @this: org.apache.catalina.util.InstanceSupport;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: javax.servlet.Servlet;
+        r3 := @parameter2: javax.servlet.ServletRequest;
+        r4 := @parameter3: javax.servlet.ServletResponse;
+        $r7 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        $i1 = lengthof $r7;
+        if $i1 != 0 goto label0;
+
+        return;
+
+     label0:
+        $r8 = new org.apache.catalina.InstanceEvent;
+        $r9 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.Wrapper wrapper>;
+        specialinvoke $r8.<org.apache.catalina.InstanceEvent: void <init>(org.apache.catalina.Wrapper,javax.servlet.Servlet,java.lang.String,javax.servlet.ServletRequest,javax.servlet.ServletResponse)>($r9, r2, r1, r3, r4);
+        r5 = $r8;
+        r6 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        i0 = 0;
+        goto label2;
+
+     label1:
+        $r10 = r6[i0];
+        interfaceinvoke $r10.<org.apache.catalina.InstanceListener: void instanceEvent(org.apache.catalina.InstanceEvent)>(r5);
+        i0 = i0 + 1;
+
+     label2:
+        $i2 = lengthof r6;
+        if i0 < $i2 goto label1;
+
+        return;
+    }
+
+    public void fireInstanceEvent(java.lang.String, javax.servlet.Servlet, javax.servlet.ServletRequest, javax.servlet.ServletResponse, java.lang.Throwable)
+    {
+        org.apache.catalina.util.InstanceSupport r0;
+        java.lang.String r1;
+        javax.servlet.Servlet r2;
+        javax.servlet.ServletRequest r3;
+        javax.servlet.ServletResponse r4;
+        java.lang.Throwable r5;
+        org.apache.catalina.InstanceEvent r6, $r9;
+        org.apache.catalina.InstanceListener[] r7, $r8;
+        int i0, $i1, $i2;
+        org.apache.catalina.Wrapper $r10;
+        org.apache.catalina.InstanceListener $r11;
+
+        r0 := @this: org.apache.catalina.util.InstanceSupport;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: javax.servlet.Servlet;
+        r3 := @parameter2: javax.servlet.ServletRequest;
+        r4 := @parameter3: javax.servlet.ServletResponse;
+        r5 := @parameter4: java.lang.Throwable;
+        $r8 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        $i1 = lengthof $r8;
+        if $i1 != 0 goto label0;
+
+        return;
+
+     label0:
+        $r9 = new org.apache.catalina.InstanceEvent;
+        $r10 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.Wrapper wrapper>;
+        specialinvoke $r9.<org.apache.catalina.InstanceEvent: void <init>(org.apache.catalina.Wrapper,javax.servlet.Servlet,java.lang.String,javax.servlet.ServletRequest,javax.servlet.ServletResponse,java.lang.Throwable)>($r10, r2, r1, r3, r4, r5);
+        r6 = $r9;
+        r7 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        i0 = 0;
+        goto label2;
+
+     label1:
+        $r11 = r7[i0];
+        interfaceinvoke $r11.<org.apache.catalina.InstanceListener: void instanceEvent(org.apache.catalina.InstanceEvent)>(r6);
+        i0 = i0 + 1;
+
+     label2:
+        $i2 = lengthof r7;
+        if i0 < $i2 goto label1;
+
+        return;
+    }
+
+    public void removeInstanceListener(org.apache.catalina.InstanceListener)
+    {
+        org.apache.catalina.util.InstanceSupport r0;
+        org.apache.catalina.InstanceListener r1, $r5, $r10;
+        java.lang.Object r2, $r3;
+        int i0, i1, i2, i3, $i4, $i5, $i6, $i7, $i8;
+        org.apache.catalina.InstanceListener[] $r4, $r6, $r7, r8, $r9, $r11;
+        java.lang.Throwable $r12;
+
+        r0 := @this: org.apache.catalina.util.InstanceSupport;
+        r1 := @parameter0: org.apache.catalina.InstanceListener;
+        $r3 = r0.<org.apache.catalina.util.InstanceSupport: java.lang.Object listenersLock>;
+        r2 = $r3;
+        entermonitor $r3;
+
+     label0:
+        i0 = -1;
+        i1 = 0;
+        goto label3;
+
+     label1:
+        $r4 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        $r5 = $r4[i1];
+        if $r5 != r1 goto label2;
+
+        i0 = i1;
+        goto label4;
+
+     label2:
+        i1 = i1 + 1;
+
+     label3:
+        $r6 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        $i4 = lengthof $r6;
+        if i1 < $i4 goto label1;
+
+     label4:
+        if i0 >= 0 goto label6;
+
+        exitmonitor r2;
+
+     label5:
+        return;
+
+     label6:
+        $r7 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        $i5 = lengthof $r7;
+        $i6 = $i5 - 1;
+        r8 = newarray (org.apache.catalina.InstanceListener)[$i6];
+        i2 = 0;
+        i3 = 0;
+        goto label9;
+
+     label7:
+        if i3 == i0 goto label8;
+
+        $i7 = i2;
+        i2 = i2 + 1;
+        $r9 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        $r10 = $r9[i3];
+        r8[$i7] = $r10;
+
+     label8:
+        i3 = i3 + 1;
+
+     label9:
+        $r11 = r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners>;
+        $i8 = lengthof $r11;
+        if i3 < $i8 goto label7;
+
+        r0.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.InstanceListener[] listeners> = r8;
+        exitmonitor r2;
+
+     label10:
+        goto label14;
+
+     label11:
+        $r12 := @caughtexception;
+
+     label12:
+        exitmonitor r2;
+
+     label13:
+        throw $r12;
+
+     label14:
+        return;
+
+        catch java.lang.Throwable from label0 to label5 with label11;
+        catch java.lang.Throwable from label6 to label10 with label11;
+        catch java.lang.Throwable from label12 to label13 with label11;
+    }
+}

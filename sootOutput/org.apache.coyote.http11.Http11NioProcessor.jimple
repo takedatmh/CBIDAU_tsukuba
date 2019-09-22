@@ -1,0 +1,1731 @@
+public class org.apache.coyote.http11.Http11NioProcessor extends org.apache.coyote.http11.AbstractHttp11Processor
+{
+    private static final org.apache.juli.logging.Log log;
+    protected org.apache.tomcat.util.net.SSLSupport sslSupport;
+    protected org.apache.coyote.http11.InternalNioInputBuffer inputBuffer;
+    protected org.apache.coyote.http11.InternalNioOutputBuffer outputBuffer;
+    protected org.apache.tomcat.util.net.NioEndpoint$SendfileData sendfileData;
+    private static int[] $SWITCH_TABLE$org$apache$tomcat$util$net$SendfileState;
+    private static int[] $SWITCH_TABLE$org$apache$coyote$ActionCode;
+
+    static void <clinit>()
+    {
+        org.apache.juli.logging.Log $r0;
+
+        $r0 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/coyote/http11/Http11NioProcessor");
+        <org.apache.coyote.http11.Http11NioProcessor: org.apache.juli.logging.Log log> = $r0;
+        return;
+    }
+
+    protected org.apache.juli.logging.Log getLog()
+    {
+        org.apache.coyote.http11.Http11NioProcessor r0;
+        org.apache.juli.logging.Log $r1;
+
+        r0 := @this: org.apache.coyote.http11.Http11NioProcessor;
+        $r1 = <org.apache.coyote.http11.Http11NioProcessor: org.apache.juli.logging.Log log>;
+        return $r1;
+    }
+
+    public void <init>(int, boolean, org.apache.tomcat.util.net.NioEndpoint, int, java.util.Set, int, int, java.lang.String, java.lang.String)
+    {
+        org.apache.coyote.http11.Http11NioProcessor r0;
+        int i0, i1, i2, i3;
+        boolean z0;
+        org.apache.tomcat.util.net.NioEndpoint r1;
+        java.util.Set r2;
+        java.lang.String r3, r4;
+        org.apache.tomcat.util.http.parser.HttpParser $r5, $r8;
+        org.apache.coyote.http11.InternalNioInputBuffer $r6, $r10;
+        org.apache.coyote.Request $r7, $r9;
+        org.apache.coyote.http11.InternalNioOutputBuffer $r11, $r14;
+        org.apache.coyote.Response $r12, $r13;
+
+        r0 := @this: org.apache.coyote.http11.Http11NioProcessor;
+        i0 := @parameter0: int;
+        z0 := @parameter1: boolean;
+        r1 := @parameter2: org.apache.tomcat.util.net.NioEndpoint;
+        i1 := @parameter3: int;
+        r2 := @parameter4: java.util.Set;
+        i2 := @parameter5: int;
+        i3 := @parameter6: int;
+        r3 := @parameter7: java.lang.String;
+        r4 := @parameter8: java.lang.String;
+        specialinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void <init>(org.apache.tomcat.util.net.AbstractEndpoint)>(r1);
+        r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.http11.InternalNioInputBuffer inputBuffer> = null;
+        r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.http11.InternalNioOutputBuffer outputBuffer> = null;
+        r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.NioEndpoint$SendfileData sendfileData> = null;
+        $r5 = new org.apache.tomcat.util.http.parser.HttpParser;
+        specialinvoke $r5.<org.apache.tomcat.util.http.parser.HttpParser: void <init>(java.lang.String,java.lang.String)>(r3, r4);
+        r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.http.parser.HttpParser httpParser> = $r5;
+        $r6 = new org.apache.coyote.http11.InternalNioInputBuffer;
+        $r7 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        $r8 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.http.parser.HttpParser httpParser>;
+        specialinvoke $r6.<org.apache.coyote.http11.InternalNioInputBuffer: void <init>(org.apache.coyote.Request,int,boolean,org.apache.tomcat.util.http.parser.HttpParser)>($r7, i0, z0, $r8);
+        r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.http11.InternalNioInputBuffer inputBuffer> = $r6;
+        $r9 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        $r10 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.http11.InternalNioInputBuffer inputBuffer>;
+        virtualinvoke $r9.<org.apache.coyote.Request: void setInputBuffer(org.apache.coyote.InputBuffer)>($r10);
+        $r11 = new org.apache.coyote.http11.InternalNioOutputBuffer;
+        $r12 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Response response>;
+        specialinvoke $r11.<org.apache.coyote.http11.InternalNioOutputBuffer: void <init>(org.apache.coyote.Response,int)>($r12, i0);
+        r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.http11.InternalNioOutputBuffer outputBuffer> = $r11;
+        $r13 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Response response>;
+        $r14 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.http11.InternalNioOutputBuffer outputBuffer>;
+        virtualinvoke $r13.<org.apache.coyote.Response: void setOutputBuffer(org.apache.coyote.OutputBuffer)>($r14);
+        virtualinvoke r0.<org.apache.coyote.http11.Http11NioProcessor: void initializeFilters(int,java.util.Set,int,int)>(i1, r2, i2, i3);
+        return;
+    }
+
+    public org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState event(org.apache.tomcat.util.net.SocketStatus) throws java.io.IOException
+    {
+        org.apache.coyote.http11.Http11NioProcessor r0;
+        org.apache.tomcat.util.net.SocketStatus r1, $r32;
+        long l0, $l2, $l4;
+        org.apache.coyote.RequestInfo r2;
+        org.apache.tomcat.util.net.NioEndpoint$KeyAttachment r3;
+        java.lang.Integer r4;
+        org.apache.tomcat.util.net.AbstractEndpoint $r5;
+        int $i1, $i3;
+        org.apache.coyote.Request $r6, $r12, $r16, $r29;
+        org.apache.tomcat.util.net.SocketWrapper $r7;
+        java.lang.Object $r8, $r10, $r17;
+        org.apache.tomcat.util.net.NioChannel $r9;
+        org.apache.coyote.Adapter $r11, $r28;
+        org.apache.coyote.Response $r13, $r23, $r30;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+        org.apache.coyote.ErrorState $r14, $r15, $r20, $r24, $r31;
+        java.io.InterruptedIOException $r18, r19;
+        java.lang.Throwable $r21, r22;
+        org.apache.juli.logging.Log $r25;
+        org.apache.tomcat.util.res.StringManager $r26;
+        java.lang.String $r27;
+        org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState $r33, $r36, $r37, $r38;
+        org.apache.coyote.http11.InternalNioInputBuffer $r34;
+        org.apache.coyote.http11.InternalNioOutputBuffer $r35;
+
+        r0 := @this: org.apache.coyote.http11.Http11NioProcessor;
+        r1 := @parameter0: org.apache.tomcat.util.net.SocketStatus;
+        $r5 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $i1 = virtualinvoke $r5.<org.apache.tomcat.util.net.AbstractEndpoint: int getSoTimeout()>();
+        l0 = (long) $i1;
+        $r6 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        r2 = virtualinvoke $r6.<org.apache.coyote.Request: org.apache.coyote.RequestInfo getRequestProcessor()>();
+        $r7 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r8 = virtualinvoke $r7.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r9 = (org.apache.tomcat.util.net.NioChannel) $r8;
+        $r10 = virtualinvoke $r9.<org.apache.tomcat.util.net.NioChannel: java.lang.Object getAttachment()>();
+        r3 = (org.apache.tomcat.util.net.NioEndpoint$KeyAttachment) $r10;
+
+     label0:
+        virtualinvoke r2.<org.apache.coyote.RequestInfo: void setStage(int)>(3);
+        $r11 = virtualinvoke r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Adapter getAdapter()>();
+        $r12 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        $r13 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Response response>;
+        $z0 = interfaceinvoke $r11.<org.apache.coyote.Adapter: boolean event(org.apache.coyote.Request,org.apache.coyote.Response,org.apache.tomcat.util.net.SocketStatus)>($r12, $r13, r1);
+        if $z0 != 0 goto label1;
+
+        $r14 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.http11.Http11NioProcessor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r14, null);
+
+     label1:
+        $r15 = virtualinvoke r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.ErrorState getErrorState()>();
+        $z1 = virtualinvoke $r15.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z1 != 0 goto label7;
+
+        if r3 == null goto label7;
+
+        $z2 = r0.<org.apache.coyote.http11.Http11NioProcessor: boolean comet>;
+        virtualinvoke r3.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void setComet(boolean)>($z2);
+        $z3 = r0.<org.apache.coyote.http11.Http11NioProcessor: boolean comet>;
+        if $z3 == 0 goto label2;
+
+        $r16 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        $r17 = virtualinvoke $r16.<org.apache.coyote.Request: java.lang.Object getAttribute(java.lang.String)>("org.apache.tomcat.comet.timeout");
+        r4 = (java.lang.Integer) $r17;
+        if r4 == null goto label7;
+
+        $l2 = virtualinvoke r4.<java.lang.Integer: long longValue()>();
+        virtualinvoke r3.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void setTimeout(long)>($l2);
+        goto label7;
+
+     label2:
+        $z4 = r0.<org.apache.coyote.http11.Http11NioProcessor: boolean keepAlive>;
+        if $z4 == 0 goto label3;
+
+        $i3 = r0.<org.apache.coyote.http11.Http11NioProcessor: int keepAliveTimeout>;
+        $l4 = (long) $i3;
+        virtualinvoke r3.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void setTimeout(long)>($l4);
+        goto label7;
+
+     label3:
+        virtualinvoke r3.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void setTimeout(long)>(l0);
+
+     label4:
+        goto label7;
+
+     label5:
+        $r18 := @caughtexception;
+        r19 = $r18;
+        $r20 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.http11.Http11NioProcessor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r20, r19);
+        goto label7;
+
+     label6:
+        $r21 := @caughtexception;
+        r22 = $r21;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r22);
+        $r23 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Response response>;
+        virtualinvoke $r23.<org.apache.coyote.Response: void setStatus(int)>(500);
+        $r24 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.http11.Http11NioProcessor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r24, r22);
+        $r25 = <org.apache.coyote.http11.Http11NioProcessor: org.apache.juli.logging.Log log>;
+        $r26 = <org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.res.StringManager sm>;
+        $r27 = virtualinvoke $r26.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.request.process");
+        interfaceinvoke $r25.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r27, r22);
+        $r28 = virtualinvoke r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Adapter getAdapter()>();
+        $r29 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        $r30 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Response response>;
+        interfaceinvoke $r28.<org.apache.coyote.Adapter: void log(org.apache.coyote.Request,org.apache.coyote.Response,long)>($r29, $r30, 0L);
+
+     label7:
+        virtualinvoke r2.<org.apache.coyote.RequestInfo: void setStage(int)>(7);
+        $r31 = virtualinvoke r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.ErrorState getErrorState()>();
+        $z5 = virtualinvoke $r31.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z5 != 0 goto label8;
+
+        $r32 = <org.apache.tomcat.util.net.SocketStatus: org.apache.tomcat.util.net.SocketStatus STOP>;
+        if r1 != $r32 goto label9;
+
+     label8:
+        $r33 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState CLOSED>;
+        return $r33;
+
+     label9:
+        $z6 = r0.<org.apache.coyote.http11.Http11NioProcessor: boolean comet>;
+        if $z6 != 0 goto label11;
+
+        $z7 = r0.<org.apache.coyote.http11.Http11NioProcessor: boolean keepAlive>;
+        if $z7 == 0 goto label10;
+
+        $r34 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.http11.InternalNioInputBuffer inputBuffer>;
+        virtualinvoke $r34.<org.apache.coyote.http11.InternalNioInputBuffer: void nextRequest()>();
+        $r35 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.http11.InternalNioOutputBuffer outputBuffer>;
+        virtualinvoke $r35.<org.apache.coyote.http11.InternalNioOutputBuffer: void nextRequest()>();
+        $r36 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState OPEN>;
+        return $r36;
+
+     label10:
+        $r37 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState CLOSED>;
+        return $r37;
+
+     label11:
+        $r38 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState LONG>;
+        return $r38;
+
+        catch java.io.InterruptedIOException from label0 to label4 with label5;
+        catch java.lang.Throwable from label0 to label4 with label6;
+    }
+
+    protected void resetTimeouts()
+    {
+        org.apache.coyote.http11.Http11NioProcessor r0;
+        org.apache.tomcat.util.net.NioEndpoint$KeyAttachment r1;
+        long l0, $l3;
+        org.apache.tomcat.util.net.SocketWrapper $r2;
+        java.lang.Object $r3, $r5;
+        org.apache.tomcat.util.net.NioChannel $r4;
+        org.apache.coyote.ErrorState $r6;
+        boolean $z0, $z1, $z2;
+        org.apache.coyote.AsyncStateMachine $r7;
+        org.apache.tomcat.util.net.AbstractEndpoint $r8;
+        int $i1, $i2;
+
+        r0 := @this: org.apache.coyote.http11.Http11NioProcessor;
+        $r2 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r4 = (org.apache.tomcat.util.net.NioChannel) $r3;
+        $r5 = virtualinvoke $r4.<org.apache.tomcat.util.net.NioChannel: java.lang.Object getAttachment()>();
+        r1 = (org.apache.tomcat.util.net.NioEndpoint$KeyAttachment) $r5;
+        $r6 = virtualinvoke r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.ErrorState getErrorState()>();
+        $z0 = virtualinvoke $r6.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z0 != 0 goto label1;
+
+        if r1 == null goto label1;
+
+        $r7 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        $z1 = virtualinvoke $r7.<org.apache.coyote.AsyncStateMachine: boolean isAsyncDispatching()>();
+        if $z1 == 0 goto label1;
+
+        $r8 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $i1 = virtualinvoke $r8.<org.apache.tomcat.util.net.AbstractEndpoint: int getSoTimeout()>();
+        l0 = (long) $i1;
+        $z2 = r0.<org.apache.coyote.http11.Http11NioProcessor: boolean keepAlive>;
+        if $z2 == 0 goto label0;
+
+        $i2 = r0.<org.apache.coyote.http11.Http11NioProcessor: int keepAliveTimeout>;
+        $l3 = (long) $i2;
+        virtualinvoke r1.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void setTimeout(long)>($l3);
+        goto label1;
+
+     label0:
+        virtualinvoke r1.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void setTimeout(long)>(l0);
+
+     label1:
+        return;
+    }
+
+    protected boolean disableKeepAlive()
+    {
+        org.apache.coyote.http11.Http11NioProcessor r0;
+
+        r0 := @this: org.apache.coyote.http11.Http11NioProcessor;
+        return 0;
+    }
+
+    protected void setRequestLineReadTimeout() throws java.io.IOException
+    {
+        org.apache.coyote.http11.Http11NioProcessor r0;
+
+        r0 := @this: org.apache.coyote.http11.Http11NioProcessor;
+        return;
+    }
+
+    protected boolean handleIncompleteRequestLineRead()
+    {
+        org.apache.coyote.http11.Http11NioProcessor r0;
+        org.apache.coyote.http11.InternalNioInputBuffer $r1;
+        int $i0, $i3, $i5;
+        org.apache.tomcat.util.net.SocketWrapper $r2, $r3, $r11;
+        long $l1, $l4, $l6;
+        byte $b2;
+        boolean $z0, $z1;
+        org.apache.tomcat.util.net.AbstractEndpoint $r4, $r5, $r12;
+        org.apache.coyote.Response $r6, $r10;
+        org.apache.coyote.ErrorState $r7;
+        org.apache.coyote.Adapter $r8;
+        org.apache.coyote.Request $r9;
+
+        r0 := @this: org.apache.coyote.http11.Http11NioProcessor;
+        r0.<org.apache.coyote.http11.Http11NioProcessor: boolean openSocket> = 1;
+        $r1 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.http11.InternalNioInputBuffer inputBuffer>;
+        $i0 = virtualinvoke $r1.<org.apache.coyote.http11.InternalNioInputBuffer: int getParsingRequestLinePhase()>();
+        if $i0 >= 2 goto label1;
+
+        $r2 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $l1 = virtualinvoke $r2.<org.apache.tomcat.util.net.SocketWrapper: long getLastAccess()>();
+        $b2 = $l1 cmp -1L;
+        if $b2 > 0 goto label0;
+
+        $z0 = r0.<org.apache.coyote.http11.Http11NioProcessor: boolean keptAlive>;
+        if $z0 == 0 goto label3;
+
+     label0:
+        $r3 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r4 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $i3 = virtualinvoke $r4.<org.apache.tomcat.util.net.AbstractEndpoint: int getKeepAliveTimeout()>();
+        $l4 = (long) $i3;
+        virtualinvoke $r3.<org.apache.tomcat.util.net.SocketWrapper: void setTimeout(long)>($l4);
+        goto label3;
+
+     label1:
+        $r5 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $z1 = virtualinvoke $r5.<org.apache.tomcat.util.net.AbstractEndpoint: boolean isPaused()>();
+        if $z1 == 0 goto label2;
+
+        $r6 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Response response>;
+        virtualinvoke $r6.<org.apache.coyote.Response: void setStatus(int)>(503);
+        $r7 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.http11.Http11NioProcessor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r7, null);
+        $r8 = virtualinvoke r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Adapter getAdapter()>();
+        $r9 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        $r10 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Response response>;
+        interfaceinvoke $r8.<org.apache.coyote.Adapter: void log(org.apache.coyote.Request,org.apache.coyote.Response,long)>($r9, $r10, 0L);
+        return 0;
+
+     label2:
+        r0.<org.apache.coyote.http11.Http11NioProcessor: boolean readComplete> = 0;
+        $r11 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r12 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $i5 = virtualinvoke $r12.<org.apache.tomcat.util.net.AbstractEndpoint: int getSoTimeout()>();
+        $l6 = (long) $i5;
+        virtualinvoke $r11.<org.apache.tomcat.util.net.SocketWrapper: void setTimeout(long)>($l6);
+
+     label3:
+        return 1;
+    }
+
+    protected void setSocketTimeout(int) throws java.io.IOException
+    {
+        org.apache.coyote.http11.Http11NioProcessor r0;
+        int i0;
+        org.apache.tomcat.util.net.SocketWrapper $r1;
+        java.lang.Object $r2;
+        org.apache.tomcat.util.net.NioChannel $r3;
+        java.nio.channels.SocketChannel $r4;
+        java.net.Socket $r5;
+
+        r0 := @this: org.apache.coyote.http11.Http11NioProcessor;
+        i0 := @parameter0: int;
+        $r1 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r2 = virtualinvoke $r1.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r3 = (org.apache.tomcat.util.net.NioChannel) $r2;
+        $r4 = virtualinvoke $r3.<org.apache.tomcat.util.net.NioChannel: java.nio.channels.SocketChannel getIOChannel()>();
+        $r5 = virtualinvoke $r4.<java.nio.channels.SocketChannel: java.net.Socket socket()>();
+        virtualinvoke $r5.<java.net.Socket: void setSoTimeout(int)>(i0);
+        return;
+    }
+
+    protected void setCometTimeouts(org.apache.tomcat.util.net.SocketWrapper)
+    {
+        org.apache.coyote.http11.Http11NioProcessor r0;
+        org.apache.tomcat.util.net.SocketWrapper r1;
+        java.nio.channels.SelectionKey r2;
+        org.apache.tomcat.util.net.NioEndpoint$KeyAttachment r3;
+        java.lang.Integer r4;
+        java.lang.Object $r5, $r8, $r12, $r14;
+        org.apache.tomcat.util.net.NioChannel $r6, $r9;
+        java.nio.channels.SocketChannel $r7;
+        org.apache.tomcat.util.net.NioEndpoint$Poller $r10;
+        java.nio.channels.Selector $r11;
+        boolean $z0, $z1;
+        org.apache.coyote.Request $r13;
+        long $l0;
+
+        r0 := @this: org.apache.coyote.http11.Http11NioProcessor;
+        r1 := @parameter0: org.apache.tomcat.util.net.SocketWrapper;
+        $r5 = virtualinvoke r1.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r6 = (org.apache.tomcat.util.net.NioChannel) $r5;
+        $r7 = virtualinvoke $r6.<org.apache.tomcat.util.net.NioChannel: java.nio.channels.SocketChannel getIOChannel()>();
+        $r8 = virtualinvoke r1.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r9 = (org.apache.tomcat.util.net.NioChannel) $r8;
+        $r10 = virtualinvoke $r9.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.NioEndpoint$Poller getPoller()>();
+        $r11 = virtualinvoke $r10.<org.apache.tomcat.util.net.NioEndpoint$Poller: java.nio.channels.Selector getSelector()>();
+        r2 = virtualinvoke $r7.<java.nio.channels.SocketChannel: java.nio.channels.SelectionKey keyFor(java.nio.channels.Selector)>($r11);
+        if r2 == null goto label0;
+
+        $r12 = virtualinvoke r2.<java.nio.channels.SelectionKey: java.lang.Object attachment()>();
+        r3 = (org.apache.tomcat.util.net.NioEndpoint$KeyAttachment) $r12;
+        if r3 == null goto label0;
+
+        $z0 = r0.<org.apache.coyote.http11.Http11NioProcessor: boolean comet>;
+        virtualinvoke r3.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void setComet(boolean)>($z0);
+        $z1 = r0.<org.apache.coyote.http11.Http11NioProcessor: boolean comet>;
+        if $z1 == 0 goto label0;
+
+        $r13 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        $r14 = virtualinvoke $r13.<org.apache.coyote.Request: java.lang.Object getAttribute(java.lang.String)>("org.apache.tomcat.comet.timeout");
+        r4 = (java.lang.Integer) $r14;
+        if r4 == null goto label0;
+
+        $l0 = virtualinvoke r4.<java.lang.Integer: long longValue()>();
+        virtualinvoke r3.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void setTimeout(long)>($l0);
+
+     label0:
+        return;
+    }
+
+    protected boolean breakKeepAliveLoop(org.apache.tomcat.util.net.SocketWrapper)
+    {
+        org.apache.coyote.http11.Http11NioProcessor r0;
+        org.apache.tomcat.util.net.SocketWrapper r1;
+        java.nio.channels.SelectionKey r2;
+        boolean $z0, $z1, $z2, $z3;
+        org.apache.tomcat.util.net.NioEndpoint$SendfileData $r3, $r6, $r8, $r10, $r12;
+        org.apache.coyote.ErrorState $r4, $r31;
+        org.apache.tomcat.util.net.NioEndpoint$KeyAttachment $r5, $r25;
+        org.apache.coyote.http11.AbstractInputBuffer $r7;
+        int $i0, $i1, $i2;
+        org.apache.tomcat.util.net.SendfileKeepAliveState $r9, $r11, $r13;
+        java.lang.Object $r14, $r17, $r22;
+        org.apache.tomcat.util.net.NioChannel $r15, $r18, $r23;
+        java.nio.channels.SocketChannel $r16;
+        org.apache.tomcat.util.net.NioEndpoint$Poller $r19, $r24;
+        java.nio.channels.Selector $r20;
+        int[] $r21;
+        org.apache.tomcat.util.net.SendfileState $r26;
+        org.apache.juli.logging.Log $r27, $r28;
+        org.apache.tomcat.util.res.StringManager $r29;
+        java.lang.String $r30;
+
+        r0 := @this: org.apache.coyote.http11.Http11NioProcessor;
+        r1 := @parameter0: org.apache.tomcat.util.net.SocketWrapper;
+        $z0 = r0.<org.apache.coyote.http11.Http11NioProcessor: boolean keepAlive>;
+        r0.<org.apache.coyote.http11.Http11NioProcessor: boolean openSocket> = $z0;
+        $r3 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.NioEndpoint$SendfileData sendfileData>;
+        if $r3 == null goto label7;
+
+        $r4 = virtualinvoke r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.ErrorState getErrorState()>();
+        $z1 = virtualinvoke $r4.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z1 != 0 goto label7;
+
+        $r5 = (org.apache.tomcat.util.net.NioEndpoint$KeyAttachment) r1;
+        $r6 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.NioEndpoint$SendfileData sendfileData>;
+        virtualinvoke $r5.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void setSendfileData(org.apache.tomcat.util.net.NioEndpoint$SendfileData)>($r6);
+        $z2 = r0.<org.apache.coyote.http11.Http11NioProcessor: boolean keepAlive>;
+        if $z2 == 0 goto label1;
+
+        $r7 = virtualinvoke r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        $i0 = virtualinvoke $r7.<org.apache.coyote.http11.AbstractInputBuffer: int available()>();
+        if $i0 != 0 goto label0;
+
+        $r8 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.NioEndpoint$SendfileData sendfileData>;
+        $r9 = <org.apache.tomcat.util.net.SendfileKeepAliveState: org.apache.tomcat.util.net.SendfileKeepAliveState OPEN>;
+        $r8.<org.apache.tomcat.util.net.NioEndpoint$SendfileData: org.apache.tomcat.util.net.SendfileKeepAliveState keepAliveState> = $r9;
+        goto label2;
+
+     label0:
+        $r10 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.NioEndpoint$SendfileData sendfileData>;
+        $r11 = <org.apache.tomcat.util.net.SendfileKeepAliveState: org.apache.tomcat.util.net.SendfileKeepAliveState PIPELINED>;
+        $r10.<org.apache.tomcat.util.net.NioEndpoint$SendfileData: org.apache.tomcat.util.net.SendfileKeepAliveState keepAliveState> = $r11;
+        goto label2;
+
+     label1:
+        $r12 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.NioEndpoint$SendfileData sendfileData>;
+        $r13 = <org.apache.tomcat.util.net.SendfileKeepAliveState: org.apache.tomcat.util.net.SendfileKeepAliveState NONE>;
+        $r12.<org.apache.tomcat.util.net.NioEndpoint$SendfileData: org.apache.tomcat.util.net.SendfileKeepAliveState keepAliveState> = $r13;
+
+     label2:
+        $r14 = virtualinvoke r1.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r15 = (org.apache.tomcat.util.net.NioChannel) $r14;
+        $r16 = virtualinvoke $r15.<org.apache.tomcat.util.net.NioChannel: java.nio.channels.SocketChannel getIOChannel()>();
+        $r17 = virtualinvoke r1.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r18 = (org.apache.tomcat.util.net.NioChannel) $r17;
+        $r19 = virtualinvoke $r18.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.NioEndpoint$Poller getPoller()>();
+        $r20 = virtualinvoke $r19.<org.apache.tomcat.util.net.NioEndpoint$Poller: java.nio.channels.Selector getSelector()>();
+        r2 = virtualinvoke $r16.<java.nio.channels.SocketChannel: java.nio.channels.SelectionKey keyFor(java.nio.channels.Selector)>($r20);
+        $r21 = staticinvoke <org.apache.coyote.http11.Http11NioProcessor: int[] $SWITCH_TABLE$org$apache$tomcat$util$net$SendfileState()>();
+        $r22 = virtualinvoke r1.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r23 = (org.apache.tomcat.util.net.NioChannel) $r22;
+        $r24 = virtualinvoke $r23.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.NioEndpoint$Poller getPoller()>();
+        $r25 = (org.apache.tomcat.util.net.NioEndpoint$KeyAttachment) r1;
+        $r26 = virtualinvoke $r24.<org.apache.tomcat.util.net.NioEndpoint$Poller: org.apache.tomcat.util.net.SendfileState processSendfile(java.nio.channels.SelectionKey,org.apache.tomcat.util.net.NioEndpoint$KeyAttachment,boolean)>(r2, $r25, 1);
+        $i1 = virtualinvoke $r26.<org.apache.tomcat.util.net.SendfileState: int ordinal()>();
+        $i2 = $r21[$i1];
+        tableswitch($i2)
+        {
+            case 1: goto label4;
+            case 2: goto label3;
+            case 3: goto label5;
+            default: goto label7;
+        };
+
+     label3:
+        r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.NioEndpoint$SendfileData sendfileData> = null;
+        return 0;
+
+     label4:
+        r0.<org.apache.coyote.http11.Http11NioProcessor: boolean sendfileInProgress> = 1;
+        return 1;
+
+     label5:
+        $r27 = <org.apache.coyote.http11.Http11NioProcessor: org.apache.juli.logging.Log log>;
+        $z3 = interfaceinvoke $r27.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z3 == 0 goto label6;
+
+        $r28 = <org.apache.coyote.http11.Http11NioProcessor: org.apache.juli.logging.Log log>;
+        $r29 = <org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.res.StringManager sm>;
+        $r30 = virtualinvoke $r29.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.sendfile.error");
+        interfaceinvoke $r28.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r30);
+
+     label6:
+        $r31 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.http11.Http11NioProcessor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r31, null);
+        return 1;
+
+     label7:
+        return 0;
+    }
+
+    public void recycleInternal()
+    {
+        org.apache.coyote.http11.Http11NioProcessor r0;
+
+        r0 := @this: org.apache.coyote.http11.Http11NioProcessor;
+        r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper> = null;
+        r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.NioEndpoint$SendfileData sendfileData> = null;
+        return;
+    }
+
+    public void actionInternal(org.apache.coyote.ActionCode, java.lang.Object)
+    {
+        org.apache.coyote.http11.Http11NioProcessor r0;
+        org.apache.coyote.ActionCode r1;
+        java.lang.Object r2, $r11, $r22, $r34, $r50, $r61, $r68, $r104, $r129, $r131, $r133, $r135, $r140, $r144, $r148, $r150, $r152, $r154, $r163, $r168, $r170, $r172, $r174, $r181;
+        int[] $r3;
+        java.net.InetAddress r4, r26, r38, $r54;
+        org.apache.tomcat.util.net.SecureNioChannel r5;
+        javax.net.ssl.SSLEngine r6;
+        java.io.IOException r7, $r112;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i11, $i12, $i14;
+        java.lang.String $r8, $r15, $r18, $r19, $r27, $r30, $r31, $r39, $r40, $r41, $r42, $r47, $r48, $r55, $r58, r75, r84, r87, $r95, $r116, $r124;
+        org.apache.tomcat.util.net.SocketWrapper $r9, $r10, $r20, $r21, $r32, $r33, $r49, $r59, $r60, $r66, $r67, $r103, $r127, $r128, $r132, $r139, $r143, $r146, $r147, $r151, $r162, $r166, $r167, $r171, $r180;
+        org.apache.tomcat.util.net.NioChannel $r12, $r23, $r35, $r51, $r62, $r69, $r130, $r134, $r141, $r145, $r149, $r153, $r164, $r169, $r173, $r182;
+        java.nio.channels.SocketChannel $r13, $r24, $r36, $r52, $r63, $r70;
+        java.net.Socket $r14, $r25, $r37, $r53, $r64, $r71;
+        org.apache.coyote.Request $r16, $r28, $r43, $r45, $r56, $r65, $r72, $r76, $r79, $r82, $r85, $r88, $r89, $r119, $r125, $r137, $r157;
+        org.apache.tomcat.util.buf.MessageBytes $r17, $r29, $r44, $r46, $r57;
+        org.apache.tomcat.util.net.SSLSupport $r73, $r74, $r77, $r80, $r83, $r86, $r90, $r96, $r111, $r117;
+        java.lang.Object[] r78, $r115, r118;
+        java.lang.Integer r81;
+        java.lang.Exception $r91, r92, $r120, r121;
+        org.apache.juli.logging.Log $r93, $r113, $r122;
+        org.apache.tomcat.util.res.StringManager $r94, $r114, $r123;
+        org.apache.coyote.http11.InternalNioInputBuffer $r97, $r101, $r126;
+        org.apache.coyote.http11.InputFilter[] r98;
+        org.apache.coyote.http11.InputFilter $r99, $r102;
+        org.apache.coyote.http11.filters.BufferedInputFilter $r100;
+        boolean $z0, $z1, $z3;
+        org.apache.tomcat.util.net.AbstractEndpoint $r105, $r106, $r160, $r178;
+        long $l10, l13, l15;
+        org.apache.tomcat.util.net.NioEndpoint $r107, $r161, $r179;
+        org.apache.tomcat.util.net.NioEndpoint$Handler $r108;
+        org.apache.tomcat.util.net.SSLImplementation $r109;
+        javax.net.ssl.SSLSession $r110;
+        org.apache.tomcat.util.net.NioEndpoint$KeyAttachment r136, r155, r175;
+        org.apache.coyote.RequestInfo r138, r158;
+        org.apache.tomcat.util.net.NioEndpoint$Poller $r142;
+        java.lang.Long $r156, $r176;
+        org.apache.coyote.AsyncStateMachine $r159, $r177;
+        org.apache.tomcat.util.net.SocketStatus $r165, $r183;
+
+        r0 := @this: org.apache.coyote.http11.Http11NioProcessor;
+        r1 := @parameter0: org.apache.coyote.ActionCode;
+        r2 := @parameter1: java.lang.Object;
+        $r3 = staticinvoke <org.apache.coyote.http11.Http11NioProcessor: int[] $SWITCH_TABLE$org$apache$coyote$ActionCode()>();
+        $i0 = virtualinvoke r1.<org.apache.coyote.ActionCode: int ordinal()>();
+        $i1 = $r3[$i0];
+        tableswitch($i1)
+        {
+            case 11: goto label4;
+            case 12: goto label0;
+            case 13: goto label14;
+            case 14: goto label22;
+            case 15: goto label10;
+            case 16: goto label12;
+            case 17: goto label8;
+            case 18: goto label2;
+            case 19: goto label45;
+            case 20: goto label30;
+            case 21: goto label31;
+            case 22: goto label29;
+            case 23: goto label32;
+            case 24: goto label35;
+            case 25: goto label45;
+            case 26: goto label44;
+            case 27: goto label45;
+            case 28: goto label45;
+            case 29: goto label39;
+            case 30: goto label45;
+            case 31: goto label45;
+            case 32: goto label40;
+            default: goto label45;
+        };
+
+     label0:
+        $r8 = r0.<org.apache.coyote.http11.Http11NioProcessor: java.lang.String remoteAddr>;
+        if $r8 != null goto label1;
+
+        $r9 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        if $r9 == null goto label1;
+
+        $r10 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r11 = virtualinvoke $r10.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r12 = (org.apache.tomcat.util.net.NioChannel) $r11;
+        $r13 = virtualinvoke $r12.<org.apache.tomcat.util.net.NioChannel: java.nio.channels.SocketChannel getIOChannel()>();
+        $r14 = virtualinvoke $r13.<java.nio.channels.SocketChannel: java.net.Socket socket()>();
+        r4 = virtualinvoke $r14.<java.net.Socket: java.net.InetAddress getInetAddress()>();
+        if r4 == null goto label1;
+
+        $r15 = virtualinvoke r4.<java.net.InetAddress: java.lang.String getHostAddress()>();
+        r0.<org.apache.coyote.http11.Http11NioProcessor: java.lang.String remoteAddr> = $r15;
+
+     label1:
+        $r16 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        $r17 = virtualinvoke $r16.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes remoteAddr()>();
+        $r18 = r0.<org.apache.coyote.http11.Http11NioProcessor: java.lang.String remoteAddr>;
+        virtualinvoke $r17.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>($r18);
+        goto label45;
+
+     label2:
+        $r19 = r0.<org.apache.coyote.http11.Http11NioProcessor: java.lang.String localName>;
+        if $r19 != null goto label3;
+
+        $r20 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        if $r20 == null goto label3;
+
+        $r21 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r22 = virtualinvoke $r21.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r23 = (org.apache.tomcat.util.net.NioChannel) $r22;
+        $r24 = virtualinvoke $r23.<org.apache.tomcat.util.net.NioChannel: java.nio.channels.SocketChannel getIOChannel()>();
+        $r25 = virtualinvoke $r24.<java.nio.channels.SocketChannel: java.net.Socket socket()>();
+        r26 = virtualinvoke $r25.<java.net.Socket: java.net.InetAddress getLocalAddress()>();
+        if r26 == null goto label3;
+
+        $r27 = virtualinvoke r26.<java.net.InetAddress: java.lang.String getHostName()>();
+        r0.<org.apache.coyote.http11.Http11NioProcessor: java.lang.String localName> = $r27;
+
+     label3:
+        $r28 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        $r29 = virtualinvoke $r28.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes localName()>();
+        $r30 = r0.<org.apache.coyote.http11.Http11NioProcessor: java.lang.String localName>;
+        virtualinvoke $r29.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>($r30);
+        goto label45;
+
+     label4:
+        $r31 = r0.<org.apache.coyote.http11.Http11NioProcessor: java.lang.String remoteHost>;
+        if $r31 != null goto label7;
+
+        $r32 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        if $r32 == null goto label7;
+
+        $r33 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r34 = virtualinvoke $r33.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r35 = (org.apache.tomcat.util.net.NioChannel) $r34;
+        $r36 = virtualinvoke $r35.<org.apache.tomcat.util.net.NioChannel: java.nio.channels.SocketChannel getIOChannel()>();
+        $r37 = virtualinvoke $r36.<java.nio.channels.SocketChannel: java.net.Socket socket()>();
+        r38 = virtualinvoke $r37.<java.net.Socket: java.net.InetAddress getInetAddress()>();
+        if r38 == null goto label5;
+
+        $r39 = virtualinvoke r38.<java.net.InetAddress: java.lang.String getHostName()>();
+        r0.<org.apache.coyote.http11.Http11NioProcessor: java.lang.String remoteHost> = $r39;
+
+     label5:
+        $r40 = r0.<org.apache.coyote.http11.Http11NioProcessor: java.lang.String remoteHost>;
+        if $r40 != null goto label7;
+
+        $r41 = r0.<org.apache.coyote.http11.Http11NioProcessor: java.lang.String remoteAddr>;
+        if $r41 == null goto label6;
+
+        $r42 = r0.<org.apache.coyote.http11.Http11NioProcessor: java.lang.String remoteAddr>;
+        r0.<org.apache.coyote.http11.Http11NioProcessor: java.lang.String remoteHost> = $r42;
+        goto label7;
+
+     label6:
+        $r43 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        $r44 = virtualinvoke $r43.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes remoteHost()>();
+        virtualinvoke $r44.<org.apache.tomcat.util.buf.MessageBytes: void recycle()>();
+
+     label7:
+        $r45 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        $r46 = virtualinvoke $r45.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes remoteHost()>();
+        $r47 = r0.<org.apache.coyote.http11.Http11NioProcessor: java.lang.String remoteHost>;
+        virtualinvoke $r46.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>($r47);
+        goto label45;
+
+     label8:
+        $r48 = r0.<org.apache.coyote.http11.Http11NioProcessor: java.lang.String localAddr>;
+        if $r48 != null goto label9;
+
+        $r49 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r50 = virtualinvoke $r49.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r51 = (org.apache.tomcat.util.net.NioChannel) $r50;
+        $r52 = virtualinvoke $r51.<org.apache.tomcat.util.net.NioChannel: java.nio.channels.SocketChannel getIOChannel()>();
+        $r53 = virtualinvoke $r52.<java.nio.channels.SocketChannel: java.net.Socket socket()>();
+        $r54 = virtualinvoke $r53.<java.net.Socket: java.net.InetAddress getLocalAddress()>();
+        $r55 = virtualinvoke $r54.<java.net.InetAddress: java.lang.String getHostAddress()>();
+        r0.<org.apache.coyote.http11.Http11NioProcessor: java.lang.String localAddr> = $r55;
+
+     label9:
+        $r56 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        $r57 = virtualinvoke $r56.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes localAddr()>();
+        $r58 = r0.<org.apache.coyote.http11.Http11NioProcessor: java.lang.String localAddr>;
+        virtualinvoke $r57.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>($r58);
+        goto label45;
+
+     label10:
+        $i2 = r0.<org.apache.coyote.http11.Http11NioProcessor: int remotePort>;
+        if $i2 != -1 goto label11;
+
+        $r59 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        if $r59 == null goto label11;
+
+        $r60 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r61 = virtualinvoke $r60.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r62 = (org.apache.tomcat.util.net.NioChannel) $r61;
+        $r63 = virtualinvoke $r62.<org.apache.tomcat.util.net.NioChannel: java.nio.channels.SocketChannel getIOChannel()>();
+        $r64 = virtualinvoke $r63.<java.nio.channels.SocketChannel: java.net.Socket socket()>();
+        $i3 = virtualinvoke $r64.<java.net.Socket: int getPort()>();
+        r0.<org.apache.coyote.http11.Http11NioProcessor: int remotePort> = $i3;
+
+     label11:
+        $r65 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        $i4 = r0.<org.apache.coyote.http11.Http11NioProcessor: int remotePort>;
+        virtualinvoke $r65.<org.apache.coyote.Request: void setRemotePort(int)>($i4);
+        goto label45;
+
+     label12:
+        $i5 = r0.<org.apache.coyote.http11.Http11NioProcessor: int localPort>;
+        if $i5 != -1 goto label13;
+
+        $r66 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        if $r66 == null goto label13;
+
+        $r67 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r68 = virtualinvoke $r67.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r69 = (org.apache.tomcat.util.net.NioChannel) $r68;
+        $r70 = virtualinvoke $r69.<org.apache.tomcat.util.net.NioChannel: java.nio.channels.SocketChannel getIOChannel()>();
+        $r71 = virtualinvoke $r70.<java.nio.channels.SocketChannel: java.net.Socket socket()>();
+        $i6 = virtualinvoke $r71.<java.net.Socket: int getLocalPort()>();
+        r0.<org.apache.coyote.http11.Http11NioProcessor: int localPort> = $i6;
+
+     label13:
+        $r72 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        $i7 = r0.<org.apache.coyote.http11.Http11NioProcessor: int localPort>;
+        virtualinvoke $r72.<org.apache.coyote.Request: void setLocalPort(int)>($i7);
+        goto label45;
+
+     label14:
+        $r73 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SSLSupport sslSupport>;
+        if $r73 == null goto label45;
+
+        $r74 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SSLSupport sslSupport>;
+        r75 = interfaceinvoke $r74.<org.apache.tomcat.util.net.SSLSupport: java.lang.String getCipherSuite()>();
+        if r75 == null goto label15;
+
+        $r76 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        virtualinvoke $r76.<org.apache.coyote.Request: void setAttribute(java.lang.String,java.lang.Object)>("javax.servlet.request.cipher_suite", r75);
+
+     label15:
+        $r77 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SSLSupport sslSupport>;
+        r78 = interfaceinvoke $r77.<org.apache.tomcat.util.net.SSLSupport: java.lang.Object[] getPeerCertificateChain(boolean)>(0);
+        if r78 == null goto label16;
+
+        $r79 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        virtualinvoke $r79.<org.apache.coyote.Request: void setAttribute(java.lang.String,java.lang.Object)>("javax.servlet.request.X509Certificate", r78);
+
+     label16:
+        $r80 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SSLSupport sslSupport>;
+        r81 = interfaceinvoke $r80.<org.apache.tomcat.util.net.SSLSupport: java.lang.Integer getKeySize()>();
+        if r81 == null goto label17;
+
+        $r82 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        virtualinvoke $r82.<org.apache.coyote.Request: void setAttribute(java.lang.String,java.lang.Object)>("javax.servlet.request.key_size", r81);
+
+     label17:
+        $r83 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SSLSupport sslSupport>;
+        r84 = interfaceinvoke $r83.<org.apache.tomcat.util.net.SSLSupport: java.lang.String getSessionId()>();
+        if r84 == null goto label18;
+
+        $r85 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        virtualinvoke $r85.<org.apache.coyote.Request: void setAttribute(java.lang.String,java.lang.Object)>("javax.servlet.request.ssl_session_id", r84);
+
+     label18:
+        $r86 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SSLSupport sslSupport>;
+        r87 = interfaceinvoke $r86.<org.apache.tomcat.util.net.SSLSupport: java.lang.String getProtocol()>();
+        if r87 == null goto label19;
+
+        $r88 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        virtualinvoke $r88.<org.apache.coyote.Request: void setAttribute(java.lang.String,java.lang.Object)>("org.apache.tomcat.util.net.secure_protocol_version", r87);
+
+     label19:
+        $r89 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        $r90 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SSLSupport sslSupport>;
+        virtualinvoke $r89.<org.apache.coyote.Request: void setAttribute(java.lang.String,java.lang.Object)>("javax.servlet.request.ssl_session_mgr", $r90);
+
+     label20:
+        goto label45;
+
+     label21:
+        $r91 := @caughtexception;
+        r92 = $r91;
+        $r93 = <org.apache.coyote.http11.Http11NioProcessor: org.apache.juli.logging.Log log>;
+        $r94 = <org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.res.StringManager sm>;
+        $r95 = virtualinvoke $r94.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.socket.ssl");
+        interfaceinvoke $r93.<org.apache.juli.logging.Log: void warn(java.lang.Object,java.lang.Throwable)>($r95, r92);
+        goto label45;
+
+     label22:
+        $r96 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SSLSupport sslSupport>;
+        if $r96 == null goto label45;
+
+        $r97 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.http11.InternalNioInputBuffer inputBuffer>;
+        r98 = virtualinvoke $r97.<org.apache.coyote.http11.InternalNioInputBuffer: org.apache.coyote.http11.InputFilter[] getFilters()>();
+        $r99 = r98[3];
+        $r100 = (org.apache.coyote.http11.filters.BufferedInputFilter) $r99;
+        $i8 = r0.<org.apache.coyote.http11.Http11NioProcessor: int maxSavePostSize>;
+        virtualinvoke $r100.<org.apache.coyote.http11.filters.BufferedInputFilter: void setLimit(int)>($i8);
+        $r101 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.http11.InternalNioInputBuffer inputBuffer>;
+        $r102 = r98[3];
+        virtualinvoke $r101.<org.apache.coyote.http11.InternalNioInputBuffer: void addActiveFilter(org.apache.coyote.http11.InputFilter)>($r102);
+        $r103 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r104 = virtualinvoke $r103.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        r5 = (org.apache.tomcat.util.net.SecureNioChannel) $r104;
+        r6 = virtualinvoke r5.<org.apache.tomcat.util.net.SecureNioChannel: javax.net.ssl.SSLEngine getSslEngine()>();
+        $z0 = virtualinvoke r6.<javax.net.ssl.SSLEngine: boolean getNeedClientAuth()>();
+        if $z0 != 0 goto label26;
+
+        virtualinvoke r6.<javax.net.ssl.SSLEngine: void setNeedClientAuth(boolean)>(1);
+
+     label23:
+        $r105 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $i9 = virtualinvoke $r105.<org.apache.tomcat.util.net.AbstractEndpoint: int getSoTimeout()>();
+        $l10 = (long) $i9;
+        virtualinvoke r5.<org.apache.tomcat.util.net.SecureNioChannel: void rehandshake(long)>($l10);
+        $r106 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r107 = (org.apache.tomcat.util.net.NioEndpoint) $r106;
+        $r108 = virtualinvoke $r107.<org.apache.tomcat.util.net.NioEndpoint: org.apache.tomcat.util.net.NioEndpoint$Handler getHandler()>();
+        $r109 = interfaceinvoke $r108.<org.apache.tomcat.util.net.NioEndpoint$Handler: org.apache.tomcat.util.net.SSLImplementation getSslImplementation()>();
+        $r110 = virtualinvoke r6.<javax.net.ssl.SSLEngine: javax.net.ssl.SSLSession getSession()>();
+        $r111 = virtualinvoke $r109.<org.apache.tomcat.util.net.SSLImplementation: org.apache.tomcat.util.net.SSLSupport getSSLSupport(javax.net.ssl.SSLSession)>($r110);
+        r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SSLSupport sslSupport> = $r111;
+
+     label24:
+        goto label26;
+
+     label25:
+        $r112 := @caughtexception;
+        r7 = $r112;
+        $r113 = <org.apache.coyote.http11.Http11NioProcessor: org.apache.juli.logging.Log log>;
+        $r114 = <org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.res.StringManager sm>;
+        $r115 = newarray (java.lang.Object)[1];
+        $r115[0] = r7;
+        $r116 = virtualinvoke $r114.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("http11processor.socket.sslreneg", $r115);
+        interfaceinvoke $r113.<org.apache.juli.logging.Log: void warn(java.lang.Object)>($r116);
+
+     label26:
+        $r117 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SSLSupport sslSupport>;
+        r118 = interfaceinvoke $r117.<org.apache.tomcat.util.net.SSLSupport: java.lang.Object[] getPeerCertificateChain(boolean)>(0);
+        if r118 == null goto label45;
+
+        $r119 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        virtualinvoke $r119.<org.apache.coyote.Request: void setAttribute(java.lang.String,java.lang.Object)>("javax.servlet.request.X509Certificate", r118);
+
+     label27:
+        goto label45;
+
+     label28:
+        $r120 := @caughtexception;
+        r121 = $r120;
+        $r122 = <org.apache.coyote.http11.Http11NioProcessor: org.apache.juli.logging.Log log>;
+        $r123 = <org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.res.StringManager sm>;
+        $r124 = virtualinvoke $r123.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.socket.ssl");
+        interfaceinvoke $r122.<org.apache.juli.logging.Log: void warn(java.lang.Object,java.lang.Throwable)>($r124, r121);
+        goto label45;
+
+     label29:
+        $r125 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        $r126 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.http11.InternalNioInputBuffer inputBuffer>;
+        $i11 = virtualinvoke $r126.<org.apache.coyote.http11.InternalNioInputBuffer: int available()>();
+        virtualinvoke $r125.<org.apache.coyote.Request: void setAvailable(int)>($i11);
+        goto label45;
+
+     label30:
+        r0.<org.apache.coyote.http11.Http11NioProcessor: boolean comet> = 1;
+        goto label45;
+
+     label31:
+        r0.<org.apache.coyote.http11.Http11NioProcessor: boolean comet> = 0;
+        goto label45;
+
+     label32:
+        $r127 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        if $r127 == null goto label33;
+
+        $r128 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r129 = virtualinvoke $r128.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r130 = (org.apache.tomcat.util.net.NioChannel) $r129;
+        $r131 = virtualinvoke $r130.<org.apache.tomcat.util.net.NioChannel: java.lang.Object getAttachment()>();
+        if $r131 != null goto label34;
+
+     label33:
+        return;
+
+     label34:
+        $r132 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r133 = virtualinvoke $r132.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r134 = (org.apache.tomcat.util.net.NioChannel) $r133;
+        $r135 = virtualinvoke $r134.<org.apache.tomcat.util.net.NioChannel: java.lang.Object getAttachment()>();
+        r136 = (org.apache.tomcat.util.net.NioEndpoint$KeyAttachment) $r135;
+        virtualinvoke r136.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void setCometOps(int)>(512);
+        $r137 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        r138 = virtualinvoke $r137.<org.apache.coyote.Request: org.apache.coyote.RequestInfo getRequestProcessor()>();
+        $i12 = virtualinvoke r138.<org.apache.coyote.RequestInfo: int getStage()>();
+        if $i12 == 3 goto label45;
+
+        $r139 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r140 = virtualinvoke $r139.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r141 = (org.apache.tomcat.util.net.NioChannel) $r140;
+        $r142 = virtualinvoke $r141.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.NioEndpoint$Poller getPoller()>();
+        $r143 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r144 = virtualinvoke $r143.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r145 = (org.apache.tomcat.util.net.NioChannel) $r144;
+        virtualinvoke $r142.<org.apache.tomcat.util.net.NioEndpoint$Poller: void add(org.apache.tomcat.util.net.NioChannel)>($r145);
+        goto label45;
+
+     label35:
+        if r2 != null goto label36;
+
+        return;
+
+     label36:
+        $r146 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        if $r146 == null goto label37;
+
+        $r147 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r148 = virtualinvoke $r147.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r149 = (org.apache.tomcat.util.net.NioChannel) $r148;
+        $r150 = virtualinvoke $r149.<org.apache.tomcat.util.net.NioChannel: java.lang.Object getAttachment()>();
+        if $r150 != null goto label38;
+
+     label37:
+        return;
+
+     label38:
+        $r151 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r152 = virtualinvoke $r151.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r153 = (org.apache.tomcat.util.net.NioChannel) $r152;
+        $r154 = virtualinvoke $r153.<org.apache.tomcat.util.net.NioChannel: java.lang.Object getAttachment()>();
+        r155 = (org.apache.tomcat.util.net.NioEndpoint$KeyAttachment) $r154;
+        $r156 = (java.lang.Long) r2;
+        l13 = virtualinvoke $r156.<java.lang.Long: long longValue()>();
+        $r157 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        r158 = virtualinvoke $r157.<org.apache.coyote.Request: org.apache.coyote.RequestInfo getRequestProcessor()>();
+        $i14 = virtualinvoke r158.<org.apache.coyote.RequestInfo: int getStage()>();
+        if $i14 == 3 goto label45;
+
+        virtualinvoke r155.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void setTimeout(long)>(l13);
+        goto label45;
+
+     label39:
+        $r159 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        $z1 = virtualinvoke $r159.<org.apache.coyote.AsyncStateMachine: boolean asyncComplete()>();
+        if $z1 == 0 goto label45;
+
+        $r160 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r161 = (org.apache.tomcat.util.net.NioEndpoint) $r160;
+        $r162 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r163 = virtualinvoke $r162.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r164 = (org.apache.tomcat.util.net.NioChannel) $r163;
+        $r165 = <org.apache.tomcat.util.net.SocketStatus: org.apache.tomcat.util.net.SocketStatus OPEN_READ>;
+        virtualinvoke $r161.<org.apache.tomcat.util.net.NioEndpoint: boolean processSocket(org.apache.tomcat.util.net.NioChannel,org.apache.tomcat.util.net.SocketStatus,boolean)>($r164, $r165, 1);
+        goto label45;
+
+     label40:
+        if r2 != null goto label41;
+
+        return;
+
+     label41:
+        $r166 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        if $r166 == null goto label42;
+
+        $r167 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r168 = virtualinvoke $r167.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r169 = (org.apache.tomcat.util.net.NioChannel) $r168;
+        $r170 = virtualinvoke $r169.<org.apache.tomcat.util.net.NioChannel: java.lang.Object getAttachment()>();
+        if $r170 != null goto label43;
+
+     label42:
+        return;
+
+     label43:
+        $r171 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r172 = virtualinvoke $r171.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r173 = (org.apache.tomcat.util.net.NioChannel) $r172;
+        $r174 = virtualinvoke $r173.<org.apache.tomcat.util.net.NioChannel: java.lang.Object getAttachment()>();
+        r175 = (org.apache.tomcat.util.net.NioEndpoint$KeyAttachment) $r174;
+        $r176 = (java.lang.Long) r2;
+        l15 = virtualinvoke $r176.<java.lang.Long: long longValue()>();
+        virtualinvoke r175.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void setTimeout(long)>(l15);
+        goto label45;
+
+     label44:
+        $r177 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        $z3 = virtualinvoke $r177.<org.apache.coyote.AsyncStateMachine: boolean asyncDispatch()>();
+        if $z3 == 0 goto label45;
+
+        $r178 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r179 = (org.apache.tomcat.util.net.NioEndpoint) $r178;
+        $r180 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SocketWrapper socketWrapper>;
+        $r181 = virtualinvoke $r180.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        $r182 = (org.apache.tomcat.util.net.NioChannel) $r181;
+        $r183 = <org.apache.tomcat.util.net.SocketStatus: org.apache.tomcat.util.net.SocketStatus OPEN_READ>;
+        virtualinvoke $r179.<org.apache.tomcat.util.net.NioEndpoint: boolean processSocket(org.apache.tomcat.util.net.NioChannel,org.apache.tomcat.util.net.SocketStatus,boolean)>($r182, $r183, 1);
+
+     label45:
+        return;
+
+        catch java.lang.Exception from label14 to label20 with label21;
+        catch java.io.IOException from label23 to label24 with label25;
+        catch java.lang.Exception from label26 to label27 with label28;
+    }
+
+    protected void prepareRequestInternal()
+    {
+        org.apache.coyote.http11.Http11NioProcessor r0;
+
+        r0 := @this: org.apache.coyote.http11.Http11NioProcessor;
+        r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.NioEndpoint$SendfileData sendfileData> = null;
+        return;
+    }
+
+    protected boolean prepareSendfile(org.apache.coyote.http11.OutputFilter[])
+    {
+        org.apache.coyote.http11.Http11NioProcessor r0;
+        org.apache.coyote.http11.OutputFilter[] r1;
+        java.lang.String r2;
+        org.apache.coyote.Request $r3, $r10, $r14;
+        java.lang.Object $r4, $r11, $r15;
+        org.apache.coyote.http11.InternalNioOutputBuffer $r5;
+        org.apache.coyote.http11.OutputFilter $r6;
+        org.apache.tomcat.util.net.NioEndpoint$SendfileData $r7, $r8, $r9, $r13, $r17;
+        java.lang.Long $r12, $r16;
+        long $l0, $l1, $l2, $l3;
+
+        r0 := @this: org.apache.coyote.http11.Http11NioProcessor;
+        r1 := @parameter0: org.apache.coyote.http11.OutputFilter[];
+        $r3 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        $r4 = virtualinvoke $r3.<org.apache.coyote.Request: java.lang.Object getAttribute(java.lang.String)>("org.apache.tomcat.sendfile.filename");
+        r2 = (java.lang.String) $r4;
+        if r2 == null goto label0;
+
+        $r5 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.http11.InternalNioOutputBuffer outputBuffer>;
+        $r6 = r1[2];
+        virtualinvoke $r5.<org.apache.coyote.http11.InternalNioOutputBuffer: void addActiveFilter(org.apache.coyote.http11.OutputFilter)>($r6);
+        r0.<org.apache.coyote.http11.Http11NioProcessor: boolean contentDelimitation> = 1;
+        $r7 = new org.apache.tomcat.util.net.NioEndpoint$SendfileData;
+        specialinvoke $r7.<org.apache.tomcat.util.net.NioEndpoint$SendfileData: void <init>()>();
+        r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.NioEndpoint$SendfileData sendfileData> = $r7;
+        $r8 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.NioEndpoint$SendfileData sendfileData>;
+        $r8.<org.apache.tomcat.util.net.NioEndpoint$SendfileData: java.lang.String fileName> = r2;
+        $r9 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.NioEndpoint$SendfileData sendfileData>;
+        $r10 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        $r11 = virtualinvoke $r10.<org.apache.coyote.Request: java.lang.Object getAttribute(java.lang.String)>("org.apache.tomcat.sendfile.start");
+        $r12 = (java.lang.Long) $r11;
+        $l0 = virtualinvoke $r12.<java.lang.Long: long longValue()>();
+        $r9.<org.apache.tomcat.util.net.NioEndpoint$SendfileData: long pos> = $l0;
+        $r13 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.NioEndpoint$SendfileData sendfileData>;
+        $r14 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.Request request>;
+        $r15 = virtualinvoke $r14.<org.apache.coyote.Request: java.lang.Object getAttribute(java.lang.String)>("org.apache.tomcat.sendfile.end");
+        $r16 = (java.lang.Long) $r15;
+        $l1 = virtualinvoke $r16.<java.lang.Long: long longValue()>();
+        $r17 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.NioEndpoint$SendfileData sendfileData>;
+        $l2 = $r17.<org.apache.tomcat.util.net.NioEndpoint$SendfileData: long pos>;
+        $l3 = $l1 - $l2;
+        $r13.<org.apache.tomcat.util.net.NioEndpoint$SendfileData: long length> = $l3;
+        return 1;
+
+     label0:
+        return 0;
+    }
+
+    protected org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()
+    {
+        org.apache.coyote.http11.Http11NioProcessor r0;
+        org.apache.coyote.http11.InternalNioInputBuffer $r1;
+
+        r0 := @this: org.apache.coyote.http11.Http11NioProcessor;
+        $r1 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.http11.InternalNioInputBuffer inputBuffer>;
+        return $r1;
+    }
+
+    protected org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()
+    {
+        org.apache.coyote.http11.Http11NioProcessor r0;
+        org.apache.coyote.http11.InternalNioOutputBuffer $r1;
+
+        r0 := @this: org.apache.coyote.http11.Http11NioProcessor;
+        $r1 = r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.coyote.http11.InternalNioOutputBuffer outputBuffer>;
+        return $r1;
+    }
+
+    public void setSslSupport(org.apache.tomcat.util.net.SSLSupport)
+    {
+        org.apache.coyote.http11.Http11NioProcessor r0;
+        org.apache.tomcat.util.net.SSLSupport r1;
+
+        r0 := @this: org.apache.coyote.http11.Http11NioProcessor;
+        r1 := @parameter0: org.apache.tomcat.util.net.SSLSupport;
+        r0.<org.apache.coyote.http11.Http11NioProcessor: org.apache.tomcat.util.net.SSLSupport sslSupport> = r1;
+        return;
+    }
+
+    static int[] $SWITCH_TABLE$org$apache$tomcat$util$net$SendfileState()
+    {
+        int[] $r0, r1;
+        org.apache.tomcat.util.net.SendfileState[] $r2;
+        int $i0, $i1, $i2, $i3;
+        org.apache.tomcat.util.net.SendfileState $r3, $r5, $r7;
+        java.lang.NoSuchFieldError $r4, $r6, $r8;
+
+        $r0 = <org.apache.coyote.http11.Http11NioProcessor: int[] $SWITCH_TABLE$org$apache$tomcat$util$net$SendfileState>;
+        if $r0 == null goto label0;
+
+        return $r0;
+
+     label0:
+        $r2 = staticinvoke <org.apache.tomcat.util.net.SendfileState: org.apache.tomcat.util.net.SendfileState[] values()>();
+        $i0 = lengthof $r2;
+        r1 = newarray (int)[$i0];
+
+     label1:
+        $r3 = <org.apache.tomcat.util.net.SendfileState: org.apache.tomcat.util.net.SendfileState DONE>;
+        $i1 = virtualinvoke $r3.<org.apache.tomcat.util.net.SendfileState: int ordinal()>();
+        r1[$i1] = 2;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r4 := @caughtexception;
+
+     label4:
+        $r5 = <org.apache.tomcat.util.net.SendfileState: org.apache.tomcat.util.net.SendfileState ERROR>;
+        $i2 = virtualinvoke $r5.<org.apache.tomcat.util.net.SendfileState: int ordinal()>();
+        r1[$i2] = 3;
+
+     label5:
+        goto label7;
+
+     label6:
+        $r6 := @caughtexception;
+
+     label7:
+        $r7 = <org.apache.tomcat.util.net.SendfileState: org.apache.tomcat.util.net.SendfileState PENDING>;
+        $i3 = virtualinvoke $r7.<org.apache.tomcat.util.net.SendfileState: int ordinal()>();
+        r1[$i3] = 1;
+
+     label8:
+        goto label10;
+
+     label9:
+        $r8 := @caughtexception;
+
+     label10:
+        <org.apache.coyote.http11.Http11NioProcessor: int[] $SWITCH_TABLE$org$apache$tomcat$util$net$SendfileState> = r1;
+        return r1;
+
+        catch java.lang.NoSuchFieldError from label1 to label2 with label3;
+        catch java.lang.NoSuchFieldError from label4 to label5 with label6;
+        catch java.lang.NoSuchFieldError from label7 to label8 with label9;
+    }
+
+    static int[] $SWITCH_TABLE$org$apache$coyote$ActionCode()
+    {
+        int[] $r0, r1;
+        org.apache.coyote.ActionCode[] $r2;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i22, $i23, $i24, $i25, $i26, $i27, $i28, $i29, $i30, $i31, $i32, $i33, $i34, $i35, $i36, $i37, $i38, $i39, $i40, $i41, $i42;
+        org.apache.coyote.ActionCode $r3, $r5, $r7, $r9, $r11, $r13, $r15, $r17, $r19, $r21, $r23, $r25, $r27, $r29, $r31, $r33, $r35, $r37, $r39, $r41, $r43, $r45, $r47, $r49, $r51, $r53, $r55, $r57, $r59, $r61, $r63, $r65, $r67, $r69, $r71, $r73, $r75, $r77, $r79, $r81, $r83, $r85;
+        java.lang.NoSuchFieldError $r4, $r6, $r8, $r10, $r12, $r14, $r16, $r18, $r20, $r22, $r24, $r26, $r28, $r30, $r32, $r34, $r36, $r38, $r40, $r42, $r44, $r46, $r48, $r50, $r52, $r54, $r56, $r58, $r60, $r62, $r64, $r66, $r68, $r70, $r72, $r74, $r76, $r78, $r80, $r82, $r84, $r86;
+
+        $r0 = <org.apache.coyote.http11.Http11NioProcessor: int[] $SWITCH_TABLE$org$apache$coyote$ActionCode>;
+        if $r0 == null goto label0;
+
+        return $r0;
+
+     label0:
+        $r2 = staticinvoke <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode[] values()>();
+        $i0 = lengthof $r2;
+        r1 = newarray (int)[$i0];
+
+     label1:
+        $r3 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ACK>;
+        $i1 = virtualinvoke $r3.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i1] = 1;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r4 := @caughtexception;
+
+     label4:
+        $r5 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_COMPLETE>;
+        $i2 = virtualinvoke $r5.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i2] = 29;
+
+     label5:
+        goto label7;
+
+     label6:
+        $r6 := @caughtexception;
+
+     label7:
+        $r7 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_DISPATCH>;
+        $i3 = virtualinvoke $r7.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i3] = 26;
+
+     label8:
+        goto label10;
+
+     label9:
+        $r8 := @caughtexception;
+
+     label10:
+        $r9 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_DISPATCHED>;
+        $i4 = virtualinvoke $r9.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i4] = 27;
+
+     label11:
+        goto label13;
+
+     label12:
+        $r10 := @caughtexception;
+
+     label13:
+        $r11 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_ERROR>;
+        $i5 = virtualinvoke $r11.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i5] = 31;
+
+     label14:
+        goto label16;
+
+     label15:
+        $r12 := @caughtexception;
+
+     label16:
+        $r13 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_IS_ASYNC>;
+        $i6 = virtualinvoke $r13.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i6] = 33;
+
+     label17:
+        goto label19;
+
+     label18:
+        $r14 := @caughtexception;
+
+     label19:
+        $r15 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_IS_COMPLETING>;
+        $i7 = virtualinvoke $r15.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i7] = 35;
+
+     label20:
+        goto label22;
+
+     label21:
+        $r16 := @caughtexception;
+
+     label22:
+        $r17 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_IS_DISPATCHING>;
+        $i8 = virtualinvoke $r17.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i8] = 36;
+
+     label23:
+        goto label25;
+
+     label24:
+        $r18 := @caughtexception;
+
+     label25:
+        $r19 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_IS_ERROR>;
+        $i9 = virtualinvoke $r19.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i9] = 38;
+
+     label26:
+        goto label28;
+
+     label27:
+        $r20 := @caughtexception;
+
+     label28:
+        $r21 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_IS_STARTED>;
+        $i10 = virtualinvoke $r21.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i10] = 34;
+
+     label29:
+        goto label31;
+
+     label30:
+        $r22 := @caughtexception;
+
+     label31:
+        $r23 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_IS_TIMINGOUT>;
+        $i11 = virtualinvoke $r23.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i11] = 37;
+
+     label32:
+        goto label34;
+
+     label33:
+        $r24 := @caughtexception;
+
+     label34:
+        $r25 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_POST_PROCESS>;
+        $i12 = virtualinvoke $r25.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i12] = 40;
+
+     label35:
+        goto label37;
+
+     label36:
+        $r26 := @caughtexception;
+
+     label37:
+        $r27 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_RUN>;
+        $i13 = virtualinvoke $r27.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i13] = 28;
+
+     label38:
+        goto label40;
+
+     label39:
+        $r28 := @caughtexception;
+
+     label40:
+        $r29 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_SETTIMEOUT>;
+        $i14 = virtualinvoke $r29.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i14] = 32;
+
+     label41:
+        goto label43;
+
+     label42:
+        $r30 := @caughtexception;
+
+     label43:
+        $r31 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_START>;
+        $i15 = virtualinvoke $r31.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i15] = 25;
+
+     label44:
+        goto label46;
+
+     label45:
+        $r32 := @caughtexception;
+
+     label46:
+        $r33 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_TIMEOUT>;
+        $i16 = virtualinvoke $r33.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i16] = 30;
+
+     label47:
+        goto label49;
+
+     label48:
+        $r34 := @caughtexception;
+
+     label49:
+        $r35 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode AVAILABLE>;
+        $i17 = virtualinvoke $r35.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i17] = 22;
+
+     label50:
+        goto label52;
+
+     label51:
+        $r36 := @caughtexception;
+
+     label52:
+        $r37 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode CLIENT_FLUSH>;
+        $i18 = virtualinvoke $r37.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i18] = 5;
+
+     label53:
+        goto label55;
+
+     label54:
+        $r38 := @caughtexception;
+
+     label55:
+        $r39 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode CLOSE>;
+        $i19 = virtualinvoke $r39.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i19] = 2;
+
+     label56:
+        goto label58;
+
+     label57:
+        $r40 := @caughtexception;
+
+     label58:
+        $r41 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode CLOSE_NOW>;
+        $i20 = virtualinvoke $r41.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i20] = 4;
+
+     label59:
+        goto label61;
+
+     label60:
+        $r42 := @caughtexception;
+
+     label61:
+        $r43 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode COMET_BEGIN>;
+        $i21 = virtualinvoke $r43.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i21] = 20;
+
+     label62:
+        goto label64;
+
+     label63:
+        $r44 := @caughtexception;
+
+     label64:
+        $r45 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode COMET_CLOSE>;
+        $i22 = virtualinvoke $r45.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i22] = 23;
+
+     label65:
+        goto label67;
+
+     label66:
+        $r46 := @caughtexception;
+
+     label67:
+        $r47 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode COMET_END>;
+        $i23 = virtualinvoke $r47.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i23] = 21;
+
+     label68:
+        goto label70;
+
+     label69:
+        $r48 := @caughtexception;
+
+     label70:
+        $r49 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode COMET_SETTIMEOUT>;
+        $i24 = virtualinvoke $r49.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i24] = 24;
+
+     label71:
+        goto label73;
+
+     label72:
+        $r50 := @caughtexception;
+
+     label73:
+        $r51 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode COMMIT>;
+        $i25 = virtualinvoke $r51.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i25] = 3;
+
+     label74:
+        goto label76;
+
+     label75:
+        $r52 := @caughtexception;
+
+     label76:
+        $r53 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode CUSTOM>;
+        $i26 = virtualinvoke $r53.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i26] = 6;
+
+     label77:
+        goto label79;
+
+     label78:
+        $r54 := @caughtexception;
+
+     label79:
+        $r55 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode DISABLE_SWALLOW_INPUT>;
+        $i27 = virtualinvoke $r55.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i27] = 10;
+
+     label80:
+        goto label82;
+
+     label81:
+        $r56 := @caughtexception;
+
+     label82:
+        $r57 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode END_REQUEST>;
+        $i28 = virtualinvoke $r57.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i28] = 42;
+
+     label83:
+        goto label85;
+
+     label84:
+        $r58 := @caughtexception;
+
+     label85:
+        $r59 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode IS_ERROR>;
+        $i29 = virtualinvoke $r59.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i29] = 9;
+
+     label86:
+        goto label88;
+
+     label87:
+        $r60 := @caughtexception;
+
+     label88:
+        $r61 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode POST_REQUEST>;
+        $i30 = virtualinvoke $r61.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i30] = 8;
+
+     label89:
+        goto label91;
+
+     label90:
+        $r62 := @caughtexception;
+
+     label91:
+        $r63 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_HOST_ADDR_ATTRIBUTE>;
+        $i31 = virtualinvoke $r63.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i31] = 12;
+
+     label92:
+        goto label94;
+
+     label93:
+        $r64 := @caughtexception;
+
+     label94:
+        $r65 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_HOST_ATTRIBUTE>;
+        $i32 = virtualinvoke $r65.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i32] = 11;
+
+     label95:
+        goto label97;
+
+     label96:
+        $r66 := @caughtexception;
+
+     label97:
+        $r67 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_LOCALPORT_ATTRIBUTE>;
+        $i33 = virtualinvoke $r67.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i33] = 16;
+
+     label98:
+        goto label100;
+
+     label99:
+        $r68 := @caughtexception;
+
+     label100:
+        $r69 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_LOCAL_ADDR_ATTRIBUTE>;
+        $i34 = virtualinvoke $r69.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i34] = 17;
+
+     label101:
+        goto label103;
+
+     label102:
+        $r70 := @caughtexception;
+
+     label103:
+        $r71 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_LOCAL_NAME_ATTRIBUTE>;
+        $i35 = virtualinvoke $r71.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i35] = 18;
+
+     label104:
+        goto label106;
+
+     label105:
+        $r72 := @caughtexception;
+
+     label106:
+        $r73 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_REMOTEPORT_ATTRIBUTE>;
+        $i36 = virtualinvoke $r73.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i36] = 15;
+
+     label107:
+        goto label109;
+
+     label108:
+        $r74 := @caughtexception;
+
+     label109:
+        $r75 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_SET_BODY_REPLAY>;
+        $i37 = virtualinvoke $r75.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i37] = 19;
+
+     label110:
+        goto label112;
+
+     label111:
+        $r76 := @caughtexception;
+
+     label112:
+        $r77 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_SSL_ATTRIBUTE>;
+        $i38 = virtualinvoke $r77.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i38] = 13;
+
+     label113:
+        goto label115;
+
+     label114:
+        $r78 := @caughtexception;
+
+     label115:
+        $r79 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_SSL_CERTIFICATE>;
+        $i39 = virtualinvoke $r79.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i39] = 14;
+
+     label116:
+        goto label118;
+
+     label117:
+        $r80 := @caughtexception;
+
+     label118:
+        $r81 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode RESET>;
+        $i40 = virtualinvoke $r81.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i40] = 7;
+
+     label119:
+        goto label121;
+
+     label120:
+        $r82 := @caughtexception;
+
+     label121:
+        $r83 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode UPGRADE>;
+        $i41 = virtualinvoke $r83.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i41] = 41;
+
+     label122:
+        goto label124;
+
+     label123:
+        $r84 := @caughtexception;
+
+     label124:
+        $r85 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode UPGRADE_TOMCAT>;
+        $i42 = virtualinvoke $r85.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i42] = 39;
+
+     label125:
+        goto label127;
+
+     label126:
+        $r86 := @caughtexception;
+
+     label127:
+        <org.apache.coyote.http11.Http11NioProcessor: int[] $SWITCH_TABLE$org$apache$coyote$ActionCode> = r1;
+        return r1;
+
+        catch java.lang.NoSuchFieldError from label1 to label2 with label3;
+        catch java.lang.NoSuchFieldError from label4 to label5 with label6;
+        catch java.lang.NoSuchFieldError from label7 to label8 with label9;
+        catch java.lang.NoSuchFieldError from label10 to label11 with label12;
+        catch java.lang.NoSuchFieldError from label13 to label14 with label15;
+        catch java.lang.NoSuchFieldError from label16 to label17 with label18;
+        catch java.lang.NoSuchFieldError from label19 to label20 with label21;
+        catch java.lang.NoSuchFieldError from label22 to label23 with label24;
+        catch java.lang.NoSuchFieldError from label25 to label26 with label27;
+        catch java.lang.NoSuchFieldError from label28 to label29 with label30;
+        catch java.lang.NoSuchFieldError from label31 to label32 with label33;
+        catch java.lang.NoSuchFieldError from label34 to label35 with label36;
+        catch java.lang.NoSuchFieldError from label37 to label38 with label39;
+        catch java.lang.NoSuchFieldError from label40 to label41 with label42;
+        catch java.lang.NoSuchFieldError from label43 to label44 with label45;
+        catch java.lang.NoSuchFieldError from label46 to label47 with label48;
+        catch java.lang.NoSuchFieldError from label49 to label50 with label51;
+        catch java.lang.NoSuchFieldError from label52 to label53 with label54;
+        catch java.lang.NoSuchFieldError from label55 to label56 with label57;
+        catch java.lang.NoSuchFieldError from label58 to label59 with label60;
+        catch java.lang.NoSuchFieldError from label61 to label62 with label63;
+        catch java.lang.NoSuchFieldError from label64 to label65 with label66;
+        catch java.lang.NoSuchFieldError from label67 to label68 with label69;
+        catch java.lang.NoSuchFieldError from label70 to label71 with label72;
+        catch java.lang.NoSuchFieldError from label73 to label74 with label75;
+        catch java.lang.NoSuchFieldError from label76 to label77 with label78;
+        catch java.lang.NoSuchFieldError from label79 to label80 with label81;
+        catch java.lang.NoSuchFieldError from label82 to label83 with label84;
+        catch java.lang.NoSuchFieldError from label85 to label86 with label87;
+        catch java.lang.NoSuchFieldError from label88 to label89 with label90;
+        catch java.lang.NoSuchFieldError from label91 to label92 with label93;
+        catch java.lang.NoSuchFieldError from label94 to label95 with label96;
+        catch java.lang.NoSuchFieldError from label97 to label98 with label99;
+        catch java.lang.NoSuchFieldError from label100 to label101 with label102;
+        catch java.lang.NoSuchFieldError from label103 to label104 with label105;
+        catch java.lang.NoSuchFieldError from label106 to label107 with label108;
+        catch java.lang.NoSuchFieldError from label109 to label110 with label111;
+        catch java.lang.NoSuchFieldError from label112 to label113 with label114;
+        catch java.lang.NoSuchFieldError from label115 to label116 with label117;
+        catch java.lang.NoSuchFieldError from label118 to label119 with label120;
+        catch java.lang.NoSuchFieldError from label121 to label122 with label123;
+        catch java.lang.NoSuchFieldError from label124 to label125 with label126;
+    }
+}

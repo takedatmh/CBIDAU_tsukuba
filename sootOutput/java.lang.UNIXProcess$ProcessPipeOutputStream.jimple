@@ -1,0 +1,50 @@
+class java.lang.UNIXProcess$ProcessPipeOutputStream extends java.io.BufferedOutputStream
+{
+
+    void <init>(int)
+    {
+        java.lang.UNIXProcess$ProcessPipeOutputStream r0;
+        int i0;
+        java.io.FileOutputStream $r1;
+        java.io.FileDescriptor $r2;
+
+        r0 := @this: java.lang.UNIXProcess$ProcessPipeOutputStream;
+        i0 := @parameter0: int;
+        $r1 = new java.io.FileOutputStream;
+        $r2 = staticinvoke <java.lang.UNIXProcess: java.io.FileDescriptor newFileDescriptor(int)>(i0);
+        specialinvoke $r1.<java.io.FileOutputStream: void <init>(java.io.FileDescriptor)>($r2);
+        specialinvoke r0.<java.io.BufferedOutputStream: void <init>(java.io.OutputStream)>($r1);
+        return;
+    }
+
+    synchronized void processExited()
+    {
+        java.lang.UNIXProcess$ProcessPipeOutputStream r0;
+        java.io.OutputStream r1;
+        java.io.IOException r2, $r4;
+        java.lang.ProcessBuilder$NullOutputStream $r3;
+
+        r0 := @this: java.lang.UNIXProcess$ProcessPipeOutputStream;
+        r1 = r0.<java.lang.UNIXProcess$ProcessPipeOutputStream: java.io.OutputStream out>;
+        if r1 == null goto label4;
+
+     label0:
+        virtualinvoke r1.<java.io.OutputStream: void close()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r4 := @caughtexception;
+        r2 = $r4;
+
+     label3:
+        $r3 = <java.lang.ProcessBuilder$NullOutputStream: java.lang.ProcessBuilder$NullOutputStream INSTANCE>;
+        r0.<java.lang.UNIXProcess$ProcessPipeOutputStream: java.io.OutputStream out> = $r3;
+
+     label4:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+}

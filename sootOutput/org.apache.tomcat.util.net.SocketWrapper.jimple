@@ -1,0 +1,377 @@
+public class org.apache.tomcat.util.net.SocketWrapper extends java.lang.Object
+{
+    protected volatile java.lang.Object socket;
+    protected volatile long lastAccess;
+    protected volatile long timeout;
+    protected boolean error;
+    protected long lastRegistered;
+    protected volatile int keepAliveLeft;
+    private boolean comet;
+    protected boolean async;
+    protected boolean keptAlive;
+    private boolean upgraded;
+    private boolean secure;
+    private volatile boolean blockingStatus;
+    private final java.util.concurrent.locks.Lock blockingStatusReadLock;
+    private final java.util.concurrent.locks.ReentrantReadWriteLock$WriteLock blockingStatusWriteLock;
+    private final java.lang.Object writeThreadLock;
+
+    public void <init>(java.lang.Object)
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        java.lang.Object r1, $r3;
+        long $l0;
+        java.util.concurrent.locks.ReentrantReadWriteLock r2, $r4;
+        java.util.concurrent.locks.ReentrantReadWriteLock$ReadLock $r5;
+        java.util.concurrent.locks.ReentrantReadWriteLock$WriteLock $r6;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        r1 := @parameter0: java.lang.Object;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $l0 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        r0.<org.apache.tomcat.util.net.SocketWrapper: long lastAccess> = $l0;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: long timeout> = -1L;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: boolean error> = 0;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: long lastRegistered> = 0L;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: int keepAliveLeft> = 100;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: boolean comet> = 0;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: boolean async> = 0;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: boolean keptAlive> = 0;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: boolean upgraded> = 0;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: boolean secure> = 0;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: boolean blockingStatus> = 1;
+        $r3 = new java.lang.Object;
+        specialinvoke $r3.<java.lang.Object: void <init>()>();
+        r0.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object writeThreadLock> = $r3;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object socket> = r1;
+        $r4 = new java.util.concurrent.locks.ReentrantReadWriteLock;
+        specialinvoke $r4.<java.util.concurrent.locks.ReentrantReadWriteLock: void <init>()>();
+        r2 = $r4;
+        $r5 = virtualinvoke r2.<java.util.concurrent.locks.ReentrantReadWriteLock: java.util.concurrent.locks.ReentrantReadWriteLock$ReadLock readLock()>();
+        r0.<org.apache.tomcat.util.net.SocketWrapper: java.util.concurrent.locks.Lock blockingStatusReadLock> = $r5;
+        $r6 = virtualinvoke r2.<java.util.concurrent.locks.ReentrantReadWriteLock: java.util.concurrent.locks.ReentrantReadWriteLock$WriteLock writeLock()>();
+        r0.<org.apache.tomcat.util.net.SocketWrapper: java.util.concurrent.locks.ReentrantReadWriteLock$WriteLock blockingStatusWriteLock> = $r6;
+        return;
+    }
+
+    public java.lang.Object getSocket()
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        java.lang.Object $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        $r1 = r0.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object socket>;
+        return $r1;
+    }
+
+    public boolean isComet()
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        $z0 = r0.<org.apache.tomcat.util.net.SocketWrapper: boolean comet>;
+        return $z0;
+    }
+
+    public void setComet(boolean)
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        boolean z0;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: boolean comet> = z0;
+        return;
+    }
+
+    public boolean isAsync()
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        $z0 = r0.<org.apache.tomcat.util.net.SocketWrapper: boolean async>;
+        return $z0;
+    }
+
+    public void setAsync(boolean)
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        boolean z0;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: boolean async> = z0;
+        return;
+    }
+
+    public boolean isUpgraded()
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        $z0 = r0.<org.apache.tomcat.util.net.SocketWrapper: boolean upgraded>;
+        return $z0;
+    }
+
+    public void setUpgraded(boolean)
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        boolean z0;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: boolean upgraded> = z0;
+        return;
+    }
+
+    public boolean isSecure()
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        $z0 = r0.<org.apache.tomcat.util.net.SocketWrapper: boolean secure>;
+        return $z0;
+    }
+
+    public void setSecure(boolean)
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        boolean z0;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: boolean secure> = z0;
+        return;
+    }
+
+    public long getLastAccess()
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        long $l0;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        $l0 = r0.<org.apache.tomcat.util.net.SocketWrapper: long lastAccess>;
+        return $l0;
+    }
+
+    public void access()
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        long $l0;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        $z0 = virtualinvoke r0.<org.apache.tomcat.util.net.SocketWrapper: boolean isAsync()>();
+        if $z0 != 0 goto label0;
+
+        $l0 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        virtualinvoke r0.<org.apache.tomcat.util.net.SocketWrapper: void access(long)>($l0);
+
+     label0:
+        return;
+    }
+
+    public void access(long)
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        long l0;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        l0 := @parameter0: long;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: long lastAccess> = l0;
+        return;
+    }
+
+    public void setTimeout(long)
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        long l0;
+        byte $b1;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        l0 := @parameter0: long;
+        $b1 = l0 cmp 0L;
+        if $b1 <= 0 goto label0;
+
+        r0.<org.apache.tomcat.util.net.SocketWrapper: long timeout> = l0;
+        goto label1;
+
+     label0:
+        r0.<org.apache.tomcat.util.net.SocketWrapper: long timeout> = -1L;
+
+     label1:
+        return;
+    }
+
+    public long getTimeout()
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        long $l0;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        $l0 = r0.<org.apache.tomcat.util.net.SocketWrapper: long timeout>;
+        return $l0;
+    }
+
+    public boolean getError()
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        $z0 = r0.<org.apache.tomcat.util.net.SocketWrapper: boolean error>;
+        return $z0;
+    }
+
+    public void setError(boolean)
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        boolean z0;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: boolean error> = z0;
+        return;
+    }
+
+    public void setKeepAliveLeft(int)
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        int i0;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        i0 := @parameter0: int;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: int keepAliveLeft> = i0;
+        return;
+    }
+
+    public int decrementKeepAlive()
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        int $i0, $i1;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        $i0 = r0.<org.apache.tomcat.util.net.SocketWrapper: int keepAliveLeft>;
+        $i1 = $i0 - 1;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: int keepAliveLeft> = $i1;
+        return $i1;
+    }
+
+    public boolean isKeptAlive()
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        $z0 = r0.<org.apache.tomcat.util.net.SocketWrapper: boolean keptAlive>;
+        return $z0;
+    }
+
+    public void setKeptAlive(boolean)
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        boolean z0;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: boolean keptAlive> = z0;
+        return;
+    }
+
+    public boolean getBlockingStatus()
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        $z0 = r0.<org.apache.tomcat.util.net.SocketWrapper: boolean blockingStatus>;
+        return $z0;
+    }
+
+    public void setBlockingStatus(boolean)
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        boolean z0;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: boolean blockingStatus> = z0;
+        return;
+    }
+
+    public java.util.concurrent.locks.Lock getBlockingStatusReadLock()
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        java.util.concurrent.locks.Lock $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        $r1 = r0.<org.apache.tomcat.util.net.SocketWrapper: java.util.concurrent.locks.Lock blockingStatusReadLock>;
+        return $r1;
+    }
+
+    public java.util.concurrent.locks.ReentrantReadWriteLock$WriteLock getBlockingStatusWriteLock()
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        java.util.concurrent.locks.ReentrantReadWriteLock$WriteLock $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        $r1 = r0.<org.apache.tomcat.util.net.SocketWrapper: java.util.concurrent.locks.ReentrantReadWriteLock$WriteLock blockingStatusWriteLock>;
+        return $r1;
+    }
+
+    public java.lang.Object getWriteThreadLock()
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        java.lang.Object $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        $r1 = r0.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object writeThreadLock>;
+        return $r1;
+    }
+
+    public void reset(java.lang.Object, long)
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        java.lang.Object r1;
+        long l0, $l1;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        r1 := @parameter0: java.lang.Object;
+        l0 := @parameter1: long;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: boolean async> = 0;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: boolean blockingStatus> = 1;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: boolean comet> = 0;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: boolean error> = 0;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: int keepAliveLeft> = 100;
+        $l1 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        r0.<org.apache.tomcat.util.net.SocketWrapper: long lastAccess> = $l1;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object socket> = r1;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: long timeout> = l0;
+        r0.<org.apache.tomcat.util.net.SocketWrapper: boolean upgraded> = 0;
+        return;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.tomcat.util.net.SocketWrapper r0;
+        java.lang.StringBuilder $r1, $r4, $r7;
+        java.lang.String $r2, $r3, $r6, $r8;
+        java.lang.Object $r5;
+
+        r0 := @this: org.apache.tomcat.util.net.SocketWrapper;
+        $r1 = new java.lang.StringBuilder;
+        $r2 = specialinvoke r0.<java.lang.Object: java.lang.String toString()>();
+        $r3 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r2);
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>(java.lang.String)>($r3);
+        $r4 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(":");
+        $r5 = r0.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object socket>;
+        $r6 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r5);
+        $r7 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r8;
+    }
+}

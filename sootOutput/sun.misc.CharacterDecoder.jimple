@@ -1,0 +1,270 @@
+public abstract class sun.misc.CharacterDecoder extends java.lang.Object
+{
+
+    public void <init>()
+    {
+        sun.misc.CharacterDecoder r0;
+
+        r0 := @this: sun.misc.CharacterDecoder;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    protected abstract int bytesPerAtom();
+
+    protected abstract int bytesPerLine();
+
+    protected void decodeBufferPrefix(java.io.PushbackInputStream, java.io.OutputStream) throws java.io.IOException
+    {
+        sun.misc.CharacterDecoder r0;
+        java.io.PushbackInputStream r1;
+        java.io.OutputStream r2;
+
+        r0 := @this: sun.misc.CharacterDecoder;
+        r1 := @parameter0: java.io.PushbackInputStream;
+        r2 := @parameter1: java.io.OutputStream;
+        return;
+    }
+
+    protected void decodeBufferSuffix(java.io.PushbackInputStream, java.io.OutputStream) throws java.io.IOException
+    {
+        sun.misc.CharacterDecoder r0;
+        java.io.PushbackInputStream r1;
+        java.io.OutputStream r2;
+
+        r0 := @this: sun.misc.CharacterDecoder;
+        r1 := @parameter0: java.io.PushbackInputStream;
+        r2 := @parameter1: java.io.OutputStream;
+        return;
+    }
+
+    protected int decodeLinePrefix(java.io.PushbackInputStream, java.io.OutputStream) throws java.io.IOException
+    {
+        sun.misc.CharacterDecoder r0;
+        java.io.PushbackInputStream r1;
+        java.io.OutputStream r2;
+        int $i0;
+
+        r0 := @this: sun.misc.CharacterDecoder;
+        r1 := @parameter0: java.io.PushbackInputStream;
+        r2 := @parameter1: java.io.OutputStream;
+        $i0 = virtualinvoke r0.<sun.misc.CharacterDecoder: int bytesPerLine()>();
+        return $i0;
+    }
+
+    protected void decodeLineSuffix(java.io.PushbackInputStream, java.io.OutputStream) throws java.io.IOException
+    {
+        sun.misc.CharacterDecoder r0;
+        java.io.PushbackInputStream r1;
+        java.io.OutputStream r2;
+
+        r0 := @this: sun.misc.CharacterDecoder;
+        r1 := @parameter0: java.io.PushbackInputStream;
+        r2 := @parameter1: java.io.OutputStream;
+        return;
+    }
+
+    protected void decodeAtom(java.io.PushbackInputStream, java.io.OutputStream, int) throws java.io.IOException
+    {
+        sun.misc.CharacterDecoder r0;
+        java.io.PushbackInputStream r1;
+        java.io.OutputStream r2;
+        int i0;
+        sun.misc.CEStreamExhausted $r3;
+
+        r0 := @this: sun.misc.CharacterDecoder;
+        r1 := @parameter0: java.io.PushbackInputStream;
+        r2 := @parameter1: java.io.OutputStream;
+        i0 := @parameter2: int;
+        $r3 = new sun.misc.CEStreamExhausted;
+        specialinvoke $r3.<sun.misc.CEStreamExhausted: void <init>()>();
+        throw $r3;
+    }
+
+    protected int readFully(java.io.InputStream, byte[], int, int) throws java.io.IOException
+    {
+        sun.misc.CharacterDecoder r0;
+        java.io.InputStream r1;
+        byte[] r2;
+        int i0, i1, i2, i3, $i4, $i5;
+        byte $b6;
+
+        r0 := @this: sun.misc.CharacterDecoder;
+        r1 := @parameter0: java.io.InputStream;
+        r2 := @parameter1: byte[];
+        i0 := @parameter2: int;
+        i1 := @parameter3: int;
+        i2 = 0;
+
+     label0:
+        if i2 >= i1 goto label4;
+
+        i3 = virtualinvoke r1.<java.io.InputStream: int read()>();
+        if i3 != -1 goto label3;
+
+        if i2 != 0 goto label1;
+
+        $i4 = -1;
+        goto label2;
+
+     label1:
+        $i4 = i2;
+
+     label2:
+        return $i4;
+
+     label3:
+        $i5 = i2 + i0;
+        $b6 = (byte) i3;
+        r2[$i5] = $b6;
+        i2 = i2 + 1;
+        goto label0;
+
+     label4:
+        return i1;
+    }
+
+    public void decodeBuffer(java.io.InputStream, java.io.OutputStream) throws java.io.IOException
+    {
+        sun.misc.CharacterDecoder r0;
+        java.io.InputStream r1;
+        java.io.OutputStream r2;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13;
+        java.io.PushbackInputStream r3, $r5;
+        sun.misc.CEStreamExhausted r4, $r6;
+
+        r0 := @this: sun.misc.CharacterDecoder;
+        r1 := @parameter0: java.io.InputStream;
+        r2 := @parameter1: java.io.OutputStream;
+        i0 = 0;
+        $r5 = new java.io.PushbackInputStream;
+        specialinvoke $r5.<java.io.PushbackInputStream: void <init>(java.io.InputStream)>(r1);
+        r3 = $r5;
+        virtualinvoke r0.<sun.misc.CharacterDecoder: void decodeBufferPrefix(java.io.PushbackInputStream,java.io.OutputStream)>(r3, r2);
+
+     label0:
+        i1 = virtualinvoke r0.<sun.misc.CharacterDecoder: int decodeLinePrefix(java.io.PushbackInputStream,java.io.OutputStream)>(r3, r2);
+        i2 = 0;
+
+     label1:
+        $i3 = virtualinvoke r0.<sun.misc.CharacterDecoder: int bytesPerAtom()>();
+        $i4 = i2 + $i3;
+        if $i4 >= i1 goto label2;
+
+        $i5 = virtualinvoke r0.<sun.misc.CharacterDecoder: int bytesPerAtom()>();
+        virtualinvoke r0.<sun.misc.CharacterDecoder: void decodeAtom(java.io.PushbackInputStream,java.io.OutputStream,int)>(r3, r2, $i5);
+        $i6 = virtualinvoke r0.<sun.misc.CharacterDecoder: int bytesPerAtom()>();
+        i0 = i0 + $i6;
+        $i7 = virtualinvoke r0.<sun.misc.CharacterDecoder: int bytesPerAtom()>();
+        i2 = i2 + $i7;
+        goto label1;
+
+     label2:
+        $i8 = virtualinvoke r0.<sun.misc.CharacterDecoder: int bytesPerAtom()>();
+        $i9 = i2 + $i8;
+        if $i9 != i1 goto label3;
+
+        $i10 = virtualinvoke r0.<sun.misc.CharacterDecoder: int bytesPerAtom()>();
+        virtualinvoke r0.<sun.misc.CharacterDecoder: void decodeAtom(java.io.PushbackInputStream,java.io.OutputStream,int)>(r3, r2, $i10);
+        $i11 = virtualinvoke r0.<sun.misc.CharacterDecoder: int bytesPerAtom()>();
+        i0 = i0 + $i11;
+        goto label4;
+
+     label3:
+        $i12 = i1 - i2;
+        virtualinvoke r0.<sun.misc.CharacterDecoder: void decodeAtom(java.io.PushbackInputStream,java.io.OutputStream,int)>(r3, r2, $i12);
+        $i13 = i1 - i2;
+        i0 = i0 + $i13;
+
+     label4:
+        virtualinvoke r0.<sun.misc.CharacterDecoder: void decodeLineSuffix(java.io.PushbackInputStream,java.io.OutputStream)>(r3, r2);
+
+     label5:
+        goto label7;
+
+     label6:
+        $r6 := @caughtexception;
+        r4 = $r6;
+        goto label8;
+
+     label7:
+        goto label0;
+
+     label8:
+        virtualinvoke r0.<sun.misc.CharacterDecoder: void decodeBufferSuffix(java.io.PushbackInputStream,java.io.OutputStream)>(r3, r2);
+        return;
+
+        catch sun.misc.CEStreamExhausted from label0 to label5 with label6;
+    }
+
+    public byte[] decodeBuffer(java.lang.String) throws java.io.IOException
+    {
+        sun.misc.CharacterDecoder r0;
+        java.lang.String r1;
+        byte[] r2, $r7;
+        java.io.ByteArrayInputStream r3, $r5;
+        java.io.ByteArrayOutputStream r4, $r6;
+        int $i0, $i1;
+
+        r0 := @this: sun.misc.CharacterDecoder;
+        r1 := @parameter0: java.lang.String;
+        $i0 = virtualinvoke r1.<java.lang.String: int length()>();
+        r2 = newarray (byte)[$i0];
+        $i1 = virtualinvoke r1.<java.lang.String: int length()>();
+        virtualinvoke r1.<java.lang.String: void getBytes(int,int,byte[],int)>(0, $i1, r2, 0);
+        $r5 = new java.io.ByteArrayInputStream;
+        specialinvoke $r5.<java.io.ByteArrayInputStream: void <init>(byte[])>(r2);
+        r3 = $r5;
+        $r6 = new java.io.ByteArrayOutputStream;
+        specialinvoke $r6.<java.io.ByteArrayOutputStream: void <init>()>();
+        r4 = $r6;
+        virtualinvoke r0.<sun.misc.CharacterDecoder: void decodeBuffer(java.io.InputStream,java.io.OutputStream)>(r3, r4);
+        $r7 = virtualinvoke r4.<java.io.ByteArrayOutputStream: byte[] toByteArray()>();
+        return $r7;
+    }
+
+    public byte[] decodeBuffer(java.io.InputStream) throws java.io.IOException
+    {
+        sun.misc.CharacterDecoder r0;
+        java.io.InputStream r1;
+        java.io.ByteArrayOutputStream $r2, r3;
+        byte[] $r4;
+
+        r0 := @this: sun.misc.CharacterDecoder;
+        r1 := @parameter0: java.io.InputStream;
+        $r2 = new java.io.ByteArrayOutputStream;
+        specialinvoke $r2.<java.io.ByteArrayOutputStream: void <init>()>();
+        r3 = $r2;
+        virtualinvoke r0.<sun.misc.CharacterDecoder: void decodeBuffer(java.io.InputStream,java.io.OutputStream)>(r1, r3);
+        $r4 = virtualinvoke r3.<java.io.ByteArrayOutputStream: byte[] toByteArray()>();
+        return $r4;
+    }
+
+    public java.nio.ByteBuffer decodeBufferToByteBuffer(java.lang.String) throws java.io.IOException
+    {
+        sun.misc.CharacterDecoder r0;
+        java.lang.String r1;
+        byte[] $r2;
+        java.nio.ByteBuffer $r3;
+
+        r0 := @this: sun.misc.CharacterDecoder;
+        r1 := @parameter0: java.lang.String;
+        $r2 = virtualinvoke r0.<sun.misc.CharacterDecoder: byte[] decodeBuffer(java.lang.String)>(r1);
+        $r3 = staticinvoke <java.nio.ByteBuffer: java.nio.ByteBuffer wrap(byte[])>($r2);
+        return $r3;
+    }
+
+    public java.nio.ByteBuffer decodeBufferToByteBuffer(java.io.InputStream) throws java.io.IOException
+    {
+        sun.misc.CharacterDecoder r0;
+        java.io.InputStream r1;
+        byte[] $r2;
+        java.nio.ByteBuffer $r3;
+
+        r0 := @this: sun.misc.CharacterDecoder;
+        r1 := @parameter0: java.io.InputStream;
+        $r2 = virtualinvoke r0.<sun.misc.CharacterDecoder: byte[] decodeBuffer(java.io.InputStream)>(r1);
+        $r3 = staticinvoke <java.nio.ByteBuffer: java.nio.ByteBuffer wrap(byte[])>($r2);
+        return $r3;
+    }
+}

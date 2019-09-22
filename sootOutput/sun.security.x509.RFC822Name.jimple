@@ -1,0 +1,305 @@
+public class sun.security.x509.RFC822Name extends java.lang.Object implements sun.security.x509.GeneralNameInterface
+{
+    private java.lang.String name;
+
+    public void <init>(sun.security.util.DerValue) throws java.io.IOException
+    {
+        sun.security.x509.RFC822Name r0;
+        sun.security.util.DerValue r1;
+        java.lang.String $r2, $r3;
+
+        r0 := @this: sun.security.x509.RFC822Name;
+        r1 := @parameter0: sun.security.util.DerValue;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r2 = virtualinvoke r1.<sun.security.util.DerValue: java.lang.String getIA5String()>();
+        r0.<sun.security.x509.RFC822Name: java.lang.String name> = $r2;
+        $r3 = r0.<sun.security.x509.RFC822Name: java.lang.String name>;
+        virtualinvoke r0.<sun.security.x509.RFC822Name: void parseName(java.lang.String)>($r3);
+        return;
+    }
+
+    public void <init>(java.lang.String) throws java.io.IOException
+    {
+        sun.security.x509.RFC822Name r0;
+        java.lang.String r1;
+
+        r0 := @this: sun.security.x509.RFC822Name;
+        r1 := @parameter0: java.lang.String;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        virtualinvoke r0.<sun.security.x509.RFC822Name: void parseName(java.lang.String)>(r1);
+        r0.<sun.security.x509.RFC822Name: java.lang.String name> = r1;
+        return;
+    }
+
+    public void parseName(java.lang.String) throws java.io.IOException
+    {
+        sun.security.x509.RFC822Name r0;
+        java.lang.String r1, r2;
+        int $i0, $i1, $i2, $i3, $i4;
+        java.io.IOException $r3, $r4, $r5;
+        boolean $z0;
+
+        r0 := @this: sun.security.x509.RFC822Name;
+        r1 := @parameter0: java.lang.String;
+        if r1 == null goto label0;
+
+        $i0 = virtualinvoke r1.<java.lang.String: int length()>();
+        if $i0 != 0 goto label1;
+
+     label0:
+        $r3 = new java.io.IOException;
+        specialinvoke $r3.<java.io.IOException: void <init>(java.lang.String)>("RFC822Name may not be null or empty");
+        throw $r3;
+
+     label1:
+        $i1 = virtualinvoke r1.<java.lang.String: int indexOf(int)>(64);
+        $i2 = $i1 + 1;
+        r2 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int)>($i2);
+        $i3 = virtualinvoke r2.<java.lang.String: int length()>();
+        if $i3 != 0 goto label2;
+
+        $r4 = new java.io.IOException;
+        specialinvoke $r4.<java.io.IOException: void <init>(java.lang.String)>("RFC822Name may not end with @");
+        throw $r4;
+
+     label2:
+        $z0 = virtualinvoke r2.<java.lang.String: boolean startsWith(java.lang.String)>(".");
+        if $z0 == 0 goto label3;
+
+        $i4 = virtualinvoke r2.<java.lang.String: int length()>();
+        if $i4 != 1 goto label3;
+
+        $r5 = new java.io.IOException;
+        specialinvoke $r5.<java.io.IOException: void <init>(java.lang.String)>("RFC822Name domain may not be just .");
+        throw $r5;
+
+     label3:
+        return;
+    }
+
+    public int getType()
+    {
+        sun.security.x509.RFC822Name r0;
+
+        r0 := @this: sun.security.x509.RFC822Name;
+        return 1;
+    }
+
+    public java.lang.String getName()
+    {
+        sun.security.x509.RFC822Name r0;
+        java.lang.String $r1;
+
+        r0 := @this: sun.security.x509.RFC822Name;
+        $r1 = r0.<sun.security.x509.RFC822Name: java.lang.String name>;
+        return $r1;
+    }
+
+    public void encode(sun.security.util.DerOutputStream) throws java.io.IOException
+    {
+        sun.security.x509.RFC822Name r0;
+        sun.security.util.DerOutputStream r1;
+        java.lang.String $r2;
+
+        r0 := @this: sun.security.x509.RFC822Name;
+        r1 := @parameter0: sun.security.util.DerOutputStream;
+        $r2 = r0.<sun.security.x509.RFC822Name: java.lang.String name>;
+        virtualinvoke r1.<sun.security.util.DerOutputStream: void putIA5String(java.lang.String)>($r2);
+        return;
+    }
+
+    public java.lang.String toString()
+    {
+        sun.security.x509.RFC822Name r0;
+        java.lang.StringBuilder $r1, $r2, $r4;
+        java.lang.String $r3, $r5;
+
+        r0 := @this: sun.security.x509.RFC822Name;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r2 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("RFC822Name: ");
+        $r3 = r0.<sun.security.x509.RFC822Name: java.lang.String name>;
+        $r4 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r3);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r5;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        sun.security.x509.RFC822Name r0, r2;
+        java.lang.Object r1;
+        boolean $z0, $z1;
+        java.lang.String $r3, $r4;
+
+        r0 := @this: sun.security.x509.RFC822Name;
+        r1 := @parameter0: java.lang.Object;
+        if r0 != r1 goto label0;
+
+        return 1;
+
+     label0:
+        $z0 = r1 instanceof sun.security.x509.RFC822Name;
+        if $z0 != 0 goto label1;
+
+        return 0;
+
+     label1:
+        r2 = (sun.security.x509.RFC822Name) r1;
+        $r3 = r0.<sun.security.x509.RFC822Name: java.lang.String name>;
+        $r4 = r2.<sun.security.x509.RFC822Name: java.lang.String name>;
+        $z1 = virtualinvoke $r3.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>($r4);
+        return $z1;
+    }
+
+    public int hashCode()
+    {
+        sun.security.x509.RFC822Name r0;
+        java.lang.String $r1, $r2;
+        int $i0;
+
+        r0 := @this: sun.security.x509.RFC822Name;
+        $r1 = r0.<sun.security.x509.RFC822Name: java.lang.String name>;
+        $r2 = virtualinvoke $r1.<java.lang.String: java.lang.String toUpperCase()>();
+        $i0 = virtualinvoke $r2.<java.lang.String: int hashCode()>();
+        return $i0;
+    }
+
+    public int constrains(sun.security.x509.GeneralNameInterface) throws java.lang.UnsupportedOperationException
+    {
+        sun.security.x509.RFC822Name r0, $r4;
+        sun.security.x509.GeneralNameInterface r1;
+        byte b0;
+        java.lang.String r2, r3, $r5, $r7;
+        int i1, $i2, $i3, $i4, $i6, i7, $i8;
+        java.util.Locale $r6, $r8;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        char $c5, $c9;
+
+        r0 := @this: sun.security.x509.RFC822Name;
+        r1 := @parameter0: sun.security.x509.GeneralNameInterface;
+        if r1 != null goto label0;
+
+        b0 = -1;
+        goto label13;
+
+     label0:
+        $i2 = interfaceinvoke r1.<sun.security.x509.GeneralNameInterface: int getType()>();
+        if $i2 == 1 goto label1;
+
+        b0 = -1;
+        goto label13;
+
+     label1:
+        $r4 = (sun.security.x509.RFC822Name) r1;
+        $r5 = virtualinvoke $r4.<sun.security.x509.RFC822Name: java.lang.String getName()>();
+        $r6 = <java.util.Locale: java.util.Locale ENGLISH>;
+        r2 = virtualinvoke $r5.<java.lang.String: java.lang.String toLowerCase(java.util.Locale)>($r6);
+        $r7 = r0.<sun.security.x509.RFC822Name: java.lang.String name>;
+        $r8 = <java.util.Locale: java.util.Locale ENGLISH>;
+        r3 = virtualinvoke $r7.<java.lang.String: java.lang.String toLowerCase(java.util.Locale)>($r8);
+        $z0 = virtualinvoke r2.<java.lang.String: boolean equals(java.lang.Object)>(r3);
+        if $z0 == 0 goto label2;
+
+        b0 = 0;
+        goto label13;
+
+     label2:
+        $z1 = virtualinvoke r3.<java.lang.String: boolean endsWith(java.lang.String)>(r2);
+        if $z1 == 0 goto label7;
+
+        $i3 = virtualinvoke r2.<java.lang.String: int indexOf(int)>(64);
+        if $i3 == -1 goto label3;
+
+        b0 = 3;
+        goto label13;
+
+     label3:
+        $z2 = virtualinvoke r2.<java.lang.String: boolean startsWith(java.lang.String)>(".");
+        if $z2 == 0 goto label4;
+
+        b0 = 2;
+        goto label13;
+
+     label4:
+        i1 = virtualinvoke r3.<java.lang.String: int lastIndexOf(java.lang.String)>(r2);
+        $i4 = i1 - 1;
+        $c5 = virtualinvoke r3.<java.lang.String: char charAt(int)>($i4);
+        if $c5 != 64 goto label5;
+
+        b0 = 2;
+        goto label6;
+
+     label5:
+        b0 = 3;
+
+     label6:
+        goto label13;
+
+     label7:
+        $z3 = virtualinvoke r2.<java.lang.String: boolean endsWith(java.lang.String)>(r3);
+        if $z3 == 0 goto label12;
+
+        $i6 = virtualinvoke r3.<java.lang.String: int indexOf(int)>(64);
+        if $i6 == -1 goto label8;
+
+        b0 = 3;
+        goto label13;
+
+     label8:
+        $z4 = virtualinvoke r3.<java.lang.String: boolean startsWith(java.lang.String)>(".");
+        if $z4 == 0 goto label9;
+
+        b0 = 1;
+        goto label13;
+
+     label9:
+        i7 = virtualinvoke r2.<java.lang.String: int lastIndexOf(java.lang.String)>(r3);
+        $i8 = i7 - 1;
+        $c9 = virtualinvoke r2.<java.lang.String: char charAt(int)>($i8);
+        if $c9 != 64 goto label10;
+
+        b0 = 1;
+        goto label11;
+
+     label10:
+        b0 = 3;
+
+     label11:
+        goto label13;
+
+     label12:
+        b0 = 3;
+
+     label13:
+        return b0;
+    }
+
+    public int subtreeDepth() throws java.lang.UnsupportedOperationException
+    {
+        sun.security.x509.RFC822Name r0;
+        java.lang.String r1;
+        int i0, i1, $i2, $i3, $i4;
+
+        r0 := @this: sun.security.x509.RFC822Name;
+        r1 = r0.<sun.security.x509.RFC822Name: java.lang.String name>;
+        i0 = 1;
+        i1 = virtualinvoke r1.<java.lang.String: int lastIndexOf(int)>(64);
+        if i1 < 0 goto label0;
+
+        i0 = i0 + 1;
+        $i2 = i1 + 1;
+        r1 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int)>($i2);
+
+     label0:
+        $i3 = virtualinvoke r1.<java.lang.String: int lastIndexOf(int)>(46);
+        if $i3 < 0 goto label1;
+
+        $i4 = virtualinvoke r1.<java.lang.String: int lastIndexOf(int)>(46);
+        r1 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int,int)>(0, $i4);
+        i0 = i0 + 1;
+        goto label0;
+
+     label1:
+        return i0;
+    }
+}

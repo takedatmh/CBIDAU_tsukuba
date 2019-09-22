@@ -1,0 +1,3444 @@
+public class org.apache.catalina.manager.ManagerServlet extends javax.servlet.http.HttpServlet implements org.apache.catalina.ContainerServlet
+{
+    private static final long serialVersionUID;
+    protected static final boolean LAST_ACCESS_AT_START;
+    protected java.io.File configBase;
+    protected transient org.apache.catalina.Context context;
+    protected int debug;
+    protected java.io.File deployed;
+    protected java.io.File versioned;
+    protected java.io.File contextDescriptors;
+    protected transient org.apache.catalina.Host host;
+    protected java.io.File appBase;
+    protected transient javax.management.MBeanServer mBeanServer;
+    protected javax.management.ObjectName oname;
+    protected transient javax.naming.Context global;
+    protected static final org.apache.tomcat.util.res.StringManager sm;
+    protected transient org.apache.catalina.Wrapper wrapper;
+
+    static void <clinit>()
+    {
+        java.lang.String r0;
+        boolean $z0, $z1;
+        org.apache.tomcat.util.res.StringManager $r1;
+
+        r0 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("org.apache.catalina.session.StandardSession.LAST_ACCESS_AT_START");
+        if r0 != null goto label0;
+
+        $z0 = <org.apache.catalina.Globals: boolean STRICT_SERVLET_COMPLIANCE>;
+        <org.apache.catalina.manager.ManagerServlet: boolean LAST_ACCESS_AT_START> = $z0;
+        goto label1;
+
+     label0:
+        $z1 = staticinvoke <java.lang.Boolean: boolean parseBoolean(java.lang.String)>(r0);
+        <org.apache.catalina.manager.ManagerServlet: boolean LAST_ACCESS_AT_START> = $z1;
+
+     label1:
+        $r1 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String)>("org.apache.catalina.manager");
+        <org.apache.catalina.manager.ManagerServlet: org.apache.tomcat.util.res.StringManager sm> = $r1;
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        specialinvoke r0.<javax.servlet.http.HttpServlet: void <init>()>();
+        r0.<org.apache.catalina.manager.ManagerServlet: java.io.File configBase> = null;
+        r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Context context> = null;
+        r0.<org.apache.catalina.manager.ManagerServlet: int debug> = 1;
+        r0.<org.apache.catalina.manager.ManagerServlet: java.io.File deployed> = null;
+        r0.<org.apache.catalina.manager.ManagerServlet: java.io.File versioned> = null;
+        r0.<org.apache.catalina.manager.ManagerServlet: java.io.File contextDescriptors> = null;
+        r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host> = null;
+        r0.<org.apache.catalina.manager.ManagerServlet: java.io.File appBase> = null;
+        r0.<org.apache.catalina.manager.ManagerServlet: javax.management.MBeanServer mBeanServer> = null;
+        r0.<org.apache.catalina.manager.ManagerServlet: javax.management.ObjectName oname> = null;
+        r0.<org.apache.catalina.manager.ManagerServlet: javax.naming.Context global> = null;
+        r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Wrapper wrapper> = null;
+        return;
+    }
+
+    public org.apache.catalina.Wrapper getWrapper()
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        org.apache.catalina.Wrapper $r1;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        $r1 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Wrapper wrapper>;
+        return $r1;
+    }
+
+    public void setWrapper(org.apache.catalina.Wrapper)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        org.apache.catalina.Wrapper r1;
+        org.apache.catalina.Engine r2;
+        java.lang.String r3, $r13, $r14, $r17, $r23;
+        java.lang.Exception r4, $r20;
+        org.apache.catalina.Container $r5, $r8, $r11;
+        org.apache.catalina.Context $r6, $r7;
+        org.apache.catalina.Host $r9, $r10, $r16;
+        java.lang.StringBuilder $r12, $r15, $r18;
+        javax.management.ObjectName $r19;
+        org.apache.tomcat.util.res.StringManager $r21;
+        java.lang.Object[] $r22;
+        org.apache.tomcat.util.modeler.Registry $r24;
+        javax.management.MBeanServer $r25;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: org.apache.catalina.Wrapper;
+        r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Wrapper wrapper> = r1;
+        if r1 != null goto label0;
+
+        r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Context context> = null;
+        r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host> = null;
+        r0.<org.apache.catalina.manager.ManagerServlet: javax.management.ObjectName oname> = null;
+        goto label4;
+
+     label0:
+        $r5 = interfaceinvoke r1.<org.apache.catalina.Wrapper: org.apache.catalina.Container getParent()>();
+        $r6 = (org.apache.catalina.Context) $r5;
+        r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Context context> = $r6;
+        $r7 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Context context>;
+        $r8 = interfaceinvoke $r7.<org.apache.catalina.Context: org.apache.catalina.Container getParent()>();
+        $r9 = (org.apache.catalina.Host) $r8;
+        r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host> = $r9;
+        $r10 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        $r11 = interfaceinvoke $r10.<org.apache.catalina.Host: org.apache.catalina.Container getParent()>();
+        r2 = (org.apache.catalina.Engine) $r11;
+        $r12 = new java.lang.StringBuilder;
+        $r13 = interfaceinvoke r2.<org.apache.catalina.Engine: java.lang.String getName()>();
+        $r14 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r13);
+        specialinvoke $r12.<java.lang.StringBuilder: void <init>(java.lang.String)>($r14);
+        $r15 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(":type=Deployer,host=");
+        $r16 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        $r17 = interfaceinvoke $r16.<org.apache.catalina.Host: java.lang.String getName()>();
+        $r18 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r17);
+        r3 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.String toString()>();
+
+     label1:
+        $r19 = new javax.management.ObjectName;
+        specialinvoke $r19.<javax.management.ObjectName: void <init>(java.lang.String)>(r3);
+        r0.<org.apache.catalina.manager.ManagerServlet: javax.management.ObjectName oname> = $r19;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r20 := @caughtexception;
+        r4 = $r20;
+        $r21 = <org.apache.catalina.manager.ManagerServlet: org.apache.tomcat.util.res.StringManager sm>;
+        $r22 = newarray (java.lang.Object)[1];
+        $r22[0] = r3;
+        $r23 = virtualinvoke $r21.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.objectNameFail", $r22);
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String,java.lang.Throwable)>($r23, r4);
+
+     label4:
+        $r24 = staticinvoke <org.apache.tomcat.util.modeler.Registry: org.apache.tomcat.util.modeler.Registry getRegistry(java.lang.Object,java.lang.Object)>(null, null);
+        $r25 = virtualinvoke $r24.<org.apache.tomcat.util.modeler.Registry: javax.management.MBeanServer getMBeanServer()>();
+        r0.<org.apache.catalina.manager.ManagerServlet: javax.management.MBeanServer mBeanServer> = $r25;
+        return;
+
+        catch java.lang.Exception from label1 to label2 with label3;
+    }
+
+    public void destroy()
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        return;
+    }
+
+    public void doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse) throws java.io.IOException, javax.servlet.ServletException
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        javax.servlet.http.HttpServletRequest r1;
+        javax.servlet.http.HttpServletResponse r2;
+        org.apache.tomcat.util.res.StringManager r3;
+        java.lang.String r4, r5, r6, r8, r9, r10, $r14, $r15, $r16, $r17, $r18, $r19, $r21, $r25;
+        org.apache.catalina.util.ContextName r7, $r13;
+        boolean z0, z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14, $z15, $z16, $z17;
+        java.io.PrintWriter r11;
+        java.util.Enumeration $r12, $r22, $r23;
+        java.lang.Object[] $r20, $r24;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: javax.servlet.http.HttpServletRequest;
+        r2 := @parameter1: javax.servlet.http.HttpServletResponse;
+        $r12 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.util.Enumeration getLocales()>();
+        r3 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String,java.util.Enumeration)>("org.apache.catalina.manager", $r12);
+        r4 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.lang.String getPathInfo()>();
+        if r4 != null goto label0;
+
+        r4 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.lang.String getServletPath()>();
+
+     label0:
+        r5 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.lang.String getParameter(java.lang.String)>("config");
+        r6 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.lang.String getParameter(java.lang.String)>("path");
+        r7 = null;
+        if r6 == null goto label1;
+
+        $r13 = new org.apache.catalina.util.ContextName;
+        $r14 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.lang.String getParameter(java.lang.String)>("version");
+        specialinvoke $r13.<org.apache.catalina.util.ContextName: void <init>(java.lang.String,java.lang.String)>(r6, $r14);
+        r7 = $r13;
+
+     label1:
+        r8 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.lang.String getParameter(java.lang.String)>("type");
+        r9 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.lang.String getParameter(java.lang.String)>("war");
+        r10 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.lang.String getParameter(java.lang.String)>("tag");
+        z0 = 0;
+        $r15 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.lang.String getParameter(java.lang.String)>("update");
+        if $r15 == null goto label2;
+
+        $r16 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.lang.String getParameter(java.lang.String)>("update");
+        $z2 = virtualinvoke $r16.<java.lang.String: boolean equals(java.lang.Object)>("true");
+        if $z2 == 0 goto label2;
+
+        z0 = 1;
+
+     label2:
+        z1 = 0;
+        $r17 = "true";
+        $r18 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.lang.String getParameter(java.lang.String)>("statusLine");
+        $z3 = virtualinvoke $r17.<java.lang.String: boolean equals(java.lang.Object)>($r18);
+        if $z3 == 0 goto label3;
+
+        z1 = 1;
+
+     label3:
+        interfaceinvoke r2.<javax.servlet.http.HttpServletResponse: void setContentType(java.lang.String)>("text/plain; charset=utf-8");
+        interfaceinvoke r2.<javax.servlet.http.HttpServletResponse: void setHeader(java.lang.String,java.lang.String)>("X-Content-Type-Options", "nosniff");
+        r11 = interfaceinvoke r2.<javax.servlet.http.HttpServletResponse: java.io.PrintWriter getWriter()>();
+        if r4 != null goto label4;
+
+        $r19 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("managerServlet.noCommand");
+        virtualinvoke r11.<java.io.PrintWriter: void println(java.lang.String)>($r19);
+        goto label21;
+
+     label4:
+        $z4 = virtualinvoke r4.<java.lang.String: boolean equals(java.lang.Object)>("/deploy");
+        if $z4 == 0 goto label7;
+
+        if r9 != null goto label5;
+
+        if r5 == null goto label6;
+
+     label5:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void deploy(java.io.PrintWriter,java.lang.String,org.apache.catalina.util.ContextName,java.lang.String,boolean,org.apache.tomcat.util.res.StringManager)>(r11, r5, r7, r9, z0, r3);
+        goto label21;
+
+     label6:
+        if r10 != null goto label21;
+
+        $r20 = newarray (java.lang.Object)[1];
+        $r20[0] = r4;
+        $r21 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.invalidCommand", $r20);
+        virtualinvoke r11.<java.io.PrintWriter: void println(java.lang.String)>($r21);
+        goto label21;
+
+     label7:
+        $z5 = virtualinvoke r4.<java.lang.String: boolean equals(java.lang.Object)>("/list");
+        if $z5 == 0 goto label8;
+
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void list(java.io.PrintWriter,org.apache.tomcat.util.res.StringManager)>(r11, r3);
+        goto label21;
+
+     label8:
+        $z6 = virtualinvoke r4.<java.lang.String: boolean equals(java.lang.Object)>("/reload");
+        if $z6 == 0 goto label9;
+
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void reload(java.io.PrintWriter,org.apache.catalina.util.ContextName,org.apache.tomcat.util.res.StringManager)>(r11, r7, r3);
+        goto label21;
+
+     label9:
+        $z7 = virtualinvoke r4.<java.lang.String: boolean equals(java.lang.Object)>("/resources");
+        if $z7 == 0 goto label10;
+
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void resources(java.io.PrintWriter,java.lang.String,org.apache.tomcat.util.res.StringManager)>(r11, r8, r3);
+        goto label21;
+
+     label10:
+        $z8 = virtualinvoke r4.<java.lang.String: boolean equals(java.lang.Object)>("/save");
+        if $z8 == 0 goto label11;
+
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void save(java.io.PrintWriter,java.lang.String,org.apache.tomcat.util.res.StringManager)>(r11, r6, r3);
+        goto label21;
+
+     label11:
+        $z9 = virtualinvoke r4.<java.lang.String: boolean equals(java.lang.Object)>("/serverinfo");
+        if $z9 == 0 goto label12;
+
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void serverinfo(java.io.PrintWriter,org.apache.tomcat.util.res.StringManager)>(r11, r3);
+        goto label21;
+
+     label12:
+        $z10 = virtualinvoke r4.<java.lang.String: boolean equals(java.lang.Object)>("/sessions");
+        if $z10 == 0 goto label13;
+
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void expireSessions(java.io.PrintWriter,org.apache.catalina.util.ContextName,javax.servlet.http.HttpServletRequest,org.apache.tomcat.util.res.StringManager)>(r11, r7, r1, r3);
+        goto label21;
+
+     label13:
+        $z11 = virtualinvoke r4.<java.lang.String: boolean equals(java.lang.Object)>("/expire");
+        if $z11 == 0 goto label14;
+
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void expireSessions(java.io.PrintWriter,org.apache.catalina.util.ContextName,javax.servlet.http.HttpServletRequest,org.apache.tomcat.util.res.StringManager)>(r11, r7, r1, r3);
+        goto label21;
+
+     label14:
+        $z12 = virtualinvoke r4.<java.lang.String: boolean equals(java.lang.Object)>("/start");
+        if $z12 == 0 goto label15;
+
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void start(java.io.PrintWriter,org.apache.catalina.util.ContextName,org.apache.tomcat.util.res.StringManager)>(r11, r7, r3);
+        goto label21;
+
+     label15:
+        $z13 = virtualinvoke r4.<java.lang.String: boolean equals(java.lang.Object)>("/stop");
+        if $z13 == 0 goto label16;
+
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void stop(java.io.PrintWriter,org.apache.catalina.util.ContextName,org.apache.tomcat.util.res.StringManager)>(r11, r7, r3);
+        goto label21;
+
+     label16:
+        $z14 = virtualinvoke r4.<java.lang.String: boolean equals(java.lang.Object)>("/undeploy");
+        if $z14 == 0 goto label17;
+
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void undeploy(java.io.PrintWriter,org.apache.catalina.util.ContextName,org.apache.tomcat.util.res.StringManager)>(r11, r7, r3);
+        goto label21;
+
+     label17:
+        $z15 = virtualinvoke r4.<java.lang.String: boolean equals(java.lang.Object)>("/findleaks");
+        if $z15 == 0 goto label18;
+
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void findleaks(boolean,java.io.PrintWriter,org.apache.tomcat.util.res.StringManager)>(z1, r11, r3);
+        goto label21;
+
+     label18:
+        $z16 = virtualinvoke r4.<java.lang.String: boolean equals(java.lang.Object)>("/vminfo");
+        if $z16 == 0 goto label19;
+
+        $r22 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.util.Enumeration getLocales()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void vmInfo(java.io.PrintWriter,org.apache.tomcat.util.res.StringManager,java.util.Enumeration)>(r11, r3, $r22);
+        goto label21;
+
+     label19:
+        $z17 = virtualinvoke r4.<java.lang.String: boolean equals(java.lang.Object)>("/threaddump");
+        if $z17 == 0 goto label20;
+
+        $r23 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.util.Enumeration getLocales()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void threadDump(java.io.PrintWriter,org.apache.tomcat.util.res.StringManager,java.util.Enumeration)>(r11, r3, $r23);
+        goto label21;
+
+     label20:
+        $r24 = newarray (java.lang.Object)[1];
+        $r24[0] = r4;
+        $r25 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.unknownCommand", $r24);
+        virtualinvoke r11.<java.io.PrintWriter: void println(java.lang.String)>($r25);
+
+     label21:
+        virtualinvoke r11.<java.io.PrintWriter: void flush()>();
+        virtualinvoke r11.<java.io.PrintWriter: void close()>();
+        return;
+    }
+
+    public void doPut(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse) throws java.io.IOException, javax.servlet.ServletException
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        javax.servlet.http.HttpServletRequest r1;
+        javax.servlet.http.HttpServletResponse r2;
+        org.apache.tomcat.util.res.StringManager r3;
+        java.lang.String r4, r5, r7, $r11, $r12, $r13, $r14, $r16;
+        org.apache.catalina.util.ContextName r6, $r10;
+        boolean z0, $z1, $z2;
+        java.io.PrintWriter r8;
+        java.util.Enumeration $r9;
+        java.lang.Object[] $r15;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: javax.servlet.http.HttpServletRequest;
+        r2 := @parameter1: javax.servlet.http.HttpServletResponse;
+        $r9 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.util.Enumeration getLocales()>();
+        r3 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String,java.util.Enumeration)>("org.apache.catalina.manager", $r9);
+        r4 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.lang.String getPathInfo()>();
+        if r4 != null goto label0;
+
+        r4 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.lang.String getServletPath()>();
+
+     label0:
+        r5 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.lang.String getParameter(java.lang.String)>("path");
+        r6 = null;
+        if r5 == null goto label1;
+
+        $r10 = new org.apache.catalina.util.ContextName;
+        $r11 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.lang.String getParameter(java.lang.String)>("version");
+        specialinvoke $r10.<org.apache.catalina.util.ContextName: void <init>(java.lang.String,java.lang.String)>(r5, $r11);
+        r6 = $r10;
+
+     label1:
+        r7 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.lang.String getParameter(java.lang.String)>("tag");
+        z0 = 0;
+        $r12 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.lang.String getParameter(java.lang.String)>("update");
+        if $r12 == null goto label2;
+
+        $r13 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.lang.String getParameter(java.lang.String)>("update");
+        $z1 = virtualinvoke $r13.<java.lang.String: boolean equals(java.lang.Object)>("true");
+        if $z1 == 0 goto label2;
+
+        z0 = 1;
+
+     label2:
+        interfaceinvoke r2.<javax.servlet.http.HttpServletResponse: void setContentType(java.lang.String)>("text/plain;charset=utf-8");
+        interfaceinvoke r2.<javax.servlet.http.HttpServletResponse: void setHeader(java.lang.String,java.lang.String)>("X-Content-Type-Options", "nosniff");
+        r8 = interfaceinvoke r2.<javax.servlet.http.HttpServletResponse: java.io.PrintWriter getWriter()>();
+        if r4 != null goto label3;
+
+        $r14 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("managerServlet.noCommand");
+        virtualinvoke r8.<java.io.PrintWriter: void println(java.lang.String)>($r14);
+        goto label5;
+
+     label3:
+        $z2 = virtualinvoke r4.<java.lang.String: boolean equals(java.lang.Object)>("/deploy");
+        if $z2 == 0 goto label4;
+
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void deploy(java.io.PrintWriter,org.apache.catalina.util.ContextName,java.lang.String,boolean,javax.servlet.http.HttpServletRequest,org.apache.tomcat.util.res.StringManager)>(r8, r6, r7, z0, r1, r3);
+        goto label5;
+
+     label4:
+        $r15 = newarray (java.lang.Object)[1];
+        $r15[0] = r4;
+        $r16 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.unknownCommand", $r15);
+        virtualinvoke r8.<java.io.PrintWriter: void println(java.lang.String)>($r16);
+
+     label5:
+        virtualinvoke r8.<java.io.PrintWriter: void flush()>();
+        virtualinvoke r8.<java.io.PrintWriter: void close()>();
+        return;
+    }
+
+    public void init() throws javax.servlet.ServletException
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        org.apache.tomcat.util.res.StringManager $r1;
+        null_type n0;
+        java.lang.Throwable r2, $r13;
+        java.lang.String r3, $r10, r12, $r29, $r31, $r34, $r37, $r42;
+        org.apache.catalina.Container r4, r5, r6, $r15, $r24;
+        org.apache.catalina.Wrapper $r7;
+        org.apache.catalina.Context $r8, $r23;
+        javax.servlet.UnavailableException $r9;
+        javax.servlet.ServletConfig $r11;
+        int $i0, $i1;
+        org.apache.catalina.Host $r14, $r25;
+        org.apache.catalina.Engine $r16;
+        org.apache.catalina.Service $r17;
+        org.apache.catalina.Server r18;
+        javax.naming.Context $r19, $r43;
+        javax.servlet.ServletContext $r20;
+        java.lang.Object $r21;
+        java.io.File $r22, $r26, $r27, $r28, $r30, $r32, $r33, $r35, $r36;
+        boolean $z0, $z1, $z2;
+        java.lang.StringBuilder $r38, $r40, $r41;
+        javax.management.ObjectName $r39;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        $r7 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Wrapper wrapper>;
+        if $r7 == null goto label0;
+
+        $r8 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Context context>;
+        if $r8 != null goto label1;
+
+     label0:
+        $r9 = new javax.servlet.UnavailableException;
+        $r1 = <org.apache.catalina.manager.ManagerServlet: org.apache.tomcat.util.res.StringManager sm>;
+        $r10 = virtualinvoke $r1.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("managerServlet.noWrapper");
+        specialinvoke $r9.<javax.servlet.UnavailableException: void <init>(java.lang.String)>($r10);
+        throw $r9;
+
+     label1:
+        n0 = null;
+
+     label2:
+        $r11 = virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: javax.servlet.ServletConfig getServletConfig()>();
+        r12 = interfaceinvoke $r11.<javax.servlet.ServletConfig: java.lang.String getInitParameter(java.lang.String)>("debug");
+        $i0 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>(r12);
+        r0.<org.apache.catalina.manager.ManagerServlet: int debug> = $i0;
+
+     label3:
+        goto label5;
+
+     label4:
+        $r13 := @caughtexception;
+        r2 = $r13;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r2);
+
+     label5:
+        $r14 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        $r15 = interfaceinvoke $r14.<org.apache.catalina.Host: org.apache.catalina.Container getParent()>();
+        $r16 = (org.apache.catalina.Engine) $r15;
+        $r17 = interfaceinvoke $r16.<org.apache.catalina.Engine: org.apache.catalina.Service getService()>();
+        r18 = interfaceinvoke $r17.<org.apache.catalina.Service: org.apache.catalina.Server getServer()>();
+        if r18 == null goto label6;
+
+        $r19 = interfaceinvoke r18.<org.apache.catalina.Server: javax.naming.Context getGlobalNamingContext()>();
+        r0.<org.apache.catalina.manager.ManagerServlet: javax.naming.Context global> = $r19;
+
+     label6:
+        $r20 = virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: javax.servlet.ServletContext getServletContext()>();
+        $r21 = interfaceinvoke $r20.<javax.servlet.ServletContext: java.lang.Object getAttribute(java.lang.String)>("javax.servlet.context.tempdir");
+        $r22 = (java.io.File) $r21;
+        r0.<org.apache.catalina.manager.ManagerServlet: java.io.File versioned> = $r22;
+        $r23 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Context context>;
+        $r24 = interfaceinvoke $r23.<org.apache.catalina.Context: org.apache.catalina.Container getParent()>();
+        $r25 = (org.apache.catalina.Host) $r24;
+        r3 = interfaceinvoke $r25.<org.apache.catalina.Host: java.lang.String getAppBase()>();
+        $r26 = new java.io.File;
+        specialinvoke $r26.<java.io.File: void <init>(java.lang.String)>(r3);
+        r0.<org.apache.catalina.manager.ManagerServlet: java.io.File deployed> = $r26;
+        $r27 = r0.<org.apache.catalina.manager.ManagerServlet: java.io.File deployed>;
+        $z0 = virtualinvoke $r27.<java.io.File: boolean isAbsolute()>();
+        if $z0 != 0 goto label7;
+
+        $r28 = new java.io.File;
+        $r29 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("catalina.base");
+        specialinvoke $r28.<java.io.File: void <init>(java.lang.String,java.lang.String)>($r29, r3);
+        r0.<org.apache.catalina.manager.ManagerServlet: java.io.File deployed> = $r28;
+
+     label7:
+        $r30 = new java.io.File;
+        $r31 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("catalina.base");
+        specialinvoke $r30.<java.io.File: void <init>(java.lang.String,java.lang.String)>($r31, "conf");
+        r0.<org.apache.catalina.manager.ManagerServlet: java.io.File configBase> = $r30;
+        r4 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Context context>;
+        r5 = null;
+        r6 = null;
+        goto label11;
+
+     label8:
+        $z1 = r4 instanceof org.apache.catalina.Host;
+        if $z1 == 0 goto label9;
+
+        r5 = r4;
+
+     label9:
+        $z2 = r4 instanceof org.apache.catalina.Engine;
+        if $z2 == 0 goto label10;
+
+        r6 = r4;
+
+     label10:
+        r4 = interfaceinvoke r4.<org.apache.catalina.Container: org.apache.catalina.Container getParent()>();
+
+     label11:
+        if r4 != null goto label8;
+
+        if r6 == null goto label12;
+
+        $r32 = new java.io.File;
+        $r33 = r0.<org.apache.catalina.manager.ManagerServlet: java.io.File configBase>;
+        $r34 = interfaceinvoke r6.<org.apache.catalina.Container: java.lang.String getName()>();
+        specialinvoke $r32.<java.io.File: void <init>(java.io.File,java.lang.String)>($r33, $r34);
+        r0.<org.apache.catalina.manager.ManagerServlet: java.io.File configBase> = $r32;
+
+     label12:
+        if r5 == null goto label13;
+
+        $r35 = new java.io.File;
+        $r36 = r0.<org.apache.catalina.manager.ManagerServlet: java.io.File configBase>;
+        $r37 = interfaceinvoke r5.<org.apache.catalina.Container: java.lang.String getName()>();
+        specialinvoke $r35.<java.io.File: void <init>(java.io.File,java.lang.String)>($r36, $r37);
+        r0.<org.apache.catalina.manager.ManagerServlet: java.io.File configBase> = $r35;
+
+     label13:
+        $i1 = r0.<org.apache.catalina.manager.ManagerServlet: int debug>;
+        if $i1 < 1 goto label14;
+
+        $r38 = new java.lang.StringBuilder;
+        specialinvoke $r38.<java.lang.StringBuilder: void <init>(java.lang.String)>("init: Associated with Deployer \'");
+        $r39 = r0.<org.apache.catalina.manager.ManagerServlet: javax.management.ObjectName oname>;
+        $r40 = virtualinvoke $r38.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r39);
+        $r41 = virtualinvoke $r40.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r42 = virtualinvoke $r41.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String)>($r42);
+        $r43 = r0.<org.apache.catalina.manager.ManagerServlet: javax.naming.Context global>;
+        if $r43 == null goto label14;
+
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String)>("init: Global resources are available");
+
+     label14:
+        return;
+
+        catch java.lang.Throwable from label2 to label3 with label4;
+    }
+
+    protected void findleaks(boolean, java.io.PrintWriter, org.apache.tomcat.util.res.StringManager)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        boolean z0, $z1, $z2;
+        java.io.PrintWriter r1;
+        org.apache.tomcat.util.res.StringManager r2;
+        java.lang.String[] r3, r4;
+        int i0, i1, $i2;
+        java.lang.String r5, $r7, $r10, $r12, $r13;
+        org.apache.catalina.Host $r6, $r8;
+        org.apache.catalina.core.StandardHost $r9;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        z0 := @parameter0: boolean;
+        r1 := @parameter1: java.io.PrintWriter;
+        r2 := @parameter2: org.apache.tomcat.util.res.StringManager;
+        $r6 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        $z1 = $r6 instanceof org.apache.catalina.core.StandardHost;
+        if $z1 != 0 goto label0;
+
+        $r7 = virtualinvoke r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("managerServlet.findleaksFail");
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r7);
+        return;
+
+     label0:
+        $r8 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        $r9 = (org.apache.catalina.core.StandardHost) $r8;
+        r3 = virtualinvoke $r9.<org.apache.catalina.core.StandardHost: java.lang.String[] findReloadedContextMemoryLeaks()>();
+        $i2 = lengthof r3;
+        if $i2 <= 0 goto label5;
+
+        if z0 == 0 goto label1;
+
+        $r10 = virtualinvoke r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("managerServlet.findleaksList");
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r10);
+
+     label1:
+        r4 = r3;
+        i0 = lengthof r3;
+        i1 = 0;
+        goto label4;
+
+     label2:
+        r5 = r4[i1];
+        $r12 = "";
+        $z2 = virtualinvoke $r12.<java.lang.String: boolean equals(java.lang.Object)>(r5);
+        if $z2 == 0 goto label3;
+
+        r5 = "/";
+
+     label3:
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>(r5);
+        i1 = i1 + 1;
+
+     label4:
+        if i1 < i0 goto label2;
+
+        goto label6;
+
+     label5:
+        if z0 == 0 goto label6;
+
+        $r13 = virtualinvoke r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("managerServlet.findleaksNone");
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r13);
+
+     label6:
+        return;
+    }
+
+    protected void vmInfo(java.io.PrintWriter, org.apache.tomcat.util.res.StringManager, java.util.Enumeration)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.PrintWriter r1;
+        org.apache.tomcat.util.res.StringManager r2;
+        java.util.Enumeration r3;
+        java.lang.String $r4, $r5;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.PrintWriter;
+        r2 := @parameter1: org.apache.tomcat.util.res.StringManager;
+        r3 := @parameter2: java.util.Enumeration;
+        $r4 = virtualinvoke r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("managerServlet.vminfo");
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r4);
+        $r5 = staticinvoke <org.apache.tomcat.util.Diagnostics: java.lang.String getVMInfo(java.util.Enumeration)>(r3);
+        virtualinvoke r1.<java.io.PrintWriter: void print(java.lang.String)>($r5);
+        return;
+    }
+
+    protected void threadDump(java.io.PrintWriter, org.apache.tomcat.util.res.StringManager, java.util.Enumeration)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.PrintWriter r1;
+        org.apache.tomcat.util.res.StringManager r2;
+        java.util.Enumeration r3;
+        java.lang.String $r4, $r5;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.PrintWriter;
+        r2 := @parameter1: org.apache.tomcat.util.res.StringManager;
+        r3 := @parameter2: java.util.Enumeration;
+        $r4 = virtualinvoke r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("managerServlet.threaddump");
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r4);
+        $r5 = staticinvoke <org.apache.tomcat.util.Diagnostics: java.lang.String getThreadDump(java.util.Enumeration)>(r3);
+        virtualinvoke r1.<java.io.PrintWriter: void print(java.lang.String)>($r5);
+        return;
+    }
+
+    protected synchronized void save(java.io.PrintWriter, java.lang.String, org.apache.tomcat.util.res.StringManager)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.PrintWriter r1;
+        java.lang.String r2, $r13, $r15, $r18, $r19, r20, $r24, $r27, $r32, $r34, $r35;
+        org.apache.tomcat.util.res.StringManager r3;
+        org.apache.catalina.Server r4;
+        java.lang.Exception r5, r7, $r16, $r28;
+        org.apache.catalina.Context r6;
+        org.apache.catalina.Host $r8, $r21;
+        org.apache.catalina.Container $r9, $r22;
+        org.apache.catalina.Engine $r10;
+        org.apache.catalina.Service $r11;
+        boolean $z0, $z1, $z2;
+        java.lang.Object[] $r12, $r17, $r23, $r26, $r33;
+        int $i0;
+        org.apache.catalina.core.StandardServer $r14, $r25;
+        java.lang.StringBuilder $r29, $r30, $r31;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.PrintWriter;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: org.apache.tomcat.util.res.StringManager;
+        $r8 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        $r9 = interfaceinvoke $r8.<org.apache.catalina.Host: org.apache.catalina.Container getParent()>();
+        $r10 = (org.apache.catalina.Engine) $r9;
+        $r11 = interfaceinvoke $r10.<org.apache.catalina.Engine: org.apache.catalina.Service getService()>();
+        r4 = interfaceinvoke $r11.<org.apache.catalina.Service: org.apache.catalina.Server getServer()>();
+        $z0 = r4 instanceof org.apache.catalina.core.StandardServer;
+        if $z0 != 0 goto label0;
+
+        $r12 = newarray (java.lang.Object)[1];
+        $r12[0] = r4;
+        $r13 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.saveFail", $r12);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r13);
+        return;
+
+     label0:
+        if r2 == null goto label1;
+
+        $i0 = virtualinvoke r2.<java.lang.String: int length()>();
+        if $i0 == 0 goto label1;
+
+        $z1 = virtualinvoke r2.<java.lang.String: boolean startsWith(java.lang.String)>("/");
+        if $z1 != 0 goto label4;
+
+     label1:
+        $r14 = (org.apache.catalina.core.StandardServer) r4;
+        virtualinvoke $r14.<org.apache.catalina.core.StandardServer: void storeConfig()>();
+        $r15 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("managerServlet.saved");
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r15);
+
+     label2:
+        goto label9;
+
+     label3:
+        $r16 := @caughtexception;
+        r5 = $r16;
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String,java.lang.Throwable)>("managerServlet.storeConfig", r5);
+        $r17 = newarray (java.lang.Object)[1];
+        $r18 = virtualinvoke r5.<java.lang.Exception: java.lang.String toString()>();
+        $r17[0] = $r18;
+        $r19 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.exception", $r17);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r19);
+        return;
+
+     label4:
+        r20 = r2;
+        $z2 = virtualinvoke r2.<java.lang.String: boolean equals(java.lang.Object)>("/");
+        if $z2 == 0 goto label5;
+
+        r20 = "";
+
+     label5:
+        $r21 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        $r22 = interfaceinvoke $r21.<org.apache.catalina.Host: org.apache.catalina.Container findChild(java.lang.String)>(r20);
+        r6 = (org.apache.catalina.Context) $r22;
+        if r6 != null goto label6;
+
+        $r23 = newarray (java.lang.Object)[1];
+        $r23[0] = r2;
+        $r24 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.noContext", $r23);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r24);
+        return;
+
+     label6:
+        $r25 = (org.apache.catalina.core.StandardServer) r4;
+        virtualinvoke $r25.<org.apache.catalina.core.StandardServer: void storeContext(org.apache.catalina.Context)>(r6);
+        $r26 = newarray (java.lang.Object)[1];
+        $r26[0] = r2;
+        $r27 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.savedContext", $r26);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r27);
+
+     label7:
+        goto label9;
+
+     label8:
+        $r28 := @caughtexception;
+        r7 = $r28;
+        $r29 = new java.lang.StringBuilder;
+        specialinvoke $r29.<java.lang.StringBuilder: void <init>(java.lang.String)>("managerServlet.save[");
+        $r30 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r31 = virtualinvoke $r30.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String,java.lang.Throwable)>($r32, r7);
+        $r33 = newarray (java.lang.Object)[1];
+        $r34 = virtualinvoke r7.<java.lang.Exception: java.lang.String toString()>();
+        $r33[0] = $r34;
+        $r35 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.exception", $r33);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r35);
+        return;
+
+     label9:
+        return;
+
+        catch java.lang.Exception from label1 to label2 with label3;
+        catch java.lang.Exception from label6 to label7 with label8;
+    }
+
+    protected synchronized void deploy(java.io.PrintWriter, org.apache.catalina.util.ContextName, java.lang.String, boolean, javax.servlet.http.HttpServletRequest, org.apache.tomcat.util.res.StringManager)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.PrintWriter r1;
+        org.apache.catalina.util.ContextName r2;
+        java.lang.String r3, r6, r7, r8, $r16, $r20, $r24, $r26, $r29, $r30, $r32, $r34, $r38, $r41, $r43, $r46, $r48, $r50, $r58, $r60, $r61;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8;
+        javax.servlet.http.HttpServletRequest r4;
+        org.apache.tomcat.util.res.StringManager r5;
+        org.apache.catalina.Context r9;
+        java.io.File r10, r11, r12, $r21, $r22, $r27, $r35, $r36, $r39;
+        int $i0, $i1;
+        java.lang.StringBuilder $r13, $r14, $r15, $r23, $r25, $r28, $r31, $r40, $r42, $r44, $r45, $r55, $r56, $r57;
+        org.apache.catalina.Host $r17;
+        org.apache.catalina.Container $r18;
+        java.lang.Object[] $r19, $r33, $r37, $r47, $r49, $r59;
+        java.lang.Throwable $r51, r52;
+        java.lang.Exception $r53, r54;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.PrintWriter;
+        r2 := @parameter1: org.apache.catalina.util.ContextName;
+        r3 := @parameter2: java.lang.String;
+        z0 := @parameter3: boolean;
+        r4 := @parameter4: javax.servlet.http.HttpServletRequest;
+        r5 := @parameter5: org.apache.tomcat.util.res.StringManager;
+        $i0 = r0.<org.apache.catalina.manager.ManagerServlet: int debug>;
+        if $i0 < 1 goto label0;
+
+        $r13 = new java.lang.StringBuilder;
+        specialinvoke $r13.<java.lang.StringBuilder: void <init>(java.lang.String)>("deploy: Deploying web application \'");
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r2);
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String)>($r16);
+
+     label0:
+        $z1 = staticinvoke <org.apache.catalina.manager.ManagerServlet: boolean validateContextName(org.apache.catalina.util.ContextName,java.io.PrintWriter,org.apache.tomcat.util.res.StringManager)>(r2, r1, r5);
+        if $z1 != 0 goto label1;
+
+        return;
+
+     label1:
+        r6 = virtualinvoke r2.<org.apache.catalina.util.ContextName: java.lang.String getName()>();
+        r7 = virtualinvoke r2.<org.apache.catalina.util.ContextName: java.lang.String getBaseName()>();
+        r8 = virtualinvoke r2.<org.apache.catalina.util.ContextName: java.lang.String getDisplayName()>();
+        $r17 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        $r18 = interfaceinvoke $r17.<org.apache.catalina.Host: org.apache.catalina.Container findChild(java.lang.String)>(r6);
+        r9 = (org.apache.catalina.Context) $r18;
+        if r9 == null goto label2;
+
+        if z0 != 0 goto label2;
+
+        $r19 = newarray (java.lang.Object)[1];
+        $r19[0] = r8;
+        $r20 = virtualinvoke r5.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.alreadyContext", $r19);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r20);
+        return;
+
+     label2:
+        $r21 = new java.io.File;
+        $r22 = r0.<org.apache.catalina.manager.ManagerServlet: java.io.File deployed>;
+        $r23 = new java.lang.StringBuilder;
+        $r24 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r7);
+        specialinvoke $r23.<java.lang.StringBuilder: void <init>(java.lang.String)>($r24);
+        $r25 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".war");
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r21.<java.io.File: void <init>(java.io.File,java.lang.String)>($r22, $r26);
+        r10 = $r21;
+        if r3 != null goto label4;
+
+        if z0 == 0 goto label3;
+
+        $r27 = new java.io.File;
+        $r28 = new java.lang.StringBuilder;
+        $r29 = virtualinvoke r10.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r30 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r29);
+        specialinvoke $r28.<java.lang.StringBuilder: void <init>(java.lang.String)>($r30);
+        $r31 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".tmp");
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r27.<java.io.File: void <init>(java.lang.String)>($r32);
+        r11 = $r27;
+        $z2 = virtualinvoke r11.<java.io.File: boolean exists()>();
+        if $z2 == 0 goto label6;
+
+        $z3 = virtualinvoke r11.<java.io.File: boolean delete()>();
+        if $z3 != 0 goto label6;
+
+        $r33 = newarray (java.lang.Object)[1];
+        $r33[0] = r11;
+        $r34 = virtualinvoke r5.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.deleteFail", $r33);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r34);
+        goto label6;
+
+     label3:
+        r11 = r10;
+        goto label6;
+
+     label4:
+        $r35 = new java.io.File;
+        $r36 = r0.<org.apache.catalina.manager.ManagerServlet: java.io.File versioned>;
+        specialinvoke $r35.<java.io.File: void <init>(java.io.File,java.lang.String)>($r36, r3);
+        r12 = $r35;
+        $z4 = virtualinvoke r12.<java.io.File: boolean mkdirs()>();
+        if $z4 != 0 goto label5;
+
+        $z5 = virtualinvoke r12.<java.io.File: boolean isDirectory()>();
+        if $z5 != 0 goto label5;
+
+        $r37 = newarray (java.lang.Object)[1];
+        $r37[0] = r12;
+        $r38 = virtualinvoke r5.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.mkdirFail", $r37);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r38);
+        return;
+
+     label5:
+        $r39 = new java.io.File;
+        $r40 = new java.lang.StringBuilder;
+        $r41 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r7);
+        specialinvoke $r40.<java.lang.StringBuilder: void <init>(java.lang.String)>($r41);
+        $r42 = virtualinvoke $r40.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".war");
+        $r43 = virtualinvoke $r42.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r39.<java.io.File: void <init>(java.io.File,java.lang.String)>(r12, $r43);
+        r11 = $r39;
+
+     label6:
+        $i1 = r0.<org.apache.catalina.manager.ManagerServlet: int debug>;
+        if $i1 < 2 goto label7;
+
+        $r44 = new java.lang.StringBuilder;
+        specialinvoke $r44.<java.lang.StringBuilder: void <init>(java.lang.String)>("Uploading WAR file to ");
+        $r45 = virtualinvoke $r44.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r11);
+        $r46 = virtualinvoke $r45.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String)>($r46);
+
+     label7:
+        $z6 = virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: boolean isServiced(java.lang.String)>(r6);
+        if $z6 == 0 goto label8;
+
+        $r47 = newarray (java.lang.Object)[1];
+        $r47[0] = r8;
+        $r48 = virtualinvoke r5.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.inService", $r47);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r48);
+        goto label19;
+
+     label8:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void addServiced(java.lang.String)>(r6);
+
+     label9:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void uploadWar(java.io.PrintWriter,javax.servlet.http.HttpServletRequest,java.io.File,org.apache.tomcat.util.res.StringManager)>(r1, r4, r11, r5);
+        if z0 == 0 goto label13;
+
+        if r3 != null goto label13;
+
+        $z7 = virtualinvoke r10.<java.io.File: boolean exists()>();
+        if $z7 == 0 goto label12;
+
+        $z8 = virtualinvoke r10.<java.io.File: boolean delete()>();
+        if $z8 != 0 goto label12;
+
+        $r49 = newarray (java.lang.Object)[1];
+        $r49[0] = r10;
+        $r50 = virtualinvoke r5.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.deleteFail", $r49);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r50);
+
+     label10:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void removeServiced(java.lang.String)>(r6);
+
+     label11:
+        return;
+
+     label12:
+        virtualinvoke r11.<java.io.File: boolean renameTo(java.io.File)>(r10);
+
+     label13:
+        if r3 == null goto label14;
+
+        staticinvoke <org.apache.catalina.manager.ManagerServlet: boolean copy(java.io.File,java.io.File)>(r11, r10);
+
+     label14:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void check(java.lang.String)>(r6);
+        goto label16;
+
+     label15:
+        $r51 := @caughtexception;
+        r52 = $r51;
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void removeServiced(java.lang.String)>(r6);
+        throw r52;
+
+     label16:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void removeServiced(java.lang.String)>(r6);
+
+     label17:
+        goto label19;
+
+     label18:
+        $r53 := @caughtexception;
+        r54 = $r53;
+        $r55 = new java.lang.StringBuilder;
+        specialinvoke $r55.<java.lang.StringBuilder: void <init>(java.lang.String)>("managerServlet.check[");
+        $r56 = virtualinvoke $r55.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r8);
+        $r57 = virtualinvoke $r56.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+        $r58 = virtualinvoke $r57.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String,java.lang.Throwable)>($r58, r54);
+        $r59 = newarray (java.lang.Object)[1];
+        $r60 = virtualinvoke r54.<java.lang.Exception: java.lang.String toString()>();
+        $r59[0] = $r60;
+        $r61 = virtualinvoke r5.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.exception", $r59);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r61);
+        return;
+
+     label19:
+        specialinvoke r0.<org.apache.catalina.manager.ManagerServlet: void writeDeployResult(java.io.PrintWriter,org.apache.tomcat.util.res.StringManager,java.lang.String,java.lang.String)>(r1, r5, r6, r8);
+        return;
+
+        catch java.lang.Throwable from label9 to label10 with label15;
+        catch java.lang.Throwable from label12 to label15 with label15;
+        catch java.lang.Exception from label7 to label11 with label18;
+        catch java.lang.Exception from label12 to label17 with label18;
+    }
+
+    protected void deploy(java.io.PrintWriter, org.apache.catalina.util.ContextName, java.lang.String, org.apache.tomcat.util.res.StringManager)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.PrintWriter r1;
+        org.apache.catalina.util.ContextName r2;
+        java.lang.String r3, r5, r6, r7, $r15, $r17, $r21, $r23, $r25, $r27, $r34, $r36, $r37;
+        org.apache.tomcat.util.res.StringManager r4;
+        java.io.File r8, r9, $r11, $r12, $r13, $r18, $r19;
+        java.lang.Throwable r10, $r28;
+        boolean $z0, $z1, $z2;
+        java.lang.StringBuilder $r14, $r16, $r20, $r22, $r31, $r32, $r33;
+        java.lang.Object[] $r24, $r26, $r35;
+        java.lang.Exception $r29, r30;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.PrintWriter;
+        r2 := @parameter1: org.apache.catalina.util.ContextName;
+        r3 := @parameter2: java.lang.String;
+        r4 := @parameter3: org.apache.tomcat.util.res.StringManager;
+        $z0 = staticinvoke <org.apache.catalina.manager.ManagerServlet: boolean validateContextName(org.apache.catalina.util.ContextName,java.io.PrintWriter,org.apache.tomcat.util.res.StringManager)>(r2, r1, r4);
+        if $z0 != 0 goto label0;
+
+        return;
+
+     label0:
+        r5 = virtualinvoke r2.<org.apache.catalina.util.ContextName: java.lang.String getBaseName()>();
+        r6 = virtualinvoke r2.<org.apache.catalina.util.ContextName: java.lang.String getName()>();
+        r7 = virtualinvoke r2.<org.apache.catalina.util.ContextName: java.lang.String getDisplayName()>();
+        $r11 = new java.io.File;
+        $r12 = new java.io.File;
+        $r13 = r0.<org.apache.catalina.manager.ManagerServlet: java.io.File versioned>;
+        specialinvoke $r12.<java.io.File: void <init>(java.io.File,java.lang.String)>($r13, r3);
+        $r14 = new java.lang.StringBuilder;
+        $r15 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r5);
+        specialinvoke $r14.<java.lang.StringBuilder: void <init>(java.lang.String)>($r15);
+        $r16 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".war");
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r11.<java.io.File: void <init>(java.io.File,java.lang.String)>($r12, $r17);
+        r8 = $r11;
+        $r18 = new java.io.File;
+        $r19 = r0.<org.apache.catalina.manager.ManagerServlet: java.io.File deployed>;
+        $r20 = new java.lang.StringBuilder;
+        $r21 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r5);
+        specialinvoke $r20.<java.lang.StringBuilder: void <init>(java.lang.String)>($r21);
+        $r22 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".war");
+        $r23 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r18.<java.io.File: void <init>(java.io.File,java.lang.String)>($r19, $r23);
+        r9 = $r18;
+
+     label1:
+        $z1 = virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: boolean isServiced(java.lang.String)>(r6);
+        if $z1 == 0 goto label2;
+
+        $r24 = newarray (java.lang.Object)[1];
+        $r24[0] = r7;
+        $r25 = virtualinvoke r4.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.inService", $r24);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r25);
+        goto label11;
+
+     label2:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void addServiced(java.lang.String)>(r6);
+
+     label3:
+        $z2 = virtualinvoke r9.<java.io.File: boolean delete()>();
+        if $z2 != 0 goto label6;
+
+        $r26 = newarray (java.lang.Object)[1];
+        $r26[0] = r9;
+        $r27 = virtualinvoke r4.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.deleteFail", $r26);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r27);
+
+     label4:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void removeServiced(java.lang.String)>(r6);
+
+     label5:
+        return;
+
+     label6:
+        staticinvoke <org.apache.catalina.manager.ManagerServlet: boolean copy(java.io.File,java.io.File)>(r8, r9);
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void check(java.lang.String)>(r6);
+        goto label8;
+
+     label7:
+        $r28 := @caughtexception;
+        r10 = $r28;
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void removeServiced(java.lang.String)>(r6);
+        throw r10;
+
+     label8:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void removeServiced(java.lang.String)>(r6);
+
+     label9:
+        goto label11;
+
+     label10:
+        $r29 := @caughtexception;
+        r30 = $r29;
+        $r31 = new java.lang.StringBuilder;
+        specialinvoke $r31.<java.lang.StringBuilder: void <init>(java.lang.String)>("managerServlet.check[");
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r7);
+        $r33 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+        $r34 = virtualinvoke $r33.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String,java.lang.Throwable)>($r34, r30);
+        $r35 = newarray (java.lang.Object)[1];
+        $r36 = virtualinvoke r30.<java.lang.Exception: java.lang.String toString()>();
+        $r35[0] = $r36;
+        $r37 = virtualinvoke r4.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.exception", $r35);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r37);
+        return;
+
+     label11:
+        specialinvoke r0.<org.apache.catalina.manager.ManagerServlet: void writeDeployResult(java.io.PrintWriter,org.apache.tomcat.util.res.StringManager,java.lang.String,java.lang.String)>(r1, r4, r6, r7);
+        return;
+
+        catch java.lang.Throwable from label3 to label4 with label7;
+        catch java.lang.Throwable from label6 to label7 with label7;
+        catch java.lang.Exception from label1 to label5 with label10;
+        catch java.lang.Exception from label6 to label9 with label10;
+    }
+
+    protected void deploy(java.io.PrintWriter, java.lang.String, org.apache.catalina.util.ContextName, java.lang.String, boolean, org.apache.tomcat.util.res.StringManager)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.PrintWriter r1;
+        java.lang.String r2, r4, r6, r7, r8, $r17, $r21, $r27, $r31, $r35, $r36, $r37, $r39, $r44, $r48, $r50, $r52, $r57, $r59, $r64, $r72, $r74, $r75;
+        org.apache.catalina.util.ContextName r3;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z10, $z11, $z12;
+        org.apache.tomcat.util.res.StringManager r5;
+        org.apache.catalina.Context r9;
+        java.io.File r10, $r40, $r41, $r43, $r45, $r46, $r53, $r54, $r55, r60, $r61, $r62, $r65;
+        java.lang.Throwable r11, $r66, $r67, r68;
+        int $i0, $i1, $i2, $i3, $i4, $i5;
+        java.lang.StringBuilder $r12, $r13, $r14, $r15, $r16, $r18, $r19, $r20, $r22, $r23, $r24, $r25, $r26, $r28, $r29, $r30, $r47, $r49, $r56, $r58, $r69, $r70, $r71;
+        org.apache.catalina.Host $r32;
+        org.apache.catalina.Container $r33;
+        java.lang.Object[] $r34, $r38, $r42, $r51, $r63, $r73;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.PrintWriter;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: org.apache.catalina.util.ContextName;
+        r4 := @parameter3: java.lang.String;
+        z0 := @parameter4: boolean;
+        r5 := @parameter5: org.apache.tomcat.util.res.StringManager;
+        if r2 == null goto label0;
+
+        $i0 = virtualinvoke r2.<java.lang.String: int length()>();
+        if $i0 != 0 goto label0;
+
+        r2 = null;
+
+     label0:
+        if r4 == null goto label1;
+
+        $i1 = virtualinvoke r4.<java.lang.String: int length()>();
+        if $i1 != 0 goto label1;
+
+        r4 = null;
+
+     label1:
+        $i2 = r0.<org.apache.catalina.manager.ManagerServlet: int debug>;
+        if $i2 < 1 goto label5;
+
+        if r2 == null goto label3;
+
+        $i3 = virtualinvoke r2.<java.lang.String: int length()>();
+        if $i3 <= 0 goto label3;
+
+        if r4 == null goto label2;
+
+        $r12 = new java.lang.StringBuilder;
+        specialinvoke $r12.<java.lang.StringBuilder: void <init>(java.lang.String)>("install: Installing context configuration at \'");
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\' from \'");
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r4);
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String)>($r17);
+        goto label5;
+
+     label2:
+        $r18 = new java.lang.StringBuilder;
+        specialinvoke $r18.<java.lang.StringBuilder: void <init>(java.lang.String)>("install: Installing context configuration at \'");
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String)>($r21);
+        goto label5;
+
+     label3:
+        if r3 == null goto label4;
+
+        $r22 = new java.lang.StringBuilder;
+        specialinvoke $r22.<java.lang.StringBuilder: void <init>(java.lang.String)>("install: Installing web application \'");
+        $r23 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r3);
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\' from \'");
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r4);
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String)>($r27);
+        goto label5;
+
+     label4:
+        $r28 = new java.lang.StringBuilder;
+        specialinvoke $r28.<java.lang.StringBuilder: void <init>(java.lang.String)>("install: Installing web application from \'");
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r4);
+        $r30 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r31 = virtualinvoke $r30.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String)>($r31);
+
+     label5:
+        $z1 = staticinvoke <org.apache.catalina.manager.ManagerServlet: boolean validateContextName(org.apache.catalina.util.ContextName,java.io.PrintWriter,org.apache.tomcat.util.res.StringManager)>(r3, r1, r5);
+        if $z1 != 0 goto label6;
+
+        return;
+
+     label6:
+        r6 = virtualinvoke r3.<org.apache.catalina.util.ContextName: java.lang.String getName()>();
+        r7 = virtualinvoke r3.<org.apache.catalina.util.ContextName: java.lang.String getBaseName()>();
+        r8 = virtualinvoke r3.<org.apache.catalina.util.ContextName: java.lang.String getDisplayName()>();
+        $r32 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        $r33 = interfaceinvoke $r32.<org.apache.catalina.Host: org.apache.catalina.Container findChild(java.lang.String)>(r6);
+        r9 = (org.apache.catalina.Context) $r33;
+        if r9 == null goto label7;
+
+        if z0 != 0 goto label7;
+
+        $r34 = newarray (java.lang.Object)[1];
+        $r34[0] = r8;
+        $r35 = virtualinvoke r5.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.alreadyContext", $r34);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r35);
+        return;
+
+     label7:
+        if r2 == null goto label8;
+
+        $z2 = virtualinvoke r2.<java.lang.String: boolean startsWith(java.lang.String)>("file:");
+        if $z2 == 0 goto label8;
+
+        $r36 = "file:";
+        $i4 = virtualinvoke $r36.<java.lang.String: int length()>();
+        r2 = virtualinvoke r2.<java.lang.String: java.lang.String substring(int)>($i4);
+
+     label8:
+        if r4 == null goto label9;
+
+        $z3 = virtualinvoke r4.<java.lang.String: boolean startsWith(java.lang.String)>("file:");
+        if $z3 == 0 goto label9;
+
+        $r37 = "file:";
+        $i5 = virtualinvoke $r37.<java.lang.String: int length()>();
+        r4 = virtualinvoke r4.<java.lang.String: java.lang.String substring(int)>($i5);
+
+     label9:
+        $z4 = virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: boolean isServiced(java.lang.String)>(r6);
+        if $z4 == 0 goto label10;
+
+        $r38 = newarray (java.lang.Object)[1];
+        $r38[0] = r8;
+        $r39 = virtualinvoke r5.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.inService", $r38);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r39);
+        goto label27;
+
+     label10:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void addServiced(java.lang.String)>(r6);
+
+     label11:
+        if r2 == null goto label18;
+
+        $r40 = r0.<org.apache.catalina.manager.ManagerServlet: java.io.File configBase>;
+        $z5 = virtualinvoke $r40.<java.io.File: boolean mkdirs()>();
+        if $z5 != 0 goto label14;
+
+        $r41 = r0.<org.apache.catalina.manager.ManagerServlet: java.io.File configBase>;
+        $z6 = virtualinvoke $r41.<java.io.File: boolean isDirectory()>();
+        if $z6 != 0 goto label14;
+
+        $r42 = newarray (java.lang.Object)[1];
+        $r43 = r0.<org.apache.catalina.manager.ManagerServlet: java.io.File configBase>;
+        $r42[0] = $r43;
+        $r44 = virtualinvoke r5.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.mkdirFail", $r42);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r44);
+
+     label12:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void removeServiced(java.lang.String)>(r6);
+
+     label13:
+        return;
+
+     label14:
+        $r45 = new java.io.File;
+        $r46 = r0.<org.apache.catalina.manager.ManagerServlet: java.io.File configBase>;
+        $r47 = new java.lang.StringBuilder;
+        $r48 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r7);
+        specialinvoke $r47.<java.lang.StringBuilder: void <init>(java.lang.String)>($r48);
+        $r49 = virtualinvoke $r47.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".xml");
+        $r50 = virtualinvoke $r49.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r45.<java.io.File: void <init>(java.io.File,java.lang.String)>($r46, $r50);
+        r10 = $r45;
+        $z7 = virtualinvoke r10.<java.io.File: boolean isFile()>();
+        if $z7 == 0 goto label17;
+
+        $z8 = virtualinvoke r10.<java.io.File: boolean delete()>();
+        if $z8 != 0 goto label17;
+
+        $r51 = newarray (java.lang.Object)[1];
+        $r51[0] = r10;
+        $r52 = virtualinvoke r5.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.deleteFail", $r51);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r52);
+
+     label15:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void removeServiced(java.lang.String)>(r6);
+
+     label16:
+        return;
+
+     label17:
+        $r53 = new java.io.File;
+        specialinvoke $r53.<java.io.File: void <init>(java.lang.String)>(r2);
+        staticinvoke <org.apache.catalina.manager.ManagerServlet: boolean copy(java.io.File,java.io.File)>($r53, r10);
+
+     label18:
+        if r4 == null goto label24;
+
+        $z10 = virtualinvoke r4.<java.lang.String: boolean endsWith(java.lang.String)>(".war");
+        if $z10 == 0 goto label19;
+
+        $r54 = new java.io.File;
+        $r55 = r0.<org.apache.catalina.manager.ManagerServlet: java.io.File deployed>;
+        $r56 = new java.lang.StringBuilder;
+        $r57 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r7);
+        specialinvoke $r56.<java.lang.StringBuilder: void <init>(java.lang.String)>($r57);
+        $r58 = virtualinvoke $r56.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".war");
+        $r59 = virtualinvoke $r58.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r54.<java.io.File: void <init>(java.io.File,java.lang.String)>($r55, $r59);
+        r60 = $r54;
+        goto label20;
+
+     label19:
+        $r61 = new java.io.File;
+        $r62 = r0.<org.apache.catalina.manager.ManagerServlet: java.io.File deployed>;
+        specialinvoke $r61.<java.io.File: void <init>(java.io.File,java.lang.String)>($r62, r7);
+        r60 = $r61;
+
+     label20:
+        $z11 = virtualinvoke r60.<java.io.File: boolean exists()>();
+        if $z11 == 0 goto label23;
+
+        $z12 = staticinvoke <org.apache.catalina.startup.ExpandWar: boolean delete(java.io.File)>(r60);
+        if $z12 != 0 goto label23;
+
+        $r63 = newarray (java.lang.Object)[1];
+        $r63[0] = r60;
+        $r64 = virtualinvoke r5.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.deleteFail", $r63);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r64);
+
+     label21:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void removeServiced(java.lang.String)>(r6);
+
+     label22:
+        return;
+
+     label23:
+        $r65 = new java.io.File;
+        specialinvoke $r65.<java.io.File: void <init>(java.lang.String)>(r4);
+        staticinvoke <org.apache.catalina.manager.ManagerServlet: boolean copy(java.io.File,java.io.File)>($r65, r60);
+
+     label24:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void check(java.lang.String)>(r6);
+        goto label26;
+
+     label25:
+        $r66 := @caughtexception;
+        r11 = $r66;
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void removeServiced(java.lang.String)>(r6);
+        throw r11;
+
+     label26:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void removeServiced(java.lang.String)>(r6);
+
+     label27:
+        specialinvoke r0.<org.apache.catalina.manager.ManagerServlet: void writeDeployResult(java.io.PrintWriter,org.apache.tomcat.util.res.StringManager,java.lang.String,java.lang.String)>(r1, r5, r6, r8);
+
+     label28:
+        goto label30;
+
+     label29:
+        $r67 := @caughtexception;
+        r68 = $r67;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r68);
+        $r69 = new java.lang.StringBuilder;
+        specialinvoke $r69.<java.lang.StringBuilder: void <init>(java.lang.String)>("ManagerServlet.install[");
+        $r70 = virtualinvoke $r69.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r8);
+        $r71 = virtualinvoke $r70.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+        $r72 = virtualinvoke $r71.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String,java.lang.Throwable)>($r72, r68);
+        $r73 = newarray (java.lang.Object)[1];
+        $r74 = virtualinvoke r68.<java.lang.Throwable: java.lang.String toString()>();
+        $r73[0] = $r74;
+        $r75 = virtualinvoke r5.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.exception", $r73);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r75);
+
+     label30:
+        return;
+
+        catch java.lang.Throwable from label11 to label12 with label25;
+        catch java.lang.Throwable from label14 to label15 with label25;
+        catch java.lang.Throwable from label17 to label21 with label25;
+        catch java.lang.Throwable from label23 to label25 with label25;
+        catch java.lang.Throwable from label9 to label13 with label29;
+        catch java.lang.Throwable from label14 to label16 with label29;
+        catch java.lang.Throwable from label17 to label22 with label29;
+        catch java.lang.Throwable from label23 to label28 with label29;
+    }
+
+    private void writeDeployResult(java.io.PrintWriter, org.apache.tomcat.util.res.StringManager, java.lang.String, java.lang.String)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.PrintWriter r1;
+        org.apache.tomcat.util.res.StringManager r2;
+        java.lang.String r3, r4, $r10, $r13, $r15;
+        org.apache.catalina.Context r5;
+        org.apache.catalina.Host $r6;
+        org.apache.catalina.Container $r7;
+        boolean $z0, $z1, $z2;
+        org.apache.catalina.LifecycleState $r8, $r11;
+        java.lang.Object[] $r9, $r12, $r14;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.PrintWriter;
+        r2 := @parameter1: org.apache.tomcat.util.res.StringManager;
+        r3 := @parameter2: java.lang.String;
+        r4 := @parameter3: java.lang.String;
+        $r6 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        $r7 = interfaceinvoke $r6.<org.apache.catalina.Host: org.apache.catalina.Container findChild(java.lang.String)>(r3);
+        r5 = (org.apache.catalina.Context) $r7;
+        if r5 == null goto label0;
+
+        $z0 = interfaceinvoke r5.<org.apache.catalina.Context: boolean getConfigured()>();
+        if $z0 == 0 goto label0;
+
+        $r8 = interfaceinvoke r5.<org.apache.catalina.Context: org.apache.catalina.LifecycleState getState()>();
+        $z1 = virtualinvoke $r8.<org.apache.catalina.LifecycleState: boolean isAvailable()>();
+        if $z1 == 0 goto label0;
+
+        $r9 = newarray (java.lang.Object)[1];
+        $r9[0] = r4;
+        $r10 = virtualinvoke r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.deployed", $r9);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r10);
+        goto label2;
+
+     label0:
+        if r5 == null goto label1;
+
+        $r11 = interfaceinvoke r5.<org.apache.catalina.Context: org.apache.catalina.LifecycleState getState()>();
+        $z2 = virtualinvoke $r11.<org.apache.catalina.LifecycleState: boolean isAvailable()>();
+        if $z2 != 0 goto label1;
+
+        $r12 = newarray (java.lang.Object)[1];
+        $r12[0] = r4;
+        $r13 = virtualinvoke r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.deployedButNotStarted", $r12);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r13);
+        goto label2;
+
+     label1:
+        $r14 = newarray (java.lang.Object)[1];
+        $r14[0] = r4;
+        $r15 = virtualinvoke r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.deployFailed", $r14);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r15);
+
+     label2:
+        return;
+    }
+
+    protected void list(java.io.PrintWriter, org.apache.tomcat.util.res.StringManager)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.PrintWriter r1;
+        org.apache.tomcat.util.res.StringManager r2;
+        org.apache.catalina.Container[] r3;
+        int i0, $i1, $i2, $i3;
+        org.apache.catalina.Context r4;
+        java.lang.String r5, $r8, $r11, $r14, $r15, $r24, $r25, $r26, $r28, $r29;
+        java.lang.StringBuilder $r6, $r9, $r10, $r20, $r23;
+        org.apache.catalina.Host $r7, $r13, $r16;
+        java.lang.Object[] $r12, $r19, $r27;
+        org.apache.catalina.Container $r17;
+        boolean $z0, $z1;
+        org.apache.catalina.LifecycleState $r18;
+        org.apache.catalina.Manager $r21;
+        org.apache.catalina.Session[] $r22;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.PrintWriter;
+        r2 := @parameter1: org.apache.tomcat.util.res.StringManager;
+        $i1 = r0.<org.apache.catalina.manager.ManagerServlet: int debug>;
+        if $i1 < 1 goto label0;
+
+        $r6 = new java.lang.StringBuilder;
+        specialinvoke $r6.<java.lang.StringBuilder: void <init>(java.lang.String)>("list: Listing contexts for virtual host \'");
+        $r7 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        $r8 = interfaceinvoke $r7.<org.apache.catalina.Host: java.lang.String getName()>();
+        $r9 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r8);
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String)>($r11);
+
+     label0:
+        $r12 = newarray (java.lang.Object)[1];
+        $r13 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        $r14 = interfaceinvoke $r13.<org.apache.catalina.Host: java.lang.String getName()>();
+        $r12[0] = $r14;
+        $r15 = virtualinvoke r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.listed", $r12);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r15);
+        $r16 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        r3 = interfaceinvoke $r16.<org.apache.catalina.Host: org.apache.catalina.Container[] findChildren()>();
+        i0 = 0;
+        goto label5;
+
+     label1:
+        $r17 = r3[i0];
+        r4 = (org.apache.catalina.Context) $r17;
+        if r4 == null goto label4;
+
+        r5 = interfaceinvoke r4.<org.apache.catalina.Context: java.lang.String getPath()>();
+        $z0 = virtualinvoke r5.<java.lang.String: boolean equals(java.lang.Object)>("");
+        if $z0 == 0 goto label2;
+
+        r5 = "/";
+
+     label2:
+        $r18 = interfaceinvoke r4.<org.apache.catalina.Context: org.apache.catalina.LifecycleState getState()>();
+        $z1 = virtualinvoke $r18.<org.apache.catalina.LifecycleState: boolean isAvailable()>();
+        if $z1 == 0 goto label3;
+
+        $r19 = newarray (java.lang.Object)[4];
+        $r19[0] = r5;
+        $r19[1] = "running";
+        $r20 = new java.lang.StringBuilder;
+        specialinvoke $r20.<java.lang.StringBuilder: void <init>()>();
+        $r21 = interfaceinvoke r4.<org.apache.catalina.Context: org.apache.catalina.Manager getManager()>();
+        $r22 = interfaceinvoke $r21.<org.apache.catalina.Manager: org.apache.catalina.Session[] findSessions()>();
+        $i2 = lengthof $r22;
+        $r23 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i2);
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r19[2] = $r24;
+        $r25 = interfaceinvoke r4.<org.apache.catalina.Context: java.lang.String getDocBase()>();
+        $r19[3] = $r25;
+        $r26 = virtualinvoke r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.listitem", $r19);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r26);
+        goto label4;
+
+     label3:
+        $r27 = newarray (java.lang.Object)[4];
+        $r27[0] = r5;
+        $r27[1] = "stopped";
+        $r27[2] = "0";
+        $r28 = interfaceinvoke r4.<org.apache.catalina.Context: java.lang.String getDocBase()>();
+        $r27[3] = $r28;
+        $r29 = virtualinvoke r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.listitem", $r27);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r29);
+
+     label4:
+        i0 = i0 + 1;
+
+     label5:
+        $i3 = lengthof r3;
+        if i0 < $i3 goto label1;
+
+        return;
+    }
+
+    protected void reload(java.io.PrintWriter, org.apache.catalina.util.ContextName, org.apache.tomcat.util.res.StringManager)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.PrintWriter r1;
+        org.apache.catalina.util.ContextName r2;
+        org.apache.tomcat.util.res.StringManager r3;
+        org.apache.catalina.Context r4, $r17;
+        int $i0;
+        java.lang.StringBuilder $r5, $r6, $r7, $r25, $r27, $r28;
+        java.lang.String $r8, $r10, $r13, $r14, $r15, $r16, $r18, $r19, $r21, $r22, $r26, $r29, $r31, $r32;
+        boolean $z0, $z1;
+        org.apache.catalina.Host $r9;
+        org.apache.catalina.Container $r11;
+        java.lang.Object[] $r12, $r20, $r30;
+        java.lang.Throwable $r23, r24;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.PrintWriter;
+        r2 := @parameter1: org.apache.catalina.util.ContextName;
+        r3 := @parameter2: org.apache.tomcat.util.res.StringManager;
+        $i0 = r0.<org.apache.catalina.manager.ManagerServlet: int debug>;
+        if $i0 < 1 goto label0;
+
+        $r5 = new java.lang.StringBuilder;
+        specialinvoke $r5.<java.lang.StringBuilder: void <init>(java.lang.String)>("restart: Reloading web application \'");
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r2);
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String)>($r8);
+
+     label0:
+        $z0 = staticinvoke <org.apache.catalina.manager.ManagerServlet: boolean validateContextName(org.apache.catalina.util.ContextName,java.io.PrintWriter,org.apache.tomcat.util.res.StringManager)>(r2, r1, r3);
+        if $z0 != 0 goto label1;
+
+        return;
+
+     label1:
+        $r9 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        $r10 = virtualinvoke r2.<org.apache.catalina.util.ContextName: java.lang.String getName()>();
+        $r11 = interfaceinvoke $r9.<org.apache.catalina.Host: org.apache.catalina.Container findChild(java.lang.String)>($r10);
+        r4 = (org.apache.catalina.Context) $r11;
+        if r4 != null goto label3;
+
+        $r12 = newarray (java.lang.Object)[1];
+        $r13 = virtualinvoke r2.<org.apache.catalina.util.ContextName: java.lang.String getDisplayName()>();
+        $r14 = staticinvoke <org.apache.catalina.util.RequestUtil: java.lang.String filter(java.lang.String)>($r13);
+        $r12[0] = $r14;
+        $r15 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.noContext", $r12);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r15);
+
+     label2:
+        return;
+
+     label3:
+        $r16 = interfaceinvoke r4.<org.apache.catalina.Context: java.lang.String getName()>();
+        $r17 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Context context>;
+        $r18 = interfaceinvoke $r17.<org.apache.catalina.Context: java.lang.String getName()>();
+        $z1 = virtualinvoke $r16.<java.lang.String: boolean equals(java.lang.Object)>($r18);
+        if $z1 == 0 goto label5;
+
+        $r19 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("managerServlet.noSelf");
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r19);
+
+     label4:
+        return;
+
+     label5:
+        interfaceinvoke r4.<org.apache.catalina.Context: void reload()>();
+        $r20 = newarray (java.lang.Object)[1];
+        $r21 = virtualinvoke r2.<org.apache.catalina.util.ContextName: java.lang.String getDisplayName()>();
+        $r20[0] = $r21;
+        $r22 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.reloaded", $r20);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r22);
+
+     label6:
+        goto label8;
+
+     label7:
+        $r23 := @caughtexception;
+        r24 = $r23;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r24);
+        $r25 = new java.lang.StringBuilder;
+        specialinvoke $r25.<java.lang.StringBuilder: void <init>(java.lang.String)>("ManagerServlet.reload[");
+        $r26 = virtualinvoke r2.<org.apache.catalina.util.ContextName: java.lang.String getDisplayName()>();
+        $r27 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r26);
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String,java.lang.Throwable)>($r29, r24);
+        $r30 = newarray (java.lang.Object)[1];
+        $r31 = virtualinvoke r24.<java.lang.Throwable: java.lang.String toString()>();
+        $r30[0] = $r31;
+        $r32 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.exception", $r30);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r32);
+
+     label8:
+        return;
+
+        catch java.lang.Throwable from label1 to label2 with label7;
+        catch java.lang.Throwable from label3 to label4 with label7;
+        catch java.lang.Throwable from label5 to label6 with label7;
+    }
+
+    protected void resources(java.io.PrintWriter, java.lang.String, org.apache.tomcat.util.res.StringManager)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.PrintWriter r1;
+        java.lang.String r2, $r8, $r10, $r12, $r13, $r18, $r20, $r21;
+        org.apache.tomcat.util.res.StringManager r3;
+        java.lang.Class r4;
+        java.lang.Throwable r5, $r14;
+        int $i0;
+        java.lang.StringBuilder $r6, $r7, $r15, $r16, $r17;
+        javax.naming.Context $r9, $r22;
+        java.lang.Object[] $r11, $r19;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.PrintWriter;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: org.apache.tomcat.util.res.StringManager;
+        $i0 = r0.<org.apache.catalina.manager.ManagerServlet: int debug>;
+        if $i0 < 1 goto label1;
+
+        if r2 == null goto label0;
+
+        $r6 = new java.lang.StringBuilder;
+        specialinvoke $r6.<java.lang.StringBuilder: void <init>(java.lang.String)>("resources:  Listing resources of type ");
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String)>($r8);
+        goto label1;
+
+     label0:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String)>("resources:  Listing resources of all types");
+
+     label1:
+        $r9 = r0.<org.apache.catalina.manager.ManagerServlet: javax.naming.Context global>;
+        if $r9 != null goto label2;
+
+        $r10 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("managerServlet.noGlobal");
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r10);
+        return;
+
+     label2:
+        if r2 == null goto label3;
+
+        $r11 = newarray (java.lang.Object)[1];
+        $r11[0] = r2;
+        $r12 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.resourcesType", $r11);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r12);
+        goto label4;
+
+     label3:
+        $r13 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("managerServlet.resourcesAll");
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r13);
+
+     label4:
+        r4 = null;
+
+     label5:
+        if r2 == null goto label8;
+
+        r4 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(r2);
+
+     label6:
+        goto label8;
+
+     label7:
+        $r14 := @caughtexception;
+        r5 = $r14;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r5);
+        $r15 = new java.lang.StringBuilder;
+        specialinvoke $r15.<java.lang.StringBuilder: void <init>(java.lang.String)>("ManagerServlet.resources[");
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String,java.lang.Throwable)>($r18, r5);
+        $r19 = newarray (java.lang.Object)[1];
+        $r20 = virtualinvoke r5.<java.lang.Throwable: java.lang.String toString()>();
+        $r19[0] = $r20;
+        $r21 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.exception", $r19);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r21);
+        return;
+
+     label8:
+        $r22 = r0.<org.apache.catalina.manager.ManagerServlet: javax.naming.Context global>;
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void printResources(java.io.PrintWriter,java.lang.String,javax.naming.Context,java.lang.String,java.lang.Class,org.apache.tomcat.util.res.StringManager)>(r1, "", $r22, r2, r4, r3);
+        return;
+
+        catch java.lang.Throwable from label5 to label6 with label7;
+    }
+
+    protected void printResources(java.io.PrintWriter, java.lang.String, javax.naming.Context, java.lang.String, java.lang.Class, org.apache.tomcat.util.res.StringManager)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.PrintWriter r1;
+        java.lang.String r2, r4, $r12, $r13, $r16, $r21, $r22, $r24, $r25, $r31, $r33, $r34;
+        javax.naming.Context r3, $r18;
+        java.lang.Class r5;
+        org.apache.tomcat.util.res.StringManager r6;
+        javax.naming.NamingEnumeration r7;
+        javax.naming.Binding r8;
+        java.lang.StringBuilder $r9, $r14, $r15, $r20, $r23, $r28, $r29, $r30;
+        java.lang.Object $r10, $r11, $r17, $r19;
+        boolean $z0, $z1, $z2;
+        java.lang.Throwable $r26, r27;
+        java.lang.Object[] $r32;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.PrintWriter;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: javax.naming.Context;
+        r4 := @parameter3: java.lang.String;
+        r5 := @parameter4: java.lang.Class;
+        r6 := @parameter5: org.apache.tomcat.util.res.StringManager;
+
+     label0:
+        r7 = interfaceinvoke r3.<javax.naming.Context: javax.naming.NamingEnumeration listBindings(java.lang.String)>("");
+        goto label4;
+
+     label1:
+        $r10 = interfaceinvoke r7.<javax.naming.NamingEnumeration: java.lang.Object next()>();
+        r8 = (javax.naming.Binding) $r10;
+        $r11 = virtualinvoke r8.<javax.naming.Binding: java.lang.Object getObject()>();
+        $z0 = $r11 instanceof javax.naming.Context;
+        if $z0 == 0 goto label2;
+
+        $r9 = new java.lang.StringBuilder;
+        $r12 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r2);
+        specialinvoke $r9.<java.lang.StringBuilder: void <init>(java.lang.String)>($r12);
+        $r13 = virtualinvoke r8.<javax.naming.Binding: java.lang.String getName()>();
+        $r14 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r13);
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("/");
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r17 = virtualinvoke r8.<javax.naming.Binding: java.lang.Object getObject()>();
+        $r18 = (javax.naming.Context) $r17;
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void printResources(java.io.PrintWriter,java.lang.String,javax.naming.Context,java.lang.String,java.lang.Class,org.apache.tomcat.util.res.StringManager)>(r1, $r16, $r18, r4, r5, r6);
+        goto label4;
+
+     label2:
+        if r5 == null goto label3;
+
+        $r19 = virtualinvoke r8.<javax.naming.Binding: java.lang.Object getObject()>();
+        $z1 = virtualinvoke r5.<java.lang.Class: boolean isInstance(java.lang.Object)>($r19);
+        if $z1 != 0 goto label3;
+
+        goto label4;
+
+     label3:
+        $r20 = new java.lang.StringBuilder;
+        $r21 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r2);
+        specialinvoke $r20.<java.lang.StringBuilder: void <init>(java.lang.String)>($r21);
+        $r22 = virtualinvoke r8.<javax.naming.Binding: java.lang.String getName()>();
+        $r23 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r22);
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r1.<java.io.PrintWriter: void print(java.lang.String)>($r24);
+        virtualinvoke r1.<java.io.PrintWriter: void print(char)>(58);
+        $r25 = virtualinvoke r8.<javax.naming.Binding: java.lang.String getClassName()>();
+        virtualinvoke r1.<java.io.PrintWriter: void print(java.lang.String)>($r25);
+        virtualinvoke r1.<java.io.PrintWriter: void println()>();
+
+     label4:
+        $z2 = interfaceinvoke r7.<javax.naming.NamingEnumeration: boolean hasMore()>();
+        if $z2 != 0 goto label1;
+
+     label5:
+        goto label7;
+
+     label6:
+        $r26 := @caughtexception;
+        r27 = $r26;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r27);
+        $r28 = new java.lang.StringBuilder;
+        specialinvoke $r28.<java.lang.StringBuilder: void <init>(java.lang.String)>("ManagerServlet.resources[");
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r4);
+        $r30 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+        $r31 = virtualinvoke $r30.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String,java.lang.Throwable)>($r31, r27);
+        $r32 = newarray (java.lang.Object)[1];
+        $r33 = virtualinvoke r27.<java.lang.Throwable: java.lang.String toString()>();
+        $r32[0] = $r33;
+        $r34 = virtualinvoke r6.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.exception", $r32);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r34);
+
+     label7:
+        return;
+
+        catch java.lang.Throwable from label0 to label5 with label6;
+    }
+
+    protected void serverinfo(java.io.PrintWriter, org.apache.tomcat.util.res.StringManager)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.PrintWriter r1;
+        org.apache.tomcat.util.res.StringManager r2;
+        java.lang.StringBuilder r3, $r4;
+        int $i0;
+        java.lang.String $r7, $r10, $r13, $r16, $r19, $r22, $r24, $r29, $r30;
+        java.lang.Throwable $r25, r26;
+        javax.servlet.ServletContext $r27;
+        java.lang.Object[] $r28;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.PrintWriter;
+        r2 := @parameter1: org.apache.tomcat.util.res.StringManager;
+        $i0 = r0.<org.apache.catalina.manager.ManagerServlet: int debug>;
+        if $i0 < 1 goto label0;
+
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String)>("serverinfo");
+
+     label0:
+        $r4 = new java.lang.StringBuilder;
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>()>();
+        r3 = $r4;
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("OK - Server info");
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\nTomcat Version: ");
+        $r7 = staticinvoke <org.apache.catalina.util.ServerInfo: java.lang.String getServerInfo()>();
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r7);
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\nOS Name: ");
+        $r10 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("os.name");
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r10);
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\nOS Version: ");
+        $r13 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("os.version");
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r13);
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\nOS Architecture: ");
+        $r16 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("os.arch");
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r16);
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\nJVM Version: ");
+        $r19 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("java.runtime.version");
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r19);
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\nJVM Vendor: ");
+        $r22 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("java.vm.vendor");
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r22);
+        $r24 = virtualinvoke r3.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r24);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r25 := @caughtexception;
+        r26 = $r25;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r26);
+        $r27 = virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: javax.servlet.ServletContext getServletContext()>();
+        interfaceinvoke $r27.<javax.servlet.ServletContext: void log(java.lang.String,java.lang.Throwable)>("ManagerServlet.serverinfo", r26);
+        $r28 = newarray (java.lang.Object)[1];
+        $r29 = virtualinvoke r26.<java.lang.Throwable: java.lang.String toString()>();
+        $r28[0] = $r29;
+        $r30 = virtualinvoke r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.exception", $r28);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r30);
+
+     label3:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+    }
+
+    protected void sessions(java.io.PrintWriter, org.apache.catalina.util.ContextName, int, org.apache.tomcat.util.res.StringManager)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.PrintWriter r1;
+        org.apache.catalina.util.ContextName r2;
+        int i0, i1, i2, i3, i4, i5, i7, i8, $i9, $i10, $i11, $i12, $i19, $i20, i21, $i23, $i24, $i26, $i27, $i28, $i29, $i30, i31, $i32, $i33, $i34, $i35, $i36, $i37, $i38, $i39;
+        org.apache.tomcat.util.res.StringManager r3;
+        java.lang.String r4, $r12, $r18, $r20, $r23, $r24, $r26, $r27, $r29, $r33, $r34, $r43, $r46, $r47, $r53, $r56, $r57, $r61, $r64, $r65, $r69, $r70, $r74, $r77, $r78, $r84, $r86, $r87;
+        org.apache.catalina.Context r5;
+        org.apache.catalina.Manager r6;
+        org.apache.catalina.Session[] r7;
+        int[] r8;
+        long l6, $l13, $l14, $l15, $l16, $l17, $l18;
+        java.lang.StringBuilder $r9, $r10, $r11, $r13, $r14, $r15, $r16, $r17, $r31, $r32, $r41, $r42, $r44, $r45, $r49, $r50, $r51, $r52, $r54, $r55, $r59, $r60, $r62, $r63, $r67, $r68, $r72, $r73, $r75, $r76, $r81, $r82, $r83;
+        boolean $z0, $z1;
+        org.apache.catalina.Host $r19;
+        org.apache.catalina.Container $r21;
+        java.lang.Object[] $r22, $r25, $r28, $r30, $r40, $r48, $r58, $r66, $r71, $r85;
+        org.apache.catalina.Session $r35, $r36, $r37;
+        java.lang.Throwable $r79, r80;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.PrintWriter;
+        r2 := @parameter1: org.apache.catalina.util.ContextName;
+        i0 := @parameter2: int;
+        r3 := @parameter3: org.apache.tomcat.util.res.StringManager;
+        $i9 = r0.<org.apache.catalina.manager.ManagerServlet: int debug>;
+        if $i9 < 1 goto label0;
+
+        $r9 = new java.lang.StringBuilder;
+        specialinvoke $r9.<java.lang.StringBuilder: void <init>(java.lang.String)>("sessions: Session information for web application \'");
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r2);
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String)>($r12);
+        if i0 < 0 goto label0;
+
+        $r13 = new java.lang.StringBuilder;
+        specialinvoke $r13.<java.lang.StringBuilder: void <init>(java.lang.String)>("sessions: Session expiration for ");
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" minutes \'");
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r2);
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String)>($r18);
+
+     label0:
+        $z0 = staticinvoke <org.apache.catalina.manager.ManagerServlet: boolean validateContextName(org.apache.catalina.util.ContextName,java.io.PrintWriter,org.apache.tomcat.util.res.StringManager)>(r2, r1, r3);
+        if $z0 != 0 goto label1;
+
+        return;
+
+     label1:
+        r4 = virtualinvoke r2.<org.apache.catalina.util.ContextName: java.lang.String getDisplayName()>();
+
+     label2:
+        $r19 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        $r20 = virtualinvoke r2.<org.apache.catalina.util.ContextName: java.lang.String getName()>();
+        $r21 = interfaceinvoke $r19.<org.apache.catalina.Host: org.apache.catalina.Container findChild(java.lang.String)>($r20);
+        r5 = (org.apache.catalina.Context) $r21;
+        if r5 != null goto label4;
+
+        $r22 = newarray (java.lang.Object)[1];
+        $r23 = staticinvoke <org.apache.catalina.util.RequestUtil: java.lang.String filter(java.lang.String)>(r4);
+        $r22[0] = $r23;
+        $r24 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.noContext", $r22);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r24);
+
+     label3:
+        return;
+
+     label4:
+        r6 = interfaceinvoke r5.<org.apache.catalina.Context: org.apache.catalina.Manager getManager()>();
+        if r6 != null goto label6;
+
+        $r25 = newarray (java.lang.Object)[1];
+        $r26 = staticinvoke <org.apache.catalina.util.RequestUtil: java.lang.String filter(java.lang.String)>(r4);
+        $r25[0] = $r26;
+        $r27 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.noManager", $r25);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r27);
+
+     label5:
+        return;
+
+     label6:
+        i1 = 60;
+        i2 = 1;
+        i3 = interfaceinvoke r5.<org.apache.catalina.Context: int getSessionTimeout()>();
+        if i3 <= 0 goto label9;
+
+        i2 = i3 / i1;
+        $i10 = i2 * i1;
+        if $i10 >= i3 goto label7;
+
+        i2 = i2 + 1;
+
+     label7:
+        if i2 != 0 goto label8;
+
+        i2 = 1;
+
+     label8:
+        i1 = i3 / i2;
+        $i11 = i2 * i1;
+        if $i11 >= i3 goto label9;
+
+        i1 = i1 + 1;
+
+     label9:
+        $r28 = newarray (java.lang.Object)[1];
+        $r28[0] = r4;
+        $r29 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.sessions", $r28);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r29);
+        $r30 = newarray (java.lang.Object)[1];
+        $r31 = new java.lang.StringBuilder;
+        specialinvoke $r31.<java.lang.StringBuilder: void <init>()>();
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i3);
+        $r33 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r30[0] = $r33;
+        $r34 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.sessiondefaultmax", $r30);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r34);
+        r7 = interfaceinvoke r6.<org.apache.catalina.Manager: org.apache.catalina.Session[] findSessions()>();
+        $i12 = i1 + 1;
+        r8 = newarray (int)[$i12];
+        i4 = 0;
+        i5 = 0;
+        l6 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        i7 = 0;
+        goto label17;
+
+     label10:
+        $z1 = <org.apache.catalina.manager.ManagerServlet: boolean LAST_ACCESS_AT_START>;
+        if $z1 == 0 goto label11;
+
+        $r35 = r7[i7];
+        $l13 = interfaceinvoke $r35.<org.apache.catalina.Session: long getLastAccessedTimeInternal()>();
+        $l14 = l6 - $l13;
+        $l15 = $l14 / 1000L;
+        i8 = (int) $l15;
+        goto label12;
+
+     label11:
+        $r36 = r7[i7];
+        $l16 = interfaceinvoke $r36.<org.apache.catalina.Session: long getThisAccessedTimeInternal()>();
+        $l17 = l6 - $l16;
+        $l18 = $l17 / 1000L;
+        i8 = (int) $l18;
+
+     label12:
+        if i0 < 0 goto label13;
+
+        $i19 = i0 * 60;
+        if i8 < $i19 goto label13;
+
+        $r37 = r7[i7];
+        interfaceinvoke $r37.<org.apache.catalina.Session: void expire()>();
+        i5 = i5 + 1;
+
+     label13:
+        $i20 = i8 / 60;
+        i21 = $i20 / i2;
+        if i21 >= 0 goto label14;
+
+        i4 = i4 + 1;
+        goto label16;
+
+     label14:
+        if i21 < i1 goto label15;
+
+        $i23 = r8[i1];
+        $i24 = $i23 + 1;
+        r8[i1] = $i24;
+        goto label16;
+
+     label15:
+        $i26 = r8[i21];
+        $i27 = $i26 + 1;
+        r8[i21] = $i27;
+
+     label16:
+        i7 = i7 + 1;
+
+     label17:
+        $i28 = lengthof r7;
+        if i7 < $i28 goto label10;
+
+        $i29 = r8[0];
+        if $i29 <= 0 goto label18;
+
+        $r40 = newarray (java.lang.Object)[2];
+        $r41 = new java.lang.StringBuilder;
+        specialinvoke $r41.<java.lang.StringBuilder: void <init>(java.lang.String)>("<");
+        $r42 = virtualinvoke $r41.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i2);
+        $r43 = virtualinvoke $r42.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r40[0] = $r43;
+        $r44 = new java.lang.StringBuilder;
+        specialinvoke $r44.<java.lang.StringBuilder: void <init>()>();
+        $i30 = r8[0];
+        $r45 = virtualinvoke $r44.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i30);
+        $r46 = virtualinvoke $r45.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r40[1] = $r46;
+        $r47 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.sessiontimeout", $r40);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r47);
+
+     label18:
+        i31 = 1;
+        goto label21;
+
+     label19:
+        $i32 = r8[i31];
+        if $i32 <= 0 goto label20;
+
+        $r48 = newarray (java.lang.Object)[2];
+        $r49 = new java.lang.StringBuilder;
+        specialinvoke $r49.<java.lang.StringBuilder: void <init>()>();
+        $i33 = i31 * i2;
+        $r50 = virtualinvoke $r49.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i33);
+        $r51 = virtualinvoke $r50.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" - <");
+        $i34 = i31 + 1;
+        $i35 = $i34 * i2;
+        $r52 = virtualinvoke $r51.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i35);
+        $r53 = virtualinvoke $r52.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r48[0] = $r53;
+        $r54 = new java.lang.StringBuilder;
+        specialinvoke $r54.<java.lang.StringBuilder: void <init>()>();
+        $i36 = r8[i31];
+        $r55 = virtualinvoke $r54.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i36);
+        $r56 = virtualinvoke $r55.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r48[1] = $r56;
+        $r57 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.sessiontimeout", $r48);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r57);
+
+     label20:
+        i31 = i31 + 1;
+
+     label21:
+        if i31 < i1 goto label19;
+
+        $i37 = r8[i1];
+        if $i37 <= 0 goto label22;
+
+        $r58 = newarray (java.lang.Object)[2];
+        $r59 = new java.lang.StringBuilder;
+        specialinvoke $r59.<java.lang.StringBuilder: void <init>(java.lang.String)>(">=");
+        $i38 = i1 * i2;
+        $r60 = virtualinvoke $r59.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i38);
+        $r61 = virtualinvoke $r60.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r58[0] = $r61;
+        $r62 = new java.lang.StringBuilder;
+        specialinvoke $r62.<java.lang.StringBuilder: void <init>()>();
+        $i39 = r8[i1];
+        $r63 = virtualinvoke $r62.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i39);
+        $r64 = virtualinvoke $r63.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r58[1] = $r64;
+        $r65 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.sessiontimeout", $r58);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r65);
+
+     label22:
+        if i4 <= 0 goto label23;
+
+        $r66 = newarray (java.lang.Object)[1];
+        $r67 = new java.lang.StringBuilder;
+        specialinvoke $r67.<java.lang.StringBuilder: void <init>()>();
+        $r68 = virtualinvoke $r67.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i4);
+        $r69 = virtualinvoke $r68.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r66[0] = $r69;
+        $r70 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.sessiontimeout.unlimited", $r66);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r70);
+
+     label23:
+        if i0 < 0 goto label26;
+
+        $r71 = newarray (java.lang.Object)[2];
+        $r72 = new java.lang.StringBuilder;
+        specialinvoke $r72.<java.lang.StringBuilder: void <init>(java.lang.String)>(">");
+        $r73 = virtualinvoke $r72.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r74 = virtualinvoke $r73.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r71[0] = $r74;
+        $r75 = new java.lang.StringBuilder;
+        specialinvoke $r75.<java.lang.StringBuilder: void <init>()>();
+        $r76 = virtualinvoke $r75.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i5);
+        $r77 = virtualinvoke $r76.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r71[1] = $r77;
+        $r78 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.sessiontimeout.expired", $r71);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r78);
+
+     label24:
+        goto label26;
+
+     label25:
+        $r79 := @caughtexception;
+        r80 = $r79;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r80);
+        $r81 = new java.lang.StringBuilder;
+        specialinvoke $r81.<java.lang.StringBuilder: void <init>(java.lang.String)>("ManagerServlet.sessions[");
+        $r82 = virtualinvoke $r81.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r4);
+        $r83 = virtualinvoke $r82.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+        $r84 = virtualinvoke $r83.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String,java.lang.Throwable)>($r84, r80);
+        $r85 = newarray (java.lang.Object)[1];
+        $r86 = virtualinvoke r80.<java.lang.Throwable: java.lang.String toString()>();
+        $r85[0] = $r86;
+        $r87 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.exception", $r85);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r87);
+
+     label26:
+        return;
+
+        catch java.lang.Throwable from label2 to label3 with label25;
+        catch java.lang.Throwable from label4 to label5 with label25;
+        catch java.lang.Throwable from label6 to label24 with label25;
+    }
+
+    protected void sessions(java.io.PrintWriter, org.apache.catalina.util.ContextName, org.apache.tomcat.util.res.StringManager)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.PrintWriter r1;
+        org.apache.catalina.util.ContextName r2;
+        org.apache.tomcat.util.res.StringManager r3;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.PrintWriter;
+        r2 := @parameter1: org.apache.catalina.util.ContextName;
+        r3 := @parameter2: org.apache.tomcat.util.res.StringManager;
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void sessions(java.io.PrintWriter,org.apache.catalina.util.ContextName,int,org.apache.tomcat.util.res.StringManager)>(r1, r2, -1, r3);
+        return;
+    }
+
+    protected void expireSessions(java.io.PrintWriter, org.apache.catalina.util.ContextName, javax.servlet.http.HttpServletRequest, org.apache.tomcat.util.res.StringManager)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.PrintWriter r1;
+        org.apache.catalina.util.ContextName r2;
+        javax.servlet.http.HttpServletRequest r3;
+        org.apache.tomcat.util.res.StringManager r4;
+        int i0;
+        java.lang.String r5, $r10;
+        java.lang.NumberFormatException r6, $r7;
+        java.lang.StringBuilder $r8, $r9;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.PrintWriter;
+        r2 := @parameter1: org.apache.catalina.util.ContextName;
+        r3 := @parameter2: javax.servlet.http.HttpServletRequest;
+        r4 := @parameter3: org.apache.tomcat.util.res.StringManager;
+        i0 = -1;
+        r5 = interfaceinvoke r3.<javax.servlet.http.HttpServletRequest: java.lang.String getParameter(java.lang.String)>("idle");
+        if r5 == null goto label3;
+
+     label0:
+        i0 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>(r5);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r7 := @caughtexception;
+        r6 = $r7;
+        $r8 = new java.lang.StringBuilder;
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>(java.lang.String)>("Could not parse idle parameter to an int: ");
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r5);
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String)>($r10);
+
+     label3:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void sessions(java.io.PrintWriter,org.apache.catalina.util.ContextName,int,org.apache.tomcat.util.res.StringManager)>(r1, r2, i0, r4);
+        return;
+
+        catch java.lang.NumberFormatException from label0 to label1 with label2;
+    }
+
+    protected void start(java.io.PrintWriter, org.apache.catalina.util.ContextName, org.apache.tomcat.util.res.StringManager)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.PrintWriter r1;
+        org.apache.catalina.util.ContextName r2;
+        org.apache.tomcat.util.res.StringManager r3, $r24;
+        java.lang.String r4, $r9, $r11, $r14, $r15, $r18, $r20, $r26, $r28, $r30, $r31;
+        org.apache.catalina.Context r5;
+        int $i0;
+        java.lang.StringBuilder $r6, $r7, $r8;
+        boolean $z0, $z1;
+        org.apache.catalina.Host $r10;
+        org.apache.catalina.Container $r12;
+        java.lang.Object[] $r13, $r17, $r19, $r25, $r27, $r29;
+        org.apache.catalina.LifecycleState $r16;
+        java.lang.Throwable $r21, r22;
+        javax.servlet.ServletContext $r23;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.PrintWriter;
+        r2 := @parameter1: org.apache.catalina.util.ContextName;
+        r3 := @parameter2: org.apache.tomcat.util.res.StringManager;
+        $i0 = r0.<org.apache.catalina.manager.ManagerServlet: int debug>;
+        if $i0 < 1 goto label0;
+
+        $r6 = new java.lang.StringBuilder;
+        specialinvoke $r6.<java.lang.StringBuilder: void <init>(java.lang.String)>("start: Starting web application \'");
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r2);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String)>($r9);
+
+     label0:
+        $z0 = staticinvoke <org.apache.catalina.manager.ManagerServlet: boolean validateContextName(org.apache.catalina.util.ContextName,java.io.PrintWriter,org.apache.tomcat.util.res.StringManager)>(r2, r1, r3);
+        if $z0 != 0 goto label1;
+
+        return;
+
+     label1:
+        r4 = virtualinvoke r2.<org.apache.catalina.util.ContextName: java.lang.String getDisplayName()>();
+
+     label2:
+        $r10 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        $r11 = virtualinvoke r2.<org.apache.catalina.util.ContextName: java.lang.String getName()>();
+        $r12 = interfaceinvoke $r10.<org.apache.catalina.Host: org.apache.catalina.Container findChild(java.lang.String)>($r11);
+        r5 = (org.apache.catalina.Context) $r12;
+        if r5 != null goto label4;
+
+        $r13 = newarray (java.lang.Object)[1];
+        $r14 = staticinvoke <org.apache.catalina.util.RequestUtil: java.lang.String filter(java.lang.String)>(r4);
+        $r13[0] = $r14;
+        $r15 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.noContext", $r13);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r15);
+
+     label3:
+        return;
+
+     label4:
+        interfaceinvoke r5.<org.apache.catalina.Context: void start()>();
+        $r16 = interfaceinvoke r5.<org.apache.catalina.Context: org.apache.catalina.LifecycleState getState()>();
+        $z1 = virtualinvoke $r16.<org.apache.catalina.LifecycleState: boolean isAvailable()>();
+        if $z1 == 0 goto label5;
+
+        $r17 = newarray (java.lang.Object)[1];
+        $r17[0] = r4;
+        $r18 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.started", $r17);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r18);
+        goto label8;
+
+     label5:
+        $r19 = newarray (java.lang.Object)[1];
+        $r19[0] = r4;
+        $r20 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.startFailed", $r19);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r20);
+
+     label6:
+        goto label8;
+
+     label7:
+        $r21 := @caughtexception;
+        r22 = $r21;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r22);
+        $r23 = virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: javax.servlet.ServletContext getServletContext()>();
+        $r24 = <org.apache.catalina.manager.ManagerServlet: org.apache.tomcat.util.res.StringManager sm>;
+        $r25 = newarray (java.lang.Object)[1];
+        $r25[0] = r4;
+        $r26 = virtualinvoke $r24.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.startFailed", $r25);
+        interfaceinvoke $r23.<javax.servlet.ServletContext: void log(java.lang.String,java.lang.Throwable)>($r26, r22);
+        $r27 = newarray (java.lang.Object)[1];
+        $r27[0] = r4;
+        $r28 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.startFailed", $r27);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r28);
+        $r29 = newarray (java.lang.Object)[1];
+        $r30 = virtualinvoke r22.<java.lang.Throwable: java.lang.String toString()>();
+        $r29[0] = $r30;
+        $r31 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.exception", $r29);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r31);
+
+     label8:
+        return;
+
+        catch java.lang.Throwable from label2 to label3 with label7;
+        catch java.lang.Throwable from label4 to label6 with label7;
+    }
+
+    protected void stop(java.io.PrintWriter, org.apache.catalina.util.ContextName, org.apache.tomcat.util.res.StringManager)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.PrintWriter r1;
+        org.apache.catalina.util.ContextName r2;
+        org.apache.tomcat.util.res.StringManager r3;
+        java.lang.String r4, $r9, $r11, $r14, $r15, $r16, $r18, $r19, $r21, $r27, $r29, $r30;
+        org.apache.catalina.Context r5, $r17;
+        int $i0;
+        java.lang.StringBuilder $r6, $r7, $r8, $r24, $r25, $r26;
+        boolean $z0, $z1;
+        org.apache.catalina.Host $r10;
+        org.apache.catalina.Container $r12;
+        java.lang.Object[] $r13, $r20, $r28;
+        java.lang.Throwable $r22, r23;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.PrintWriter;
+        r2 := @parameter1: org.apache.catalina.util.ContextName;
+        r3 := @parameter2: org.apache.tomcat.util.res.StringManager;
+        $i0 = r0.<org.apache.catalina.manager.ManagerServlet: int debug>;
+        if $i0 < 1 goto label0;
+
+        $r6 = new java.lang.StringBuilder;
+        specialinvoke $r6.<java.lang.StringBuilder: void <init>(java.lang.String)>("stop: Stopping web application \'");
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r2);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String)>($r9);
+
+     label0:
+        $z0 = staticinvoke <org.apache.catalina.manager.ManagerServlet: boolean validateContextName(org.apache.catalina.util.ContextName,java.io.PrintWriter,org.apache.tomcat.util.res.StringManager)>(r2, r1, r3);
+        if $z0 != 0 goto label1;
+
+        return;
+
+     label1:
+        r4 = virtualinvoke r2.<org.apache.catalina.util.ContextName: java.lang.String getDisplayName()>();
+
+     label2:
+        $r10 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        $r11 = virtualinvoke r2.<org.apache.catalina.util.ContextName: java.lang.String getName()>();
+        $r12 = interfaceinvoke $r10.<org.apache.catalina.Host: org.apache.catalina.Container findChild(java.lang.String)>($r11);
+        r5 = (org.apache.catalina.Context) $r12;
+        if r5 != null goto label4;
+
+        $r13 = newarray (java.lang.Object)[1];
+        $r14 = staticinvoke <org.apache.catalina.util.RequestUtil: java.lang.String filter(java.lang.String)>(r4);
+        $r13[0] = $r14;
+        $r15 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.noContext", $r13);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r15);
+
+     label3:
+        return;
+
+     label4:
+        $r16 = interfaceinvoke r5.<org.apache.catalina.Context: java.lang.String getName()>();
+        $r17 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Context context>;
+        $r18 = interfaceinvoke $r17.<org.apache.catalina.Context: java.lang.String getName()>();
+        $z1 = virtualinvoke $r16.<java.lang.String: boolean equals(java.lang.Object)>($r18);
+        if $z1 == 0 goto label6;
+
+        $r19 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("managerServlet.noSelf");
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r19);
+
+     label5:
+        return;
+
+     label6:
+        interfaceinvoke r5.<org.apache.catalina.Context: void stop()>();
+        $r20 = newarray (java.lang.Object)[1];
+        $r20[0] = r4;
+        $r21 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.stopped", $r20);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r21);
+
+     label7:
+        goto label9;
+
+     label8:
+        $r22 := @caughtexception;
+        r23 = $r22;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r23);
+        $r24 = new java.lang.StringBuilder;
+        specialinvoke $r24.<java.lang.StringBuilder: void <init>(java.lang.String)>("ManagerServlet.stop[");
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r4);
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String,java.lang.Throwable)>($r27, r23);
+        $r28 = newarray (java.lang.Object)[1];
+        $r29 = virtualinvoke r23.<java.lang.Throwable: java.lang.String toString()>();
+        $r28[0] = $r29;
+        $r30 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.exception", $r28);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r30);
+
+     label9:
+        return;
+
+        catch java.lang.Throwable from label2 to label3 with label8;
+        catch java.lang.Throwable from label4 to label5 with label8;
+        catch java.lang.Throwable from label6 to label7 with label8;
+    }
+
+    protected void undeploy(java.io.PrintWriter, org.apache.catalina.util.ContextName, org.apache.tomcat.util.res.StringManager)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.PrintWriter r1;
+        org.apache.catalina.util.ContextName r2;
+        org.apache.tomcat.util.res.StringManager r3;
+        java.lang.String r4, r5, r6, $r15, $r19, $r20, $r22, $r23, $r25, $r30, $r32, $r39, $r41, $r43, $r45, $r47, $r50, $r56, $r58, $r59;
+        org.apache.catalina.Context r7;
+        java.lang.Throwable r8, r11, $r26, $r48, $r51, r52;
+        java.io.File r9, r10, $r27, $r28, r33, $r34, $r35, $r36, $r37;
+        int $i0;
+        java.lang.StringBuilder $r12, $r13, $r14, $r29, $r31, $r38, $r40, $r53, $r54, $r55;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8;
+        org.apache.catalina.Host $r16;
+        org.apache.catalina.Container $r17;
+        java.lang.Object[] $r18, $r21, $r24, $r42, $r44, $r46, $r49, $r57;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.PrintWriter;
+        r2 := @parameter1: org.apache.catalina.util.ContextName;
+        r3 := @parameter2: org.apache.tomcat.util.res.StringManager;
+        $i0 = r0.<org.apache.catalina.manager.ManagerServlet: int debug>;
+        if $i0 < 1 goto label0;
+
+        $r12 = new java.lang.StringBuilder;
+        specialinvoke $r12.<java.lang.StringBuilder: void <init>(java.lang.String)>("undeploy: Undeploying web application at \'");
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r2);
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String)>($r15);
+
+     label0:
+        $z0 = staticinvoke <org.apache.catalina.manager.ManagerServlet: boolean validateContextName(org.apache.catalina.util.ContextName,java.io.PrintWriter,org.apache.tomcat.util.res.StringManager)>(r2, r1, r3);
+        if $z0 != 0 goto label1;
+
+        return;
+
+     label1:
+        r4 = virtualinvoke r2.<org.apache.catalina.util.ContextName: java.lang.String getName()>();
+        r5 = virtualinvoke r2.<org.apache.catalina.util.ContextName: java.lang.String getBaseName()>();
+        r6 = virtualinvoke r2.<org.apache.catalina.util.ContextName: java.lang.String getDisplayName()>();
+
+     label2:
+        $r16 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        $r17 = interfaceinvoke $r16.<org.apache.catalina.Host: org.apache.catalina.Container findChild(java.lang.String)>(r4);
+        r7 = (org.apache.catalina.Context) $r17;
+        if r7 != null goto label4;
+
+        $r18 = newarray (java.lang.Object)[1];
+        $r19 = staticinvoke <org.apache.catalina.util.RequestUtil: java.lang.String filter(java.lang.String)>(r6);
+        $r18[0] = $r19;
+        $r20 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.noContext", $r18);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r20);
+
+     label3:
+        return;
+
+     label4:
+        $z1 = virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: boolean isDeployed(java.lang.String)>(r4);
+        if $z1 != 0 goto label6;
+
+        $r21 = newarray (java.lang.Object)[1];
+        $r22 = staticinvoke <org.apache.catalina.util.RequestUtil: java.lang.String filter(java.lang.String)>(r6);
+        $r21[0] = $r22;
+        $r23 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.notDeployed", $r21);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r23);
+
+     label5:
+        return;
+
+     label6:
+        $z2 = virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: boolean isServiced(java.lang.String)>(r4);
+        if $z2 == 0 goto label7;
+
+        $r24 = newarray (java.lang.Object)[1];
+        $r24[0] = r6;
+        $r25 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.inService", $r24);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r25);
+        goto label23;
+
+     label7:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void addServiced(java.lang.String)>(r4);
+
+     label8:
+        interfaceinvoke r7.<org.apache.catalina.Context: void stop()>();
+
+     label9:
+        goto label11;
+
+     label10:
+        $r26 := @caughtexception;
+        r8 = $r26;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r8);
+
+     label11:
+        $r27 = new java.io.File;
+        $r28 = r0.<org.apache.catalina.manager.ManagerServlet: java.io.File deployed>;
+        $r29 = new java.lang.StringBuilder;
+        $r30 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r5);
+        specialinvoke $r29.<java.lang.StringBuilder: void <init>(java.lang.String)>($r30);
+        $r31 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".war");
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r27.<java.io.File: void <init>(java.io.File,java.lang.String)>($r28, $r32);
+        r33 = $r27;
+        $r34 = new java.io.File;
+        $r35 = r0.<org.apache.catalina.manager.ManagerServlet: java.io.File deployed>;
+        specialinvoke $r34.<java.io.File: void <init>(java.io.File,java.lang.String)>($r35, r5);
+        r9 = $r34;
+        $r36 = new java.io.File;
+        $r37 = r0.<org.apache.catalina.manager.ManagerServlet: java.io.File configBase>;
+        $r38 = new java.lang.StringBuilder;
+        $r39 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r5);
+        specialinvoke $r38.<java.lang.StringBuilder: void <init>(java.lang.String)>($r39);
+        $r40 = virtualinvoke $r38.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".xml");
+        $r41 = virtualinvoke $r40.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r36.<java.io.File: void <init>(java.io.File,java.lang.String)>($r37, $r41);
+        r10 = $r36;
+        $z3 = virtualinvoke r33.<java.io.File: boolean exists()>();
+        if $z3 == 0 goto label14;
+
+        $z4 = virtualinvoke r33.<java.io.File: boolean delete()>();
+        if $z4 != 0 goto label14;
+
+        $r42 = newarray (java.lang.Object)[1];
+        $r42[0] = r33;
+        $r43 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.deleteFail", $r42);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r43);
+
+     label12:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void removeServiced(java.lang.String)>(r4);
+
+     label13:
+        return;
+
+     label14:
+        $z5 = virtualinvoke r9.<java.io.File: boolean exists()>();
+        if $z5 == 0 goto label17;
+
+        $z6 = virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: boolean undeployDir(java.io.File)>(r9);
+        if $z6 != 0 goto label17;
+
+        $r44 = newarray (java.lang.Object)[1];
+        $r44[0] = r9;
+        $r45 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.deleteFail", $r44);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r45);
+
+     label15:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void removeServiced(java.lang.String)>(r4);
+
+     label16:
+        return;
+
+     label17:
+        $z7 = virtualinvoke r10.<java.io.File: boolean exists()>();
+        if $z7 == 0 goto label20;
+
+        $z8 = virtualinvoke r10.<java.io.File: boolean delete()>();
+        if $z8 != 0 goto label20;
+
+        $r46 = newarray (java.lang.Object)[1];
+        $r46[0] = r10;
+        $r47 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.deleteFail", $r46);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r47);
+
+     label18:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void removeServiced(java.lang.String)>(r4);
+
+     label19:
+        return;
+
+     label20:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void check(java.lang.String)>(r4);
+        goto label22;
+
+     label21:
+        $r48 := @caughtexception;
+        r11 = $r48;
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void removeServiced(java.lang.String)>(r4);
+        throw r11;
+
+     label22:
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void removeServiced(java.lang.String)>(r4);
+
+     label23:
+        $r49 = newarray (java.lang.Object)[1];
+        $r49[0] = r6;
+        $r50 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.undeployed", $r49);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r50);
+
+     label24:
+        goto label26;
+
+     label25:
+        $r51 := @caughtexception;
+        r52 = $r51;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r52);
+        $r53 = new java.lang.StringBuilder;
+        specialinvoke $r53.<java.lang.StringBuilder: void <init>(java.lang.String)>("ManagerServlet.undeploy[");
+        $r54 = virtualinvoke $r53.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r6);
+        $r55 = virtualinvoke $r54.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+        $r56 = virtualinvoke $r55.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: void log(java.lang.String,java.lang.Throwable)>($r56, r52);
+        $r57 = newarray (java.lang.Object)[1];
+        $r58 = virtualinvoke r52.<java.lang.Throwable: java.lang.String toString()>();
+        $r57[0] = $r58;
+        $r59 = virtualinvoke r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.exception", $r57);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r59);
+
+     label26:
+        return;
+
+        catch java.lang.Throwable from label8 to label9 with label10;
+        catch java.lang.Throwable from label11 to label12 with label21;
+        catch java.lang.Throwable from label14 to label15 with label21;
+        catch java.lang.Throwable from label17 to label18 with label21;
+        catch java.lang.Throwable from label20 to label21 with label21;
+        catch java.lang.Throwable from label2 to label3 with label25;
+        catch java.lang.Throwable from label4 to label5 with label25;
+        catch java.lang.Throwable from label6 to label13 with label25;
+        catch java.lang.Throwable from label14 to label16 with label25;
+        catch java.lang.Throwable from label17 to label19 with label25;
+        catch java.lang.Throwable from label20 to label24 with label25;
+    }
+
+    protected java.io.File getAppBase()
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.File r1, $r3, $r4, $r5, $r8, $r12, $r14;
+        java.io.IOException r2, $r13;
+        org.apache.catalina.Host $r6, $r10;
+        java.lang.String $r7, $r9, $r11;
+        boolean $z0;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        $r3 = r0.<org.apache.catalina.manager.ManagerServlet: java.io.File appBase>;
+        if $r3 == null goto label0;
+
+        $r4 = r0.<org.apache.catalina.manager.ManagerServlet: java.io.File appBase>;
+        return $r4;
+
+     label0:
+        $r5 = new java.io.File;
+        $r6 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        $r7 = interfaceinvoke $r6.<org.apache.catalina.Host: java.lang.String getAppBase()>();
+        specialinvoke $r5.<java.io.File: void <init>(java.lang.String)>($r7);
+        r1 = $r5;
+        $z0 = virtualinvoke r1.<java.io.File: boolean isAbsolute()>();
+        if $z0 != 0 goto label1;
+
+        $r8 = new java.io.File;
+        $r9 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("catalina.base");
+        $r10 = r0.<org.apache.catalina.manager.ManagerServlet: org.apache.catalina.Host host>;
+        $r11 = interfaceinvoke $r10.<org.apache.catalina.Host: java.lang.String getAppBase()>();
+        specialinvoke $r8.<java.io.File: void <init>(java.lang.String,java.lang.String)>($r9, $r11);
+        r1 = $r8;
+
+     label1:
+        $r12 = virtualinvoke r1.<java.io.File: java.io.File getCanonicalFile()>();
+        r0.<org.apache.catalina.manager.ManagerServlet: java.io.File appBase> = $r12;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r13 := @caughtexception;
+        r2 = $r13;
+        r0.<org.apache.catalina.manager.ManagerServlet: java.io.File appBase> = r1;
+
+     label4:
+        $r14 = r0.<org.apache.catalina.manager.ManagerServlet: java.io.File appBase>;
+        return $r14;
+
+        catch java.io.IOException from label1 to label2 with label3;
+    }
+
+    protected boolean isDeployed(java.lang.String) throws java.lang.Exception
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.lang.String r1;
+        java.lang.String[] r2, r3, $r5, $r6;
+        java.lang.Boolean r4;
+        javax.management.MBeanServer $r7;
+        javax.management.ObjectName $r8;
+        java.lang.Object $r9;
+        boolean $z0;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.lang.String;
+        $r5 = newarray (java.lang.String)[1];
+        $r5[0] = r1;
+        r2 = $r5;
+        $r6 = newarray (java.lang.String)[1];
+        $r6[0] = "java.lang.String";
+        r3 = $r6;
+        $r7 = r0.<org.apache.catalina.manager.ManagerServlet: javax.management.MBeanServer mBeanServer>;
+        $r8 = r0.<org.apache.catalina.manager.ManagerServlet: javax.management.ObjectName oname>;
+        $r9 = interfaceinvoke $r7.<javax.management.MBeanServer: java.lang.Object invoke(javax.management.ObjectName,java.lang.String,java.lang.Object[],java.lang.String[])>($r8, "isDeployed", r2, r3);
+        r4 = (java.lang.Boolean) $r9;
+        $z0 = virtualinvoke r4.<java.lang.Boolean: boolean booleanValue()>();
+        return $z0;
+    }
+
+    protected void check(java.lang.String) throws java.lang.Exception
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.lang.String r1;
+        java.lang.String[] r2, r3, $r4, $r5;
+        javax.management.MBeanServer $r6;
+        javax.management.ObjectName $r7;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.lang.String;
+        $r4 = newarray (java.lang.String)[1];
+        $r4[0] = r1;
+        r2 = $r4;
+        $r5 = newarray (java.lang.String)[1];
+        $r5[0] = "java.lang.String";
+        r3 = $r5;
+        $r6 = r0.<org.apache.catalina.manager.ManagerServlet: javax.management.MBeanServer mBeanServer>;
+        $r7 = r0.<org.apache.catalina.manager.ManagerServlet: javax.management.ObjectName oname>;
+        interfaceinvoke $r6.<javax.management.MBeanServer: java.lang.Object invoke(javax.management.ObjectName,java.lang.String,java.lang.Object[],java.lang.String[])>($r7, "check", r2, r3);
+        return;
+    }
+
+    protected boolean isServiced(java.lang.String) throws java.lang.Exception
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.lang.String r1;
+        java.lang.String[] r2, r3, $r5, $r6;
+        java.lang.Boolean r4;
+        javax.management.MBeanServer $r7;
+        javax.management.ObjectName $r8;
+        java.lang.Object $r9;
+        boolean $z0;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.lang.String;
+        $r5 = newarray (java.lang.String)[1];
+        $r5[0] = r1;
+        r2 = $r5;
+        $r6 = newarray (java.lang.String)[1];
+        $r6[0] = "java.lang.String";
+        r3 = $r6;
+        $r7 = r0.<org.apache.catalina.manager.ManagerServlet: javax.management.MBeanServer mBeanServer>;
+        $r8 = r0.<org.apache.catalina.manager.ManagerServlet: javax.management.ObjectName oname>;
+        $r9 = interfaceinvoke $r7.<javax.management.MBeanServer: java.lang.Object invoke(javax.management.ObjectName,java.lang.String,java.lang.Object[],java.lang.String[])>($r8, "isServiced", r2, r3);
+        r4 = (java.lang.Boolean) $r9;
+        $z0 = virtualinvoke r4.<java.lang.Boolean: boolean booleanValue()>();
+        return $z0;
+    }
+
+    protected void addServiced(java.lang.String) throws java.lang.Exception
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.lang.String r1;
+        java.lang.String[] r2, r3, $r4, $r5;
+        javax.management.MBeanServer $r6;
+        javax.management.ObjectName $r7;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.lang.String;
+        $r4 = newarray (java.lang.String)[1];
+        $r4[0] = r1;
+        r2 = $r4;
+        $r5 = newarray (java.lang.String)[1];
+        $r5[0] = "java.lang.String";
+        r3 = $r5;
+        $r6 = r0.<org.apache.catalina.manager.ManagerServlet: javax.management.MBeanServer mBeanServer>;
+        $r7 = r0.<org.apache.catalina.manager.ManagerServlet: javax.management.ObjectName oname>;
+        interfaceinvoke $r6.<javax.management.MBeanServer: java.lang.Object invoke(javax.management.ObjectName,java.lang.String,java.lang.Object[],java.lang.String[])>($r7, "addServiced", r2, r3);
+        return;
+    }
+
+    protected void removeServiced(java.lang.String) throws java.lang.Exception
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.lang.String r1;
+        java.lang.String[] r2, r3, $r4, $r5;
+        javax.management.MBeanServer $r6;
+        javax.management.ObjectName $r7;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.lang.String;
+        $r4 = newarray (java.lang.String)[1];
+        $r4[0] = r1;
+        r2 = $r4;
+        $r5 = newarray (java.lang.String)[1];
+        $r5[0] = "java.lang.String";
+        r3 = $r5;
+        $r6 = r0.<org.apache.catalina.manager.ManagerServlet: javax.management.MBeanServer mBeanServer>;
+        $r7 = r0.<org.apache.catalina.manager.ManagerServlet: javax.management.ObjectName oname>;
+        interfaceinvoke $r6.<javax.management.MBeanServer: java.lang.Object invoke(javax.management.ObjectName,java.lang.String,java.lang.Object[],java.lang.String[])>($r7, "removeServiced", r2, r3);
+        return;
+    }
+
+    protected boolean undeployDir(java.io.File)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.File r1, r3, $r4;
+        java.lang.String[] r2;
+        int i0, $i1;
+        java.lang.String $r5;
+        boolean $z0, $z1, $z2, $z3;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.File;
+        r2 = virtualinvoke r1.<java.io.File: java.lang.String[] list()>();
+        if r2 != null goto label0;
+
+        r2 = newarray (java.lang.String)[0];
+
+     label0:
+        i0 = 0;
+        goto label4;
+
+     label1:
+        $r4 = new java.io.File;
+        $r5 = r2[i0];
+        specialinvoke $r4.<java.io.File: void <init>(java.io.File,java.lang.String)>(r1, $r5);
+        r3 = $r4;
+        $z0 = virtualinvoke r3.<java.io.File: boolean isDirectory()>();
+        if $z0 == 0 goto label2;
+
+        $z1 = virtualinvoke r0.<org.apache.catalina.manager.ManagerServlet: boolean undeployDir(java.io.File)>(r3);
+        if $z1 != 0 goto label3;
+
+        return 0;
+
+     label2:
+        $z2 = virtualinvoke r3.<java.io.File: boolean delete()>();
+        if $z2 != 0 goto label3;
+
+        return 0;
+
+     label3:
+        i0 = i0 + 1;
+
+     label4:
+        $i1 = lengthof r2;
+        if i0 < $i1 goto label1;
+
+        $z3 = virtualinvoke r1.<java.io.File: boolean delete()>();
+        return $z3;
+    }
+
+    protected void uploadWar(java.io.PrintWriter, javax.servlet.http.HttpServletRequest, java.io.File, org.apache.tomcat.util.res.StringManager) throws java.io.IOException
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        java.io.PrintWriter r1;
+        javax.servlet.http.HttpServletRequest r2;
+        java.io.File r3;
+        org.apache.tomcat.util.res.StringManager r4;
+        java.lang.String r5, $r18;
+        java.io.BufferedOutputStream r6, $r13;
+        byte[] r7;
+        int i0;
+        java.lang.Throwable r8, r9, $r19, $r20, $r21, r22, $r23, r24, $r25, r26;
+        boolean $z0, $z1, $z2, $z3;
+        java.lang.Object[] $r10, $r17;
+        java.io.IOException $r11, $r15, r16;
+        javax.servlet.ServletInputStream r12;
+        java.io.FileOutputStream $r14;
+        null_type n0, n1, n2, n3;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: java.io.PrintWriter;
+        r2 := @parameter1: javax.servlet.http.HttpServletRequest;
+        r3 := @parameter2: java.io.File;
+        r4 := @parameter3: org.apache.tomcat.util.res.StringManager;
+        $z0 = virtualinvoke r3.<java.io.File: boolean exists()>();
+        if $z0 == 0 goto label0;
+
+        $z1 = virtualinvoke r3.<java.io.File: boolean delete()>();
+        if $z1 != 0 goto label0;
+
+        $r10 = newarray (java.lang.Object)[1];
+        $r10[0] = r3;
+        r5 = virtualinvoke r4.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.deleteFail", $r10);
+        $r11 = new java.io.IOException;
+        specialinvoke $r11.<java.io.IOException: void <init>(java.lang.String)>(r5);
+        throw $r11;
+
+     label0:
+        r12 = null;
+        r6 = null;
+
+     label1:
+        r12 = interfaceinvoke r2.<javax.servlet.http.HttpServletRequest: javax.servlet.ServletInputStream getInputStream()>();
+        $r13 = new java.io.BufferedOutputStream;
+        $r14 = new java.io.FileOutputStream;
+        specialinvoke $r14.<java.io.FileOutputStream: void <init>(java.io.File)>(r3);
+        specialinvoke $r13.<java.io.BufferedOutputStream: void <init>(java.io.OutputStream,int)>($r14, 1024);
+        r6 = $r13;
+        r7 = newarray (byte)[1024];
+
+     label2:
+        i0 = virtualinvoke r12.<javax.servlet.ServletInputStream: int read(byte[])>(r7);
+        if i0 >= 0 goto label3;
+
+        goto label4;
+
+     label3:
+        virtualinvoke r6.<java.io.BufferedOutputStream: void write(byte[],int,int)>(r7, 0, i0);
+        goto label2;
+
+     label4:
+        virtualinvoke r6.<java.io.BufferedOutputStream: void flush()>();
+        virtualinvoke r6.<java.io.BufferedOutputStream: void close()>();
+        r6 = null;
+        virtualinvoke r12.<javax.servlet.ServletInputStream: void close()>();
+        r12 = null;
+
+     label5:
+        goto label19;
+
+     label6:
+        $r15 := @caughtexception;
+        r16 = $r15;
+        $z2 = virtualinvoke r3.<java.io.File: boolean exists()>();
+        if $z2 == 0 goto label7;
+
+        $z3 = virtualinvoke r3.<java.io.File: boolean delete()>();
+        if $z3 != 0 goto label7;
+
+        $r17 = newarray (java.lang.Object)[1];
+        $r17[0] = r3;
+        $r18 = virtualinvoke r4.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.deleteFail", $r17);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r18);
+
+     label7:
+        throw r16;
+
+     label8:
+        $r19 := @caughtexception;
+        r8 = $r19;
+        if r6 == null goto label13;
+
+     label9:
+        virtualinvoke r6.<java.io.BufferedOutputStream: void close()>();
+
+     label10:
+        goto label12;
+
+     label11:
+        $r20 := @caughtexception;
+        r9 = $r20;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r9);
+
+     label12:
+        n0 = null;
+
+     label13:
+        if r12 == null goto label18;
+
+     label14:
+        virtualinvoke r12.<javax.servlet.ServletInputStream: void close()>();
+
+     label15:
+        goto label17;
+
+     label16:
+        $r21 := @caughtexception;
+        r22 = $r21;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r22);
+
+     label17:
+        n1 = null;
+
+     label18:
+        throw r8;
+
+     label19:
+        if r6 == null goto label24;
+
+     label20:
+        virtualinvoke r6.<java.io.BufferedOutputStream: void close()>();
+
+     label21:
+        goto label23;
+
+     label22:
+        $r23 := @caughtexception;
+        r24 = $r23;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r24);
+
+     label23:
+        n2 = null;
+
+     label24:
+        if r12 == null goto label29;
+
+     label25:
+        virtualinvoke r12.<javax.servlet.ServletInputStream: void close()>();
+
+     label26:
+        goto label28;
+
+     label27:
+        $r25 := @caughtexception;
+        r26 = $r25;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r26);
+
+     label28:
+        n3 = null;
+
+     label29:
+        return;
+
+        catch java.io.IOException from label1 to label5 with label6;
+        catch java.lang.Throwable from label1 to label8 with label8;
+        catch java.lang.Throwable from label9 to label10 with label11;
+        catch java.lang.Throwable from label14 to label15 with label16;
+        catch java.lang.Throwable from label20 to label21 with label22;
+        catch java.lang.Throwable from label25 to label26 with label27;
+    }
+
+    protected org.apache.tomcat.util.res.StringManager getStringManager(javax.servlet.http.HttpServletRequest)
+    {
+        org.apache.catalina.manager.ManagerServlet r0;
+        javax.servlet.http.HttpServletRequest r1;
+        java.util.Enumeration r2;
+        java.util.Locale r3, $r6;
+        org.apache.tomcat.util.res.StringManager r4, $r7;
+        java.lang.Object $r5;
+        boolean $z0, $z1;
+
+        r0 := @this: org.apache.catalina.manager.ManagerServlet;
+        r1 := @parameter0: javax.servlet.http.HttpServletRequest;
+        r2 = interfaceinvoke r1.<javax.servlet.http.HttpServletRequest: java.util.Enumeration getLocales()>();
+        goto label1;
+
+     label0:
+        $r5 = interfaceinvoke r2.<java.util.Enumeration: java.lang.Object nextElement()>();
+        r3 = (java.util.Locale) $r5;
+        r4 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String,java.util.Locale)>("org.apache.catalina.manager", r3);
+        $r6 = virtualinvoke r4.<org.apache.tomcat.util.res.StringManager: java.util.Locale getLocale()>();
+        $z0 = virtualinvoke $r6.<java.util.Locale: boolean equals(java.lang.Object)>(r3);
+        if $z0 == 0 goto label1;
+
+        return r4;
+
+     label1:
+        $z1 = interfaceinvoke r2.<java.util.Enumeration: boolean hasMoreElements()>();
+        if $z1 != 0 goto label0;
+
+        $r7 = <org.apache.catalina.manager.ManagerServlet: org.apache.tomcat.util.res.StringManager sm>;
+        return $r7;
+    }
+
+    protected static boolean validateContextName(org.apache.catalina.util.ContextName, java.io.PrintWriter, org.apache.tomcat.util.res.StringManager)
+    {
+        org.apache.catalina.util.ContextName r0;
+        java.io.PrintWriter r1;
+        org.apache.tomcat.util.res.StringManager r2;
+        java.lang.String r3, $r4, $r5, $r6, $r8;
+        boolean $z0, $z1;
+        java.lang.Object[] $r7;
+
+        r0 := @parameter0: org.apache.catalina.util.ContextName;
+        r1 := @parameter1: java.io.PrintWriter;
+        r2 := @parameter2: org.apache.tomcat.util.res.StringManager;
+        if r0 == null goto label1;
+
+        $r4 = virtualinvoke r0.<org.apache.catalina.util.ContextName: java.lang.String getPath()>();
+        $z0 = virtualinvoke $r4.<java.lang.String: boolean startsWith(java.lang.String)>("/");
+        if $z0 != 0 goto label0;
+
+        $r5 = virtualinvoke r0.<org.apache.catalina.util.ContextName: java.lang.String getPath()>();
+        $z1 = virtualinvoke $r5.<java.lang.String: boolean equals(java.lang.Object)>("");
+        if $z1 == 0 goto label1;
+
+     label0:
+        return 1;
+
+     label1:
+        r3 = null;
+        if r0 == null goto label2;
+
+        $r6 = virtualinvoke r0.<org.apache.catalina.util.ContextName: java.lang.String getPath()>();
+        r3 = staticinvoke <org.apache.catalina.util.RequestUtil: java.lang.String filter(java.lang.String)>($r6);
+
+     label2:
+        $r7 = newarray (java.lang.Object)[1];
+        $r7[0] = r3;
+        $r8 = virtualinvoke r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("managerServlet.invalidPath", $r7);
+        virtualinvoke r1.<java.io.PrintWriter: void println(java.lang.String)>($r8);
+        return 0;
+    }
+
+    public static boolean copy(java.io.File, java.io.File)
+    {
+        java.io.File r0, r1;
+        boolean z0, $z1;
+        java.io.IOException r2, $r6;
+        java.lang.String $r3, $r4;
+        byte[] $r5;
+
+        r0 := @parameter0: java.io.File;
+        r1 := @parameter1: java.io.File;
+        z0 = 0;
+
+     label0:
+        if r0 == null goto label3;
+
+        $r3 = virtualinvoke r0.<java.io.File: java.lang.String getCanonicalPath()>();
+        $r4 = virtualinvoke r1.<java.io.File: java.lang.String getCanonicalPath()>();
+        $z1 = virtualinvoke $r3.<java.lang.String: boolean equals(java.lang.Object)>($r4);
+        if $z1 != 0 goto label3;
+
+        $r5 = newarray (byte)[4096];
+        z0 = staticinvoke <org.apache.catalina.manager.ManagerServlet: boolean copyInternal(java.io.File,java.io.File,byte[])>(r0, r1, $r5);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r6 := @caughtexception;
+        r2 = $r6;
+        virtualinvoke r2.<java.io.IOException: void printStackTrace()>();
+
+     label3:
+        return z0;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    public static boolean copyInternal(java.io.File, java.io.File, byte[])
+    {
+        java.io.File r0, r1, r3, r4, $r10, $r12;
+        byte[] r2;
+        boolean z0, z1, $z2, $z3;
+        null_type n0;
+        int i0, i1, $i2;
+        java.io.FileInputStream r5, $r14;
+        java.io.FileOutputStream r6, $r15;
+        java.io.IOException r7, $r16, r17, $r18, $r19, r20, $r22, r23, $r24, r25, $r26, r27, $r28, r29;
+        java.lang.Throwable r8, $r21;
+        java.lang.String[] r9;
+        java.lang.String $r11, $r13;
+
+        r0 := @parameter0: java.io.File;
+        r1 := @parameter1: java.io.File;
+        r2 := @parameter2: byte[];
+        z0 = 1;
+        n0 = null;
+        $z2 = virtualinvoke r0.<java.io.File: boolean isDirectory()>();
+        if $z2 == 0 goto label0;
+
+        r9 = virtualinvoke r0.<java.io.File: java.lang.String[] list()>();
+        z0 = virtualinvoke r1.<java.io.File: boolean mkdir()>();
+        goto label1;
+
+     label0:
+        r9 = newarray (java.lang.String)[1];
+        r9[0] = "";
+
+     label1:
+        if r9 != null goto label2;
+
+        r9 = newarray (java.lang.String)[0];
+
+     label2:
+        i0 = 0;
+        goto label35;
+
+     label3:
+        $r10 = new java.io.File;
+        $r11 = r9[i0];
+        specialinvoke $r10.<java.io.File: void <init>(java.io.File,java.lang.String)>(r0, $r11);
+        r3 = $r10;
+        $r12 = new java.io.File;
+        $r13 = r9[i0];
+        specialinvoke $r12.<java.io.File: void <init>(java.io.File,java.lang.String)>(r1, $r13);
+        r4 = $r12;
+        $z3 = virtualinvoke r3.<java.io.File: boolean isDirectory()>();
+        if $z3 == 0 goto label4;
+
+        z0 = staticinvoke <org.apache.catalina.manager.ManagerServlet: boolean copyInternal(java.io.File,java.io.File,byte[])>(r3, r4, r2);
+        goto label34;
+
+     label4:
+        r5 = null;
+        r6 = null;
+
+     label5:
+        $r14 = new java.io.FileInputStream;
+        specialinvoke $r14.<java.io.FileInputStream: void <init>(java.io.File)>(r3);
+        r5 = $r14;
+        $r15 = new java.io.FileOutputStream;
+        specialinvoke $r15.<java.io.FileOutputStream: void <init>(java.io.File)>(r4);
+        r6 = $r15;
+        z1 = 0;
+
+     label6:
+        i1 = virtualinvoke r5.<java.io.FileInputStream: int read(byte[])>(r2);
+        if i1 != -1 goto label7;
+
+        goto label26;
+
+     label7:
+        virtualinvoke r6.<java.io.FileOutputStream: void write(byte[],int,int)>(r2, 0, i1);
+        goto label6;
+
+     label8:
+        $r16 := @caughtexception;
+        r17 = $r16;
+        virtualinvoke r17.<java.io.IOException: void printStackTrace()>();
+        z0 = 0;
+
+     label9:
+        if r5 == null goto label13;
+
+     label10:
+        virtualinvoke r5.<java.io.FileInputStream: void close()>();
+
+     label11:
+        goto label13;
+
+     label12:
+        $r18 := @caughtexception;
+        r7 = $r18;
+
+     label13:
+        if r6 == null goto label34;
+
+     label14:
+        virtualinvoke r6.<java.io.FileOutputStream: void close()>();
+
+     label15:
+        goto label34;
+
+     label16:
+        $r19 := @caughtexception;
+        r20 = $r19;
+        goto label34;
+
+     label17:
+        $r21 := @caughtexception;
+        r8 = $r21;
+        if r5 == null goto label21;
+
+     label18:
+        virtualinvoke r5.<java.io.FileInputStream: void close()>();
+
+     label19:
+        goto label21;
+
+     label20:
+        $r22 := @caughtexception;
+        r23 = $r22;
+
+     label21:
+        if r6 == null goto label25;
+
+     label22:
+        virtualinvoke r6.<java.io.FileOutputStream: void close()>();
+
+     label23:
+        goto label25;
+
+     label24:
+        $r24 := @caughtexception;
+        r25 = $r24;
+
+     label25:
+        throw r8;
+
+     label26:
+        if r5 == null goto label30;
+
+     label27:
+        virtualinvoke r5.<java.io.FileInputStream: void close()>();
+
+     label28:
+        goto label30;
+
+     label29:
+        $r26 := @caughtexception;
+        r27 = $r26;
+
+     label30:
+        if r6 == null goto label34;
+
+     label31:
+        virtualinvoke r6.<java.io.FileOutputStream: void close()>();
+
+     label32:
+        goto label34;
+
+     label33:
+        $r28 := @caughtexception;
+        r29 = $r28;
+
+     label34:
+        i0 = i0 + 1;
+
+     label35:
+        $i2 = lengthof r9;
+        if i0 >= $i2 goto label36;
+
+        if z0 != 0 goto label3;
+
+     label36:
+        return z0;
+
+        catch java.io.IOException from label5 to label8 with label8;
+        catch java.io.IOException from label10 to label11 with label12;
+        catch java.io.IOException from label14 to label15 with label16;
+        catch java.lang.Throwable from label5 to label9 with label17;
+        catch java.io.IOException from label18 to label19 with label20;
+        catch java.io.IOException from label22 to label23 with label24;
+        catch java.io.IOException from label27 to label28 with label29;
+        catch java.io.IOException from label31 to label32 with label33;
+    }
+}

@@ -1,0 +1,366 @@
+public class org.apache.catalina.startup.WebappServiceLoader extends java.lang.Object
+{
+    private static final java.lang.String LIB;
+    private static final java.lang.String SERVICES;
+    private static final java.nio.charset.Charset UTF8;
+    private final org.apache.catalina.Context context;
+    private final javax.servlet.ServletContext servletContext;
+    private final java.util.regex.Pattern containerSciFilterPattern;
+
+    static void <clinit>()
+    {
+        java.nio.charset.Charset $r0;
+
+        $r0 = staticinvoke <java.nio.charset.Charset: java.nio.charset.Charset forName(java.lang.String)>("UTF-8");
+        <org.apache.catalina.startup.WebappServiceLoader: java.nio.charset.Charset UTF8> = $r0;
+        return;
+    }
+
+    public void <init>(org.apache.catalina.Context)
+    {
+        org.apache.catalina.startup.WebappServiceLoader r0;
+        org.apache.catalina.Context r1;
+        java.lang.String r2;
+        javax.servlet.ServletContext $r3;
+        int $i0;
+        java.util.regex.Pattern $r4;
+
+        r0 := @this: org.apache.catalina.startup.WebappServiceLoader;
+        r1 := @parameter0: org.apache.catalina.Context;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<org.apache.catalina.startup.WebappServiceLoader: org.apache.catalina.Context context> = r1;
+        $r3 = interfaceinvoke r1.<org.apache.catalina.Context: javax.servlet.ServletContext getServletContext()>();
+        r0.<org.apache.catalina.startup.WebappServiceLoader: javax.servlet.ServletContext servletContext> = $r3;
+        r2 = interfaceinvoke r1.<org.apache.catalina.Context: java.lang.String getContainerSciFilter()>();
+        if r2 == null goto label0;
+
+        $i0 = virtualinvoke r2.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label0;
+
+        $r4 = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern compile(java.lang.String)>(r2);
+        r0.<org.apache.catalina.startup.WebappServiceLoader: java.util.regex.Pattern containerSciFilterPattern> = $r4;
+        goto label1;
+
+     label0:
+        r0.<org.apache.catalina.startup.WebappServiceLoader: java.util.regex.Pattern containerSciFilterPattern> = null;
+
+     label1:
+        return;
+    }
+
+    public java.util.List load(java.lang.Class) throws java.io.IOException
+    {
+        org.apache.catalina.startup.WebappServiceLoader r0;
+        java.lang.Class r1;
+        java.lang.StringBuilder $r2, $r15, $r23, $r24, $r27, $r29;
+        java.lang.String r3, r9, r11, $r14, $r25, $r28, $r30;
+        java.util.LinkedHashSet r4, r5, $r16, $r17;
+        java.lang.ClassLoader r6;
+        java.util.List r7, $r42, $r43;
+        java.util.Iterator r8, r37;
+        java.net.URL r10, r12, $r26, $r35;
+        java.io.FileNotFoundException r13, $r31;
+        javax.servlet.ServletContext $r18, $r19, $r22;
+        java.lang.Object $r20, $r21, $r34, $r39;
+        boolean $z0, $z1, $z2, $z3, $z4, $z6;
+        org.apache.catalina.Context $r32;
+        java.util.Enumeration r33;
+        java.util.regex.Pattern $r36, $r38;
+        java.lang.CharSequence $r40;
+        java.util.regex.Matcher $r41;
+
+        r0 := @this: org.apache.catalina.startup.WebappServiceLoader;
+        r1 := @parameter0: java.lang.Class;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>(java.lang.String)>("META-INF/services/");
+        $r14 = virtualinvoke r1.<java.lang.Class: java.lang.String getName()>();
+        $r15 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r14);
+        r3 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r16 = new java.util.LinkedHashSet;
+        specialinvoke $r16.<java.util.LinkedHashSet: void <init>()>();
+        r4 = $r16;
+        $r17 = new java.util.LinkedHashSet;
+        specialinvoke $r17.<java.util.LinkedHashSet: void <init>()>();
+        r5 = $r17;
+        $r18 = r0.<org.apache.catalina.startup.WebappServiceLoader: javax.servlet.ServletContext servletContext>;
+        r6 = interfaceinvoke $r18.<javax.servlet.ServletContext: java.lang.ClassLoader getClassLoader()>();
+        $r19 = r0.<org.apache.catalina.startup.WebappServiceLoader: javax.servlet.ServletContext servletContext>;
+        $r20 = interfaceinvoke $r19.<javax.servlet.ServletContext: java.lang.Object getAttribute(java.lang.String)>("javax.servlet.context.orderedLibs");
+        r7 = (java.util.List) $r20;
+        if r7 == null goto label7;
+
+        r8 = interfaceinvoke r7.<java.util.List: java.util.Iterator iterator()>();
+        goto label6;
+
+     label0:
+        $r21 = interfaceinvoke r8.<java.util.Iterator: java.lang.Object next()>();
+        r9 = (java.lang.String) $r21;
+        $r22 = r0.<org.apache.catalina.startup.WebappServiceLoader: javax.servlet.ServletContext servletContext>;
+        $r23 = new java.lang.StringBuilder;
+        specialinvoke $r23.<java.lang.StringBuilder: void <init>(java.lang.String)>("/WEB-INF/lib/");
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r9);
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.String toString()>();
+        r10 = interfaceinvoke $r22.<javax.servlet.ServletContext: java.net.URL getResource(java.lang.String)>($r25);
+        if r10 != null goto label1;
+
+        goto label6;
+
+     label1:
+        r11 = virtualinvoke r10.<java.net.URL: java.lang.String toExternalForm()>();
+        $z0 = virtualinvoke r11.<java.lang.String: boolean endsWith(java.lang.String)>("/");
+        if $z0 == 0 goto label2;
+
+        $r26 = new java.net.URL;
+        $r27 = new java.lang.StringBuilder;
+        $r28 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r11);
+        specialinvoke $r27.<java.lang.StringBuilder: void <init>(java.lang.String)>($r28);
+        $r29 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r3);
+        $r30 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r26.<java.net.URL: void <init>(java.lang.String)>($r30);
+        r12 = $r26;
+        goto label3;
+
+     label2:
+        r12 = staticinvoke <org.apache.tomcat.util.buf.UriUtil: java.net.URL buildJarUrl(java.lang.String,java.lang.String)>(r11, r3);
+
+     label3:
+        specialinvoke r0.<org.apache.catalina.startup.WebappServiceLoader: void parseConfigFile(java.util.LinkedHashSet,java.net.URL)>(r4, r12);
+
+     label4:
+        goto label6;
+
+     label5:
+        $r31 := @caughtexception;
+        r13 = $r31;
+
+     label6:
+        $z1 = interfaceinvoke r8.<java.util.Iterator: boolean hasNext()>();
+        if $z1 != 0 goto label0;
+
+        $r32 = r0.<org.apache.catalina.startup.WebappServiceLoader: org.apache.catalina.Context context>;
+        r6 = interfaceinvoke $r32.<org.apache.catalina.Context: java.lang.ClassLoader getParentClassLoader()>();
+
+     label7:
+        if r6 != null goto label8;
+
+        r33 = staticinvoke <java.lang.ClassLoader: java.util.Enumeration getSystemResources(java.lang.String)>(r3);
+        goto label10;
+
+     label8:
+        r33 = virtualinvoke r6.<java.lang.ClassLoader: java.util.Enumeration getResources(java.lang.String)>(r3);
+        goto label10;
+
+     label9:
+        $r34 = interfaceinvoke r33.<java.util.Enumeration: java.lang.Object nextElement()>();
+        $r35 = (java.net.URL) $r34;
+        specialinvoke r0.<org.apache.catalina.startup.WebappServiceLoader: void parseConfigFile(java.util.LinkedHashSet,java.net.URL)>(r5, $r35);
+
+     label10:
+        $z2 = interfaceinvoke r33.<java.util.Enumeration: boolean hasMoreElements()>();
+        if $z2 != 0 goto label9;
+
+        $r36 = r0.<org.apache.catalina.startup.WebappServiceLoader: java.util.regex.Pattern containerSciFilterPattern>;
+        if $r36 == null goto label13;
+
+        r37 = virtualinvoke r5.<java.util.LinkedHashSet: java.util.Iterator iterator()>();
+        goto label12;
+
+     label11:
+        $r38 = r0.<org.apache.catalina.startup.WebappServiceLoader: java.util.regex.Pattern containerSciFilterPattern>;
+        $r39 = interfaceinvoke r37.<java.util.Iterator: java.lang.Object next()>();
+        $r40 = (java.lang.CharSequence) $r39;
+        $r41 = virtualinvoke $r38.<java.util.regex.Pattern: java.util.regex.Matcher matcher(java.lang.CharSequence)>($r40);
+        $z3 = virtualinvoke $r41.<java.util.regex.Matcher: boolean find()>();
+        if $z3 == 0 goto label12;
+
+        interfaceinvoke r37.<java.util.Iterator: void remove()>();
+
+     label12:
+        $z4 = interfaceinvoke r37.<java.util.Iterator: boolean hasNext()>();
+        if $z4 != 0 goto label11;
+
+     label13:
+        virtualinvoke r5.<java.util.LinkedHashSet: boolean addAll(java.util.Collection)>(r4);
+        $z6 = virtualinvoke r5.<java.util.LinkedHashSet: boolean isEmpty()>();
+        if $z6 == 0 goto label14;
+
+        $r42 = staticinvoke <java.util.Collections: java.util.List emptyList()>();
+        return $r42;
+
+     label14:
+        $r43 = specialinvoke r0.<org.apache.catalina.startup.WebappServiceLoader: java.util.List loadServices(java.lang.Class,java.util.LinkedHashSet)>(r1, r5);
+        return $r43;
+
+        catch java.io.FileNotFoundException from label3 to label4 with label5;
+    }
+
+    private void parseConfigFile(java.util.LinkedHashSet, java.net.URL) throws java.io.IOException
+    {
+        org.apache.catalina.startup.WebappServiceLoader r0;
+        java.util.LinkedHashSet r1;
+        java.net.URL r2;
+        java.io.InputStream r3;
+        java.io.BufferedReader r4, $r10;
+        java.nio.charset.Charset $r5;
+        java.io.InputStreamReader r6, $r9;
+        java.lang.String r7, r11, $r12;
+        int i0, $i1;
+        java.lang.Throwable r8, $r13;
+
+        r0 := @this: org.apache.catalina.startup.WebappServiceLoader;
+        r1 := @parameter0: java.util.LinkedHashSet;
+        r2 := @parameter1: java.net.URL;
+        r3 = null;
+        r4 = null;
+
+     label0:
+        r3 = virtualinvoke r2.<java.net.URL: java.io.InputStream openStream()>();
+        $r9 = new java.io.InputStreamReader;
+        $r5 = <org.apache.catalina.startup.WebappServiceLoader: java.nio.charset.Charset UTF8>;
+        specialinvoke $r9.<java.io.InputStreamReader: void <init>(java.io.InputStream,java.nio.charset.Charset)>(r3, $r5);
+        r6 = $r9;
+        $r10 = new java.io.BufferedReader;
+        specialinvoke $r10.<java.io.BufferedReader: void <init>(java.io.Reader)>(r6);
+        r4 = $r10;
+        goto label4;
+
+     label1:
+        i0 = virtualinvoke r7.<java.lang.String: int indexOf(int)>(35);
+        if i0 < 0 goto label2;
+
+        r7 = virtualinvoke r7.<java.lang.String: java.lang.String substring(int,int)>(0, i0);
+
+     label2:
+        r11 = virtualinvoke r7.<java.lang.String: java.lang.String trim()>();
+        $i1 = virtualinvoke r11.<java.lang.String: int length()>();
+        if $i1 != 0 goto label3;
+
+        goto label4;
+
+     label3:
+        virtualinvoke r1.<java.util.LinkedHashSet: boolean add(java.lang.Object)>(r11);
+
+     label4:
+        $r12 = virtualinvoke r4.<java.io.BufferedReader: java.lang.String readLine()>();
+        r7 = $r12;
+        if $r12 != null goto label1;
+
+        goto label8;
+
+     label5:
+        $r13 := @caughtexception;
+        r8 = $r13;
+        if r4 == null goto label6;
+
+        virtualinvoke r4.<java.io.BufferedReader: void close()>();
+
+     label6:
+        if r3 == null goto label7;
+
+        virtualinvoke r3.<java.io.InputStream: void close()>();
+
+     label7:
+        throw r8;
+
+     label8:
+        if r4 == null goto label9;
+
+        virtualinvoke r4.<java.io.BufferedReader: void close()>();
+
+     label9:
+        if r3 == null goto label10;
+
+        virtualinvoke r3.<java.io.InputStream: void close()>();
+
+     label10:
+        return;
+
+        catch java.lang.Throwable from label0 to label5 with label5;
+    }
+
+    private java.util.List loadServices(java.lang.Class, java.util.LinkedHashSet) throws java.io.IOException
+    {
+        org.apache.catalina.startup.WebappServiceLoader r0;
+        java.lang.Class r1, r7;
+        java.util.LinkedHashSet r2;
+        java.lang.ClassLoader r3;
+        java.util.ArrayList r4, $r9;
+        java.util.Iterator r5;
+        java.lang.String r6;
+        javax.servlet.ServletContext $r8;
+        int $i0;
+        java.lang.Object $r10, $r11, $r12;
+        java.lang.ClassNotFoundException $r13, r14;
+        java.io.IOException $r15, $r18, $r21, $r24;
+        java.lang.InstantiationException $r16, r17;
+        java.lang.IllegalAccessException $r19, r20;
+        java.lang.ClassCastException $r22, r23;
+        boolean $z1;
+        java.util.List $r25;
+
+        r0 := @this: org.apache.catalina.startup.WebappServiceLoader;
+        r1 := @parameter0: java.lang.Class;
+        r2 := @parameter1: java.util.LinkedHashSet;
+        $r8 = r0.<org.apache.catalina.startup.WebappServiceLoader: javax.servlet.ServletContext servletContext>;
+        r3 = interfaceinvoke $r8.<javax.servlet.ServletContext: java.lang.ClassLoader getClassLoader()>();
+        $r9 = new java.util.ArrayList;
+        $i0 = virtualinvoke r2.<java.util.LinkedHashSet: int size()>();
+        specialinvoke $r9.<java.util.ArrayList: void <init>(int)>($i0);
+        r4 = $r9;
+        r5 = virtualinvoke r2.<java.util.LinkedHashSet: java.util.Iterator iterator()>();
+        goto label7;
+
+     label0:
+        $r10 = interfaceinvoke r5.<java.util.Iterator: java.lang.Object next()>();
+        r6 = (java.lang.String) $r10;
+
+     label1:
+        r7 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String,boolean,java.lang.ClassLoader)>(r6, 1, r3);
+        $r11 = virtualinvoke r7.<java.lang.Class: java.lang.Object newInstance()>();
+        $r12 = virtualinvoke r1.<java.lang.Class: java.lang.Object cast(java.lang.Object)>($r11);
+        interfaceinvoke r4.<java.util.List: boolean add(java.lang.Object)>($r12);
+
+     label2:
+        goto label7;
+
+     label3:
+        $r13 := @caughtexception;
+        r14 = $r13;
+        $r15 = new java.io.IOException;
+        specialinvoke $r15.<java.io.IOException: void <init>(java.lang.Throwable)>(r14);
+        throw $r15;
+
+     label4:
+        $r16 := @caughtexception;
+        r17 = $r16;
+        $r18 = new java.io.IOException;
+        specialinvoke $r18.<java.io.IOException: void <init>(java.lang.Throwable)>(r17);
+        throw $r18;
+
+     label5:
+        $r19 := @caughtexception;
+        r20 = $r19;
+        $r21 = new java.io.IOException;
+        specialinvoke $r21.<java.io.IOException: void <init>(java.lang.Throwable)>(r20);
+        throw $r21;
+
+     label6:
+        $r22 := @caughtexception;
+        r23 = $r22;
+        $r24 = new java.io.IOException;
+        specialinvoke $r24.<java.io.IOException: void <init>(java.lang.Throwable)>(r23);
+        throw $r24;
+
+     label7:
+        $z1 = interfaceinvoke r5.<java.util.Iterator: boolean hasNext()>();
+        if $z1 != 0 goto label0;
+
+        $r25 = staticinvoke <java.util.Collections: java.util.List unmodifiableList(java.util.List)>(r4);
+        return $r25;
+
+        catch java.lang.ClassNotFoundException from label1 to label2 with label3;
+        catch java.lang.InstantiationException from label1 to label2 with label4;
+        catch java.lang.IllegalAccessException from label1 to label2 with label5;
+        catch java.lang.ClassCastException from label1 to label2 with label6;
+    }
+}

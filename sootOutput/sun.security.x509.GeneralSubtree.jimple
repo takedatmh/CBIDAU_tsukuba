@@ -1,0 +1,329 @@
+public class sun.security.x509.GeneralSubtree extends java.lang.Object
+{
+    private static final byte TAG_MIN;
+    private static final byte TAG_MAX;
+    private static final int MIN_DEFAULT;
+    private sun.security.x509.GeneralName name;
+    private int minimum;
+    private int maximum;
+    private int myhash;
+
+    public void <init>(sun.security.x509.GeneralName, int, int)
+    {
+        sun.security.x509.GeneralSubtree r0;
+        sun.security.x509.GeneralName r1;
+        int i0, i1;
+
+        r0 := @this: sun.security.x509.GeneralSubtree;
+        r1 := @parameter0: sun.security.x509.GeneralName;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.security.x509.GeneralSubtree: int minimum> = 0;
+        r0.<sun.security.x509.GeneralSubtree: int maximum> = -1;
+        r0.<sun.security.x509.GeneralSubtree: int myhash> = -1;
+        r0.<sun.security.x509.GeneralSubtree: sun.security.x509.GeneralName name> = r1;
+        r0.<sun.security.x509.GeneralSubtree: int minimum> = i0;
+        r0.<sun.security.x509.GeneralSubtree: int maximum> = i1;
+        return;
+    }
+
+    public void <init>(sun.security.util.DerValue) throws java.io.IOException
+    {
+        sun.security.x509.GeneralSubtree r0;
+        sun.security.util.DerValue r1, r2, $r6;
+        byte $b0;
+        java.io.IOException $r3, $r9;
+        sun.security.x509.GeneralName $r4;
+        sun.security.util.DerInputStream $r5, $r7, $r8;
+        int $i1, $i2, $i3;
+        boolean $z0, $z1, $z2, $z3;
+
+        r0 := @this: sun.security.x509.GeneralSubtree;
+        r1 := @parameter0: sun.security.util.DerValue;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.security.x509.GeneralSubtree: int minimum> = 0;
+        r0.<sun.security.x509.GeneralSubtree: int maximum> = -1;
+        r0.<sun.security.x509.GeneralSubtree: int myhash> = -1;
+        $b0 = r1.<sun.security.util.DerValue: byte tag>;
+        if $b0 == 48 goto label0;
+
+        $r3 = new java.io.IOException;
+        specialinvoke $r3.<java.io.IOException: void <init>(java.lang.String)>("Invalid encoding for GeneralSubtree.");
+        throw $r3;
+
+     label0:
+        $r4 = new sun.security.x509.GeneralName;
+        $r5 = r1.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $r6 = virtualinvoke $r5.<sun.security.util.DerInputStream: sun.security.util.DerValue getDerValue()>();
+        specialinvoke $r4.<sun.security.x509.GeneralName: void <init>(sun.security.util.DerValue,boolean)>($r6, 1);
+        r0.<sun.security.x509.GeneralSubtree: sun.security.x509.GeneralName name> = $r4;
+
+     label1:
+        $r7 = r1.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $i1 = virtualinvoke $r7.<sun.security.util.DerInputStream: int available()>();
+        if $i1 == 0 goto label5;
+
+        $r8 = r1.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        r2 = virtualinvoke $r8.<sun.security.util.DerInputStream: sun.security.util.DerValue getDerValue()>();
+        $z0 = virtualinvoke r2.<sun.security.util.DerValue: boolean isContextSpecific(byte)>(0);
+        if $z0 == 0 goto label2;
+
+        $z1 = virtualinvoke r2.<sun.security.util.DerValue: boolean isConstructed()>();
+        if $z1 != 0 goto label2;
+
+        virtualinvoke r2.<sun.security.util.DerValue: void resetTag(byte)>(2);
+        $i2 = virtualinvoke r2.<sun.security.util.DerValue: int getInteger()>();
+        r0.<sun.security.x509.GeneralSubtree: int minimum> = $i2;
+        goto label4;
+
+     label2:
+        $z2 = virtualinvoke r2.<sun.security.util.DerValue: boolean isContextSpecific(byte)>(1);
+        if $z2 == 0 goto label3;
+
+        $z3 = virtualinvoke r2.<sun.security.util.DerValue: boolean isConstructed()>();
+        if $z3 != 0 goto label3;
+
+        virtualinvoke r2.<sun.security.util.DerValue: void resetTag(byte)>(2);
+        $i3 = virtualinvoke r2.<sun.security.util.DerValue: int getInteger()>();
+        r0.<sun.security.x509.GeneralSubtree: int maximum> = $i3;
+        goto label4;
+
+     label3:
+        $r9 = new java.io.IOException;
+        specialinvoke $r9.<java.io.IOException: void <init>(java.lang.String)>("Invalid encoding of GeneralSubtree.");
+        throw $r9;
+
+     label4:
+        goto label1;
+
+     label5:
+        return;
+    }
+
+    public sun.security.x509.GeneralName getName()
+    {
+        sun.security.x509.GeneralSubtree r0;
+        sun.security.x509.GeneralName $r1;
+
+        r0 := @this: sun.security.x509.GeneralSubtree;
+        $r1 = r0.<sun.security.x509.GeneralSubtree: sun.security.x509.GeneralName name>;
+        return $r1;
+    }
+
+    public int getMinimum()
+    {
+        sun.security.x509.GeneralSubtree r0;
+        int $i0;
+
+        r0 := @this: sun.security.x509.GeneralSubtree;
+        $i0 = r0.<sun.security.x509.GeneralSubtree: int minimum>;
+        return $i0;
+    }
+
+    public int getMaximum()
+    {
+        sun.security.x509.GeneralSubtree r0;
+        int $i0;
+
+        r0 := @this: sun.security.x509.GeneralSubtree;
+        $i0 = r0.<sun.security.x509.GeneralSubtree: int maximum>;
+        return $i0;
+    }
+
+    public java.lang.String toString()
+    {
+        sun.security.x509.GeneralSubtree r0;
+        java.lang.StringBuilder $r1, $r3, $r7, $r8, $r9, $r10, $r11, $r12, $r14, $r15, $r16, $r17, $r18, $r19, $r20;
+        java.lang.String r2, $r5, r13, r21;
+        sun.security.x509.GeneralName $r4, $r6;
+        int $i0, $i1, $i2;
+
+        r0 := @this: sun.security.x509.GeneralSubtree;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r3 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\n   GeneralSubtree: [\n    GeneralName: ");
+        $r4 = r0.<sun.security.x509.GeneralSubtree: sun.security.x509.GeneralName name>;
+        if $r4 != null goto label0;
+
+        $r5 = "";
+        goto label1;
+
+     label0:
+        $r6 = r0.<sun.security.x509.GeneralSubtree: sun.security.x509.GeneralName name>;
+        $r5 = virtualinvoke $r6.<sun.security.x509.GeneralName: java.lang.String toString()>();
+
+     label1:
+        $r7 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r5);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\n    Minimum: ");
+        $i0 = r0.<sun.security.x509.GeneralSubtree: int minimum>;
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i0);
+        r2 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+        $i1 = r0.<sun.security.x509.GeneralSubtree: int maximum>;
+        if $i1 != -1 goto label2;
+
+        $r10 = new java.lang.StringBuilder;
+        specialinvoke $r10.<java.lang.StringBuilder: void <init>()>();
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\t    Maximum: undefined");
+        r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+        goto label3;
+
+     label2:
+        $r14 = new java.lang.StringBuilder;
+        specialinvoke $r14.<java.lang.StringBuilder: void <init>()>();
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\t    Maximum: ");
+        $i2 = r0.<sun.security.x509.GeneralSubtree: int maximum>;
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i2);
+        r13 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+
+     label3:
+        $r18 = new java.lang.StringBuilder;
+        specialinvoke $r18.<java.lang.StringBuilder: void <init>()>();
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r13);
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("    ]\n");
+        r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.String toString()>();
+        return r21;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        sun.security.x509.GeneralSubtree r0, r2;
+        java.lang.Object r1;
+        boolean $z0, $z1;
+        sun.security.x509.GeneralName $r3, $r4, $r5, $r6;
+        int $i0, $i1, $i2, $i3;
+
+        r0 := @this: sun.security.x509.GeneralSubtree;
+        r1 := @parameter0: java.lang.Object;
+        $z0 = r1 instanceof sun.security.x509.GeneralSubtree;
+        if $z0 != 0 goto label0;
+
+        return 0;
+
+     label0:
+        r2 = (sun.security.x509.GeneralSubtree) r1;
+        $r3 = r0.<sun.security.x509.GeneralSubtree: sun.security.x509.GeneralName name>;
+        if $r3 != null goto label1;
+
+        $r4 = r2.<sun.security.x509.GeneralSubtree: sun.security.x509.GeneralName name>;
+        if $r4 == null goto label2;
+
+        return 0;
+
+     label1:
+        $r5 = r0.<sun.security.x509.GeneralSubtree: sun.security.x509.GeneralName name>;
+        $r6 = r2.<sun.security.x509.GeneralSubtree: sun.security.x509.GeneralName name>;
+        $z1 = virtualinvoke $r5.<sun.security.x509.GeneralName: boolean equals(java.lang.Object)>($r6);
+        if $z1 != 0 goto label2;
+
+        return 0;
+
+     label2:
+        $i0 = r0.<sun.security.x509.GeneralSubtree: int minimum>;
+        $i1 = r2.<sun.security.x509.GeneralSubtree: int minimum>;
+        if $i0 == $i1 goto label3;
+
+        return 0;
+
+     label3:
+        $i2 = r0.<sun.security.x509.GeneralSubtree: int maximum>;
+        $i3 = r2.<sun.security.x509.GeneralSubtree: int maximum>;
+        if $i2 == $i3 goto label4;
+
+        return 0;
+
+     label4:
+        return 1;
+    }
+
+    public int hashCode()
+    {
+        sun.security.x509.GeneralSubtree r0;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15;
+        sun.security.x509.GeneralName $r1, $r2;
+
+        r0 := @this: sun.security.x509.GeneralSubtree;
+        $i0 = r0.<sun.security.x509.GeneralSubtree: int myhash>;
+        if $i0 != -1 goto label2;
+
+        r0.<sun.security.x509.GeneralSubtree: int myhash> = 17;
+        $r1 = r0.<sun.security.x509.GeneralSubtree: sun.security.x509.GeneralName name>;
+        if $r1 == null goto label0;
+
+        $i1 = r0.<sun.security.x509.GeneralSubtree: int myhash>;
+        $i2 = 37 * $i1;
+        $r2 = r0.<sun.security.x509.GeneralSubtree: sun.security.x509.GeneralName name>;
+        $i3 = virtualinvoke $r2.<sun.security.x509.GeneralName: int hashCode()>();
+        $i4 = $i2 + $i3;
+        r0.<sun.security.x509.GeneralSubtree: int myhash> = $i4;
+
+     label0:
+        $i5 = r0.<sun.security.x509.GeneralSubtree: int minimum>;
+        if $i5 == 0 goto label1;
+
+        $i6 = r0.<sun.security.x509.GeneralSubtree: int myhash>;
+        $i7 = 37 * $i6;
+        $i8 = r0.<sun.security.x509.GeneralSubtree: int minimum>;
+        $i9 = $i7 + $i8;
+        r0.<sun.security.x509.GeneralSubtree: int myhash> = $i9;
+
+     label1:
+        $i10 = r0.<sun.security.x509.GeneralSubtree: int maximum>;
+        if $i10 == -1 goto label2;
+
+        $i11 = r0.<sun.security.x509.GeneralSubtree: int myhash>;
+        $i12 = 37 * $i11;
+        $i13 = r0.<sun.security.x509.GeneralSubtree: int maximum>;
+        $i14 = $i12 + $i13;
+        r0.<sun.security.x509.GeneralSubtree: int myhash> = $i14;
+
+     label2:
+        $i15 = r0.<sun.security.x509.GeneralSubtree: int myhash>;
+        return $i15;
+    }
+
+    public void encode(sun.security.util.DerOutputStream) throws java.io.IOException
+    {
+        sun.security.x509.GeneralSubtree r0;
+        sun.security.util.DerOutputStream r1, $r2, r3, r4, $r6, $r7, r8;
+        sun.security.x509.GeneralName $r5;
+        int $i0, $i1, $i3, $i4;
+        byte $b2, $b5;
+
+        r0 := @this: sun.security.x509.GeneralSubtree;
+        r1 := @parameter0: sun.security.util.DerOutputStream;
+        $r2 = new sun.security.util.DerOutputStream;
+        specialinvoke $r2.<sun.security.util.DerOutputStream: void <init>()>();
+        r3 = $r2;
+        $r5 = r0.<sun.security.x509.GeneralSubtree: sun.security.x509.GeneralName name>;
+        virtualinvoke $r5.<sun.security.x509.GeneralName: void encode(sun.security.util.DerOutputStream)>(r3);
+        $i0 = r0.<sun.security.x509.GeneralSubtree: int minimum>;
+        if $i0 == 0 goto label0;
+
+        $r6 = new sun.security.util.DerOutputStream;
+        specialinvoke $r6.<sun.security.util.DerOutputStream: void <init>()>();
+        r4 = $r6;
+        $i1 = r0.<sun.security.x509.GeneralSubtree: int minimum>;
+        virtualinvoke r4.<sun.security.util.DerOutputStream: void putInteger(int)>($i1);
+        $b2 = staticinvoke <sun.security.util.DerValue: byte createTag(byte,boolean,byte)>(-128, 0, 0);
+        virtualinvoke r3.<sun.security.util.DerOutputStream: void writeImplicit(byte,sun.security.util.DerOutputStream)>($b2, r4);
+
+     label0:
+        $i3 = r0.<sun.security.x509.GeneralSubtree: int maximum>;
+        if $i3 == -1 goto label1;
+
+        $r7 = new sun.security.util.DerOutputStream;
+        specialinvoke $r7.<sun.security.util.DerOutputStream: void <init>()>();
+        r8 = $r7;
+        $i4 = r0.<sun.security.x509.GeneralSubtree: int maximum>;
+        virtualinvoke r8.<sun.security.util.DerOutputStream: void putInteger(int)>($i4);
+        $b5 = staticinvoke <sun.security.util.DerValue: byte createTag(byte,boolean,byte)>(-128, 0, 1);
+        virtualinvoke r3.<sun.security.util.DerOutputStream: void writeImplicit(byte,sun.security.util.DerOutputStream)>($b5, r8);
+
+     label1:
+        virtualinvoke r1.<sun.security.util.DerOutputStream: void write(byte,sun.security.util.DerOutputStream)>(48, r3);
+        return;
+    }
+}

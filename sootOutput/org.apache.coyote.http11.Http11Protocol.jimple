@@ -1,0 +1,132 @@
+public class org.apache.coyote.http11.Http11Protocol extends org.apache.coyote.http11.AbstractHttp11JsseProtocol
+{
+    private static final org.apache.juli.logging.Log log;
+    protected org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler cHandler;
+    private int disableKeepAlivePercentage;
+
+    static void <clinit>()
+    {
+        org.apache.juli.logging.Log $r0;
+
+        $r0 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/coyote/http11/Http11Protocol");
+        <org.apache.coyote.http11.Http11Protocol: org.apache.juli.logging.Log log> = $r0;
+        return;
+    }
+
+    protected org.apache.juli.logging.Log getLog()
+    {
+        org.apache.coyote.http11.Http11Protocol r0;
+        org.apache.juli.logging.Log $r1;
+
+        r0 := @this: org.apache.coyote.http11.Http11Protocol;
+        $r1 = <org.apache.coyote.http11.Http11Protocol: org.apache.juli.logging.Log log>;
+        return $r1;
+    }
+
+    protected org.apache.tomcat.util.net.AbstractEndpoint$Handler getHandler()
+    {
+        org.apache.coyote.http11.Http11Protocol r0;
+        org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler $r1;
+
+        r0 := @this: org.apache.coyote.http11.Http11Protocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11Protocol: org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler cHandler>;
+        return $r1;
+    }
+
+    public void <init>()
+    {
+        org.apache.coyote.http11.Http11Protocol r0;
+        org.apache.tomcat.util.net.JIoEndpoint $r1, $r4;
+        org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler $r2, $r5;
+        org.apache.tomcat.util.net.AbstractEndpoint $r3;
+
+        r0 := @this: org.apache.coyote.http11.Http11Protocol;
+        specialinvoke r0.<org.apache.coyote.http11.AbstractHttp11JsseProtocol: void <init>()>();
+        r0.<org.apache.coyote.http11.Http11Protocol: int disableKeepAlivePercentage> = 75;
+        $r1 = new org.apache.tomcat.util.net.JIoEndpoint;
+        specialinvoke $r1.<org.apache.tomcat.util.net.JIoEndpoint: void <init>()>();
+        r0.<org.apache.coyote.http11.Http11Protocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint> = $r1;
+        $r2 = new org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler;
+        specialinvoke $r2.<org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler: void <init>(org.apache.coyote.http11.Http11Protocol)>(r0);
+        r0.<org.apache.coyote.http11.Http11Protocol: org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler cHandler> = $r2;
+        $r3 = r0.<org.apache.coyote.http11.Http11Protocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $r4 = (org.apache.tomcat.util.net.JIoEndpoint) $r3;
+        $r5 = r0.<org.apache.coyote.http11.Http11Protocol: org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler cHandler>;
+        virtualinvoke $r4.<org.apache.tomcat.util.net.JIoEndpoint: void setHandler(org.apache.tomcat.util.net.JIoEndpoint$Handler)>($r5);
+        virtualinvoke r0.<org.apache.coyote.http11.Http11Protocol: void setSoLinger(int)>(-1);
+        virtualinvoke r0.<org.apache.coyote.http11.Http11Protocol: void setSoTimeout(int)>(60000);
+        virtualinvoke r0.<org.apache.coyote.http11.Http11Protocol: void setTcpNoDelay(boolean)>(1);
+        return;
+    }
+
+    public int getDisableKeepAlivePercentage()
+    {
+        org.apache.coyote.http11.Http11Protocol r0;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.http11.Http11Protocol;
+        $i0 = r0.<org.apache.coyote.http11.Http11Protocol: int disableKeepAlivePercentage>;
+        return $i0;
+    }
+
+    public void setDisableKeepAlivePercentage(int)
+    {
+        org.apache.coyote.http11.Http11Protocol r0;
+        int i0;
+
+        r0 := @this: org.apache.coyote.http11.Http11Protocol;
+        i0 := @parameter0: int;
+        if i0 >= 0 goto label0;
+
+        r0.<org.apache.coyote.http11.Http11Protocol: int disableKeepAlivePercentage> = 0;
+        goto label2;
+
+     label0:
+        if i0 <= 100 goto label1;
+
+        r0.<org.apache.coyote.http11.Http11Protocol: int disableKeepAlivePercentage> = 100;
+        goto label2;
+
+     label1:
+        r0.<org.apache.coyote.http11.Http11Protocol: int disableKeepAlivePercentage> = i0;
+
+     label2:
+        return;
+    }
+
+    protected java.lang.String getNamePrefix()
+    {
+        org.apache.coyote.http11.Http11Protocol r0;
+
+        r0 := @this: org.apache.coyote.http11.Http11Protocol;
+        return "http-bio";
+    }
+
+    static org.apache.juli.logging.Log access$0()
+    {
+        org.apache.juli.logging.Log $r0;
+
+        $r0 = <org.apache.coyote.http11.Http11Protocol: org.apache.juli.logging.Log log>;
+        return $r0;
+    }
+
+    static org.apache.tomcat.util.net.AbstractEndpoint access$1(org.apache.coyote.http11.Http11Protocol)
+    {
+        org.apache.coyote.http11.Http11Protocol r0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r1;
+
+        r0 := @parameter0: org.apache.coyote.http11.Http11Protocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11Protocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        return $r1;
+    }
+
+    static org.apache.coyote.Adapter access$2(org.apache.coyote.http11.Http11Protocol)
+    {
+        org.apache.coyote.http11.Http11Protocol r0;
+        org.apache.coyote.Adapter $r1;
+
+        r0 := @parameter0: org.apache.coyote.http11.Http11Protocol;
+        $r1 = r0.<org.apache.coyote.http11.Http11Protocol: org.apache.coyote.Adapter adapter>;
+        return $r1;
+    }
+}

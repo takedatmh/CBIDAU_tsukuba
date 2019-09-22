@@ -1,0 +1,160 @@
+public abstract class org.apache.tomcat.util.net.SSLImplementation extends java.lang.Object
+{
+    private static final org.apache.juli.logging.Log logger;
+    private static final java.lang.String JSSEImplementationClass;
+    private static final java.lang.String[] implementations;
+
+    static void <clinit>()
+    {
+        org.apache.juli.logging.Log $r0;
+        java.lang.String[] $r1;
+
+        $r0 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/tomcat/util/net/SSLImplementation");
+        <org.apache.tomcat.util.net.SSLImplementation: org.apache.juli.logging.Log logger> = $r0;
+        $r1 = newarray (java.lang.String)[1];
+        $r1[0] = "org.apache.tomcat.util.net.jsse.JSSEImplementation";
+        <org.apache.tomcat.util.net.SSLImplementation: java.lang.String[] implementations> = $r1;
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.tomcat.util.net.SSLImplementation r0;
+
+        r0 := @this: org.apache.tomcat.util.net.SSLImplementation;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static org.apache.tomcat.util.net.SSLImplementation getInstance() throws java.lang.ClassNotFoundException
+    {
+        int i0, $i1;
+        org.apache.tomcat.util.net.SSLImplementation r0;
+        java.lang.String[] $r1, $r9, $r13;
+        java.lang.String $r2, $r10, $r12;
+        java.lang.Exception $r4, r5;
+        org.apache.juli.logging.Log $r6, $r7;
+        boolean $z0;
+        java.lang.StringBuilder $r8, $r11;
+        java.lang.ClassNotFoundException $r14;
+
+        i0 = 0;
+        goto label4;
+
+     label0:
+        $r1 = <org.apache.tomcat.util.net.SSLImplementation: java.lang.String[] implementations>;
+        $r2 = $r1[i0];
+        r0 = staticinvoke <org.apache.tomcat.util.net.SSLImplementation: org.apache.tomcat.util.net.SSLImplementation getInstance(java.lang.String)>($r2);
+
+     label1:
+        return r0;
+
+     label2:
+        $r4 := @caughtexception;
+        r5 = $r4;
+        $r6 = <org.apache.tomcat.util.net.SSLImplementation: org.apache.juli.logging.Log logger>;
+        $z0 = interfaceinvoke $r6.<org.apache.juli.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label3;
+
+        $r7 = <org.apache.tomcat.util.net.SSLImplementation: org.apache.juli.logging.Log logger>;
+        $r8 = new java.lang.StringBuilder;
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>(java.lang.String)>("Error creating ");
+        $r9 = <org.apache.tomcat.util.net.SSLImplementation: java.lang.String[] implementations>;
+        $r10 = $r9[i0];
+        $r11 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r10);
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r7.<org.apache.juli.logging.Log: void trace(java.lang.Object,java.lang.Throwable)>($r12, r5);
+
+     label3:
+        i0 = i0 + 1;
+
+     label4:
+        $r13 = <org.apache.tomcat.util.net.SSLImplementation: java.lang.String[] implementations>;
+        $i1 = lengthof $r13;
+        if i0 < $i1 goto label0;
+
+        $r14 = new java.lang.ClassNotFoundException;
+        specialinvoke $r14.<java.lang.ClassNotFoundException: void <init>(java.lang.String)>("Can\'t find any SSL implementation");
+        throw $r14;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    public static org.apache.tomcat.util.net.SSLImplementation getInstance(java.lang.String) throws java.lang.ClassNotFoundException
+    {
+        java.lang.String r0, $r3, $r13, $r18, $r20;
+        java.lang.Class r1;
+        org.apache.tomcat.util.net.SSLImplementation $r2, $r6;
+        boolean $z0, $z1;
+        org.apache.tomcat.util.net.jsse.JSSEImplementation $r4;
+        java.lang.Object $r5;
+        java.lang.Exception $r7, r8;
+        org.apache.juli.logging.Log $r9, $r10;
+        java.lang.StringBuilder $r11, $r12, $r15, $r16, $r17, $r19;
+        java.lang.ClassNotFoundException $r14;
+
+        r0 := @parameter0: java.lang.String;
+        if r0 != null goto label0;
+
+        $r2 = staticinvoke <org.apache.tomcat.util.net.SSLImplementation: org.apache.tomcat.util.net.SSLImplementation getInstance()>();
+        return $r2;
+
+     label0:
+        $r3 = "org.apache.tomcat.util.net.jsse.JSSEImplementation";
+        $z0 = virtualinvoke $r3.<java.lang.String: boolean equals(java.lang.Object)>(r0);
+        if $z0 == 0 goto label2;
+
+        $r4 = new org.apache.tomcat.util.net.jsse.JSSEImplementation;
+        specialinvoke $r4.<org.apache.tomcat.util.net.jsse.JSSEImplementation: void <init>()>();
+
+     label1:
+        return $r4;
+
+     label2:
+        r1 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(r0);
+        $r5 = virtualinvoke r1.<java.lang.Class: java.lang.Object newInstance()>();
+        $r6 = (org.apache.tomcat.util.net.SSLImplementation) $r5;
+
+     label3:
+        return $r6;
+
+     label4:
+        $r7 := @caughtexception;
+        r8 = $r7;
+        $r9 = <org.apache.tomcat.util.net.SSLImplementation: org.apache.juli.logging.Log logger>;
+        $z1 = interfaceinvoke $r9.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z1 == 0 goto label5;
+
+        $r10 = <org.apache.tomcat.util.net.SSLImplementation: org.apache.juli.logging.Log logger>;
+        $r11 = new java.lang.StringBuilder;
+        specialinvoke $r11.<java.lang.StringBuilder: void <init>(java.lang.String)>("Error loading SSL Implementation ");
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r0);
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r10.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r13, r8);
+
+     label5:
+        $r14 = new java.lang.ClassNotFoundException;
+        $r15 = new java.lang.StringBuilder;
+        specialinvoke $r15.<java.lang.StringBuilder: void <init>(java.lang.String)>("Error loading SSL Implementation ");
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r0);
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" :");
+        $r18 = virtualinvoke r8.<java.lang.Exception: java.lang.String toString()>();
+        $r19 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r18);
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r14.<java.lang.ClassNotFoundException: void <init>(java.lang.String)>($r20);
+        throw $r14;
+
+        catch java.lang.Exception from label0 to label1 with label4;
+        catch java.lang.Exception from label2 to label3 with label4;
+    }
+
+    public abstract java.lang.String getImplementationName();
+
+    public abstract org.apache.tomcat.util.net.ServerSocketFactory getServerSocketFactory(org.apache.tomcat.util.net.AbstractEndpoint);
+
+    public abstract org.apache.tomcat.util.net.SSLSupport getSSLSupport(java.net.Socket);
+
+    public abstract org.apache.tomcat.util.net.SSLSupport getSSLSupport(javax.net.ssl.SSLSession);
+
+    public abstract org.apache.tomcat.util.net.SSLUtil getSSLUtil(org.apache.tomcat.util.net.AbstractEndpoint);
+}

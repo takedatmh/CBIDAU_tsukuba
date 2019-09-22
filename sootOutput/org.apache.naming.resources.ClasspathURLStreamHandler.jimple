@@ -1,0 +1,62 @@
+public class org.apache.naming.resources.ClasspathURLStreamHandler extends java.net.URLStreamHandler
+{
+    private static final org.apache.naming.StringManager sm;
+
+    static void <clinit>()
+    {
+        org.apache.naming.StringManager $r0;
+
+        $r0 = staticinvoke <org.apache.naming.StringManager: org.apache.naming.StringManager getManager(java.lang.String)>("org.apache.naming.resources");
+        <org.apache.naming.resources.ClasspathURLStreamHandler: org.apache.naming.StringManager sm> = $r0;
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.naming.resources.ClasspathURLStreamHandler r0;
+
+        r0 := @this: org.apache.naming.resources.ClasspathURLStreamHandler;
+        specialinvoke r0.<java.net.URLStreamHandler: void <init>()>();
+        return;
+    }
+
+    protected java.net.URLConnection openConnection(java.net.URL) throws java.io.IOException
+    {
+        org.apache.naming.resources.ClasspathURLStreamHandler r0;
+        java.net.URL r1, r3;
+        java.lang.String r2, $r10;
+        org.apache.naming.StringManager $r4;
+        java.lang.Thread $r5;
+        java.lang.ClassLoader $r6;
+        java.lang.Class $r7;
+        java.io.FileNotFoundException $r8;
+        java.lang.Object[] $r9;
+        java.net.URLConnection $r11;
+
+        r0 := @this: org.apache.naming.resources.ClasspathURLStreamHandler;
+        r1 := @parameter0: java.net.URL;
+        r2 = virtualinvoke r1.<java.net.URL: java.lang.String getPath()>();
+        $r5 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        $r6 = virtualinvoke $r5.<java.lang.Thread: java.lang.ClassLoader getContextClassLoader()>();
+        r3 = virtualinvoke $r6.<java.lang.ClassLoader: java.net.URL getResource(java.lang.String)>(r2);
+        if r3 != null goto label0;
+
+        $r7 = class "org/apache/naming/resources/ClasspathURLStreamHandler";
+        r3 = virtualinvoke $r7.<java.lang.Class: java.net.URL getResource(java.lang.String)>(r2);
+
+     label0:
+        if r3 != null goto label1;
+
+        $r8 = new java.io.FileNotFoundException;
+        $r4 = <org.apache.naming.resources.ClasspathURLStreamHandler: org.apache.naming.StringManager sm>;
+        $r9 = newarray (java.lang.Object)[1];
+        $r9[0] = r1;
+        $r10 = virtualinvoke $r4.<org.apache.naming.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("classpathUrlStreamHandler.notFound", $r9);
+        specialinvoke $r8.<java.io.FileNotFoundException: void <init>(java.lang.String)>($r10);
+        throw $r8;
+
+     label1:
+        $r11 = virtualinvoke r3.<java.net.URL: java.net.URLConnection openConnection()>();
+        return $r11;
+    }
+}

@@ -1,0 +1,618 @@
+public class org.apache.catalina.core.StandardPipeline extends org.apache.catalina.util.LifecycleBase implements org.apache.catalina.Pipeline, org.apache.catalina.Contained
+{
+    private static final org.apache.juli.logging.Log log;
+    protected org.apache.catalina.Valve basic;
+    protected org.apache.catalina.Container container;
+    protected static final java.lang.String info;
+    protected org.apache.catalina.Valve first;
+
+    static void <clinit>()
+    {
+        org.apache.juli.logging.Log $r0;
+
+        $r0 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/catalina/core/StandardPipeline");
+        <org.apache.catalina.core.StandardPipeline: org.apache.juli.logging.Log log> = $r0;
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.catalina.core.StandardPipeline r0;
+
+        r0 := @this: org.apache.catalina.core.StandardPipeline;
+        specialinvoke r0.<org.apache.catalina.core.StandardPipeline: void <init>(org.apache.catalina.Container)>(null);
+        return;
+    }
+
+    public void <init>(org.apache.catalina.Container)
+    {
+        org.apache.catalina.core.StandardPipeline r0;
+        org.apache.catalina.Container r1;
+
+        r0 := @this: org.apache.catalina.core.StandardPipeline;
+        r1 := @parameter0: org.apache.catalina.Container;
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void <init>()>();
+        r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve basic> = null;
+        r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Container container> = null;
+        r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve first> = null;
+        virtualinvoke r0.<org.apache.catalina.core.StandardPipeline: void setContainer(org.apache.catalina.Container)>(r1);
+        return;
+    }
+
+    public java.lang.String getInfo()
+    {
+        org.apache.catalina.core.StandardPipeline r0;
+
+        r0 := @this: org.apache.catalina.core.StandardPipeline;
+        return "org.apache.catalina.core.StandardPipeline/1.0";
+    }
+
+    public boolean isAsyncSupported()
+    {
+        org.apache.catalina.core.StandardPipeline r0;
+        org.apache.catalina.Valve r1, $r2, $r3;
+        boolean z0, $z1;
+
+        r0 := @this: org.apache.catalina.core.StandardPipeline;
+        $r2 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve first>;
+        if $r2 == null goto label0;
+
+        $r3 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve first>;
+        goto label1;
+
+     label0:
+        $r3 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve basic>;
+
+     label1:
+        r1 = $r3;
+        z0 = 1;
+        goto label3;
+
+     label2:
+        $z1 = interfaceinvoke r1.<org.apache.catalina.Valve: boolean isAsyncSupported()>();
+        z0 = z0 & $z1;
+        r1 = interfaceinvoke r1.<org.apache.catalina.Valve: org.apache.catalina.Valve getNext()>();
+
+     label3:
+        if z0 == 0 goto label4;
+
+        if r1 != null goto label2;
+
+     label4:
+        return z0;
+    }
+
+    public org.apache.catalina.Container getContainer()
+    {
+        org.apache.catalina.core.StandardPipeline r0;
+        org.apache.catalina.Container $r1;
+
+        r0 := @this: org.apache.catalina.core.StandardPipeline;
+        $r1 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Container container>;
+        return $r1;
+    }
+
+    public void setContainer(org.apache.catalina.Container)
+    {
+        org.apache.catalina.core.StandardPipeline r0;
+        org.apache.catalina.Container r1;
+
+        r0 := @this: org.apache.catalina.core.StandardPipeline;
+        r1 := @parameter0: org.apache.catalina.Container;
+        r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Container container> = r1;
+        return;
+    }
+
+    protected void initInternal()
+    {
+        org.apache.catalina.core.StandardPipeline r0;
+
+        r0 := @this: org.apache.catalina.core.StandardPipeline;
+        return;
+    }
+
+    protected synchronized void startInternal() throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.core.StandardPipeline r0;
+        org.apache.catalina.Valve r1;
+        org.apache.catalina.LifecycleState $r2;
+        boolean $z0;
+        org.apache.catalina.Lifecycle $r3;
+
+        r0 := @this: org.apache.catalina.core.StandardPipeline;
+        r1 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve first>;
+        if r1 != null goto label2;
+
+        r1 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve basic>;
+        goto label2;
+
+     label0:
+        $z0 = r1 instanceof org.apache.catalina.Lifecycle;
+        if $z0 == 0 goto label1;
+
+        $r3 = (org.apache.catalina.Lifecycle) r1;
+        interfaceinvoke $r3.<org.apache.catalina.Lifecycle: void start()>();
+
+     label1:
+        r1 = interfaceinvoke r1.<org.apache.catalina.Valve: org.apache.catalina.Valve getNext()>();
+
+     label2:
+        if r1 != null goto label0;
+
+        $r2 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STARTING>;
+        virtualinvoke r0.<org.apache.catalina.core.StandardPipeline: void setState(org.apache.catalina.LifecycleState)>($r2);
+        return;
+    }
+
+    protected synchronized void stopInternal() throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.core.StandardPipeline r0;
+        org.apache.catalina.LifecycleState $r1;
+        org.apache.catalina.Valve r2;
+        boolean $z0;
+        org.apache.catalina.Lifecycle $r3;
+
+        r0 := @this: org.apache.catalina.core.StandardPipeline;
+        $r1 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STOPPING>;
+        virtualinvoke r0.<org.apache.catalina.core.StandardPipeline: void setState(org.apache.catalina.LifecycleState)>($r1);
+        r2 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve first>;
+        if r2 != null goto label2;
+
+        r2 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve basic>;
+        goto label2;
+
+     label0:
+        $z0 = r2 instanceof org.apache.catalina.Lifecycle;
+        if $z0 == 0 goto label1;
+
+        $r3 = (org.apache.catalina.Lifecycle) r2;
+        interfaceinvoke $r3.<org.apache.catalina.Lifecycle: void stop()>();
+
+     label1:
+        r2 = interfaceinvoke r2.<org.apache.catalina.Valve: org.apache.catalina.Valve getNext()>();
+
+     label2:
+        if r2 != null goto label0;
+
+        return;
+    }
+
+    protected void destroyInternal()
+    {
+        org.apache.catalina.core.StandardPipeline r0;
+        org.apache.catalina.Valve[] r1, r2;
+        int i0, i1;
+        org.apache.catalina.Valve r3;
+
+        r0 := @this: org.apache.catalina.core.StandardPipeline;
+        r1 = virtualinvoke r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve[] getValves()>();
+        r2 = r1;
+        i0 = lengthof r1;
+        i1 = 0;
+        goto label1;
+
+     label0:
+        r3 = r2[i1];
+        virtualinvoke r0.<org.apache.catalina.core.StandardPipeline: void removeValve(org.apache.catalina.Valve)>(r3);
+        i1 = i1 + 1;
+
+     label1:
+        if i1 < i0 goto label0;
+
+        return;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.catalina.core.StandardPipeline r0;
+        java.lang.StringBuilder $r1, r2;
+        org.apache.catalina.Container $r3;
+        java.lang.String $r6;
+
+        r0 := @this: org.apache.catalina.core.StandardPipeline;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>(java.lang.String)>("Pipeline[");
+        r2 = $r1;
+        $r3 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Container container>;
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r3);
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(93);
+        $r6 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r6;
+    }
+
+    public org.apache.catalina.Valve getBasic()
+    {
+        org.apache.catalina.core.StandardPipeline r0;
+        org.apache.catalina.Valve $r1;
+
+        r0 := @this: org.apache.catalina.core.StandardPipeline;
+        $r1 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve basic>;
+        return $r1;
+    }
+
+    public void setBasic(org.apache.catalina.Valve)
+    {
+        org.apache.catalina.core.StandardPipeline r0;
+        org.apache.catalina.Valve r1, r2, r18, $r19;
+        org.apache.catalina.LifecycleException r3, $r6, $r15, r16;
+        org.apache.catalina.LifecycleState $r4, $r13;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5;
+        org.apache.catalina.Lifecycle $r5, $r14;
+        org.apache.juli.logging.Log $r7, $r17;
+        org.apache.catalina.Contained $r8, $r11;
+        java.lang.Throwable $r9, r10;
+        org.apache.catalina.Container $r12;
+
+        r0 := @this: org.apache.catalina.core.StandardPipeline;
+        r1 := @parameter0: org.apache.catalina.Valve;
+        r2 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve basic>;
+        if r2 != r1 goto label0;
+
+        return;
+
+     label0:
+        if r2 == null goto label8;
+
+        $r4 = virtualinvoke r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.LifecycleState getState()>();
+        $z0 = virtualinvoke $r4.<org.apache.catalina.LifecycleState: boolean isAvailable()>();
+        if $z0 == 0 goto label4;
+
+        $z1 = r2 instanceof org.apache.catalina.Lifecycle;
+        if $z1 == 0 goto label4;
+
+     label1:
+        $r5 = (org.apache.catalina.Lifecycle) r2;
+        interfaceinvoke $r5.<org.apache.catalina.Lifecycle: void stop()>();
+
+     label2:
+        goto label4;
+
+     label3:
+        $r6 := @caughtexception;
+        r3 = $r6;
+        $r7 = <org.apache.catalina.core.StandardPipeline: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r7.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("StandardPipeline.setBasic: stop", r3);
+
+     label4:
+        $z2 = r2 instanceof org.apache.catalina.Contained;
+        if $z2 == 0 goto label8;
+
+     label5:
+        $r8 = (org.apache.catalina.Contained) r2;
+        interfaceinvoke $r8.<org.apache.catalina.Contained: void setContainer(org.apache.catalina.Container)>(null);
+
+     label6:
+        goto label8;
+
+     label7:
+        $r9 := @caughtexception;
+        r10 = $r9;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r10);
+
+     label8:
+        if r1 != null goto label9;
+
+        return;
+
+     label9:
+        $z3 = r1 instanceof org.apache.catalina.Contained;
+        if $z3 == 0 goto label10;
+
+        $r11 = (org.apache.catalina.Contained) r1;
+        $r12 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Container container>;
+        interfaceinvoke $r11.<org.apache.catalina.Contained: void setContainer(org.apache.catalina.Container)>($r12);
+
+     label10:
+        $r13 = virtualinvoke r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.LifecycleState getState()>();
+        $z4 = virtualinvoke $r13.<org.apache.catalina.LifecycleState: boolean isAvailable()>();
+        if $z4 == 0 goto label14;
+
+        $z5 = r1 instanceof org.apache.catalina.Lifecycle;
+        if $z5 == 0 goto label14;
+
+     label11:
+        $r14 = (org.apache.catalina.Lifecycle) r1;
+        interfaceinvoke $r14.<org.apache.catalina.Lifecycle: void start()>();
+
+     label12:
+        goto label14;
+
+     label13:
+        $r15 := @caughtexception;
+        r16 = $r15;
+        $r17 = <org.apache.catalina.core.StandardPipeline: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r17.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("StandardPipeline.setBasic: start", r16);
+        return;
+
+     label14:
+        r18 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve first>;
+        goto label17;
+
+     label15:
+        $r19 = interfaceinvoke r18.<org.apache.catalina.Valve: org.apache.catalina.Valve getNext()>();
+        if $r19 != r2 goto label16;
+
+        interfaceinvoke r18.<org.apache.catalina.Valve: void setNext(org.apache.catalina.Valve)>(r1);
+        goto label18;
+
+     label16:
+        r18 = interfaceinvoke r18.<org.apache.catalina.Valve: org.apache.catalina.Valve getNext()>();
+
+     label17:
+        if r18 != null goto label15;
+
+     label18:
+        r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve basic> = r1;
+        return;
+
+        catch org.apache.catalina.LifecycleException from label1 to label2 with label3;
+        catch java.lang.Throwable from label5 to label6 with label7;
+        catch org.apache.catalina.LifecycleException from label11 to label12 with label13;
+    }
+
+    public void addValve(org.apache.catalina.Valve)
+    {
+        org.apache.catalina.core.StandardPipeline r0;
+        org.apache.catalina.Valve r1, $r9, $r10, r11, $r12, $r13, $r14;
+        org.apache.catalina.LifecycleException r2, $r7;
+        boolean $z0, $z1, $z2;
+        org.apache.catalina.Contained $r3;
+        org.apache.catalina.Container $r4, $r15;
+        org.apache.catalina.LifecycleState $r5;
+        org.apache.catalina.Lifecycle $r6;
+        org.apache.juli.logging.Log $r8;
+
+        r0 := @this: org.apache.catalina.core.StandardPipeline;
+        r1 := @parameter0: org.apache.catalina.Valve;
+        $z0 = r1 instanceof org.apache.catalina.Contained;
+        if $z0 == 0 goto label0;
+
+        $r3 = (org.apache.catalina.Contained) r1;
+        $r4 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Container container>;
+        interfaceinvoke $r3.<org.apache.catalina.Contained: void setContainer(org.apache.catalina.Container)>($r4);
+
+     label0:
+        $r5 = virtualinvoke r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.LifecycleState getState()>();
+        $z1 = virtualinvoke $r5.<org.apache.catalina.LifecycleState: boolean isAvailable()>();
+        if $z1 == 0 goto label4;
+
+        $z2 = r1 instanceof org.apache.catalina.Lifecycle;
+        if $z2 == 0 goto label4;
+
+     label1:
+        $r6 = (org.apache.catalina.Lifecycle) r1;
+        interfaceinvoke $r6.<org.apache.catalina.Lifecycle: void start()>();
+
+     label2:
+        goto label4;
+
+     label3:
+        $r7 := @caughtexception;
+        r2 = $r7;
+        $r8 = <org.apache.catalina.core.StandardPipeline: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r8.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("StandardPipeline.addValve: start: ", r2);
+
+     label4:
+        $r9 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve first>;
+        if $r9 != null goto label5;
+
+        r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve first> = r1;
+        $r10 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve basic>;
+        interfaceinvoke r1.<org.apache.catalina.Valve: void setNext(org.apache.catalina.Valve)>($r10);
+        goto label9;
+
+     label5:
+        r11 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve first>;
+        goto label8;
+
+     label6:
+        $r12 = interfaceinvoke r11.<org.apache.catalina.Valve: org.apache.catalina.Valve getNext()>();
+        $r13 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve basic>;
+        if $r12 != $r13 goto label7;
+
+        interfaceinvoke r11.<org.apache.catalina.Valve: void setNext(org.apache.catalina.Valve)>(r1);
+        $r14 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve basic>;
+        interfaceinvoke r1.<org.apache.catalina.Valve: void setNext(org.apache.catalina.Valve)>($r14);
+        goto label9;
+
+     label7:
+        r11 = interfaceinvoke r11.<org.apache.catalina.Valve: org.apache.catalina.Valve getNext()>();
+
+     label8:
+        if r11 != null goto label6;
+
+     label9:
+        $r15 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Container container>;
+        interfaceinvoke $r15.<org.apache.catalina.Container: void fireContainerEvent(java.lang.String,java.lang.Object)>("addValve", r1);
+        return;
+
+        catch org.apache.catalina.LifecycleException from label1 to label2 with label3;
+    }
+
+    public org.apache.catalina.Valve[] getValves()
+    {
+        org.apache.catalina.core.StandardPipeline r0;
+        java.util.ArrayList $r1, r2;
+        org.apache.catalina.Valve r3;
+        org.apache.catalina.Valve[] $r4, $r6;
+        java.lang.Object[] $r5;
+
+        r0 := @this: org.apache.catalina.core.StandardPipeline;
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        r2 = $r1;
+        r3 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve first>;
+        if r3 != null goto label1;
+
+        r3 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve basic>;
+        goto label1;
+
+     label0:
+        virtualinvoke r2.<java.util.ArrayList: boolean add(java.lang.Object)>(r3);
+        r3 = interfaceinvoke r3.<org.apache.catalina.Valve: org.apache.catalina.Valve getNext()>();
+
+     label1:
+        if r3 != null goto label0;
+
+        $r4 = newarray (org.apache.catalina.Valve)[0];
+        $r5 = virtualinvoke r2.<java.util.ArrayList: java.lang.Object[] toArray(java.lang.Object[])>($r4);
+        $r6 = (org.apache.catalina.Valve[]) $r5;
+        return $r6;
+    }
+
+    public javax.management.ObjectName[] getValveObjectNames()
+    {
+        org.apache.catalina.core.StandardPipeline r0;
+        java.util.ArrayList $r1, r2;
+        org.apache.catalina.Valve r3;
+        boolean $z0;
+        org.apache.catalina.valves.ValveBase $r4;
+        javax.management.ObjectName $r5;
+        javax.management.ObjectName[] $r6, $r8;
+        java.lang.Object[] $r7;
+
+        r0 := @this: org.apache.catalina.core.StandardPipeline;
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        r2 = $r1;
+        r3 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve first>;
+        if r3 != null goto label2;
+
+        r3 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve basic>;
+        goto label2;
+
+     label0:
+        $z0 = r3 instanceof org.apache.catalina.valves.ValveBase;
+        if $z0 == 0 goto label1;
+
+        $r4 = (org.apache.catalina.valves.ValveBase) r3;
+        $r5 = virtualinvoke $r4.<org.apache.catalina.valves.ValveBase: javax.management.ObjectName getObjectName()>();
+        virtualinvoke r2.<java.util.ArrayList: boolean add(java.lang.Object)>($r5);
+
+     label1:
+        r3 = interfaceinvoke r3.<org.apache.catalina.Valve: org.apache.catalina.Valve getNext()>();
+
+     label2:
+        if r3 != null goto label0;
+
+        $r6 = newarray (javax.management.ObjectName)[0];
+        $r7 = virtualinvoke r2.<java.util.ArrayList: java.lang.Object[] toArray(java.lang.Object[])>($r6);
+        $r8 = (javax.management.ObjectName[]) $r7;
+        return $r8;
+    }
+
+    public void removeValve(org.apache.catalina.Valve)
+    {
+        org.apache.catalina.core.StandardPipeline r0;
+        org.apache.catalina.Valve r1, r2, $r4, $r5, $r6, $r7, $r8, $r9, $r10;
+        org.apache.catalina.LifecycleException r3, $r14, $r17, r18;
+        boolean $z0, $z1, $z2;
+        org.apache.catalina.Contained $r11;
+        org.apache.catalina.LifecycleState $r12;
+        org.apache.catalina.Lifecycle $r13, $r16;
+        org.apache.juli.logging.Log $r15, $r19;
+        org.apache.catalina.Container $r20;
+
+        r0 := @this: org.apache.catalina.core.StandardPipeline;
+        r1 := @parameter0: org.apache.catalina.Valve;
+        $r4 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve first>;
+        if $r4 != r1 goto label0;
+
+        $r5 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve first>;
+        $r6 = interfaceinvoke $r5.<org.apache.catalina.Valve: org.apache.catalina.Valve getNext()>();
+        r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve first> = $r6;
+        r2 = null;
+        goto label3;
+
+     label0:
+        r2 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve first>;
+        goto label3;
+
+     label1:
+        $r7 = interfaceinvoke r2.<org.apache.catalina.Valve: org.apache.catalina.Valve getNext()>();
+        if $r7 != r1 goto label2;
+
+        $r8 = interfaceinvoke r1.<org.apache.catalina.Valve: org.apache.catalina.Valve getNext()>();
+        interfaceinvoke r2.<org.apache.catalina.Valve: void setNext(org.apache.catalina.Valve)>($r8);
+        goto label4;
+
+     label2:
+        r2 = interfaceinvoke r2.<org.apache.catalina.Valve: org.apache.catalina.Valve getNext()>();
+
+     label3:
+        if r2 != null goto label1;
+
+     label4:
+        $r9 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve first>;
+        $r10 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve basic>;
+        if $r9 != $r10 goto label5;
+
+        r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve first> = null;
+
+     label5:
+        $z0 = r1 instanceof org.apache.catalina.Contained;
+        if $z0 == 0 goto label6;
+
+        $r11 = (org.apache.catalina.Contained) r1;
+        interfaceinvoke $r11.<org.apache.catalina.Contained: void setContainer(org.apache.catalina.Container)>(null);
+
+     label6:
+        $z1 = r1 instanceof org.apache.catalina.Lifecycle;
+        if $z1 == 0 goto label13;
+
+        $r12 = virtualinvoke r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.LifecycleState getState()>();
+        $z2 = virtualinvoke $r12.<org.apache.catalina.LifecycleState: boolean isAvailable()>();
+        if $z2 == 0 goto label10;
+
+     label7:
+        $r13 = (org.apache.catalina.Lifecycle) r1;
+        interfaceinvoke $r13.<org.apache.catalina.Lifecycle: void stop()>();
+
+     label8:
+        goto label10;
+
+     label9:
+        $r14 := @caughtexception;
+        r3 = $r14;
+        $r15 = <org.apache.catalina.core.StandardPipeline: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r15.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("StandardPipeline.removeValve: stop: ", r3);
+
+     label10:
+        $r16 = (org.apache.catalina.Lifecycle) r1;
+        interfaceinvoke $r16.<org.apache.catalina.Lifecycle: void destroy()>();
+
+     label11:
+        goto label13;
+
+     label12:
+        $r17 := @caughtexception;
+        r18 = $r17;
+        $r19 = <org.apache.catalina.core.StandardPipeline: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r19.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("StandardPipeline.removeValve: destroy: ", r18);
+
+     label13:
+        $r20 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Container container>;
+        interfaceinvoke $r20.<org.apache.catalina.Container: void fireContainerEvent(java.lang.String,java.lang.Object)>("removeValve", r1);
+        return;
+
+        catch org.apache.catalina.LifecycleException from label7 to label8 with label9;
+        catch org.apache.catalina.LifecycleException from label10 to label11 with label12;
+    }
+
+    public org.apache.catalina.Valve getFirst()
+    {
+        org.apache.catalina.core.StandardPipeline r0;
+        org.apache.catalina.Valve $r1, $r2, $r3;
+
+        r0 := @this: org.apache.catalina.core.StandardPipeline;
+        $r1 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve first>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve first>;
+        return $r2;
+
+     label0:
+        $r3 = r0.<org.apache.catalina.core.StandardPipeline: org.apache.catalina.Valve basic>;
+        return $r3;
+    }
+}

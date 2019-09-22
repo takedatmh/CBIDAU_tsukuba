@@ -1,0 +1,287 @@
+final class java.net.SocketPermissionCollection extends java.security.PermissionCollection implements java.io.Serializable
+{
+    private transient java.util.List perms;
+    private static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+
+    public void <init>()
+    {
+        java.net.SocketPermissionCollection r0;
+        java.util.ArrayList $r1;
+
+        r0 := @this: java.net.SocketPermissionCollection;
+        specialinvoke r0.<java.security.PermissionCollection: void <init>()>();
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        r0.<java.net.SocketPermissionCollection: java.util.List perms> = $r1;
+        return;
+    }
+
+    public void add(java.security.Permission)
+    {
+        java.net.SocketPermissionCollection r0, r3;
+        java.security.Permission r1;
+        java.lang.StringBuilder $r2, $r6, $r7;
+        java.lang.Throwable r4, $r12;
+        boolean $z0, $z1;
+        java.lang.IllegalArgumentException $r5;
+        java.lang.String $r8;
+        java.lang.SecurityException $r9;
+        java.util.List $r11;
+
+        r0 := @this: java.net.SocketPermissionCollection;
+        r1 := @parameter0: java.security.Permission;
+        $z0 = r1 instanceof java.net.SocketPermission;
+        if $z0 != 0 goto label0;
+
+        $r5 = new java.lang.IllegalArgumentException;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+        $r6 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("invalid permission: ");
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r1);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r5.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r8);
+        throw $r5;
+
+     label0:
+        $z1 = virtualinvoke r0.<java.net.SocketPermissionCollection: boolean isReadOnly()>();
+        if $z1 == 0 goto label1;
+
+        $r9 = new java.lang.SecurityException;
+        specialinvoke $r9.<java.lang.SecurityException: void <init>(java.lang.String)>("attempt to add a Permission to a readonly PermissionCollection");
+        throw $r9;
+
+     label1:
+        r3 = r0;
+        entermonitor r0;
+
+     label2:
+        $r11 = r0.<java.net.SocketPermissionCollection: java.util.List perms>;
+        interfaceinvoke $r11.<java.util.List: void add(int,java.lang.Object)>(0, r1);
+        exitmonitor r3;
+
+     label3:
+        goto label7;
+
+     label4:
+        $r12 := @caughtexception;
+
+     label5:
+        r4 = $r12;
+        exitmonitor r3;
+
+     label6:
+        throw r4;
+
+     label7:
+        return;
+
+        catch java.lang.Throwable from label2 to label3 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+    }
+
+    public boolean implies(java.security.Permission)
+    {
+        java.net.SocketPermissionCollection r0, r3;
+        java.security.Permission r1;
+        java.net.SocketPermission r2, r4;
+        int i0, i1, i2, i3, i4, $i5, $i6, $i7, $i8;
+        java.lang.Throwable r5, $r10;
+        boolean $z0, $z1, $z2;
+        java.util.List $r7, $r8;
+        java.lang.Object $r9;
+
+        r0 := @this: java.net.SocketPermissionCollection;
+        r1 := @parameter0: java.security.Permission;
+        $z0 = r1 instanceof java.net.SocketPermission;
+        if $z0 != 0 goto label0;
+
+        return 0;
+
+     label0:
+        r2 = (java.net.SocketPermission) r1;
+        i0 = virtualinvoke r2.<java.net.SocketPermission: int getMask()>();
+        i1 = 0;
+        i2 = i0;
+        r3 = r0;
+        entermonitor r0;
+
+     label1:
+        $r7 = r0.<java.net.SocketPermissionCollection: java.util.List perms>;
+        i3 = interfaceinvoke $r7.<java.util.List: int size()>();
+        i4 = 0;
+
+     label2:
+        if i4 >= i3 goto label6;
+
+        $r8 = r0.<java.net.SocketPermissionCollection: java.util.List perms>;
+        $r9 = interfaceinvoke $r8.<java.util.List: java.lang.Object get(int)>(i4);
+        r4 = (java.net.SocketPermission) $r9;
+        $i5 = virtualinvoke r4.<java.net.SocketPermission: int getMask()>();
+        $i6 = i2 & $i5;
+        if $i6 == 0 goto label5;
+
+        $z1 = virtualinvoke r4.<java.net.SocketPermission: boolean impliesIgnoreMask(java.net.SocketPermission)>(r2);
+        if $z1 == 0 goto label5;
+
+        $i7 = virtualinvoke r4.<java.net.SocketPermission: int getMask()>();
+        i1 = i1 | $i7;
+        $i8 = i1 & i0;
+        if $i8 != i0 goto label4;
+
+        $z2 = 1;
+        exitmonitor r3;
+
+     label3:
+        return $z2;
+
+     label4:
+        i2 = i0 ^ i1;
+
+     label5:
+        i4 = i4 + 1;
+        goto label2;
+
+     label6:
+        exitmonitor r3;
+
+     label7:
+        goto label11;
+
+     label8:
+        $r10 := @caughtexception;
+
+     label9:
+        r5 = $r10;
+        exitmonitor r3;
+
+     label10:
+        throw r5;
+
+     label11:
+        return 0;
+
+        catch java.lang.Throwable from label1 to label3 with label8;
+        catch java.lang.Throwable from label4 to label7 with label8;
+        catch java.lang.Throwable from label9 to label10 with label8;
+    }
+
+    public java.util.Enumeration elements()
+    {
+        java.net.SocketPermissionCollection r0, r2;
+        java.lang.Throwable r3, $r6;
+        java.util.List $r4;
+        java.util.Enumeration $r5;
+
+        r0 := @this: java.net.SocketPermissionCollection;
+        r2 = r0;
+        entermonitor r0;
+
+     label0:
+        $r4 = r0.<java.net.SocketPermissionCollection: java.util.List perms>;
+        $r5 = staticinvoke <java.util.Collections: java.util.Enumeration enumeration(java.util.Collection)>($r4);
+        exitmonitor r2;
+
+     label1:
+        return $r5;
+
+     label2:
+        $r6 := @caughtexception;
+
+     label3:
+        r3 = $r6;
+        exitmonitor r2;
+
+     label4:
+        throw r3;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream) throws java.io.IOException
+    {
+        java.net.SocketPermissionCollection r0, r4;
+        java.io.ObjectOutputStream r1;
+        java.util.Vector $r2, r3;
+        java.lang.Throwable r5, $r9;
+        java.util.List $r6, $r8;
+        int $i0;
+        java.io.ObjectOutputStream$PutField r10;
+
+        r0 := @this: java.net.SocketPermissionCollection;
+        r1 := @parameter0: java.io.ObjectOutputStream;
+        $r2 = new java.util.Vector;
+        $r6 = r0.<java.net.SocketPermissionCollection: java.util.List perms>;
+        $i0 = interfaceinvoke $r6.<java.util.List: int size()>();
+        specialinvoke $r2.<java.util.Vector: void <init>(int)>($i0);
+        r3 = $r2;
+        r4 = r0;
+        entermonitor r0;
+
+     label0:
+        $r8 = r0.<java.net.SocketPermissionCollection: java.util.List perms>;
+        virtualinvoke r3.<java.util.Vector: boolean addAll(java.util.Collection)>($r8);
+        exitmonitor r4;
+
+     label1:
+        goto label5;
+
+     label2:
+        $r9 := @caughtexception;
+
+     label3:
+        r5 = $r9;
+        exitmonitor r4;
+
+     label4:
+        throw r5;
+
+     label5:
+        r10 = virtualinvoke r1.<java.io.ObjectOutputStream: java.io.ObjectOutputStream$PutField putFields()>();
+        virtualinvoke r10.<java.io.ObjectOutputStream$PutField: void put(java.lang.String,java.lang.Object)>("permissions", r3);
+        virtualinvoke r1.<java.io.ObjectOutputStream: void writeFields()>();
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private void readObject(java.io.ObjectInputStream) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        java.net.SocketPermissionCollection r0;
+        java.io.ObjectInputStream r1;
+        java.io.ObjectInputStream$GetField r2;
+        java.util.Vector r3;
+        java.lang.Object $r4;
+        java.util.ArrayList $r5;
+        int $i0;
+        java.util.List $r6;
+
+        r0 := @this: java.net.SocketPermissionCollection;
+        r1 := @parameter0: java.io.ObjectInputStream;
+        r2 = virtualinvoke r1.<java.io.ObjectInputStream: java.io.ObjectInputStream$GetField readFields()>();
+        $r4 = virtualinvoke r2.<java.io.ObjectInputStream$GetField: java.lang.Object get(java.lang.String,java.lang.Object)>("permissions", null);
+        r3 = (java.util.Vector) $r4;
+        $r5 = new java.util.ArrayList;
+        $i0 = virtualinvoke r3.<java.util.Vector: int size()>();
+        specialinvoke $r5.<java.util.ArrayList: void <init>(int)>($i0);
+        r0.<java.net.SocketPermissionCollection: java.util.List perms> = $r5;
+        $r6 = r0.<java.net.SocketPermissionCollection: java.util.List perms>;
+        interfaceinvoke $r6.<java.util.List: boolean addAll(java.util.Collection)>(r3);
+        return;
+    }
+
+    static void <clinit>()
+    {
+        java.io.ObjectStreamField $r0;
+        java.io.ObjectStreamField[] $r1;
+
+        $r1 = newarray (java.io.ObjectStreamField)[1];
+        $r0 = new java.io.ObjectStreamField;
+        specialinvoke $r0.<java.io.ObjectStreamField: void <init>(java.lang.String,java.lang.Class)>("permissions", class "java/util/Vector");
+        $r1[0] = $r0;
+        <java.net.SocketPermissionCollection: java.io.ObjectStreamField[] serialPersistentFields> = $r1;
+        return;
+    }
+}

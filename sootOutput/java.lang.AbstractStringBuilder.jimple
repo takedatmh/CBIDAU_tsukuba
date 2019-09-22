@@ -1,0 +1,1630 @@
+abstract class java.lang.AbstractStringBuilder extends java.lang.Object implements java.lang.Appendable, java.lang.CharSequence
+{
+    char[] value;
+    int count;
+
+    void <init>()
+    {
+        java.lang.AbstractStringBuilder r0;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    void <init>(int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0;
+        char[] $r1;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r1 = newarray (char)[i0];
+        r0.<java.lang.AbstractStringBuilder: char[] value> = $r1;
+        return;
+    }
+
+    public int length()
+    {
+        java.lang.AbstractStringBuilder r0;
+        int $i0;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        $i0 = r0.<java.lang.AbstractStringBuilder: int count>;
+        return $i0;
+    }
+
+    public int capacity()
+    {
+        java.lang.AbstractStringBuilder r0;
+        char[] $r1;
+        int $i0;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        $r1 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i0 = lengthof $r1;
+        return $i0;
+    }
+
+    public void ensureCapacity(int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        if i0 <= 0 goto label0;
+
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>(i0);
+
+     label0:
+        return;
+    }
+
+    private void ensureCapacityInternal(int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, $i1, $i2;
+        char[] $r1;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        $r1 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i1 = lengthof $r1;
+        $i2 = i0 - $i1;
+        if $i2 <= 0 goto label0;
+
+        virtualinvoke r0.<java.lang.AbstractStringBuilder: void expandCapacity(int)>(i0);
+
+     label0:
+        return;
+    }
+
+    void expandCapacity(int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, i1, $i2, $i3, $i4;
+        char[] $r1, $r3, $r4;
+        java.lang.OutOfMemoryError $r2;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        $r1 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i2 = lengthof $r1;
+        $i3 = $i2 * 2;
+        i1 = $i3 + 2;
+        $i4 = i1 - i0;
+        if $i4 >= 0 goto label0;
+
+        i1 = i0;
+
+     label0:
+        if i1 >= 0 goto label2;
+
+        if i0 >= 0 goto label1;
+
+        $r2 = new java.lang.OutOfMemoryError;
+        specialinvoke $r2.<java.lang.OutOfMemoryError: void <init>()>();
+        throw $r2;
+
+     label1:
+        i1 = 2147483647;
+
+     label2:
+        $r3 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $r4 = staticinvoke <java.util.Arrays: char[] copyOf(char[],int)>($r3, i1);
+        r0.<java.lang.AbstractStringBuilder: char[] value> = $r4;
+        return;
+    }
+
+    public void trimToSize()
+    {
+        java.lang.AbstractStringBuilder r0;
+        int $i0, $i1, $i2;
+        char[] $r1, $r2, $r3;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        $i0 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $r1 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i1 = lengthof $r1;
+        if $i0 >= $i1 goto label0;
+
+        $r2 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i2 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $r3 = staticinvoke <java.util.Arrays: char[] copyOf(char[],int)>($r2, $i2);
+        r0.<java.lang.AbstractStringBuilder: char[] value> = $r3;
+
+     label0:
+        return;
+    }
+
+    public void setLength(int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, $i1, $i2, $i3, $i4, $i5;
+        java.lang.StringIndexOutOfBoundsException $r1;
+        char[] $r2;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        if i0 >= 0 goto label0;
+
+        $r1 = new java.lang.StringIndexOutOfBoundsException;
+        specialinvoke $r1.<java.lang.StringIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r1;
+
+     label0:
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>(i0);
+        $i1 = r0.<java.lang.AbstractStringBuilder: int count>;
+        if $i1 >= i0 goto label2;
+
+     label1:
+        $i2 = r0.<java.lang.AbstractStringBuilder: int count>;
+        if $i2 >= i0 goto label3;
+
+        $r2 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i3 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $r2[$i3] = 0;
+        $i4 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i5 = $i4 + 1;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i5;
+        goto label1;
+
+     label2:
+        r0.<java.lang.AbstractStringBuilder: int count> = i0;
+
+     label3:
+        return;
+    }
+
+    public char charAt(int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, $i1;
+        java.lang.StringIndexOutOfBoundsException $r1;
+        char[] $r2;
+        char $c2;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        if i0 < 0 goto label0;
+
+        $i1 = r0.<java.lang.AbstractStringBuilder: int count>;
+        if i0 < $i1 goto label1;
+
+     label0:
+        $r1 = new java.lang.StringIndexOutOfBoundsException;
+        specialinvoke $r1.<java.lang.StringIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r1;
+
+     label1:
+        $r2 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $c2 = $r2[i0];
+        return $c2;
+    }
+
+    public int codePointAt(int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, $i1, $i2;
+        java.lang.StringIndexOutOfBoundsException $r1;
+        char[] $r2;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        if i0 < 0 goto label0;
+
+        $i1 = r0.<java.lang.AbstractStringBuilder: int count>;
+        if i0 < $i1 goto label1;
+
+     label0:
+        $r1 = new java.lang.StringIndexOutOfBoundsException;
+        specialinvoke $r1.<java.lang.StringIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r1;
+
+     label1:
+        $r2 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i2 = staticinvoke <java.lang.Character: int codePointAt(char[],int)>($r2, i0);
+        return $i2;
+    }
+
+    public int codePointBefore(int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, i1, $i2, $i3;
+        java.lang.StringIndexOutOfBoundsException $r1;
+        char[] $r2;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        i1 = i0 - 1;
+        if i1 < 0 goto label0;
+
+        $i2 = r0.<java.lang.AbstractStringBuilder: int count>;
+        if i1 < $i2 goto label1;
+
+     label0:
+        $r1 = new java.lang.StringIndexOutOfBoundsException;
+        specialinvoke $r1.<java.lang.StringIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r1;
+
+     label1:
+        $r2 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i3 = staticinvoke <java.lang.Character: int codePointBefore(char[],int)>($r2, i0);
+        return $i3;
+    }
+
+    public int codePointCount(int, int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, i1, $i2, $i3, $i4;
+        java.lang.IndexOutOfBoundsException $r1;
+        char[] $r2;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        if i0 < 0 goto label0;
+
+        $i2 = r0.<java.lang.AbstractStringBuilder: int count>;
+        if i1 > $i2 goto label0;
+
+        if i0 <= i1 goto label1;
+
+     label0:
+        $r1 = new java.lang.IndexOutOfBoundsException;
+        specialinvoke $r1.<java.lang.IndexOutOfBoundsException: void <init>()>();
+        throw $r1;
+
+     label1:
+        $r2 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i3 = i1 - i0;
+        $i4 = staticinvoke <java.lang.Character: int codePointCountImpl(char[],int,int)>($r2, i0, $i3);
+        return $i4;
+    }
+
+    public int offsetByCodePoints(int, int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, i1, $i2, $i3, $i4;
+        java.lang.IndexOutOfBoundsException $r1;
+        char[] $r2;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        if i0 < 0 goto label0;
+
+        $i2 = r0.<java.lang.AbstractStringBuilder: int count>;
+        if i0 <= $i2 goto label1;
+
+     label0:
+        $r1 = new java.lang.IndexOutOfBoundsException;
+        specialinvoke $r1.<java.lang.IndexOutOfBoundsException: void <init>()>();
+        throw $r1;
+
+     label1:
+        $r2 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i3 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i4 = staticinvoke <java.lang.Character: int offsetByCodePointsImpl(char[],int,int,int,int)>($r2, 0, $i3, i0, i1);
+        return $i4;
+    }
+
+    public void getChars(int, int, char[], int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, i1, i2, $i3, $i4;
+        char[] r1, $r5;
+        java.lang.StringIndexOutOfBoundsException $r2, $r3, $r4;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        r1 := @parameter2: char[];
+        i2 := @parameter3: int;
+        if i0 >= 0 goto label0;
+
+        $r2 = new java.lang.StringIndexOutOfBoundsException;
+        specialinvoke $r2.<java.lang.StringIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r2;
+
+     label0:
+        if i1 < 0 goto label1;
+
+        $i3 = r0.<java.lang.AbstractStringBuilder: int count>;
+        if i1 <= $i3 goto label2;
+
+     label1:
+        $r3 = new java.lang.StringIndexOutOfBoundsException;
+        specialinvoke $r3.<java.lang.StringIndexOutOfBoundsException: void <init>(int)>(i1);
+        throw $r3;
+
+     label2:
+        if i0 <= i1 goto label3;
+
+        $r4 = new java.lang.StringIndexOutOfBoundsException;
+        specialinvoke $r4.<java.lang.StringIndexOutOfBoundsException: void <init>(java.lang.String)>("srcBegin > srcEnd");
+        throw $r4;
+
+     label3:
+        $r5 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i4 = i1 - i0;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r5, i0, r1, i2, $i4);
+        return;
+    }
+
+    public void setCharAt(int, char)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, $i2;
+        char c1;
+        java.lang.StringIndexOutOfBoundsException $r1;
+        char[] $r2;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        c1 := @parameter1: char;
+        if i0 < 0 goto label0;
+
+        $i2 = r0.<java.lang.AbstractStringBuilder: int count>;
+        if i0 < $i2 goto label1;
+
+     label0:
+        $r1 = new java.lang.StringIndexOutOfBoundsException;
+        specialinvoke $r1.<java.lang.StringIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r1;
+
+     label1:
+        $r2 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $r2[i0] = c1;
+        return;
+    }
+
+    public java.lang.AbstractStringBuilder append(java.lang.Object)
+    {
+        java.lang.AbstractStringBuilder r0, $r3;
+        java.lang.Object r1;
+        java.lang.String $r2;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        r1 := @parameter0: java.lang.Object;
+        $r2 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r1);
+        $r3 = virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.AbstractStringBuilder append(java.lang.String)>($r2);
+        return $r3;
+    }
+
+    public java.lang.AbstractStringBuilder append(java.lang.String)
+    {
+        java.lang.AbstractStringBuilder r0;
+        java.lang.String r1;
+        int i0, $i1, $i2, $i3, $i4, $i5;
+        char[] $r2;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        r1 := @parameter0: java.lang.String;
+        if r1 != null goto label0;
+
+        r1 = "null";
+
+     label0:
+        i0 = virtualinvoke r1.<java.lang.String: int length()>();
+        $i1 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i2 = $i1 + i0;
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>($i2);
+        $r2 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i3 = r0.<java.lang.AbstractStringBuilder: int count>;
+        virtualinvoke r1.<java.lang.String: void getChars(int,int,char[],int)>(0, i0, $r2, $i3);
+        $i4 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i5 = $i4 + i0;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i5;
+        return r0;
+    }
+
+    public java.lang.AbstractStringBuilder append(java.lang.StringBuffer)
+    {
+        java.lang.AbstractStringBuilder r0, $r2;
+        java.lang.StringBuffer r1;
+        int i0, $i1, $i2, $i3, $i4, $i5;
+        char[] $r3;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        r1 := @parameter0: java.lang.StringBuffer;
+        if r1 != null goto label0;
+
+        $r2 = virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.AbstractStringBuilder append(java.lang.String)>("null");
+        return $r2;
+
+     label0:
+        i0 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        $i1 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i2 = $i1 + i0;
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>($i2);
+        $r3 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i3 = r0.<java.lang.AbstractStringBuilder: int count>;
+        virtualinvoke r1.<java.lang.StringBuffer: void getChars(int,int,char[],int)>(0, i0, $r3, $i3);
+        $i4 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i5 = $i4 + i0;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i5;
+        return r0;
+    }
+
+    public java.lang.AbstractStringBuilder append(java.lang.CharSequence)
+    {
+        java.lang.AbstractStringBuilder r0, $r3, $r5, $r6;
+        java.lang.CharSequence r1;
+        boolean $z0, $z1;
+        java.lang.String $r2;
+        java.lang.StringBuffer $r4;
+        int $i0;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        r1 := @parameter0: java.lang.CharSequence;
+        if r1 != null goto label0;
+
+        r1 = "null";
+
+     label0:
+        $z0 = r1 instanceof java.lang.String;
+        if $z0 == 0 goto label1;
+
+        $r2 = (java.lang.String) r1;
+        $r3 = virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.AbstractStringBuilder append(java.lang.String)>($r2);
+        return $r3;
+
+     label1:
+        $z1 = r1 instanceof java.lang.StringBuffer;
+        if $z1 == 0 goto label2;
+
+        $r4 = (java.lang.StringBuffer) r1;
+        $r5 = virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.AbstractStringBuilder append(java.lang.StringBuffer)>($r4);
+        return $r5;
+
+     label2:
+        $i0 = interfaceinvoke r1.<java.lang.CharSequence: int length()>();
+        $r6 = virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.AbstractStringBuilder append(java.lang.CharSequence,int,int)>(r1, 0, $i0);
+        return $r6;
+    }
+
+    public java.lang.AbstractStringBuilder append(java.lang.CharSequence, int, int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        java.lang.CharSequence r1;
+        int i0, i1, i2, i3, i4, $i5, $i6, $i7, $i8, $i10, $i11;
+        java.lang.StringBuilder $r2, $r4, $r5, $r6, $r7, $r8, $r9;
+        java.lang.IndexOutOfBoundsException $r3;
+        java.lang.String $r10;
+        char[] $r11;
+        char $c9;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        r1 := @parameter0: java.lang.CharSequence;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        if r1 != null goto label0;
+
+        r1 = "null";
+
+     label0:
+        if i0 < 0 goto label1;
+
+        if i0 > i1 goto label1;
+
+        $i5 = interfaceinvoke r1.<java.lang.CharSequence: int length()>();
+        if i1 <= $i5 goto label2;
+
+     label1:
+        $r3 = new java.lang.IndexOutOfBoundsException;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+        $r4 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("start ");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", end ");
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i1);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", s.length() ");
+        $i6 = interfaceinvoke r1.<java.lang.CharSequence: int length()>();
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i6);
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r3.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r10);
+        throw $r3;
+
+     label2:
+        i2 = i1 - i0;
+        $i7 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i8 = $i7 + i2;
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>($i8);
+        i3 = i0;
+        i4 = r0.<java.lang.AbstractStringBuilder: int count>;
+
+     label3:
+        if i3 >= i1 goto label4;
+
+        $r11 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $c9 = interfaceinvoke r1.<java.lang.CharSequence: char charAt(int)>(i3);
+        $r11[i4] = $c9;
+        i3 = i3 + 1;
+        i4 = i4 + 1;
+        goto label3;
+
+     label4:
+        $i10 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i11 = $i10 + i2;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i11;
+        return r0;
+    }
+
+    public java.lang.AbstractStringBuilder append(char[])
+    {
+        java.lang.AbstractStringBuilder r0;
+        char[] r1, $r2;
+        int i0, $i1, $i2, $i3, $i4, $i5;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        r1 := @parameter0: char[];
+        i0 = lengthof r1;
+        $i1 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i2 = $i1 + i0;
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>($i2);
+        $r2 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i3 = r0.<java.lang.AbstractStringBuilder: int count>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r1, 0, $r2, $i3, i0);
+        $i4 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i5 = $i4 + i0;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i5;
+        return r0;
+    }
+
+    public java.lang.AbstractStringBuilder append(char[], int, int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        char[] r1, $r2;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        r1 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        if i1 <= 0 goto label0;
+
+        $i2 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i3 = $i2 + i1;
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>($i3);
+
+     label0:
+        $r2 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i4 = r0.<java.lang.AbstractStringBuilder: int count>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r1, i0, $r2, $i4, i1);
+        $i5 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i6 = $i5 + i1;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i6;
+        return r0;
+    }
+
+    public java.lang.AbstractStringBuilder append(boolean)
+    {
+        java.lang.AbstractStringBuilder r0;
+        boolean z0;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21;
+        char[] $r1, $r3, $r5, $r7, $r9, $r11, $r13, $r15, $r17;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        z0 := @parameter0: boolean;
+        if z0 == 0 goto label0;
+
+        $i1 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i2 = $i1 + 4;
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>($i2);
+        $r1 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i0 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i3 = $i0 + 1;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i3;
+        $r1[$i0] = 116;
+        $r3 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i4 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i5 = $i4 + 1;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i5;
+        $r3[$i4] = 114;
+        $r5 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i6 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i7 = $i6 + 1;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i7;
+        $r5[$i6] = 117;
+        $r7 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i8 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i9 = $i8 + 1;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i9;
+        $r7[$i8] = 101;
+        goto label1;
+
+     label0:
+        $i10 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i11 = $i10 + 5;
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>($i11);
+        $r9 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i12 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i13 = $i12 + 1;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i13;
+        $r9[$i12] = 102;
+        $r11 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i14 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i15 = $i14 + 1;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i15;
+        $r11[$i14] = 97;
+        $r13 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i16 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i17 = $i16 + 1;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i17;
+        $r13[$i16] = 108;
+        $r15 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i18 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i19 = $i18 + 1;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i19;
+        $r15[$i18] = 115;
+        $r17 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i20 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i21 = $i20 + 1;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i21;
+        $r17[$i20] = 101;
+
+     label1:
+        return r0;
+    }
+
+    public java.lang.AbstractStringBuilder append(char)
+    {
+        java.lang.AbstractStringBuilder r0;
+        char c0;
+        int $i1, $i2, $i3, $i4;
+        char[] $r1;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        c0 := @parameter0: char;
+        $i2 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i3 = $i2 + 1;
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>($i3);
+        $r1 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i1 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i4 = $i1 + 1;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i4;
+        $r1[$i1] = c0;
+        return r0;
+    }
+
+    public java.lang.AbstractStringBuilder append(int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, i1, i2, $i3, $i4, $i5, $i6;
+        char[] $r2;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        if i0 != -2147483648 goto label0;
+
+        virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.AbstractStringBuilder append(java.lang.String)>("-2147483648");
+        return r0;
+
+     label0:
+        if i0 >= 0 goto label1;
+
+        $i3 = neg i0;
+        $i4 = staticinvoke <java.lang.Integer: int stringSize(int)>($i3);
+        $i5 = $i4 + 1;
+        goto label2;
+
+     label1:
+        $i5 = staticinvoke <java.lang.Integer: int stringSize(int)>(i0);
+
+     label2:
+        i1 = $i5;
+        $i6 = r0.<java.lang.AbstractStringBuilder: int count>;
+        i2 = $i6 + i1;
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>(i2);
+        $r2 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        staticinvoke <java.lang.Integer: void getChars(int,int,char[])>(i0, i2, $r2);
+        r0.<java.lang.AbstractStringBuilder: int count> = i2;
+        return r0;
+    }
+
+    public java.lang.AbstractStringBuilder append(long)
+    {
+        java.lang.AbstractStringBuilder r0;
+        long l0, $l5;
+        int i1, i2, $i6, $i7, $i8;
+        byte $b3, $b4;
+        char[] $r2;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        l0 := @parameter0: long;
+        $b3 = l0 cmp -9223372036854775808L;
+        if $b3 != 0 goto label0;
+
+        virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.AbstractStringBuilder append(java.lang.String)>("-9223372036854775808");
+        return r0;
+
+     label0:
+        $b4 = l0 cmp 0L;
+        if $b4 >= 0 goto label1;
+
+        $l5 = neg l0;
+        $i6 = staticinvoke <java.lang.Long: int stringSize(long)>($l5);
+        $i7 = $i6 + 1;
+        goto label2;
+
+     label1:
+        $i7 = staticinvoke <java.lang.Long: int stringSize(long)>(l0);
+
+     label2:
+        i1 = $i7;
+        $i8 = r0.<java.lang.AbstractStringBuilder: int count>;
+        i2 = $i8 + i1;
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>(i2);
+        $r2 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        staticinvoke <java.lang.Long: void getChars(long,int,char[])>(l0, i2, $r2);
+        r0.<java.lang.AbstractStringBuilder: int count> = i2;
+        return r0;
+    }
+
+    public java.lang.AbstractStringBuilder append(float)
+    {
+        java.lang.AbstractStringBuilder r0;
+        float f0;
+        sun.misc.FloatingDecimal $r1;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        f0 := @parameter0: float;
+        $r1 = new sun.misc.FloatingDecimal;
+        specialinvoke $r1.<sun.misc.FloatingDecimal: void <init>(float)>(f0);
+        virtualinvoke $r1.<sun.misc.FloatingDecimal: void appendTo(java.lang.Appendable)>(r0);
+        return r0;
+    }
+
+    public java.lang.AbstractStringBuilder append(double)
+    {
+        java.lang.AbstractStringBuilder r0;
+        double d0;
+        sun.misc.FloatingDecimal $r1;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        d0 := @parameter0: double;
+        $r1 = new sun.misc.FloatingDecimal;
+        specialinvoke $r1.<sun.misc.FloatingDecimal: void <init>(double)>(d0);
+        virtualinvoke $r1.<sun.misc.FloatingDecimal: void appendTo(java.lang.Appendable)>(r0);
+        return r0;
+    }
+
+    public java.lang.AbstractStringBuilder delete(int, int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8;
+        java.lang.StringIndexOutOfBoundsException $r1, $r2;
+        char[] $r3, $r4;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        if i0 >= 0 goto label0;
+
+        $r1 = new java.lang.StringIndexOutOfBoundsException;
+        specialinvoke $r1.<java.lang.StringIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r1;
+
+     label0:
+        $i3 = r0.<java.lang.AbstractStringBuilder: int count>;
+        if i1 <= $i3 goto label1;
+
+        i1 = r0.<java.lang.AbstractStringBuilder: int count>;
+
+     label1:
+        if i0 <= i1 goto label2;
+
+        $r2 = new java.lang.StringIndexOutOfBoundsException;
+        specialinvoke $r2.<java.lang.StringIndexOutOfBoundsException: void <init>()>();
+        throw $r2;
+
+     label2:
+        i2 = i1 - i0;
+        if i2 <= 0 goto label3;
+
+        $r3 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i4 = i0 + i2;
+        $r4 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i5 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i6 = $i5 - i1;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r3, $i4, $r4, i0, $i6);
+        $i7 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i8 = $i7 - i2;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i8;
+
+     label3:
+        return r0;
+    }
+
+    public java.lang.AbstractStringBuilder appendCodePoint(int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, i1, $i2, $i4, $i5, $i6;
+        boolean $z0, $z1;
+        char[] $r1, $r2;
+        char $c3;
+        java.lang.IllegalArgumentException $r3;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        i1 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $z0 = staticinvoke <java.lang.Character: boolean isBmpCodePoint(int)>(i0);
+        if $z0 == 0 goto label0;
+
+        $i2 = i1 + 1;
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>($i2);
+        $r1 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $c3 = (char) i0;
+        $r1[i1] = $c3;
+        $i4 = i1 + 1;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i4;
+        goto label2;
+
+     label0:
+        $z1 = staticinvoke <java.lang.Character: boolean isValidCodePoint(int)>(i0);
+        if $z1 == 0 goto label1;
+
+        $i5 = i1 + 2;
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>($i5);
+        $r2 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        staticinvoke <java.lang.Character: void toSurrogates(int,char[],int)>(i0, $r2, i1);
+        $i6 = i1 + 2;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i6;
+        goto label2;
+
+     label1:
+        $r3 = new java.lang.IllegalArgumentException;
+        specialinvoke $r3.<java.lang.IllegalArgumentException: void <init>()>();
+        throw $r3;
+
+     label2:
+        return r0;
+    }
+
+    public java.lang.AbstractStringBuilder deleteCharAt(int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7;
+        java.lang.StringIndexOutOfBoundsException $r1;
+        char[] $r2, $r3;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        if i0 < 0 goto label0;
+
+        $i1 = r0.<java.lang.AbstractStringBuilder: int count>;
+        if i0 < $i1 goto label1;
+
+     label0:
+        $r1 = new java.lang.StringIndexOutOfBoundsException;
+        specialinvoke $r1.<java.lang.StringIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r1;
+
+     label1:
+        $r2 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i2 = i0 + 1;
+        $r3 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i3 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i4 = $i3 - i0;
+        $i5 = $i4 - 1;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r2, $i2, $r3, i0, $i5);
+        $i6 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i7 = $i6 - 1;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i7;
+        return r0;
+    }
+
+    public java.lang.AbstractStringBuilder replace(int, int, java.lang.String)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, i1, i2, i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11;
+        java.lang.String r1;
+        java.lang.StringIndexOutOfBoundsException $r2, $r3, $r4;
+        char[] $r5, $r6, $r7;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        r1 := @parameter2: java.lang.String;
+        if i0 >= 0 goto label0;
+
+        $r2 = new java.lang.StringIndexOutOfBoundsException;
+        specialinvoke $r2.<java.lang.StringIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r2;
+
+     label0:
+        $i4 = r0.<java.lang.AbstractStringBuilder: int count>;
+        if i0 <= $i4 goto label1;
+
+        $r3 = new java.lang.StringIndexOutOfBoundsException;
+        specialinvoke $r3.<java.lang.StringIndexOutOfBoundsException: void <init>(java.lang.String)>("start > length()");
+        throw $r3;
+
+     label1:
+        if i0 <= i1 goto label2;
+
+        $r4 = new java.lang.StringIndexOutOfBoundsException;
+        specialinvoke $r4.<java.lang.StringIndexOutOfBoundsException: void <init>(java.lang.String)>("start > end");
+        throw $r4;
+
+     label2:
+        $i5 = r0.<java.lang.AbstractStringBuilder: int count>;
+        if i1 <= $i5 goto label3;
+
+        i1 = r0.<java.lang.AbstractStringBuilder: int count>;
+
+     label3:
+        i2 = virtualinvoke r1.<java.lang.String: int length()>();
+        $i6 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i7 = $i6 + i2;
+        $i8 = i1 - i0;
+        i3 = $i7 - $i8;
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>(i3);
+        $r5 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $r6 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i9 = i0 + i2;
+        $i10 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i11 = $i10 - i1;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r5, i1, $r6, $i9, $i11);
+        $r7 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        virtualinvoke r1.<java.lang.String: void getChars(char[],int)>($r7, i0);
+        r0.<java.lang.AbstractStringBuilder: int count> = i3;
+        return r0;
+    }
+
+    public java.lang.String substring(int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, $i1;
+        java.lang.String $r1;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        $i1 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $r1 = virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.String substring(int,int)>(i0, $i1);
+        return $r1;
+    }
+
+    public java.lang.CharSequence subSequence(int, int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, i1;
+        java.lang.String $r1;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $r1 = virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.String substring(int,int)>(i0, i1);
+        return $r1;
+    }
+
+    public java.lang.String substring(int, int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, i1, $i2, $i3, $i4;
+        java.lang.StringIndexOutOfBoundsException $r1, $r2, $r3;
+        java.lang.String $r4;
+        char[] $r5;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        if i0 >= 0 goto label0;
+
+        $r1 = new java.lang.StringIndexOutOfBoundsException;
+        specialinvoke $r1.<java.lang.StringIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r1;
+
+     label0:
+        $i2 = r0.<java.lang.AbstractStringBuilder: int count>;
+        if i1 <= $i2 goto label1;
+
+        $r2 = new java.lang.StringIndexOutOfBoundsException;
+        specialinvoke $r2.<java.lang.StringIndexOutOfBoundsException: void <init>(int)>(i1);
+        throw $r2;
+
+     label1:
+        if i0 <= i1 goto label2;
+
+        $r3 = new java.lang.StringIndexOutOfBoundsException;
+        $i3 = i1 - i0;
+        specialinvoke $r3.<java.lang.StringIndexOutOfBoundsException: void <init>(int)>($i3);
+        throw $r3;
+
+     label2:
+        $r4 = new java.lang.String;
+        $r5 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i4 = i1 - i0;
+        specialinvoke $r4.<java.lang.String: void <init>(char[],int,int)>($r5, i0, $i4);
+        return $r4;
+    }
+
+    public java.lang.AbstractStringBuilder insert(int, char[], int, int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13;
+        char[] r1, $r12, $r13, $r14;
+        java.lang.StringIndexOutOfBoundsException $r2, $r3;
+        java.lang.StringBuilder $r4, $r5, $r6, $r7, $r8, $r9, $r10;
+        java.lang.String $r11;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        r1 := @parameter1: char[];
+        i1 := @parameter2: int;
+        i2 := @parameter3: int;
+        if i0 < 0 goto label0;
+
+        $i3 = virtualinvoke r0.<java.lang.AbstractStringBuilder: int length()>();
+        if i0 <= $i3 goto label1;
+
+     label0:
+        $r2 = new java.lang.StringIndexOutOfBoundsException;
+        specialinvoke $r2.<java.lang.StringIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r2;
+
+     label1:
+        if i1 < 0 goto label2;
+
+        if i2 < 0 goto label2;
+
+        $i4 = lengthof r1;
+        $i5 = $i4 - i2;
+        if i1 <= $i5 goto label3;
+
+     label2:
+        $r3 = new java.lang.StringIndexOutOfBoundsException;
+        $r4 = new java.lang.StringBuilder;
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>()>();
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("offset ");
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i1);
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", len ");
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i2);
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", str.length ");
+        $i6 = lengthof r1;
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i6);
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r3.<java.lang.StringIndexOutOfBoundsException: void <init>(java.lang.String)>($r11);
+        throw $r3;
+
+     label3:
+        $i7 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i8 = $i7 + i2;
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>($i8);
+        $r12 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $r13 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i9 = i0 + i2;
+        $i10 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i11 = $i10 - i0;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r12, i0, $r13, $i9, $i11);
+        $r14 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r1, i1, $r14, i0, i2);
+        $i12 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i13 = $i12 + i2;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i13;
+        return r0;
+    }
+
+    public java.lang.AbstractStringBuilder insert(int, java.lang.Object)
+    {
+        java.lang.AbstractStringBuilder r0, $r3;
+        int i0;
+        java.lang.Object r1;
+        java.lang.String $r2;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.lang.Object;
+        $r2 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r1);
+        $r3 = virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.AbstractStringBuilder insert(int,java.lang.String)>(i0, $r2);
+        return $r3;
+    }
+
+    public java.lang.AbstractStringBuilder insert(int, java.lang.String)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9;
+        java.lang.String r1;
+        java.lang.StringIndexOutOfBoundsException $r2;
+        char[] $r3, $r4, $r5;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.lang.String;
+        if i0 < 0 goto label0;
+
+        $i2 = virtualinvoke r0.<java.lang.AbstractStringBuilder: int length()>();
+        if i0 <= $i2 goto label1;
+
+     label0:
+        $r2 = new java.lang.StringIndexOutOfBoundsException;
+        specialinvoke $r2.<java.lang.StringIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r2;
+
+     label1:
+        if r1 != null goto label2;
+
+        r1 = "null";
+
+     label2:
+        i1 = virtualinvoke r1.<java.lang.String: int length()>();
+        $i3 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i4 = $i3 + i1;
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>($i4);
+        $r3 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $r4 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i5 = i0 + i1;
+        $i6 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i7 = $i6 - i0;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r3, i0, $r4, $i5, $i7);
+        $r5 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        virtualinvoke r1.<java.lang.String: void getChars(char[],int)>($r5, i0);
+        $i8 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i9 = $i8 + i1;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i9;
+        return r0;
+    }
+
+    public java.lang.AbstractStringBuilder insert(int, char[])
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9;
+        char[] r1, $r3, $r4, $r5;
+        java.lang.StringIndexOutOfBoundsException $r2;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        r1 := @parameter1: char[];
+        if i0 < 0 goto label0;
+
+        $i2 = virtualinvoke r0.<java.lang.AbstractStringBuilder: int length()>();
+        if i0 <= $i2 goto label1;
+
+     label0:
+        $r2 = new java.lang.StringIndexOutOfBoundsException;
+        specialinvoke $r2.<java.lang.StringIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r2;
+
+     label1:
+        i1 = lengthof r1;
+        $i3 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i4 = $i3 + i1;
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>($i4);
+        $r3 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $r4 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i5 = i0 + i1;
+        $i6 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i7 = $i6 - i0;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r3, i0, $r4, $i5, $i7);
+        $r5 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r1, 0, $r5, i0, i1);
+        $i8 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i9 = $i8 + i1;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i9;
+        return r0;
+    }
+
+    public java.lang.AbstractStringBuilder insert(int, java.lang.CharSequence)
+    {
+        java.lang.AbstractStringBuilder r0, $r3, $r4;
+        int i0, $i1;
+        java.lang.CharSequence r1;
+        boolean $z0;
+        java.lang.String $r2;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.lang.CharSequence;
+        if r1 != null goto label0;
+
+        r1 = "null";
+
+     label0:
+        $z0 = r1 instanceof java.lang.String;
+        if $z0 == 0 goto label1;
+
+        $r2 = (java.lang.String) r1;
+        $r3 = virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.AbstractStringBuilder insert(int,java.lang.String)>(i0, $r2);
+        return $r3;
+
+     label1:
+        $i1 = interfaceinvoke r1.<java.lang.CharSequence: int length()>();
+        $r4 = virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.AbstractStringBuilder insert(int,java.lang.CharSequence,int,int)>(i0, r1, 0, $i1);
+        return $r4;
+    }
+
+    public java.lang.AbstractStringBuilder insert(int, java.lang.CharSequence, int, int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, i1, i2, i3, i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i15, $i16;
+        java.lang.CharSequence r1;
+        java.lang.StringBuilder $r2, $r4, $r5, $r8, $r9, $r10, $r11, $r12, $r13, $r14;
+        java.lang.IndexOutOfBoundsException $r3, $r7;
+        java.lang.String $r6, $r15;
+        char[] $r16, $r17, $r18;
+        char $c14;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.lang.CharSequence;
+        i1 := @parameter2: int;
+        i2 := @parameter3: int;
+        if r1 != null goto label0;
+
+        r1 = "null";
+
+     label0:
+        if i0 < 0 goto label1;
+
+        $i5 = virtualinvoke r0.<java.lang.AbstractStringBuilder: int length()>();
+        if i0 <= $i5 goto label2;
+
+     label1:
+        $r3 = new java.lang.IndexOutOfBoundsException;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+        $r4 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("dstOffset ");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r3.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r6);
+        throw $r3;
+
+     label2:
+        if i1 < 0 goto label3;
+
+        if i2 < 0 goto label3;
+
+        if i1 > i2 goto label3;
+
+        $i6 = interfaceinvoke r1.<java.lang.CharSequence: int length()>();
+        if i2 <= $i6 goto label4;
+
+     label3:
+        $r7 = new java.lang.IndexOutOfBoundsException;
+        $r8 = new java.lang.StringBuilder;
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>()>();
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("start ");
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i1);
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", end ");
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i2);
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", s.length() ");
+        $i7 = interfaceinvoke r1.<java.lang.CharSequence: int length()>();
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i7);
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r7.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r15);
+        throw $r7;
+
+     label4:
+        i3 = i2 - i1;
+        $i8 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i9 = $i8 + i3;
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>($i9);
+        $r16 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $r17 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i10 = i0 + i3;
+        $i11 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i12 = $i11 - i0;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r16, i0, $r17, $i10, $i12);
+        i4 = i1;
+
+     label5:
+        if i4 >= i2 goto label6;
+
+        $r18 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i13 = i0;
+        i0 = i0 + 1;
+        $c14 = interfaceinvoke r1.<java.lang.CharSequence: char charAt(int)>(i4);
+        $r18[$i13] = $c14;
+        i4 = i4 + 1;
+        goto label5;
+
+     label6:
+        $i15 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i16 = $i15 + i3;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i16;
+        return r0;
+    }
+
+    public java.lang.AbstractStringBuilder insert(int, boolean)
+    {
+        java.lang.AbstractStringBuilder r0, $r2;
+        int i0;
+        boolean z0;
+        java.lang.String $r1;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        z0 := @parameter1: boolean;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(boolean)>(z0);
+        $r2 = virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.AbstractStringBuilder insert(int,java.lang.String)>(i0, $r1);
+        return $r2;
+    }
+
+    public java.lang.AbstractStringBuilder insert(int, char)
+    {
+        java.lang.AbstractStringBuilder r0;
+        int i0, $i2, $i3, $i4, $i5, $i6, $i7, $i8;
+        char c1;
+        char[] $r1, $r2, $r3;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        c1 := @parameter1: char;
+        $i2 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i3 = $i2 + 1;
+        specialinvoke r0.<java.lang.AbstractStringBuilder: void ensureCapacityInternal(int)>($i3);
+        $r1 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $r2 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i4 = i0 + 1;
+        $i5 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i6 = $i5 - i0;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r1, i0, $r2, $i4, $i6);
+        $r3 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $r3[i0] = c1;
+        $i7 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i8 = $i7 + 1;
+        r0.<java.lang.AbstractStringBuilder: int count> = $i8;
+        return r0;
+    }
+
+    public java.lang.AbstractStringBuilder insert(int, int)
+    {
+        java.lang.AbstractStringBuilder r0, $r2;
+        int i0, i1;
+        java.lang.String $r1;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>(i1);
+        $r2 = virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.AbstractStringBuilder insert(int,java.lang.String)>(i0, $r1);
+        return $r2;
+    }
+
+    public java.lang.AbstractStringBuilder insert(int, long)
+    {
+        java.lang.AbstractStringBuilder r0, $r2;
+        int i0;
+        long l1;
+        java.lang.String $r1;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        l1 := @parameter1: long;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(long)>(l1);
+        $r2 = virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.AbstractStringBuilder insert(int,java.lang.String)>(i0, $r1);
+        return $r2;
+    }
+
+    public java.lang.AbstractStringBuilder insert(int, float)
+    {
+        java.lang.AbstractStringBuilder r0, $r2;
+        int i0;
+        float f0;
+        java.lang.String $r1;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        f0 := @parameter1: float;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(float)>(f0);
+        $r2 = virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.AbstractStringBuilder insert(int,java.lang.String)>(i0, $r1);
+        return $r2;
+    }
+
+    public java.lang.AbstractStringBuilder insert(int, double)
+    {
+        java.lang.AbstractStringBuilder r0, $r2;
+        int i0;
+        double d0;
+        java.lang.String $r1;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        i0 := @parameter0: int;
+        d0 := @parameter1: double;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(double)>(d0);
+        $r2 = virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.AbstractStringBuilder insert(int,java.lang.String)>(i0, $r1);
+        return $r2;
+    }
+
+    public int indexOf(java.lang.String)
+    {
+        java.lang.AbstractStringBuilder r0;
+        java.lang.String r1;
+        int $i0;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        r1 := @parameter0: java.lang.String;
+        $i0 = virtualinvoke r0.<java.lang.AbstractStringBuilder: int indexOf(java.lang.String,int)>(r1, 0);
+        return $i0;
+    }
+
+    public int indexOf(java.lang.String, int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        java.lang.String r1;
+        int i0, $i1, $i2, $i3;
+        char[] $r2, $r3;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        r1 := @parameter0: java.lang.String;
+        i0 := @parameter1: int;
+        $r2 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i1 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $r3 = virtualinvoke r1.<java.lang.String: char[] toCharArray()>();
+        $i2 = virtualinvoke r1.<java.lang.String: int length()>();
+        $i3 = staticinvoke <java.lang.String: int indexOf(char[],int,int,char[],int,int,int)>($r2, 0, $i1, $r3, 0, $i2, i0);
+        return $i3;
+    }
+
+    public int lastIndexOf(java.lang.String)
+    {
+        java.lang.AbstractStringBuilder r0;
+        java.lang.String r1;
+        int $i0, $i1;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        r1 := @parameter0: java.lang.String;
+        $i0 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i1 = virtualinvoke r0.<java.lang.AbstractStringBuilder: int lastIndexOf(java.lang.String,int)>(r1, $i0);
+        return $i1;
+    }
+
+    public int lastIndexOf(java.lang.String, int)
+    {
+        java.lang.AbstractStringBuilder r0;
+        java.lang.String r1;
+        int i0, $i1, $i2, $i3;
+        char[] $r2, $r3;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        r1 := @parameter0: java.lang.String;
+        i0 := @parameter1: int;
+        $r2 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i1 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $r3 = virtualinvoke r1.<java.lang.String: char[] toCharArray()>();
+        $i2 = virtualinvoke r1.<java.lang.String: int length()>();
+        $i3 = staticinvoke <java.lang.String: int lastIndexOf(char[],int,int,char[],int,int,int)>($r2, 0, $i1, $r3, 0, $i2, i0);
+        return $i3;
+    }
+
+    public java.lang.AbstractStringBuilder reverse()
+    {
+        java.lang.AbstractStringBuilder r0;
+        boolean z0, $z1, $z2, $z3;
+        int i0, i1, $i4, $i5, $i6, $i7, i8, $i9, $i10, $i12, $i14;
+        char c2, c3, c11, c13;
+        char[] $r1, $r2, $r3, $r4, $r5, $r6, $r7, $r8;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        z0 = 0;
+        $i4 = r0.<java.lang.AbstractStringBuilder: int count>;
+        i0 = $i4 - 1;
+        $i5 = i0 - 1;
+        i1 = $i5 >> 1;
+
+     label0:
+        if i1 < 0 goto label6;
+
+        $r1 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        c2 = $r1[i1];
+        $r2 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i6 = i0 - i1;
+        c3 = $r2[$i6];
+        if z0 != 0 goto label5;
+
+        if c2 < 55296 goto label1;
+
+        if c2 <= 57343 goto label2;
+
+     label1:
+        if c3 < 55296 goto label3;
+
+        if c3 > 57343 goto label3;
+
+     label2:
+        $z1 = 1;
+        goto label4;
+
+     label3:
+        $z1 = 0;
+
+     label4:
+        z0 = $z1;
+
+     label5:
+        $r3 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $r3[i1] = c3;
+        $r4 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i7 = i0 - i1;
+        $r4[$i7] = c2;
+        i1 = i1 + -1;
+        goto label0;
+
+     label6:
+        if z0 == 0 goto label9;
+
+        i8 = 0;
+
+     label7:
+        $i9 = r0.<java.lang.AbstractStringBuilder: int count>;
+        $i10 = $i9 - 1;
+        if i8 >= $i10 goto label9;
+
+        $r5 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        c11 = $r5[i8];
+        $z2 = staticinvoke <java.lang.Character: boolean isLowSurrogate(char)>(c11);
+        if $z2 == 0 goto label8;
+
+        $r6 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i12 = i8 + 1;
+        c13 = $r6[$i12];
+        $z3 = staticinvoke <java.lang.Character: boolean isHighSurrogate(char)>(c13);
+        if $z3 == 0 goto label8;
+
+        $r7 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $i14 = i8;
+        i8 = i8 + 1;
+        $r7[$i14] = c13;
+        $r8 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        $r8[i8] = c11;
+
+     label8:
+        i8 = i8 + 1;
+        goto label7;
+
+     label9:
+        return r0;
+    }
+
+    public abstract java.lang.String toString();
+
+    final char[] getValue()
+    {
+        java.lang.AbstractStringBuilder r0;
+        char[] $r1;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        $r1 = r0.<java.lang.AbstractStringBuilder: char[] value>;
+        return $r1;
+    }
+
+    public volatile java.lang.Appendable append(char) throws java.io.IOException
+    {
+        java.lang.AbstractStringBuilder r0, $r1;
+        char c0;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        c0 := @parameter0: char;
+        $r1 = virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.AbstractStringBuilder append(char)>(c0);
+        return $r1;
+    }
+
+    public volatile java.lang.Appendable append(java.lang.CharSequence, int, int) throws java.io.IOException
+    {
+        java.lang.AbstractStringBuilder r0, $r2;
+        java.lang.CharSequence r1;
+        int i0, i1;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        r1 := @parameter0: java.lang.CharSequence;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        $r2 = virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.AbstractStringBuilder append(java.lang.CharSequence,int,int)>(r1, i0, i1);
+        return $r2;
+    }
+
+    public volatile java.lang.Appendable append(java.lang.CharSequence) throws java.io.IOException
+    {
+        java.lang.AbstractStringBuilder r0, $r2;
+        java.lang.CharSequence r1;
+
+        r0 := @this: java.lang.AbstractStringBuilder;
+        r1 := @parameter0: java.lang.CharSequence;
+        $r2 = virtualinvoke r0.<java.lang.AbstractStringBuilder: java.lang.AbstractStringBuilder append(java.lang.CharSequence)>(r1);
+        return $r2;
+    }
+}

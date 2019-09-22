@@ -1,0 +1,452 @@
+public class org.apache.catalina.core.StandardEngine extends org.apache.catalina.core.ContainerBase implements org.apache.catalina.Engine
+{
+    private static final org.apache.juli.logging.Log log;
+    private java.lang.String defaultHost;
+    private static final java.lang.String info;
+    private org.apache.catalina.Service service;
+    private java.lang.String baseDir;
+    private java.lang.String jvmRouteId;
+    private final java.util.concurrent.atomic.AtomicReference defaultAccessLog;
+
+    static void <clinit>()
+    {
+        org.apache.juli.logging.Log $r0;
+
+        $r0 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/catalina/core/StandardEngine");
+        <org.apache.catalina.core.StandardEngine: org.apache.juli.logging.Log log> = $r0;
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.catalina.core.StandardEngine r0;
+        java.lang.Exception r1, $r6;
+        java.util.concurrent.atomic.AtomicReference $r2;
+        org.apache.catalina.Pipeline $r3;
+        org.apache.catalina.core.StandardEngineValve $r4;
+        java.lang.String $r5, $r9;
+        org.apache.juli.logging.Log $r7;
+        org.apache.tomcat.util.res.StringManager $r8;
+
+        r0 := @this: org.apache.catalina.core.StandardEngine;
+        specialinvoke r0.<org.apache.catalina.core.ContainerBase: void <init>()>();
+        r0.<org.apache.catalina.core.StandardEngine: java.lang.String defaultHost> = null;
+        r0.<org.apache.catalina.core.StandardEngine: org.apache.catalina.Service service> = null;
+        r0.<org.apache.catalina.core.StandardEngine: java.lang.String baseDir> = null;
+        $r2 = new java.util.concurrent.atomic.AtomicReference;
+        specialinvoke $r2.<java.util.concurrent.atomic.AtomicReference: void <init>()>();
+        r0.<org.apache.catalina.core.StandardEngine: java.util.concurrent.atomic.AtomicReference defaultAccessLog> = $r2;
+        $r3 = r0.<org.apache.catalina.core.StandardEngine: org.apache.catalina.Pipeline pipeline>;
+        $r4 = new org.apache.catalina.core.StandardEngineValve;
+        specialinvoke $r4.<org.apache.catalina.core.StandardEngineValve: void <init>()>();
+        interfaceinvoke $r3.<org.apache.catalina.Pipeline: void setBasic(org.apache.catalina.Valve)>($r4);
+
+     label0:
+        $r5 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("jvmRoute");
+        virtualinvoke r0.<org.apache.catalina.core.StandardEngine: void setJvmRoute(java.lang.String)>($r5);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r6 := @caughtexception;
+        r1 = $r6;
+        $r7 = <org.apache.catalina.core.StandardEngine: org.apache.juli.logging.Log log>;
+        $r8 = <org.apache.catalina.core.StandardEngine: org.apache.tomcat.util.res.StringManager sm>;
+        $r9 = virtualinvoke $r8.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("standardEngine.jvmRouteFail");
+        interfaceinvoke $r7.<org.apache.juli.logging.Log: void warn(java.lang.Object)>($r9);
+
+     label3:
+        r0.<org.apache.catalina.core.StandardEngine: int backgroundProcessorDelay> = 10;
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    public org.apache.catalina.Realm getRealm()
+    {
+        org.apache.catalina.core.StandardEngine r0;
+        org.apache.catalina.Realm r1;
+        org.apache.catalina.realm.NullRealm $r2;
+
+        r0 := @this: org.apache.catalina.core.StandardEngine;
+        r1 = specialinvoke r0.<org.apache.catalina.core.ContainerBase: org.apache.catalina.Realm getRealm()>();
+        if r1 != null goto label0;
+
+        $r2 = new org.apache.catalina.realm.NullRealm;
+        specialinvoke $r2.<org.apache.catalina.realm.NullRealm: void <init>()>();
+        r1 = $r2;
+        virtualinvoke r0.<org.apache.catalina.core.StandardEngine: void setRealm(org.apache.catalina.Realm)>(r1);
+
+     label0:
+        return r1;
+    }
+
+    public java.lang.String getDefaultHost()
+    {
+        org.apache.catalina.core.StandardEngine r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.catalina.core.StandardEngine;
+        $r1 = r0.<org.apache.catalina.core.StandardEngine: java.lang.String defaultHost>;
+        return $r1;
+    }
+
+    public void setDefaultHost(java.lang.String)
+    {
+        org.apache.catalina.core.StandardEngine r0;
+        java.lang.String r1, r2, $r4, $r6;
+        java.util.Locale $r3;
+        java.beans.PropertyChangeSupport $r5;
+
+        r0 := @this: org.apache.catalina.core.StandardEngine;
+        r1 := @parameter0: java.lang.String;
+        r2 = r0.<org.apache.catalina.core.StandardEngine: java.lang.String defaultHost>;
+        if r1 != null goto label0;
+
+        r0.<org.apache.catalina.core.StandardEngine: java.lang.String defaultHost> = null;
+        goto label1;
+
+     label0:
+        $r3 = <java.util.Locale: java.util.Locale ENGLISH>;
+        $r4 = virtualinvoke r1.<java.lang.String: java.lang.String toLowerCase(java.util.Locale)>($r3);
+        r0.<org.apache.catalina.core.StandardEngine: java.lang.String defaultHost> = $r4;
+
+     label1:
+        $r5 = r0.<org.apache.catalina.core.StandardEngine: java.beans.PropertyChangeSupport support>;
+        $r6 = r0.<org.apache.catalina.core.StandardEngine: java.lang.String defaultHost>;
+        virtualinvoke $r5.<java.beans.PropertyChangeSupport: void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)>("defaultHost", r2, $r6);
+        return;
+    }
+
+    public void setJvmRoute(java.lang.String)
+    {
+        org.apache.catalina.core.StandardEngine r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.catalina.core.StandardEngine;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.catalina.core.StandardEngine: java.lang.String jvmRouteId> = r1;
+        return;
+    }
+
+    public java.lang.String getJvmRoute()
+    {
+        org.apache.catalina.core.StandardEngine r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.catalina.core.StandardEngine;
+        $r1 = r0.<org.apache.catalina.core.StandardEngine: java.lang.String jvmRouteId>;
+        return $r1;
+    }
+
+    public org.apache.catalina.Service getService()
+    {
+        org.apache.catalina.core.StandardEngine r0;
+        org.apache.catalina.Service $r1;
+
+        r0 := @this: org.apache.catalina.core.StandardEngine;
+        $r1 = r0.<org.apache.catalina.core.StandardEngine: org.apache.catalina.Service service>;
+        return $r1;
+    }
+
+    public void setService(org.apache.catalina.Service)
+    {
+        org.apache.catalina.core.StandardEngine r0;
+        org.apache.catalina.Service r1;
+
+        r0 := @this: org.apache.catalina.core.StandardEngine;
+        r1 := @parameter0: org.apache.catalina.Service;
+        r0.<org.apache.catalina.core.StandardEngine: org.apache.catalina.Service service> = r1;
+        return;
+    }
+
+    public java.lang.String getBaseDir()
+    {
+        org.apache.catalina.core.StandardEngine r0;
+        java.lang.String $r1, $r2, $r3, $r4, $r5;
+
+        r0 := @this: org.apache.catalina.core.StandardEngine;
+        $r1 = r0.<org.apache.catalina.core.StandardEngine: java.lang.String baseDir>;
+        if $r1 != null goto label0;
+
+        $r2 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("catalina.base");
+        r0.<org.apache.catalina.core.StandardEngine: java.lang.String baseDir> = $r2;
+
+     label0:
+        $r3 = r0.<org.apache.catalina.core.StandardEngine: java.lang.String baseDir>;
+        if $r3 != null goto label1;
+
+        $r4 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("catalina.home");
+        r0.<org.apache.catalina.core.StandardEngine: java.lang.String baseDir> = $r4;
+
+     label1:
+        $r5 = r0.<org.apache.catalina.core.StandardEngine: java.lang.String baseDir>;
+        return $r5;
+    }
+
+    public void setBaseDir(java.lang.String)
+    {
+        org.apache.catalina.core.StandardEngine r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.catalina.core.StandardEngine;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.catalina.core.StandardEngine: java.lang.String baseDir> = r1;
+        return;
+    }
+
+    public void addChild(org.apache.catalina.Container)
+    {
+        org.apache.catalina.core.StandardEngine r0;
+        org.apache.catalina.Container r1;
+        org.apache.tomcat.util.res.StringManager $r2;
+        boolean $z0;
+        java.lang.IllegalArgumentException $r3;
+        java.lang.String $r4;
+
+        r0 := @this: org.apache.catalina.core.StandardEngine;
+        r1 := @parameter0: org.apache.catalina.Container;
+        $z0 = r1 instanceof org.apache.catalina.Host;
+        if $z0 != 0 goto label0;
+
+        $r3 = new java.lang.IllegalArgumentException;
+        $r2 = <org.apache.catalina.core.StandardEngine: org.apache.tomcat.util.res.StringManager sm>;
+        $r4 = virtualinvoke $r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("standardEngine.notHost");
+        specialinvoke $r3.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r4);
+        throw $r3;
+
+     label0:
+        specialinvoke r0.<org.apache.catalina.core.ContainerBase: void addChild(org.apache.catalina.Container)>(r1);
+        return;
+    }
+
+    public java.lang.String getInfo()
+    {
+        org.apache.catalina.core.StandardEngine r0;
+
+        r0 := @this: org.apache.catalina.core.StandardEngine;
+        return "org.apache.catalina.core.StandardEngine/1.0";
+    }
+
+    public void setParent(org.apache.catalina.Container)
+    {
+        org.apache.catalina.core.StandardEngine r0;
+        org.apache.catalina.Container r1;
+        java.lang.IllegalArgumentException $r2;
+        org.apache.tomcat.util.res.StringManager $r3;
+        java.lang.String $r4;
+
+        r0 := @this: org.apache.catalina.core.StandardEngine;
+        r1 := @parameter0: org.apache.catalina.Container;
+        $r2 = new java.lang.IllegalArgumentException;
+        $r3 = <org.apache.catalina.core.StandardEngine: org.apache.tomcat.util.res.StringManager sm>;
+        $r4 = virtualinvoke $r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("standardEngine.notParent");
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r4);
+        throw $r2;
+    }
+
+    protected void initInternal() throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.core.StandardEngine r0;
+
+        r0 := @this: org.apache.catalina.core.StandardEngine;
+        virtualinvoke r0.<org.apache.catalina.core.StandardEngine: org.apache.catalina.Realm getRealm()>();
+        specialinvoke r0.<org.apache.catalina.core.ContainerBase: void initInternal()>();
+        return;
+    }
+
+    protected synchronized void startInternal() throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.core.StandardEngine r0;
+        org.apache.juli.logging.Log $r1, $r3;
+        java.lang.StringBuilder $r2, $r5;
+        boolean $z0;
+        java.lang.String $r4, $r6;
+
+        r0 := @this: org.apache.catalina.core.StandardEngine;
+        $r1 = <org.apache.catalina.core.StandardEngine: org.apache.juli.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.juli.logging.Log: boolean isInfoEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r3 = <org.apache.catalina.core.StandardEngine: org.apache.juli.logging.Log log>;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>(java.lang.String)>("Starting Servlet Engine: ");
+        $r4 = staticinvoke <org.apache.catalina.util.ServerInfo: java.lang.String getServerInfo()>();
+        $r5 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r4);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.juli.logging.Log: void info(java.lang.Object)>($r6);
+
+     label0:
+        specialinvoke r0.<org.apache.catalina.core.ContainerBase: void startInternal()>();
+        return;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.catalina.core.StandardEngine r0;
+        java.lang.StringBuilder $r1, r2;
+        java.lang.String $r3, $r6;
+
+        r0 := @this: org.apache.catalina.core.StandardEngine;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>(java.lang.String)>("StandardEngine[");
+        r2 = $r1;
+        $r3 = virtualinvoke r0.<org.apache.catalina.core.StandardEngine: java.lang.String getName()>();
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r3);
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+        $r6 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r6;
+    }
+
+    public void logAccess(org.apache.catalina.connector.Request, org.apache.catalina.connector.Response, long, boolean)
+    {
+        org.apache.catalina.core.StandardEngine r0;
+        org.apache.catalina.connector.Request r1;
+        org.apache.catalina.connector.Response r2;
+        long l0;
+        boolean z0, z1, $z2, $z3, $z4, $z5, $z6;
+        org.apache.catalina.AccessLog r3, $r7, $r8;
+        org.apache.catalina.Host r4;
+        org.apache.catalina.Context r5;
+        org.apache.catalina.core.StandardEngine$AccessLogListener r6, $r15, $r19, r20, $r23, r24;
+        java.util.concurrent.atomic.AtomicReference $r9, $r14, $r18, $r22;
+        java.lang.Object $r10;
+        java.lang.String $r11;
+        org.apache.catalina.Container $r12, $r16;
+        org.apache.catalina.LifecycleState $r13, $r17;
+        org.apache.catalina.core.StandardEngine$NoopAccessLog $r21;
+
+        r0 := @this: org.apache.catalina.core.StandardEngine;
+        r1 := @parameter0: org.apache.catalina.connector.Request;
+        r2 := @parameter1: org.apache.catalina.connector.Response;
+        l0 := @parameter2: long;
+        z0 := @parameter3: boolean;
+        z1 = 0;
+        $r7 = virtualinvoke r0.<org.apache.catalina.core.StandardEngine: org.apache.catalina.AccessLog getAccessLog()>();
+        if $r7 == null goto label0;
+
+        $r8 = r0.<org.apache.catalina.core.StandardEngine: org.apache.catalina.AccessLog accessLog>;
+        interfaceinvoke $r8.<org.apache.catalina.AccessLog: void log(org.apache.catalina.connector.Request,org.apache.catalina.connector.Response,long)>(r1, r2, l0);
+        z1 = 1;
+
+     label0:
+        if z1 != 0 goto label4;
+
+        if z0 == 0 goto label4;
+
+        $r9 = r0.<org.apache.catalina.core.StandardEngine: java.util.concurrent.atomic.AtomicReference defaultAccessLog>;
+        $r10 = virtualinvoke $r9.<java.util.concurrent.atomic.AtomicReference: java.lang.Object get()>();
+        r3 = (org.apache.catalina.AccessLog) $r10;
+        if r3 != null goto label3;
+
+        $r11 = virtualinvoke r0.<org.apache.catalina.core.StandardEngine: java.lang.String getDefaultHost()>();
+        $r12 = virtualinvoke r0.<org.apache.catalina.core.StandardEngine: org.apache.catalina.Container findChild(java.lang.String)>($r11);
+        r4 = (org.apache.catalina.Host) $r12;
+        r5 = null;
+        if r4 == null goto label2;
+
+        $r13 = interfaceinvoke r4.<org.apache.catalina.Host: org.apache.catalina.LifecycleState getState()>();
+        $z2 = virtualinvoke $r13.<org.apache.catalina.LifecycleState: boolean isAvailable()>();
+        if $z2 == 0 goto label2;
+
+        r3 = interfaceinvoke r4.<org.apache.catalina.Host: org.apache.catalina.AccessLog getAccessLog()>();
+        if r3 == null goto label1;
+
+        $r14 = r0.<org.apache.catalina.core.StandardEngine: java.util.concurrent.atomic.AtomicReference defaultAccessLog>;
+        $z3 = virtualinvoke $r14.<java.util.concurrent.atomic.AtomicReference: boolean compareAndSet(java.lang.Object,java.lang.Object)>(null, r3);
+        if $z3 == 0 goto label2;
+
+        $r15 = new org.apache.catalina.core.StandardEngine$AccessLogListener;
+        specialinvoke $r15.<org.apache.catalina.core.StandardEngine$AccessLogListener: void <init>(org.apache.catalina.core.StandardEngine,org.apache.catalina.Host,org.apache.catalina.Context)>(r0, r4, null);
+        r6 = $r15;
+        virtualinvoke r6.<org.apache.catalina.core.StandardEngine$AccessLogListener: void install()>();
+        goto label2;
+
+     label1:
+        $r16 = interfaceinvoke r4.<org.apache.catalina.Host: org.apache.catalina.Container findChild(java.lang.String)>("");
+        r5 = (org.apache.catalina.Context) $r16;
+        if r5 == null goto label2;
+
+        $r17 = interfaceinvoke r5.<org.apache.catalina.Context: org.apache.catalina.LifecycleState getState()>();
+        $z4 = virtualinvoke $r17.<org.apache.catalina.LifecycleState: boolean isAvailable()>();
+        if $z4 == 0 goto label2;
+
+        r3 = interfaceinvoke r5.<org.apache.catalina.Context: org.apache.catalina.AccessLog getAccessLog()>();
+        if r3 == null goto label2;
+
+        $r18 = r0.<org.apache.catalina.core.StandardEngine: java.util.concurrent.atomic.AtomicReference defaultAccessLog>;
+        $z5 = virtualinvoke $r18.<java.util.concurrent.atomic.AtomicReference: boolean compareAndSet(java.lang.Object,java.lang.Object)>(null, r3);
+        if $z5 == 0 goto label2;
+
+        $r19 = new org.apache.catalina.core.StandardEngine$AccessLogListener;
+        specialinvoke $r19.<org.apache.catalina.core.StandardEngine$AccessLogListener: void <init>(org.apache.catalina.core.StandardEngine,org.apache.catalina.Host,org.apache.catalina.Context)>(r0, null, r5);
+        r20 = $r19;
+        virtualinvoke r20.<org.apache.catalina.core.StandardEngine$AccessLogListener: void install()>();
+
+     label2:
+        if r3 != null goto label3;
+
+        $r21 = new org.apache.catalina.core.StandardEngine$NoopAccessLog;
+        specialinvoke $r21.<org.apache.catalina.core.StandardEngine$NoopAccessLog: void <init>()>();
+        r3 = $r21;
+        $r22 = r0.<org.apache.catalina.core.StandardEngine: java.util.concurrent.atomic.AtomicReference defaultAccessLog>;
+        $z6 = virtualinvoke $r22.<java.util.concurrent.atomic.AtomicReference: boolean compareAndSet(java.lang.Object,java.lang.Object)>(null, r3);
+        if $z6 == 0 goto label3;
+
+        $r23 = new org.apache.catalina.core.StandardEngine$AccessLogListener;
+        specialinvoke $r23.<org.apache.catalina.core.StandardEngine$AccessLogListener: void <init>(org.apache.catalina.core.StandardEngine,org.apache.catalina.Host,org.apache.catalina.Context)>(r0, r4, r5);
+        r24 = $r23;
+        virtualinvoke r24.<org.apache.catalina.core.StandardEngine$AccessLogListener: void install()>();
+
+     label3:
+        interfaceinvoke r3.<org.apache.catalina.AccessLog: void log(org.apache.catalina.connector.Request,org.apache.catalina.connector.Response,long)>(r1, r2, l0);
+
+     label4:
+        return;
+    }
+
+    public java.lang.ClassLoader getParentClassLoader()
+    {
+        org.apache.catalina.core.StandardEngine r0;
+        java.lang.ClassLoader $r1, $r2, $r5, $r6;
+        org.apache.catalina.Service $r3, $r4;
+
+        r0 := @this: org.apache.catalina.core.StandardEngine;
+        $r1 = r0.<org.apache.catalina.core.StandardEngine: java.lang.ClassLoader parentClassLoader>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<org.apache.catalina.core.StandardEngine: java.lang.ClassLoader parentClassLoader>;
+        return $r2;
+
+     label0:
+        $r3 = r0.<org.apache.catalina.core.StandardEngine: org.apache.catalina.Service service>;
+        if $r3 == null goto label1;
+
+        $r4 = r0.<org.apache.catalina.core.StandardEngine: org.apache.catalina.Service service>;
+        $r5 = interfaceinvoke $r4.<org.apache.catalina.Service: java.lang.ClassLoader getParentClassLoader()>();
+        return $r5;
+
+     label1:
+        $r6 = staticinvoke <java.lang.ClassLoader: java.lang.ClassLoader getSystemClassLoader()>();
+        return $r6;
+    }
+
+    protected java.lang.String getObjectNameKeyProperties()
+    {
+        org.apache.catalina.core.StandardEngine r0;
+
+        r0 := @this: org.apache.catalina.core.StandardEngine;
+        return "type=Engine";
+    }
+
+    static java.util.concurrent.atomic.AtomicReference access$0(org.apache.catalina.core.StandardEngine)
+    {
+        org.apache.catalina.core.StandardEngine r0;
+        java.util.concurrent.atomic.AtomicReference $r1;
+
+        r0 := @parameter0: org.apache.catalina.core.StandardEngine;
+        $r1 = r0.<org.apache.catalina.core.StandardEngine: java.util.concurrent.atomic.AtomicReference defaultAccessLog>;
+        return $r1;
+    }
+}

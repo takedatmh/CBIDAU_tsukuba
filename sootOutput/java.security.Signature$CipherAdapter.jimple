@@ -1,0 +1,230 @@
+class java.security.Signature$CipherAdapter extends java.security.SignatureSpi
+{
+    private final javax.crypto.Cipher cipher;
+    private java.io.ByteArrayOutputStream data;
+
+    void <init>(javax.crypto.Cipher)
+    {
+        java.security.Signature$CipherAdapter r0;
+        javax.crypto.Cipher r1;
+
+        r0 := @this: java.security.Signature$CipherAdapter;
+        r1 := @parameter0: javax.crypto.Cipher;
+        specialinvoke r0.<java.security.SignatureSpi: void <init>()>();
+        r0.<java.security.Signature$CipherAdapter: javax.crypto.Cipher cipher> = r1;
+        return;
+    }
+
+    protected void engineInitVerify(java.security.PublicKey) throws java.security.InvalidKeyException
+    {
+        java.security.Signature$CipherAdapter r0;
+        java.security.PublicKey r1;
+        javax.crypto.Cipher $r2;
+        java.io.ByteArrayOutputStream $r3, $r4, $r5;
+
+        r0 := @this: java.security.Signature$CipherAdapter;
+        r1 := @parameter0: java.security.PublicKey;
+        $r2 = r0.<java.security.Signature$CipherAdapter: javax.crypto.Cipher cipher>;
+        virtualinvoke $r2.<javax.crypto.Cipher: void init(int,java.security.Key)>(2, r1);
+        $r3 = r0.<java.security.Signature$CipherAdapter: java.io.ByteArrayOutputStream data>;
+        if $r3 != null goto label0;
+
+        $r4 = new java.io.ByteArrayOutputStream;
+        specialinvoke $r4.<java.io.ByteArrayOutputStream: void <init>(int)>(128);
+        r0.<java.security.Signature$CipherAdapter: java.io.ByteArrayOutputStream data> = $r4;
+        goto label1;
+
+     label0:
+        $r5 = r0.<java.security.Signature$CipherAdapter: java.io.ByteArrayOutputStream data>;
+        virtualinvoke $r5.<java.io.ByteArrayOutputStream: void reset()>();
+
+     label1:
+        return;
+    }
+
+    protected void engineInitSign(java.security.PrivateKey) throws java.security.InvalidKeyException
+    {
+        java.security.Signature$CipherAdapter r0;
+        java.security.PrivateKey r1;
+        javax.crypto.Cipher $r2;
+
+        r0 := @this: java.security.Signature$CipherAdapter;
+        r1 := @parameter0: java.security.PrivateKey;
+        $r2 = r0.<java.security.Signature$CipherAdapter: javax.crypto.Cipher cipher>;
+        virtualinvoke $r2.<javax.crypto.Cipher: void init(int,java.security.Key)>(1, r1);
+        r0.<java.security.Signature$CipherAdapter: java.io.ByteArrayOutputStream data> = null;
+        return;
+    }
+
+    protected void engineInitSign(java.security.PrivateKey, java.security.SecureRandom) throws java.security.InvalidKeyException
+    {
+        java.security.Signature$CipherAdapter r0;
+        java.security.PrivateKey r1;
+        java.security.SecureRandom r2;
+        javax.crypto.Cipher $r3;
+
+        r0 := @this: java.security.Signature$CipherAdapter;
+        r1 := @parameter0: java.security.PrivateKey;
+        r2 := @parameter1: java.security.SecureRandom;
+        $r3 = r0.<java.security.Signature$CipherAdapter: javax.crypto.Cipher cipher>;
+        virtualinvoke $r3.<javax.crypto.Cipher: void init(int,java.security.Key,java.security.SecureRandom)>(1, r1, r2);
+        r0.<java.security.Signature$CipherAdapter: java.io.ByteArrayOutputStream data> = null;
+        return;
+    }
+
+    protected void engineUpdate(byte) throws java.security.SignatureException
+    {
+        java.security.Signature$CipherAdapter r0;
+        byte b0;
+        byte[] $r1;
+
+        r0 := @this: java.security.Signature$CipherAdapter;
+        b0 := @parameter0: byte;
+        $r1 = newarray (byte)[1];
+        $r1[0] = b0;
+        virtualinvoke r0.<java.security.Signature$CipherAdapter: void engineUpdate(byte[],int,int)>($r1, 0, 1);
+        return;
+    }
+
+    protected void engineUpdate(byte[], int, int) throws java.security.SignatureException
+    {
+        java.security.Signature$CipherAdapter r0;
+        byte[] r1, r2;
+        int i0, i1, $i2;
+        java.io.ByteArrayOutputStream $r3, $r4;
+        javax.crypto.Cipher $r5;
+        java.security.SignatureException $r6;
+
+        r0 := @this: java.security.Signature$CipherAdapter;
+        r1 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        $r3 = r0.<java.security.Signature$CipherAdapter: java.io.ByteArrayOutputStream data>;
+        if $r3 == null goto label0;
+
+        $r4 = r0.<java.security.Signature$CipherAdapter: java.io.ByteArrayOutputStream data>;
+        virtualinvoke $r4.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>(r1, i0, i1);
+        return;
+
+     label0:
+        $r5 = r0.<java.security.Signature$CipherAdapter: javax.crypto.Cipher cipher>;
+        r2 = virtualinvoke $r5.<javax.crypto.Cipher: byte[] update(byte[],int,int)>(r1, i0, i1);
+        if r2 == null goto label1;
+
+        $i2 = lengthof r2;
+        if $i2 == 0 goto label1;
+
+        $r6 = new java.security.SignatureException;
+        specialinvoke $r6.<java.security.SignatureException: void <init>(java.lang.String)>("Cipher unexpectedly returned data");
+        throw $r6;
+
+     label1:
+        return;
+    }
+
+    protected byte[] engineSign() throws java.security.SignatureException
+    {
+        java.security.Signature$CipherAdapter r0;
+        javax.crypto.IllegalBlockSizeException r1, $r4;
+        javax.crypto.Cipher $r2;
+        byte[] $r3;
+        java.security.SignatureException $r5, $r8;
+        javax.crypto.BadPaddingException $r6, r7;
+
+        r0 := @this: java.security.Signature$CipherAdapter;
+
+     label0:
+        $r2 = r0.<java.security.Signature$CipherAdapter: javax.crypto.Cipher cipher>;
+        $r3 = virtualinvoke $r2.<javax.crypto.Cipher: byte[] doFinal()>();
+
+     label1:
+        return $r3;
+
+     label2:
+        $r4 := @caughtexception;
+        r1 = $r4;
+        $r5 = new java.security.SignatureException;
+        specialinvoke $r5.<java.security.SignatureException: void <init>(java.lang.String,java.lang.Throwable)>("doFinal() failed", r1);
+        throw $r5;
+
+     label3:
+        $r6 := @caughtexception;
+        r7 = $r6;
+        $r8 = new java.security.SignatureException;
+        specialinvoke $r8.<java.security.SignatureException: void <init>(java.lang.String,java.lang.Throwable)>("doFinal() failed", r7);
+        throw $r8;
+
+        catch javax.crypto.IllegalBlockSizeException from label0 to label1 with label2;
+        catch javax.crypto.BadPaddingException from label0 to label1 with label3;
+    }
+
+    protected boolean engineVerify(byte[]) throws java.security.SignatureException
+    {
+        java.security.Signature$CipherAdapter r0;
+        byte[] r1, r2, r3;
+        javax.crypto.Cipher $r4;
+        java.io.ByteArrayOutputStream $r5, $r6;
+        boolean $z0;
+        javax.crypto.BadPaddingException $r7, r8;
+        javax.crypto.IllegalBlockSizeException $r9, r10;
+        java.security.SignatureException $r11;
+
+        r0 := @this: java.security.Signature$CipherAdapter;
+        r1 := @parameter0: byte[];
+
+     label0:
+        $r4 = r0.<java.security.Signature$CipherAdapter: javax.crypto.Cipher cipher>;
+        r2 = virtualinvoke $r4.<javax.crypto.Cipher: byte[] doFinal(byte[])>(r1);
+        $r5 = r0.<java.security.Signature$CipherAdapter: java.io.ByteArrayOutputStream data>;
+        r3 = virtualinvoke $r5.<java.io.ByteArrayOutputStream: byte[] toByteArray()>();
+        $r6 = r0.<java.security.Signature$CipherAdapter: java.io.ByteArrayOutputStream data>;
+        virtualinvoke $r6.<java.io.ByteArrayOutputStream: void reset()>();
+        $z0 = staticinvoke <java.util.Arrays: boolean equals(byte[],byte[])>(r2, r3);
+
+     label1:
+        return $z0;
+
+     label2:
+        $r7 := @caughtexception;
+        r8 = $r7;
+        return 0;
+
+     label3:
+        $r9 := @caughtexception;
+        r10 = $r9;
+        $r11 = new java.security.SignatureException;
+        specialinvoke $r11.<java.security.SignatureException: void <init>(java.lang.String,java.lang.Throwable)>("doFinal() failed", r10);
+        throw $r11;
+
+        catch javax.crypto.BadPaddingException from label0 to label1 with label2;
+        catch javax.crypto.IllegalBlockSizeException from label0 to label1 with label3;
+    }
+
+    protected void engineSetParameter(java.lang.String, java.lang.Object) throws java.security.InvalidParameterException
+    {
+        java.security.Signature$CipherAdapter r0;
+        java.lang.String r1;
+        java.lang.Object r2;
+        java.security.InvalidParameterException $r3;
+
+        r0 := @this: java.security.Signature$CipherAdapter;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.Object;
+        $r3 = new java.security.InvalidParameterException;
+        specialinvoke $r3.<java.security.InvalidParameterException: void <init>(java.lang.String)>("Parameters not supported");
+        throw $r3;
+    }
+
+    protected java.lang.Object engineGetParameter(java.lang.String) throws java.security.InvalidParameterException
+    {
+        java.security.Signature$CipherAdapter r0;
+        java.lang.String r1;
+        java.security.InvalidParameterException $r2;
+
+        r0 := @this: java.security.Signature$CipherAdapter;
+        r1 := @parameter0: java.lang.String;
+        $r2 = new java.security.InvalidParameterException;
+        specialinvoke $r2.<java.security.InvalidParameterException: void <init>(java.lang.String)>("Parameters not supported");
+        throw $r2;
+    }
+}

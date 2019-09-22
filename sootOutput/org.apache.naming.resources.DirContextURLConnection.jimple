@@ -1,0 +1,740 @@
+public class org.apache.naming.resources.DirContextURLConnection extends java.net.URLConnection
+{
+    private static final org.apache.tomcat.util.buf.UDecoder URL_DECODER;
+    protected javax.naming.directory.DirContext context;
+    protected org.apache.naming.resources.Resource resource;
+    protected javax.naming.directory.DirContext collection;
+    protected java.lang.Object object;
+    protected javax.naming.directory.Attributes attributes;
+    protected long date;
+    protected java.security.Permission permission;
+    private java.lang.String path;
+
+    static void <clinit>()
+    {
+        org.apache.tomcat.util.buf.UDecoder $r0;
+
+        $r0 = new org.apache.tomcat.util.buf.UDecoder;
+        specialinvoke $r0.<org.apache.tomcat.util.buf.UDecoder: void <init>()>();
+        <org.apache.naming.resources.DirContextURLConnection: org.apache.tomcat.util.buf.UDecoder URL_DECODER> = $r0;
+        return;
+    }
+
+    public void <init>(javax.naming.directory.DirContext, java.net.URL)
+    {
+        org.apache.naming.resources.DirContextURLConnection r0;
+        javax.naming.directory.DirContext r1;
+        java.net.URL r2;
+        java.lang.IllegalArgumentException $r3;
+        boolean $z0;
+        org.apache.naming.JndiPermission $r4;
+        java.lang.String $r5;
+
+        r0 := @this: org.apache.naming.resources.DirContextURLConnection;
+        r1 := @parameter0: javax.naming.directory.DirContext;
+        r2 := @parameter1: java.net.URL;
+        specialinvoke r0.<java.net.URLConnection: void <init>(java.net.URL)>(r2);
+        r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.String path> = null;
+        if r1 != null goto label0;
+
+        $r3 = new java.lang.IllegalArgumentException;
+        specialinvoke $r3.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Directory context can\'t be null");
+        throw $r3;
+
+     label0:
+        $z0 = <org.apache.naming.Constants: boolean IS_SECURITY_ENABLED>;
+        if $z0 == 0 goto label1;
+
+        $r4 = new org.apache.naming.JndiPermission;
+        $r5 = virtualinvoke r2.<java.net.URL: java.lang.String toString()>();
+        specialinvoke $r4.<org.apache.naming.JndiPermission: void <init>(java.lang.String)>($r5);
+        r0.<org.apache.naming.resources.DirContextURLConnection: java.security.Permission permission> = $r4;
+
+     label1:
+        r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.DirContext context> = r1;
+        return;
+    }
+
+    public void connect() throws java.io.IOException
+    {
+        org.apache.naming.resources.DirContextURLConnection r0;
+        long $l0;
+        org.apache.naming.resources.ProxyDirContext r1;
+        java.lang.String r2, r3, $r6, $r7, $r10, $r14, $r15, $r16, $r17, $r19, $r21, $r22, $r23, $r25, $r28;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5;
+        org.apache.tomcat.util.buf.UDecoder $r4;
+        java.net.URL $r5;
+        javax.naming.directory.DirContext $r8, $r9, $r24, $r27, $r35;
+        java.lang.StringBuilder $r11, $r12, $r13, $r18, $r20;
+        int $i1, $i2, $i3;
+        java.lang.Object $r26, $r30, $r31, $r33, $r34;
+        javax.naming.directory.Attributes $r29;
+        org.apache.naming.resources.Resource $r32;
+        javax.naming.NamingException $r36, r37;
+
+        r0 := @this: org.apache.naming.resources.DirContextURLConnection;
+        $z0 = r0.<org.apache.naming.resources.DirContextURLConnection: boolean connected>;
+        if $z0 != 0 goto label11;
+
+     label0:
+        $l0 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        r0.<org.apache.naming.resources.DirContextURLConnection: long date> = $l0;
+        $r4 = <org.apache.naming.resources.DirContextURLConnection: org.apache.tomcat.util.buf.UDecoder URL_DECODER>;
+        $r5 = virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: java.net.URL getURL()>();
+        $r6 = virtualinvoke $r5.<java.net.URL: java.lang.String getFile()>();
+        $r7 = virtualinvoke $r4.<org.apache.tomcat.util.buf.UDecoder: java.lang.String convert(java.lang.String,boolean)>($r6, 0);
+        r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.String path> = $r7;
+        $r8 = r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.DirContext context>;
+        $z1 = $r8 instanceof org.apache.naming.resources.ProxyDirContext;
+        if $z1 == 0 goto label6;
+
+        $r9 = r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.DirContext context>;
+        r1 = (org.apache.naming.resources.ProxyDirContext) $r9;
+        r2 = virtualinvoke r1.<org.apache.naming.resources.ProxyDirContext: java.lang.String getHostName()>();
+        r3 = virtualinvoke r1.<org.apache.naming.resources.ProxyDirContext: java.lang.String getContextPath()>();
+        if r2 == null goto label3;
+
+        $r10 = r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.String path>;
+        $r11 = new java.lang.StringBuilder;
+        specialinvoke $r11.<java.lang.StringBuilder: void <init>(java.lang.String)>("/");
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("/");
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.String toString()>();
+        $z2 = virtualinvoke $r10.<java.lang.String: boolean startsWith(java.lang.String)>($r14);
+        if $z2 != 0 goto label2;
+
+     label1:
+        return;
+
+     label2:
+        $r15 = r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.String path>;
+        $i1 = virtualinvoke r2.<java.lang.String: int length()>();
+        $i2 = $i1 + 1;
+        $r16 = virtualinvoke $r15.<java.lang.String: java.lang.String substring(int)>($i2);
+        r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.String path> = $r16;
+
+     label3:
+        if r3 == null goto label6;
+
+        $r17 = r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.String path>;
+        $r18 = new java.lang.StringBuilder;
+        $r19 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r3);
+        specialinvoke $r18.<java.lang.StringBuilder: void <init>(java.lang.String)>($r19);
+        $r20 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("/");
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.String toString()>();
+        $z3 = virtualinvoke $r17.<java.lang.String: boolean startsWith(java.lang.String)>($r21);
+        if $z3 != 0 goto label5;
+
+     label4:
+        return;
+
+     label5:
+        $r22 = r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.String path>;
+        $i3 = virtualinvoke r3.<java.lang.String: int length()>();
+        $r23 = virtualinvoke $r22.<java.lang.String: java.lang.String substring(int)>($i3);
+        r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.String path> = $r23;
+
+     label6:
+        $r24 = r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.DirContext context>;
+        $r25 = r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.String path>;
+        $r26 = interfaceinvoke $r24.<javax.naming.directory.DirContext: java.lang.Object lookup(java.lang.String)>($r25);
+        r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.Object object> = $r26;
+        $r27 = r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.DirContext context>;
+        $r28 = r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.String path>;
+        $r29 = interfaceinvoke $r27.<javax.naming.directory.DirContext: javax.naming.directory.Attributes getAttributes(java.lang.String)>($r28);
+        r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.Attributes attributes> = $r29;
+        $r30 = r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.Object object>;
+        $z4 = $r30 instanceof org.apache.naming.resources.Resource;
+        if $z4 == 0 goto label7;
+
+        $r31 = r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.Object object>;
+        $r32 = (org.apache.naming.resources.Resource) $r31;
+        r0.<org.apache.naming.resources.DirContextURLConnection: org.apache.naming.resources.Resource resource> = $r32;
+
+     label7:
+        $r33 = r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.Object object>;
+        $z5 = $r33 instanceof javax.naming.directory.DirContext;
+        if $z5 == 0 goto label10;
+
+        $r34 = r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.Object object>;
+        $r35 = (javax.naming.directory.DirContext) $r34;
+        r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.DirContext collection> = $r35;
+
+     label8:
+        goto label10;
+
+     label9:
+        $r36 := @caughtexception;
+        r37 = $r36;
+
+     label10:
+        r0.<org.apache.naming.resources.DirContextURLConnection: boolean connected> = 1;
+
+     label11:
+        return;
+
+        catch javax.naming.NamingException from label0 to label1 with label9;
+        catch javax.naming.NamingException from label2 to label4 with label9;
+        catch javax.naming.NamingException from label5 to label8 with label9;
+    }
+
+    public int getContentLength()
+    {
+        org.apache.naming.resources.DirContextURLConnection r0;
+        int $i0;
+
+        r0 := @this: org.apache.naming.resources.DirContextURLConnection;
+        $i0 = virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: int getHeaderFieldInt(java.lang.String,int)>("getcontentlength", -1);
+        return $i0;
+    }
+
+    public java.lang.String getContentType()
+    {
+        org.apache.naming.resources.DirContextURLConnection r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.naming.resources.DirContextURLConnection;
+        $r1 = virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.String getHeaderField(java.lang.String)>("getcontenttype");
+        return $r1;
+    }
+
+    public long getDate()
+    {
+        org.apache.naming.resources.DirContextURLConnection r0;
+        long $l0;
+
+        r0 := @this: org.apache.naming.resources.DirContextURLConnection;
+        $l0 = r0.<org.apache.naming.resources.DirContextURLConnection: long date>;
+        return $l0;
+    }
+
+    public long getLastModified()
+    {
+        org.apache.naming.resources.DirContextURLConnection r0;
+        java.io.IOException r1, $r3;
+        java.util.Date r2;
+        boolean $z0;
+        javax.naming.directory.Attributes $r4, $r5;
+        javax.naming.directory.Attribute r6;
+        java.lang.Object $r7;
+        long $l0;
+        java.lang.Exception $r8, r9;
+
+        r0 := @this: org.apache.naming.resources.DirContextURLConnection;
+        $z0 = r0.<org.apache.naming.resources.DirContextURLConnection: boolean connected>;
+        if $z0 != 0 goto label3;
+
+     label0:
+        virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: void connect()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r3 := @caughtexception;
+        r1 = $r3;
+
+     label3:
+        $r4 = r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.Attributes attributes>;
+        if $r4 != null goto label4;
+
+        return 0L;
+
+     label4:
+        $r5 = r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.Attributes attributes>;
+        r6 = interfaceinvoke $r5.<javax.naming.directory.Attributes: javax.naming.directory.Attribute get(java.lang.String)>("getlastmodified");
+        if r6 == null goto label8;
+
+     label5:
+        $r7 = interfaceinvoke r6.<javax.naming.directory.Attribute: java.lang.Object get()>();
+        r2 = (java.util.Date) $r7;
+        $l0 = virtualinvoke r2.<java.util.Date: long getTime()>();
+
+     label6:
+        return $l0;
+
+     label7:
+        $r8 := @caughtexception;
+        r9 = $r8;
+
+     label8:
+        return 0L;
+
+        catch java.io.IOException from label0 to label1 with label2;
+        catch java.lang.Exception from label5 to label6 with label7;
+    }
+
+    protected java.lang.String getHeaderValueAsString(java.lang.Object)
+    {
+        org.apache.naming.resources.DirContextURLConnection r0;
+        java.lang.Object r1;
+        boolean $z0;
+        java.util.Date $r2;
+        long $l0;
+        java.lang.String $r3, $r4;
+
+        r0 := @this: org.apache.naming.resources.DirContextURLConnection;
+        r1 := @parameter0: java.lang.Object;
+        if r1 != null goto label0;
+
+        return null;
+
+     label0:
+        $z0 = r1 instanceof java.util.Date;
+        if $z0 == 0 goto label1;
+
+        $r2 = (java.util.Date) r1;
+        $l0 = virtualinvoke $r2.<java.util.Date: long getTime()>();
+        $r3 = staticinvoke <org.apache.tomcat.util.http.FastHttpDateFormat: java.lang.String formatDate(long,java.text.DateFormat)>($l0, null);
+        return $r3;
+
+     label1:
+        $r4 = virtualinvoke r1.<java.lang.Object: java.lang.String toString()>();
+        return $r4;
+    }
+
+    public java.util.Map getHeaderFields()
+    {
+        org.apache.naming.resources.DirContextURLConnection r0;
+        java.io.IOException r1, $r8;
+        javax.naming.NamingEnumeration r2, r6;
+        java.lang.String r3, $r18;
+        javax.naming.directory.Attribute r4;
+        java.util.ArrayList r5, $r17;
+        java.lang.Object r7, $r15;
+        boolean $z0, $z2, $z3;
+        javax.naming.directory.Attributes $r9, $r12, $r14, $r16;
+        java.util.Map $r10, $r23;
+        java.util.HashMap $r11, r13;
+        int $i0, $i1;
+        java.util.List $r19;
+        javax.naming.NamingException $r21, r22;
+
+        r0 := @this: org.apache.naming.resources.DirContextURLConnection;
+        $z0 = r0.<org.apache.naming.resources.DirContextURLConnection: boolean connected>;
+        if $z0 != 0 goto label3;
+
+     label0:
+        virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: void connect()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r8 := @caughtexception;
+        r1 = $r8;
+
+     label3:
+        $r9 = r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.Attributes attributes>;
+        if $r9 != null goto label4;
+
+        $r10 = staticinvoke <java.util.Collections: java.util.Map emptyMap()>();
+        return $r10;
+
+     label4:
+        $r11 = new java.util.HashMap;
+        $r12 = r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.Attributes attributes>;
+        $i0 = interfaceinvoke $r12.<javax.naming.directory.Attributes: int size()>();
+        specialinvoke $r11.<java.util.HashMap: void <init>(int)>($i0);
+        r13 = $r11;
+        $r14 = r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.Attributes attributes>;
+        r2 = interfaceinvoke $r14.<javax.naming.directory.Attributes: javax.naming.NamingEnumeration getIDs()>();
+
+     label5:
+        goto label10;
+
+     label6:
+        $r15 = interfaceinvoke r2.<javax.naming.NamingEnumeration: java.lang.Object next()>();
+        r3 = (java.lang.String) $r15;
+        $r16 = r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.Attributes attributes>;
+        r4 = interfaceinvoke $r16.<javax.naming.directory.Attributes: javax.naming.directory.Attribute get(java.lang.String)>(r3);
+        if r4 != null goto label7;
+
+        goto label10;
+
+     label7:
+        $r17 = new java.util.ArrayList;
+        $i1 = interfaceinvoke r4.<javax.naming.directory.Attribute: int size()>();
+        specialinvoke $r17.<java.util.ArrayList: void <init>(int)>($i1);
+        r5 = $r17;
+        r6 = interfaceinvoke r4.<javax.naming.directory.Attribute: javax.naming.NamingEnumeration getAll()>();
+        goto label9;
+
+     label8:
+        r7 = interfaceinvoke r6.<javax.naming.NamingEnumeration: java.lang.Object next()>();
+        $r18 = virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.String getHeaderValueAsString(java.lang.Object)>(r7);
+        virtualinvoke r5.<java.util.ArrayList: boolean add(java.lang.Object)>($r18);
+
+     label9:
+        $z2 = interfaceinvoke r6.<javax.naming.NamingEnumeration: boolean hasMore()>();
+        if $z2 != 0 goto label8;
+
+        virtualinvoke r5.<java.util.ArrayList: void trimToSize()>();
+        $r19 = staticinvoke <java.util.Collections: java.util.List unmodifiableList(java.util.List)>(r5);
+        virtualinvoke r13.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(r3, $r19);
+
+     label10:
+        $z3 = interfaceinvoke r2.<javax.naming.NamingEnumeration: boolean hasMore()>();
+        if $z3 != 0 goto label6;
+
+     label11:
+        goto label13;
+
+     label12:
+        $r21 := @caughtexception;
+        r22 = $r21;
+
+     label13:
+        $r23 = staticinvoke <java.util.Collections: java.util.Map unmodifiableMap(java.util.Map)>(r13);
+        return $r23;
+
+        catch java.io.IOException from label0 to label1 with label2;
+        catch javax.naming.NamingException from label5 to label11 with label12;
+    }
+
+    public java.lang.String getHeaderField(java.lang.String)
+    {
+        org.apache.naming.resources.DirContextURLConnection r0;
+        java.lang.String r1, r3, $r12;
+        java.io.IOException r2, $r6;
+        javax.naming.directory.Attribute r4;
+        java.lang.Object r5, $r10;
+        boolean $z0, $z1, $z2;
+        javax.naming.directory.Attributes $r7, $r8, $r11;
+        javax.naming.NamingEnumeration r9;
+        int $i0, $i1;
+        javax.naming.NamingException $r13, r14;
+
+        r0 := @this: org.apache.naming.resources.DirContextURLConnection;
+        r1 := @parameter0: java.lang.String;
+        $z0 = r0.<org.apache.naming.resources.DirContextURLConnection: boolean connected>;
+        if $z0 != 0 goto label3;
+
+     label0:
+        virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: void connect()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r6 := @caughtexception;
+        r2 = $r6;
+
+     label3:
+        $r7 = r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.Attributes attributes>;
+        if $r7 != null goto label4;
+
+        return null;
+
+     label4:
+        $r8 = r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.Attributes attributes>;
+        r9 = interfaceinvoke $r8.<javax.naming.directory.Attributes: javax.naming.NamingEnumeration getIDs()>();
+
+     label5:
+        goto label10;
+
+     label6:
+        $r10 = interfaceinvoke r9.<javax.naming.NamingEnumeration: java.lang.Object next()>();
+        r3 = (java.lang.String) $r10;
+        $z1 = virtualinvoke r3.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>(r1);
+        if $z1 == 0 goto label10;
+
+        $r11 = r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.Attributes attributes>;
+        r4 = interfaceinvoke $r11.<javax.naming.directory.Attributes: javax.naming.directory.Attribute get(java.lang.String)>(r3);
+        if r4 != null goto label8;
+
+     label7:
+        return null;
+
+     label8:
+        $i0 = interfaceinvoke r4.<javax.naming.directory.Attribute: int size()>();
+        $i1 = $i0 - 1;
+        r5 = interfaceinvoke r4.<javax.naming.directory.Attribute: java.lang.Object get(int)>($i1);
+        $r12 = virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.String getHeaderValueAsString(java.lang.Object)>(r5);
+
+     label9:
+        return $r12;
+
+     label10:
+        $z2 = interfaceinvoke r9.<javax.naming.NamingEnumeration: boolean hasMore()>();
+        if $z2 != 0 goto label6;
+
+     label11:
+        goto label13;
+
+     label12:
+        $r13 := @caughtexception;
+        r14 = $r13;
+
+     label13:
+        return null;
+
+        catch java.io.IOException from label0 to label1 with label2;
+        catch javax.naming.NamingException from label5 to label7 with label12;
+        catch javax.naming.NamingException from label8 to label9 with label12;
+        catch javax.naming.NamingException from label10 to label11 with label12;
+    }
+
+    public java.lang.Object getContent() throws java.io.IOException
+    {
+        org.apache.naming.resources.DirContextURLConnection r0;
+        boolean $z0;
+        org.apache.naming.resources.Resource $r2;
+        java.io.InputStream $r3;
+        javax.naming.directory.DirContext $r4, $r5;
+        java.lang.Object $r6, $r7;
+        java.io.FileNotFoundException $r8;
+        java.net.URL $r9, $r11;
+        java.lang.String $r10;
+
+        r0 := @this: org.apache.naming.resources.DirContextURLConnection;
+        $z0 = r0.<org.apache.naming.resources.DirContextURLConnection: boolean connected>;
+        if $z0 != 0 goto label0;
+
+        virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: void connect()>();
+
+     label0:
+        $r2 = r0.<org.apache.naming.resources.DirContextURLConnection: org.apache.naming.resources.Resource resource>;
+        if $r2 == null goto label1;
+
+        $r3 = virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: java.io.InputStream getInputStream()>();
+        return $r3;
+
+     label1:
+        $r4 = r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.DirContext collection>;
+        if $r4 == null goto label2;
+
+        $r5 = r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.DirContext collection>;
+        return $r5;
+
+     label2:
+        $r6 = r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.Object object>;
+        if $r6 == null goto label3;
+
+        $r7 = r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.Object object>;
+        return $r7;
+
+     label3:
+        $r8 = new java.io.FileNotFoundException;
+        $r9 = virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: java.net.URL getURL()>();
+        if $r9 != null goto label4;
+
+        $r10 = "null";
+        goto label5;
+
+     label4:
+        $r11 = virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: java.net.URL getURL()>();
+        $r10 = virtualinvoke $r11.<java.net.URL: java.lang.String toString()>();
+
+     label5:
+        specialinvoke $r8.<java.io.FileNotFoundException: void <init>(java.lang.String)>($r10);
+        throw $r8;
+    }
+
+    public java.lang.Object getContent(java.lang.Class[]) throws java.io.IOException
+    {
+        org.apache.naming.resources.DirContextURLConnection r0;
+        java.lang.Class[] r1;
+        java.lang.Object r2;
+        int i0, $i1;
+        java.lang.Class $r3;
+        boolean $z0;
+
+        r0 := @this: org.apache.naming.resources.DirContextURLConnection;
+        r1 := @parameter0: java.lang.Class[];
+        r2 = virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.Object getContent()>();
+        i0 = 0;
+        goto label2;
+
+     label0:
+        $r3 = r1[i0];
+        $z0 = virtualinvoke $r3.<java.lang.Class: boolean isInstance(java.lang.Object)>(r2);
+        if $z0 == 0 goto label1;
+
+        return r2;
+
+     label1:
+        i0 = i0 + 1;
+
+     label2:
+        $i1 = lengthof r1;
+        if i0 < $i1 goto label0;
+
+        return null;
+    }
+
+    public java.io.InputStream getInputStream() throws java.io.IOException
+    {
+        org.apache.naming.resources.DirContextURLConnection r0;
+        javax.naming.NamingException r2, $r12;
+        boolean $z0;
+        org.apache.naming.resources.Resource $r3, $r11, $r13;
+        java.io.FileNotFoundException $r4;
+        java.net.URL $r5, $r7;
+        java.lang.String $r6, $r9;
+        javax.naming.directory.DirContext $r8;
+        java.lang.Object $r10;
+        java.io.InputStream $r14;
+
+        r0 := @this: org.apache.naming.resources.DirContextURLConnection;
+        $z0 = r0.<org.apache.naming.resources.DirContextURLConnection: boolean connected>;
+        if $z0 != 0 goto label0;
+
+        virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: void connect()>();
+
+     label0:
+        $r3 = r0.<org.apache.naming.resources.DirContextURLConnection: org.apache.naming.resources.Resource resource>;
+        if $r3 != null goto label3;
+
+        $r4 = new java.io.FileNotFoundException;
+        $r5 = virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: java.net.URL getURL()>();
+        if $r5 != null goto label1;
+
+        $r6 = "null";
+        goto label2;
+
+     label1:
+        $r7 = virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: java.net.URL getURL()>();
+        $r6 = virtualinvoke $r7.<java.net.URL: java.lang.String toString()>();
+
+     label2:
+        specialinvoke $r4.<java.io.FileNotFoundException: void <init>(java.lang.String)>($r6);
+        throw $r4;
+
+     label3:
+        $r8 = r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.DirContext context>;
+        $r9 = r0.<org.apache.naming.resources.DirContextURLConnection: java.lang.String path>;
+        $r10 = interfaceinvoke $r8.<javax.naming.directory.DirContext: java.lang.Object lookup(java.lang.String)>($r9);
+        $r11 = (org.apache.naming.resources.Resource) $r10;
+        r0.<org.apache.naming.resources.DirContextURLConnection: org.apache.naming.resources.Resource resource> = $r11;
+
+     label4:
+        goto label6;
+
+     label5:
+        $r12 := @caughtexception;
+        r2 = $r12;
+
+     label6:
+        $r13 = r0.<org.apache.naming.resources.DirContextURLConnection: org.apache.naming.resources.Resource resource>;
+        $r14 = virtualinvoke $r13.<org.apache.naming.resources.Resource: java.io.InputStream streamContent()>();
+        return $r14;
+
+        catch javax.naming.NamingException from label3 to label4 with label5;
+    }
+
+    public java.security.Permission getPermission()
+    {
+        org.apache.naming.resources.DirContextURLConnection r0;
+        java.security.Permission $r1;
+
+        r0 := @this: org.apache.naming.resources.DirContextURLConnection;
+        $r1 = r0.<org.apache.naming.resources.DirContextURLConnection: java.security.Permission permission>;
+        return $r1;
+    }
+
+    public java.util.Enumeration list() throws java.io.IOException
+    {
+        org.apache.naming.resources.DirContextURLConnection r0;
+        java.util.Vector r2, $r13;
+        javax.naming.NamingEnumeration r3;
+        org.apache.tomcat.util.buf.UEncoder r4, $r16;
+        javax.naming.NameClassPair r5;
+        java.lang.String r6, $r11, $r20, $r26;
+        boolean $z0, $z1;
+        org.apache.naming.resources.Resource $r7;
+        javax.naming.directory.DirContext $r8, $r14, $r15;
+        java.io.FileNotFoundException $r9, $r23;
+        java.net.URL $r10, $r12, $r25, $r27;
+        org.apache.tomcat.util.buf.UEncoder$SafeCharsSet $r17;
+        java.lang.Object $r18;
+        int $i0;
+        org.apache.tomcat.util.buf.CharChunk $r19;
+        javax.naming.NamingException $r21, r22;
+        java.util.Enumeration $r28;
+
+        r0 := @this: org.apache.naming.resources.DirContextURLConnection;
+        $z0 = r0.<org.apache.naming.resources.DirContextURLConnection: boolean connected>;
+        if $z0 != 0 goto label0;
+
+        virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: void connect()>();
+
+     label0:
+        $r7 = r0.<org.apache.naming.resources.DirContextURLConnection: org.apache.naming.resources.Resource resource>;
+        if $r7 != null goto label3;
+
+        $r8 = r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.DirContext collection>;
+        if $r8 != null goto label3;
+
+        $r9 = new java.io.FileNotFoundException;
+        $r10 = virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: java.net.URL getURL()>();
+        if $r10 != null goto label1;
+
+        $r11 = "null";
+        goto label2;
+
+     label1:
+        $r12 = virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: java.net.URL getURL()>();
+        $r11 = virtualinvoke $r12.<java.net.URL: java.lang.String toString()>();
+
+     label2:
+        specialinvoke $r9.<java.io.FileNotFoundException: void <init>(java.lang.String)>($r11);
+        throw $r9;
+
+     label3:
+        $r13 = new java.util.Vector;
+        specialinvoke $r13.<java.util.Vector: void <init>()>();
+        r2 = $r13;
+        $r14 = r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.DirContext collection>;
+        if $r14 == null goto label11;
+
+     label4:
+        $r15 = r0.<org.apache.naming.resources.DirContextURLConnection: javax.naming.directory.DirContext collection>;
+        r3 = interfaceinvoke $r15.<javax.naming.directory.DirContext: javax.naming.NamingEnumeration list(java.lang.String)>("/");
+        $r16 = new org.apache.tomcat.util.buf.UEncoder;
+        $r17 = <org.apache.tomcat.util.buf.UEncoder$SafeCharsSet: org.apache.tomcat.util.buf.UEncoder$SafeCharsSet WITH_SLASH>;
+        specialinvoke $r16.<org.apache.tomcat.util.buf.UEncoder: void <init>(org.apache.tomcat.util.buf.UEncoder$SafeCharsSet)>($r17);
+        r4 = $r16;
+        goto label6;
+
+     label5:
+        $r18 = interfaceinvoke r3.<javax.naming.NamingEnumeration: java.lang.Object nextElement()>();
+        r5 = (javax.naming.NameClassPair) $r18;
+        r6 = virtualinvoke r5.<javax.naming.NameClassPair: java.lang.String getName()>();
+        $i0 = virtualinvoke r6.<java.lang.String: int length()>();
+        $r19 = virtualinvoke r4.<org.apache.tomcat.util.buf.UEncoder: org.apache.tomcat.util.buf.CharChunk encodeURL(java.lang.String,int,int)>(r6, 0, $i0);
+        $r20 = virtualinvoke $r19.<org.apache.tomcat.util.buf.CharChunk: java.lang.String toString()>();
+        virtualinvoke r2.<java.util.Vector: void addElement(java.lang.Object)>($r20);
+
+     label6:
+        $z1 = interfaceinvoke r3.<javax.naming.NamingEnumeration: boolean hasMoreElements()>();
+        if $z1 != 0 goto label5;
+
+     label7:
+        goto label11;
+
+     label8:
+        $r21 := @caughtexception;
+        r22 = $r21;
+        $r23 = new java.io.FileNotFoundException;
+        $r25 = virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: java.net.URL getURL()>();
+        if $r25 != null goto label9;
+
+        $r26 = "null";
+        goto label10;
+
+     label9:
+        $r27 = virtualinvoke r0.<org.apache.naming.resources.DirContextURLConnection: java.net.URL getURL()>();
+        $r26 = virtualinvoke $r27.<java.net.URL: java.lang.String toString()>();
+
+     label10:
+        specialinvoke $r23.<java.io.FileNotFoundException: void <init>(java.lang.String)>($r26);
+        throw $r23;
+
+     label11:
+        $r28 = virtualinvoke r2.<java.util.Vector: java.util.Enumeration elements()>();
+        return $r28;
+
+        catch javax.naming.NamingException from label4 to label7 with label8;
+    }
+}

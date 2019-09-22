@@ -1,0 +1,118 @@
+class sun.net.www.http.ClientVector extends java.util.Stack
+{
+    private static final long serialVersionUID;
+    int nap;
+
+    void <init>(int)
+    {
+        sun.net.www.http.ClientVector r0;
+        int i0;
+
+        r0 := @this: sun.net.www.http.ClientVector;
+        i0 := @parameter0: int;
+        specialinvoke r0.<java.util.Stack: void <init>()>();
+        r0.<sun.net.www.http.ClientVector: int nap> = i0;
+        return;
+    }
+
+    synchronized sun.net.www.http.HttpClient get()
+    {
+        sun.net.www.http.ClientVector r0;
+        sun.net.www.http.HttpClient r1, $r4;
+        long l0, $l1, $l2, $l4;
+        sun.net.www.http.KeepAliveEntry r2;
+        boolean $z0, $z1;
+        java.lang.Object $r3;
+        int $i3;
+        byte $b5;
+
+        r0 := @this: sun.net.www.http.ClientVector;
+        $z0 = virtualinvoke r0.<sun.net.www.http.ClientVector: boolean empty()>();
+        if $z0 == 0 goto label0;
+
+        return null;
+
+     label0:
+        r1 = null;
+        l0 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+
+     label1:
+        $r3 = virtualinvoke r0.<sun.net.www.http.ClientVector: java.lang.Object pop()>();
+        r2 = (sun.net.www.http.KeepAliveEntry) $r3;
+        $l1 = r2.<sun.net.www.http.KeepAliveEntry: long idleStartTime>;
+        $l2 = l0 - $l1;
+        $i3 = r0.<sun.net.www.http.ClientVector: int nap>;
+        $l4 = (long) $i3;
+        $b5 = $l2 cmp $l4;
+        if $b5 <= 0 goto label2;
+
+        $r4 = r2.<sun.net.www.http.KeepAliveEntry: sun.net.www.http.HttpClient hc>;
+        virtualinvoke $r4.<sun.net.www.http.HttpClient: void closeServer()>();
+        goto label3;
+
+     label2:
+        r1 = r2.<sun.net.www.http.KeepAliveEntry: sun.net.www.http.HttpClient hc>;
+
+     label3:
+        if r1 != null goto label4;
+
+        $z1 = virtualinvoke r0.<sun.net.www.http.ClientVector: boolean empty()>();
+        if $z1 == 0 goto label1;
+
+     label4:
+        return r1;
+    }
+
+    synchronized void put(sun.net.www.http.HttpClient)
+    {
+        sun.net.www.http.ClientVector r0;
+        sun.net.www.http.HttpClient r1;
+        int $i0, $i2;
+        long $l1;
+        sun.net.www.http.KeepAliveEntry $r2;
+
+        r0 := @this: sun.net.www.http.ClientVector;
+        r1 := @parameter0: sun.net.www.http.HttpClient;
+        $i2 = virtualinvoke r0.<sun.net.www.http.ClientVector: int size()>();
+        $i0 = staticinvoke <sun.net.www.http.KeepAliveCache: int getMaxConnections()>();
+        if $i2 < $i0 goto label0;
+
+        virtualinvoke r1.<sun.net.www.http.HttpClient: void closeServer()>();
+        goto label1;
+
+     label0:
+        $r2 = new sun.net.www.http.KeepAliveEntry;
+        $l1 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        specialinvoke $r2.<sun.net.www.http.KeepAliveEntry: void <init>(sun.net.www.http.HttpClient,long)>(r1, $l1);
+        virtualinvoke r0.<sun.net.www.http.ClientVector: java.lang.Object push(java.lang.Object)>($r2);
+
+     label1:
+        return;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream) throws java.io.IOException
+    {
+        sun.net.www.http.ClientVector r0;
+        java.io.ObjectOutputStream r1;
+        java.io.NotSerializableException $r2;
+
+        r0 := @this: sun.net.www.http.ClientVector;
+        r1 := @parameter0: java.io.ObjectOutputStream;
+        $r2 = new java.io.NotSerializableException;
+        specialinvoke $r2.<java.io.NotSerializableException: void <init>()>();
+        throw $r2;
+    }
+
+    private void readObject(java.io.ObjectInputStream) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        sun.net.www.http.ClientVector r0;
+        java.io.ObjectInputStream r1;
+        java.io.NotSerializableException $r2;
+
+        r0 := @this: sun.net.www.http.ClientVector;
+        r1 := @parameter0: java.io.ObjectInputStream;
+        $r2 = new java.io.NotSerializableException;
+        specialinvoke $r2.<java.io.NotSerializableException: void <init>()>();
+        throw $r2;
+    }
+}

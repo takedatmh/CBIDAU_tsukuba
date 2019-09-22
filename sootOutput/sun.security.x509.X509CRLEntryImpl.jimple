@@ -1,0 +1,1017 @@
+public class sun.security.x509.X509CRLEntryImpl extends java.security.cert.X509CRLEntry implements java.lang.Comparable
+{
+    private sun.security.x509.SerialNumber serialNumber;
+    private java.util.Date revocationDate;
+    private sun.security.x509.CRLExtensions extensions;
+    private byte[] revokedCert;
+    private javax.security.auth.x500.X500Principal certIssuer;
+    private static final boolean isExplicit;
+    private static final long YR_2050;
+
+    public void <init>(java.math.BigInteger, java.util.Date)
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        java.math.BigInteger r1;
+        java.util.Date r2;
+        sun.security.x509.SerialNumber $r3;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        r1 := @parameter0: java.math.BigInteger;
+        r2 := @parameter1: java.util.Date;
+        specialinvoke r0.<java.security.cert.X509CRLEntry: void <init>()>();
+        r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.SerialNumber serialNumber> = null;
+        r0.<sun.security.x509.X509CRLEntryImpl: java.util.Date revocationDate> = null;
+        r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions> = null;
+        r0.<sun.security.x509.X509CRLEntryImpl: byte[] revokedCert> = null;
+        $r3 = new sun.security.x509.SerialNumber;
+        specialinvoke $r3.<sun.security.x509.SerialNumber: void <init>(java.math.BigInteger)>(r1);
+        r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.SerialNumber serialNumber> = $r3;
+        r0.<sun.security.x509.X509CRLEntryImpl: java.util.Date revocationDate> = r2;
+        return;
+    }
+
+    public void <init>(java.math.BigInteger, java.util.Date, sun.security.x509.CRLExtensions)
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        java.math.BigInteger r1;
+        java.util.Date r2;
+        sun.security.x509.CRLExtensions r3;
+        sun.security.x509.SerialNumber $r4;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        r1 := @parameter0: java.math.BigInteger;
+        r2 := @parameter1: java.util.Date;
+        r3 := @parameter2: sun.security.x509.CRLExtensions;
+        specialinvoke r0.<java.security.cert.X509CRLEntry: void <init>()>();
+        r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.SerialNumber serialNumber> = null;
+        r0.<sun.security.x509.X509CRLEntryImpl: java.util.Date revocationDate> = null;
+        r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions> = null;
+        r0.<sun.security.x509.X509CRLEntryImpl: byte[] revokedCert> = null;
+        $r4 = new sun.security.x509.SerialNumber;
+        specialinvoke $r4.<sun.security.x509.SerialNumber: void <init>(java.math.BigInteger)>(r1);
+        r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.SerialNumber serialNumber> = $r4;
+        r0.<sun.security.x509.X509CRLEntryImpl: java.util.Date revocationDate> = r2;
+        r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions> = r3;
+        return;
+    }
+
+    public void <init>(byte[]) throws java.security.cert.CRLException
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        byte[] r1;
+        java.io.IOException r2, $r4;
+        sun.security.util.DerValue $r3;
+        java.security.cert.CRLException $r5;
+        java.lang.StringBuilder $r6, $r7, $r9;
+        java.lang.String $r8, $r10;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        r1 := @parameter0: byte[];
+        specialinvoke r0.<java.security.cert.X509CRLEntry: void <init>()>();
+        r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.SerialNumber serialNumber> = null;
+        r0.<sun.security.x509.X509CRLEntryImpl: java.util.Date revocationDate> = null;
+        r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions> = null;
+        r0.<sun.security.x509.X509CRLEntryImpl: byte[] revokedCert> = null;
+
+     label0:
+        $r3 = new sun.security.util.DerValue;
+        specialinvoke $r3.<sun.security.util.DerValue: void <init>(byte[])>(r1);
+        specialinvoke r0.<sun.security.x509.X509CRLEntryImpl: void parse(sun.security.util.DerValue)>($r3);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r4 := @caughtexception;
+        r2 = $r4;
+        r0.<sun.security.x509.X509CRLEntryImpl: byte[] revokedCert> = null;
+        $r5 = new java.security.cert.CRLException;
+        $r6 = new java.lang.StringBuilder;
+        specialinvoke $r6.<java.lang.StringBuilder: void <init>()>();
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Parsing error: ");
+        $r8 = virtualinvoke r2.<java.io.IOException: java.lang.String toString()>();
+        $r9 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r8);
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r5.<java.security.cert.CRLException: void <init>(java.lang.String)>($r10);
+        throw $r5;
+
+     label3:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    public void <init>(sun.security.util.DerValue) throws java.security.cert.CRLException
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        sun.security.util.DerValue r1;
+        java.io.IOException r2, $r4;
+        java.lang.StringBuilder $r3, $r6, $r8;
+        java.security.cert.CRLException $r5;
+        java.lang.String $r7, $r9;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        r1 := @parameter0: sun.security.util.DerValue;
+        specialinvoke r0.<java.security.cert.X509CRLEntry: void <init>()>();
+        r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.SerialNumber serialNumber> = null;
+        r0.<sun.security.x509.X509CRLEntryImpl: java.util.Date revocationDate> = null;
+        r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions> = null;
+        r0.<sun.security.x509.X509CRLEntryImpl: byte[] revokedCert> = null;
+
+     label0:
+        specialinvoke r0.<sun.security.x509.X509CRLEntryImpl: void parse(sun.security.util.DerValue)>(r1);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r4 := @caughtexception;
+        r2 = $r4;
+        r0.<sun.security.x509.X509CRLEntryImpl: byte[] revokedCert> = null;
+        $r5 = new java.security.cert.CRLException;
+        $r3 = new java.lang.StringBuilder;
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>()>();
+        $r6 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Parsing error: ");
+        $r7 = virtualinvoke r2.<java.io.IOException: java.lang.String toString()>();
+        $r8 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r7);
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r5.<java.security.cert.CRLException: void <init>(java.lang.String)>($r9);
+        throw $r5;
+
+     label3:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    public boolean hasExtensions()
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        sun.security.x509.CRLExtensions $r1;
+        boolean $z0;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        $r1 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions>;
+        if $r1 == null goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public void encode(sun.security.util.DerOutputStream) throws java.security.cert.CRLException
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        sun.security.util.DerOutputStream r1, r2, r3, $r5, $r12;
+        byte[] $r4, $r13, $r14;
+        sun.security.x509.SerialNumber $r6;
+        java.util.Date $r7, $r8, $r9;
+        long $l0;
+        byte $b1;
+        sun.security.x509.CRLExtensions $r10, $r11;
+        java.io.IOException $r15, r16;
+        java.security.cert.CRLException $r17;
+        java.lang.StringBuilder $r18, $r19, $r21;
+        java.lang.String $r20, $r22;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        r1 := @parameter0: sun.security.util.DerOutputStream;
+
+     label0:
+        $r4 = r0.<sun.security.x509.X509CRLEntryImpl: byte[] revokedCert>;
+        if $r4 != null goto label4;
+
+        $r5 = new sun.security.util.DerOutputStream;
+        specialinvoke $r5.<sun.security.util.DerOutputStream: void <init>()>();
+        r2 = $r5;
+        $r6 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.SerialNumber serialNumber>;
+        virtualinvoke $r6.<sun.security.x509.SerialNumber: void encode(sun.security.util.DerOutputStream)>(r2);
+        $r7 = r0.<sun.security.x509.X509CRLEntryImpl: java.util.Date revocationDate>;
+        $l0 = virtualinvoke $r7.<java.util.Date: long getTime()>();
+        $b1 = $l0 cmp 2524636800000L;
+        if $b1 >= 0 goto label1;
+
+        $r8 = r0.<sun.security.x509.X509CRLEntryImpl: java.util.Date revocationDate>;
+        virtualinvoke r2.<sun.security.util.DerOutputStream: void putUTCTime(java.util.Date)>($r8);
+        goto label2;
+
+     label1:
+        $r9 = r0.<sun.security.x509.X509CRLEntryImpl: java.util.Date revocationDate>;
+        virtualinvoke r2.<sun.security.util.DerOutputStream: void putGeneralizedTime(java.util.Date)>($r9);
+
+     label2:
+        $r10 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions>;
+        if $r10 == null goto label3;
+
+        $r11 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions>;
+        virtualinvoke $r11.<sun.security.x509.CRLExtensions: void encode(java.io.OutputStream,boolean)>(r2, 0);
+
+     label3:
+        $r12 = new sun.security.util.DerOutputStream;
+        specialinvoke $r12.<sun.security.util.DerOutputStream: void <init>()>();
+        r3 = $r12;
+        virtualinvoke r3.<sun.security.util.DerOutputStream: void write(byte,sun.security.util.DerOutputStream)>(48, r2);
+        $r13 = virtualinvoke r3.<sun.security.util.DerOutputStream: byte[] toByteArray()>();
+        r0.<sun.security.x509.X509CRLEntryImpl: byte[] revokedCert> = $r13;
+
+     label4:
+        $r14 = r0.<sun.security.x509.X509CRLEntryImpl: byte[] revokedCert>;
+        virtualinvoke r1.<sun.security.util.DerOutputStream: void write(byte[])>($r14);
+
+     label5:
+        goto label7;
+
+     label6:
+        $r15 := @caughtexception;
+        r16 = $r15;
+        $r17 = new java.security.cert.CRLException;
+        $r18 = new java.lang.StringBuilder;
+        specialinvoke $r18.<java.lang.StringBuilder: void <init>()>();
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Encoding error: ");
+        $r20 = virtualinvoke r16.<java.io.IOException: java.lang.String toString()>();
+        $r21 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r20);
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r17.<java.security.cert.CRLException: void <init>(java.lang.String)>($r22);
+        throw $r17;
+
+     label7:
+        return;
+
+        catch java.io.IOException from label0 to label5 with label6;
+    }
+
+    public byte[] getEncoded() throws java.security.cert.CRLException
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        byte[] $r1, $r3;
+        java.lang.Object $r2;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        $r1 = specialinvoke r0.<sun.security.x509.X509CRLEntryImpl: byte[] getEncoded0()>();
+        $r2 = virtualinvoke $r1.<java.lang.Object: java.lang.Object clone()>();
+        $r3 = (byte[]) $r2;
+        return $r3;
+    }
+
+    private byte[] getEncoded0() throws java.security.cert.CRLException
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        sun.security.util.DerOutputStream $r1;
+        byte[] $r2, $r3;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        $r2 = r0.<sun.security.x509.X509CRLEntryImpl: byte[] revokedCert>;
+        if $r2 != null goto label0;
+
+        $r1 = new sun.security.util.DerOutputStream;
+        specialinvoke $r1.<sun.security.util.DerOutputStream: void <init>()>();
+        virtualinvoke r0.<sun.security.x509.X509CRLEntryImpl: void encode(sun.security.util.DerOutputStream)>($r1);
+
+     label0:
+        $r3 = r0.<sun.security.x509.X509CRLEntryImpl: byte[] revokedCert>;
+        return $r3;
+    }
+
+    public javax.security.auth.x500.X500Principal getCertificateIssuer()
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        javax.security.auth.x500.X500Principal $r1;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        $r1 = r0.<sun.security.x509.X509CRLEntryImpl: javax.security.auth.x500.X500Principal certIssuer>;
+        return $r1;
+    }
+
+    void setCertificateIssuer(javax.security.auth.x500.X500Principal, javax.security.auth.x500.X500Principal)
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        javax.security.auth.x500.X500Principal r1, r2;
+        boolean $z0;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        r1 := @parameter0: javax.security.auth.x500.X500Principal;
+        r2 := @parameter1: javax.security.auth.x500.X500Principal;
+        $z0 = virtualinvoke r1.<javax.security.auth.x500.X500Principal: boolean equals(java.lang.Object)>(r2);
+        if $z0 == 0 goto label0;
+
+        r0.<sun.security.x509.X509CRLEntryImpl: javax.security.auth.x500.X500Principal certIssuer> = null;
+        goto label1;
+
+     label0:
+        r0.<sun.security.x509.X509CRLEntryImpl: javax.security.auth.x500.X500Principal certIssuer> = r2;
+
+     label1:
+        return;
+    }
+
+    public java.math.BigInteger getSerialNumber()
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        sun.security.x509.SerialNumber $r1;
+        java.math.BigInteger $r2;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        $r1 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.SerialNumber serialNumber>;
+        $r2 = virtualinvoke $r1.<sun.security.x509.SerialNumber: java.math.BigInteger getNumber()>();
+        return $r2;
+    }
+
+    public java.util.Date getRevocationDate()
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        java.util.Date $r1, $r2;
+        long $l0;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        $r1 = new java.util.Date;
+        $r2 = r0.<sun.security.x509.X509CRLEntryImpl: java.util.Date revocationDate>;
+        $l0 = virtualinvoke $r2.<java.util.Date: long getTime()>();
+        specialinvoke $r1.<java.util.Date: void <init>(long)>($l0);
+        return $r1;
+    }
+
+    public java.security.cert.CRLReason getRevocationReason()
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        sun.security.util.ObjectIdentifier $r1;
+        sun.security.x509.Extension r2;
+        sun.security.x509.CRLReasonCodeExtension r3;
+        java.security.cert.CRLReason $r4;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        $r1 = <sun.security.x509.PKIXExtensions: sun.security.util.ObjectIdentifier ReasonCode_Id>;
+        r2 = virtualinvoke r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.Extension getExtension(sun.security.util.ObjectIdentifier)>($r1);
+        if r2 != null goto label0;
+
+        return null;
+
+     label0:
+        r3 = (sun.security.x509.CRLReasonCodeExtension) r2;
+        $r4 = virtualinvoke r3.<sun.security.x509.CRLReasonCodeExtension: java.security.cert.CRLReason getReasonCode()>();
+        return $r4;
+    }
+
+    public static java.security.cert.CRLReason getRevocationReason(java.security.cert.X509CRLEntry)
+    {
+        java.security.cert.X509CRLEntry r0;
+        byte[] r1, r3;
+        sun.security.util.DerValue r2, $r5;
+        sun.security.x509.CRLReasonCodeExtension r4, $r6;
+        null_type $n0;
+        java.lang.Boolean $r7;
+        java.security.cert.CRLReason $r8;
+        java.io.IOException $r9, r10;
+
+        r0 := @parameter0: java.security.cert.X509CRLEntry;
+
+     label0:
+        r1 = virtualinvoke r0.<java.security.cert.X509CRLEntry: byte[] getExtensionValue(java.lang.String)>("2.5.29.21");
+        if r1 != null goto label2;
+
+        $n0 = null;
+
+     label1:
+        return $n0;
+
+     label2:
+        $r5 = new sun.security.util.DerValue;
+        specialinvoke $r5.<sun.security.util.DerValue: void <init>(byte[])>(r1);
+        r2 = $r5;
+        r3 = virtualinvoke r2.<sun.security.util.DerValue: byte[] getOctetString()>();
+        $r6 = new sun.security.x509.CRLReasonCodeExtension;
+        $r7 = <java.lang.Boolean: java.lang.Boolean FALSE>;
+        specialinvoke $r6.<sun.security.x509.CRLReasonCodeExtension: void <init>(java.lang.Boolean,java.lang.Object)>($r7, r3);
+        r4 = $r6;
+        $r8 = virtualinvoke r4.<sun.security.x509.CRLReasonCodeExtension: java.security.cert.CRLReason getReasonCode()>();
+
+     label3:
+        return $r8;
+
+     label4:
+        $r9 := @caughtexception;
+        r10 = $r9;
+        return null;
+
+        catch java.io.IOException from label0 to label1 with label4;
+        catch java.io.IOException from label2 to label3 with label4;
+    }
+
+    public java.lang.Integer getReasonCode() throws java.io.IOException
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        sun.security.util.ObjectIdentifier $r1;
+        sun.security.x509.Extension r2;
+        sun.security.x509.CRLReasonCodeExtension r3;
+        java.lang.Object $r5;
+        java.lang.Integer $r6, $r7;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        $r1 = <sun.security.x509.PKIXExtensions: sun.security.util.ObjectIdentifier ReasonCode_Id>;
+        r2 = virtualinvoke r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.Extension getExtension(sun.security.util.ObjectIdentifier)>($r1);
+        if r2 != null goto label0;
+
+        return null;
+
+     label0:
+        r3 = (sun.security.x509.CRLReasonCodeExtension) r2;
+        $r5 = virtualinvoke r3.<sun.security.x509.CRLReasonCodeExtension: java.lang.Object get(java.lang.String)>("reason");
+        $r6 = (java.lang.Integer) $r5;
+        $r7 = (java.lang.Integer) $r6;
+        return $r7;
+    }
+
+    public java.lang.String toString()
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        java.lang.StringBuilder $r1, r2, $r12, $r13, $r16, $r20, $r21, $r23, $r28, $r29, $r30, $r33, $r34, $r35, $r36, $r47, $r48, $r50, $r51;
+        java.util.Collection r3;
+        java.lang.Object[] r4;
+        int i0, $i1, $i2, $i3;
+        sun.security.x509.Extension r5;
+        byte[] r6, r45;
+        sun.security.util.DerOutputStream r7, $r44;
+        sun.misc.HexDumpEncoder r8, $r46;
+        sun.security.x509.SerialNumber $r9;
+        java.lang.String $r10, $r15, $r17, $r24, $r31, $r37, $r42, $r49, $r52, $r54, $r60;
+        java.util.Date $r14;
+        javax.security.auth.x500.X500Principal $r19, $r22;
+        sun.security.x509.CRLExtensions $r26, $r27;
+        java.lang.Object $r39;
+        sun.security.util.ObjectIdentifier $r40;
+        java.lang.Class $r41;
+        java.lang.Exception $r56, r57;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        r2 = $r1;
+        $r9 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.SerialNumber serialNumber>;
+        $r10 = virtualinvoke $r9.<sun.security.x509.SerialNumber: java.lang.String toString()>();
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r10);
+        $r12 = new java.lang.StringBuilder;
+        specialinvoke $r12.<java.lang.StringBuilder: void <init>()>();
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("  On: ");
+        $r14 = r0.<sun.security.x509.X509CRLEntryImpl: java.util.Date revocationDate>;
+        $r15 = virtualinvoke $r14.<java.util.Date: java.lang.String toString()>();
+        $r16 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r15);
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r17);
+        $r19 = r0.<sun.security.x509.X509CRLEntryImpl: javax.security.auth.x500.X500Principal certIssuer>;
+        if $r19 == null goto label0;
+
+        $r20 = new java.lang.StringBuilder;
+        specialinvoke $r20.<java.lang.StringBuilder: void <init>()>();
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\n    Certificate issuer: ");
+        $r22 = r0.<sun.security.x509.X509CRLEntryImpl: javax.security.auth.x500.X500Principal certIssuer>;
+        $r23 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r22);
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r24);
+
+     label0:
+        $r26 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions>;
+        if $r26 == null goto label8;
+
+        $r27 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions>;
+        r3 = virtualinvoke $r27.<sun.security.x509.CRLExtensions: java.util.Collection getAllExtensions()>();
+        r4 = interfaceinvoke r3.<java.util.Collection: java.lang.Object[] toArray()>();
+        $r28 = new java.lang.StringBuilder;
+        specialinvoke $r28.<java.lang.StringBuilder: void <init>()>();
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\n    CRL Entry Extensions: ");
+        $i1 = lengthof r4;
+        $r30 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i1);
+        $r31 = virtualinvoke $r30.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r31);
+        i0 = 0;
+
+     label1:
+        $i2 = lengthof r4;
+        if i0 >= $i2 goto label8;
+
+        $r33 = new java.lang.StringBuilder;
+        specialinvoke $r33.<java.lang.StringBuilder: void <init>()>();
+        $r34 = virtualinvoke $r33.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\n    [");
+        $i3 = i0 + 1;
+        $r35 = virtualinvoke $r34.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i3);
+        $r36 = virtualinvoke $r35.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]: ");
+        $r37 = virtualinvoke $r36.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r37);
+        $r39 = r4[i0];
+        r5 = (sun.security.x509.Extension) $r39;
+
+     label2:
+        $r40 = virtualinvoke r5.<sun.security.x509.Extension: sun.security.util.ObjectIdentifier getExtensionId()>();
+        $r41 = staticinvoke <sun.security.x509.OIDMap: java.lang.Class getClass(sun.security.util.ObjectIdentifier)>($r40);
+        if $r41 != null goto label4;
+
+        $r42 = virtualinvoke r5.<sun.security.x509.Extension: java.lang.String toString()>();
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r42);
+        r6 = virtualinvoke r5.<sun.security.x509.Extension: byte[] getExtensionValue()>();
+        if r6 == null goto label3;
+
+        $r44 = new sun.security.util.DerOutputStream;
+        specialinvoke $r44.<sun.security.util.DerOutputStream: void <init>()>();
+        r7 = $r44;
+        virtualinvoke r7.<sun.security.util.DerOutputStream: void putOctetString(byte[])>(r6);
+        r45 = virtualinvoke r7.<sun.security.util.DerOutputStream: byte[] toByteArray()>();
+        $r46 = new sun.misc.HexDumpEncoder;
+        specialinvoke $r46.<sun.misc.HexDumpEncoder: void <init>()>();
+        r8 = $r46;
+        $r47 = new java.lang.StringBuilder;
+        specialinvoke $r47.<java.lang.StringBuilder: void <init>()>();
+        $r48 = virtualinvoke $r47.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Extension unknown: DER encoded OCTET string =\n");
+        $r49 = virtualinvoke r8.<sun.misc.HexDumpEncoder: java.lang.String encodeBuffer(byte[])>(r45);
+        $r50 = virtualinvoke $r48.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r49);
+        $r51 = virtualinvoke $r50.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\n");
+        $r52 = virtualinvoke $r51.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r52);
+
+     label3:
+        goto label5;
+
+     label4:
+        $r54 = virtualinvoke r5.<sun.security.x509.Extension: java.lang.String toString()>();
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r54);
+
+     label5:
+        goto label7;
+
+     label6:
+        $r56 := @caughtexception;
+        r57 = $r56;
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", Error parsing this extension");
+
+     label7:
+        i0 = i0 + 1;
+        goto label1;
+
+     label8:
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\n");
+        $r60 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r60;
+
+        catch java.lang.Exception from label2 to label5 with label6;
+    }
+
+    public boolean hasUnsupportedCriticalExtension()
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        sun.security.x509.CRLExtensions $r1, $r2;
+        boolean $z0;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        $r1 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions>;
+        if $r1 != null goto label0;
+
+        return 0;
+
+     label0:
+        $r2 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions>;
+        $z0 = virtualinvoke $r2.<sun.security.x509.CRLExtensions: boolean hasUnsupportedCriticalExtension()>();
+        return $z0;
+    }
+
+    public java.util.Set getCriticalExtensionOIDs()
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        java.util.TreeSet r1, $r5;
+        java.util.Iterator r2;
+        sun.security.x509.Extension r3;
+        sun.security.x509.CRLExtensions $r4, $r6;
+        java.util.Collection $r7;
+        boolean $z0, $z1;
+        java.lang.Object $r8;
+        sun.security.util.ObjectIdentifier $r9;
+        java.lang.String $r10;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        $r4 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions>;
+        if $r4 != null goto label0;
+
+        return null;
+
+     label0:
+        $r5 = new java.util.TreeSet;
+        specialinvoke $r5.<java.util.TreeSet: void <init>()>();
+        r1 = $r5;
+        $r6 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions>;
+        $r7 = virtualinvoke $r6.<sun.security.x509.CRLExtensions: java.util.Collection getAllExtensions()>();
+        r2 = interfaceinvoke $r7.<java.util.Collection: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r2.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r8 = interfaceinvoke r2.<java.util.Iterator: java.lang.Object next()>();
+        r3 = (sun.security.x509.Extension) $r8;
+        $z1 = virtualinvoke r3.<sun.security.x509.Extension: boolean isCritical()>();
+        if $z1 == 0 goto label2;
+
+        $r9 = virtualinvoke r3.<sun.security.x509.Extension: sun.security.util.ObjectIdentifier getExtensionId()>();
+        $r10 = virtualinvoke $r9.<sun.security.util.ObjectIdentifier: java.lang.String toString()>();
+        interfaceinvoke r1.<java.util.Set: boolean add(java.lang.Object)>($r10);
+
+     label2:
+        goto label1;
+
+     label3:
+        return r1;
+    }
+
+    public java.util.Set getNonCriticalExtensionOIDs()
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        java.util.TreeSet r1, $r5;
+        java.util.Iterator r2;
+        sun.security.x509.Extension r3;
+        sun.security.x509.CRLExtensions $r4, $r6;
+        java.util.Collection $r7;
+        boolean $z0, $z1;
+        java.lang.Object $r8;
+        sun.security.util.ObjectIdentifier $r9;
+        java.lang.String $r10;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        $r4 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions>;
+        if $r4 != null goto label0;
+
+        return null;
+
+     label0:
+        $r5 = new java.util.TreeSet;
+        specialinvoke $r5.<java.util.TreeSet: void <init>()>();
+        r1 = $r5;
+        $r6 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions>;
+        $r7 = virtualinvoke $r6.<sun.security.x509.CRLExtensions: java.util.Collection getAllExtensions()>();
+        r2 = interfaceinvoke $r7.<java.util.Collection: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r2.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r8 = interfaceinvoke r2.<java.util.Iterator: java.lang.Object next()>();
+        r3 = (sun.security.x509.Extension) $r8;
+        $z1 = virtualinvoke r3.<sun.security.x509.Extension: boolean isCritical()>();
+        if $z1 != 0 goto label2;
+
+        $r9 = virtualinvoke r3.<sun.security.x509.Extension: sun.security.util.ObjectIdentifier getExtensionId()>();
+        $r10 = virtualinvoke $r9.<sun.security.util.ObjectIdentifier: java.lang.String toString()>();
+        interfaceinvoke r1.<java.util.Set: boolean add(java.lang.Object)>($r10);
+
+     label2:
+        goto label1;
+
+     label3:
+        return r1;
+    }
+
+    public byte[] getExtensionValue(java.lang.String)
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        java.lang.String r1, r2;
+        sun.security.x509.Extension r3, r12;
+        sun.security.util.ObjectIdentifier r4, r6, $r8, $r9;
+        null_type n0, $n1, $n2;
+        java.util.Enumeration r5;
+        sun.security.x509.CRLExtensions $r7, $r10, $r13;
+        boolean $z0, $z1;
+        java.lang.Object $r11;
+        byte[] r14, $r17;
+        sun.security.util.DerOutputStream $r15, r16;
+        java.lang.Exception $r18, r19;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        r1 := @parameter0: java.lang.String;
+        $r7 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions>;
+        if $r7 != null goto label0;
+
+        return null;
+
+     label0:
+        $r8 = new sun.security.util.ObjectIdentifier;
+        specialinvoke $r8.<sun.security.util.ObjectIdentifier: void <init>(java.lang.String)>(r1);
+        r2 = staticinvoke <sun.security.x509.OIDMap: java.lang.String getName(sun.security.util.ObjectIdentifier)>($r8);
+        r3 = null;
+        if r2 != null goto label3;
+
+        $r9 = new sun.security.util.ObjectIdentifier;
+        specialinvoke $r9.<sun.security.util.ObjectIdentifier: void <init>(java.lang.String)>(r1);
+        r4 = $r9;
+        n0 = null;
+        $r10 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions>;
+        r5 = virtualinvoke $r10.<sun.security.x509.CRLExtensions: java.util.Enumeration getElements()>();
+
+     label1:
+        $z0 = interfaceinvoke r5.<java.util.Enumeration: boolean hasMoreElements()>();
+        if $z0 == 0 goto label2;
+
+        $r11 = interfaceinvoke r5.<java.util.Enumeration: java.lang.Object nextElement()>();
+        r12 = (sun.security.x509.Extension) $r11;
+        r6 = virtualinvoke r12.<sun.security.x509.Extension: sun.security.util.ObjectIdentifier getExtensionId()>();
+        $z1 = virtualinvoke r6.<sun.security.util.ObjectIdentifier: boolean equals(sun.security.util.ObjectIdentifier)>(r4);
+        if $z1 == 0 goto label1;
+
+        r3 = r12;
+        goto label2;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r13 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions>;
+        r3 = virtualinvoke $r13.<sun.security.x509.CRLExtensions: sun.security.x509.Extension get(java.lang.String)>(r2);
+
+     label4:
+        if r3 != null goto label6;
+
+        $n1 = null;
+
+     label5:
+        return $n1;
+
+     label6:
+        r14 = virtualinvoke r3.<sun.security.x509.Extension: byte[] getExtensionValue()>();
+        if r14 != null goto label8;
+
+        $n2 = null;
+
+     label7:
+        return $n2;
+
+     label8:
+        $r15 = new sun.security.util.DerOutputStream;
+        specialinvoke $r15.<sun.security.util.DerOutputStream: void <init>()>();
+        r16 = $r15;
+        virtualinvoke r16.<sun.security.util.DerOutputStream: void putOctetString(byte[])>(r14);
+        $r17 = virtualinvoke r16.<sun.security.util.DerOutputStream: byte[] toByteArray()>();
+
+     label9:
+        return $r17;
+
+     label10:
+        $r18 := @caughtexception;
+        r19 = $r18;
+        return null;
+
+        catch java.lang.Exception from label0 to label5 with label10;
+        catch java.lang.Exception from label6 to label7 with label10;
+        catch java.lang.Exception from label8 to label9 with label10;
+    }
+
+    public sun.security.x509.Extension getExtension(sun.security.util.ObjectIdentifier)
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        sun.security.util.ObjectIdentifier r1;
+        sun.security.x509.CRLExtensions $r2, $r3;
+        java.lang.String $r4;
+        sun.security.x509.Extension $r5;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        r1 := @parameter0: sun.security.util.ObjectIdentifier;
+        $r2 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions>;
+        if $r2 != null goto label0;
+
+        return null;
+
+     label0:
+        $r3 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions>;
+        $r4 = staticinvoke <sun.security.x509.OIDMap: java.lang.String getName(sun.security.util.ObjectIdentifier)>(r1);
+        $r5 = virtualinvoke $r3.<sun.security.x509.CRLExtensions: sun.security.x509.Extension get(java.lang.String)>($r4);
+        return $r5;
+    }
+
+    private void parse(sun.security.util.DerValue) throws java.security.cert.CRLException, java.io.IOException
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        sun.security.util.DerValue r1, r3;
+        sun.security.util.DerInputStream r2, $r5, $r9, $r10, $r12, $r15, $r17;
+        int i0, $i2, $i5;
+        byte $b1, $b3, $b4;
+        java.security.cert.CRLException $r4, $r6, $r14;
+        byte[] $r7;
+        sun.security.x509.SerialNumber $r8;
+        java.util.Date $r11, $r13;
+        sun.security.x509.CRLExtensions $r16;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        r1 := @parameter0: sun.security.util.DerValue;
+        $b1 = r1.<sun.security.util.DerValue: byte tag>;
+        if $b1 == 48 goto label0;
+
+        $r4 = new java.security.cert.CRLException;
+        specialinvoke $r4.<java.security.cert.CRLException: void <init>(java.lang.String)>("Invalid encoded RevokedCertificate, starting sequence tag missing.");
+        throw $r4;
+
+     label0:
+        $r5 = r1.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $i2 = virtualinvoke $r5.<sun.security.util.DerInputStream: int available()>();
+        if $i2 != 0 goto label1;
+
+        $r6 = new java.security.cert.CRLException;
+        specialinvoke $r6.<java.security.cert.CRLException: void <init>(java.lang.String)>("No data encoded for RevokedCertificates");
+        throw $r6;
+
+     label1:
+        $r7 = virtualinvoke r1.<sun.security.util.DerValue: byte[] toByteArray()>();
+        r0.<sun.security.x509.X509CRLEntryImpl: byte[] revokedCert> = $r7;
+        r2 = virtualinvoke r1.<sun.security.util.DerValue: sun.security.util.DerInputStream toDerInputStream()>();
+        r3 = virtualinvoke r2.<sun.security.util.DerInputStream: sun.security.util.DerValue getDerValue()>();
+        $r8 = new sun.security.x509.SerialNumber;
+        specialinvoke $r8.<sun.security.x509.SerialNumber: void <init>(sun.security.util.DerValue)>(r3);
+        r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.SerialNumber serialNumber> = $r8;
+        $r9 = r1.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        i0 = virtualinvoke $r9.<sun.security.util.DerInputStream: int peekByte()>();
+        $b3 = (byte) i0;
+        if $b3 != 23 goto label2;
+
+        $r10 = r1.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $r11 = virtualinvoke $r10.<sun.security.util.DerInputStream: java.util.Date getUTCTime()>();
+        r0.<sun.security.x509.X509CRLEntryImpl: java.util.Date revocationDate> = $r11;
+        goto label4;
+
+     label2:
+        $b4 = (byte) i0;
+        if $b4 != 24 goto label3;
+
+        $r12 = r1.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $r13 = virtualinvoke $r12.<sun.security.util.DerInputStream: java.util.Date getGeneralizedTime()>();
+        r0.<sun.security.x509.X509CRLEntryImpl: java.util.Date revocationDate> = $r13;
+        goto label4;
+
+     label3:
+        $r14 = new java.security.cert.CRLException;
+        specialinvoke $r14.<java.security.cert.CRLException: void <init>(java.lang.String)>("Invalid encoding for revocation date");
+        throw $r14;
+
+     label4:
+        $r15 = r1.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $i5 = virtualinvoke $r15.<sun.security.util.DerInputStream: int available()>();
+        if $i5 != 0 goto label5;
+
+        return;
+
+     label5:
+        $r16 = new sun.security.x509.CRLExtensions;
+        $r17 = virtualinvoke r1.<sun.security.util.DerValue: sun.security.util.DerInputStream toDerInputStream()>();
+        specialinvoke $r16.<sun.security.x509.CRLExtensions: void <init>(sun.security.util.DerInputStream)>($r17);
+        r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions> = $r16;
+        return;
+    }
+
+    public static sun.security.x509.X509CRLEntryImpl toImpl(java.security.cert.X509CRLEntry) throws java.security.cert.CRLException
+    {
+        java.security.cert.X509CRLEntry r0;
+        boolean $z0;
+        sun.security.x509.X509CRLEntryImpl $r1, $r2;
+        byte[] $r3;
+
+        r0 := @parameter0: java.security.cert.X509CRLEntry;
+        $z0 = r0 instanceof sun.security.x509.X509CRLEntryImpl;
+        if $z0 == 0 goto label0;
+
+        $r1 = (sun.security.x509.X509CRLEntryImpl) r0;
+        return $r1;
+
+     label0:
+        $r2 = new sun.security.x509.X509CRLEntryImpl;
+        $r3 = virtualinvoke r0.<java.security.cert.X509CRLEntry: byte[] getEncoded()>();
+        specialinvoke $r2.<sun.security.x509.X509CRLEntryImpl: void <init>(byte[])>($r3);
+        return $r2;
+    }
+
+    sun.security.x509.CertificateIssuerExtension getCertificateIssuerExtension()
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        sun.security.util.ObjectIdentifier $r1;
+        sun.security.x509.Extension $r2;
+        sun.security.x509.CertificateIssuerExtension $r3;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        $r1 = <sun.security.x509.PKIXExtensions: sun.security.util.ObjectIdentifier CertificateIssuer_Id>;
+        $r2 = virtualinvoke r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.Extension getExtension(sun.security.util.ObjectIdentifier)>($r1);
+        $r3 = (sun.security.x509.CertificateIssuerExtension) $r2;
+        return $r3;
+    }
+
+    public java.util.Map getExtensions()
+    {
+        sun.security.x509.X509CRLEntryImpl r0;
+        java.util.Collection r1;
+        java.util.TreeMap r2, $r8;
+        java.util.Iterator r3;
+        sun.security.x509.Extension r4;
+        sun.security.x509.CRLExtensions $r5, $r7;
+        java.util.Map $r6;
+        boolean $z0;
+        java.lang.Object $r9;
+        java.lang.String $r10;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        $r5 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions>;
+        if $r5 != null goto label0;
+
+        $r6 = staticinvoke <java.util.Collections: java.util.Map emptyMap()>();
+        return $r6;
+
+     label0:
+        $r7 = r0.<sun.security.x509.X509CRLEntryImpl: sun.security.x509.CRLExtensions extensions>;
+        r1 = virtualinvoke $r7.<sun.security.x509.CRLExtensions: java.util.Collection getAllExtensions()>();
+        $r8 = new java.util.TreeMap;
+        specialinvoke $r8.<java.util.TreeMap: void <init>()>();
+        r2 = $r8;
+        r3 = interfaceinvoke r1.<java.util.Collection: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r9 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+        r4 = (sun.security.x509.Extension) $r9;
+        $r10 = virtualinvoke r4.<sun.security.x509.Extension: java.lang.String getId()>();
+        interfaceinvoke r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r10, r4);
+        goto label1;
+
+     label2:
+        return r2;
+    }
+
+    public int compareTo(sun.security.x509.X509CRLEntryImpl)
+    {
+        sun.security.x509.X509CRLEntryImpl r0, r1;
+        int i0, i1, $i4, $i5, $i8, $i9, $i10, $i11;
+        byte[] r2, r3;
+        short s2, s3;
+        java.math.BigInteger $r4, $r5;
+        byte $b6, $b7;
+        java.security.cert.CRLException $r6, r7;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        r1 := @parameter0: sun.security.x509.X509CRLEntryImpl;
+        $r4 = virtualinvoke r0.<sun.security.x509.X509CRLEntryImpl: java.math.BigInteger getSerialNumber()>();
+        $r5 = virtualinvoke r1.<sun.security.x509.X509CRLEntryImpl: java.math.BigInteger getSerialNumber()>();
+        i0 = virtualinvoke $r4.<java.math.BigInteger: int compareTo(java.math.BigInteger)>($r5);
+        if i0 == 0 goto label0;
+
+        return i0;
+
+     label0:
+        r2 = specialinvoke r0.<sun.security.x509.X509CRLEntryImpl: byte[] getEncoded0()>();
+        r3 = specialinvoke r1.<sun.security.x509.X509CRLEntryImpl: byte[] getEncoded0()>();
+        i1 = 0;
+
+     label1:
+        $i4 = lengthof r2;
+        if i1 >= $i4 goto label4;
+
+        $i5 = lengthof r3;
+        if i1 >= $i5 goto label4;
+
+        $b6 = r2[i1];
+        s2 = $b6 & 255;
+        $b7 = r3[i1];
+        s3 = $b7 & 255;
+        if s2 == s3 goto label3;
+
+        $i8 = s2 - s3;
+
+     label2:
+        return $i8;
+
+     label3:
+        i1 = i1 + 1;
+        goto label1;
+
+     label4:
+        $i9 = lengthof r2;
+        $i10 = lengthof r3;
+        $i11 = $i9 - $i10;
+
+     label5:
+        return $i11;
+
+     label6:
+        $r6 := @caughtexception;
+        r7 = $r6;
+        return -1;
+
+        catch java.security.cert.CRLException from label0 to label2 with label6;
+        catch java.security.cert.CRLException from label3 to label5 with label6;
+    }
+
+    public volatile int compareTo(java.lang.Object)
+    {
+        sun.security.x509.X509CRLEntryImpl r0, $r2;
+        java.lang.Object r1;
+        int $i0;
+
+        r0 := @this: sun.security.x509.X509CRLEntryImpl;
+        r1 := @parameter0: java.lang.Object;
+        $r2 = (sun.security.x509.X509CRLEntryImpl) r1;
+        $i0 = virtualinvoke r0.<sun.security.x509.X509CRLEntryImpl: int compareTo(sun.security.x509.X509CRLEntryImpl)>($r2);
+        return $i0;
+    }
+}

@@ -1,0 +1,297 @@
+class sun.nio.ch.SocketAdaptor$SocketInputStream extends sun.nio.ch.ChannelInputStream
+{
+    final sun.nio.ch.SocketAdaptor this$0;
+
+    private void <init>(sun.nio.ch.SocketAdaptor)
+    {
+        sun.nio.ch.SocketAdaptor$SocketInputStream r0;
+        sun.nio.ch.SocketAdaptor r1;
+        sun.nio.ch.SocketChannelImpl $r2;
+
+        r0 := @this: sun.nio.ch.SocketAdaptor$SocketInputStream;
+        r1 := @parameter0: sun.nio.ch.SocketAdaptor;
+        r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0> = r1;
+        $r2 = staticinvoke <sun.nio.ch.SocketAdaptor: sun.nio.ch.SocketChannelImpl access$000(sun.nio.ch.SocketAdaptor)>(r1);
+        specialinvoke r0.<sun.nio.ch.ChannelInputStream: void <init>(java.nio.channels.ReadableByteChannel)>($r2);
+        return;
+    }
+
+    protected int read(java.nio.ByteBuffer) throws java.io.IOException
+    {
+        sun.nio.ch.SocketAdaptor$SocketInputStream r0;
+        java.nio.ByteBuffer r1;
+        java.lang.Object r2, r5, $r10;
+        java.nio.channels.SelectionKey r3;
+        java.nio.channels.Selector r4;
+        int i0, i1, i3, i4, $i5, $i6, $i7, $i8, $i9, $i11, $i13, $i14, $i15, $i20, $i21;
+        long l2, $l10, l12, $l16, $l17, $l18, $l22;
+        java.lang.Throwable r6, r7, $r54, $r65;
+        sun.nio.ch.SocketAdaptor $r8, $r11, $r14, $r15, $r17, $r20, $r23, $r25, $r26, $r27, $r29, $r32, $r34, $r36, $r37, $r40, $r43, $r45, $r46, $r47, $r49, $r56, $r58, $r59, $r60, $r62;
+        sun.nio.ch.SocketChannelImpl $r9, $r12, $r16, $r18, $r21, $r28, $r30, $r33, $r35, $r38, $r41, $r48, $r50, $r61, $r63;
+        boolean $z0, $z1, $z2, $z3, $z4, $z6;
+        java.nio.channels.IllegalBlockingModeException $r13;
+        java.net.InetAddress $r24, $r44, $r57;
+        java.nio.channels.ClosedChannelException $r39;
+        java.util.Set $r52;
+        byte $b19;
+        java.net.SocketTimeoutException $r53;
+
+        r0 := @this: sun.nio.ch.SocketAdaptor$SocketInputStream;
+        r1 := @parameter0: java.nio.ByteBuffer;
+        $r8 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $r9 = staticinvoke <sun.nio.ch.SocketAdaptor: sun.nio.ch.SocketChannelImpl access$000(sun.nio.ch.SocketAdaptor)>($r8);
+        $r10 = virtualinvoke $r9.<sun.nio.ch.SocketChannelImpl: java.lang.Object blockingLock()>();
+        r2 = $r10;
+        entermonitor $r10;
+
+     label0:
+        $r11 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $r12 = staticinvoke <sun.nio.ch.SocketAdaptor: sun.nio.ch.SocketChannelImpl access$000(sun.nio.ch.SocketAdaptor)>($r11);
+        $z0 = virtualinvoke $r12.<sun.nio.ch.SocketChannelImpl: boolean isBlocking()>();
+        if $z0 != 0 goto label1;
+
+        $r13 = new java.nio.channels.IllegalBlockingModeException;
+        specialinvoke $r13.<java.nio.channels.IllegalBlockingModeException: void <init>()>();
+        throw $r13;
+
+     label1:
+        $r14 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $i5 = staticinvoke <sun.nio.ch.SocketAdaptor: int access$100(sun.nio.ch.SocketAdaptor)>($r14);
+        if $i5 != 0 goto label3;
+
+        $r15 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $r16 = staticinvoke <sun.nio.ch.SocketAdaptor: sun.nio.ch.SocketChannelImpl access$000(sun.nio.ch.SocketAdaptor)>($r15);
+        $i6 = virtualinvoke $r16.<sun.nio.ch.SocketChannelImpl: int read(java.nio.ByteBuffer)>(r1);
+        exitmonitor r2;
+
+     label2:
+        return $i6;
+
+     label3:
+        r3 = null;
+        r4 = null;
+        $r17 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $r18 = staticinvoke <sun.nio.ch.SocketAdaptor: sun.nio.ch.SocketChannelImpl access$000(sun.nio.ch.SocketAdaptor)>($r17);
+        virtualinvoke $r18.<sun.nio.ch.SocketChannelImpl: java.nio.channels.SelectableChannel configureBlocking(boolean)>(0);
+        i0 = 0;
+        r5 = staticinvoke <sun.misc.IoTrace: java.lang.Object socketReadBegin()>();
+
+     label4:
+        $r20 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $r21 = staticinvoke <sun.nio.ch.SocketAdaptor: sun.nio.ch.SocketChannelImpl access$000(sun.nio.ch.SocketAdaptor)>($r20);
+        $i7 = virtualinvoke $r21.<sun.nio.ch.SocketChannelImpl: int read(java.nio.ByteBuffer)>(r1);
+        i0 = $i7;
+        if $i7 == 0 goto label12;
+
+        i1 = i0;
+
+     label5:
+        $r23 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $r24 = virtualinvoke $r23.<sun.nio.ch.SocketAdaptor: java.net.InetAddress getInetAddress()>();
+        $r25 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $i8 = virtualinvoke $r25.<sun.nio.ch.SocketAdaptor: int getPort()>();
+        $r26 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $i9 = staticinvoke <sun.nio.ch.SocketAdaptor: int access$100(sun.nio.ch.SocketAdaptor)>($r26);
+        if i0 <= 0 goto label6;
+
+        $l10 = (long) i0;
+        goto label7;
+
+     label6:
+        $l10 = 0L;
+
+     label7:
+        staticinvoke <sun.misc.IoTrace: void socketReadEnd(java.lang.Object,java.net.InetAddress,int,int,long)>(r5, $r24, $i8, $i9, $l10);
+        if r3 == null goto label8;
+
+        virtualinvoke r3.<java.nio.channels.SelectionKey: void cancel()>();
+
+     label8:
+        $r27 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $r28 = staticinvoke <sun.nio.ch.SocketAdaptor: sun.nio.ch.SocketChannelImpl access$000(sun.nio.ch.SocketAdaptor)>($r27);
+        $z1 = virtualinvoke $r28.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z1 == 0 goto label9;
+
+        $r29 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $r30 = staticinvoke <sun.nio.ch.SocketAdaptor: sun.nio.ch.SocketChannelImpl access$000(sun.nio.ch.SocketAdaptor)>($r29);
+        virtualinvoke $r30.<sun.nio.ch.SocketChannelImpl: java.nio.channels.SelectableChannel configureBlocking(boolean)>(1);
+
+     label9:
+        if r4 == null goto label10;
+
+        staticinvoke <sun.nio.ch.Util: void releaseTemporarySelector(java.nio.channels.Selector)>(r4);
+
+     label10:
+        exitmonitor r2;
+
+     label11:
+        return i1;
+
+     label12:
+        $r32 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $r33 = staticinvoke <sun.nio.ch.SocketAdaptor: sun.nio.ch.SocketChannelImpl access$000(sun.nio.ch.SocketAdaptor)>($r32);
+        r4 = staticinvoke <sun.nio.ch.Util: java.nio.channels.Selector getTemporarySelector(java.nio.channels.SelectableChannel)>($r33);
+        $r34 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $r35 = staticinvoke <sun.nio.ch.SocketAdaptor: sun.nio.ch.SocketChannelImpl access$000(sun.nio.ch.SocketAdaptor)>($r34);
+        r3 = virtualinvoke $r35.<sun.nio.ch.SocketChannelImpl: java.nio.channels.SelectionKey register(java.nio.channels.Selector,int)>(r4, 1);
+        $r36 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $i11 = staticinvoke <sun.nio.ch.SocketAdaptor: int access$100(sun.nio.ch.SocketAdaptor)>($r36);
+        l12 = (long) $i11;
+
+     label13:
+        $r37 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $r38 = staticinvoke <sun.nio.ch.SocketAdaptor: sun.nio.ch.SocketChannelImpl access$000(sun.nio.ch.SocketAdaptor)>($r37);
+        $z2 = virtualinvoke $r38.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z2 != 0 goto label14;
+
+        $r39 = new java.nio.channels.ClosedChannelException;
+        specialinvoke $r39.<java.nio.channels.ClosedChannelException: void <init>()>();
+        throw $r39;
+
+     label14:
+        l2 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        i3 = virtualinvoke r4.<java.nio.channels.Selector: int select(long)>(l12);
+        if i3 <= 0 goto label22;
+
+        $z3 = virtualinvoke r3.<java.nio.channels.SelectionKey: boolean isReadable()>();
+        if $z3 == 0 goto label22;
+
+        $r40 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $r41 = staticinvoke <sun.nio.ch.SocketAdaptor: sun.nio.ch.SocketChannelImpl access$000(sun.nio.ch.SocketAdaptor)>($r40);
+        $i13 = virtualinvoke $r41.<sun.nio.ch.SocketChannelImpl: int read(java.nio.ByteBuffer)>(r1);
+        i0 = $i13;
+        if $i13 == 0 goto label22;
+
+        i4 = i0;
+
+     label15:
+        $r43 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $r44 = virtualinvoke $r43.<sun.nio.ch.SocketAdaptor: java.net.InetAddress getInetAddress()>();
+        $r45 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $i14 = virtualinvoke $r45.<sun.nio.ch.SocketAdaptor: int getPort()>();
+        $r46 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $i15 = staticinvoke <sun.nio.ch.SocketAdaptor: int access$100(sun.nio.ch.SocketAdaptor)>($r46);
+        if i0 <= 0 goto label16;
+
+        $l16 = (long) i0;
+        goto label17;
+
+     label16:
+        $l16 = 0L;
+
+     label17:
+        staticinvoke <sun.misc.IoTrace: void socketReadEnd(java.lang.Object,java.net.InetAddress,int,int,long)>(r5, $r44, $i14, $i15, $l16);
+        if r3 == null goto label18;
+
+        virtualinvoke r3.<java.nio.channels.SelectionKey: void cancel()>();
+
+     label18:
+        $r47 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $r48 = staticinvoke <sun.nio.ch.SocketAdaptor: sun.nio.ch.SocketChannelImpl access$000(sun.nio.ch.SocketAdaptor)>($r47);
+        $z4 = virtualinvoke $r48.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z4 == 0 goto label19;
+
+        $r49 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $r50 = staticinvoke <sun.nio.ch.SocketAdaptor: sun.nio.ch.SocketChannelImpl access$000(sun.nio.ch.SocketAdaptor)>($r49);
+        virtualinvoke $r50.<sun.nio.ch.SocketChannelImpl: java.nio.channels.SelectableChannel configureBlocking(boolean)>(1);
+
+     label19:
+        if r4 == null goto label20;
+
+        staticinvoke <sun.nio.ch.Util: void releaseTemporarySelector(java.nio.channels.Selector)>(r4);
+
+     label20:
+        exitmonitor r2;
+
+     label21:
+        return i4;
+
+     label22:
+        $r52 = virtualinvoke r4.<java.nio.channels.Selector: java.util.Set selectedKeys()>();
+        interfaceinvoke $r52.<java.util.Set: boolean remove(java.lang.Object)>(r3);
+        $l17 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        $l18 = $l17 - l2;
+        l12 = l12 - $l18;
+        $b19 = l12 cmp 0L;
+        if $b19 > 0 goto label23;
+
+        $r53 = new java.net.SocketTimeoutException;
+        specialinvoke $r53.<java.net.SocketTimeoutException: void <init>()>();
+        throw $r53;
+
+     label23:
+        goto label13;
+
+     label24:
+        $r54 := @caughtexception;
+        r6 = $r54;
+
+     label25:
+        $r56 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $r57 = virtualinvoke $r56.<sun.nio.ch.SocketAdaptor: java.net.InetAddress getInetAddress()>();
+        $r58 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $i20 = virtualinvoke $r58.<sun.nio.ch.SocketAdaptor: int getPort()>();
+        $r59 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $i21 = staticinvoke <sun.nio.ch.SocketAdaptor: int access$100(sun.nio.ch.SocketAdaptor)>($r59);
+        if i0 <= 0 goto label26;
+
+        $l22 = (long) i0;
+        goto label27;
+
+     label26:
+        $l22 = 0L;
+
+     label27:
+        staticinvoke <sun.misc.IoTrace: void socketReadEnd(java.lang.Object,java.net.InetAddress,int,int,long)>(r5, $r57, $i20, $i21, $l22);
+        if r3 == null goto label28;
+
+        virtualinvoke r3.<java.nio.channels.SelectionKey: void cancel()>();
+
+     label28:
+        $r60 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $r61 = staticinvoke <sun.nio.ch.SocketAdaptor: sun.nio.ch.SocketChannelImpl access$000(sun.nio.ch.SocketAdaptor)>($r60);
+        $z6 = virtualinvoke $r61.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z6 == 0 goto label29;
+
+        $r62 = r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: sun.nio.ch.SocketAdaptor this$0>;
+        $r63 = staticinvoke <sun.nio.ch.SocketAdaptor: sun.nio.ch.SocketChannelImpl access$000(sun.nio.ch.SocketAdaptor)>($r62);
+        virtualinvoke $r63.<sun.nio.ch.SocketChannelImpl: java.nio.channels.SelectableChannel configureBlocking(boolean)>(1);
+
+     label29:
+        if r4 == null goto label30;
+
+        staticinvoke <sun.nio.ch.Util: void releaseTemporarySelector(java.nio.channels.Selector)>(r4);
+
+     label30:
+        throw r6;
+
+     label31:
+        $r65 := @caughtexception;
+        r7 = $r65;
+        exitmonitor r2;
+
+     label32:
+        throw r7;
+
+        catch java.lang.Throwable from label4 to label5 with label24;
+        catch java.lang.Throwable from label12 to label15 with label24;
+        catch java.lang.Throwable from label22 to label25 with label24;
+        catch java.lang.Throwable from label0 to label2 with label31;
+        catch java.lang.Throwable from label3 to label11 with label31;
+        catch java.lang.Throwable from label12 to label21 with label31;
+        catch java.lang.Throwable from label22 to label32 with label31;
+    }
+
+    void <init>(sun.nio.ch.SocketAdaptor, sun.nio.ch.SocketAdaptor$1)
+    {
+        sun.nio.ch.SocketAdaptor$SocketInputStream r0;
+        sun.nio.ch.SocketAdaptor r1;
+        sun.nio.ch.SocketAdaptor$1 r2;
+
+        r0 := @this: sun.nio.ch.SocketAdaptor$SocketInputStream;
+        r1 := @parameter0: sun.nio.ch.SocketAdaptor;
+        r2 := @parameter1: sun.nio.ch.SocketAdaptor$1;
+        specialinvoke r0.<sun.nio.ch.SocketAdaptor$SocketInputStream: void <init>(sun.nio.ch.SocketAdaptor)>(r1);
+        return;
+    }
+}

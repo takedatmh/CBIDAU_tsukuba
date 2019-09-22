@@ -1,0 +1,485 @@
+public final class java.security.Permissions extends java.security.PermissionCollection implements java.io.Serializable
+{
+    private transient java.util.Map permsMap;
+    private transient boolean hasUnresolved;
+    java.security.PermissionCollection allPermission;
+    private static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+
+    public void <init>()
+    {
+        java.security.Permissions r0;
+        java.util.HashMap $r1;
+
+        r0 := @this: java.security.Permissions;
+        specialinvoke r0.<java.security.PermissionCollection: void <init>()>();
+        r0.<java.security.Permissions: boolean hasUnresolved> = 0;
+        $r1 = new java.util.HashMap;
+        specialinvoke $r1.<java.util.HashMap: void <init>(int)>(11);
+        r0.<java.security.Permissions: java.util.Map permsMap> = $r1;
+        r0.<java.security.Permissions: java.security.PermissionCollection allPermission> = null;
+        return;
+    }
+
+    public void add(java.security.Permission)
+    {
+        java.security.Permissions r0, r2;
+        java.security.Permission r1;
+        java.security.PermissionCollection r3;
+        java.lang.Throwable r4, $r7;
+        boolean $z0, $z1, $z2;
+        java.lang.SecurityException $r5;
+
+        r0 := @this: java.security.Permissions;
+        r1 := @parameter0: java.security.Permission;
+        $z0 = virtualinvoke r0.<java.security.Permissions: boolean isReadOnly()>();
+        if $z0 == 0 goto label0;
+
+        $r5 = new java.lang.SecurityException;
+        specialinvoke $r5.<java.lang.SecurityException: void <init>(java.lang.String)>("attempt to add a Permission to a readonly Permissions object");
+        throw $r5;
+
+     label0:
+        r2 = r0;
+        entermonitor r0;
+
+     label1:
+        r3 = specialinvoke r0.<java.security.Permissions: java.security.PermissionCollection getPermissionCollection(java.security.Permission,boolean)>(r1, 1);
+        virtualinvoke r3.<java.security.PermissionCollection: void add(java.security.Permission)>(r1);
+        exitmonitor r2;
+
+     label2:
+        goto label6;
+
+     label3:
+        $r7 := @caughtexception;
+
+     label4:
+        r4 = $r7;
+        exitmonitor r2;
+
+     label5:
+        throw r4;
+
+     label6:
+        $z1 = r1 instanceof java.security.AllPermission;
+        if $z1 == 0 goto label7;
+
+        r0.<java.security.Permissions: java.security.PermissionCollection allPermission> = r3;
+
+     label7:
+        $z2 = r1 instanceof java.security.UnresolvedPermission;
+        if $z2 == 0 goto label8;
+
+        r0.<java.security.Permissions: boolean hasUnresolved> = 1;
+
+     label8:
+        return;
+
+        catch java.lang.Throwable from label1 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    public boolean implies(java.security.Permission)
+    {
+        java.security.Permissions r0, r2;
+        java.security.Permission r1;
+        java.security.PermissionCollection r3, $r5;
+        java.lang.Throwable r4, $r7;
+        boolean $z0, $z1;
+
+        r0 := @this: java.security.Permissions;
+        r1 := @parameter0: java.security.Permission;
+        $r5 = r0.<java.security.Permissions: java.security.PermissionCollection allPermission>;
+        if $r5 == null goto label0;
+
+        return 1;
+
+     label0:
+        r2 = r0;
+        entermonitor r0;
+
+     label1:
+        r3 = specialinvoke r0.<java.security.Permissions: java.security.PermissionCollection getPermissionCollection(java.security.Permission,boolean)>(r1, 0);
+        if r3 == null goto label3;
+
+        $z0 = virtualinvoke r3.<java.security.PermissionCollection: boolean implies(java.security.Permission)>(r1);
+        exitmonitor r2;
+
+     label2:
+        return $z0;
+
+     label3:
+        $z1 = 0;
+        exitmonitor r2;
+
+     label4:
+        return $z1;
+
+     label5:
+        $r7 := @caughtexception;
+
+     label6:
+        r4 = $r7;
+        exitmonitor r2;
+
+     label7:
+        throw r4;
+
+        catch java.lang.Throwable from label1 to label2 with label5;
+        catch java.lang.Throwable from label3 to label4 with label5;
+        catch java.lang.Throwable from label6 to label7 with label5;
+    }
+
+    public java.util.Enumeration elements()
+    {
+        java.security.Permissions r0, r2;
+        java.lang.Throwable r3, $r8;
+        java.security.PermissionsEnumerator $r4;
+        java.util.Map $r5;
+        java.util.Collection $r6;
+        java.util.Iterator $r7;
+
+        r0 := @this: java.security.Permissions;
+        r2 = r0;
+        entermonitor r0;
+
+     label0:
+        $r4 = new java.security.PermissionsEnumerator;
+        $r5 = r0.<java.security.Permissions: java.util.Map permsMap>;
+        $r6 = interfaceinvoke $r5.<java.util.Map: java.util.Collection values()>();
+        $r7 = interfaceinvoke $r6.<java.util.Collection: java.util.Iterator iterator()>();
+        specialinvoke $r4.<java.security.PermissionsEnumerator: void <init>(java.util.Iterator)>($r7);
+        exitmonitor r2;
+
+     label1:
+        return $r4;
+
+     label2:
+        $r8 := @caughtexception;
+
+     label3:
+        r3 = $r8;
+        exitmonitor r2;
+
+     label4:
+        throw r3;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private java.security.PermissionCollection getPermissionCollection(java.security.Permission, boolean)
+    {
+        java.security.Permissions r0;
+        java.security.Permission r1;
+        boolean z0, $z1, $z2;
+        java.lang.Class r2;
+        java.security.PermissionCollection r3, $r6;
+        java.util.Map $r4, $r8;
+        java.lang.Object $r5;
+        java.security.PermissionsHash $r7;
+
+        r0 := @this: java.security.Permissions;
+        r1 := @parameter0: java.security.Permission;
+        z0 := @parameter1: boolean;
+        r2 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+        $r4 = r0.<java.security.Permissions: java.util.Map permsMap>;
+        $r5 = interfaceinvoke $r4.<java.util.Map: java.lang.Object get(java.lang.Object)>(r2);
+        r3 = (java.security.PermissionCollection) $r5;
+        $z1 = r0.<java.security.Permissions: boolean hasUnresolved>;
+        if $z1 != 0 goto label0;
+
+        if z0 != 0 goto label0;
+
+        return r3;
+
+     label0:
+        if r3 != null goto label4;
+
+        $z2 = r0.<java.security.Permissions: boolean hasUnresolved>;
+        if $z2 == 0 goto label1;
+
+        $r6 = specialinvoke r0.<java.security.Permissions: java.security.PermissionCollection getUnresolvedPermissions(java.security.Permission)>(r1);
+        goto label2;
+
+     label1:
+        $r6 = null;
+
+     label2:
+        r3 = $r6;
+        if r3 != null goto label3;
+
+        if z0 == 0 goto label3;
+
+        r3 = virtualinvoke r1.<java.security.Permission: java.security.PermissionCollection newPermissionCollection()>();
+        if r3 != null goto label3;
+
+        $r7 = new java.security.PermissionsHash;
+        specialinvoke $r7.<java.security.PermissionsHash: void <init>()>();
+        r3 = $r7;
+
+     label3:
+        if r3 == null goto label4;
+
+        $r8 = r0.<java.security.Permissions: java.util.Map permsMap>;
+        interfaceinvoke $r8.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(r2, r3);
+
+     label4:
+        return r3;
+    }
+
+    private java.security.PermissionCollection getUnresolvedPermissions(java.security.Permission)
+    {
+        java.security.Permissions r0;
+        java.security.Permission r1, r8;
+        java.security.UnresolvedPermissionCollection r2;
+        java.util.List r3, r6;
+        java.security.cert.Certificate[] r4;
+        java.lang.Object[] r5;
+        int i0, i1, i2, i3, $i4, i5, i6, $i7, $i8;
+        java.security.UnresolvedPermission r7;
+        java.lang.Throwable r9, $r21;
+        java.util.Map $r10;
+        java.lang.Object $r11, $r13, $r14, $r15, $r19;
+        java.lang.Class $r12;
+        boolean $z0, $z1;
+        java.security.cert.Certificate $r16;
+        java.security.PermissionCollection r17;
+        java.security.PermissionsHash $r20;
+
+        r0 := @this: java.security.Permissions;
+        r1 := @parameter0: java.security.Permission;
+        $r10 = r0.<java.security.Permissions: java.util.Map permsMap>;
+        $r11 = interfaceinvoke $r10.<java.util.Map: java.lang.Object get(java.lang.Object)>(class "java/security/UnresolvedPermission");
+        r2 = (java.security.UnresolvedPermissionCollection) $r11;
+        if r2 != null goto label0;
+
+        return null;
+
+     label0:
+        r3 = virtualinvoke r2.<java.security.UnresolvedPermissionCollection: java.util.List getUnresolvedPermissions(java.security.Permission)>(r1);
+        if r3 != null goto label1;
+
+        return null;
+
+     label1:
+        r4 = null;
+        $r12 = virtualinvoke r1.<java.lang.Object: java.lang.Class getClass()>();
+        r5 = virtualinvoke $r12.<java.lang.Class: java.lang.Object[] getSigners()>();
+        i0 = 0;
+        if r5 == null goto label7;
+
+        i1 = 0;
+
+     label2:
+        $i4 = lengthof r5;
+        if i1 >= $i4 goto label4;
+
+        $r13 = r5[i1];
+        $z0 = $r13 instanceof java.security.cert.Certificate;
+        if $z0 == 0 goto label3;
+
+        i0 = i0 + 1;
+
+     label3:
+        i1 = i1 + 1;
+        goto label2;
+
+     label4:
+        r4 = newarray (java.security.cert.Certificate)[i0];
+        i5 = 0;
+        i6 = 0;
+
+     label5:
+        $i7 = lengthof r5;
+        if i6 >= $i7 goto label7;
+
+        $r14 = r5[i6];
+        $z1 = $r14 instanceof java.security.cert.Certificate;
+        if $z1 == 0 goto label6;
+
+        $i8 = i5;
+        i5 = i5 + 1;
+        $r15 = r5[i6];
+        $r16 = (java.security.cert.Certificate) $r15;
+        r4[$i8] = $r16;
+
+     label6:
+        i6 = i6 + 1;
+        goto label5;
+
+     label7:
+        r17 = null;
+        r6 = r3;
+        entermonitor r3;
+
+     label8:
+        i2 = interfaceinvoke r3.<java.util.List: int size()>();
+        i3 = 0;
+
+     label9:
+        if i3 >= i2 goto label12;
+
+        $r19 = interfaceinvoke r3.<java.util.List: java.lang.Object get(int)>(i3);
+        r7 = (java.security.UnresolvedPermission) $r19;
+        r8 = virtualinvoke r7.<java.security.UnresolvedPermission: java.security.Permission resolve(java.security.Permission,java.security.cert.Certificate[])>(r1, r4);
+        if r8 == null goto label11;
+
+        if r17 != null goto label10;
+
+        r17 = virtualinvoke r1.<java.security.Permission: java.security.PermissionCollection newPermissionCollection()>();
+        if r17 != null goto label10;
+
+        $r20 = new java.security.PermissionsHash;
+        specialinvoke $r20.<java.security.PermissionsHash: void <init>()>();
+        r17 = $r20;
+
+     label10:
+        virtualinvoke r17.<java.security.PermissionCollection: void add(java.security.Permission)>(r8);
+
+     label11:
+        i3 = i3 + 1;
+        goto label9;
+
+     label12:
+        exitmonitor r6;
+
+     label13:
+        goto label17;
+
+     label14:
+        $r21 := @caughtexception;
+
+     label15:
+        r9 = $r21;
+        exitmonitor r6;
+
+     label16:
+        throw r9;
+
+     label17:
+        return r17;
+
+        catch java.lang.Throwable from label8 to label13 with label14;
+        catch java.lang.Throwable from label15 to label16 with label14;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream) throws java.io.IOException
+    {
+        java.security.Permissions r0, r4;
+        java.io.ObjectOutputStream r1;
+        java.util.Hashtable $r2, r3;
+        java.lang.Throwable r5, $r9;
+        java.util.Map $r6, $r8;
+        int $i0, $i1;
+        java.io.ObjectOutputStream$PutField r10;
+        java.security.PermissionCollection $r11;
+
+        r0 := @this: java.security.Permissions;
+        r1 := @parameter0: java.io.ObjectOutputStream;
+        $r2 = new java.util.Hashtable;
+        $r6 = r0.<java.security.Permissions: java.util.Map permsMap>;
+        $i0 = interfaceinvoke $r6.<java.util.Map: int size()>();
+        $i1 = $i0 * 2;
+        specialinvoke $r2.<java.util.Hashtable: void <init>(int)>($i1);
+        r3 = $r2;
+        r4 = r0;
+        entermonitor r0;
+
+     label0:
+        $r8 = r0.<java.security.Permissions: java.util.Map permsMap>;
+        virtualinvoke r3.<java.util.Hashtable: void putAll(java.util.Map)>($r8);
+        exitmonitor r4;
+
+     label1:
+        goto label5;
+
+     label2:
+        $r9 := @caughtexception;
+
+     label3:
+        r5 = $r9;
+        exitmonitor r4;
+
+     label4:
+        throw r5;
+
+     label5:
+        r10 = virtualinvoke r1.<java.io.ObjectOutputStream: java.io.ObjectOutputStream$PutField putFields()>();
+        $r11 = r0.<java.security.Permissions: java.security.PermissionCollection allPermission>;
+        virtualinvoke r10.<java.io.ObjectOutputStream$PutField: void put(java.lang.String,java.lang.Object)>("allPermission", $r11);
+        virtualinvoke r10.<java.io.ObjectOutputStream$PutField: void put(java.lang.String,java.lang.Object)>("perms", r3);
+        virtualinvoke r1.<java.io.ObjectOutputStream: void writeFields()>();
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private void readObject(java.io.ObjectInputStream) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        java.security.Permissions r0;
+        java.io.ObjectInputStream r1;
+        java.io.ObjectInputStream$GetField r2;
+        java.util.Hashtable r3;
+        java.security.UnresolvedPermissionCollection r4;
+        java.lang.Object $r5, $r7, $r11;
+        java.security.PermissionCollection $r6;
+        java.util.HashMap $r8;
+        int $i0, $i1;
+        java.util.Map $r9, $r10;
+        java.util.Enumeration $r13;
+        boolean $z0, $z1;
+
+        r0 := @this: java.security.Permissions;
+        r1 := @parameter0: java.io.ObjectInputStream;
+        r2 = virtualinvoke r1.<java.io.ObjectInputStream: java.io.ObjectInputStream$GetField readFields()>();
+        $r5 = virtualinvoke r2.<java.io.ObjectInputStream$GetField: java.lang.Object get(java.lang.String,java.lang.Object)>("allPermission", null);
+        $r6 = (java.security.PermissionCollection) $r5;
+        r0.<java.security.Permissions: java.security.PermissionCollection allPermission> = $r6;
+        $r7 = virtualinvoke r2.<java.io.ObjectInputStream$GetField: java.lang.Object get(java.lang.String,java.lang.Object)>("perms", null);
+        r3 = (java.util.Hashtable) $r7;
+        $r8 = new java.util.HashMap;
+        $i0 = virtualinvoke r3.<java.util.Hashtable: int size()>();
+        $i1 = $i0 * 2;
+        specialinvoke $r8.<java.util.HashMap: void <init>(int)>($i1);
+        r0.<java.security.Permissions: java.util.Map permsMap> = $r8;
+        $r9 = r0.<java.security.Permissions: java.util.Map permsMap>;
+        interfaceinvoke $r9.<java.util.Map: void putAll(java.util.Map)>(r3);
+        $r10 = r0.<java.security.Permissions: java.util.Map permsMap>;
+        $r11 = interfaceinvoke $r10.<java.util.Map: java.lang.Object get(java.lang.Object)>(class "java/security/UnresolvedPermission");
+        r4 = (java.security.UnresolvedPermissionCollection) $r11;
+        if r4 == null goto label0;
+
+        $r13 = virtualinvoke r4.<java.security.UnresolvedPermissionCollection: java.util.Enumeration elements()>();
+        $z0 = interfaceinvoke $r13.<java.util.Enumeration: boolean hasMoreElements()>();
+        if $z0 == 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        r0.<java.security.Permissions: boolean hasUnresolved> = $z1;
+        return;
+    }
+
+    static void <clinit>()
+    {
+        java.io.ObjectStreamField $r0, $r2;
+        java.io.ObjectStreamField[] $r1;
+
+        $r1 = newarray (java.io.ObjectStreamField)[2];
+        $r0 = new java.io.ObjectStreamField;
+        specialinvoke $r0.<java.io.ObjectStreamField: void <init>(java.lang.String,java.lang.Class)>("perms", class "java/util/Hashtable");
+        $r1[0] = $r0;
+        $r2 = new java.io.ObjectStreamField;
+        specialinvoke $r2.<java.io.ObjectStreamField: void <init>(java.lang.String,java.lang.Class)>("allPermission", class "java/security/PermissionCollection");
+        $r1[1] = $r2;
+        <java.security.Permissions: java.io.ObjectStreamField[] serialPersistentFields> = $r1;
+        return;
+    }
+}

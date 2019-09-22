@@ -1,0 +1,3078 @@
+class java.math.MutableBigInteger extends java.lang.Object
+{
+    int[] value;
+    int intLen;
+    int offset;
+    static final java.math.MutableBigInteger ONE;
+    static final boolean $assertionsDisabled;
+
+    void <init>()
+    {
+        java.math.MutableBigInteger r0;
+        int[] $r1;
+
+        r0 := @this: java.math.MutableBigInteger;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.math.MutableBigInteger: int offset> = 0;
+        $r1 = newarray (int)[1];
+        r0.<java.math.MutableBigInteger: int[] value> = $r1;
+        r0.<java.math.MutableBigInteger: int intLen> = 0;
+        return;
+    }
+
+    void <init>(int)
+    {
+        java.math.MutableBigInteger r0;
+        int i0;
+        int[] $r1, $r2;
+
+        r0 := @this: java.math.MutableBigInteger;
+        i0 := @parameter0: int;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.math.MutableBigInteger: int offset> = 0;
+        $r1 = newarray (int)[1];
+        r0.<java.math.MutableBigInteger: int[] value> = $r1;
+        r0.<java.math.MutableBigInteger: int intLen> = 1;
+        $r2 = r0.<java.math.MutableBigInteger: int[] value>;
+        $r2[0] = i0;
+        return;
+    }
+
+    void <init>(int[])
+    {
+        java.math.MutableBigInteger r0;
+        int[] r1;
+        int $i0;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: int[];
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.math.MutableBigInteger: int offset> = 0;
+        r0.<java.math.MutableBigInteger: int[] value> = r1;
+        $i0 = lengthof r1;
+        r0.<java.math.MutableBigInteger: int intLen> = $i0;
+        return;
+    }
+
+    void <init>(java.math.BigInteger)
+    {
+        java.math.MutableBigInteger r0;
+        java.math.BigInteger r1;
+        int[] $r2, $r3, $r4;
+        int $i0, $i1;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: java.math.BigInteger;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.math.MutableBigInteger: int offset> = 0;
+        $r2 = r1.<java.math.BigInteger: int[] mag>;
+        $i0 = lengthof $r2;
+        r0.<java.math.MutableBigInteger: int intLen> = $i0;
+        $r3 = r1.<java.math.BigInteger: int[] mag>;
+        $i1 = r0.<java.math.MutableBigInteger: int intLen>;
+        $r4 = staticinvoke <java.util.Arrays: int[] copyOf(int[],int)>($r3, $i1);
+        r0.<java.math.MutableBigInteger: int[] value> = $r4;
+        return;
+    }
+
+    void <init>(java.math.MutableBigInteger)
+    {
+        java.math.MutableBigInteger r0, r1;
+        int $i0, $i1, $i2, $i3, $i4;
+        int[] $r2, $r3;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: java.math.MutableBigInteger;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.math.MutableBigInteger: int offset> = 0;
+        $i0 = r1.<java.math.MutableBigInteger: int intLen>;
+        r0.<java.math.MutableBigInteger: int intLen> = $i0;
+        $r2 = r1.<java.math.MutableBigInteger: int[] value>;
+        $i1 = r1.<java.math.MutableBigInteger: int offset>;
+        $i2 = r1.<java.math.MutableBigInteger: int offset>;
+        $i3 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i4 = $i2 + $i3;
+        $r3 = staticinvoke <java.util.Arrays: int[] copyOfRange(int[],int,int)>($r2, $i1, $i4);
+        r0.<java.math.MutableBigInteger: int[] value> = $r3;
+        return;
+    }
+
+    private int[] getMagnitudeArray()
+    {
+        java.math.MutableBigInteger r0;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6;
+        int[] $r1, $r2, $r3, $r4;
+
+        r0 := @this: java.math.MutableBigInteger;
+        $i0 = r0.<java.math.MutableBigInteger: int offset>;
+        if $i0 > 0 goto label0;
+
+        $r1 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i1 = lengthof $r1;
+        $i2 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i1 == $i2 goto label1;
+
+     label0:
+        $r2 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i3 = r0.<java.math.MutableBigInteger: int offset>;
+        $i4 = r0.<java.math.MutableBigInteger: int offset>;
+        $i5 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i6 = $i4 + $i5;
+        $r3 = staticinvoke <java.util.Arrays: int[] copyOfRange(int[],int,int)>($r2, $i3, $i6);
+        return $r3;
+
+     label1:
+        $r4 = r0.<java.math.MutableBigInteger: int[] value>;
+        return $r4;
+    }
+
+    private long toLong()
+    {
+        java.math.MutableBigInteger r0;
+        boolean $z0;
+        long l0, $l5, $l7, $l11, $l12, $l13;
+        int $i1, $i2, $i3, $i4, $i6, $i8, $i9, $i10;
+        java.lang.AssertionError $r1;
+        int[] $r2, $r3;
+
+        r0 := @this: java.math.MutableBigInteger;
+        $z0 = <java.math.MutableBigInteger: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label0;
+
+        $i1 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i1 <= 2 goto label0;
+
+        $r1 = new java.lang.AssertionError;
+        specialinvoke $r1.<java.lang.AssertionError: void <init>(java.lang.Object)>("this MutableBigInteger exceeds the range of long");
+        throw $r1;
+
+     label0:
+        $i2 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i2 != 0 goto label1;
+
+        return 0L;
+
+     label1:
+        $r2 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i3 = r0.<java.math.MutableBigInteger: int offset>;
+        $i4 = $r2[$i3];
+        $l5 = (long) $i4;
+        l0 = $l5 & 4294967295L;
+        $i6 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i6 != 2 goto label2;
+
+        $l7 = l0 << 32;
+        $r3 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i8 = r0.<java.math.MutableBigInteger: int offset>;
+        $i9 = $i8 + 1;
+        $i10 = $r3[$i9];
+        $l11 = (long) $i10;
+        $l12 = $l11 & 4294967295L;
+        $l13 = $l7 | $l12;
+        goto label3;
+
+     label2:
+        $l13 = l0;
+
+     label3:
+        return $l13;
+    }
+
+    java.math.BigInteger toBigInteger(int)
+    {
+        java.math.MutableBigInteger r0;
+        int i0, $i1;
+        java.math.BigInteger $r1, $r2;
+        int[] $r3;
+
+        r0 := @this: java.math.MutableBigInteger;
+        i0 := @parameter0: int;
+        $i1 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i1 == 0 goto label0;
+
+        if i0 != 0 goto label1;
+
+     label0:
+        $r1 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        return $r1;
+
+     label1:
+        $r2 = new java.math.BigInteger;
+        $r3 = specialinvoke r0.<java.math.MutableBigInteger: int[] getMagnitudeArray()>();
+        specialinvoke $r2.<java.math.BigInteger: void <init>(int[],int)>($r3, i0);
+        return $r2;
+    }
+
+    java.math.BigDecimal toBigDecimal(int, int)
+    {
+        java.math.MutableBigInteger r0;
+        int i0, i1, i2, i3, $i5, $i6;
+        int[] r1;
+        long l4, $l7, $l8, $l9, $l10, $l11, $l12, $l13, $l14;
+        java.math.BigDecimal $r2, $r3, $r5;
+        java.math.BigInteger $r4;
+        null_type $n0;
+
+        r0 := @this: java.math.MutableBigInteger;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $i5 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i5 == 0 goto label0;
+
+        if i0 != 0 goto label1;
+
+     label0:
+        $r2 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal valueOf(long,int)>(0L, i1);
+        return $r2;
+
+     label1:
+        r1 = specialinvoke r0.<java.math.MutableBigInteger: int[] getMagnitudeArray()>();
+        i2 = lengthof r1;
+        i3 = r1[0];
+        if i2 > 2 goto label2;
+
+        if i3 >= 0 goto label3;
+
+        if i2 != 2 goto label3;
+
+     label2:
+        $r3 = new java.math.BigDecimal;
+        $r4 = new java.math.BigInteger;
+        specialinvoke $r4.<java.math.BigInteger: void <init>(int[],int)>(r1, i0);
+        specialinvoke $r3.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r4, -9223372036854775808L, i1, 0);
+        return $r3;
+
+     label3:
+        if i2 != 2 goto label4;
+
+        $i6 = r1[1];
+        $l7 = (long) $i6;
+        $l8 = $l7 & 4294967295L;
+        $l9 = (long) i3;
+        $l10 = $l9 & 4294967295L;
+        $l11 = $l10 << 32;
+        $l12 = $l8 | $l11;
+        goto label5;
+
+     label4:
+        $l13 = (long) i3;
+        $l12 = $l13 & 4294967295L;
+
+     label5:
+        l4 = $l12;
+        $r5 = new java.math.BigDecimal;
+        $n0 = null;
+        if i0 != -1 goto label6;
+
+        $l14 = neg l4;
+        goto label7;
+
+     label6:
+        $l14 = l4;
+
+     label7:
+        specialinvoke $r5.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($n0, $l14, i1, 0);
+        return $r5;
+    }
+
+    void clear()
+    {
+        java.math.MutableBigInteger r0;
+        byte $b0;
+        int i1, i2;
+        int[] $r1, $r2;
+
+        r0 := @this: java.math.MutableBigInteger;
+        $b0 = 0;
+        r0.<java.math.MutableBigInteger: int intLen> = $b0;
+        r0.<java.math.MutableBigInteger: int offset> = $b0;
+        i1 = 0;
+        $r1 = r0.<java.math.MutableBigInteger: int[] value>;
+        i2 = lengthof $r1;
+
+     label0:
+        if i1 >= i2 goto label1;
+
+        $r2 = r0.<java.math.MutableBigInteger: int[] value>;
+        $r2[i1] = 0;
+        i1 = i1 + 1;
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    void reset()
+    {
+        java.math.MutableBigInteger r0;
+        byte $b0;
+
+        r0 := @this: java.math.MutableBigInteger;
+        $b0 = 0;
+        r0.<java.math.MutableBigInteger: int intLen> = $b0;
+        r0.<java.math.MutableBigInteger: int offset> = $b0;
+        return;
+    }
+
+    final int compare(java.math.MutableBigInteger)
+    {
+        java.math.MutableBigInteger r0, r1;
+        int i0, i1, i2, i3, i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11;
+        int[] r2, $r3;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: java.math.MutableBigInteger;
+        i0 = r1.<java.math.MutableBigInteger: int intLen>;
+        $i5 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i5 >= i0 goto label0;
+
+        return -1;
+
+     label0:
+        $i6 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i6 <= i0 goto label1;
+
+        return 1;
+
+     label1:
+        r2 = r1.<java.math.MutableBigInteger: int[] value>;
+        i1 = r0.<java.math.MutableBigInteger: int offset>;
+        i2 = r1.<java.math.MutableBigInteger: int offset>;
+
+     label2:
+        $i7 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i8 = r0.<java.math.MutableBigInteger: int offset>;
+        $i9 = $i7 + $i8;
+        if i1 >= $i9 goto label5;
+
+        $r3 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i10 = $r3[i1];
+        i3 = $i10 + -2147483648;
+        $i11 = r2[i2];
+        i4 = $i11 + -2147483648;
+        if i3 >= i4 goto label3;
+
+        return -1;
+
+     label3:
+        if i3 <= i4 goto label4;
+
+        return 1;
+
+     label4:
+        i1 = i1 + 1;
+        i2 = i2 + 1;
+        goto label2;
+
+     label5:
+        return 0;
+    }
+
+    final int compareHalf(java.math.MutableBigInteger)
+    {
+        java.math.MutableBigInteger r0, r1;
+        int i0, i1, i2, i3, i4, i5, i6, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i18, $i19, $i24;
+        int[] r2, r3;
+        long l7, l8, $l17, $l20;
+        byte $b9, $b21, $b22, $b23, $b25;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: java.math.MutableBigInteger;
+        i0 = r1.<java.math.MutableBigInteger: int intLen>;
+        i1 = r0.<java.math.MutableBigInteger: int intLen>;
+        if i1 > 0 goto label2;
+
+        if i0 > 0 goto label0;
+
+        $b9 = 0;
+        goto label1;
+
+     label0:
+        $b9 = -1;
+
+     label1:
+        return $b9;
+
+     label2:
+        if i1 <= i0 goto label3;
+
+        return 1;
+
+     label3:
+        $i10 = i0 - 1;
+        if i1 >= $i10 goto label4;
+
+        return -1;
+
+     label4:
+        r2 = r1.<java.math.MutableBigInteger: int[] value>;
+        i2 = 0;
+        i3 = 0;
+        if i1 == i0 goto label6;
+
+        $i11 = r2[i2];
+        if $i11 != 1 goto label5;
+
+        i2 = i2 + 1;
+        i3 = -2147483648;
+        goto label6;
+
+     label5:
+        return -1;
+
+     label6:
+        r3 = r0.<java.math.MutableBigInteger: int[] value>;
+        i4 = r0.<java.math.MutableBigInteger: int offset>;
+        i5 = i2;
+
+     label7:
+        $i12 = r0.<java.math.MutableBigInteger: int offset>;
+        $i13 = i1 + $i12;
+        if i4 >= $i13 goto label11;
+
+        $i14 = i5;
+        i5 = i5 + 1;
+        i6 = r2[$i14];
+        $i15 = i6 >>> 1;
+        $i16 = $i15 + i3;
+        $l17 = (long) $i16;
+        l7 = $l17 & 4294967295L;
+        $i18 = i4;
+        i4 = i4 + 1;
+        $i19 = r3[$i18];
+        $l20 = (long) $i19;
+        l8 = $l20 & 4294967295L;
+        $b21 = l8 cmp l7;
+        if $b21 == 0 goto label10;
+
+        $b22 = l8 cmp l7;
+        if $b22 >= 0 goto label8;
+
+        $b23 = -1;
+        goto label9;
+
+     label8:
+        $b23 = 1;
+
+     label9:
+        return $b23;
+
+     label10:
+        $i24 = i6 & 1;
+        i3 = $i24 << 31;
+        goto label7;
+
+     label11:
+        if i3 != 0 goto label12;
+
+        $b25 = 0;
+        goto label13;
+
+     label12:
+        $b25 = -1;
+
+     label13:
+        return $b25;
+    }
+
+    private final int getLowestSetBit()
+    {
+        java.math.MutableBigInteger r0;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14;
+        int[] $r1, $r2;
+
+        r0 := @this: java.math.MutableBigInteger;
+        $i2 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i2 != 0 goto label0;
+
+        return -1;
+
+     label0:
+        $i3 = r0.<java.math.MutableBigInteger: int intLen>;
+        i0 = $i3 - 1;
+
+     label1:
+        if i0 <= 0 goto label2;
+
+        $r1 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i4 = r0.<java.math.MutableBigInteger: int offset>;
+        $i5 = i0 + $i4;
+        $i6 = $r1[$i5];
+        if $i6 != 0 goto label2;
+
+        i0 = i0 + -1;
+        goto label1;
+
+     label2:
+        $r2 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i7 = r0.<java.math.MutableBigInteger: int offset>;
+        $i8 = i0 + $i7;
+        i1 = $r2[$i8];
+        if i1 != 0 goto label3;
+
+        return -1;
+
+     label3:
+        $i9 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i10 = $i9 - 1;
+        $i11 = $i10 - i0;
+        $i12 = $i11 << 5;
+        $i13 = staticinvoke <java.lang.Integer: int numberOfTrailingZeros(int)>(i1);
+        $i14 = $i12 + $i13;
+        return $i14;
+    }
+
+    private final int getInt(int)
+    {
+        java.math.MutableBigInteger r0;
+        int i0, $i1, $i2, $i3;
+        int[] $r1;
+
+        r0 := @this: java.math.MutableBigInteger;
+        i0 := @parameter0: int;
+        $r1 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i1 = r0.<java.math.MutableBigInteger: int offset>;
+        $i2 = $i1 + i0;
+        $i3 = $r1[$i2];
+        return $i3;
+    }
+
+    private final long getLong(int)
+    {
+        java.math.MutableBigInteger r0;
+        int i0, $i1, $i2, $i3;
+        int[] $r1;
+        long $l4, $l5;
+
+        r0 := @this: java.math.MutableBigInteger;
+        i0 := @parameter0: int;
+        $r1 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i1 = r0.<java.math.MutableBigInteger: int offset>;
+        $i2 = $i1 + i0;
+        $i3 = $r1[$i2];
+        $l4 = (long) $i3;
+        $l5 = $l4 & 4294967295L;
+        return $l5;
+    }
+
+    final void normalize()
+    {
+        java.math.MutableBigInteger r0;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12;
+        int[] $r1, $r2;
+
+        r0 := @this: java.math.MutableBigInteger;
+        $i3 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i3 != 0 goto label0;
+
+        r0.<java.math.MutableBigInteger: int offset> = 0;
+        return;
+
+     label0:
+        i0 = r0.<java.math.MutableBigInteger: int offset>;
+        $r1 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i4 = $r1[i0];
+        if $i4 == 0 goto label1;
+
+        return;
+
+     label1:
+        $i5 = r0.<java.math.MutableBigInteger: int intLen>;
+        i1 = i0 + $i5;
+
+     label2:
+        i0 = i0 + 1;
+        if i0 >= i1 goto label3;
+
+        $r2 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i6 = $r2[i0];
+        if $i6 == 0 goto label2;
+
+     label3:
+        $i7 = r0.<java.math.MutableBigInteger: int offset>;
+        i2 = i0 - $i7;
+        $i8 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i9 = $i8 - i2;
+        r0.<java.math.MutableBigInteger: int intLen> = $i9;
+        $i10 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i10 != 0 goto label4;
+
+        $i11 = 0;
+        goto label5;
+
+     label4:
+        $i12 = r0.<java.math.MutableBigInteger: int offset>;
+        $i11 = $i12 + i2;
+
+     label5:
+        r0.<java.math.MutableBigInteger: int offset> = $i11;
+        return;
+    }
+
+    private final void ensureCapacity(int)
+    {
+        java.math.MutableBigInteger r0;
+        int i0, $i1;
+        int[] $r1, $r2;
+
+        r0 := @this: java.math.MutableBigInteger;
+        i0 := @parameter0: int;
+        $r1 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i1 = lengthof $r1;
+        if $i1 >= i0 goto label0;
+
+        $r2 = newarray (int)[i0];
+        r0.<java.math.MutableBigInteger: int[] value> = $r2;
+        r0.<java.math.MutableBigInteger: int offset> = 0;
+        r0.<java.math.MutableBigInteger: int intLen> = i0;
+
+     label0:
+        return;
+    }
+
+    int[] toIntArray()
+    {
+        java.math.MutableBigInteger r0;
+        int[] r1, $r2;
+        int i0, $i1, $i2, $i3, $i4, $i5;
+
+        r0 := @this: java.math.MutableBigInteger;
+        $i1 = r0.<java.math.MutableBigInteger: int intLen>;
+        r1 = newarray (int)[$i1];
+        i0 = 0;
+
+     label0:
+        $i2 = r0.<java.math.MutableBigInteger: int intLen>;
+        if i0 >= $i2 goto label1;
+
+        $r2 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i3 = r0.<java.math.MutableBigInteger: int offset>;
+        $i4 = $i3 + i0;
+        $i5 = $r2[$i4];
+        r1[i0] = $i5;
+        i0 = i0 + 1;
+        goto label0;
+
+     label1:
+        return r1;
+    }
+
+    void setInt(int, int)
+    {
+        java.math.MutableBigInteger r0;
+        int i0, i1, $i2, $i3;
+        int[] $r1;
+
+        r0 := @this: java.math.MutableBigInteger;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $r1 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i2 = r0.<java.math.MutableBigInteger: int offset>;
+        $i3 = $i2 + i0;
+        $r1[$i3] = i1;
+        return;
+    }
+
+    void setValue(int[], int)
+    {
+        java.math.MutableBigInteger r0;
+        int[] r1;
+        int i0;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: int[];
+        i0 := @parameter1: int;
+        r0.<java.math.MutableBigInteger: int[] value> = r1;
+        r0.<java.math.MutableBigInteger: int intLen> = i0;
+        r0.<java.math.MutableBigInteger: int offset> = 0;
+        return;
+    }
+
+    void copyValue(java.math.MutableBigInteger)
+    {
+        java.math.MutableBigInteger r0, r1;
+        int i0, $i1, $i2;
+        int[] $r2, $r3, $r4, $r5;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: java.math.MutableBigInteger;
+        i0 = r1.<java.math.MutableBigInteger: int intLen>;
+        $r2 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i1 = lengthof $r2;
+        if $i1 >= i0 goto label0;
+
+        $r3 = newarray (int)[i0];
+        r0.<java.math.MutableBigInteger: int[] value> = $r3;
+
+     label0:
+        $r4 = r1.<java.math.MutableBigInteger: int[] value>;
+        $i2 = r1.<java.math.MutableBigInteger: int offset>;
+        $r5 = r0.<java.math.MutableBigInteger: int[] value>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r4, $i2, $r5, 0, i0);
+        r0.<java.math.MutableBigInteger: int intLen> = i0;
+        r0.<java.math.MutableBigInteger: int offset> = 0;
+        return;
+    }
+
+    void copyValue(int[])
+    {
+        java.math.MutableBigInteger r0;
+        int[] r1, $r2, $r3, $r4;
+        int i0, $i1;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: int[];
+        i0 = lengthof r1;
+        $r2 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i1 = lengthof $r2;
+        if $i1 >= i0 goto label0;
+
+        $r3 = newarray (int)[i0];
+        r0.<java.math.MutableBigInteger: int[] value> = $r3;
+
+     label0:
+        $r4 = r0.<java.math.MutableBigInteger: int[] value>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r1, 0, $r4, 0, i0);
+        r0.<java.math.MutableBigInteger: int intLen> = i0;
+        r0.<java.math.MutableBigInteger: int offset> = 0;
+        return;
+    }
+
+    boolean isOne()
+    {
+        java.math.MutableBigInteger r0;
+        int $i0, $i1, $i2;
+        int[] $r1;
+        boolean $z0;
+
+        r0 := @this: java.math.MutableBigInteger;
+        $i0 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i0 != 1 goto label0;
+
+        $r1 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i1 = r0.<java.math.MutableBigInteger: int offset>;
+        $i2 = $r1[$i1];
+        if $i2 != 1 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    boolean isZero()
+    {
+        java.math.MutableBigInteger r0;
+        int $i0;
+        boolean $z0;
+
+        r0 := @this: java.math.MutableBigInteger;
+        $i0 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i0 != 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    boolean isEven()
+    {
+        java.math.MutableBigInteger r0;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6;
+        int[] $r1;
+        boolean $z0;
+
+        r0 := @this: java.math.MutableBigInteger;
+        $i0 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i0 == 0 goto label0;
+
+        $r1 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i1 = r0.<java.math.MutableBigInteger: int offset>;
+        $i2 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i3 = $i1 + $i2;
+        $i4 = $i3 - 1;
+        $i5 = $r1[$i4];
+        $i6 = $i5 & 1;
+        if $i6 != 0 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    boolean isOdd()
+    {
+        java.math.MutableBigInteger r0;
+        boolean $z0, $z1;
+        int[] $r1;
+        int $i0, $i1, $i2, $i3, $i4, $i5;
+
+        r0 := @this: java.math.MutableBigInteger;
+        $z0 = virtualinvoke r0.<java.math.MutableBigInteger: boolean isZero()>();
+        if $z0 == 0 goto label0;
+
+        $z1 = 0;
+        goto label2;
+
+     label0:
+        $r1 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i0 = r0.<java.math.MutableBigInteger: int offset>;
+        $i1 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i2 = $i0 + $i1;
+        $i3 = $i2 - 1;
+        $i4 = $r1[$i3];
+        $i5 = $i4 & 1;
+        if $i5 != 1 goto label1;
+
+        $z1 = 1;
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        return $z1;
+    }
+
+    boolean isNormal()
+    {
+        java.math.MutableBigInteger r0;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6;
+        int[] $r1, $r2;
+        boolean $z0;
+
+        r0 := @this: java.math.MutableBigInteger;
+        $i0 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i1 = r0.<java.math.MutableBigInteger: int offset>;
+        $i2 = $i0 + $i1;
+        $r1 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i3 = lengthof $r1;
+        if $i2 <= $i3 goto label0;
+
+        return 0;
+
+     label0:
+        $i4 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i4 != 0 goto label1;
+
+        return 1;
+
+     label1:
+        $r2 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i5 = r0.<java.math.MutableBigInteger: int offset>;
+        $i6 = $r2[$i5];
+        if $i6 == 0 goto label2;
+
+        $z0 = 1;
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        return $z0;
+    }
+
+    public java.lang.String toString()
+    {
+        java.math.MutableBigInteger r0;
+        java.math.BigInteger r1;
+        java.lang.String $r2;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 = virtualinvoke r0.<java.math.MutableBigInteger: java.math.BigInteger toBigInteger(int)>(1);
+        $r2 = virtualinvoke r1.<java.math.BigInteger: java.lang.String toString()>();
+        return $r2;
+    }
+
+    void rightShift(int)
+    {
+        java.math.MutableBigInteger r0;
+        int i0, i1, i2, i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11;
+        int[] $r2;
+
+        r0 := @this: java.math.MutableBigInteger;
+        i0 := @parameter0: int;
+        $i4 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i4 != 0 goto label0;
+
+        return;
+
+     label0:
+        i1 = i0 >>> 5;
+        i2 = i0 & 31;
+        $i5 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i6 = $i5 - i1;
+        r0.<java.math.MutableBigInteger: int intLen> = $i6;
+        if i2 != 0 goto label1;
+
+        return;
+
+     label1:
+        $r2 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i7 = r0.<java.math.MutableBigInteger: int offset>;
+        $i8 = $r2[$i7];
+        i3 = staticinvoke <java.math.BigInteger: int bitLengthForInt(int)>($i8);
+        if i2 < i3 goto label2;
+
+        $i9 = 32 - i2;
+        specialinvoke r0.<java.math.MutableBigInteger: void primitiveLeftShift(int)>($i9);
+        $i10 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i11 = $i10 - 1;
+        r0.<java.math.MutableBigInteger: int intLen> = $i11;
+        goto label3;
+
+     label2:
+        specialinvoke r0.<java.math.MutableBigInteger: void primitiveRightShift(int)>(i2);
+
+     label3:
+        return;
+    }
+
+    void leftShift(int)
+    {
+        java.math.MutableBigInteger r0;
+        int i0, i1, i2, i3, i4, i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, i21, $i22, $i23, $i24, $i25, $i26, $i27, i28, $i29, $i30, $i31, $i32, i33, $i34, $i35;
+        int[] r1, $r2, $r3, $r4, $r5, $r6, $r7, $r8, $r9;
+
+        r0 := @this: java.math.MutableBigInteger;
+        i0 := @parameter0: int;
+        $i6 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i6 != 0 goto label0;
+
+        return;
+
+     label0:
+        i1 = i0 >>> 5;
+        i2 = i0 & 31;
+        $r2 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i7 = r0.<java.math.MutableBigInteger: int offset>;
+        $i8 = $r2[$i7];
+        i3 = staticinvoke <java.math.BigInteger: int bitLengthForInt(int)>($i8);
+        $i9 = 32 - i3;
+        if i0 > $i9 goto label1;
+
+        specialinvoke r0.<java.math.MutableBigInteger: void primitiveLeftShift(int)>(i2);
+        return;
+
+     label1:
+        $i10 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i11 = $i10 + i1;
+        i4 = $i11 + 1;
+        $i12 = 32 - i3;
+        if i2 > $i12 goto label2;
+
+        i4 = i4 + -1;
+
+     label2:
+        $r3 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i13 = lengthof $r3;
+        if $i13 >= i4 goto label5;
+
+        r1 = newarray (int)[i4];
+        i5 = 0;
+
+     label3:
+        $i14 = r0.<java.math.MutableBigInteger: int intLen>;
+        if i5 >= $i14 goto label4;
+
+        $r4 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i15 = r0.<java.math.MutableBigInteger: int offset>;
+        $i16 = $i15 + i5;
+        $i17 = $r4[$i16];
+        r1[i5] = $i17;
+        i5 = i5 + 1;
+        goto label3;
+
+     label4:
+        virtualinvoke r0.<java.math.MutableBigInteger: void setValue(int[],int)>(r1, i4);
+        goto label13;
+
+     label5:
+        $r5 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i18 = lengthof $r5;
+        $i19 = r0.<java.math.MutableBigInteger: int offset>;
+        $i20 = $i18 - $i19;
+        if $i20 < i4 goto label8;
+
+        i21 = 0;
+
+     label6:
+        $i22 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i23 = i4 - $i22;
+        if i21 >= $i23 goto label7;
+
+        $r6 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i24 = r0.<java.math.MutableBigInteger: int offset>;
+        $i25 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i26 = $i24 + $i25;
+        $i27 = $i26 + i21;
+        $r6[$i27] = 0;
+        i21 = i21 + 1;
+        goto label6;
+
+     label7:
+        goto label13;
+
+     label8:
+        i28 = 0;
+
+     label9:
+        $i29 = r0.<java.math.MutableBigInteger: int intLen>;
+        if i28 >= $i29 goto label10;
+
+        $r7 = r0.<java.math.MutableBigInteger: int[] value>;
+        $r8 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i30 = r0.<java.math.MutableBigInteger: int offset>;
+        $i31 = $i30 + i28;
+        $i32 = $r8[$i31];
+        $r7[i28] = $i32;
+        i28 = i28 + 1;
+        goto label9;
+
+     label10:
+        i33 = r0.<java.math.MutableBigInteger: int intLen>;
+
+     label11:
+        if i33 >= i4 goto label12;
+
+        $r9 = r0.<java.math.MutableBigInteger: int[] value>;
+        $r9[i33] = 0;
+        i33 = i33 + 1;
+        goto label11;
+
+     label12:
+        r0.<java.math.MutableBigInteger: int offset> = 0;
+
+     label13:
+        r0.<java.math.MutableBigInteger: int intLen> = i4;
+        if i2 != 0 goto label14;
+
+        return;
+
+     label14:
+        $i34 = 32 - i3;
+        if i2 > $i34 goto label15;
+
+        specialinvoke r0.<java.math.MutableBigInteger: void primitiveLeftShift(int)>(i2);
+        goto label16;
+
+     label15:
+        $i35 = 32 - i2;
+        specialinvoke r0.<java.math.MutableBigInteger: void primitiveRightShift(int)>($i35);
+
+     label16:
+        return;
+    }
+
+    private int divadd(int[], int[], int)
+    {
+        java.math.MutableBigInteger r0;
+        int[] r1, r2;
+        int i0, i2, $i4, $i5, $i8, $i9, $i13, $i14, $i15;
+        long l1, l3, $l6, $l7, $l10, $l11, $l12;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: int[];
+        r2 := @parameter1: int[];
+        i0 := @parameter2: int;
+        l1 = 0L;
+        $i4 = lengthof r1;
+        i2 = $i4 - 1;
+
+     label0:
+        if i2 < 0 goto label1;
+
+        $i5 = r1[i2];
+        $l6 = (long) $i5;
+        $l7 = $l6 & 4294967295L;
+        $i8 = i2 + i0;
+        $i9 = r2[$i8];
+        $l10 = (long) $i9;
+        $l11 = $l10 & 4294967295L;
+        $l12 = $l7 + $l11;
+        l3 = $l12 + l1;
+        $i13 = i2 + i0;
+        $i14 = (int) l3;
+        r2[$i13] = $i14;
+        l1 = l3 >>> 32;
+        i2 = i2 + -1;
+        goto label0;
+
+     label1:
+        $i15 = (int) l1;
+        return $i15;
+    }
+
+    private int mulsub(int[], int[], int, int, int)
+    {
+        java.math.MutableBigInteger r0;
+        int[] r1, r2;
+        int i0, i1, i2, i5, i9, $i10, $i14, $i16, $i17, $i20, $i21, $i26;
+        long l3, l4, l6, l7, $l8, $l11, $l12, $l13, $l15, $l18, $l19, $l22, $l23, $l25;
+        byte $b24;
+        boolean $z0;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: int[];
+        r2 := @parameter1: int[];
+        i0 := @parameter2: int;
+        i1 := @parameter3: int;
+        i2 := @parameter4: int;
+        $l8 = (long) i0;
+        l3 = $l8 & 4294967295L;
+        l4 = 0L;
+        i9 = i2 + i1;
+        i5 = i1 - 1;
+
+     label0:
+        if i5 < 0 goto label3;
+
+        $i10 = r2[i5];
+        $l11 = (long) $i10;
+        $l12 = $l11 & 4294967295L;
+        $l13 = $l12 * l3;
+        l6 = $l13 + l4;
+        $i14 = r1[i9];
+        $l15 = (long) $i14;
+        l7 = $l15 - l6;
+        $i16 = i9;
+        i9 = i9 + -1;
+        $i17 = (int) l7;
+        r1[$i16] = $i17;
+        $l18 = l6 >>> 32;
+        $l19 = l7 & 4294967295L;
+        $i20 = (int) l6;
+        $i21 = $i20 ^ -1;
+        $l22 = (long) $i21;
+        $l23 = $l22 & 4294967295L;
+        $b24 = $l19 cmp $l23;
+        if $b24 <= 0 goto label1;
+
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        $l25 = (long) $z0;
+        l4 = $l18 + $l25;
+        i5 = i5 + -1;
+        goto label0;
+
+     label3:
+        $i26 = (int) l4;
+        return $i26;
+    }
+
+    private final void primitiveRightShift(int)
+    {
+        java.math.MutableBigInteger r0;
+        int i0, i1, i2, i3, i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15;
+        int[] r1;
+
+        r0 := @this: java.math.MutableBigInteger;
+        i0 := @parameter0: int;
+        r1 = r0.<java.math.MutableBigInteger: int[] value>;
+        i1 = 32 - i0;
+        $i5 = r0.<java.math.MutableBigInteger: int offset>;
+        $i6 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i7 = $i5 + $i6;
+        i2 = $i7 - 1;
+        i3 = r1[i2];
+
+     label0:
+        $i8 = r0.<java.math.MutableBigInteger: int offset>;
+        if i2 <= $i8 goto label1;
+
+        i4 = i3;
+        $i9 = i2 - 1;
+        i3 = r1[$i9];
+        $i10 = i3 << i1;
+        $i11 = i4 >>> i0;
+        $i12 = $i10 | $i11;
+        r1[i2] = $i12;
+        i2 = i2 + -1;
+        goto label0;
+
+     label1:
+        $i13 = r0.<java.math.MutableBigInteger: int offset>;
+        $i14 = r1[$i13];
+        $i15 = $i14 >>> i0;
+        r1[$i13] = $i15;
+        return;
+    }
+
+    private final void primitiveLeftShift(int)
+    {
+        java.math.MutableBigInteger r0;
+        int i0, i1, i2, i3, i4, i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17;
+        int[] r1;
+
+        r0 := @this: java.math.MutableBigInteger;
+        i0 := @parameter0: int;
+        r1 = r0.<java.math.MutableBigInteger: int[] value>;
+        i1 = 32 - i0;
+        i2 = r0.<java.math.MutableBigInteger: int offset>;
+        i3 = r1[i2];
+        $i6 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i7 = i2 + $i6;
+        i4 = $i7 - 1;
+
+     label0:
+        if i2 >= i4 goto label1;
+
+        i5 = i3;
+        $i8 = i2 + 1;
+        i3 = r1[$i8];
+        $i9 = i5 << i0;
+        $i10 = i3 >>> i1;
+        $i11 = $i9 | $i10;
+        r1[i2] = $i11;
+        i2 = i2 + 1;
+        goto label0;
+
+     label1:
+        $i12 = r0.<java.math.MutableBigInteger: int offset>;
+        $i13 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i14 = $i12 + $i13;
+        $i15 = $i14 - 1;
+        $i16 = r1[$i15];
+        $i17 = $i16 << i0;
+        r1[$i15] = $i17;
+        return;
+    }
+
+    void add(java.math.MutableBigInteger)
+    {
+        java.math.MutableBigInteger r0, r1;
+        int i0, i1, i2, i3, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i16, $i17, $i18, $i22, $i23, $i25, $i26, $i27, $i28, $i29, $i33, $i34, $i35, $i36, $i37, $i41, $i42, $i44, $i45, i46, $i47, $i48;
+        int[] r2, r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10;
+        long l4, l5, $l14, $l15, $l19, $l20, $l21, $l30, $l31, l32, $l38, $l39, l40;
+        byte $b24, $b43;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: java.math.MutableBigInteger;
+        i0 = r0.<java.math.MutableBigInteger: int intLen>;
+        i1 = r1.<java.math.MutableBigInteger: int intLen>;
+        $i6 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i7 = r1.<java.math.MutableBigInteger: int intLen>;
+        if $i6 <= $i7 goto label0;
+
+        $i8 = r0.<java.math.MutableBigInteger: int intLen>;
+        goto label1;
+
+     label0:
+        $i8 = r1.<java.math.MutableBigInteger: int intLen>;
+
+     label1:
+        i2 = $i8;
+        $r4 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i9 = lengthof $r4;
+        if $i9 >= i2 goto label2;
+
+        $r5 = newarray (int)[i2];
+        goto label3;
+
+     label2:
+        $r5 = r0.<java.math.MutableBigInteger: int[] value>;
+
+     label3:
+        r2 = $r5;
+        $i10 = lengthof r2;
+        i3 = $i10 - 1;
+        l4 = 0L;
+
+     label4:
+        if i0 <= 0 goto label5;
+
+        if i1 <= 0 goto label5;
+
+        i0 = i0 + -1;
+        i1 = i1 + -1;
+        $r6 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i11 = r0.<java.math.MutableBigInteger: int offset>;
+        $i12 = i0 + $i11;
+        $i13 = $r6[$i12];
+        $l14 = (long) $i13;
+        $l15 = $l14 & 4294967295L;
+        $r7 = r1.<java.math.MutableBigInteger: int[] value>;
+        $i16 = r1.<java.math.MutableBigInteger: int offset>;
+        $i17 = i1 + $i16;
+        $i18 = $r7[$i17];
+        $l19 = (long) $i18;
+        $l20 = $l19 & 4294967295L;
+        $l21 = $l15 + $l20;
+        l5 = $l21 + l4;
+        $i22 = i3;
+        i3 = i3 + -1;
+        $i23 = (int) l5;
+        r2[$i22] = $i23;
+        l4 = l5 >>> 32;
+        goto label4;
+
+     label5:
+        if i0 <= 0 goto label7;
+
+        i0 = i0 + -1;
+        $b24 = l4 cmp 0L;
+        if $b24 != 0 goto label6;
+
+        $r8 = r0.<java.math.MutableBigInteger: int[] value>;
+        if r2 != $r8 goto label6;
+
+        $i25 = r0.<java.math.MutableBigInteger: int offset>;
+        $i26 = i0 + $i25;
+        if i3 != $i26 goto label6;
+
+        return;
+
+     label6:
+        $r9 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i27 = r0.<java.math.MutableBigInteger: int offset>;
+        $i28 = i0 + $i27;
+        $i29 = $r9[$i28];
+        $l30 = (long) $i29;
+        $l31 = $l30 & 4294967295L;
+        l32 = $l31 + l4;
+        $i33 = i3;
+        i3 = i3 + -1;
+        $i34 = (int) l32;
+        r2[$i33] = $i34;
+        l4 = l32 >>> 32;
+        goto label5;
+
+     label7:
+        if i1 <= 0 goto label8;
+
+        i1 = i1 + -1;
+        $r10 = r1.<java.math.MutableBigInteger: int[] value>;
+        $i35 = r1.<java.math.MutableBigInteger: int offset>;
+        $i36 = i1 + $i35;
+        $i37 = $r10[$i36];
+        $l38 = (long) $i37;
+        $l39 = $l38 & 4294967295L;
+        l40 = $l39 + l4;
+        $i41 = i3;
+        i3 = i3 + -1;
+        $i42 = (int) l40;
+        r2[$i41] = $i42;
+        l4 = l40 >>> 32;
+        goto label7;
+
+     label8:
+        $b43 = l4 cmp 0L;
+        if $b43 <= 0 goto label10;
+
+        i2 = i2 + 1;
+        $i44 = lengthof r2;
+        if $i44 >= i2 goto label9;
+
+        r3 = newarray (int)[i2];
+        $i45 = lengthof r2;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r2, 0, r3, 1, $i45);
+        r3[0] = 1;
+        r2 = r3;
+        goto label10;
+
+     label9:
+        i46 = i3 + -1;
+        r2[i3] = 1;
+
+     label10:
+        r0.<java.math.MutableBigInteger: int[] value> = r2;
+        r0.<java.math.MutableBigInteger: int intLen> = i2;
+        $i47 = lengthof r2;
+        $i48 = $i47 - i2;
+        r0.<java.math.MutableBigInteger: int offset> = $i48;
+        return;
+    }
+
+    int subtract(java.math.MutableBigInteger)
+    {
+        java.math.MutableBigInteger r0, r1, r2, r4;
+        int[] r3, $r5, $r6, $r7, $r8;
+        int i0, i2, i3, i4, i5, $i6, $i7, $i8, $i9, $i10, $i13, $i14, $i15, $i21, $i23, $i24, $i25, $i26, $i27, $i32, $i34, $i35, $i36, $i37;
+        long l1, $l11, $l12, $l16, $l17, $l18, $l19, $l20, $l22, $l28, $l29, $l30, $l31, $l33;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: java.math.MutableBigInteger;
+        r2 = r0;
+        r3 = r0.<java.math.MutableBigInteger: int[] value>;
+        i0 = virtualinvoke r2.<java.math.MutableBigInteger: int compare(java.math.MutableBigInteger)>(r1);
+        if i0 != 0 goto label0;
+
+        virtualinvoke r0.<java.math.MutableBigInteger: void reset()>();
+        return 0;
+
+     label0:
+        if i0 >= 0 goto label1;
+
+        r4 = r2;
+        r2 = r1;
+        r1 = r4;
+
+     label1:
+        i5 = r2.<java.math.MutableBigInteger: int intLen>;
+        $i6 = lengthof r3;
+        if $i6 >= i5 goto label2;
+
+        r3 = newarray (int)[i5];
+
+     label2:
+        l1 = 0L;
+        i2 = r2.<java.math.MutableBigInteger: int intLen>;
+        i3 = r1.<java.math.MutableBigInteger: int intLen>;
+        $i7 = lengthof r3;
+        i4 = $i7 - 1;
+
+     label3:
+        if i3 <= 0 goto label4;
+
+        i2 = i2 + -1;
+        i3 = i3 + -1;
+        $r5 = r2.<java.math.MutableBigInteger: int[] value>;
+        $i8 = r2.<java.math.MutableBigInteger: int offset>;
+        $i9 = i2 + $i8;
+        $i10 = $r5[$i9];
+        $l11 = (long) $i10;
+        $l12 = $l11 & 4294967295L;
+        $r6 = r1.<java.math.MutableBigInteger: int[] value>;
+        $i13 = r1.<java.math.MutableBigInteger: int offset>;
+        $i14 = i3 + $i13;
+        $i15 = $r6[$i14];
+        $l16 = (long) $i15;
+        $l17 = $l16 & 4294967295L;
+        $l18 = $l12 - $l17;
+        $l19 = l1 >> 32;
+        $l20 = neg $l19;
+        $i21 = (int) $l20;
+        $l22 = (long) $i21;
+        l1 = $l18 - $l22;
+        $i23 = i4;
+        i4 = i4 + -1;
+        $i24 = (int) l1;
+        r3[$i23] = $i24;
+        goto label3;
+
+     label4:
+        if i2 <= 0 goto label5;
+
+        i2 = i2 + -1;
+        $r7 = r2.<java.math.MutableBigInteger: int[] value>;
+        $i25 = r2.<java.math.MutableBigInteger: int offset>;
+        $i26 = i2 + $i25;
+        $i27 = $r7[$i26];
+        $l28 = (long) $i27;
+        $l29 = $l28 & 4294967295L;
+        $l30 = l1 >> 32;
+        $l31 = neg $l30;
+        $i32 = (int) $l31;
+        $l33 = (long) $i32;
+        l1 = $l29 - $l33;
+        $i34 = i4;
+        i4 = i4 + -1;
+        $i35 = (int) l1;
+        r3[$i34] = $i35;
+        goto label4;
+
+     label5:
+        r0.<java.math.MutableBigInteger: int[] value> = r3;
+        r0.<java.math.MutableBigInteger: int intLen> = i5;
+        $r8 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i36 = lengthof $r8;
+        $i37 = $i36 - i5;
+        r0.<java.math.MutableBigInteger: int offset> = $i37;
+        virtualinvoke r0.<java.math.MutableBigInteger: void normalize()>();
+        return i0;
+    }
+
+    private int difference(java.math.MutableBigInteger)
+    {
+        java.math.MutableBigInteger r0, r1, r2, r3;
+        int i0, i1, i2, $i4, $i5, $i6, $i9, $i10, $i11, $i17, $i19, $i20, $i21, $i22, $i23, $i24, $i29, $i31, $i32, $i33;
+        long l3, $l7, $l8, $l12, $l13, $l14, $l15, $l16, $l18, $l25, $l26, $l27, $l28, $l30;
+        int[] $r4, $r5, $r6, $r7, $r8;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: java.math.MutableBigInteger;
+        r2 = r0;
+        i0 = virtualinvoke r2.<java.math.MutableBigInteger: int compare(java.math.MutableBigInteger)>(r1);
+        if i0 != 0 goto label0;
+
+        return 0;
+
+     label0:
+        if i0 >= 0 goto label1;
+
+        r3 = r2;
+        r2 = r1;
+        r1 = r3;
+
+     label1:
+        l3 = 0L;
+        i1 = r2.<java.math.MutableBigInteger: int intLen>;
+        i2 = r1.<java.math.MutableBigInteger: int intLen>;
+
+     label2:
+        if i2 <= 0 goto label3;
+
+        i1 = i1 + -1;
+        i2 = i2 + -1;
+        $r4 = r2.<java.math.MutableBigInteger: int[] value>;
+        $i4 = r2.<java.math.MutableBigInteger: int offset>;
+        $i5 = $i4 + i1;
+        $i6 = $r4[$i5];
+        $l7 = (long) $i6;
+        $l8 = $l7 & 4294967295L;
+        $r5 = r1.<java.math.MutableBigInteger: int[] value>;
+        $i9 = r1.<java.math.MutableBigInteger: int offset>;
+        $i10 = $i9 + i2;
+        $i11 = $r5[$i10];
+        $l12 = (long) $i11;
+        $l13 = $l12 & 4294967295L;
+        $l14 = $l8 - $l13;
+        $l15 = l3 >> 32;
+        $l16 = neg $l15;
+        $i17 = (int) $l16;
+        $l18 = (long) $i17;
+        l3 = $l14 - $l18;
+        $r6 = r2.<java.math.MutableBigInteger: int[] value>;
+        $i19 = r2.<java.math.MutableBigInteger: int offset>;
+        $i20 = $i19 + i1;
+        $i21 = (int) l3;
+        $r6[$i20] = $i21;
+        goto label2;
+
+     label3:
+        if i1 <= 0 goto label4;
+
+        i1 = i1 + -1;
+        $r7 = r2.<java.math.MutableBigInteger: int[] value>;
+        $i22 = r2.<java.math.MutableBigInteger: int offset>;
+        $i23 = $i22 + i1;
+        $i24 = $r7[$i23];
+        $l25 = (long) $i24;
+        $l26 = $l25 & 4294967295L;
+        $l27 = l3 >> 32;
+        $l28 = neg $l27;
+        $i29 = (int) $l28;
+        $l30 = (long) $i29;
+        l3 = $l26 - $l30;
+        $r8 = r2.<java.math.MutableBigInteger: int[] value>;
+        $i31 = r2.<java.math.MutableBigInteger: int offset>;
+        $i32 = $i31 + i1;
+        $i33 = (int) l3;
+        $r8[$i32] = $i33;
+        goto label3;
+
+     label4:
+        virtualinvoke r2.<java.math.MutableBigInteger: void normalize()>();
+        return i0;
+    }
+
+    void multiply(java.math.MutableBigInteger, java.math.MutableBigInteger)
+    {
+        java.math.MutableBigInteger r0, r1, r2;
+        int i0, i1, i2, i4, i5, $i8, $i9, $i10, $i11, $i12, $i15, $i16, $i17, $i18, $i22, $i23, $i24, i25, i27, i28, $i29, $i30, $i31, $i34, $i35, $i36, $i40, $i44, $i45;
+        long l3, l6, l7, $l13, $l14, $l19, $l20, $l21, l26, $l32, $l33, $l37, $l38, $l39, $l41, $l42, $l43;
+        int[] $r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: java.math.MutableBigInteger;
+        r2 := @parameter1: java.math.MutableBigInteger;
+        i0 = r0.<java.math.MutableBigInteger: int intLen>;
+        i1 = r1.<java.math.MutableBigInteger: int intLen>;
+        i2 = i0 + i1;
+        $r3 = r2.<java.math.MutableBigInteger: int[] value>;
+        $i8 = lengthof $r3;
+        if $i8 >= i2 goto label0;
+
+        $r4 = newarray (int)[i2];
+        r2.<java.math.MutableBigInteger: int[] value> = $r4;
+
+     label0:
+        r2.<java.math.MutableBigInteger: int offset> = 0;
+        r2.<java.math.MutableBigInteger: int intLen> = i2;
+        l3 = 0L;
+        i4 = i1 - 1;
+        $i9 = i1 + i0;
+        i5 = $i9 - 1;
+
+     label1:
+        if i4 < 0 goto label2;
+
+        $r5 = r1.<java.math.MutableBigInteger: int[] value>;
+        $i10 = r1.<java.math.MutableBigInteger: int offset>;
+        $i11 = i4 + $i10;
+        $i12 = $r5[$i11];
+        $l13 = (long) $i12;
+        $l14 = $l13 & 4294967295L;
+        $r6 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i15 = i0 - 1;
+        $i16 = r0.<java.math.MutableBigInteger: int offset>;
+        $i17 = $i15 + $i16;
+        $i18 = $r6[$i17];
+        $l19 = (long) $i18;
+        $l20 = $l19 & 4294967295L;
+        $l21 = $l14 * $l20;
+        l6 = $l21 + l3;
+        $r7 = r2.<java.math.MutableBigInteger: int[] value>;
+        $i22 = (int) l6;
+        $r7[i5] = $i22;
+        l3 = l6 >>> 32;
+        i4 = i4 + -1;
+        i5 = i5 + -1;
+        goto label1;
+
+     label2:
+        $r8 = r2.<java.math.MutableBigInteger: int[] value>;
+        $i23 = i0 - 1;
+        $i24 = (int) l3;
+        $r8[$i23] = $i24;
+        i25 = i0 - 2;
+
+     label3:
+        if i25 < 0 goto label6;
+
+        l26 = 0L;
+        i27 = i1 - 1;
+        i28 = i1 + i25;
+
+     label4:
+        if i27 < 0 goto label5;
+
+        $r9 = r1.<java.math.MutableBigInteger: int[] value>;
+        $i29 = r1.<java.math.MutableBigInteger: int offset>;
+        $i30 = i27 + $i29;
+        $i31 = $r9[$i30];
+        $l32 = (long) $i31;
+        $l33 = $l32 & 4294967295L;
+        $r10 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i34 = r0.<java.math.MutableBigInteger: int offset>;
+        $i35 = i25 + $i34;
+        $i36 = $r10[$i35];
+        $l37 = (long) $i36;
+        $l38 = $l37 & 4294967295L;
+        $l39 = $l33 * $l38;
+        $r11 = r2.<java.math.MutableBigInteger: int[] value>;
+        $i40 = $r11[i28];
+        $l41 = (long) $i40;
+        $l42 = $l41 & 4294967295L;
+        $l43 = $l39 + $l42;
+        l7 = $l43 + l26;
+        $r12 = r2.<java.math.MutableBigInteger: int[] value>;
+        $i44 = (int) l7;
+        $r12[i28] = $i44;
+        l26 = l7 >>> 32;
+        i27 = i27 + -1;
+        i28 = i28 + -1;
+        goto label4;
+
+     label5:
+        $r13 = r2.<java.math.MutableBigInteger: int[] value>;
+        $i45 = (int) l26;
+        $r13[i25] = $i45;
+        i25 = i25 + -1;
+        goto label3;
+
+     label6:
+        virtualinvoke r2.<java.math.MutableBigInteger: void normalize()>();
+        return;
+    }
+
+    void mul(int, java.math.MutableBigInteger)
+    {
+        java.math.MutableBigInteger r0, r1;
+        int i0, i3, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i18, $i19, $i21, $i22, $i23, $i24;
+        long l1, l2, l4, $l5, $l15, $l16, $l17;
+        int[] r2, $r3, $r4, $r5;
+        byte $b20;
+
+        r0 := @this: java.math.MutableBigInteger;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.math.MutableBigInteger;
+        if i0 != 1 goto label0;
+
+        virtualinvoke r1.<java.math.MutableBigInteger: void copyValue(java.math.MutableBigInteger)>(r0);
+        return;
+
+     label0:
+        if i0 != 0 goto label1;
+
+        virtualinvoke r1.<java.math.MutableBigInteger: void clear()>();
+        return;
+
+     label1:
+        $l5 = (long) i0;
+        l1 = $l5 & 4294967295L;
+        $r3 = r1.<java.math.MutableBigInteger: int[] value>;
+        $i6 = lengthof $r3;
+        $i7 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i8 = $i7 + 1;
+        if $i6 >= $i8 goto label2;
+
+        $i9 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i10 = $i9 + 1;
+        $r4 = newarray (int)[$i10];
+        goto label3;
+
+     label2:
+        $r4 = r1.<java.math.MutableBigInteger: int[] value>;
+
+     label3:
+        r2 = $r4;
+        l2 = 0L;
+        $i11 = r0.<java.math.MutableBigInteger: int intLen>;
+        i3 = $i11 - 1;
+
+     label4:
+        if i3 < 0 goto label5;
+
+        $r5 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i12 = r0.<java.math.MutableBigInteger: int offset>;
+        $i13 = i3 + $i12;
+        $i14 = $r5[$i13];
+        $l15 = (long) $i14;
+        $l16 = $l15 & 4294967295L;
+        $l17 = l1 * $l16;
+        l4 = $l17 + l2;
+        $i18 = i3 + 1;
+        $i19 = (int) l4;
+        r2[$i18] = $i19;
+        l2 = l4 >>> 32;
+        i3 = i3 + -1;
+        goto label4;
+
+     label5:
+        $b20 = l2 cmp 0L;
+        if $b20 != 0 goto label6;
+
+        r1.<java.math.MutableBigInteger: int offset> = 1;
+        $i21 = r0.<java.math.MutableBigInteger: int intLen>;
+        r1.<java.math.MutableBigInteger: int intLen> = $i21;
+        goto label7;
+
+     label6:
+        r1.<java.math.MutableBigInteger: int offset> = 0;
+        $i22 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i23 = $i22 + 1;
+        r1.<java.math.MutableBigInteger: int intLen> = $i23;
+        $i24 = (int) l2;
+        r2[0] = $i24;
+
+     label7:
+        r1.<java.math.MutableBigInteger: int[] value> = r2;
+        return;
+    }
+
+    int divideOneWord(int, java.math.MutableBigInteger)
+    {
+        java.math.MutableBigInteger r0, r1;
+        int i0, i3, i4, i5, i6, $i9, $i10, $i11, $i18, $i19, $i20, $i21, i22, $i23, $i28, $i29, $i35, $i36, $i37, $i38, $i39, $i44, $i45, $i49, $i50, $i51, $i52, $i54;
+        long l1, l2, l7, $l8, $l12, $l13, $l14, $l15, $l16, $l24, l25, $l27, $l30, $l31, $l32, $l33, $l34, $l40, $l41, $l43, $l46, $l47, $l48, $l53;
+        int[] r2, $r3, $r4, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13;
+        byte $b17, $b26, $b42;
+
+        r0 := @this: java.math.MutableBigInteger;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.math.MutableBigInteger;
+        $l8 = (long) i0;
+        l1 = $l8 & 4294967295L;
+        $i9 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i9 != 1 goto label2;
+
+        $r3 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i10 = r0.<java.math.MutableBigInteger: int offset>;
+        $i11 = $r3[$i10];
+        $l12 = (long) $i11;
+        l2 = $l12 & 4294967295L;
+        $l13 = l2 / l1;
+        i3 = (int) $l13;
+        $l14 = (long) i3;
+        $l15 = $l14 * l1;
+        $l16 = l2 - $l15;
+        i4 = (int) $l16;
+        $r4 = r1.<java.math.MutableBigInteger: int[] value>;
+        $r4[0] = i3;
+        if i3 != 0 goto label0;
+
+        $b17 = 0;
+        goto label1;
+
+     label0:
+        $b17 = 1;
+
+     label1:
+        r1.<java.math.MutableBigInteger: int intLen> = $b17;
+        r1.<java.math.MutableBigInteger: int offset> = 0;
+        return i4;
+
+     label2:
+        $r6 = r1.<java.math.MutableBigInteger: int[] value>;
+        $i18 = lengthof $r6;
+        $i19 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i18 >= $i19 goto label3;
+
+        $i20 = r0.<java.math.MutableBigInteger: int intLen>;
+        $r7 = newarray (int)[$i20];
+        r1.<java.math.MutableBigInteger: int[] value> = $r7;
+
+     label3:
+        r1.<java.math.MutableBigInteger: int offset> = 0;
+        $i21 = r0.<java.math.MutableBigInteger: int intLen>;
+        r1.<java.math.MutableBigInteger: int intLen> = $i21;
+        i22 = staticinvoke <java.lang.Integer: int numberOfLeadingZeros(int)>(i0);
+        $r8 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i23 = r0.<java.math.MutableBigInteger: int offset>;
+        i5 = $r8[$i23];
+        $l24 = (long) i5;
+        l25 = $l24 & 4294967295L;
+        $b26 = l25 cmp l1;
+        if $b26 >= 0 goto label4;
+
+        $r9 = r1.<java.math.MutableBigInteger: int[] value>;
+        $r9[0] = 0;
+        goto label5;
+
+     label4:
+        $r10 = r1.<java.math.MutableBigInteger: int[] value>;
+        $l27 = l25 / l1;
+        $i28 = (int) $l27;
+        $r10[0] = $i28;
+        $r11 = r1.<java.math.MutableBigInteger: int[] value>;
+        $i29 = $r11[0];
+        $l30 = (long) $i29;
+        $l31 = $l30 * l1;
+        $l32 = l25 - $l31;
+        i5 = (int) $l32;
+        $l33 = (long) i5;
+        l25 = $l33 & 4294967295L;
+
+     label5:
+        i6 = r0.<java.math.MutableBigInteger: int intLen>;
+        r2 = newarray (int)[2];
+
+     label6:
+        i6 = i6 + -1;
+        if i6 <= 0 goto label9;
+
+        $l34 = l25 << 32;
+        $r12 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i35 = r0.<java.math.MutableBigInteger: int offset>;
+        $i36 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i37 = $i35 + $i36;
+        $i38 = $i37 - i6;
+        $i39 = $r12[$i38];
+        $l40 = (long) $i39;
+        $l41 = $l40 & 4294967295L;
+        l7 = $l34 | $l41;
+        $b42 = l7 cmp 0L;
+        if $b42 < 0 goto label7;
+
+        $l43 = l7 / l1;
+        $i44 = (int) $l43;
+        r2[0] = $i44;
+        $i45 = r2[0];
+        $l46 = (long) $i45;
+        $l47 = $l46 * l1;
+        $l48 = l7 - $l47;
+        $i49 = (int) $l48;
+        r2[1] = $i49;
+        goto label8;
+
+     label7:
+        specialinvoke r0.<java.math.MutableBigInteger: void divWord(int[],long,int)>(r2, l7, i0);
+
+     label8:
+        $r13 = r1.<java.math.MutableBigInteger: int[] value>;
+        $i50 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i51 = $i50 - i6;
+        $i52 = r2[0];
+        $r13[$i51] = $i52;
+        i5 = r2[1];
+        $l53 = (long) i5;
+        l25 = $l53 & 4294967295L;
+        goto label6;
+
+     label9:
+        virtualinvoke r1.<java.math.MutableBigInteger: void normalize()>();
+        if i22 <= 0 goto label10;
+
+        $i54 = i5 % i0;
+        return $i54;
+
+     label10:
+        return i5;
+    }
+
+    java.math.MutableBigInteger divide(java.math.MutableBigInteger, java.math.MutableBigInteger)
+    {
+        java.math.MutableBigInteger r0, r1, r2, $r4, $r5, $r7, $r9, $r10, $r13;
+        int i0, i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13;
+        byte $b1, $b2;
+        java.lang.ArithmeticException $r3;
+        int[] $r6, $r8, $r11, r12;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: java.math.MutableBigInteger;
+        r2 := @parameter1: java.math.MutableBigInteger;
+        $i4 = r1.<java.math.MutableBigInteger: int intLen>;
+        if $i4 != 0 goto label0;
+
+        $r3 = new java.lang.ArithmeticException;
+        specialinvoke $r3.<java.lang.ArithmeticException: void <init>(java.lang.String)>("BigInteger divide by zero");
+        throw $r3;
+
+     label0:
+        $i5 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i5 != 0 goto label1;
+
+        $i6 = r2.<java.math.MutableBigInteger: int offset>;
+        r2.<java.math.MutableBigInteger: int intLen> = $i6;
+        $r4 = new java.math.MutableBigInteger;
+        specialinvoke $r4.<java.math.MutableBigInteger: void <init>()>();
+        return $r4;
+
+     label1:
+        i0 = virtualinvoke r0.<java.math.MutableBigInteger: int compare(java.math.MutableBigInteger)>(r1);
+        if i0 >= 0 goto label2;
+
+        $b1 = 0;
+        r2.<java.math.MutableBigInteger: int offset> = $b1;
+        r2.<java.math.MutableBigInteger: int intLen> = $b1;
+        $r5 = new java.math.MutableBigInteger;
+        specialinvoke $r5.<java.math.MutableBigInteger: void <init>(java.math.MutableBigInteger)>(r0);
+        return $r5;
+
+     label2:
+        if i0 != 0 goto label3;
+
+        $r6 = r2.<java.math.MutableBigInteger: int[] value>;
+        $b2 = 1;
+        r2.<java.math.MutableBigInteger: int intLen> = $b2;
+        $r6[0] = $b2;
+        r2.<java.math.MutableBigInteger: int offset> = 0;
+        $r7 = new java.math.MutableBigInteger;
+        specialinvoke $r7.<java.math.MutableBigInteger: void <init>()>();
+        return $r7;
+
+     label3:
+        virtualinvoke r2.<java.math.MutableBigInteger: void clear()>();
+        $i7 = r1.<java.math.MutableBigInteger: int intLen>;
+        if $i7 != 1 goto label5;
+
+        $r8 = r1.<java.math.MutableBigInteger: int[] value>;
+        $i8 = r1.<java.math.MutableBigInteger: int offset>;
+        $i9 = $r8[$i8];
+        i3 = virtualinvoke r0.<java.math.MutableBigInteger: int divideOneWord(int,java.math.MutableBigInteger)>($i9, r2);
+        if i3 != 0 goto label4;
+
+        $r9 = new java.math.MutableBigInteger;
+        specialinvoke $r9.<java.math.MutableBigInteger: void <init>()>();
+        return $r9;
+
+     label4:
+        $r10 = new java.math.MutableBigInteger;
+        specialinvoke $r10.<java.math.MutableBigInteger: void <init>(int)>(i3);
+        return $r10;
+
+     label5:
+        $r11 = r1.<java.math.MutableBigInteger: int[] value>;
+        $i10 = r1.<java.math.MutableBigInteger: int offset>;
+        $i11 = r1.<java.math.MutableBigInteger: int offset>;
+        $i12 = r1.<java.math.MutableBigInteger: int intLen>;
+        $i13 = $i11 + $i12;
+        r12 = staticinvoke <java.util.Arrays: int[] copyOfRange(int[],int,int)>($r11, $i10, $i13);
+        $r13 = specialinvoke r0.<java.math.MutableBigInteger: java.math.MutableBigInteger divideMagnitude(int[],java.math.MutableBigInteger)>(r12, r2);
+        return $r13;
+    }
+
+    long divide(long, java.math.MutableBigInteger)
+    {
+        java.math.MutableBigInteger r0, r1, $r5;
+        long l0, $l6, $l9, $l10, $l11, $l13;
+        byte $b1, $b3, $b5;
+        int i2, $i4, $i7, $i8, $i12;
+        int[] r2, $r4;
+        java.lang.ArithmeticException $r3;
+
+        r0 := @this: java.math.MutableBigInteger;
+        l0 := @parameter0: long;
+        r1 := @parameter1: java.math.MutableBigInteger;
+        $b3 = l0 cmp 0L;
+        if $b3 != 0 goto label0;
+
+        $r3 = new java.lang.ArithmeticException;
+        specialinvoke $r3.<java.lang.ArithmeticException: void <init>(java.lang.String)>("BigInteger divide by zero");
+        throw $r3;
+
+     label0:
+        $i4 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i4 != 0 goto label1;
+
+        $b1 = 0;
+        r1.<java.math.MutableBigInteger: int offset> = $b1;
+        r1.<java.math.MutableBigInteger: int intLen> = $b1;
+        return 0L;
+
+     label1:
+        $b5 = l0 cmp 0L;
+        if $b5 >= 0 goto label2;
+
+        l0 = neg l0;
+
+     label2:
+        $l6 = l0 >>> 32;
+        i2 = (int) $l6;
+        virtualinvoke r1.<java.math.MutableBigInteger: void clear()>();
+        if i2 != 0 goto label3;
+
+        $i7 = (int) l0;
+        $i8 = virtualinvoke r0.<java.math.MutableBigInteger: int divideOneWord(int,java.math.MutableBigInteger)>($i7, r1);
+        $l9 = (long) $i8;
+        $l10 = $l9 & 4294967295L;
+        return $l10;
+
+     label3:
+        $r4 = newarray (int)[2];
+        $r4[0] = i2;
+        $l11 = l0 & 4294967295L;
+        $i12 = (int) $l11;
+        $r4[1] = $i12;
+        r2 = $r4;
+        $r5 = specialinvoke r0.<java.math.MutableBigInteger: java.math.MutableBigInteger divideMagnitude(int[],java.math.MutableBigInteger)>(r2, r1);
+        $l13 = specialinvoke $r5.<java.math.MutableBigInteger: long toLong()>();
+        return $l13;
+    }
+
+    private java.math.MutableBigInteger divideMagnitude(int[], java.math.MutableBigInteger)
+    {
+        java.math.MutableBigInteger r0, r2, $r3, r4;
+        int[] r1, r5, r6, $r7, $r8, $r9, $r10, $r11, $r12, $r14, $r15, $r16, $r17, $r18, $r19;
+        int i0, i1, i2, i3, i4, i6, i7, i8, i9, i10, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i22, $i23, $i24, $i26, $i27, $i28, $i29, $i30, i31, i32, $i33, $i43, $i44, $i45, $i46, i59, $i70, $i71, $i72, $i73, i74, $i75, $i76, $i77, $i78;
+        long l5, l11, l12, l13, $l25, $l34, $l35, $l36, $l37, $l39, $l40, $l41, $l42, $l47, l48, $l49, $l50, $l51, $l52, $l53, $l54, $l55, $l56, $l57, $l58, $l60, $l61, $l63, $l64, l65, $l66, $l67, $l68, l69;
+        boolean z0, z1, z2, $z3, $z4, $z5;
+        byte $b38, $b62;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: int[];
+        r2 := @parameter1: java.math.MutableBigInteger;
+        $r3 = new java.math.MutableBigInteger;
+        $i14 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i15 = $i14 + 1;
+        $r7 = newarray (int)[$i15];
+        specialinvoke $r3.<java.math.MutableBigInteger: void <init>(int[])>($r7);
+        r4 = $r3;
+        $r8 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i16 = r0.<java.math.MutableBigInteger: int offset>;
+        $r9 = r4.<java.math.MutableBigInteger: int[] value>;
+        $i17 = r0.<java.math.MutableBigInteger: int intLen>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r8, $i16, $r9, 1, $i17);
+        $i18 = r0.<java.math.MutableBigInteger: int intLen>;
+        r4.<java.math.MutableBigInteger: int intLen> = $i18;
+        r4.<java.math.MutableBigInteger: int offset> = 1;
+        i0 = r4.<java.math.MutableBigInteger: int intLen>;
+        i1 = lengthof r1;
+        $i19 = i0 - i1;
+        i2 = $i19 + 1;
+        $r10 = r2.<java.math.MutableBigInteger: int[] value>;
+        $i20 = lengthof $r10;
+        if $i20 >= i2 goto label0;
+
+        $r11 = newarray (int)[i2];
+        r2.<java.math.MutableBigInteger: int[] value> = $r11;
+        r2.<java.math.MutableBigInteger: int offset> = 0;
+
+     label0:
+        r2.<java.math.MutableBigInteger: int intLen> = i2;
+        r5 = r2.<java.math.MutableBigInteger: int[] value>;
+        $i21 = r1[0];
+        i3 = staticinvoke <java.lang.Integer: int numberOfLeadingZeros(int)>($i21);
+        if i3 <= 0 goto label1;
+
+        staticinvoke <java.math.BigInteger: void primitiveLeftShift(int[],int,int)>(r1, i1, i3);
+        virtualinvoke r4.<java.math.MutableBigInteger: void leftShift(int)>(i3);
+
+     label1:
+        $i22 = r4.<java.math.MutableBigInteger: int intLen>;
+        if $i22 != i0 goto label2;
+
+        r4.<java.math.MutableBigInteger: int offset> = 0;
+        $r12 = r4.<java.math.MutableBigInteger: int[] value>;
+        $r12[0] = 0;
+        $i23 = r4.<java.math.MutableBigInteger: int intLen>;
+        $i24 = $i23 + 1;
+        r4.<java.math.MutableBigInteger: int intLen> = $i24;
+
+     label2:
+        i4 = r1[0];
+        $l25 = (long) i4;
+        l5 = $l25 & 4294967295L;
+        i6 = r1[1];
+        r6 = newarray (int)[2];
+        i7 = 0;
+
+     label3:
+        if i7 >= i2 goto label13;
+
+        z0 = 0;
+        z1 = 0;
+        z2 = 0;
+        $r14 = r4.<java.math.MutableBigInteger: int[] value>;
+        $i26 = r4.<java.math.MutableBigInteger: int offset>;
+        $i27 = i7 + $i26;
+        i8 = $r14[$i27];
+        i9 = i8 + -2147483648;
+        $r15 = r4.<java.math.MutableBigInteger: int[] value>;
+        $i28 = i7 + 1;
+        $i29 = r4.<java.math.MutableBigInteger: int offset>;
+        $i30 = $i28 + $i29;
+        i10 = $r15[$i30];
+        if i8 != i4 goto label6;
+
+        i31 = -1;
+        i32 = i8 + i10;
+        $i33 = i32 + -2147483648;
+        if $i33 >= i9 goto label4;
+
+        $z3 = 1;
+        goto label5;
+
+     label4:
+        $z3 = 0;
+
+     label5:
+        z2 = $z3;
+        goto label8;
+
+     label6:
+        $l34 = (long) i8;
+        $l35 = $l34 << 32;
+        $l36 = (long) i10;
+        $l37 = $l36 & 4294967295L;
+        l11 = $l35 | $l37;
+        $b38 = l11 cmp 0L;
+        if $b38 < 0 goto label7;
+
+        $l39 = l11 / l5;
+        i31 = (int) $l39;
+        $l40 = (long) i31;
+        $l41 = $l40 * l5;
+        $l42 = l11 - $l41;
+        i32 = (int) $l42;
+        goto label8;
+
+     label7:
+        specialinvoke r0.<java.math.MutableBigInteger: void divWord(int[],long,int)>(r6, l11, i4);
+        i31 = r6[0];
+        i32 = r6[1];
+
+     label8:
+        if i31 != 0 goto label9;
+
+        goto label12;
+
+     label9:
+        if z2 != 0 goto label10;
+
+        $r16 = r4.<java.math.MutableBigInteger: int[] value>;
+        $i43 = i7 + 2;
+        $i44 = r4.<java.math.MutableBigInteger: int offset>;
+        $i45 = $i43 + $i44;
+        $i46 = $r16[$i45];
+        $l47 = (long) $i46;
+        l48 = $l47 & 4294967295L;
+        $l49 = (long) i32;
+        $l50 = $l49 & 4294967295L;
+        $l51 = $l50 << 32;
+        l12 = $l51 | l48;
+        $l52 = (long) i6;
+        $l53 = $l52 & 4294967295L;
+        $l54 = (long) i31;
+        $l55 = $l54 & 4294967295L;
+        l13 = $l53 * $l55;
+        $z4 = specialinvoke r0.<java.math.MutableBigInteger: boolean unsignedLongCompare(long,long)>(l13, l12);
+        if $z4 == 0 goto label10;
+
+        i31 = i31 + -1;
+        $l56 = (long) i32;
+        $l57 = $l56 & 4294967295L;
+        $l58 = $l57 + l5;
+        i59 = (int) $l58;
+        $l60 = (long) i59;
+        $l61 = $l60 & 4294967295L;
+        $b62 = $l61 cmp l5;
+        if $b62 < 0 goto label10;
+
+        $l63 = (long) i6;
+        $l64 = $l63 & 4294967295L;
+        l65 = l13 - $l64;
+        $l66 = (long) i59;
+        $l67 = $l66 & 4294967295L;
+        $l68 = $l67 << 32;
+        l69 = $l68 | l48;
+        $z5 = specialinvoke r0.<java.math.MutableBigInteger: boolean unsignedLongCompare(long,long)>(l65, l69);
+        if $z5 == 0 goto label10;
+
+        i31 = i31 + -1;
+
+     label10:
+        $r17 = r4.<java.math.MutableBigInteger: int[] value>;
+        $i70 = r4.<java.math.MutableBigInteger: int offset>;
+        $i71 = i7 + $i70;
+        $r17[$i71] = 0;
+        $r18 = r4.<java.math.MutableBigInteger: int[] value>;
+        $i72 = r4.<java.math.MutableBigInteger: int offset>;
+        $i73 = i7 + $i72;
+        i74 = specialinvoke r0.<java.math.MutableBigInteger: int mulsub(int[],int[],int,int,int)>($r18, r1, i31, i1, $i73);
+        $i75 = i74 + -2147483648;
+        if $i75 <= i9 goto label11;
+
+        $r19 = r4.<java.math.MutableBigInteger: int[] value>;
+        $i76 = i7 + 1;
+        $i77 = r4.<java.math.MutableBigInteger: int offset>;
+        $i78 = $i76 + $i77;
+        specialinvoke r0.<java.math.MutableBigInteger: int divadd(int[],int[],int)>(r1, $r19, $i78);
+        i31 = i31 + -1;
+
+     label11:
+        r5[i7] = i31;
+
+     label12:
+        i7 = i7 + 1;
+        goto label3;
+
+     label13:
+        if i3 <= 0 goto label14;
+
+        virtualinvoke r4.<java.math.MutableBigInteger: void rightShift(int)>(i3);
+
+     label14:
+        virtualinvoke r2.<java.math.MutableBigInteger: void normalize()>();
+        virtualinvoke r4.<java.math.MutableBigInteger: void normalize()>();
+        return r4;
+    }
+
+    private boolean unsignedLongCompare(long, long)
+    {
+        java.math.MutableBigInteger r0;
+        long l0, l1, $l2, $l3;
+        byte $b4;
+        boolean $z0;
+
+        r0 := @this: java.math.MutableBigInteger;
+        l0 := @parameter0: long;
+        l1 := @parameter1: long;
+        $l2 = l0 + -9223372036854775808L;
+        $l3 = l1 + -9223372036854775808L;
+        $b4 = $l2 cmp $l3;
+        if $b4 <= 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    private void divWord(int[], long, int)
+    {
+        java.math.MutableBigInteger r0;
+        int[] r1;
+        long l0, l2, l3, l4, $l5, $l8, $l9, $l10;
+        int i1, $i7, $i13, $i14;
+        byte $b6, $b11, $b12;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: int[];
+        l0 := @parameter1: long;
+        i1 := @parameter2: int;
+        $l5 = (long) i1;
+        l2 = $l5 & 4294967295L;
+        $b6 = l2 cmp 1L;
+        if $b6 != 0 goto label0;
+
+        $i7 = (int) l0;
+        r1[0] = $i7;
+        r1[1] = 0;
+        return;
+
+     label0:
+        $l8 = l0 >>> 1;
+        $l9 = l2 >>> 1;
+        l3 = $l8 / $l9;
+        $l10 = l3 * l2;
+        l4 = l0 - $l10;
+
+     label1:
+        $b11 = l4 cmp 0L;
+        if $b11 >= 0 goto label2;
+
+        l4 = l4 + l2;
+        l3 = l3 - 1L;
+        goto label1;
+
+     label2:
+        $b12 = l4 cmp l2;
+        if $b12 < 0 goto label3;
+
+        l4 = l4 - l2;
+        l3 = l3 + 1L;
+        goto label2;
+
+     label3:
+        $i13 = (int) l3;
+        r1[0] = $i13;
+        $i14 = (int) l4;
+        r1[1] = $i14;
+        return;
+    }
+
+    java.math.MutableBigInteger hybridGCD(java.math.MutableBigInteger)
+    {
+        java.math.MutableBigInteger r0, r1, r2, r3, r4, $r5, $r6;
+        int $i0, $i1, $i2, $i3, $i4;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: java.math.MutableBigInteger;
+        r2 = r0;
+        $r5 = new java.math.MutableBigInteger;
+        specialinvoke $r5.<java.math.MutableBigInteger: void <init>()>();
+        r3 = $r5;
+
+     label0:
+        $i0 = r1.<java.math.MutableBigInteger: int intLen>;
+        if $i0 == 0 goto label2;
+
+        $i1 = r2.<java.math.MutableBigInteger: int intLen>;
+        $i2 = r1.<java.math.MutableBigInteger: int intLen>;
+        $i3 = $i1 - $i2;
+        $i4 = staticinvoke <java.lang.Math: int abs(int)>($i3);
+        if $i4 >= 2 goto label1;
+
+        $r6 = specialinvoke r2.<java.math.MutableBigInteger: java.math.MutableBigInteger binaryGCD(java.math.MutableBigInteger)>(r1);
+        return $r6;
+
+     label1:
+        r4 = virtualinvoke r2.<java.math.MutableBigInteger: java.math.MutableBigInteger divide(java.math.MutableBigInteger,java.math.MutableBigInteger)>(r1, r3);
+        r2 = r1;
+        r1 = r4;
+        goto label0;
+
+     label2:
+        return r2;
+    }
+
+    private java.math.MutableBigInteger binaryGCD(java.math.MutableBigInteger)
+    {
+        java.math.MutableBigInteger r0, r1, r2, r3, r4, $r5, $r6, $r10;
+        int i0, i1, i2, i3, i4, i5, i6, $i7, $i9, $i10, $i11, $i12, $i13, i14, $i15;
+        boolean z0, $z1;
+        byte $b8;
+        int[] $r7, $r8, $r9;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: java.math.MutableBigInteger;
+        r2 = r0;
+        $r5 = new java.math.MutableBigInteger;
+        specialinvoke $r5.<java.math.MutableBigInteger: void <init>()>();
+        r3 = $r5;
+        i0 = specialinvoke r2.<java.math.MutableBigInteger: int getLowestSetBit()>();
+        i1 = specialinvoke r1.<java.math.MutableBigInteger: int getLowestSetBit()>();
+        if i0 >= i1 goto label0;
+
+        $i7 = i0;
+        goto label1;
+
+     label0:
+        $i7 = i1;
+
+     label1:
+        i2 = $i7;
+        if i2 == 0 goto label2;
+
+        virtualinvoke r2.<java.math.MutableBigInteger: void rightShift(int)>(i2);
+        virtualinvoke r1.<java.math.MutableBigInteger: void rightShift(int)>(i2);
+
+     label2:
+        if i2 != i0 goto label3;
+
+        $z1 = 1;
+        goto label4;
+
+     label3:
+        $z1 = 0;
+
+     label4:
+        z0 = $z1;
+        if z0 == 0 goto label5;
+
+        $r6 = r1;
+        goto label6;
+
+     label5:
+        $r6 = r2;
+
+     label6:
+        r4 = $r6;
+        if z0 == 0 goto label7;
+
+        $b8 = -1;
+        goto label8;
+
+     label7:
+        $b8 = 1;
+
+     label8:
+        i3 = $b8;
+
+     label9:
+        $i9 = specialinvoke r4.<java.math.MutableBigInteger: int getLowestSetBit()>();
+        i4 = $i9;
+        if $i9 < 0 goto label17;
+
+        virtualinvoke r4.<java.math.MutableBigInteger: void rightShift(int)>(i4);
+        if i3 <= 0 goto label10;
+
+        r2 = r4;
+        goto label11;
+
+     label10:
+        r1 = r4;
+
+     label11:
+        $i10 = r2.<java.math.MutableBigInteger: int intLen>;
+        if $i10 >= 2 goto label13;
+
+        $i11 = r1.<java.math.MutableBigInteger: int intLen>;
+        if $i11 >= 2 goto label13;
+
+        $r7 = r2.<java.math.MutableBigInteger: int[] value>;
+        $i12 = r2.<java.math.MutableBigInteger: int offset>;
+        i5 = $r7[$i12];
+        $r8 = r1.<java.math.MutableBigInteger: int[] value>;
+        $i13 = r1.<java.math.MutableBigInteger: int offset>;
+        i6 = $r8[$i13];
+        i14 = staticinvoke <java.math.MutableBigInteger: int binaryGcd(int,int)>(i5, i6);
+        $r9 = r3.<java.math.MutableBigInteger: int[] value>;
+        $r9[0] = i14;
+        r3.<java.math.MutableBigInteger: int intLen> = 1;
+        r3.<java.math.MutableBigInteger: int offset> = 0;
+        if i2 <= 0 goto label12;
+
+        virtualinvoke r3.<java.math.MutableBigInteger: void leftShift(int)>(i2);
+
+     label12:
+        return r3;
+
+     label13:
+        $i15 = specialinvoke r2.<java.math.MutableBigInteger: int difference(java.math.MutableBigInteger)>(r1);
+        i3 = $i15;
+        if $i15 != 0 goto label14;
+
+        goto label17;
+
+     label14:
+        if i3 < 0 goto label15;
+
+        $r10 = r2;
+        goto label16;
+
+     label15:
+        $r10 = r1;
+
+     label16:
+        r4 = $r10;
+        goto label9;
+
+     label17:
+        if i2 <= 0 goto label18;
+
+        virtualinvoke r2.<java.math.MutableBigInteger: void leftShift(int)>(i2);
+
+     label18:
+        return r2;
+    }
+
+    static int binaryGcd(int, int)
+    {
+        int i0, i1, i2, i3, i4, i5, i6, $i7, $i8, $i9, i10, $i11, i12, $i13, $i14;
+
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        if i1 != 0 goto label0;
+
+        return i0;
+
+     label0:
+        if i0 != 0 goto label1;
+
+        return i1;
+
+     label1:
+        i2 = staticinvoke <java.lang.Integer: int numberOfTrailingZeros(int)>(i0);
+        i3 = staticinvoke <java.lang.Integer: int numberOfTrailingZeros(int)>(i1);
+        i5 = i0 >>> i2;
+        i6 = i1 >>> i3;
+        if i2 >= i3 goto label2;
+
+        $i7 = i2;
+        goto label3;
+
+     label2:
+        $i7 = i3;
+
+     label3:
+        i4 = $i7;
+
+     label4:
+        if i5 == i6 goto label6;
+
+        $i8 = i5 + -2147483648;
+        $i9 = i6 + -2147483648;
+        if $i8 <= $i9 goto label5;
+
+        i10 = i5 - i6;
+        $i11 = staticinvoke <java.lang.Integer: int numberOfTrailingZeros(int)>(i10);
+        i5 = i10 >>> $i11;
+        goto label4;
+
+     label5:
+        i12 = i6 - i5;
+        $i13 = staticinvoke <java.lang.Integer: int numberOfTrailingZeros(int)>(i12);
+        i6 = i12 >>> $i13;
+        goto label4;
+
+     label6:
+        $i14 = i5 << i4;
+        return $i14;
+    }
+
+    java.math.MutableBigInteger mutableModInverse(java.math.MutableBigInteger)
+    {
+        java.math.MutableBigInteger r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, $r10, $r12, $r13, $r14, $r15, $r16, $r17;
+        int i0;
+        boolean $z0, $z1, $z2;
+        java.lang.ArithmeticException $r11;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: java.math.MutableBigInteger;
+        $z0 = virtualinvoke r1.<java.math.MutableBigInteger: boolean isOdd()>();
+        if $z0 == 0 goto label0;
+
+        $r10 = specialinvoke r0.<java.math.MutableBigInteger: java.math.MutableBigInteger modInverse(java.math.MutableBigInteger)>(r1);
+        return $r10;
+
+     label0:
+        $z1 = virtualinvoke r0.<java.math.MutableBigInteger: boolean isEven()>();
+        if $z1 == 0 goto label1;
+
+        $r11 = new java.lang.ArithmeticException;
+        specialinvoke $r11.<java.lang.ArithmeticException: void <init>(java.lang.String)>("BigInteger not invertible.");
+        throw $r11;
+
+     label1:
+        i0 = specialinvoke r1.<java.math.MutableBigInteger: int getLowestSetBit()>();
+        $r12 = new java.math.MutableBigInteger;
+        specialinvoke $r12.<java.math.MutableBigInteger: void <init>(java.math.MutableBigInteger)>(r1);
+        r2 = $r12;
+        virtualinvoke r2.<java.math.MutableBigInteger: void rightShift(int)>(i0);
+        $z2 = virtualinvoke r2.<java.math.MutableBigInteger: boolean isOne()>();
+        if $z2 == 0 goto label2;
+
+        $r13 = virtualinvoke r0.<java.math.MutableBigInteger: java.math.MutableBigInteger modInverseMP2(int)>(i0);
+        return $r13;
+
+     label2:
+        r3 = specialinvoke r0.<java.math.MutableBigInteger: java.math.MutableBigInteger modInverse(java.math.MutableBigInteger)>(r2);
+        r4 = virtualinvoke r0.<java.math.MutableBigInteger: java.math.MutableBigInteger modInverseMP2(int)>(i0);
+        r5 = staticinvoke <java.math.MutableBigInteger: java.math.MutableBigInteger modInverseBP2(java.math.MutableBigInteger,int)>(r2, i0);
+        r6 = virtualinvoke r2.<java.math.MutableBigInteger: java.math.MutableBigInteger modInverseMP2(int)>(i0);
+        $r14 = new java.math.MutableBigInteger;
+        specialinvoke $r14.<java.math.MutableBigInteger: void <init>()>();
+        r7 = $r14;
+        $r15 = new java.math.MutableBigInteger;
+        specialinvoke $r15.<java.math.MutableBigInteger: void <init>()>();
+        r8 = $r15;
+        $r16 = new java.math.MutableBigInteger;
+        specialinvoke $r16.<java.math.MutableBigInteger: void <init>()>();
+        r9 = $r16;
+        virtualinvoke r3.<java.math.MutableBigInteger: void leftShift(int)>(i0);
+        virtualinvoke r3.<java.math.MutableBigInteger: void multiply(java.math.MutableBigInteger,java.math.MutableBigInteger)>(r5, r9);
+        virtualinvoke r4.<java.math.MutableBigInteger: void multiply(java.math.MutableBigInteger,java.math.MutableBigInteger)>(r2, r7);
+        virtualinvoke r7.<java.math.MutableBigInteger: void multiply(java.math.MutableBigInteger,java.math.MutableBigInteger)>(r6, r8);
+        virtualinvoke r9.<java.math.MutableBigInteger: void add(java.math.MutableBigInteger)>(r8);
+        $r17 = virtualinvoke r9.<java.math.MutableBigInteger: java.math.MutableBigInteger divide(java.math.MutableBigInteger,java.math.MutableBigInteger)>(r1, r7);
+        return $r17;
+    }
+
+    java.math.MutableBigInteger modInverseMP2(int)
+    {
+        java.math.MutableBigInteger r0, r1, $r3, $r5, $r8;
+        int i0, i1, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, i12, $i13, $i14, $i15, $i16, $i17, $i19, $i20, $i21, $i22, $i23, $i24, $i36, $i37;
+        long l2, l3, $l18, $l25, $l26, $l27, $l28, $l29, l30, $l31, $l32, $l33, l34, $l35;
+        boolean $z0;
+        java.lang.ArithmeticException $r2;
+        int[] $r4, $r6, $r7, $r9, $r10, $r11;
+
+        r0 := @this: java.math.MutableBigInteger;
+        i0 := @parameter0: int;
+        $z0 = virtualinvoke r0.<java.math.MutableBigInteger: boolean isEven()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = new java.lang.ArithmeticException;
+        specialinvoke $r2.<java.lang.ArithmeticException: void <init>(java.lang.String)>("Non-invertible. (GCD != 1)");
+        throw $r2;
+
+     label0:
+        if i0 <= 64 goto label1;
+
+        $r3 = virtualinvoke r0.<java.math.MutableBigInteger: java.math.MutableBigInteger euclidModInverse(int)>(i0);
+        return $r3;
+
+     label1:
+        $r4 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i4 = r0.<java.math.MutableBigInteger: int offset>;
+        $i5 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i6 = $i4 + $i5;
+        $i7 = $i6 - 1;
+        $i8 = $r4[$i7];
+        i1 = staticinvoke <java.math.MutableBigInteger: int inverseMod32(int)>($i8);
+        if i0 >= 33 goto label4;
+
+        if i0 != 32 goto label2;
+
+        $i9 = i1;
+        goto label3;
+
+     label2:
+        $i10 = 1 << i0;
+        $i11 = $i10 - 1;
+        $i9 = i1 & $i11;
+
+     label3:
+        i12 = $i9;
+        $r5 = new java.math.MutableBigInteger;
+        specialinvoke $r5.<java.math.MutableBigInteger: void <init>(int)>(i12);
+        return $r5;
+
+     label4:
+        $r6 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i13 = r0.<java.math.MutableBigInteger: int offset>;
+        $i14 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i15 = $i13 + $i14;
+        $i16 = $i15 - 1;
+        $i17 = $r6[$i16];
+        $l18 = (long) $i17;
+        l2 = $l18 & 4294967295L;
+        $i19 = r0.<java.math.MutableBigInteger: int intLen>;
+        if $i19 <= 1 goto label5;
+
+        $r7 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i20 = r0.<java.math.MutableBigInteger: int offset>;
+        $i21 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i22 = $i20 + $i21;
+        $i23 = $i22 - 2;
+        $i24 = $r7[$i23];
+        $l25 = (long) $i24;
+        $l26 = $l25 << 32;
+        l2 = l2 | $l26;
+
+     label5:
+        $l27 = (long) i1;
+        l3 = $l27 & 4294967295L;
+        $l28 = l2 * l3;
+        $l29 = 2L - $l28;
+        l30 = l3 * $l29;
+        if i0 != 64 goto label6;
+
+        $l31 = l30;
+        goto label7;
+
+     label6:
+        $l32 = 1L << i0;
+        $l33 = $l32 - 1L;
+        $l31 = l30 & $l33;
+
+     label7:
+        l34 = $l31;
+        $r8 = new java.math.MutableBigInteger;
+        $r9 = newarray (int)[2];
+        specialinvoke $r8.<java.math.MutableBigInteger: void <init>(int[])>($r9);
+        r1 = $r8;
+        $r10 = r1.<java.math.MutableBigInteger: int[] value>;
+        $l35 = l34 >>> 32;
+        $i36 = (int) $l35;
+        $r10[0] = $i36;
+        $r11 = r1.<java.math.MutableBigInteger: int[] value>;
+        $i37 = (int) l34;
+        $r11[1] = $i37;
+        r1.<java.math.MutableBigInteger: int intLen> = 2;
+        virtualinvoke r1.<java.math.MutableBigInteger: void normalize()>();
+        return r1;
+    }
+
+    static int inverseMod32(int)
+    {
+        int i0, i1, $i2, $i3, i4, $i5, $i6, i7, $i8, $i9, i10, $i11, $i12, i13;
+
+        i0 := @parameter0: int;
+        i1 = i0;
+        $i2 = i0 * i1;
+        $i3 = 2 - $i2;
+        i4 = i1 * $i3;
+        $i5 = i0 * i4;
+        $i6 = 2 - $i5;
+        i7 = i4 * $i6;
+        $i8 = i0 * i7;
+        $i9 = 2 - $i8;
+        i10 = i7 * $i9;
+        $i11 = i0 * i10;
+        $i12 = 2 - $i11;
+        i13 = i10 * $i12;
+        return i13;
+    }
+
+    static java.math.MutableBigInteger modInverseBP2(java.math.MutableBigInteger, int)
+    {
+        java.math.MutableBigInteger r0, $r1, $r2, $r3;
+        int i0;
+
+        r0 := @parameter0: java.math.MutableBigInteger;
+        i0 := @parameter1: int;
+        $r1 = new java.math.MutableBigInteger;
+        specialinvoke $r1.<java.math.MutableBigInteger: void <init>(int)>(1);
+        $r2 = new java.math.MutableBigInteger;
+        specialinvoke $r2.<java.math.MutableBigInteger: void <init>(java.math.MutableBigInteger)>(r0);
+        $r3 = staticinvoke <java.math.MutableBigInteger: java.math.MutableBigInteger fixup(java.math.MutableBigInteger,java.math.MutableBigInteger,int)>($r1, $r2, i0);
+        return $r3;
+    }
+
+    private java.math.MutableBigInteger modInverse(java.math.MutableBigInteger)
+    {
+        java.math.MutableBigInteger r0, r1, $r2, r3, r4, r5, $r8, $r9, r13, $r17;
+        java.math.SignedMutableBigInteger r6, r7, $r10, $r11, r14;
+        null_type n0, n1;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, i16, $i17;
+        boolean $z0, $z1, $z2;
+        java.lang.ArithmeticException $r12;
+        int[] $r15, $r16;
+
+        r0 := @this: java.math.MutableBigInteger;
+        r1 := @parameter0: java.math.MutableBigInteger;
+        $r2 = new java.math.MutableBigInteger;
+        specialinvoke $r2.<java.math.MutableBigInteger: void <init>(java.math.MutableBigInteger)>(r1);
+        r3 = $r2;
+        $r8 = new java.math.MutableBigInteger;
+        specialinvoke $r8.<java.math.MutableBigInteger: void <init>(java.math.MutableBigInteger)>(r0);
+        r4 = $r8;
+        $r9 = new java.math.MutableBigInteger;
+        specialinvoke $r9.<java.math.MutableBigInteger: void <init>(java.math.MutableBigInteger)>(r3);
+        r5 = $r9;
+        $r10 = new java.math.SignedMutableBigInteger;
+        specialinvoke $r10.<java.math.SignedMutableBigInteger: void <init>(int)>(1);
+        r6 = $r10;
+        $r11 = new java.math.SignedMutableBigInteger;
+        specialinvoke $r11.<java.math.SignedMutableBigInteger: void <init>()>();
+        r7 = $r11;
+        n0 = null;
+        n1 = null;
+        i0 = 0;
+        $z0 = virtualinvoke r4.<java.math.MutableBigInteger: boolean isEven()>();
+        if $z0 == 0 goto label0;
+
+        i1 = specialinvoke r4.<java.math.MutableBigInteger: int getLowestSetBit()>();
+        virtualinvoke r4.<java.math.MutableBigInteger: void rightShift(int)>(i1);
+        virtualinvoke r7.<java.math.SignedMutableBigInteger: void leftShift(int)>(i1);
+        i0 = i1;
+
+     label0:
+        $z1 = virtualinvoke r4.<java.math.MutableBigInteger: boolean isOne()>();
+        if $z1 != 0 goto label5;
+
+        $z2 = virtualinvoke r4.<java.math.MutableBigInteger: boolean isZero()>();
+        if $z2 == 0 goto label1;
+
+        $r12 = new java.lang.ArithmeticException;
+        specialinvoke $r12.<java.lang.ArithmeticException: void <init>(java.lang.String)>("BigInteger not invertible.");
+        throw $r12;
+
+     label1:
+        $i2 = virtualinvoke r4.<java.math.MutableBigInteger: int compare(java.math.MutableBigInteger)>(r5);
+        if $i2 >= 0 goto label2;
+
+        r13 = r4;
+        r4 = r5;
+        r5 = r13;
+        r14 = r7;
+        r7 = r6;
+        r6 = r14;
+
+     label2:
+        $r15 = r4.<java.math.MutableBigInteger: int[] value>;
+        $i3 = r4.<java.math.MutableBigInteger: int offset>;
+        $i4 = r4.<java.math.MutableBigInteger: int intLen>;
+        $i5 = $i3 + $i4;
+        $i6 = $i5 - 1;
+        $i7 = $r15[$i6];
+        $r16 = r5.<java.math.MutableBigInteger: int[] value>;
+        $i8 = r5.<java.math.MutableBigInteger: int offset>;
+        $i9 = r5.<java.math.MutableBigInteger: int intLen>;
+        $i10 = $i8 + $i9;
+        $i11 = $i10 - 1;
+        $i12 = $r16[$i11];
+        $i13 = $i7 ^ $i12;
+        $i14 = $i13 & 3;
+        if $i14 != 0 goto label3;
+
+        virtualinvoke r4.<java.math.MutableBigInteger: int subtract(java.math.MutableBigInteger)>(r5);
+        virtualinvoke r6.<java.math.SignedMutableBigInteger: void signedSubtract(java.math.SignedMutableBigInteger)>(r7);
+        goto label4;
+
+     label3:
+        virtualinvoke r4.<java.math.MutableBigInteger: void add(java.math.MutableBigInteger)>(r5);
+        virtualinvoke r6.<java.math.SignedMutableBigInteger: void signedAdd(java.math.SignedMutableBigInteger)>(r7);
+
+     label4:
+        i16 = specialinvoke r4.<java.math.MutableBigInteger: int getLowestSetBit()>();
+        virtualinvoke r4.<java.math.MutableBigInteger: void rightShift(int)>(i16);
+        virtualinvoke r7.<java.math.SignedMutableBigInteger: void leftShift(int)>(i16);
+        i0 = i0 + i16;
+        goto label0;
+
+     label5:
+        $i17 = r6.<java.math.SignedMutableBigInteger: int sign>;
+        if $i17 >= 0 goto label6;
+
+        virtualinvoke r6.<java.math.SignedMutableBigInteger: void signedAdd(java.math.MutableBigInteger)>(r3);
+        goto label5;
+
+     label6:
+        $r17 = staticinvoke <java.math.MutableBigInteger: java.math.MutableBigInteger fixup(java.math.MutableBigInteger,java.math.MutableBigInteger,int)>(r6, r3, i0);
+        return $r17;
+    }
+
+    static java.math.MutableBigInteger fixup(java.math.MutableBigInteger, java.math.MutableBigInteger, int)
+    {
+        java.math.MutableBigInteger r0, r1, $r2, r3;
+        int i0, i1, i2, i3, i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, i18, $i19, $i20, $i21, $i22, $i23, i24, $i25, $i26, i27, $i28;
+        int[] $r4, $r5, $r7;
+
+        r0 := @parameter0: java.math.MutableBigInteger;
+        r1 := @parameter1: java.math.MutableBigInteger;
+        i0 := @parameter2: int;
+        $r2 = new java.math.MutableBigInteger;
+        specialinvoke $r2.<java.math.MutableBigInteger: void <init>()>();
+        r3 = $r2;
+        $r4 = r1.<java.math.MutableBigInteger: int[] value>;
+        $i5 = r1.<java.math.MutableBigInteger: int offset>;
+        $i6 = r1.<java.math.MutableBigInteger: int intLen>;
+        $i7 = $i5 + $i6;
+        $i8 = $i7 - 1;
+        $i9 = $r4[$i8];
+        $i10 = staticinvoke <java.math.MutableBigInteger: int inverseMod32(int)>($i9);
+        i1 = neg $i10;
+        i2 = 0;
+        i3 = i0 >> 5;
+
+     label0:
+        if i2 >= i3 goto label1;
+
+        $r5 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i11 = r0.<java.math.MutableBigInteger: int offset>;
+        $i12 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i13 = $i11 + $i12;
+        $i14 = $i13 - 1;
+        $i15 = $r5[$i14];
+        i4 = i1 * $i15;
+        virtualinvoke r1.<java.math.MutableBigInteger: void mul(int,java.math.MutableBigInteger)>(i4, r3);
+        virtualinvoke r0.<java.math.MutableBigInteger: void add(java.math.MutableBigInteger)>(r3);
+        $i16 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i17 = $i16 - 1;
+        r0.<java.math.MutableBigInteger: int intLen> = $i17;
+        i2 = i2 + 1;
+        goto label0;
+
+     label1:
+        i18 = i0 & 31;
+        if i18 == 0 goto label2;
+
+        $r7 = r0.<java.math.MutableBigInteger: int[] value>;
+        $i19 = r0.<java.math.MutableBigInteger: int offset>;
+        $i20 = r0.<java.math.MutableBigInteger: int intLen>;
+        $i21 = $i19 + $i20;
+        $i22 = $i21 - 1;
+        $i23 = $r7[$i22];
+        i24 = i1 * $i23;
+        $i25 = 1 << i18;
+        $i26 = $i25 - 1;
+        i27 = i24 & $i26;
+        virtualinvoke r1.<java.math.MutableBigInteger: void mul(int,java.math.MutableBigInteger)>(i27, r3);
+        virtualinvoke r0.<java.math.MutableBigInteger: void add(java.math.MutableBigInteger)>(r3);
+        virtualinvoke r0.<java.math.MutableBigInteger: void rightShift(int)>(i18);
+
+     label2:
+        $i28 = virtualinvoke r0.<java.math.MutableBigInteger: int compare(java.math.MutableBigInteger)>(r1);
+        if $i28 < 0 goto label3;
+
+        virtualinvoke r0.<java.math.MutableBigInteger: int subtract(java.math.MutableBigInteger)>(r1);
+        goto label2;
+
+     label3:
+        return r0;
+    }
+
+    java.math.MutableBigInteger euclidModInverse(int)
+    {
+        java.math.MutableBigInteger r0, $r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, $r11, $r12, $r13, r14, r15, $r16, $r17, $r18, r19, r21, r23, r24, r25, r26, r28, r30;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8;
+        boolean $z0, $z1;
+        java.lang.ArithmeticException $r20, $r27;
+        int[] $r22, $r29;
+
+        r0 := @this: java.math.MutableBigInteger;
+        i0 := @parameter0: int;
+        $r1 = new java.math.MutableBigInteger;
+        specialinvoke $r1.<java.math.MutableBigInteger: void <init>(int)>(1);
+        r2 = $r1;
+        virtualinvoke r2.<java.math.MutableBigInteger: void leftShift(int)>(i0);
+        $r11 = new java.math.MutableBigInteger;
+        specialinvoke $r11.<java.math.MutableBigInteger: void <init>(java.math.MutableBigInteger)>(r2);
+        r3 = $r11;
+        $r12 = new java.math.MutableBigInteger;
+        specialinvoke $r12.<java.math.MutableBigInteger: void <init>(java.math.MutableBigInteger)>(r0);
+        r4 = $r12;
+        $r13 = new java.math.MutableBigInteger;
+        specialinvoke $r13.<java.math.MutableBigInteger: void <init>()>();
+        r5 = $r13;
+        r6 = virtualinvoke r2.<java.math.MutableBigInteger: java.math.MutableBigInteger divide(java.math.MutableBigInteger,java.math.MutableBigInteger)>(r4, r5);
+        r7 = r2;
+        r14 = r6;
+        r15 = r7;
+        $r16 = new java.math.MutableBigInteger;
+        specialinvoke $r16.<java.math.MutableBigInteger: void <init>(java.math.MutableBigInteger)>(r5);
+        r8 = $r16;
+        $r17 = new java.math.MutableBigInteger;
+        specialinvoke $r17.<java.math.MutableBigInteger: void <init>(int)>(1);
+        r9 = $r17;
+        $r18 = new java.math.MutableBigInteger;
+        specialinvoke $r18.<java.math.MutableBigInteger: void <init>()>();
+        r10 = $r18;
+
+     label0:
+        $z0 = virtualinvoke r14.<java.math.MutableBigInteger: boolean isOne()>();
+        if $z0 != 0 goto label8;
+
+        r19 = virtualinvoke r4.<java.math.MutableBigInteger: java.math.MutableBigInteger divide(java.math.MutableBigInteger,java.math.MutableBigInteger)>(r14, r5);
+        $i1 = r19.<java.math.MutableBigInteger: int intLen>;
+        if $i1 != 0 goto label1;
+
+        $r20 = new java.lang.ArithmeticException;
+        specialinvoke $r20.<java.lang.ArithmeticException: void <init>(java.lang.String)>("BigInteger not invertible.");
+        throw $r20;
+
+     label1:
+        r21 = r19;
+        r4 = r21;
+        $i2 = r5.<java.math.MutableBigInteger: int intLen>;
+        if $i2 != 1 goto label2;
+
+        $r22 = r5.<java.math.MutableBigInteger: int[] value>;
+        $i3 = r5.<java.math.MutableBigInteger: int offset>;
+        $i4 = $r22[$i3];
+        virtualinvoke r8.<java.math.MutableBigInteger: void mul(int,java.math.MutableBigInteger)>($i4, r10);
+        goto label3;
+
+     label2:
+        virtualinvoke r5.<java.math.MutableBigInteger: void multiply(java.math.MutableBigInteger,java.math.MutableBigInteger)>(r8, r10);
+
+     label3:
+        r23 = r5;
+        r24 = r10;
+        r25 = r23;
+        virtualinvoke r9.<java.math.MutableBigInteger: void add(java.math.MutableBigInteger)>(r24);
+        $z1 = virtualinvoke r4.<java.math.MutableBigInteger: boolean isOne()>();
+        if $z1 == 0 goto label4;
+
+        return r9;
+
+     label4:
+        r26 = virtualinvoke r14.<java.math.MutableBigInteger: java.math.MutableBigInteger divide(java.math.MutableBigInteger,java.math.MutableBigInteger)>(r4, r24);
+        $i5 = r26.<java.math.MutableBigInteger: int intLen>;
+        if $i5 != 0 goto label5;
+
+        $r27 = new java.lang.ArithmeticException;
+        specialinvoke $r27.<java.lang.ArithmeticException: void <init>(java.lang.String)>("BigInteger not invertible.");
+        throw $r27;
+
+     label5:
+        r28 = r14;
+        r14 = r26;
+        $i6 = r24.<java.math.MutableBigInteger: int intLen>;
+        if $i6 != 1 goto label6;
+
+        $r29 = r24.<java.math.MutableBigInteger: int[] value>;
+        $i7 = r24.<java.math.MutableBigInteger: int offset>;
+        $i8 = $r29[$i7];
+        virtualinvoke r9.<java.math.MutableBigInteger: void mul(int,java.math.MutableBigInteger)>($i8, r25);
+        goto label7;
+
+     label6:
+        virtualinvoke r24.<java.math.MutableBigInteger: void multiply(java.math.MutableBigInteger,java.math.MutableBigInteger)>(r9, r25);
+
+     label7:
+        r30 = r24;
+        r5 = r25;
+        r10 = r30;
+        virtualinvoke r8.<java.math.MutableBigInteger: void add(java.math.MutableBigInteger)>(r5);
+        goto label0;
+
+     label8:
+        virtualinvoke r3.<java.math.MutableBigInteger: int subtract(java.math.MutableBigInteger)>(r8);
+        return r3;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        boolean $z0, $z1;
+        java.math.MutableBigInteger $r1;
+
+        $r0 = class "java/math/MutableBigInteger";
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        <java.math.MutableBigInteger: boolean $assertionsDisabled> = $z1;
+        $r1 = new java.math.MutableBigInteger;
+        specialinvoke $r1.<java.math.MutableBigInteger: void <init>(int)>(1);
+        <java.math.MutableBigInteger: java.math.MutableBigInteger ONE> = $r1;
+        return;
+    }
+}

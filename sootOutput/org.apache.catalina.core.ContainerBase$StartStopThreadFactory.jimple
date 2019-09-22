@@ -1,0 +1,66 @@
+class org.apache.catalina.core.ContainerBase$StartStopThreadFactory extends java.lang.Object implements java.util.concurrent.ThreadFactory
+{
+    private final java.lang.ThreadGroup group;
+    private final java.util.concurrent.atomic.AtomicInteger threadNumber;
+    private final java.lang.String namePrefix;
+
+    public void <init>(java.lang.String)
+    {
+        org.apache.catalina.core.ContainerBase$StartStopThreadFactory r0;
+        java.lang.String r1;
+        java.util.concurrent.atomic.AtomicInteger $r2;
+        java.lang.SecurityManager r3;
+        java.lang.ThreadGroup $r5;
+        java.lang.Thread $r6;
+
+        r0 := @this: org.apache.catalina.core.ContainerBase$StartStopThreadFactory;
+        r1 := @parameter0: java.lang.String;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r2 = new java.util.concurrent.atomic.AtomicInteger;
+        specialinvoke $r2.<java.util.concurrent.atomic.AtomicInteger: void <init>(int)>(1);
+        r0.<org.apache.catalina.core.ContainerBase$StartStopThreadFactory: java.util.concurrent.atomic.AtomicInteger threadNumber> = $r2;
+        r3 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r3 == null goto label0;
+
+        $r5 = virtualinvoke r3.<java.lang.SecurityManager: java.lang.ThreadGroup getThreadGroup()>();
+        goto label1;
+
+     label0:
+        $r6 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        $r5 = virtualinvoke $r6.<java.lang.Thread: java.lang.ThreadGroup getThreadGroup()>();
+
+     label1:
+        r0.<org.apache.catalina.core.ContainerBase$StartStopThreadFactory: java.lang.ThreadGroup group> = $r5;
+        r0.<org.apache.catalina.core.ContainerBase$StartStopThreadFactory: java.lang.String namePrefix> = r1;
+        return;
+    }
+
+    public java.lang.Thread newThread(java.lang.Runnable)
+    {
+        org.apache.catalina.core.ContainerBase$StartStopThreadFactory r0;
+        java.lang.Runnable r1;
+        java.lang.Thread $r2, r4;
+        java.lang.StringBuilder $r3, $r9;
+        java.lang.ThreadGroup $r5;
+        java.lang.String $r6, $r7, $r10;
+        java.util.concurrent.atomic.AtomicInteger $r8;
+        int $i0;
+
+        r0 := @this: org.apache.catalina.core.ContainerBase$StartStopThreadFactory;
+        r1 := @parameter0: java.lang.Runnable;
+        $r2 = new java.lang.Thread;
+        $r5 = r0.<org.apache.catalina.core.ContainerBase$StartStopThreadFactory: java.lang.ThreadGroup group>;
+        $r3 = new java.lang.StringBuilder;
+        $r6 = r0.<org.apache.catalina.core.ContainerBase$StartStopThreadFactory: java.lang.String namePrefix>;
+        $r7 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r6);
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>(java.lang.String)>($r7);
+        $r8 = r0.<org.apache.catalina.core.ContainerBase$StartStopThreadFactory: java.util.concurrent.atomic.AtomicInteger threadNumber>;
+        $i0 = virtualinvoke $r8.<java.util.concurrent.atomic.AtomicInteger: int getAndIncrement()>();
+        $r9 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i0);
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.Thread: void <init>(java.lang.ThreadGroup,java.lang.Runnable,java.lang.String)>($r5, r1, $r10);
+        r4 = $r2;
+        virtualinvoke r4.<java.lang.Thread: void setDaemon(boolean)>(1);
+        return r4;
+    }
+}

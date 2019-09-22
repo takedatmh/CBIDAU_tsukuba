@@ -1,0 +1,493 @@
+public class org.apache.tomcat.util.net.NioBlockingSelector extends java.lang.Object
+{
+    private static final org.apache.juli.logging.Log log;
+    private static int threadCounter;
+    private java.util.Queue keyReferenceQueue;
+    protected java.nio.channels.Selector sharedSelector;
+    protected org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller;
+
+    static void <clinit>()
+    {
+        org.apache.juli.logging.Log $r0;
+
+        $r0 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/tomcat/util/net/NioBlockingSelector");
+        <org.apache.tomcat.util.net.NioBlockingSelector: org.apache.juli.logging.Log log> = $r0;
+        <org.apache.tomcat.util.net.NioBlockingSelector: int threadCounter> = 0;
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.tomcat.util.net.NioBlockingSelector r0;
+        java.util.concurrent.ConcurrentLinkedQueue $r1;
+
+        r0 := @this: org.apache.tomcat.util.net.NioBlockingSelector;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r1 = new java.util.concurrent.ConcurrentLinkedQueue;
+        specialinvoke $r1.<java.util.concurrent.ConcurrentLinkedQueue: void <init>()>();
+        r0.<org.apache.tomcat.util.net.NioBlockingSelector: java.util.Queue keyReferenceQueue> = $r1;
+        return;
+    }
+
+    public void open(java.nio.channels.Selector)
+    {
+        org.apache.tomcat.util.net.NioBlockingSelector r0;
+        java.nio.channels.Selector r1, $r4;
+        org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller $r2, $r3, $r5, $r6, $r10;
+        java.lang.StringBuilder $r7, $r8;
+        int $i0, $i1;
+        java.lang.String $r9;
+
+        r0 := @this: org.apache.tomcat.util.net.NioBlockingSelector;
+        r1 := @parameter0: java.nio.channels.Selector;
+        r0.<org.apache.tomcat.util.net.NioBlockingSelector: java.nio.channels.Selector sharedSelector> = r1;
+        $r2 = new org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller;
+        specialinvoke $r2.<org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller: void <init>()>();
+        r0.<org.apache.tomcat.util.net.NioBlockingSelector: org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller> = $r2;
+        $r3 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller>;
+        $r4 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: java.nio.channels.Selector sharedSelector>;
+        $r3.<org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller: java.nio.channels.Selector selector> = $r4;
+        $r5 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller>;
+        virtualinvoke $r5.<org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller: void setDaemon(boolean)>(1);
+        $r6 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller>;
+        $r7 = new java.lang.StringBuilder;
+        specialinvoke $r7.<java.lang.StringBuilder: void <init>(java.lang.String)>("NioBlockingSelector.BlockPoller-");
+        $i0 = <org.apache.tomcat.util.net.NioBlockingSelector: int threadCounter>;
+        $i1 = $i0 + 1;
+        <org.apache.tomcat.util.net.NioBlockingSelector: int threadCounter> = $i1;
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i1);
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke $r6.<org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller: void setName(java.lang.String)>($r9);
+        $r10 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller>;
+        virtualinvoke $r10.<org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller: void start()>();
+        return;
+    }
+
+    public void close()
+    {
+        org.apache.tomcat.util.net.NioBlockingSelector r0;
+        org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller $r1, $r2, $r3;
+
+        r0 := @this: org.apache.tomcat.util.net.NioBlockingSelector;
+        $r1 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller>;
+        virtualinvoke $r2.<org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller: void disable()>();
+        $r3 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller>;
+        virtualinvoke $r3.<org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller: void interrupt()>();
+        r0.<org.apache.tomcat.util.net.NioBlockingSelector: org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller> = null;
+
+     label0:
+        return;
+    }
+
+    public int write(java.nio.ByteBuffer, org.apache.tomcat.util.net.NioChannel, long) throws java.io.IOException
+    {
+        org.apache.tomcat.util.net.NioBlockingSelector r0;
+        java.nio.ByteBuffer r1;
+        org.apache.tomcat.util.net.NioChannel r2;
+        long l0, l3, $l5, $l8, $l11, $l12;
+        java.nio.channels.SelectionKey r3, $r28, $r30, $r33, $r35;
+        org.apache.tomcat.util.net.NioBlockingSelector$KeyReference r4, $r13;
+        org.apache.tomcat.util.net.NioEndpoint$KeyAttachment r5;
+        int i1, i4;
+        boolean z0, $z2, $z3;
+        byte b2, $b6, $b7, $b9, $b10, $b13;
+        java.lang.Throwable r6, $r26;
+        java.nio.channels.SocketChannel $r7;
+        org.apache.tomcat.util.net.NioEndpoint$Poller $r8;
+        java.nio.channels.Selector $r9;
+        java.io.IOException $r10;
+        java.util.Queue $r11, $r31, $r36;
+        java.lang.Object $r12, $r14;
+        java.io.EOFException $r15;
+        java.util.concurrent.CountDownLatch $r16, $r17, $r23, $r24;
+        org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller $r18, $r27, $r29, $r32, $r34;
+        java.util.concurrent.TimeUnit $r19, $r20;
+        java.lang.InterruptedException $r21, r22;
+        java.net.SocketTimeoutException $r25;
+
+        r0 := @this: org.apache.tomcat.util.net.NioBlockingSelector;
+        r1 := @parameter0: java.nio.ByteBuffer;
+        r2 := @parameter1: org.apache.tomcat.util.net.NioChannel;
+        l0 := @parameter2: long;
+        $r7 = virtualinvoke r2.<org.apache.tomcat.util.net.NioChannel: java.nio.channels.SocketChannel getIOChannel()>();
+        $r8 = virtualinvoke r2.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.NioEndpoint$Poller getPoller()>();
+        $r9 = virtualinvoke $r8.<org.apache.tomcat.util.net.NioEndpoint$Poller: java.nio.channels.Selector getSelector()>();
+        r3 = virtualinvoke $r7.<java.nio.channels.SocketChannel: java.nio.channels.SelectionKey keyFor(java.nio.channels.Selector)>($r9);
+        if r3 != null goto label0;
+
+        $r10 = new java.io.IOException;
+        specialinvoke $r10.<java.io.IOException: void <init>(java.lang.String)>("Key no longer registered");
+        throw $r10;
+
+     label0:
+        $r11 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: java.util.Queue keyReferenceQueue>;
+        $r12 = interfaceinvoke $r11.<java.util.Queue: java.lang.Object poll()>();
+        r4 = (org.apache.tomcat.util.net.NioBlockingSelector$KeyReference) $r12;
+        if r4 != null goto label1;
+
+        $r13 = new org.apache.tomcat.util.net.NioBlockingSelector$KeyReference;
+        specialinvoke $r13.<org.apache.tomcat.util.net.NioBlockingSelector$KeyReference: void <init>()>();
+        r4 = $r13;
+
+     label1:
+        $r14 = virtualinvoke r3.<java.nio.channels.SelectionKey: java.lang.Object attachment()>();
+        r5 = (org.apache.tomcat.util.net.NioEndpoint$KeyAttachment) $r14;
+        i1 = 0;
+        z0 = 0;
+        b2 = 1;
+        l3 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+
+     label2:
+        goto label16;
+
+     label3:
+        if b2 <= 0 goto label5;
+
+        i4 = virtualinvoke r2.<org.apache.tomcat.util.net.NioChannel: int write(java.nio.ByteBuffer)>(r1);
+        if i4 != -1 goto label4;
+
+        $r15 = new java.io.EOFException;
+        specialinvoke $r15.<java.io.EOFException: void <init>()>();
+        throw $r15;
+
+     label4:
+        i1 = i1 + i4;
+        if i4 <= 0 goto label5;
+
+        l3 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        goto label16;
+
+     label5:
+        $r16 = virtualinvoke r5.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: java.util.concurrent.CountDownLatch getWriteLatch()>();
+        if $r16 == null goto label6;
+
+        $r17 = virtualinvoke r5.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: java.util.concurrent.CountDownLatch getWriteLatch()>();
+        $l5 = virtualinvoke $r17.<java.util.concurrent.CountDownLatch: long getCount()>();
+        $b6 = $l5 cmp 0L;
+        if $b6 != 0 goto label7;
+
+     label6:
+        virtualinvoke r5.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void startWriteLatch(int)>(1);
+
+     label7:
+        $r18 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller>;
+        virtualinvoke $r18.<org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller: void add(org.apache.tomcat.util.net.NioEndpoint$KeyAttachment,int,org.apache.tomcat.util.net.NioBlockingSelector$KeyReference)>(r5, 4, r4);
+        $b7 = l0 cmp 0L;
+        if $b7 >= 0 goto label8;
+
+        $r19 = <java.util.concurrent.TimeUnit: java.util.concurrent.TimeUnit MILLISECONDS>;
+        virtualinvoke r5.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void awaitWriteLatch(long,java.util.concurrent.TimeUnit)>(9223372036854775807L, $r19);
+        goto label11;
+
+     label8:
+        $r20 = <java.util.concurrent.TimeUnit: java.util.concurrent.TimeUnit MILLISECONDS>;
+        virtualinvoke r5.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void awaitWriteLatch(long,java.util.concurrent.TimeUnit)>(l0, $r20);
+
+     label9:
+        goto label11;
+
+     label10:
+        $r21 := @caughtexception;
+        r22 = $r21;
+        staticinvoke <java.lang.Thread: boolean interrupted()>();
+
+     label11:
+        $r23 = virtualinvoke r5.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: java.util.concurrent.CountDownLatch getWriteLatch()>();
+        if $r23 == null goto label12;
+
+        $r24 = virtualinvoke r5.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: java.util.concurrent.CountDownLatch getWriteLatch()>();
+        $l8 = virtualinvoke $r24.<java.util.concurrent.CountDownLatch: long getCount()>();
+        $b9 = $l8 cmp 0L;
+        if $b9 <= 0 goto label12;
+
+        b2 = 0;
+        goto label13;
+
+     label12:
+        b2 = 1;
+        virtualinvoke r5.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void resetWriteLatch()>();
+
+     label13:
+        $b10 = l0 cmp 0L;
+        if $b10 <= 0 goto label16;
+
+        if b2 != 0 goto label16;
+
+        $l11 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        $l12 = $l11 - l3;
+        $b13 = $l12 cmp l0;
+        if $b13 < 0 goto label14;
+
+        $z2 = 1;
+        goto label15;
+
+     label14:
+        $z2 = 0;
+
+     label15:
+        z0 = $z2;
+
+     label16:
+        if z0 != 0 goto label17;
+
+        $z3 = virtualinvoke r1.<java.nio.ByteBuffer: boolean hasRemaining()>();
+        if $z3 != 0 goto label3;
+
+     label17:
+        if z0 == 0 goto label20;
+
+        $r25 = new java.net.SocketTimeoutException;
+        specialinvoke $r25.<java.net.SocketTimeoutException: void <init>()>();
+        throw $r25;
+
+     label18:
+        $r26 := @caughtexception;
+        r6 = $r26;
+        $r27 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller>;
+        virtualinvoke $r27.<org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller: void remove(org.apache.tomcat.util.net.NioEndpoint$KeyAttachment,int)>(r5, 4);
+        if z0 == 0 goto label19;
+
+        $r28 = r4.<org.apache.tomcat.util.net.NioBlockingSelector$KeyReference: java.nio.channels.SelectionKey key>;
+        if $r28 == null goto label19;
+
+        $r29 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller>;
+        $r30 = r4.<org.apache.tomcat.util.net.NioBlockingSelector$KeyReference: java.nio.channels.SelectionKey key>;
+        virtualinvoke $r29.<org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller: void cancelKey(java.nio.channels.SelectionKey)>($r30);
+
+     label19:
+        r4.<org.apache.tomcat.util.net.NioBlockingSelector$KeyReference: java.nio.channels.SelectionKey key> = null;
+        $r31 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: java.util.Queue keyReferenceQueue>;
+        interfaceinvoke $r31.<java.util.Queue: boolean add(java.lang.Object)>(r4);
+        throw r6;
+
+     label20:
+        $r32 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller>;
+        virtualinvoke $r32.<org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller: void remove(org.apache.tomcat.util.net.NioEndpoint$KeyAttachment,int)>(r5, 4);
+        if z0 == 0 goto label21;
+
+        $r33 = r4.<org.apache.tomcat.util.net.NioBlockingSelector$KeyReference: java.nio.channels.SelectionKey key>;
+        if $r33 == null goto label21;
+
+        $r34 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller>;
+        $r35 = r4.<org.apache.tomcat.util.net.NioBlockingSelector$KeyReference: java.nio.channels.SelectionKey key>;
+        virtualinvoke $r34.<org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller: void cancelKey(java.nio.channels.SelectionKey)>($r35);
+
+     label21:
+        r4.<org.apache.tomcat.util.net.NioBlockingSelector$KeyReference: java.nio.channels.SelectionKey key> = null;
+        $r36 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: java.util.Queue keyReferenceQueue>;
+        interfaceinvoke $r36.<java.util.Queue: boolean add(java.lang.Object)>(r4);
+        return i1;
+
+        catch java.lang.InterruptedException from label5 to label9 with label10;
+        catch java.lang.Throwable from label2 to label18 with label18;
+    }
+
+    public int read(java.nio.ByteBuffer, org.apache.tomcat.util.net.NioChannel, long) throws java.io.IOException
+    {
+        org.apache.tomcat.util.net.NioBlockingSelector r0;
+        java.nio.ByteBuffer r1;
+        org.apache.tomcat.util.net.NioChannel r2;
+        long l0, l3, $l4, $l7, $l10, $l11;
+        java.nio.channels.SelectionKey r3, $r28, $r30, $r33, $r35;
+        org.apache.tomcat.util.net.NioBlockingSelector$KeyReference r4, $r14;
+        org.apache.tomcat.util.net.NioEndpoint$KeyAttachment r5;
+        int i1;
+        boolean z0, $z2;
+        byte b2, $b5, $b6, $b8, $b9, $b12;
+        java.lang.InterruptedException r6, $r22;
+        java.lang.Throwable r7, $r26;
+        java.nio.channels.SocketChannel $r8;
+        org.apache.tomcat.util.net.NioEndpoint$Poller $r9;
+        java.nio.channels.Selector $r10;
+        java.io.IOException $r11;
+        java.util.Queue $r12, $r31, $r36;
+        java.lang.Object $r13, $r15;
+        java.io.EOFException $r16;
+        java.util.concurrent.CountDownLatch $r17, $r18, $r23, $r24;
+        org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller $r19, $r27, $r29, $r32, $r34;
+        java.util.concurrent.TimeUnit $r20, $r21;
+        java.net.SocketTimeoutException $r25;
+
+        r0 := @this: org.apache.tomcat.util.net.NioBlockingSelector;
+        r1 := @parameter0: java.nio.ByteBuffer;
+        r2 := @parameter1: org.apache.tomcat.util.net.NioChannel;
+        l0 := @parameter2: long;
+        $r8 = virtualinvoke r2.<org.apache.tomcat.util.net.NioChannel: java.nio.channels.SocketChannel getIOChannel()>();
+        $r9 = virtualinvoke r2.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.NioEndpoint$Poller getPoller()>();
+        $r10 = virtualinvoke $r9.<org.apache.tomcat.util.net.NioEndpoint$Poller: java.nio.channels.Selector getSelector()>();
+        r3 = virtualinvoke $r8.<java.nio.channels.SocketChannel: java.nio.channels.SelectionKey keyFor(java.nio.channels.Selector)>($r10);
+        if r3 != null goto label0;
+
+        $r11 = new java.io.IOException;
+        specialinvoke $r11.<java.io.IOException: void <init>(java.lang.String)>("Key no longer registered");
+        throw $r11;
+
+     label0:
+        $r12 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: java.util.Queue keyReferenceQueue>;
+        $r13 = interfaceinvoke $r12.<java.util.Queue: java.lang.Object poll()>();
+        r4 = (org.apache.tomcat.util.net.NioBlockingSelector$KeyReference) $r13;
+        if r4 != null goto label1;
+
+        $r14 = new org.apache.tomcat.util.net.NioBlockingSelector$KeyReference;
+        specialinvoke $r14.<org.apache.tomcat.util.net.NioBlockingSelector$KeyReference: void <init>()>();
+        r4 = $r14;
+
+     label1:
+        $r15 = virtualinvoke r3.<java.nio.channels.SelectionKey: java.lang.Object attachment()>();
+        r5 = (org.apache.tomcat.util.net.NioEndpoint$KeyAttachment) $r15;
+        i1 = 0;
+        z0 = 0;
+        b2 = 1;
+        l3 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+
+     label2:
+        goto label16;
+
+     label3:
+        if b2 <= 0 goto label5;
+
+        i1 = virtualinvoke r2.<org.apache.tomcat.util.net.NioChannel: int read(java.nio.ByteBuffer)>(r1);
+        if i1 != -1 goto label4;
+
+        $r16 = new java.io.EOFException;
+        specialinvoke $r16.<java.io.EOFException: void <init>()>();
+        throw $r16;
+
+     label4:
+        if i1 <= 0 goto label5;
+
+        goto label17;
+
+     label5:
+        $r17 = virtualinvoke r5.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: java.util.concurrent.CountDownLatch getReadLatch()>();
+        if $r17 == null goto label6;
+
+        $r18 = virtualinvoke r5.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: java.util.concurrent.CountDownLatch getReadLatch()>();
+        $l4 = virtualinvoke $r18.<java.util.concurrent.CountDownLatch: long getCount()>();
+        $b5 = $l4 cmp 0L;
+        if $b5 != 0 goto label7;
+
+     label6:
+        virtualinvoke r5.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void startReadLatch(int)>(1);
+
+     label7:
+        $r19 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller>;
+        virtualinvoke $r19.<org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller: void add(org.apache.tomcat.util.net.NioEndpoint$KeyAttachment,int,org.apache.tomcat.util.net.NioBlockingSelector$KeyReference)>(r5, 1, r4);
+        $b6 = l0 cmp 0L;
+        if $b6 >= 0 goto label8;
+
+        $r20 = <java.util.concurrent.TimeUnit: java.util.concurrent.TimeUnit MILLISECONDS>;
+        virtualinvoke r5.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void awaitReadLatch(long,java.util.concurrent.TimeUnit)>(9223372036854775807L, $r20);
+        goto label11;
+
+     label8:
+        $r21 = <java.util.concurrent.TimeUnit: java.util.concurrent.TimeUnit MILLISECONDS>;
+        virtualinvoke r5.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void awaitReadLatch(long,java.util.concurrent.TimeUnit)>(l0, $r21);
+
+     label9:
+        goto label11;
+
+     label10:
+        $r22 := @caughtexception;
+        r6 = $r22;
+        staticinvoke <java.lang.Thread: boolean interrupted()>();
+
+     label11:
+        $r23 = virtualinvoke r5.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: java.util.concurrent.CountDownLatch getReadLatch()>();
+        if $r23 == null goto label12;
+
+        $r24 = virtualinvoke r5.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: java.util.concurrent.CountDownLatch getReadLatch()>();
+        $l7 = virtualinvoke $r24.<java.util.concurrent.CountDownLatch: long getCount()>();
+        $b8 = $l7 cmp 0L;
+        if $b8 <= 0 goto label12;
+
+        b2 = 0;
+        goto label13;
+
+     label12:
+        b2 = 1;
+        virtualinvoke r5.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void resetReadLatch()>();
+
+     label13:
+        $b9 = l0 cmp 0L;
+        if $b9 < 0 goto label16;
+
+        if b2 != 0 goto label16;
+
+        $l10 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        $l11 = $l10 - l3;
+        $b12 = $l11 cmp l0;
+        if $b12 < 0 goto label14;
+
+        $z2 = 1;
+        goto label15;
+
+     label14:
+        $z2 = 0;
+
+     label15:
+        z0 = $z2;
+
+     label16:
+        if z0 == 0 goto label3;
+
+     label17:
+        if z0 == 0 goto label20;
+
+        $r25 = new java.net.SocketTimeoutException;
+        specialinvoke $r25.<java.net.SocketTimeoutException: void <init>()>();
+        throw $r25;
+
+     label18:
+        $r26 := @caughtexception;
+        r7 = $r26;
+        $r27 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller>;
+        virtualinvoke $r27.<org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller: void remove(org.apache.tomcat.util.net.NioEndpoint$KeyAttachment,int)>(r5, 1);
+        if z0 == 0 goto label19;
+
+        $r28 = r4.<org.apache.tomcat.util.net.NioBlockingSelector$KeyReference: java.nio.channels.SelectionKey key>;
+        if $r28 == null goto label19;
+
+        $r29 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller>;
+        $r30 = r4.<org.apache.tomcat.util.net.NioBlockingSelector$KeyReference: java.nio.channels.SelectionKey key>;
+        virtualinvoke $r29.<org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller: void cancelKey(java.nio.channels.SelectionKey)>($r30);
+
+     label19:
+        r4.<org.apache.tomcat.util.net.NioBlockingSelector$KeyReference: java.nio.channels.SelectionKey key> = null;
+        $r31 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: java.util.Queue keyReferenceQueue>;
+        interfaceinvoke $r31.<java.util.Queue: boolean add(java.lang.Object)>(r4);
+        throw r7;
+
+     label20:
+        $r32 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller>;
+        virtualinvoke $r32.<org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller: void remove(org.apache.tomcat.util.net.NioEndpoint$KeyAttachment,int)>(r5, 1);
+        if z0 == 0 goto label21;
+
+        $r33 = r4.<org.apache.tomcat.util.net.NioBlockingSelector$KeyReference: java.nio.channels.SelectionKey key>;
+        if $r33 == null goto label21;
+
+        $r34 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller poller>;
+        $r35 = r4.<org.apache.tomcat.util.net.NioBlockingSelector$KeyReference: java.nio.channels.SelectionKey key>;
+        virtualinvoke $r34.<org.apache.tomcat.util.net.NioBlockingSelector$BlockPoller: void cancelKey(java.nio.channels.SelectionKey)>($r35);
+
+     label21:
+        r4.<org.apache.tomcat.util.net.NioBlockingSelector$KeyReference: java.nio.channels.SelectionKey key> = null;
+        $r36 = r0.<org.apache.tomcat.util.net.NioBlockingSelector: java.util.Queue keyReferenceQueue>;
+        interfaceinvoke $r36.<java.util.Queue: boolean add(java.lang.Object)>(r4);
+        return i1;
+
+        catch java.lang.InterruptedException from label5 to label9 with label10;
+        catch java.lang.Throwable from label2 to label18 with label18;
+    }
+
+    static org.apache.juli.logging.Log access$0()
+    {
+        org.apache.juli.logging.Log $r0;
+
+        $r0 = <org.apache.tomcat.util.net.NioBlockingSelector: org.apache.juli.logging.Log log>;
+        return $r0;
+    }
+}

@@ -1,0 +1,3556 @@
+public abstract class org.apache.coyote.http11.AbstractHttp11Processor extends org.apache.coyote.AbstractProcessor
+{
+    protected static final org.apache.tomcat.util.res.StringManager sm;
+    private int pluggableFilterIndex;
+    protected boolean keepAlive;
+    protected boolean openSocket;
+    protected boolean keptAlive;
+    protected boolean sendfileInProgress;
+    protected boolean readComplete;
+    protected boolean http11;
+    protected boolean http09;
+    protected boolean contentDelimitation;
+    protected boolean expectation;
+    protected boolean comet;
+    protected java.util.regex.Pattern restrictedUserAgents;
+    protected int maxKeepAliveRequests;
+    protected int keepAliveTimeout;
+    protected java.lang.String remoteAddr;
+    protected java.lang.String remoteHost;
+    protected java.lang.String localName;
+    protected int localPort;
+    protected int remotePort;
+    protected java.lang.String localAddr;
+    protected int connectionUploadTimeout;
+    protected boolean disableUploadTimeout;
+    protected int compressionLevel;
+    protected int compressionMinSize;
+    protected int socketBuffer;
+    protected int maxSavePostSize;
+    protected java.util.regex.Pattern noCompressionUserAgents;
+    protected java.lang.String[] compressableMimeTypes;
+    protected java.lang.String server;
+    protected org.apache.coyote.http11.upgrade.UpgradeInbound upgradeInbound;
+    protected org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler httpUpgradeHandler;
+    private boolean allowHostHeaderMismatch;
+    protected org.apache.tomcat.util.http.parser.HttpParser httpParser;
+    private static int[] $SWITCH_TABLE$org$apache$coyote$ActionCode;
+    private static int[] $SWITCH_TABLE$org$apache$tomcat$util$log$UserDataHelper$Mode;
+
+    static void <clinit>()
+    {
+        org.apache.tomcat.util.res.StringManager $r0;
+
+        $r0 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String)>("org.apache.coyote.http11");
+        <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm> = $r0;
+        return;
+    }
+
+    public boolean getAllowHostHeaderMismatch()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        $z0 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean allowHostHeaderMismatch>;
+        return $z0;
+    }
+
+    public void setAllowHostHeaderMismatch(boolean)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        boolean z0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean allowHostHeaderMismatch> = z0;
+        return;
+    }
+
+    public void <init>(org.apache.tomcat.util.net.AbstractEndpoint)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        org.apache.tomcat.util.net.AbstractEndpoint r1;
+        java.lang.String[] $r2;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: org.apache.tomcat.util.net.AbstractEndpoint;
+        specialinvoke r0.<org.apache.coyote.AbstractProcessor: void <init>(org.apache.tomcat.util.net.AbstractEndpoint)>(r1);
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int pluggableFilterIndex> = 2147483647;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keepAlive> = 1;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean openSocket> = 0;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean sendfileInProgress> = 0;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean readComplete> = 1;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean http11> = 1;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean http09> = 0;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean contentDelimitation> = 1;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean expectation> = 0;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean comet> = 0;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.util.regex.Pattern restrictedUserAgents> = null;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int maxKeepAliveRequests> = -1;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int keepAliveTimeout> = -1;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String remoteAddr> = null;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String remoteHost> = null;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String localName> = null;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int localPort> = -1;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int remotePort> = -1;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String localAddr> = null;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int connectionUploadTimeout> = 300000;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean disableUploadTimeout> = 0;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int compressionLevel> = 0;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int compressionMinSize> = 2048;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int socketBuffer> = -1;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int maxSavePostSize> = 4096;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.util.regex.Pattern noCompressionUserAgents> = null;
+        $r2 = newarray (java.lang.String)[3];
+        $r2[0] = "text/html";
+        $r2[1] = "text/xml";
+        $r2[2] = "text/plain";
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String[] compressableMimeTypes> = $r2;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String server> = null;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.upgrade.UpgradeInbound upgradeInbound> = null;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler httpUpgradeHandler> = null;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean allowHostHeaderMismatch> = 1;
+        return;
+    }
+
+    public void setCompression(java.lang.String)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        java.lang.String r1;
+        java.lang.Exception r2, $r3;
+        boolean $z0, $z1, $z2;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: java.lang.String;
+        $z0 = virtualinvoke r1.<java.lang.String: boolean equals(java.lang.Object)>("on");
+        if $z0 == 0 goto label0;
+
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int compressionLevel> = 1;
+        goto label5;
+
+     label0:
+        $z1 = virtualinvoke r1.<java.lang.String: boolean equals(java.lang.Object)>("force");
+        if $z1 == 0 goto label1;
+
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int compressionLevel> = 2;
+        goto label5;
+
+     label1:
+        $z2 = virtualinvoke r1.<java.lang.String: boolean equals(java.lang.Object)>("off");
+        if $z2 == 0 goto label2;
+
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int compressionLevel> = 0;
+        goto label5;
+
+     label2:
+        $i0 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>(r1);
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int compressionMinSize> = $i0;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int compressionLevel> = 1;
+
+     label3:
+        goto label5;
+
+     label4:
+        $r3 := @caughtexception;
+        r2 = $r3;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int compressionLevel> = 0;
+
+     label5:
+        return;
+
+        catch java.lang.Exception from label2 to label3 with label4;
+    }
+
+    public void setCompressionMinSize(int)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        int i0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        i0 := @parameter0: int;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int compressionMinSize> = i0;
+        return;
+    }
+
+    public void setNoCompressionUserAgents(java.lang.String)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        java.lang.String r1;
+        int $i0;
+        java.util.regex.Pattern $r2;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: java.lang.String;
+        if r1 == null goto label0;
+
+        $i0 = virtualinvoke r1.<java.lang.String: int length()>();
+        if $i0 != 0 goto label1;
+
+     label0:
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.util.regex.Pattern noCompressionUserAgents> = null;
+        goto label2;
+
+     label1:
+        $r2 = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern compile(java.lang.String)>(r1);
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.util.regex.Pattern noCompressionUserAgents> = $r2;
+
+     label2:
+        return;
+    }
+
+    public void addCompressableMimeType(java.lang.String)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: java.lang.String;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void addCompressibleMimeType(java.lang.String)>(r1);
+        return;
+    }
+
+    public void setCompressableMimeTypes(java.lang.String[])
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        java.lang.String[] r1;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: java.lang.String[];
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setCompressibleMimeTypes(java.lang.String[])>(r1);
+        return;
+    }
+
+    public void setCompressableMimeTypes(java.lang.String)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: java.lang.String;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setCompressibleMimeTypes(java.lang.String)>(r1);
+        return;
+    }
+
+    public void addCompressibleMimeType(java.lang.String)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        java.lang.String r1;
+        java.lang.String[] $r2, $r3;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: java.lang.String;
+        $r2 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String[] compressableMimeTypes>;
+        $r3 = specialinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String[] addStringArray(java.lang.String[],java.lang.String)>($r2, r1);
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String[] compressableMimeTypes> = $r3;
+        return;
+    }
+
+    public void setCompressibleMimeTypes(java.lang.String[])
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        java.lang.String[] r1;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: java.lang.String[];
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String[] compressableMimeTypes> = r1;
+        return;
+    }
+
+    public void setCompressibleMimeTypes(java.lang.String)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        java.lang.String r1, $r4, $r5;
+        java.util.StringTokenizer r2, $r3;
+        boolean $z0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: java.lang.String;
+        if r1 == null goto label2;
+
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String[] compressableMimeTypes> = null;
+        $r3 = new java.util.StringTokenizer;
+        specialinvoke $r3.<java.util.StringTokenizer: void <init>(java.lang.String,java.lang.String)>(r1, ",");
+        r2 = $r3;
+        goto label1;
+
+     label0:
+        $r4 = virtualinvoke r2.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        $r5 = virtualinvoke $r4.<java.lang.String: java.lang.String trim()>();
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void addCompressibleMimeType(java.lang.String)>($r5);
+
+     label1:
+        $z0 = virtualinvoke r2.<java.util.StringTokenizer: boolean hasMoreTokens()>();
+        if $z0 != 0 goto label0;
+
+     label2:
+        return;
+    }
+
+    public java.lang.String getCompression()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        $i0 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: int compressionLevel>;
+        tableswitch($i0)
+        {
+            case 0: goto label0;
+            case 1: goto label1;
+            case 2: goto label2;
+            default: goto label3;
+        };
+
+     label0:
+        return "off";
+
+     label1:
+        return "on";
+
+     label2:
+        return "force";
+
+     label3:
+        return "off";
+    }
+
+    private java.lang.String[] addStringArray(java.lang.String[], java.lang.String)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        java.lang.String[] r1, r3;
+        java.lang.String r2, $r4;
+        null_type n0;
+        int i0, $i1, $i2, $i3, $i4;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: java.lang.String[];
+        r2 := @parameter1: java.lang.String;
+        n0 = null;
+        if r1 != null goto label0;
+
+        r3 = newarray (java.lang.String)[1];
+        r3[0] = r2;
+        goto label3;
+
+     label0:
+        $i1 = lengthof r1;
+        $i2 = $i1 + 1;
+        r3 = newarray (java.lang.String)[$i2];
+        i0 = 0;
+        goto label2;
+
+     label1:
+        $r4 = r1[i0];
+        r3[i0] = $r4;
+        i0 = i0 + 1;
+
+     label2:
+        $i3 = lengthof r1;
+        if i0 < $i3 goto label1;
+
+        $i4 = lengthof r1;
+        r3[$i4] = r2;
+
+     label3:
+        return r3;
+    }
+
+    private boolean startsWithStringArray(java.lang.String[], java.lang.String)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        java.lang.String[] r1;
+        java.lang.String r2, $r3;
+        int i0, $i1;
+        boolean $z0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: java.lang.String[];
+        r2 := @parameter1: java.lang.String;
+        if r2 != null goto label0;
+
+        return 0;
+
+     label0:
+        i0 = 0;
+        goto label3;
+
+     label1:
+        $r3 = r1[i0];
+        $z0 = virtualinvoke r2.<java.lang.String: boolean startsWith(java.lang.String)>($r3);
+        if $z0 == 0 goto label2;
+
+        return 1;
+
+     label2:
+        i0 = i0 + 1;
+
+     label3:
+        $i1 = lengthof r1;
+        if i0 < $i1 goto label1;
+
+        return 0;
+    }
+
+    public void setRestrictedUserAgents(java.lang.String)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        java.lang.String r1;
+        int $i0;
+        java.util.regex.Pattern $r2;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: java.lang.String;
+        if r1 == null goto label0;
+
+        $i0 = virtualinvoke r1.<java.lang.String: int length()>();
+        if $i0 != 0 goto label1;
+
+     label0:
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.util.regex.Pattern restrictedUserAgents> = null;
+        goto label2;
+
+     label1:
+        $r2 = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern compile(java.lang.String)>(r1);
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.util.regex.Pattern restrictedUserAgents> = $r2;
+
+     label2:
+        return;
+    }
+
+    public void setMaxKeepAliveRequests(int)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        int i0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        i0 := @parameter0: int;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int maxKeepAliveRequests> = i0;
+        return;
+    }
+
+    public int getMaxKeepAliveRequests()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        $i0 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: int maxKeepAliveRequests>;
+        return $i0;
+    }
+
+    public void setKeepAliveTimeout(int)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        int i0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        i0 := @parameter0: int;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int keepAliveTimeout> = i0;
+        return;
+    }
+
+    public int getKeepAliveTimeout()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        $i0 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: int keepAliveTimeout>;
+        return $i0;
+    }
+
+    public void setMaxSavePostSize(int)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        int i0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        i0 := @parameter0: int;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int maxSavePostSize> = i0;
+        return;
+    }
+
+    public int getMaxSavePostSize()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        $i0 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: int maxSavePostSize>;
+        return $i0;
+    }
+
+    public void setDisableUploadTimeout(boolean)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        boolean z0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean disableUploadTimeout> = z0;
+        return;
+    }
+
+    public boolean getDisableUploadTimeout()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        $z0 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean disableUploadTimeout>;
+        return $z0;
+    }
+
+    public void setSocketBuffer(int)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        int i0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        i0 := @parameter0: int;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int socketBuffer> = i0;
+        return;
+    }
+
+    public int getSocketBuffer()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        $i0 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: int socketBuffer>;
+        return $i0;
+    }
+
+    public void setConnectionUploadTimeout(int)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        int i0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        i0 := @parameter0: int;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int connectionUploadTimeout> = i0;
+        return;
+    }
+
+    public int getConnectionUploadTimeout()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        $i0 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: int connectionUploadTimeout>;
+        return $i0;
+    }
+
+    public void setServer(java.lang.String)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        java.lang.String r1;
+        boolean $z0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: java.lang.String;
+        if r1 == null goto label0;
+
+        $z0 = virtualinvoke r1.<java.lang.String: boolean equals(java.lang.Object)>("");
+        if $z0 == 0 goto label1;
+
+     label0:
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String server> = null;
+        goto label2;
+
+     label1:
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String server> = r1;
+
+     label2:
+        return;
+    }
+
+    public java.lang.String getServer()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        $r1 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String server>;
+        return $r1;
+    }
+
+    private boolean isCompressible()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        org.apache.tomcat.util.buf.MessageBytes r1;
+        long l0, $l6;
+        org.apache.coyote.Response $r2, $r4, $r7;
+        org.apache.tomcat.util.http.MimeHeaders $r3;
+        int $i1, $i2, $i3, $i5;
+        byte $b4, $b7;
+        java.lang.String[] $r5, $r6;
+        java.lang.String $r8;
+        boolean $z0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        $r2 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        $r3 = virtualinvoke $r2.<org.apache.coyote.Response: org.apache.tomcat.util.http.MimeHeaders getMimeHeaders()>();
+        r1 = virtualinvoke $r3.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes getValue(java.lang.String)>("Content-Encoding");
+        if r1 == null goto label1;
+
+        $i1 = virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: int indexOf(java.lang.String)>("gzip");
+        if $i1 != -1 goto label0;
+
+        $i2 = virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: int indexOf(java.lang.String)>("br");
+        if $i2 == -1 goto label1;
+
+     label0:
+        return 0;
+
+     label1:
+        $i3 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: int compressionLevel>;
+        if $i3 != 2 goto label2;
+
+        return 1;
+
+     label2:
+        $r4 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        l0 = virtualinvoke $r4.<org.apache.coyote.Response: long getContentLengthLong()>();
+        $b4 = l0 cmp -1L;
+        if $b4 == 0 goto label3;
+
+        $i5 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: int compressionMinSize>;
+        $l6 = (long) $i5;
+        $b7 = l0 cmp $l6;
+        if $b7 <= 0 goto label4;
+
+     label3:
+        $r5 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String[] compressableMimeTypes>;
+        if $r5 == null goto label4;
+
+        $r6 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String[] compressableMimeTypes>;
+        $r7 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        $r8 = virtualinvoke $r7.<org.apache.coyote.Response: java.lang.String getContentType()>();
+        $z0 = specialinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean startsWithStringArray(java.lang.String[],java.lang.String)>($r6, $r8);
+        return $z0;
+
+     label4:
+        return 0;
+    }
+
+    private boolean useCompression()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        org.apache.tomcat.util.buf.MessageBytes r1, r2;
+        java.lang.String r3;
+        org.apache.coyote.Request $r4, $r7;
+        org.apache.tomcat.util.http.MimeHeaders $r5, $r8;
+        int $i0, $i1;
+        java.util.regex.Pattern $r6, $r9;
+        java.util.regex.Matcher $r10;
+        boolean $z0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        $r4 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r5 = virtualinvoke $r4.<org.apache.coyote.Request: org.apache.tomcat.util.http.MimeHeaders getMimeHeaders()>();
+        r1 = virtualinvoke $r5.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes getValue(java.lang.String)>("accept-encoding");
+        if r1 == null goto label0;
+
+        $i0 = virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: int indexOf(java.lang.String)>("gzip");
+        if $i0 != -1 goto label1;
+
+     label0:
+        return 0;
+
+     label1:
+        $i1 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: int compressionLevel>;
+        if $i1 != 2 goto label2;
+
+        return 1;
+
+     label2:
+        $r6 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.util.regex.Pattern noCompressionUserAgents>;
+        if $r6 == null goto label3;
+
+        $r7 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r8 = virtualinvoke $r7.<org.apache.coyote.Request: org.apache.tomcat.util.http.MimeHeaders getMimeHeaders()>();
+        r2 = virtualinvoke $r8.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes getValue(java.lang.String)>("user-agent");
+        if r2 == null goto label3;
+
+        r3 = virtualinvoke r2.<org.apache.tomcat.util.buf.MessageBytes: java.lang.String toString()>();
+        $r9 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.util.regex.Pattern noCompressionUserAgents>;
+        $r10 = virtualinvoke $r9.<java.util.regex.Pattern: java.util.regex.Matcher matcher(java.lang.CharSequence)>(r3);
+        $z0 = virtualinvoke $r10.<java.util.regex.Matcher: boolean matches()>();
+        if $z0 == 0 goto label3;
+
+        return 0;
+
+     label3:
+        return 1;
+    }
+
+    protected int findBytes(org.apache.tomcat.util.buf.ByteChunk, byte[])
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        org.apache.tomcat.util.buf.ByteChunk r1;
+        byte[] r2, r3;
+        byte b0, $b8, $b11, $b13;
+        int i1, i2, i3, i4, i5, i6, $i7, $i9, $i10, $i12, $i14, $i15;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: org.apache.tomcat.util.buf.ByteChunk;
+        r2 := @parameter1: byte[];
+        b0 = r2[0];
+        r3 = virtualinvoke r1.<org.apache.tomcat.util.buf.ByteChunk: byte[] getBuffer()>();
+        i1 = virtualinvoke r1.<org.apache.tomcat.util.buf.ByteChunk: int getStart()>();
+        i2 = virtualinvoke r1.<org.apache.tomcat.util.buf.ByteChunk: int getEnd()>();
+        i3 = lengthof r2;
+        i4 = i1;
+        goto label6;
+
+     label0:
+        $b8 = r3[i4];
+        $i9 = staticinvoke <org.apache.tomcat.util.buf.Ascii: int toLower(int)>($b8);
+        if $i9 == b0 goto label1;
+
+        goto label5;
+
+     label1:
+        i5 = i4 + 1;
+        i6 = 1;
+        goto label4;
+
+     label2:
+        $i10 = i5;
+        i5 = i5 + 1;
+        $b11 = r3[$i10];
+        $i12 = staticinvoke <org.apache.tomcat.util.buf.Ascii: int toLower(int)>($b11);
+        $i7 = i6;
+        i6 = i6 + 1;
+        $b13 = r2[$i7];
+        if $i12 == $b13 goto label3;
+
+        goto label5;
+
+     label3:
+        if i6 != i3 goto label4;
+
+        $i14 = i4 - i1;
+        return $i14;
+
+     label4:
+        if i6 < i3 goto label2;
+
+     label5:
+        i4 = i4 + 1;
+
+     label6:
+        $i15 = i2 - i3;
+        if i4 <= $i15 goto label0;
+
+        return -1;
+    }
+
+    protected boolean statusDropsConnection(int)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        int i0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        i0 := @parameter0: int;
+        if i0 == 400 goto label0;
+
+        if i0 == 408 goto label0;
+
+        if i0 == 411 goto label0;
+
+        if i0 == 413 goto label0;
+
+        if i0 == 414 goto label0;
+
+        if i0 == 500 goto label0;
+
+        if i0 == 503 goto label0;
+
+        if i0 == 501 goto label0;
+
+        return 0;
+
+     label0:
+        return 1;
+    }
+
+    protected abstract org.apache.coyote.http11.AbstractInputBuffer getInputBuffer();
+
+    protected abstract org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer();
+
+    protected void initializeFilters(int, java.util.Set, int, int)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        int i0, i1, i2, $i3;
+        java.util.Set r1;
+        org.apache.coyote.http11.filters.IdentityInputFilter $r2;
+        org.apache.coyote.http11.AbstractInputBuffer $r3, $r6, $r10, $r14, $r18;
+        org.apache.coyote.http11.AbstractOutputBuffer $r4, $r8, $r12, $r16;
+        org.apache.coyote.http11.filters.IdentityOutputFilter $r5;
+        org.apache.coyote.http11.filters.ChunkedInputFilter $r7;
+        org.apache.coyote.http11.filters.ChunkedOutputFilter $r9;
+        org.apache.coyote.http11.filters.VoidInputFilter $r11;
+        org.apache.coyote.http11.filters.VoidOutputFilter $r13;
+        org.apache.coyote.http11.filters.BufferedInputFilter $r15;
+        org.apache.coyote.http11.filters.GzipOutputFilter $r17;
+        org.apache.coyote.http11.InputFilter[] $r19;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.util.Set;
+        i1 := @parameter2: int;
+        i2 := @parameter3: int;
+        $r3 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        $r2 = new org.apache.coyote.http11.filters.IdentityInputFilter;
+        specialinvoke $r2.<org.apache.coyote.http11.filters.IdentityInputFilter: void <init>(int)>(i2);
+        virtualinvoke $r3.<org.apache.coyote.http11.AbstractInputBuffer: void addFilter(org.apache.coyote.http11.InputFilter)>($r2);
+        $r4 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        $r5 = new org.apache.coyote.http11.filters.IdentityOutputFilter;
+        specialinvoke $r5.<org.apache.coyote.http11.filters.IdentityOutputFilter: void <init>()>();
+        virtualinvoke $r4.<org.apache.coyote.http11.AbstractOutputBuffer: void addFilter(org.apache.coyote.http11.OutputFilter)>($r5);
+        $r6 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        $r7 = new org.apache.coyote.http11.filters.ChunkedInputFilter;
+        specialinvoke $r7.<org.apache.coyote.http11.filters.ChunkedInputFilter: void <init>(int,java.util.Set,int,int)>(i0, r1, i1, i2);
+        virtualinvoke $r6.<org.apache.coyote.http11.AbstractInputBuffer: void addFilter(org.apache.coyote.http11.InputFilter)>($r7);
+        $r8 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        $r9 = new org.apache.coyote.http11.filters.ChunkedOutputFilter;
+        specialinvoke $r9.<org.apache.coyote.http11.filters.ChunkedOutputFilter: void <init>()>();
+        virtualinvoke $r8.<org.apache.coyote.http11.AbstractOutputBuffer: void addFilter(org.apache.coyote.http11.OutputFilter)>($r9);
+        $r10 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        $r11 = new org.apache.coyote.http11.filters.VoidInputFilter;
+        specialinvoke $r11.<org.apache.coyote.http11.filters.VoidInputFilter: void <init>()>();
+        virtualinvoke $r10.<org.apache.coyote.http11.AbstractInputBuffer: void addFilter(org.apache.coyote.http11.InputFilter)>($r11);
+        $r12 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        $r13 = new org.apache.coyote.http11.filters.VoidOutputFilter;
+        specialinvoke $r13.<org.apache.coyote.http11.filters.VoidOutputFilter: void <init>()>();
+        virtualinvoke $r12.<org.apache.coyote.http11.AbstractOutputBuffer: void addFilter(org.apache.coyote.http11.OutputFilter)>($r13);
+        $r14 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        $r15 = new org.apache.coyote.http11.filters.BufferedInputFilter;
+        specialinvoke $r15.<org.apache.coyote.http11.filters.BufferedInputFilter: void <init>()>();
+        virtualinvoke $r14.<org.apache.coyote.http11.AbstractInputBuffer: void addFilter(org.apache.coyote.http11.InputFilter)>($r15);
+        $r16 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        $r17 = new org.apache.coyote.http11.filters.GzipOutputFilter;
+        specialinvoke $r17.<org.apache.coyote.http11.filters.GzipOutputFilter: void <init>()>();
+        virtualinvoke $r16.<org.apache.coyote.http11.AbstractOutputBuffer: void addFilter(org.apache.coyote.http11.OutputFilter)>($r17);
+        $r18 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        $r19 = virtualinvoke $r18.<org.apache.coyote.http11.AbstractInputBuffer: org.apache.coyote.http11.InputFilter[] getFilters()>();
+        $i3 = lengthof $r19;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int pluggableFilterIndex> = $i3;
+        return;
+    }
+
+    private void addInputFilter(org.apache.coyote.http11.InputFilter[], java.lang.String)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        org.apache.coyote.http11.InputFilter[] r1;
+        java.lang.String r2, $r5, r6, $r11, $r19, $r20, $r24;
+        java.util.Locale $r3;
+        int i0, $i1;
+        org.apache.tomcat.util.res.StringManager $r4;
+        boolean $z0, $z1, $z2, $z3;
+        org.apache.coyote.http11.AbstractInputBuffer $r7, $r12;
+        org.apache.coyote.http11.InputFilter $r8, $r9, $r13;
+        org.apache.tomcat.util.buf.ByteChunk $r10;
+        org.apache.coyote.Response $r14;
+        org.apache.coyote.ErrorState $r15;
+        org.apache.juli.logging.Log $r16, $r17;
+        java.lang.StringBuilder $r18, $r21, $r22, $r23;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: org.apache.coyote.http11.InputFilter[];
+        r2 := @parameter1: java.lang.String;
+        $r5 = virtualinvoke r2.<java.lang.String: java.lang.String trim()>();
+        $r3 = <java.util.Locale: java.util.Locale ENGLISH>;
+        r6 = virtualinvoke $r5.<java.lang.String: java.lang.String toLowerCase(java.util.Locale)>($r3);
+        $z0 = virtualinvoke r6.<java.lang.String: boolean equals(java.lang.Object)>("identity");
+        if $z0 != 0 goto label4;
+
+        $z1 = virtualinvoke r6.<java.lang.String: boolean equals(java.lang.Object)>("chunked");
+        if $z1 == 0 goto label0;
+
+        $r7 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        $r8 = r1[1];
+        virtualinvoke $r7.<org.apache.coyote.http11.AbstractInputBuffer: void addActiveFilter(org.apache.coyote.http11.InputFilter)>($r8);
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean contentDelimitation> = 1;
+        goto label4;
+
+     label0:
+        i0 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: int pluggableFilterIndex>;
+        goto label3;
+
+     label1:
+        $r9 = r1[i0];
+        $r10 = interfaceinvoke $r9.<org.apache.coyote.http11.InputFilter: org.apache.tomcat.util.buf.ByteChunk getEncodingName()>();
+        $r11 = virtualinvoke $r10.<org.apache.tomcat.util.buf.ByteChunk: java.lang.String toString()>();
+        $z2 = virtualinvoke $r11.<java.lang.String: boolean equals(java.lang.Object)>(r6);
+        if $z2 == 0 goto label2;
+
+        $r12 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        $r13 = r1[i0];
+        virtualinvoke $r12.<org.apache.coyote.http11.AbstractInputBuffer: void addActiveFilter(org.apache.coyote.http11.InputFilter)>($r13);
+        return;
+
+     label2:
+        i0 = i0 + 1;
+
+     label3:
+        $i1 = lengthof r1;
+        if i0 < $i1 goto label1;
+
+        $r14 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r14.<org.apache.coyote.Response: void setStatus(int)>(501);
+        $r15 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r15, null);
+        $r16 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $z3 = interfaceinvoke $r16.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z3 == 0 goto label4;
+
+        $r17 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $r18 = new java.lang.StringBuilder;
+        $r4 = <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm>;
+        $r19 = virtualinvoke $r4.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.request.prepare");
+        $r20 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r19);
+        specialinvoke $r18.<java.lang.StringBuilder: void <init>(java.lang.String)>($r20);
+        $r21 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" Unsupported transfer encoding [");
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r6);
+        $r23 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r17.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r24);
+
+     label4:
+        return;
+    }
+
+    public final void action(org.apache.coyote.ActionCode, java.lang.Object)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        org.apache.coyote.ActionCode r1;
+        java.lang.Object r2;
+        int[] $r3;
+        java.io.IOException r4, $r8, $r12, r13, $r18, r19, $r22, r23;
+        org.apache.coyote.http11.filters.SavedRequestInputFilter r5, $r32;
+        org.apache.coyote.http11.AbstractInputBuffer r6, $r16, $r29;
+        int $i0, $i1;
+        org.apache.coyote.http11.AbstractOutputBuffer $r7, $r11, $r17, $r21, $r30, $r58, $r62, $r63;
+        org.apache.coyote.ErrorState $r9, $r14, $r20, $r24, $r27, $r28, $r64, $r66;
+        org.apache.coyote.Response $r10, $r15, $r25;
+        boolean $z0, $z1, $z2, $z3, $z4, $z6, $z7, $z8, $z9, $z10, $z11, $z12;
+        java.util.concurrent.atomic.AtomicBoolean $r26, r40, $r45, $r47, $r49, $r51, $r53, $r55;
+        org.apache.tomcat.util.buf.ByteChunk r31;
+        org.apache.coyote.Request $r33, $r34;
+        org.apache.coyote.InputBuffer $r35;
+        org.apache.coyote.AsyncStateMachine $r36, $r39, $r41, $r42, $r44, $r46, $r48, $r50, $r52, $r54, $r56, $r59;
+        org.apache.coyote.AsyncContextCallback $r37;
+        org.apache.tomcat.util.net.SocketWrapper $r38;
+        java.lang.Runnable $r43;
+        org.apache.coyote.http11.upgrade.UpgradeInbound $r57;
+        org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler $r61;
+        java.lang.Throwable $r65;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: org.apache.coyote.ActionCode;
+        r2 := @parameter1: java.lang.Object;
+        $r3 = staticinvoke <org.apache.coyote.http11.AbstractHttp11Processor: int[] $SWITCH_TABLE$org$apache$coyote$ActionCode()>();
+        $i0 = virtualinvoke r1.<org.apache.coyote.ActionCode: int ordinal()>();
+        $i1 = $r3[$i0];
+        tableswitch($i1)
+        {
+            case 1: goto label7;
+            case 2: goto label0;
+            case 3: goto label3;
+            case 4: goto label35;
+            case 5: goto label13;
+            case 6: goto label19;
+            case 7: goto label18;
+            case 8: goto label38;
+            case 9: goto label16;
+            case 10: goto label17;
+            case 11: goto label38;
+            case 12: goto label38;
+            case 13: goto label38;
+            case 14: goto label38;
+            case 15: goto label38;
+            case 16: goto label38;
+            case 17: goto label38;
+            case 18: goto label38;
+            case 19: goto label20;
+            case 20: goto label38;
+            case 21: goto label38;
+            case 22: goto label38;
+            case 23: goto label38;
+            case 24: goto label38;
+            case 25: goto label21;
+            case 26: goto label38;
+            case 27: goto label22;
+            case 28: goto label24;
+            case 29: goto label38;
+            case 30: goto label23;
+            case 31: goto label25;
+            case 32: goto label38;
+            case 33: goto label29;
+            case 34: goto label26;
+            case 35: goto label27;
+            case 36: goto label28;
+            case 37: goto label30;
+            case 38: goto label31;
+            case 39: goto label32;
+            case 40: goto label33;
+            case 41: goto label34;
+            case 42: goto label37;
+            default: goto label38;
+        };
+
+     label0:
+        $r7 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        virtualinvoke $r7.<org.apache.coyote.http11.AbstractOutputBuffer: void endRequest()>();
+
+     label1:
+        goto label39;
+
+     label2:
+        $r8 := @caughtexception;
+        r4 = $r8;
+        $r9 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r9, r4);
+        goto label39;
+
+     label3:
+        $r10 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        $z0 = virtualinvoke $r10.<org.apache.coyote.Response: boolean isCommitted()>();
+        if $z0 == 0 goto label4;
+
+        return;
+
+     label4:
+        specialinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void prepareResponse()>();
+        $r11 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        virtualinvoke $r11.<org.apache.coyote.http11.AbstractOutputBuffer: void commit()>();
+
+     label5:
+        goto label39;
+
+     label6:
+        $r12 := @caughtexception;
+        r13 = $r12;
+        $r14 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r14, r13);
+        goto label39;
+
+     label7:
+        $r15 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        $z1 = virtualinvoke $r15.<org.apache.coyote.Response: boolean isCommitted()>();
+        if $z1 != 0 goto label8;
+
+        $z2 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean expectation>;
+        if $z2 != 0 goto label9;
+
+     label8:
+        return;
+
+     label9:
+        $r16 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        virtualinvoke $r16.<org.apache.coyote.http11.AbstractInputBuffer: void setSwallowInput(boolean)>(1);
+
+     label10:
+        $r17 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        virtualinvoke $r17.<org.apache.coyote.http11.AbstractOutputBuffer: void sendAck()>();
+
+     label11:
+        goto label39;
+
+     label12:
+        $r18 := @caughtexception;
+        r19 = $r18;
+        $r20 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r20, r19);
+        goto label39;
+
+     label13:
+        $r21 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        virtualinvoke $r21.<org.apache.coyote.http11.AbstractOutputBuffer: void flush()>();
+
+     label14:
+        goto label39;
+
+     label15:
+        $r22 := @caughtexception;
+        r23 = $r22;
+        $r24 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r24, r23);
+        $r25 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r25.<org.apache.coyote.Response: void setErrorException(java.lang.Exception)>(r23);
+        goto label39;
+
+     label16:
+        $r26 = (java.util.concurrent.atomic.AtomicBoolean) r2;
+        $r27 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.ErrorState getErrorState()>();
+        $z3 = virtualinvoke $r27.<org.apache.coyote.ErrorState: boolean isError()>();
+        virtualinvoke $r26.<java.util.concurrent.atomic.AtomicBoolean: void set(boolean)>($z3);
+        goto label39;
+
+     label17:
+        $r28 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r28, null);
+        $r29 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        virtualinvoke $r29.<org.apache.coyote.http11.AbstractInputBuffer: void setSwallowInput(boolean)>(0);
+        goto label39;
+
+     label18:
+        $r30 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        virtualinvoke $r30.<org.apache.coyote.http11.AbstractOutputBuffer: void reset()>();
+        goto label39;
+
+     label19:
+        goto label39;
+
+     label20:
+        r31 = (org.apache.tomcat.util.buf.ByteChunk) r2;
+        $r32 = new org.apache.coyote.http11.filters.SavedRequestInputFilter;
+        specialinvoke $r32.<org.apache.coyote.http11.filters.SavedRequestInputFilter: void <init>(org.apache.tomcat.util.buf.ByteChunk)>(r31);
+        r5 = $r32;
+        $r33 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        interfaceinvoke r5.<org.apache.coyote.http11.InputFilter: void setRequest(org.apache.coyote.Request)>($r33);
+        $r34 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r35 = virtualinvoke $r34.<org.apache.coyote.Request: org.apache.coyote.InputBuffer getInputBuffer()>();
+        r6 = (org.apache.coyote.http11.AbstractInputBuffer) $r35;
+        virtualinvoke r6.<org.apache.coyote.http11.AbstractInputBuffer: void addActiveFilter(org.apache.coyote.http11.InputFilter)>(r5);
+        goto label39;
+
+     label21:
+        $r36 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        $r37 = (org.apache.coyote.AsyncContextCallback) r2;
+        virtualinvoke $r36.<org.apache.coyote.AsyncStateMachine: void asyncStart(org.apache.coyote.AsyncContextCallback)>($r37);
+        $r38 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.net.SocketWrapper getSocketWrapper()>();
+        virtualinvoke $r38.<org.apache.tomcat.util.net.SocketWrapper: void access()>();
+        goto label39;
+
+     label22:
+        $r39 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        virtualinvoke $r39.<org.apache.coyote.AsyncStateMachine: void asyncDispatched()>();
+        goto label39;
+
+     label23:
+        r40 = (java.util.concurrent.atomic.AtomicBoolean) r2;
+        $r41 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        $z4 = virtualinvoke $r41.<org.apache.coyote.AsyncStateMachine: boolean asyncTimeout()>();
+        virtualinvoke r40.<java.util.concurrent.atomic.AtomicBoolean: void set(boolean)>($z4);
+        goto label39;
+
+     label24:
+        $r42 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        $r43 = (java.lang.Runnable) r2;
+        virtualinvoke $r42.<org.apache.coyote.AsyncStateMachine: void asyncRun(java.lang.Runnable)>($r43);
+        goto label39;
+
+     label25:
+        $r44 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        virtualinvoke $r44.<org.apache.coyote.AsyncStateMachine: boolean asyncError()>();
+        goto label39;
+
+     label26:
+        $r45 = (java.util.concurrent.atomic.AtomicBoolean) r2;
+        $r46 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        $z6 = virtualinvoke $r46.<org.apache.coyote.AsyncStateMachine: boolean isAsyncStarted()>();
+        virtualinvoke $r45.<java.util.concurrent.atomic.AtomicBoolean: void set(boolean)>($z6);
+        goto label39;
+
+     label27:
+        $r47 = (java.util.concurrent.atomic.AtomicBoolean) r2;
+        $r48 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        $z7 = virtualinvoke $r48.<org.apache.coyote.AsyncStateMachine: boolean isCompleting()>();
+        virtualinvoke $r47.<java.util.concurrent.atomic.AtomicBoolean: void set(boolean)>($z7);
+        goto label39;
+
+     label28:
+        $r49 = (java.util.concurrent.atomic.AtomicBoolean) r2;
+        $r50 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        $z8 = virtualinvoke $r50.<org.apache.coyote.AsyncStateMachine: boolean isAsyncDispatching()>();
+        virtualinvoke $r49.<java.util.concurrent.atomic.AtomicBoolean: void set(boolean)>($z8);
+        goto label39;
+
+     label29:
+        $r51 = (java.util.concurrent.atomic.AtomicBoolean) r2;
+        $r52 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        $z9 = virtualinvoke $r52.<org.apache.coyote.AsyncStateMachine: boolean isAsync()>();
+        virtualinvoke $r51.<java.util.concurrent.atomic.AtomicBoolean: void set(boolean)>($z9);
+        goto label39;
+
+     label30:
+        $r53 = (java.util.concurrent.atomic.AtomicBoolean) r2;
+        $r54 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        $z10 = virtualinvoke $r54.<org.apache.coyote.AsyncStateMachine: boolean isAsyncTimingOut()>();
+        virtualinvoke $r53.<java.util.concurrent.atomic.AtomicBoolean: void set(boolean)>($z10);
+        goto label39;
+
+     label31:
+        $r55 = (java.util.concurrent.atomic.AtomicBoolean) r2;
+        $r56 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        $z11 = virtualinvoke $r56.<org.apache.coyote.AsyncStateMachine: boolean isAsyncError()>();
+        virtualinvoke $r55.<java.util.concurrent.atomic.AtomicBoolean: void set(boolean)>($z11);
+        goto label39;
+
+     label32:
+        $r57 = (org.apache.coyote.http11.upgrade.UpgradeInbound) r2;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.upgrade.UpgradeInbound upgradeInbound> = $r57;
+        $r58 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        $r58.<org.apache.coyote.http11.AbstractOutputBuffer: boolean finished> = 1;
+        goto label39;
+
+     label33:
+        $r59 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        virtualinvoke $r59.<org.apache.coyote.AsyncStateMachine: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState asyncPostProcess()>();
+        goto label39;
+
+     label34:
+        $r61 = (org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler) r2;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler httpUpgradeHandler> = $r61;
+        $r62 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        $r62.<org.apache.coyote.http11.AbstractOutputBuffer: boolean finished> = 1;
+        goto label39;
+
+     label35:
+        $r63 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        $r63.<org.apache.coyote.http11.AbstractOutputBuffer: boolean finished> = 1;
+        $z12 = r2 instanceof java.lang.Throwable;
+        if $z12 == 0 goto label36;
+
+        $r64 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        $r65 = (java.lang.Throwable) r2;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r64, $r65);
+        goto label39;
+
+     label36:
+        $r66 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r66, null);
+        goto label39;
+
+     label37:
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void endRequest()>();
+        goto label39;
+
+     label38:
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void actionInternal(org.apache.coyote.ActionCode,java.lang.Object)>(r1, r2);
+
+     label39:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+        catch java.io.IOException from label4 to label5 with label6;
+        catch java.io.IOException from label10 to label11 with label12;
+        catch java.io.IOException from label13 to label14 with label15;
+    }
+
+    protected abstract void actionInternal(org.apache.coyote.ActionCode, java.lang.Object);
+
+    protected abstract boolean disableKeepAlive();
+
+    protected abstract void setRequestLineReadTimeout() throws java.io.IOException;
+
+    protected abstract boolean handleIncompleteRequestLineRead();
+
+    protected abstract void setSocketTimeout(int) throws java.io.IOException;
+
+    public org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState process(org.apache.tomcat.util.net.SocketWrapper) throws java.io.IOException
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        org.apache.tomcat.util.net.SocketWrapper r1;
+        org.apache.coyote.RequestInfo r2;
+        java.io.IOException r3, $r22;
+        org.apache.tomcat.util.log.UserDataHelper$Mode r4;
+        java.lang.String r5, $r26, $r34, $r36, $r51, $r73, $r84;
+        org.apache.coyote.Request $r6, $r16, $r19, $r43, $r55, $r59, $r88, $r94;
+        org.apache.coyote.http11.AbstractInputBuffer $r7, $r12, $r21, $r91, $r97;
+        org.apache.tomcat.util.net.AbstractEndpoint $r8, $r10, $r11, $r13, $r18, $r99, $r100, $r104, $r106;
+        org.apache.coyote.http11.AbstractOutputBuffer $r9, $r98;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14, $z15, $z16, $z17, $z18, $z19, $z20, $z21, $z22, $z23, $z24, $z25, $z26, $z27, $z28, $z29, $z30, $z31, $z32, $z33, $z34, $z35, $z36, $z37, $z38, $z39, $z40;
+        org.apache.coyote.Response $r14, $r40, $r44, $r52, $r56, $r60, $r62, $r64, $r74, $r76, $r77, $r79, $r85, $r89, $r93;
+        org.apache.coyote.ErrorState $r15, $r27, $r41, $r45, $r53, $r57, $r61, $r65, $r68, $r75, $r78, $r86, $r90, $r92, $r95, $r96, $r101, $r105;
+        org.apache.tomcat.util.http.MimeHeaders $r17;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10;
+        org.apache.tomcat.util.http.Cookies $r20;
+        org.apache.juli.logging.Log $r23, $r24, $r38, $r39, $r48, $r49, $r71, $r82;
+        org.apache.tomcat.util.res.StringManager $r25, $r31, $r35, $r50, $r72, $r83;
+        java.lang.Throwable $r28, r29, $r46, r47, $r80, r81;
+        org.apache.tomcat.util.log.UserDataHelper $r30;
+        int[] $r32;
+        java.lang.StringBuilder $r33, $r37;
+        org.apache.coyote.Adapter $r42, $r54, $r58, $r87;
+        java.lang.Exception $r63;
+        java.io.InterruptedIOException $r66, r67;
+        org.apache.coyote.http11.HeadersTooLargeException $r69, r70;
+        org.apache.coyote.http11.upgrade.UpgradeInbound $r102, $r110;
+        org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler $r103;
+        org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState $r107, $r108, $r109, $r111, $r112, $r113, $r114, $r115;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: org.apache.tomcat.util.net.SocketWrapper;
+        $r6 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        r2 = virtualinvoke $r6.<org.apache.coyote.Request: org.apache.coyote.RequestInfo getRequestProcessor()>();
+        virtualinvoke r2.<org.apache.coyote.RequestInfo: void setStage(int)>(1);
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setSocketWrapper(org.apache.tomcat.util.net.SocketWrapper)>(r1);
+        $r7 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        $r8 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        virtualinvoke $r7.<org.apache.coyote.http11.AbstractInputBuffer: void init(org.apache.tomcat.util.net.SocketWrapper,org.apache.tomcat.util.net.AbstractEndpoint)>(r1, $r8);
+        $r9 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        $r10 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        virtualinvoke $r9.<org.apache.coyote.http11.AbstractOutputBuffer: void init(org.apache.tomcat.util.net.SocketWrapper,org.apache.tomcat.util.net.AbstractEndpoint)>(r1, $r10);
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keepAlive> = 1;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean comet> = 0;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean openSocket> = 0;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean sendfileInProgress> = 0;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean readComplete> = 1;
+        $r11 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $z0 = virtualinvoke $r11.<org.apache.tomcat.util.net.AbstractEndpoint: boolean getUsePolling()>();
+        if $z0 == 0 goto label0;
+
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keptAlive> = 0;
+        goto label1;
+
+     label0:
+        $z1 = virtualinvoke r1.<org.apache.tomcat.util.net.SocketWrapper: boolean isKeptAlive()>();
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keptAlive> = $z1;
+
+     label1:
+        $z2 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean disableKeepAlive()>();
+        if $z2 == 0 goto label42;
+
+        virtualinvoke r1.<org.apache.tomcat.util.net.SocketWrapper: void setKeepAliveLeft(int)>(0);
+        goto label42;
+
+     label2:
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setRequestLineReadTimeout()>();
+        $r12 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        $z3 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keptAlive>;
+        $z4 = virtualinvoke $r12.<org.apache.coyote.http11.AbstractInputBuffer: boolean parseRequestLine(boolean)>($z3);
+        if $z4 != 0 goto label4;
+
+        $z5 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean handleIncompleteRequestLineRead()>();
+        if $z5 == 0 goto label4;
+
+     label3:
+        goto label43;
+
+     label4:
+        $r13 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $z6 = virtualinvoke $r13.<org.apache.tomcat.util.net.AbstractEndpoint: boolean isPaused()>();
+        if $z6 == 0 goto label5;
+
+        $r14 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r14.<org.apache.coyote.Response: void setStatus(int)>(503);
+        $r15 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r15, null);
+        goto label16;
+
+     label5:
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keptAlive> = 1;
+        $r16 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r17 = virtualinvoke $r16.<org.apache.coyote.Request: org.apache.tomcat.util.http.MimeHeaders getMimeHeaders()>();
+        $r18 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $i0 = virtualinvoke $r18.<org.apache.tomcat.util.net.AbstractEndpoint: int getMaxHeaderCount()>();
+        virtualinvoke $r17.<org.apache.tomcat.util.http.MimeHeaders: void setLimit(int)>($i0);
+        $r19 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r20 = virtualinvoke $r19.<org.apache.coyote.Request: org.apache.tomcat.util.http.Cookies getCookies()>();
+        $i1 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: int getMaxCookieCount()>();
+        virtualinvoke $r20.<org.apache.tomcat.util.http.Cookies: void setLimit(int)>($i1);
+        $r21 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        $z7 = virtualinvoke $r21.<org.apache.coyote.http11.AbstractInputBuffer: boolean parseHeaders()>();
+        if $z7 != 0 goto label7;
+
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean openSocket> = 1;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean readComplete> = 0;
+
+     label6:
+        goto label43;
+
+     label7:
+        $z8 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean disableUploadTimeout>;
+        if $z8 != 0 goto label16;
+
+        $i2 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: int connectionUploadTimeout>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setSocketTimeout(int)>($i2);
+
+     label8:
+        goto label16;
+
+     label9:
+        $r22 := @caughtexception;
+        r3 = $r22;
+        $r23 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $z9 = interfaceinvoke $r23.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z9 == 0 goto label10;
+
+        $r24 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $r25 = <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm>;
+        $r26 = virtualinvoke $r25.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.header.parse");
+        interfaceinvoke $r24.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r26, r3);
+
+     label10:
+        $r27 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r27, r3);
+        goto label43;
+
+     label11:
+        $r28 := @caughtexception;
+        r29 = $r28;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r29);
+        $r30 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.log.UserDataHelper userDataHelper>;
+        r4 = virtualinvoke $r30.<org.apache.tomcat.util.log.UserDataHelper: org.apache.tomcat.util.log.UserDataHelper$Mode getNextMode()>();
+        if r4 == null goto label15;
+
+        $r31 = <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm>;
+        r5 = virtualinvoke $r31.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.header.parse");
+        $r32 = staticinvoke <org.apache.coyote.http11.AbstractHttp11Processor: int[] $SWITCH_TABLE$org$apache$tomcat$util$log$UserDataHelper$Mode()>();
+        $i3 = virtualinvoke r4.<org.apache.tomcat.util.log.UserDataHelper$Mode: int ordinal()>();
+        $i4 = $r32[$i3];
+        tableswitch($i4)
+        {
+            case 1: goto label14;
+            case 2: goto label12;
+            case 3: goto label13;
+            default: goto label15;
+        };
+
+     label12:
+        $r33 = new java.lang.StringBuilder;
+        $r34 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r5);
+        specialinvoke $r33.<java.lang.StringBuilder: void <init>(java.lang.String)>($r34);
+        $r35 = <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm>;
+        $r36 = virtualinvoke $r35.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.fallToDebug");
+        $r37 = virtualinvoke $r33.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r36);
+        r5 = virtualinvoke $r37.<java.lang.StringBuilder: java.lang.String toString()>();
+
+     label13:
+        $r38 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        interfaceinvoke $r38.<org.apache.juli.logging.Log: void info(java.lang.Object,java.lang.Throwable)>(r5, r29);
+        goto label15;
+
+     label14:
+        $r39 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        interfaceinvoke $r39.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>(r5, r29);
+
+     label15:
+        $r40 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r40.<org.apache.coyote.Response: void setStatus(int)>(400);
+        $r41 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r41, r29);
+        $r42 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Adapter getAdapter()>();
+        $r43 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r44 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        interfaceinvoke $r42.<org.apache.coyote.Adapter: void log(org.apache.coyote.Request,org.apache.coyote.Response,long)>($r43, $r44, 0L);
+
+     label16:
+        $r45 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.ErrorState getErrorState()>();
+        $z10 = virtualinvoke $r45.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z10 != 0 goto label21;
+
+        virtualinvoke r2.<org.apache.coyote.RequestInfo: void setStage(int)>(2);
+
+     label17:
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void prepareRequest()>();
+
+     label18:
+        goto label21;
+
+     label19:
+        $r46 := @caughtexception;
+        r47 = $r46;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r47);
+        $r48 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $z11 = interfaceinvoke $r48.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z11 == 0 goto label20;
+
+        $r49 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $r50 = <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm>;
+        $r51 = virtualinvoke $r50.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.request.prepare");
+        interfaceinvoke $r49.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r51, r47);
+
+     label20:
+        $r52 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r52.<org.apache.coyote.Response: void setStatus(int)>(500);
+        $r53 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r53, r47);
+        $r54 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Adapter getAdapter()>();
+        $r55 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r56 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        interfaceinvoke $r54.<org.apache.coyote.Adapter: void log(org.apache.coyote.Request,org.apache.coyote.Response,long)>($r55, $r56, 0L);
+
+     label21:
+        $i5 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: int maxKeepAliveRequests>;
+        if $i5 != 1 goto label22;
+
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keepAlive> = 0;
+        goto label23;
+
+     label22:
+        $i6 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: int maxKeepAliveRequests>;
+        if $i6 <= 0 goto label23;
+
+        $i7 = virtualinvoke r1.<org.apache.tomcat.util.net.SocketWrapper: int decrementKeepAlive()>();
+        if $i7 > 0 goto label23;
+
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keepAlive> = 0;
+
+     label23:
+        $r57 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.ErrorState getErrorState()>();
+        $z12 = virtualinvoke $r57.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z12 != 0 goto label32;
+
+     label24:
+        virtualinvoke r2.<org.apache.coyote.RequestInfo: void setStage(int)>(3);
+        $r58 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Adapter adapter>;
+        $r59 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r60 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        interfaceinvoke $r58.<org.apache.coyote.Adapter: void service(org.apache.coyote.Request,org.apache.coyote.Response)>($r59, $r60);
+        $z13 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keepAlive>;
+        if $z13 == 0 goto label26;
+
+        $r61 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.ErrorState getErrorState()>();
+        $z14 = virtualinvoke $r61.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z14 != 0 goto label26;
+
+        $r62 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        $r63 = virtualinvoke $r62.<org.apache.coyote.Response: java.lang.Exception getErrorException()>();
+        if $r63 != null goto label25;
+
+        $z15 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean isAsync()>();
+        if $z15 != 0 goto label26;
+
+        $r64 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        $i8 = virtualinvoke $r64.<org.apache.coyote.Response: int getStatus()>();
+        $z16 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean statusDropsConnection(int)>($i8);
+        if $z16 == 0 goto label26;
+
+     label25:
+        $r65 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r65, null);
+
+     label26:
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setCometTimeouts(org.apache.tomcat.util.net.SocketWrapper)>(r1);
+
+     label27:
+        goto label32;
+
+     label28:
+        $r66 := @caughtexception;
+        r67 = $r66;
+        $r68 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r68, r67);
+        goto label32;
+
+     label29:
+        $r69 := @caughtexception;
+        r70 = $r69;
+        $r71 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $r72 = <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm>;
+        $r73 = virtualinvoke $r72.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.request.process");
+        interfaceinvoke $r71.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r73, r70);
+        $r74 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        $z17 = virtualinvoke $r74.<org.apache.coyote.Response: boolean isCommitted()>();
+        if $z17 == 0 goto label30;
+
+        $r75 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r75, r70);
+        goto label32;
+
+     label30:
+        $r76 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r76.<org.apache.coyote.Response: void reset()>();
+        $r77 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r77.<org.apache.coyote.Response: void setStatus(int)>(500);
+        $r78 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r78, r70);
+        $r79 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r79.<org.apache.coyote.Response: void setHeader(java.lang.String,java.lang.String)>("Connection", "close");
+        goto label32;
+
+     label31:
+        $r80 := @caughtexception;
+        r81 = $r80;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r81);
+        $r82 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $r83 = <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm>;
+        $r84 = virtualinvoke $r83.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.request.process");
+        interfaceinvoke $r82.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r84, r81);
+        $r85 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r85.<org.apache.coyote.Response: void setStatus(int)>(500);
+        $r86 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r86, r81);
+        $r87 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Adapter getAdapter()>();
+        $r88 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r89 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        interfaceinvoke $r87.<org.apache.coyote.Adapter: void log(org.apache.coyote.Request,org.apache.coyote.Response,long)>($r88, $r89, 0L);
+
+     label32:
+        virtualinvoke r2.<org.apache.coyote.RequestInfo: void setStage(int)>(4);
+        $z18 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean isAsync()>();
+        if $z18 != 0 goto label35;
+
+        $z19 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean comet>;
+        if $z19 != 0 goto label35;
+
+        $r90 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.ErrorState getErrorState()>();
+        $z20 = virtualinvoke $r90.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z20 == 0 goto label33;
+
+        $r91 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        virtualinvoke $r91.<org.apache.coyote.http11.AbstractInputBuffer: void setSwallowInput(boolean)>(0);
+        goto label34;
+
+     label33:
+        specialinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void checkExpectationAndResponseStatus()>();
+
+     label34:
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void endRequest()>();
+
+     label35:
+        virtualinvoke r2.<org.apache.coyote.RequestInfo: void setStage(int)>(5);
+        $r92 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.ErrorState getErrorState()>();
+        $z21 = virtualinvoke $r92.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z21 == 0 goto label36;
+
+        $r93 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r93.<org.apache.coyote.Response: void setStatus(int)>(500);
+
+     label36:
+        $r94 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        virtualinvoke $r94.<org.apache.coyote.Request: void updateCounters()>();
+        $z22 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean isAsync()>();
+        if $z22 != 0 goto label37;
+
+        $z23 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean comet>;
+        if $z23 == 0 goto label38;
+
+     label37:
+        $r95 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.ErrorState getErrorState()>();
+        $z24 = virtualinvoke $r95.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z24 == 0 goto label39;
+
+     label38:
+        $r96 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.ErrorState getErrorState()>();
+        $z25 = virtualinvoke $r96.<org.apache.coyote.ErrorState: boolean isIoAllowed()>();
+        if $z25 == 0 goto label39;
+
+        $r97 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        virtualinvoke $r97.<org.apache.coyote.http11.AbstractInputBuffer: void nextRequest()>();
+        $r98 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        virtualinvoke $r98.<org.apache.coyote.http11.AbstractOutputBuffer: void nextRequest()>();
+
+     label39:
+        $z26 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean disableUploadTimeout>;
+        if $z26 != 0 goto label41;
+
+        $r99 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $i9 = virtualinvoke $r99.<org.apache.tomcat.util.net.AbstractEndpoint: int getSoTimeout()>();
+        if $i9 <= 0 goto label40;
+
+        $r100 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $i10 = virtualinvoke $r100.<org.apache.tomcat.util.net.AbstractEndpoint: int getSoTimeout()>();
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setSocketTimeout(int)>($i10);
+        goto label41;
+
+     label40:
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setSocketTimeout(int)>(0);
+
+     label41:
+        virtualinvoke r2.<org.apache.coyote.RequestInfo: void setStage(int)>(6);
+        $z27 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean breakKeepAliveLoop(org.apache.tomcat.util.net.SocketWrapper)>(r1);
+        if $z27 == 0 goto label42;
+
+        goto label43;
+
+     label42:
+        $r101 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.ErrorState getErrorState()>();
+        $z28 = virtualinvoke $r101.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z28 != 0 goto label43;
+
+        $z29 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keepAlive>;
+        if $z29 == 0 goto label43;
+
+        $z30 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean comet>;
+        if $z30 != 0 goto label43;
+
+        $z31 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean isAsync()>();
+        if $z31 != 0 goto label43;
+
+        $r102 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.upgrade.UpgradeInbound upgradeInbound>;
+        if $r102 != null goto label43;
+
+        $r103 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler httpUpgradeHandler>;
+        if $r103 != null goto label43;
+
+        $r104 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $z32 = virtualinvoke $r104.<org.apache.tomcat.util.net.AbstractEndpoint: boolean isPaused()>();
+        if $z32 == 0 goto label2;
+
+     label43:
+        virtualinvoke r2.<org.apache.coyote.RequestInfo: void setStage(int)>(7);
+        $r105 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.ErrorState getErrorState()>();
+        $z33 = virtualinvoke $r105.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z33 != 0 goto label44;
+
+        $r106 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $z34 = virtualinvoke $r106.<org.apache.tomcat.util.net.AbstractEndpoint: boolean isPaused()>();
+        if $z34 == 0 goto label45;
+
+     label44:
+        $r107 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState CLOSED>;
+        return $r107;
+
+     label45:
+        $z35 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean isAsync()>();
+        if $z35 != 0 goto label46;
+
+        $z36 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean comet>;
+        if $z36 == 0 goto label47;
+
+     label46:
+        $r108 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState LONG>;
+        return $r108;
+
+     label47:
+        $z37 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean isUpgrade()>();
+        if $z37 == 0 goto label48;
+
+        $r109 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState UPGRADING>;
+        return $r109;
+
+     label48:
+        $r110 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.upgrade.UpgradeInbound getUpgradeInbound()>();
+        if $r110 == null goto label49;
+
+        $r111 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState UPGRADING_TOMCAT>;
+        return $r111;
+
+     label49:
+        $z38 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean sendfileInProgress>;
+        if $z38 == 0 goto label50;
+
+        $r112 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState SENDFILE>;
+        return $r112;
+
+     label50:
+        $z39 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean openSocket>;
+        if $z39 == 0 goto label52;
+
+        $z40 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean readComplete>;
+        if $z40 == 0 goto label51;
+
+        $r113 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState OPEN>;
+        return $r113;
+
+     label51:
+        $r114 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState LONG>;
+        return $r114;
+
+     label52:
+        $r115 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState CLOSED>;
+        return $r115;
+
+        catch java.io.IOException from label2 to label3 with label9;
+        catch java.io.IOException from label4 to label6 with label9;
+        catch java.io.IOException from label7 to label8 with label9;
+        catch java.lang.Throwable from label2 to label3 with label11;
+        catch java.lang.Throwable from label4 to label6 with label11;
+        catch java.lang.Throwable from label7 to label8 with label11;
+        catch java.lang.Throwable from label17 to label18 with label19;
+        catch java.io.InterruptedIOException from label24 to label27 with label28;
+        catch org.apache.coyote.http11.HeadersTooLargeException from label24 to label27 with label29;
+        catch java.lang.Throwable from label24 to label27 with label31;
+    }
+
+    private void checkExpectationAndResponseStatus()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        boolean $z0;
+        org.apache.coyote.Response $r1, $r2;
+        int $i0, $i1;
+        org.apache.coyote.http11.AbstractInputBuffer $r3;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        $z0 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean expectation>;
+        if $z0 == 0 goto label1;
+
+        $r1 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        $i0 = virtualinvoke $r1.<org.apache.coyote.Response: int getStatus()>();
+        if $i0 < 200 goto label0;
+
+        $r2 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        $i1 = virtualinvoke $r2.<org.apache.coyote.Response: int getStatus()>();
+        if $i1 <= 299 goto label1;
+
+     label0:
+        $r3 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        virtualinvoke $r3.<org.apache.coyote.http11.AbstractInputBuffer: void setSwallowInput(boolean)>(0);
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keepAlive> = 0;
+
+     label1:
+        return;
+    }
+
+    protected void prepareRequest()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        org.apache.tomcat.util.buf.MessageBytes r1, r3, r5, r7, $r12, r29, r36, $r52, $r55, $r57, r86;
+        org.apache.tomcat.util.res.StringManager $r2, $r43, $r49, $r62, $r69, $r75, $r82;
+        org.apache.tomcat.util.http.MimeHeaders r4;
+        org.apache.tomcat.util.buf.ByteChunk r6, r53, $r64;
+        java.lang.String r8, $r19, $r20, $r24, $r44, $r50, $r63, $r70, $r76, $r83, r87, r88, r89;
+        byte[] r9, $r27, $r28;
+        int i0, i1, i2, i3, $i5, $i6, $i7, i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, i20, $i22, i23, i24;
+        byte b4, $b21, $b26;
+        null_type n0;
+        org.apache.tomcat.util.net.AbstractEndpoint $r10, $r96, $r99, $r102;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14, $z15, $z16, $z17, $z18, $z19, $z20, $z21, $z22, $z23, $z24, $z25, $z26, $z27, $z28, $z29, $z30, $z31, $z32;
+        org.apache.coyote.Request $r11, $r13, $r25, $r26, $r51, $r54, $r56, $r90, $r91, $r97, $r100, $r103, $r107;
+        org.apache.coyote.Response $r14, $r31, $r39, $r45, $r58, $r65, $r71, $r78, $r108;
+        org.apache.coyote.ErrorState $r15, $r32, $r40, $r46, $r59, $r66, $r72, $r79, $r105;
+        org.apache.juli.logging.Log $r16, $r17, $r41, $r42, $r47, $r48, $r60, $r61, $r67, $r68, $r73, $r74, $r80, $r81;
+        java.lang.StringBuilder $r18, $r21, $r22, $r23;
+        org.apache.coyote.http11.AbstractInputBuffer $r30, $r84, $r92, $r94;
+        java.util.regex.Pattern $r33, $r34;
+        java.util.regex.Matcher $r35;
+        java.lang.IllegalArgumentException $r37, r38;
+        org.apache.tomcat.util.http.parser.HttpParser $r77;
+        org.apache.coyote.http11.InputFilter[] r85;
+        long l25;
+        org.apache.coyote.http11.InputFilter $r93, $r95;
+        java.lang.Boolean $r98, $r101, $r104;
+        org.apache.coyote.Adapter $r106;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean http11> = 1;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean http09> = 0;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean contentDelimitation> = 0;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean expectation> = 0;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void prepareRequestInternal()>();
+        $r10 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $z0 = virtualinvoke $r10.<org.apache.tomcat.util.net.AbstractEndpoint: boolean isSSLEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r11 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r12 = virtualinvoke $r11.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes scheme()>();
+        virtualinvoke $r12.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>("https");
+
+     label0:
+        $r13 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        r1 = virtualinvoke $r13.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes protocol()>();
+        $z1 = virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: boolean equals(java.lang.String)>("HTTP/1.1");
+        if $z1 == 0 goto label1;
+
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean http11> = 1;
+        virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>("HTTP/1.1");
+        goto label4;
+
+     label1:
+        $z2 = virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: boolean equals(java.lang.String)>("HTTP/1.0");
+        if $z2 == 0 goto label2;
+
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean http11> = 0;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keepAlive> = 0;
+        virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>("HTTP/1.0");
+        goto label4;
+
+     label2:
+        $z3 = virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: boolean equals(java.lang.String)>("");
+        if $z3 == 0 goto label3;
+
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean http09> = 1;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean http11> = 0;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keepAlive> = 0;
+        goto label4;
+
+     label3:
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean http11> = 0;
+        $r14 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r14.<org.apache.coyote.Response: void setStatus(int)>(505);
+        $r15 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r15, null);
+        $r16 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $z4 = interfaceinvoke $r16.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z4 == 0 goto label4;
+
+        $r17 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $r18 = new java.lang.StringBuilder;
+        $r2 = <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm>;
+        $r19 = virtualinvoke $r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.request.prepare");
+        $r20 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r19);
+        specialinvoke $r18.<java.lang.StringBuilder: void <init>(java.lang.String)>($r20);
+        $r21 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" Unsupported HTTP version \"");
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r1);
+        $r23 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\"");
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r17.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r24);
+
+     label4:
+        $r25 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        r3 = virtualinvoke $r25.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes method()>();
+        $z5 = virtualinvoke r3.<org.apache.tomcat.util.buf.MessageBytes: boolean equals(java.lang.String)>("GET");
+        if $z5 == 0 goto label5;
+
+        virtualinvoke r3.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>("GET");
+        goto label6;
+
+     label5:
+        $z6 = virtualinvoke r3.<org.apache.tomcat.util.buf.MessageBytes: boolean equals(java.lang.String)>("POST");
+        if $z6 == 0 goto label6;
+
+        virtualinvoke r3.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>("POST");
+
+     label6:
+        $r26 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        r4 = virtualinvoke $r26.<org.apache.coyote.Request: org.apache.tomcat.util.http.MimeHeaders getMimeHeaders()>();
+        r5 = virtualinvoke r4.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes getValue(java.lang.String)>("Connection");
+        if r5 == null goto label8;
+
+        r6 = virtualinvoke r5.<org.apache.tomcat.util.buf.MessageBytes: org.apache.tomcat.util.buf.ByteChunk getByteChunk()>();
+        $r27 = <org.apache.coyote.http11.Constants: byte[] CLOSE_BYTES>;
+        $i5 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: int findBytes(org.apache.tomcat.util.buf.ByteChunk,byte[])>(r6, $r27);
+        if $i5 == -1 goto label7;
+
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keepAlive> = 0;
+        goto label8;
+
+     label7:
+        $r28 = <org.apache.coyote.http11.Constants: byte[] KEEPALIVE_BYTES>;
+        $i6 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: int findBytes(org.apache.tomcat.util.buf.ByteChunk,byte[])>(r6, $r28);
+        if $i6 == -1 goto label8;
+
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keepAlive> = 1;
+
+     label8:
+        r29 = null;
+        $z7 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean http11>;
+        if $z7 == 0 goto label9;
+
+        r29 = virtualinvoke r4.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes getValue(java.lang.String)>("expect");
+
+     label9:
+        if r29 == null goto label11;
+
+        $i7 = virtualinvoke r29.<org.apache.tomcat.util.buf.MessageBytes: int indexOfIgnoreCase(java.lang.String,int)>("100-continue", 0);
+        if $i7 == -1 goto label10;
+
+        $r30 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        virtualinvoke $r30.<org.apache.coyote.http11.AbstractInputBuffer: void setSwallowInput(boolean)>(0);
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean expectation> = 1;
+        goto label11;
+
+     label10:
+        $r31 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r31.<org.apache.coyote.Response: void setStatus(int)>(417);
+        $r32 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r32, null);
+
+     label11:
+        $r33 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.util.regex.Pattern restrictedUserAgents>;
+        if $r33 == null goto label13;
+
+        $z8 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean http11>;
+        if $z8 != 0 goto label12;
+
+        $z9 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keepAlive>;
+        if $z9 == 0 goto label13;
+
+     label12:
+        r7 = virtualinvoke r4.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes getValue(java.lang.String)>("user-agent");
+        if r7 == null goto label13;
+
+        r8 = virtualinvoke r7.<org.apache.tomcat.util.buf.MessageBytes: java.lang.String toString()>();
+        $r34 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.util.regex.Pattern restrictedUserAgents>;
+        $r35 = virtualinvoke $r34.<java.util.regex.Pattern: java.util.regex.Matcher matcher(java.lang.CharSequence)>(r8);
+        $z10 = virtualinvoke $r35.<java.util.regex.Matcher: boolean matches()>();
+        if $z10 == 0 goto label13;
+
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean http11> = 0;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keepAlive> = 0;
+
+     label13:
+        r36 = null;
+
+     label14:
+        r36 = virtualinvoke r4.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes getUniqueValue(java.lang.String)>("host");
+
+     label15:
+        goto label17;
+
+     label16:
+        $r37 := @caughtexception;
+        r38 = $r37;
+        $r39 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r39.<org.apache.coyote.Response: void setStatus(int)>(400);
+        $r40 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r40, null);
+        $r41 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $z11 = interfaceinvoke $r41.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z11 == 0 goto label17;
+
+        $r42 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $r43 = <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm>;
+        $r44 = virtualinvoke $r43.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.request.multipleHosts");
+        interfaceinvoke $r42.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r44);
+
+     label17:
+        $z12 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean http11>;
+        if $z12 == 0 goto label18;
+
+        if r36 != null goto label18;
+
+        $r45 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r45.<org.apache.coyote.Response: void setStatus(int)>(400);
+        $r46 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r46, null);
+        $r47 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $z13 = interfaceinvoke $r47.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z13 == 0 goto label18;
+
+        $r48 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $r49 = <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm>;
+        $r50 = virtualinvoke $r49.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.request.noHostHeader");
+        interfaceinvoke $r48.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r50);
+
+     label18:
+        $r51 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r52 = virtualinvoke $r51.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes requestURI()>();
+        r53 = virtualinvoke $r52.<org.apache.tomcat.util.buf.MessageBytes: org.apache.tomcat.util.buf.ByteChunk getByteChunk()>();
+        r9 = virtualinvoke r53.<org.apache.tomcat.util.buf.ByteChunk: byte[] getBytes()>();
+        $z14 = virtualinvoke r53.<org.apache.tomcat.util.buf.ByteChunk: boolean startsWithIgnoreCase(java.lang.String,int)>("http", 0);
+        if $z14 == 0 goto label31;
+
+        i0 = 4;
+        $z15 = virtualinvoke r53.<org.apache.tomcat.util.buf.ByteChunk: boolean startsWithIgnoreCase(java.lang.String,int)>("s", i0);
+        if $z15 == 0 goto label19;
+
+        i0 = i0 + 1;
+
+     label19:
+        $z16 = virtualinvoke r53.<org.apache.tomcat.util.buf.ByteChunk: boolean startsWith(java.lang.String,int)>("://", i0);
+        if $z16 == 0 goto label30;
+
+        i8 = i0 + 3;
+        i1 = virtualinvoke r53.<org.apache.tomcat.util.buf.ByteChunk: int getStart()>();
+        i2 = virtualinvoke r53.<org.apache.tomcat.util.buf.ByteChunk: int indexOf(char,int)>(47, i8);
+        i3 = virtualinvoke r53.<org.apache.tomcat.util.buf.ByteChunk: int indexOf(char,int)>(64, i8);
+        if i2 <= -1 goto label20;
+
+        if i3 <= i2 goto label20;
+
+        i3 = -1;
+
+     label20:
+        if i2 != -1 goto label21;
+
+        i2 = virtualinvoke r53.<org.apache.tomcat.util.buf.ByteChunk: int getLength()>();
+        $r54 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r55 = virtualinvoke $r54.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes requestURI()>();
+        $i9 = i1 + 6;
+        virtualinvoke $r55.<org.apache.tomcat.util.buf.MessageBytes: void setBytes(byte[],int,int)>(r9, $i9, 1);
+        goto label22;
+
+     label21:
+        $r56 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r57 = virtualinvoke $r56.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes requestURI()>();
+        $i10 = i1 + i2;
+        $i11 = virtualinvoke r53.<org.apache.tomcat.util.buf.ByteChunk: int getLength()>();
+        $i12 = $i11 - i2;
+        virtualinvoke $r57.<org.apache.tomcat.util.buf.MessageBytes: void setBytes(byte[],int,int)>(r9, $i10, $i12);
+
+     label22:
+        if i3 == -1 goto label27;
+
+        goto label25;
+
+     label23:
+        $i13 = i1 + i8;
+        b4 = r9[$i13];
+        $z17 = staticinvoke <org.apache.tomcat.util.http.parser.HttpParser: boolean isUserInfo(int)>(b4);
+        if $z17 != 0 goto label24;
+
+        $r58 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r58.<org.apache.coyote.Response: void setStatus(int)>(400);
+        $r59 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r59, null);
+        $r60 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $z18 = interfaceinvoke $r60.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z18 == 0 goto label26;
+
+        $r61 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $r62 = <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm>;
+        $r63 = virtualinvoke $r62.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.request.invalidUserInfo");
+        interfaceinvoke $r61.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r63);
+        goto label26;
+
+     label24:
+        i8 = i8 + 1;
+
+     label25:
+        if i8 < i3 goto label23;
+
+     label26:
+        i8 = i3 + 1;
+
+     label27:
+        $z19 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean http11>;
+        if $z19 == 0 goto label29;
+
+        if r36 == null goto label31;
+
+        $r64 = virtualinvoke r36.<org.apache.tomcat.util.buf.MessageBytes: org.apache.tomcat.util.buf.ByteChunk getByteChunk()>();
+        $i14 = i1 + i8;
+        $i15 = i2 - i8;
+        $z20 = virtualinvoke $r64.<org.apache.tomcat.util.buf.ByteChunk: boolean equals(byte[],int,int)>(r9, $i14, $i15);
+        if $z20 != 0 goto label31;
+
+        $z21 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean allowHostHeaderMismatch>;
+        if $z21 == 0 goto label28;
+
+        r36 = virtualinvoke r4.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes setValue(java.lang.String)>("host");
+        $i16 = i1 + i8;
+        $i17 = i2 - i8;
+        virtualinvoke r36.<org.apache.tomcat.util.buf.MessageBytes: void setBytes(byte[],int,int)>(r9, $i16, $i17);
+        goto label31;
+
+     label28:
+        $r65 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r65.<org.apache.coyote.Response: void setStatus(int)>(400);
+        $r66 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r66, null);
+        $r67 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $z22 = interfaceinvoke $r67.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z22 == 0 goto label31;
+
+        $r68 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $r69 = <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm>;
+        $r70 = virtualinvoke $r69.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.request.inconsistentHosts");
+        interfaceinvoke $r68.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r70);
+        goto label31;
+
+     label29:
+        r36 = virtualinvoke r4.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes setValue(java.lang.String)>("host");
+        $i18 = i1 + i8;
+        $i19 = i2 - i8;
+        virtualinvoke r36.<org.apache.tomcat.util.buf.MessageBytes: void setBytes(byte[],int,int)>(r9, $i18, $i19);
+        goto label31;
+
+     label30:
+        $r71 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r71.<org.apache.coyote.Response: void setStatus(int)>(400);
+        $r72 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r72, null);
+        $r73 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $z23 = interfaceinvoke $r73.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z23 == 0 goto label31;
+
+        $r74 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $r75 = <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm>;
+        $r76 = virtualinvoke $r75.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.request.invalidScheme");
+        interfaceinvoke $r74.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r76);
+
+     label31:
+        i20 = virtualinvoke r53.<org.apache.tomcat.util.buf.ByteChunk: int getStart()>();
+        goto label34;
+
+     label32:
+        $r77 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.http.parser.HttpParser httpParser>;
+        $b21 = r9[i20];
+        $z24 = virtualinvoke $r77.<org.apache.tomcat.util.http.parser.HttpParser: boolean isAbsolutePathRelaxed(int)>($b21);
+        if $z24 != 0 goto label33;
+
+        $r78 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r78.<org.apache.coyote.Response: void setStatus(int)>(400);
+        $r79 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_CLEAN>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r79, null);
+        $r80 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $z25 = interfaceinvoke $r80.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z25 == 0 goto label35;
+
+        $r81 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $r82 = <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm>;
+        $r83 = virtualinvoke $r82.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.request.invalidUri");
+        interfaceinvoke $r81.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r83);
+        goto label35;
+
+     label33:
+        i20 = i20 + 1;
+
+     label34:
+        $i22 = virtualinvoke r53.<org.apache.tomcat.util.buf.ByteChunk: int getEnd()>();
+        if i20 < $i22 goto label32;
+
+     label35:
+        $r84 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        r85 = virtualinvoke $r84.<org.apache.coyote.http11.AbstractInputBuffer: org.apache.coyote.http11.InputFilter[] getFilters()>();
+        r86 = null;
+        $z26 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean http11>;
+        if $z26 == 0 goto label36;
+
+        r86 = virtualinvoke r4.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes getValue(java.lang.String)>("transfer-encoding");
+
+     label36:
+        if r86 == null goto label39;
+
+        r87 = virtualinvoke r86.<org.apache.tomcat.util.buf.MessageBytes: java.lang.String toString()>();
+        i23 = 0;
+        i24 = virtualinvoke r87.<java.lang.String: int indexOf(int)>(44);
+        n0 = null;
+        goto label38;
+
+     label37:
+        r88 = virtualinvoke r87.<java.lang.String: java.lang.String substring(int,int)>(i23, i24);
+        specialinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void addInputFilter(org.apache.coyote.http11.InputFilter[],java.lang.String)>(r85, r88);
+        i23 = i24 + 1;
+        i24 = virtualinvoke r87.<java.lang.String: int indexOf(int,int)>(44, i23);
+
+     label38:
+        if i24 != -1 goto label37;
+
+        r89 = virtualinvoke r87.<java.lang.String: java.lang.String substring(int)>(i23);
+        specialinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void addInputFilter(org.apache.coyote.http11.InputFilter[],java.lang.String)>(r85, r89);
+
+     label39:
+        $r90 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        l25 = virtualinvoke $r90.<org.apache.coyote.Request: long getContentLengthLong()>();
+        $b26 = l25 cmp 0L;
+        if $b26 < 0 goto label41;
+
+        $z27 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean contentDelimitation>;
+        if $z27 == 0 goto label40;
+
+        virtualinvoke r4.<org.apache.tomcat.util.http.MimeHeaders: void removeHeader(java.lang.String)>("content-length");
+        $r91 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        virtualinvoke $r91.<org.apache.coyote.Request: void setContentLength(long)>(-1L);
+        goto label41;
+
+     label40:
+        $r92 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        $r93 = r85[0];
+        virtualinvoke $r92.<org.apache.coyote.http11.AbstractInputBuffer: void addActiveFilter(org.apache.coyote.http11.InputFilter)>($r93);
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean contentDelimitation> = 1;
+
+     label41:
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void parseHost(org.apache.tomcat.util.buf.MessageBytes)>(r36);
+        $z28 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean contentDelimitation>;
+        if $z28 != 0 goto label42;
+
+        $r94 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        $r95 = r85[2];
+        virtualinvoke $r94.<org.apache.coyote.http11.AbstractInputBuffer: void addActiveFilter(org.apache.coyote.http11.InputFilter)>($r95);
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean contentDelimitation> = 1;
+
+     label42:
+        $r96 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $z29 = virtualinvoke $r96.<org.apache.tomcat.util.net.AbstractEndpoint: boolean getUseSendfile()>();
+        if $z29 == 0 goto label43;
+
+        $r97 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r98 = <java.lang.Boolean: java.lang.Boolean TRUE>;
+        virtualinvoke $r97.<org.apache.coyote.Request: void setAttribute(java.lang.String,java.lang.Object)>("org.apache.tomcat.sendfile.support", $r98);
+
+     label43:
+        $r99 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $z30 = virtualinvoke $r99.<org.apache.tomcat.util.net.AbstractEndpoint: boolean getUseComet()>();
+        if $z30 == 0 goto label44;
+
+        $r100 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r101 = <java.lang.Boolean: java.lang.Boolean TRUE>;
+        virtualinvoke $r100.<org.apache.coyote.Request: void setAttribute(java.lang.String,java.lang.Object)>("org.apache.tomcat.comet.support", $r101);
+
+     label44:
+        $r102 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        $z31 = virtualinvoke $r102.<org.apache.tomcat.util.net.AbstractEndpoint: boolean getUseCometTimeout()>();
+        if $z31 == 0 goto label45;
+
+        $r103 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r104 = <java.lang.Boolean: java.lang.Boolean TRUE>;
+        virtualinvoke $r103.<org.apache.coyote.Request: void setAttribute(java.lang.String,java.lang.Object)>("org.apache.tomcat.comet.timeout.support", $r104);
+
+     label45:
+        $r105 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.ErrorState getErrorState()>();
+        $z32 = virtualinvoke $r105.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z32 == 0 goto label46;
+
+        $r106 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Adapter adapter>;
+        $r107 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r108 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        interfaceinvoke $r106.<org.apache.coyote.Adapter: void log(org.apache.coyote.Request,org.apache.coyote.Response,long)>($r107, $r108, 0L);
+
+     label46:
+        return;
+
+        catch java.lang.IllegalArgumentException from label14 to label15 with label16;
+    }
+
+    protected abstract void prepareRequestInternal();
+
+    private void prepareResponse()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        boolean z0, z1, z2, z3, z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14, $z15;
+        org.apache.coyote.http11.OutputFilter[] r1;
+        int i0, i1, i2, $i3;
+        org.apache.tomcat.util.buf.MessageBytes r2, $r21, $r23, $r25, $r30, $r35, $r36, $r37, $r40, $r42, $r45, $r47, $r51, $r52;
+        org.apache.tomcat.util.http.MimeHeaders r3;
+        java.lang.String r4, r5, $r38, $r44, $r46;
+        org.apache.coyote.http11.AbstractOutputBuffer $r6, $r7, $r10, $r15, $r26, $r28, $r31, $r33, $r43, $r48, $r50, $r53;
+        org.apache.coyote.http11.OutputFilter $r8, $r11, $r16, $r27, $r29, $r32, $r34;
+        org.apache.coyote.Response $r9, $r12, $r13, $r18, $r19, $r20, $r22, $r24;
+        org.apache.coyote.Request $r14;
+        org.apache.tomcat.util.net.AbstractEndpoint $r17;
+        long l4;
+        byte $b5;
+        org.apache.coyote.ErrorState $r41;
+        byte[] $r49;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        z0 = 1;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean contentDelimitation> = 0;
+        $r6 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        r1 = virtualinvoke $r6.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.http11.OutputFilter[] getFilters()>();
+        $z5 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean http09>;
+        if $z5 == 0 goto label0;
+
+        $r7 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        $r8 = r1[0];
+        virtualinvoke $r7.<org.apache.coyote.http11.AbstractOutputBuffer: void addActiveFilter(org.apache.coyote.http11.OutputFilter)>($r8);
+        return;
+
+     label0:
+        $r9 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        i0 = virtualinvoke $r9.<org.apache.coyote.Response: int getStatus()>();
+        if i0 < 200 goto label1;
+
+        if i0 == 204 goto label1;
+
+        if i0 == 205 goto label1;
+
+        if i0 != 304 goto label3;
+
+     label1:
+        $r10 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        $r11 = r1[2];
+        virtualinvoke $r10.<org.apache.coyote.http11.AbstractOutputBuffer: void addActiveFilter(org.apache.coyote.http11.OutputFilter)>($r11);
+        z0 = 0;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean contentDelimitation> = 1;
+        if i0 != 205 goto label2;
+
+        $r12 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r12.<org.apache.coyote.Response: void setContentLength(long)>(0L);
+        goto label3;
+
+     label2:
+        $r13 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r13.<org.apache.coyote.Response: void setContentLength(long)>(-1L);
+
+     label3:
+        $r14 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        r2 = virtualinvoke $r14.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes method()>();
+        $z6 = virtualinvoke r2.<org.apache.tomcat.util.buf.MessageBytes: boolean equals(java.lang.String)>("HEAD");
+        if $z6 == 0 goto label4;
+
+        $r15 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        $r16 = r1[2];
+        virtualinvoke $r15.<org.apache.coyote.http11.AbstractOutputBuffer: void addActiveFilter(org.apache.coyote.http11.OutputFilter)>($r16);
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean contentDelimitation> = 1;
+
+     label4:
+        z1 = 0;
+        $r17 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.net.AbstractEndpoint getEndpoint()>();
+        $z7 = virtualinvoke $r17.<org.apache.tomcat.util.net.AbstractEndpoint: boolean getUseSendfile()>();
+        if $z7 == 0 goto label5;
+
+        z1 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean prepareSendfile(org.apache.coyote.http11.OutputFilter[])>(r1);
+
+     label5:
+        z2 = 0;
+        z3 = 0;
+        if z0 == 0 goto label7;
+
+        $i3 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: int compressionLevel>;
+        if $i3 <= 0 goto label7;
+
+        if z1 != 0 goto label7;
+
+        z2 = specialinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean isCompressible()>();
+        if z2 == 0 goto label6;
+
+        z3 = specialinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean useCompression()>();
+
+     label6:
+        if z3 == 0 goto label7;
+
+        $r18 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r18.<org.apache.coyote.Response: void setContentLength(long)>(-1L);
+
+     label7:
+        $r19 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        r3 = virtualinvoke $r19.<org.apache.coyote.Response: org.apache.tomcat.util.http.MimeHeaders getMimeHeaders()>();
+        if z0 != 0 goto label8;
+
+        if i0 != 204 goto label10;
+
+     label8:
+        $r20 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        r4 = virtualinvoke $r20.<org.apache.coyote.Response: java.lang.String getContentType()>();
+        if r4 == null goto label9;
+
+        $r21 = virtualinvoke r3.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes setValue(java.lang.String)>("Content-Type");
+        virtualinvoke $r21.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>(r4);
+
+     label9:
+        $r22 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        r5 = virtualinvoke $r22.<org.apache.coyote.Response: java.lang.String getContentLanguage()>();
+        if r5 == null goto label10;
+
+        $r23 = virtualinvoke r3.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes setValue(java.lang.String)>("Content-Language");
+        virtualinvoke $r23.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>(r5);
+
+     label10:
+        $r24 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        l4 = virtualinvoke $r24.<org.apache.coyote.Response: long getContentLengthLong()>();
+        z4 = 0;
+        $b5 = l4 cmp -1L;
+        if $b5 == 0 goto label11;
+
+        $r25 = virtualinvoke r3.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes setValue(java.lang.String)>("Content-Length");
+        virtualinvoke $r25.<org.apache.tomcat.util.buf.MessageBytes: void setLong(long)>(l4);
+        $r26 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        $r27 = r1[0];
+        virtualinvoke $r26.<org.apache.coyote.http11.AbstractOutputBuffer: void addActiveFilter(org.apache.coyote.http11.OutputFilter)>($r27);
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean contentDelimitation> = 1;
+        goto label13;
+
+     label11:
+        z4 = specialinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean isConnectionClose(org.apache.tomcat.util.http.MimeHeaders)>(r3);
+        if z0 == 0 goto label12;
+
+        $z8 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean http11>;
+        if $z8 == 0 goto label12;
+
+        if z4 != 0 goto label12;
+
+        $r28 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        $r29 = r1[1];
+        virtualinvoke $r28.<org.apache.coyote.http11.AbstractOutputBuffer: void addActiveFilter(org.apache.coyote.http11.OutputFilter)>($r29);
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean contentDelimitation> = 1;
+        $r30 = virtualinvoke r3.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes addValue(java.lang.String)>("Transfer-Encoding");
+        virtualinvoke $r30.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>("chunked");
+        goto label13;
+
+     label12:
+        $r31 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        $r32 = r1[0];
+        virtualinvoke $r31.<org.apache.coyote.http11.AbstractOutputBuffer: void addActiveFilter(org.apache.coyote.http11.OutputFilter)>($r32);
+
+     label13:
+        if z3 == 0 goto label14;
+
+        $r33 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        $r34 = r1[3];
+        virtualinvoke $r33.<org.apache.coyote.http11.AbstractOutputBuffer: void addActiveFilter(org.apache.coyote.http11.OutputFilter)>($r34);
+        $r35 = virtualinvoke r3.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes setValue(java.lang.String)>("Content-Encoding");
+        virtualinvoke $r35.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>("gzip");
+
+     label14:
+        if z2 == 0 goto label15;
+
+        staticinvoke <org.apache.tomcat.util.http.ResponseUtil: void addVaryFieldName(org.apache.tomcat.util.http.MimeHeaders,java.lang.String)>(r3, "accept-encoding");
+
+     label15:
+        $r36 = virtualinvoke r3.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes getValue(java.lang.String)>("Date");
+        if $r36 != null goto label16;
+
+        $r37 = virtualinvoke r3.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes setValue(java.lang.String)>("Date");
+        $r38 = staticinvoke <org.apache.tomcat.util.http.FastHttpDateFormat: java.lang.String getCurrentDate()>();
+        virtualinvoke $r37.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>($r38);
+
+     label16:
+        if z0 == 0 goto label17;
+
+        $z9 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean contentDelimitation>;
+        if $z9 != 0 goto label17;
+
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keepAlive> = 0;
+
+     label17:
+        specialinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void checkExpectationAndResponseStatus()>();
+        $z10 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keepAlive>;
+        if $z10 == 0 goto label18;
+
+        $z11 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean statusDropsConnection(int)>(i0);
+        if $z11 != 0 goto label18;
+
+        $z12 = 1;
+        goto label19;
+
+     label18:
+        $z12 = 0;
+
+     label19:
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keepAlive> = $z12;
+        $z13 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keepAlive>;
+        if $z13 != 0 goto label20;
+
+        if z4 != 0 goto label21;
+
+        $r40 = virtualinvoke r3.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes addValue(java.lang.String)>("Connection");
+        virtualinvoke $r40.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>("close");
+        goto label21;
+
+     label20:
+        $z14 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean http11>;
+        if $z14 != 0 goto label21;
+
+        $r41 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.ErrorState getErrorState()>();
+        $z15 = virtualinvoke $r41.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z15 != 0 goto label21;
+
+        $r42 = virtualinvoke r3.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes addValue(java.lang.String)>("Connection");
+        virtualinvoke $r42.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>("keep-alive");
+
+     label21:
+        $r43 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        virtualinvoke $r43.<org.apache.coyote.http11.AbstractOutputBuffer: void sendStatus()>();
+        $r44 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String server>;
+        if $r44 == null goto label22;
+
+        $r45 = virtualinvoke r3.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes setValue(java.lang.String)>("Server");
+        $r46 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String server>;
+        virtualinvoke $r45.<org.apache.tomcat.util.buf.MessageBytes: void setString(java.lang.String)>($r46);
+        goto label23;
+
+     label22:
+        $r47 = virtualinvoke r3.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes getValue(java.lang.String)>("Server");
+        if $r47 != null goto label23;
+
+        $r48 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        $r49 = <org.apache.coyote.http11.Constants: byte[] SERVER_BYTES>;
+        virtualinvoke $r48.<org.apache.coyote.http11.AbstractOutputBuffer: void write(byte[])>($r49);
+
+     label23:
+        i1 = virtualinvoke r3.<org.apache.tomcat.util.http.MimeHeaders: int size()>();
+        i2 = 0;
+        goto label25;
+
+     label24:
+        $r50 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        $r51 = virtualinvoke r3.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes getName(int)>(i2);
+        $r52 = virtualinvoke r3.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes getValue(int)>(i2);
+        virtualinvoke $r50.<org.apache.coyote.http11.AbstractOutputBuffer: void sendHeader(org.apache.tomcat.util.buf.MessageBytes,org.apache.tomcat.util.buf.MessageBytes)>($r51, $r52);
+        i2 = i2 + 1;
+
+     label25:
+        if i2 < i1 goto label24;
+
+        $r53 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        virtualinvoke $r53.<org.apache.coyote.http11.AbstractOutputBuffer: void endHeaders()>();
+        return;
+    }
+
+    private boolean isConnectionClose(org.apache.tomcat.util.http.MimeHeaders)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        org.apache.tomcat.util.http.MimeHeaders r1;
+        org.apache.tomcat.util.buf.MessageBytes r2;
+        boolean $z0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: org.apache.tomcat.util.http.MimeHeaders;
+        r2 = virtualinvoke r1.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes getValue(java.lang.String)>("Connection");
+        if r2 != null goto label0;
+
+        return 0;
+
+     label0:
+        $z0 = virtualinvoke r2.<org.apache.tomcat.util.buf.MessageBytes: boolean equals(java.lang.String)>("close");
+        return $z0;
+    }
+
+    protected abstract boolean prepareSendfile(org.apache.coyote.http11.OutputFilter[]);
+
+    protected void populateHost()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        org.apache.coyote.ActionCode $r1;
+        org.apache.coyote.Request $r2, $r3, $r4, $r5;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        $r2 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r1 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_LOCALPORT_ATTRIBUTE>;
+        $r3 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        virtualinvoke $r2.<org.apache.coyote.Request: void action(org.apache.coyote.ActionCode,java.lang.Object)>($r1, $r3);
+        $r4 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r5 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $i0 = virtualinvoke $r5.<org.apache.coyote.Request: int getLocalPort()>();
+        virtualinvoke $r4.<org.apache.coyote.Request: void setServerPort(int)>($i0);
+        return;
+    }
+
+    public org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState asyncDispatch(org.apache.tomcat.util.net.SocketStatus)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        org.apache.tomcat.util.net.SocketStatus r1;
+        org.apache.coyote.RequestInfo r2;
+        java.io.InterruptedIOException r3, $r10;
+        java.lang.Throwable r4, $r17, r18, $r28;
+        org.apache.coyote.Request $r5, $r7, $r15, $r26, $r32, $r37;
+        org.apache.coyote.Adapter $r6, $r14, $r25, $r31, $r36;
+        org.apache.coyote.Response $r8, $r13, $r16, $r24, $r27, $r30, $r33, $r35, $r38;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+        org.apache.coyote.ErrorState $r9, $r11, $r12, $r19, $r23, $r29, $r34, $r39;
+        org.apache.juli.logging.Log $r20;
+        org.apache.tomcat.util.res.StringManager $r21;
+        java.lang.String $r22;
+        org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState $r40, $r41, $r42, $r45;
+        org.apache.coyote.http11.AbstractInputBuffer $r43;
+        org.apache.coyote.http11.AbstractOutputBuffer $r44;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: org.apache.tomcat.util.net.SocketStatus;
+        $r5 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        r2 = virtualinvoke $r5.<org.apache.coyote.Request: org.apache.coyote.RequestInfo getRequestProcessor()>();
+
+     label0:
+        virtualinvoke r2.<org.apache.coyote.RequestInfo: void setStage(int)>(3);
+        $r6 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Adapter getAdapter()>();
+        $r7 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r8 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        $z0 = interfaceinvoke $r6.<org.apache.coyote.Adapter: boolean asyncDispatch(org.apache.coyote.Request,org.apache.coyote.Response,org.apache.tomcat.util.net.SocketStatus)>($r7, $r8, r1);
+        if $z0 != 0 goto label1;
+
+        $r9 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r9, null);
+
+     label1:
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void resetTimeouts()>();
+
+     label2:
+        goto label10;
+
+     label3:
+        $r10 := @caughtexception;
+        r3 = $r10;
+        $r11 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r11, r3);
+
+     label4:
+        $r12 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.ErrorState getErrorState()>();
+        $z1 = virtualinvoke $r12.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z1 == 0 goto label11;
+
+        $r13 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r13.<org.apache.coyote.Response: void setStatus(int)>(500);
+        $r14 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Adapter adapter>;
+        $r15 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r16 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        interfaceinvoke $r14.<org.apache.coyote.Adapter: void log(org.apache.coyote.Request,org.apache.coyote.Response,long)>($r15, $r16, 0L);
+        goto label11;
+
+     label5:
+        $r17 := @caughtexception;
+
+     label6:
+        r18 = $r17;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r18);
+        $r19 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r19, r18);
+        $r20 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $r21 = <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm>;
+        $r22 = virtualinvoke $r21.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.request.process");
+        interfaceinvoke $r20.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r22, r18);
+
+     label7:
+        $r23 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.ErrorState getErrorState()>();
+        $z2 = virtualinvoke $r23.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z2 == 0 goto label11;
+
+        $r24 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r24.<org.apache.coyote.Response: void setStatus(int)>(500);
+        $r25 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Adapter adapter>;
+        $r26 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r27 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        interfaceinvoke $r25.<org.apache.coyote.Adapter: void log(org.apache.coyote.Request,org.apache.coyote.Response,long)>($r26, $r27, 0L);
+        goto label11;
+
+     label8:
+        $r28 := @caughtexception;
+        r4 = $r28;
+        $r29 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.ErrorState getErrorState()>();
+        $z3 = virtualinvoke $r29.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z3 == 0 goto label9;
+
+        $r30 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r30.<org.apache.coyote.Response: void setStatus(int)>(500);
+        $r31 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Adapter adapter>;
+        $r32 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r33 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        interfaceinvoke $r31.<org.apache.coyote.Adapter: void log(org.apache.coyote.Request,org.apache.coyote.Response,long)>($r32, $r33, 0L);
+
+     label9:
+        throw r4;
+
+     label10:
+        $r34 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.ErrorState getErrorState()>();
+        $z4 = virtualinvoke $r34.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z4 == 0 goto label11;
+
+        $r35 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r35.<org.apache.coyote.Response: void setStatus(int)>(500);
+        $r36 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Adapter adapter>;
+        $r37 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r38 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        interfaceinvoke $r36.<org.apache.coyote.Adapter: void log(org.apache.coyote.Request,org.apache.coyote.Response,long)>($r37, $r38, 0L);
+
+     label11:
+        virtualinvoke r2.<org.apache.coyote.RequestInfo: void setStage(int)>(7);
+        $r39 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.ErrorState getErrorState()>();
+        $z5 = virtualinvoke $r39.<org.apache.coyote.ErrorState: boolean isError()>();
+        if $z5 == 0 goto label12;
+
+        $r40 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState CLOSED>;
+        return $r40;
+
+     label12:
+        $z6 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean isAsync()>();
+        if $z6 == 0 goto label13;
+
+        $r41 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState LONG>;
+        return $r41;
+
+     label13:
+        $z7 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean keepAlive>;
+        if $z7 != 0 goto label14;
+
+        $r42 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState CLOSED>;
+        return $r42;
+
+     label14:
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void endRequest()>();
+        $r43 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        virtualinvoke $r43.<org.apache.coyote.http11.AbstractInputBuffer: void nextRequest()>();
+        $r44 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        virtualinvoke $r44.<org.apache.coyote.http11.AbstractOutputBuffer: void nextRequest()>();
+        $r45 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState OPEN>;
+        return $r45;
+
+        catch java.io.InterruptedIOException from label0 to label2 with label3;
+        catch java.lang.Throwable from label0 to label2 with label5;
+        catch java.lang.Throwable from label0 to label4 with label8;
+        catch java.lang.Throwable from label6 to label7 with label8;
+    }
+
+    public boolean isComet()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        $z0 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean comet>;
+        return $z0;
+    }
+
+    public org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState upgradeDispatch() throws java.io.IOException
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        java.io.IOException $r1;
+        org.apache.tomcat.util.res.StringManager $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        $r1 = new java.io.IOException;
+        $r2 = <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm>;
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11Processor.upgrade");
+        specialinvoke $r1.<java.io.IOException: void <init>(java.lang.String)>($r3);
+        throw $r1;
+    }
+
+    public org.apache.coyote.http11.upgrade.UpgradeInbound getUpgradeInbound()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        org.apache.coyote.http11.upgrade.UpgradeInbound $r1;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        $r1 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.upgrade.UpgradeInbound upgradeInbound>;
+        return $r1;
+    }
+
+    public boolean isUpgrade()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler $r1;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        $r1 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler httpUpgradeHandler>;
+        if $r1 == null goto label0;
+
+        return 1;
+
+     label0:
+        return 0;
+    }
+
+    public org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState upgradeDispatch(org.apache.tomcat.util.net.SocketStatus) throws java.io.IOException
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        org.apache.tomcat.util.net.SocketStatus r1;
+        java.io.IOException $r2;
+        org.apache.tomcat.util.res.StringManager $r3;
+        java.lang.String $r4;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        r1 := @parameter0: org.apache.tomcat.util.net.SocketStatus;
+        $r2 = new java.io.IOException;
+        $r3 = <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm>;
+        $r4 = virtualinvoke $r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("ajpprocessor.httpupgrade.notsupported");
+        specialinvoke $r2.<java.io.IOException: void <init>(java.lang.String)>($r4);
+        throw $r2;
+    }
+
+    public org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler getHttpUpgradeHandler()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler $r1;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        $r1 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler httpUpgradeHandler>;
+        return $r1;
+    }
+
+    protected abstract void resetTimeouts();
+
+    protected abstract void setCometTimeouts(org.apache.tomcat.util.net.SocketWrapper);
+
+    public void endRequest()
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        java.io.IOException r1, $r5, $r15, r16;
+        org.apache.coyote.ErrorState $r2, $r3, $r9, $r13, $r17, $r20;
+        boolean $z0, $z1;
+        org.apache.coyote.http11.AbstractInputBuffer $r4;
+        java.lang.Throwable $r6, r7, $r18, r19;
+        org.apache.coyote.Response $r8;
+        org.apache.juli.logging.Log $r10, $r21;
+        org.apache.tomcat.util.res.StringManager $r11, $r22;
+        java.lang.String $r12, $r23;
+        org.apache.coyote.http11.AbstractOutputBuffer $r14;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        $r3 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.ErrorState getErrorState()>();
+        $z0 = virtualinvoke $r3.<org.apache.coyote.ErrorState: boolean isIoAllowed()>();
+        if $z0 == 0 goto label4;
+
+     label0:
+        $r4 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        virtualinvoke $r4.<org.apache.coyote.http11.AbstractInputBuffer: void endRequest()>();
+
+     label1:
+        goto label4;
+
+     label2:
+        $r5 := @caughtexception;
+        r1 = $r5;
+        $r2 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r2, r1);
+        goto label4;
+
+     label3:
+        $r6 := @caughtexception;
+        r7 = $r6;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r7);
+        $r8 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        virtualinvoke $r8.<org.apache.coyote.Response: void setStatus(int)>(500);
+        $r9 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r9, r7);
+        $r10 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $r11 = <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm>;
+        $r12 = virtualinvoke $r11.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.request.finish");
+        interfaceinvoke $r10.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r12, r7);
+
+     label4:
+        $r13 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.ErrorState getErrorState()>();
+        $z1 = virtualinvoke $r13.<org.apache.coyote.ErrorState: boolean isIoAllowed()>();
+        if $z1 == 0 goto label9;
+
+     label5:
+        $r14 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        virtualinvoke $r14.<org.apache.coyote.http11.AbstractOutputBuffer: void endRequest()>();
+
+     label6:
+        goto label9;
+
+     label7:
+        $r15 := @caughtexception;
+        r16 = $r15;
+        $r17 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r17, r16);
+        goto label9;
+
+     label8:
+        $r18 := @caughtexception;
+        r19 = $r18;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r19);
+        $r20 = <org.apache.coyote.ErrorState: org.apache.coyote.ErrorState CLOSE_NOW>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void setErrorState(org.apache.coyote.ErrorState,java.lang.Throwable)>($r20, r19);
+        $r21 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.juli.logging.Log getLog()>();
+        $r22 = <org.apache.coyote.http11.AbstractHttp11Processor: org.apache.tomcat.util.res.StringManager sm>;
+        $r23 = virtualinvoke $r22.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("http11processor.response.finish");
+        interfaceinvoke $r21.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r23, r19);
+
+     label9:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+        catch java.lang.Throwable from label0 to label1 with label3;
+        catch java.io.IOException from label5 to label6 with label7;
+        catch java.lang.Throwable from label5 to label6 with label8;
+    }
+
+    protected abstract boolean breakKeepAliveLoop(org.apache.tomcat.util.net.SocketWrapper);
+
+    public final void recycle(boolean)
+    {
+        org.apache.coyote.http11.AbstractHttp11Processor r0;
+        boolean z0;
+        org.apache.coyote.Adapter $r1;
+        org.apache.coyote.Request $r2;
+        org.apache.coyote.Response $r3;
+        org.apache.coyote.http11.AbstractInputBuffer $r4, $r5;
+        org.apache.coyote.http11.AbstractOutputBuffer $r6, $r7;
+        org.apache.coyote.AsyncStateMachine $r8, $r9;
+
+        r0 := @this: org.apache.coyote.http11.AbstractHttp11Processor;
+        z0 := @parameter0: boolean;
+        $r1 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Adapter getAdapter()>();
+        $r2 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Request request>;
+        $r3 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.Response response>;
+        interfaceinvoke $r1.<org.apache.coyote.Adapter: void checkRecycled(org.apache.coyote.Request,org.apache.coyote.Response)>($r2, $r3);
+        $r4 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        if $r4 == null goto label0;
+
+        $r5 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractInputBuffer getInputBuffer()>();
+        virtualinvoke $r5.<org.apache.coyote.http11.AbstractInputBuffer: void recycle()>();
+
+     label0:
+        $r6 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        if $r6 == null goto label1;
+
+        $r7 = virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.AbstractOutputBuffer getOutputBuffer()>();
+        virtualinvoke $r7.<org.apache.coyote.http11.AbstractOutputBuffer: void recycle()>();
+
+     label1:
+        $r8 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        if $r8 == null goto label2;
+
+        $r9 = r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.AsyncStateMachine asyncStateMachine>;
+        virtualinvoke $r9.<org.apache.coyote.AsyncStateMachine: void recycle()>();
+
+     label2:
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.upgrade.UpgradeInbound upgradeInbound> = null;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler httpUpgradeHandler> = null;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String remoteAddr> = null;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String remoteHost> = null;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String localAddr> = null;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: java.lang.String localName> = null;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int remotePort> = -1;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: int localPort> = -1;
+        r0.<org.apache.coyote.http11.AbstractHttp11Processor: boolean comet> = 0;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void resetErrorState()>();
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractHttp11Processor: void recycleInternal()>();
+        return;
+    }
+
+    protected abstract void recycleInternal();
+
+    static int[] $SWITCH_TABLE$org$apache$coyote$ActionCode()
+    {
+        int[] $r0, r1;
+        org.apache.coyote.ActionCode[] $r2;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i22, $i23, $i24, $i25, $i26, $i27, $i28, $i29, $i30, $i31, $i32, $i33, $i34, $i35, $i36, $i37, $i38, $i39, $i40, $i41, $i42;
+        org.apache.coyote.ActionCode $r3, $r5, $r7, $r9, $r11, $r13, $r15, $r17, $r19, $r21, $r23, $r25, $r27, $r29, $r31, $r33, $r35, $r37, $r39, $r41, $r43, $r45, $r47, $r49, $r51, $r53, $r55, $r57, $r59, $r61, $r63, $r65, $r67, $r69, $r71, $r73, $r75, $r77, $r79, $r81, $r83, $r85;
+        java.lang.NoSuchFieldError $r4, $r6, $r8, $r10, $r12, $r14, $r16, $r18, $r20, $r22, $r24, $r26, $r28, $r30, $r32, $r34, $r36, $r38, $r40, $r42, $r44, $r46, $r48, $r50, $r52, $r54, $r56, $r58, $r60, $r62, $r64, $r66, $r68, $r70, $r72, $r74, $r76, $r78, $r80, $r82, $r84, $r86;
+
+        $r0 = <org.apache.coyote.http11.AbstractHttp11Processor: int[] $SWITCH_TABLE$org$apache$coyote$ActionCode>;
+        if $r0 == null goto label0;
+
+        return $r0;
+
+     label0:
+        $r2 = staticinvoke <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode[] values()>();
+        $i0 = lengthof $r2;
+        r1 = newarray (int)[$i0];
+
+     label1:
+        $r3 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ACK>;
+        $i1 = virtualinvoke $r3.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i1] = 1;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r4 := @caughtexception;
+
+     label4:
+        $r5 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_COMPLETE>;
+        $i2 = virtualinvoke $r5.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i2] = 29;
+
+     label5:
+        goto label7;
+
+     label6:
+        $r6 := @caughtexception;
+
+     label7:
+        $r7 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_DISPATCH>;
+        $i3 = virtualinvoke $r7.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i3] = 26;
+
+     label8:
+        goto label10;
+
+     label9:
+        $r8 := @caughtexception;
+
+     label10:
+        $r9 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_DISPATCHED>;
+        $i4 = virtualinvoke $r9.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i4] = 27;
+
+     label11:
+        goto label13;
+
+     label12:
+        $r10 := @caughtexception;
+
+     label13:
+        $r11 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_ERROR>;
+        $i5 = virtualinvoke $r11.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i5] = 31;
+
+     label14:
+        goto label16;
+
+     label15:
+        $r12 := @caughtexception;
+
+     label16:
+        $r13 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_IS_ASYNC>;
+        $i6 = virtualinvoke $r13.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i6] = 33;
+
+     label17:
+        goto label19;
+
+     label18:
+        $r14 := @caughtexception;
+
+     label19:
+        $r15 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_IS_COMPLETING>;
+        $i7 = virtualinvoke $r15.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i7] = 35;
+
+     label20:
+        goto label22;
+
+     label21:
+        $r16 := @caughtexception;
+
+     label22:
+        $r17 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_IS_DISPATCHING>;
+        $i8 = virtualinvoke $r17.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i8] = 36;
+
+     label23:
+        goto label25;
+
+     label24:
+        $r18 := @caughtexception;
+
+     label25:
+        $r19 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_IS_ERROR>;
+        $i9 = virtualinvoke $r19.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i9] = 38;
+
+     label26:
+        goto label28;
+
+     label27:
+        $r20 := @caughtexception;
+
+     label28:
+        $r21 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_IS_STARTED>;
+        $i10 = virtualinvoke $r21.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i10] = 34;
+
+     label29:
+        goto label31;
+
+     label30:
+        $r22 := @caughtexception;
+
+     label31:
+        $r23 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_IS_TIMINGOUT>;
+        $i11 = virtualinvoke $r23.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i11] = 37;
+
+     label32:
+        goto label34;
+
+     label33:
+        $r24 := @caughtexception;
+
+     label34:
+        $r25 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_POST_PROCESS>;
+        $i12 = virtualinvoke $r25.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i12] = 40;
+
+     label35:
+        goto label37;
+
+     label36:
+        $r26 := @caughtexception;
+
+     label37:
+        $r27 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_RUN>;
+        $i13 = virtualinvoke $r27.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i13] = 28;
+
+     label38:
+        goto label40;
+
+     label39:
+        $r28 := @caughtexception;
+
+     label40:
+        $r29 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_SETTIMEOUT>;
+        $i14 = virtualinvoke $r29.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i14] = 32;
+
+     label41:
+        goto label43;
+
+     label42:
+        $r30 := @caughtexception;
+
+     label43:
+        $r31 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_START>;
+        $i15 = virtualinvoke $r31.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i15] = 25;
+
+     label44:
+        goto label46;
+
+     label45:
+        $r32 := @caughtexception;
+
+     label46:
+        $r33 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_TIMEOUT>;
+        $i16 = virtualinvoke $r33.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i16] = 30;
+
+     label47:
+        goto label49;
+
+     label48:
+        $r34 := @caughtexception;
+
+     label49:
+        $r35 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode AVAILABLE>;
+        $i17 = virtualinvoke $r35.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i17] = 22;
+
+     label50:
+        goto label52;
+
+     label51:
+        $r36 := @caughtexception;
+
+     label52:
+        $r37 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode CLIENT_FLUSH>;
+        $i18 = virtualinvoke $r37.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i18] = 5;
+
+     label53:
+        goto label55;
+
+     label54:
+        $r38 := @caughtexception;
+
+     label55:
+        $r39 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode CLOSE>;
+        $i19 = virtualinvoke $r39.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i19] = 2;
+
+     label56:
+        goto label58;
+
+     label57:
+        $r40 := @caughtexception;
+
+     label58:
+        $r41 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode CLOSE_NOW>;
+        $i20 = virtualinvoke $r41.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i20] = 4;
+
+     label59:
+        goto label61;
+
+     label60:
+        $r42 := @caughtexception;
+
+     label61:
+        $r43 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode COMET_BEGIN>;
+        $i21 = virtualinvoke $r43.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i21] = 20;
+
+     label62:
+        goto label64;
+
+     label63:
+        $r44 := @caughtexception;
+
+     label64:
+        $r45 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode COMET_CLOSE>;
+        $i22 = virtualinvoke $r45.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i22] = 23;
+
+     label65:
+        goto label67;
+
+     label66:
+        $r46 := @caughtexception;
+
+     label67:
+        $r47 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode COMET_END>;
+        $i23 = virtualinvoke $r47.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i23] = 21;
+
+     label68:
+        goto label70;
+
+     label69:
+        $r48 := @caughtexception;
+
+     label70:
+        $r49 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode COMET_SETTIMEOUT>;
+        $i24 = virtualinvoke $r49.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i24] = 24;
+
+     label71:
+        goto label73;
+
+     label72:
+        $r50 := @caughtexception;
+
+     label73:
+        $r51 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode COMMIT>;
+        $i25 = virtualinvoke $r51.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i25] = 3;
+
+     label74:
+        goto label76;
+
+     label75:
+        $r52 := @caughtexception;
+
+     label76:
+        $r53 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode CUSTOM>;
+        $i26 = virtualinvoke $r53.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i26] = 6;
+
+     label77:
+        goto label79;
+
+     label78:
+        $r54 := @caughtexception;
+
+     label79:
+        $r55 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode DISABLE_SWALLOW_INPUT>;
+        $i27 = virtualinvoke $r55.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i27] = 10;
+
+     label80:
+        goto label82;
+
+     label81:
+        $r56 := @caughtexception;
+
+     label82:
+        $r57 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode END_REQUEST>;
+        $i28 = virtualinvoke $r57.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i28] = 42;
+
+     label83:
+        goto label85;
+
+     label84:
+        $r58 := @caughtexception;
+
+     label85:
+        $r59 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode IS_ERROR>;
+        $i29 = virtualinvoke $r59.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i29] = 9;
+
+     label86:
+        goto label88;
+
+     label87:
+        $r60 := @caughtexception;
+
+     label88:
+        $r61 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode POST_REQUEST>;
+        $i30 = virtualinvoke $r61.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i30] = 8;
+
+     label89:
+        goto label91;
+
+     label90:
+        $r62 := @caughtexception;
+
+     label91:
+        $r63 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_HOST_ADDR_ATTRIBUTE>;
+        $i31 = virtualinvoke $r63.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i31] = 12;
+
+     label92:
+        goto label94;
+
+     label93:
+        $r64 := @caughtexception;
+
+     label94:
+        $r65 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_HOST_ATTRIBUTE>;
+        $i32 = virtualinvoke $r65.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i32] = 11;
+
+     label95:
+        goto label97;
+
+     label96:
+        $r66 := @caughtexception;
+
+     label97:
+        $r67 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_LOCALPORT_ATTRIBUTE>;
+        $i33 = virtualinvoke $r67.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i33] = 16;
+
+     label98:
+        goto label100;
+
+     label99:
+        $r68 := @caughtexception;
+
+     label100:
+        $r69 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_LOCAL_ADDR_ATTRIBUTE>;
+        $i34 = virtualinvoke $r69.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i34] = 17;
+
+     label101:
+        goto label103;
+
+     label102:
+        $r70 := @caughtexception;
+
+     label103:
+        $r71 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_LOCAL_NAME_ATTRIBUTE>;
+        $i35 = virtualinvoke $r71.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i35] = 18;
+
+     label104:
+        goto label106;
+
+     label105:
+        $r72 := @caughtexception;
+
+     label106:
+        $r73 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_REMOTEPORT_ATTRIBUTE>;
+        $i36 = virtualinvoke $r73.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i36] = 15;
+
+     label107:
+        goto label109;
+
+     label108:
+        $r74 := @caughtexception;
+
+     label109:
+        $r75 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_SET_BODY_REPLAY>;
+        $i37 = virtualinvoke $r75.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i37] = 19;
+
+     label110:
+        goto label112;
+
+     label111:
+        $r76 := @caughtexception;
+
+     label112:
+        $r77 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_SSL_ATTRIBUTE>;
+        $i38 = virtualinvoke $r77.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i38] = 13;
+
+     label113:
+        goto label115;
+
+     label114:
+        $r78 := @caughtexception;
+
+     label115:
+        $r79 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_SSL_CERTIFICATE>;
+        $i39 = virtualinvoke $r79.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i39] = 14;
+
+     label116:
+        goto label118;
+
+     label117:
+        $r80 := @caughtexception;
+
+     label118:
+        $r81 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode RESET>;
+        $i40 = virtualinvoke $r81.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i40] = 7;
+
+     label119:
+        goto label121;
+
+     label120:
+        $r82 := @caughtexception;
+
+     label121:
+        $r83 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode UPGRADE>;
+        $i41 = virtualinvoke $r83.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i41] = 41;
+
+     label122:
+        goto label124;
+
+     label123:
+        $r84 := @caughtexception;
+
+     label124:
+        $r85 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode UPGRADE_TOMCAT>;
+        $i42 = virtualinvoke $r85.<org.apache.coyote.ActionCode: int ordinal()>();
+        r1[$i42] = 39;
+
+     label125:
+        goto label127;
+
+     label126:
+        $r86 := @caughtexception;
+
+     label127:
+        <org.apache.coyote.http11.AbstractHttp11Processor: int[] $SWITCH_TABLE$org$apache$coyote$ActionCode> = r1;
+        return r1;
+
+        catch java.lang.NoSuchFieldError from label1 to label2 with label3;
+        catch java.lang.NoSuchFieldError from label4 to label5 with label6;
+        catch java.lang.NoSuchFieldError from label7 to label8 with label9;
+        catch java.lang.NoSuchFieldError from label10 to label11 with label12;
+        catch java.lang.NoSuchFieldError from label13 to label14 with label15;
+        catch java.lang.NoSuchFieldError from label16 to label17 with label18;
+        catch java.lang.NoSuchFieldError from label19 to label20 with label21;
+        catch java.lang.NoSuchFieldError from label22 to label23 with label24;
+        catch java.lang.NoSuchFieldError from label25 to label26 with label27;
+        catch java.lang.NoSuchFieldError from label28 to label29 with label30;
+        catch java.lang.NoSuchFieldError from label31 to label32 with label33;
+        catch java.lang.NoSuchFieldError from label34 to label35 with label36;
+        catch java.lang.NoSuchFieldError from label37 to label38 with label39;
+        catch java.lang.NoSuchFieldError from label40 to label41 with label42;
+        catch java.lang.NoSuchFieldError from label43 to label44 with label45;
+        catch java.lang.NoSuchFieldError from label46 to label47 with label48;
+        catch java.lang.NoSuchFieldError from label49 to label50 with label51;
+        catch java.lang.NoSuchFieldError from label52 to label53 with label54;
+        catch java.lang.NoSuchFieldError from label55 to label56 with label57;
+        catch java.lang.NoSuchFieldError from label58 to label59 with label60;
+        catch java.lang.NoSuchFieldError from label61 to label62 with label63;
+        catch java.lang.NoSuchFieldError from label64 to label65 with label66;
+        catch java.lang.NoSuchFieldError from label67 to label68 with label69;
+        catch java.lang.NoSuchFieldError from label70 to label71 with label72;
+        catch java.lang.NoSuchFieldError from label73 to label74 with label75;
+        catch java.lang.NoSuchFieldError from label76 to label77 with label78;
+        catch java.lang.NoSuchFieldError from label79 to label80 with label81;
+        catch java.lang.NoSuchFieldError from label82 to label83 with label84;
+        catch java.lang.NoSuchFieldError from label85 to label86 with label87;
+        catch java.lang.NoSuchFieldError from label88 to label89 with label90;
+        catch java.lang.NoSuchFieldError from label91 to label92 with label93;
+        catch java.lang.NoSuchFieldError from label94 to label95 with label96;
+        catch java.lang.NoSuchFieldError from label97 to label98 with label99;
+        catch java.lang.NoSuchFieldError from label100 to label101 with label102;
+        catch java.lang.NoSuchFieldError from label103 to label104 with label105;
+        catch java.lang.NoSuchFieldError from label106 to label107 with label108;
+        catch java.lang.NoSuchFieldError from label109 to label110 with label111;
+        catch java.lang.NoSuchFieldError from label112 to label113 with label114;
+        catch java.lang.NoSuchFieldError from label115 to label116 with label117;
+        catch java.lang.NoSuchFieldError from label118 to label119 with label120;
+        catch java.lang.NoSuchFieldError from label121 to label122 with label123;
+        catch java.lang.NoSuchFieldError from label124 to label125 with label126;
+    }
+
+    static int[] $SWITCH_TABLE$org$apache$tomcat$util$log$UserDataHelper$Mode()
+    {
+        int[] $r0, r1;
+        org.apache.tomcat.util.log.UserDataHelper$Mode[] $r2;
+        int $i0, $i1, $i2, $i3;
+        org.apache.tomcat.util.log.UserDataHelper$Mode $r3, $r5, $r7;
+        java.lang.NoSuchFieldError $r4, $r6, $r8;
+
+        $r0 = <org.apache.coyote.http11.AbstractHttp11Processor: int[] $SWITCH_TABLE$org$apache$tomcat$util$log$UserDataHelper$Mode>;
+        if $r0 == null goto label0;
+
+        return $r0;
+
+     label0:
+        $r2 = staticinvoke <org.apache.tomcat.util.log.UserDataHelper$Mode: org.apache.tomcat.util.log.UserDataHelper$Mode[] values()>();
+        $i0 = lengthof $r2;
+        r1 = newarray (int)[$i0];
+
+     label1:
+        $r3 = <org.apache.tomcat.util.log.UserDataHelper$Mode: org.apache.tomcat.util.log.UserDataHelper$Mode DEBUG>;
+        $i1 = virtualinvoke $r3.<org.apache.tomcat.util.log.UserDataHelper$Mode: int ordinal()>();
+        r1[$i1] = 1;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r4 := @caughtexception;
+
+     label4:
+        $r5 = <org.apache.tomcat.util.log.UserDataHelper$Mode: org.apache.tomcat.util.log.UserDataHelper$Mode INFO>;
+        $i2 = virtualinvoke $r5.<org.apache.tomcat.util.log.UserDataHelper$Mode: int ordinal()>();
+        r1[$i2] = 3;
+
+     label5:
+        goto label7;
+
+     label6:
+        $r6 := @caughtexception;
+
+     label7:
+        $r7 = <org.apache.tomcat.util.log.UserDataHelper$Mode: org.apache.tomcat.util.log.UserDataHelper$Mode INFO_THEN_DEBUG>;
+        $i3 = virtualinvoke $r7.<org.apache.tomcat.util.log.UserDataHelper$Mode: int ordinal()>();
+        r1[$i3] = 2;
+
+     label8:
+        goto label10;
+
+     label9:
+        $r8 := @caughtexception;
+
+     label10:
+        <org.apache.coyote.http11.AbstractHttp11Processor: int[] $SWITCH_TABLE$org$apache$tomcat$util$log$UserDataHelper$Mode> = r1;
+        return r1;
+
+        catch java.lang.NoSuchFieldError from label1 to label2 with label3;
+        catch java.lang.NoSuchFieldError from label4 to label5 with label6;
+        catch java.lang.NoSuchFieldError from label7 to label8 with label9;
+    }
+}

@@ -1,0 +1,666 @@
+public final class sun.security.validator.SimpleValidator extends sun.security.validator.Validator
+{
+    static final java.lang.String OID_BASIC_CONSTRAINTS;
+    static final java.lang.String OID_NETSCAPE_CERT_TYPE;
+    static final java.lang.String OID_KEY_USAGE;
+    static final java.lang.String OID_EXTENDED_KEY_USAGE;
+    static final java.lang.String OID_EKU_ANY_USAGE;
+    static final sun.security.util.ObjectIdentifier OBJID_NETSCAPE_CERT_TYPE;
+    private static final java.lang.String NSCT_SSL_CA;
+    private static final java.lang.String NSCT_CODE_SIGNING_CA;
+    private final java.util.Map trustedX500Principals;
+    private final java.util.Collection trustedCerts;
+
+    void <init>(java.lang.String, java.util.Collection)
+    {
+        sun.security.validator.SimpleValidator r0;
+        java.lang.String r1;
+        java.util.Collection r2;
+        java.util.Iterator r3;
+        java.security.cert.X509Certificate r4;
+        javax.security.auth.x500.X500Principal r5;
+        java.util.List r6;
+        java.util.HashMap $r7;
+        boolean $z0;
+        java.lang.Object $r8, $r10;
+        java.util.Map $r9, $r12;
+        java.util.ArrayList $r11;
+
+        r0 := @this: sun.security.validator.SimpleValidator;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.util.Collection;
+        specialinvoke r0.<sun.security.validator.Validator: void <init>(java.lang.String,java.lang.String)>("Simple", r1);
+        r0.<sun.security.validator.SimpleValidator: java.util.Collection trustedCerts> = r2;
+        $r7 = new java.util.HashMap;
+        specialinvoke $r7.<java.util.HashMap: void <init>()>();
+        r0.<sun.security.validator.SimpleValidator: java.util.Map trustedX500Principals> = $r7;
+        r3 = interfaceinvoke r2.<java.util.Collection: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r8 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+        r4 = (java.security.cert.X509Certificate) $r8;
+        r5 = virtualinvoke r4.<java.security.cert.X509Certificate: javax.security.auth.x500.X500Principal getSubjectX500Principal()>();
+        $r9 = r0.<sun.security.validator.SimpleValidator: java.util.Map trustedX500Principals>;
+        $r10 = interfaceinvoke $r9.<java.util.Map: java.lang.Object get(java.lang.Object)>(r5);
+        r6 = (java.util.List) $r10;
+        if r6 != null goto label1;
+
+        $r11 = new java.util.ArrayList;
+        specialinvoke $r11.<java.util.ArrayList: void <init>(int)>(2);
+        r6 = $r11;
+        $r12 = r0.<sun.security.validator.SimpleValidator: java.util.Map trustedX500Principals>;
+        interfaceinvoke $r12.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(r5, r6);
+
+     label1:
+        interfaceinvoke r6.<java.util.List: boolean add(java.lang.Object)>(r4);
+        goto label0;
+
+     label2:
+        return;
+    }
+
+    public java.util.Collection getTrustedCertificates()
+    {
+        sun.security.validator.SimpleValidator r0;
+        java.util.Collection $r1;
+
+        r0 := @this: sun.security.validator.SimpleValidator;
+        $r1 = r0.<sun.security.validator.SimpleValidator: java.util.Collection trustedCerts>;
+        return $r1;
+    }
+
+    java.security.cert.X509Certificate[] engineValidate(java.security.cert.X509Certificate[], java.util.Collection, java.security.AlgorithmConstraints, java.lang.Object) throws java.security.cert.CertificateException
+    {
+        sun.security.validator.SimpleValidator r0;
+        java.security.cert.X509Certificate[] r1, r14;
+        java.util.Collection r2;
+        java.security.AlgorithmConstraints r3;
+        java.lang.Object r4, $r29, $r35, $r41, $r46;
+        java.util.Date r5, $r15;
+        sun.security.provider.certpath.UntrustedChecker r6, $r16;
+        java.security.cert.TrustAnchor r7, $r17;
+        sun.security.provider.certpath.AlgorithmChecker r8, r9, $r19, $r20;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7;
+        java.security.cert.X509Certificate r10, r11, $r18;
+        java.security.cert.CertPathValidatorException r12, $r22, $r32, r33;
+        java.security.cert.CertificateException $r13;
+        java.util.Set $r21, $r30, $r31;
+        sun.security.validator.ValidatorException $r23, $r34, $r40, $r45;
+        java.lang.StringBuilder $r24, $r25, $r27;
+        javax.security.auth.x500.X500Principal $r26, $r38, $r39;
+        java.lang.String $r28, $r36, $r37;
+        boolean $z0, $z1, $z2;
+        java.security.PublicKey $r42;
+        java.security.GeneralSecurityException $r43, r44;
+
+        r0 := @this: sun.security.validator.SimpleValidator;
+        r1 := @parameter0: java.security.cert.X509Certificate[];
+        r2 := @parameter1: java.util.Collection;
+        r3 := @parameter2: java.security.AlgorithmConstraints;
+        r4 := @parameter3: java.lang.Object;
+        if r1 == null goto label0;
+
+        $i2 = lengthof r1;
+        if $i2 != 0 goto label1;
+
+     label0:
+        $r13 = new java.security.cert.CertificateException;
+        specialinvoke $r13.<java.security.cert.CertificateException: void <init>(java.lang.String)>("null or zero-length certificate chain");
+        throw $r13;
+
+     label1:
+        r14 = specialinvoke r0.<sun.security.validator.SimpleValidator: java.security.cert.X509Certificate[] buildTrustedChain(java.security.cert.X509Certificate[])>(r1);
+        r5 = r0.<sun.security.validator.SimpleValidator: java.util.Date validationDate>;
+        if r5 != null goto label2;
+
+        $r15 = new java.util.Date;
+        specialinvoke $r15.<java.util.Date: void <init>()>();
+        r5 = $r15;
+
+     label2:
+        $r16 = new sun.security.provider.certpath.UntrustedChecker;
+        specialinvoke $r16.<sun.security.provider.certpath.UntrustedChecker: void <init>()>();
+        r6 = $r16;
+        $r17 = new java.security.cert.TrustAnchor;
+        $i3 = lengthof r14;
+        $i4 = $i3 - 1;
+        $r18 = r14[$i4];
+        specialinvoke $r17.<java.security.cert.TrustAnchor: void <init>(java.security.cert.X509Certificate,byte[])>($r18, null);
+        r7 = $r17;
+        $r19 = new sun.security.provider.certpath.AlgorithmChecker;
+        specialinvoke $r19.<sun.security.provider.certpath.AlgorithmChecker: void <init>(java.security.cert.TrustAnchor)>(r7);
+        r8 = $r19;
+        r9 = null;
+        if r3 == null goto label3;
+
+        $r20 = new sun.security.provider.certpath.AlgorithmChecker;
+        specialinvoke $r20.<sun.security.provider.certpath.AlgorithmChecker: void <init>(java.security.cert.TrustAnchor,java.security.AlgorithmConstraints)>(r7, r3);
+        r9 = $r20;
+
+     label3:
+        $i5 = lengthof r14;
+        i0 = $i5 - 1;
+        $i6 = lengthof r14;
+        i1 = $i6 - 2;
+
+     label4:
+        if i1 < 0 goto label18;
+
+        $i7 = i1 + 1;
+        r10 = r14[$i7];
+        r11 = r14[i1];
+
+     label5:
+        $r21 = staticinvoke <java.util.Collections: java.util.Set emptySet()>();
+        virtualinvoke r6.<sun.security.provider.certpath.UntrustedChecker: void check(java.security.cert.Certificate,java.util.Collection)>(r11, $r21);
+
+     label6:
+        goto label8;
+
+     label7:
+        $r22 := @caughtexception;
+        r12 = $r22;
+        $r23 = new sun.security.validator.ValidatorException;
+        $r24 = new java.lang.StringBuilder;
+        specialinvoke $r24.<java.lang.StringBuilder: void <init>()>();
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Untrusted certificate: ");
+        $r26 = virtualinvoke r11.<java.security.cert.X509Certificate: javax.security.auth.x500.X500Principal getSubjectX500Principal()>();
+        $r27 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r26);
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r29 = <sun.security.validator.ValidatorException: java.lang.Object T_UNTRUSTED_CERT>;
+        specialinvoke $r23.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate,java.lang.Throwable)>($r28, $r29, r11, r12);
+        throw $r23;
+
+     label8:
+        $r30 = staticinvoke <java.util.Collections: java.util.Set emptySet()>();
+        virtualinvoke r8.<sun.security.provider.certpath.AlgorithmChecker: void check(java.security.cert.Certificate,java.util.Collection)>(r11, $r30);
+        if r9 == null goto label9;
+
+        $r31 = staticinvoke <java.util.Collections: java.util.Set emptySet()>();
+        virtualinvoke r9.<sun.security.provider.certpath.AlgorithmChecker: void check(java.security.cert.Certificate,java.util.Collection)>(r11, $r31);
+
+     label9:
+        goto label11;
+
+     label10:
+        $r32 := @caughtexception;
+        r33 = $r32;
+        $r34 = new sun.security.validator.ValidatorException;
+        $r35 = <sun.security.validator.ValidatorException: java.lang.Object T_ALGORITHM_DISABLED>;
+        specialinvoke $r34.<sun.security.validator.ValidatorException: void <init>(java.lang.Object,java.security.cert.X509Certificate,java.lang.Throwable)>($r35, r11, r33);
+        throw $r34;
+
+     label11:
+        $r36 = r0.<sun.security.validator.SimpleValidator: java.lang.String variant>;
+        $z0 = virtualinvoke $r36.<java.lang.String: boolean equals(java.lang.Object)>("code signing");
+        if $z0 != 0 goto label12;
+
+        $r37 = r0.<sun.security.validator.SimpleValidator: java.lang.String variant>;
+        $z1 = virtualinvoke $r37.<java.lang.String: boolean equals(java.lang.Object)>("jce signing");
+        if $z1 != 0 goto label12;
+
+        virtualinvoke r11.<java.security.cert.X509Certificate: void checkValidity(java.util.Date)>(r5);
+
+     label12:
+        $r38 = virtualinvoke r11.<java.security.cert.X509Certificate: javax.security.auth.x500.X500Principal getIssuerX500Principal()>();
+        $r39 = virtualinvoke r10.<java.security.cert.X509Certificate: javax.security.auth.x500.X500Principal getSubjectX500Principal()>();
+        $z2 = virtualinvoke $r38.<javax.security.auth.x500.X500Principal: boolean equals(java.lang.Object)>($r39);
+        if $z2 != 0 goto label13;
+
+        $r40 = new sun.security.validator.ValidatorException;
+        $r41 = <sun.security.validator.ValidatorException: java.lang.Object T_NAME_CHAINING>;
+        specialinvoke $r40.<sun.security.validator.ValidatorException: void <init>(java.lang.Object,java.security.cert.X509Certificate)>($r41, r11);
+        throw $r40;
+
+     label13:
+        $r42 = virtualinvoke r10.<java.security.cert.X509Certificate: java.security.PublicKey getPublicKey()>();
+        virtualinvoke r11.<java.security.cert.X509Certificate: void verify(java.security.PublicKey)>($r42);
+
+     label14:
+        goto label16;
+
+     label15:
+        $r43 := @caughtexception;
+        r44 = $r43;
+        $r45 = new sun.security.validator.ValidatorException;
+        $r46 = <sun.security.validator.ValidatorException: java.lang.Object T_SIGNATURE_ERROR>;
+        specialinvoke $r45.<sun.security.validator.ValidatorException: void <init>(java.lang.Object,java.security.cert.X509Certificate,java.lang.Throwable)>($r46, r11, r44);
+        throw $r45;
+
+     label16:
+        if i1 == 0 goto label17;
+
+        i0 = specialinvoke r0.<sun.security.validator.SimpleValidator: int checkExtensions(java.security.cert.X509Certificate,int)>(r11, i0);
+
+     label17:
+        i1 = i1 + -1;
+        goto label4;
+
+     label18:
+        return r14;
+
+        catch java.security.cert.CertPathValidatorException from label5 to label6 with label7;
+        catch java.security.cert.CertPathValidatorException from label8 to label9 with label10;
+        catch java.security.GeneralSecurityException from label13 to label14 with label15;
+    }
+
+    private int checkExtensions(java.security.cert.X509Certificate, int) throws java.security.cert.CertificateException
+    {
+        sun.security.validator.SimpleValidator r0;
+        java.security.cert.X509Certificate r1;
+        int i0, i1;
+        java.util.Set r2;
+        boolean $z0;
+        sun.security.validator.ValidatorException $r3;
+        java.lang.StringBuilder $r4, $r5, $r6;
+        java.lang.String $r7;
+        java.lang.Object $r8;
+
+        r0 := @this: sun.security.validator.SimpleValidator;
+        r1 := @parameter0: java.security.cert.X509Certificate;
+        i0 := @parameter1: int;
+        r2 = virtualinvoke r1.<java.security.cert.X509Certificate: java.util.Set getCriticalExtensionOIDs()>();
+        if r2 != null goto label0;
+
+        r2 = staticinvoke <java.util.Collections: java.util.Set emptySet()>();
+
+     label0:
+        i1 = specialinvoke r0.<sun.security.validator.SimpleValidator: int checkBasicConstraints(java.security.cert.X509Certificate,java.util.Set,int)>(r1, r2, i0);
+        specialinvoke r0.<sun.security.validator.SimpleValidator: void checkKeyUsage(java.security.cert.X509Certificate,java.util.Set)>(r1, r2);
+        specialinvoke r0.<sun.security.validator.SimpleValidator: void checkNetscapeCertType(java.security.cert.X509Certificate,java.util.Set)>(r1, r2);
+        $z0 = interfaceinvoke r2.<java.util.Set: boolean isEmpty()>();
+        if $z0 != 0 goto label1;
+
+        $r3 = new sun.security.validator.ValidatorException;
+        $r4 = new java.lang.StringBuilder;
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>()>();
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Certificate contains unknown critical extensions: ");
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r2);
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r8 = <sun.security.validator.ValidatorException: java.lang.Object T_CA_EXTENSIONS>;
+        specialinvoke $r3.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>($r7, $r8, r1);
+        throw $r3;
+
+     label1:
+        return i1;
+    }
+
+    private void checkNetscapeCertType(java.security.cert.X509Certificate, java.util.Set) throws java.security.cert.CertificateException
+    {
+        sun.security.validator.SimpleValidator r0;
+        java.security.cert.X509Certificate r1;
+        java.util.Set r2;
+        java.lang.Object $r3, $r11;
+        java.lang.String $r4, $r5, $r6, $r8, $r9, $r15, $r17;
+        boolean $z0, $z1, $z2, $z3, $z5, $z6, $z7;
+        sun.security.validator.ValidatorException $r7, $r10;
+        java.security.cert.CertificateException $r12;
+        java.lang.StringBuilder $r13, $r14, $r16;
+
+        r0 := @this: sun.security.validator.SimpleValidator;
+        r1 := @parameter0: java.security.cert.X509Certificate;
+        r2 := @parameter1: java.util.Set;
+        $r4 = r0.<sun.security.validator.SimpleValidator: java.lang.String variant>;
+        $z0 = virtualinvoke $r4.<java.lang.String: boolean equals(java.lang.Object)>("generic");
+        if $z0 == 0 goto label0;
+
+        goto label7;
+
+     label0:
+        $r5 = r0.<sun.security.validator.SimpleValidator: java.lang.String variant>;
+        $z1 = virtualinvoke $r5.<java.lang.String: boolean equals(java.lang.Object)>("tls client");
+        if $z1 != 0 goto label1;
+
+        $r6 = r0.<sun.security.validator.SimpleValidator: java.lang.String variant>;
+        $z2 = virtualinvoke $r6.<java.lang.String: boolean equals(java.lang.Object)>("tls server");
+        if $z2 == 0 goto label3;
+
+     label1:
+        $z3 = staticinvoke <sun.security.validator.SimpleValidator: boolean getNetscapeCertTypeBit(java.security.cert.X509Certificate,java.lang.String)>(r1, "ssl_ca");
+        if $z3 != 0 goto label2;
+
+        $r7 = new sun.security.validator.ValidatorException;
+        $r3 = <sun.security.validator.ValidatorException: java.lang.Object T_CA_EXTENSIONS>;
+        specialinvoke $r7.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>("Invalid Netscape CertType extension for SSL CA certificate", $r3, r1);
+        throw $r7;
+
+     label2:
+        interfaceinvoke r2.<java.util.Set: boolean remove(java.lang.Object)>("2.16.840.1.113730.1.1");
+        goto label7;
+
+     label3:
+        $r8 = r0.<sun.security.validator.SimpleValidator: java.lang.String variant>;
+        $z5 = virtualinvoke $r8.<java.lang.String: boolean equals(java.lang.Object)>("code signing");
+        if $z5 != 0 goto label4;
+
+        $r9 = r0.<sun.security.validator.SimpleValidator: java.lang.String variant>;
+        $z6 = virtualinvoke $r9.<java.lang.String: boolean equals(java.lang.Object)>("jce signing");
+        if $z6 == 0 goto label6;
+
+     label4:
+        $z7 = staticinvoke <sun.security.validator.SimpleValidator: boolean getNetscapeCertTypeBit(java.security.cert.X509Certificate,java.lang.String)>(r1, "object_signing_ca");
+        if $z7 != 0 goto label5;
+
+        $r10 = new sun.security.validator.ValidatorException;
+        $r11 = <sun.security.validator.ValidatorException: java.lang.Object T_CA_EXTENSIONS>;
+        specialinvoke $r10.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>("Invalid Netscape CertType extension for code signing CA certificate", $r11, r1);
+        throw $r10;
+
+     label5:
+        interfaceinvoke r2.<java.util.Set: boolean remove(java.lang.Object)>("2.16.840.1.113730.1.1");
+        goto label7;
+
+     label6:
+        $r12 = new java.security.cert.CertificateException;
+        $r13 = new java.lang.StringBuilder;
+        specialinvoke $r13.<java.lang.StringBuilder: void <init>()>();
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Unknown variant ");
+        $r15 = r0.<sun.security.validator.SimpleValidator: java.lang.String variant>;
+        $r16 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r15);
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r12.<java.security.cert.CertificateException: void <init>(java.lang.String)>($r17);
+        throw $r12;
+
+     label7:
+        return;
+    }
+
+    static boolean getNetscapeCertTypeBit(java.security.cert.X509Certificate, java.lang.String)
+    {
+        java.security.cert.X509Certificate r0;
+        java.lang.String r1;
+        sun.security.x509.X509CertImpl r2;
+        sun.security.util.ObjectIdentifier r3;
+        sun.security.x509.NetscapeCertTypeExtension r4, $r13;
+        byte[] r5, r7, r12;
+        boolean $z0, $z1, $z2, $z3;
+        sun.security.x509.Extension $r6;
+        sun.security.util.DerInputStream $r8, r9;
+        sun.security.util.DerValue $r10;
+        sun.security.util.BitArray $r11;
+        java.lang.Object $r14;
+        java.lang.Boolean r15;
+        java.io.IOException $r16, r17;
+
+        r0 := @parameter0: java.security.cert.X509Certificate;
+        r1 := @parameter1: java.lang.String;
+
+     label0:
+        $z0 = r0 instanceof sun.security.x509.X509CertImpl;
+        if $z0 == 0 goto label3;
+
+        r2 = (sun.security.x509.X509CertImpl) r0;
+        r3 = <sun.security.validator.SimpleValidator: sun.security.util.ObjectIdentifier OBJID_NETSCAPE_CERT_TYPE>;
+        $r6 = virtualinvoke r2.<sun.security.x509.X509CertImpl: sun.security.x509.Extension getExtension(sun.security.util.ObjectIdentifier)>(r3);
+        r4 = (sun.security.x509.NetscapeCertTypeExtension) $r6;
+        if r4 != null goto label2;
+
+        $z1 = 1;
+
+     label1:
+        return $z1;
+
+     label2:
+        goto label6;
+
+     label3:
+        r7 = virtualinvoke r0.<java.security.cert.X509Certificate: byte[] getExtensionValue(java.lang.String)>("2.16.840.1.113730.1.1");
+        if r7 != null goto label5;
+
+        $z2 = 1;
+
+     label4:
+        return $z2;
+
+     label5:
+        $r8 = new sun.security.util.DerInputStream;
+        specialinvoke $r8.<sun.security.util.DerInputStream: void <init>(byte[])>(r7);
+        r9 = $r8;
+        r5 = virtualinvoke r9.<sun.security.util.DerInputStream: byte[] getOctetString()>();
+        $r10 = new sun.security.util.DerValue;
+        specialinvoke $r10.<sun.security.util.DerValue: void <init>(byte[])>(r5);
+        $r11 = virtualinvoke $r10.<sun.security.util.DerValue: sun.security.util.BitArray getUnalignedBitString()>();
+        r12 = virtualinvoke $r11.<sun.security.util.BitArray: byte[] toByteArray()>();
+        $r13 = new sun.security.x509.NetscapeCertTypeExtension;
+        specialinvoke $r13.<sun.security.x509.NetscapeCertTypeExtension: void <init>(byte[])>(r12);
+        r4 = $r13;
+
+     label6:
+        $r14 = virtualinvoke r4.<sun.security.x509.NetscapeCertTypeExtension: java.lang.Object get(java.lang.String)>(r1);
+        r15 = (java.lang.Boolean) $r14;
+        $z3 = virtualinvoke r15.<java.lang.Boolean: boolean booleanValue()>();
+
+     label7:
+        return $z3;
+
+     label8:
+        $r16 := @caughtexception;
+        r17 = $r16;
+        return 0;
+
+        catch java.io.IOException from label0 to label1 with label8;
+        catch java.io.IOException from label2 to label4 with label8;
+        catch java.io.IOException from label5 to label7 with label8;
+    }
+
+    private int checkBasicConstraints(java.security.cert.X509Certificate, java.util.Set, int) throws java.security.cert.CertificateException
+    {
+        sun.security.validator.SimpleValidator r0;
+        java.security.cert.X509Certificate r1;
+        java.util.Set r2;
+        int i0, i1;
+        java.lang.Object $r3, $r6;
+        sun.security.validator.ValidatorException $r4, $r5;
+        boolean $z1;
+
+        r0 := @this: sun.security.validator.SimpleValidator;
+        r1 := @parameter0: java.security.cert.X509Certificate;
+        r2 := @parameter1: java.util.Set;
+        i0 := @parameter2: int;
+        interfaceinvoke r2.<java.util.Set: boolean remove(java.lang.Object)>("2.5.29.19");
+        i1 = virtualinvoke r1.<java.security.cert.X509Certificate: int getBasicConstraints()>();
+        if i1 >= 0 goto label0;
+
+        $r4 = new sun.security.validator.ValidatorException;
+        $r3 = <sun.security.validator.ValidatorException: java.lang.Object T_CA_EXTENSIONS>;
+        specialinvoke $r4.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>("End user tried to act as a CA", $r3, r1);
+        throw $r4;
+
+     label0:
+        $z1 = staticinvoke <sun.security.x509.X509CertImpl: boolean isSelfIssued(java.security.cert.X509Certificate)>(r1);
+        if $z1 != 0 goto label2;
+
+        if i0 > 0 goto label1;
+
+        $r5 = new sun.security.validator.ValidatorException;
+        $r6 = <sun.security.validator.ValidatorException: java.lang.Object T_CA_EXTENSIONS>;
+        specialinvoke $r5.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>("Violated path length constraints", $r6, r1);
+        throw $r5;
+
+     label1:
+        i0 = i0 + -1;
+
+     label2:
+        if i0 <= i1 goto label3;
+
+        i0 = i1;
+
+     label3:
+        return i0;
+    }
+
+    private void checkKeyUsage(java.security.cert.X509Certificate, java.util.Set) throws java.security.cert.CertificateException
+    {
+        sun.security.validator.SimpleValidator r0;
+        java.security.cert.X509Certificate r1;
+        java.util.Set r2;
+        boolean[] r3;
+        java.lang.Object $r4;
+        int $i0;
+        boolean $z2;
+        sun.security.validator.ValidatorException $r5;
+
+        r0 := @this: sun.security.validator.SimpleValidator;
+        r1 := @parameter0: java.security.cert.X509Certificate;
+        r2 := @parameter1: java.util.Set;
+        interfaceinvoke r2.<java.util.Set: boolean remove(java.lang.Object)>("2.5.29.15");
+        interfaceinvoke r2.<java.util.Set: boolean remove(java.lang.Object)>("2.5.29.37");
+        r3 = virtualinvoke r1.<java.security.cert.X509Certificate: boolean[] getKeyUsage()>();
+        if r3 == null goto label1;
+
+        $i0 = lengthof r3;
+        if $i0 < 6 goto label0;
+
+        $z2 = r3[5];
+        if $z2 != 0 goto label1;
+
+     label0:
+        $r5 = new sun.security.validator.ValidatorException;
+        $r4 = <sun.security.validator.ValidatorException: java.lang.Object T_CA_EXTENSIONS>;
+        specialinvoke $r5.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>("Wrong key usage: expected keyCertSign", $r4, r1);
+        throw $r5;
+
+     label1:
+        return;
+    }
+
+    private java.security.cert.X509Certificate[] buildTrustedChain(java.security.cert.X509Certificate[]) throws java.security.cert.CertificateException
+    {
+        sun.security.validator.SimpleValidator r0;
+        java.security.cert.X509Certificate[] r1, $r8, $r10, $r18, $r20;
+        java.util.ArrayList $r2, r3;
+        int i0, $i1, $i2, $i3, $i4;
+        java.security.cert.X509Certificate r4, r5, r7, r11;
+        java.util.List r6;
+        java.lang.Object[] $r9, $r19;
+        javax.security.auth.x500.X500Principal r13;
+        java.util.Map $r14;
+        java.lang.Object $r15, $r17, $r22;
+        java.util.Iterator $r16;
+        sun.security.validator.ValidatorException $r21;
+
+        r0 := @this: sun.security.validator.SimpleValidator;
+        r1 := @parameter0: java.security.cert.X509Certificate[];
+        $r2 = new java.util.ArrayList;
+        $i1 = lengthof r1;
+        specialinvoke $r2.<java.util.ArrayList: void <init>(int)>($i1);
+        r3 = $r2;
+        i0 = 0;
+
+     label0:
+        $i2 = lengthof r1;
+        if i0 >= $i2 goto label2;
+
+        r4 = r1[i0];
+        r5 = specialinvoke r0.<sun.security.validator.SimpleValidator: java.security.cert.X509Certificate getTrustedCertificate(java.security.cert.X509Certificate)>(r4);
+        if r5 == null goto label1;
+
+        interfaceinvoke r3.<java.util.List: boolean add(java.lang.Object)>(r5);
+        $r8 = <sun.security.validator.SimpleValidator: java.security.cert.X509Certificate[] CHAIN0>;
+        $r9 = interfaceinvoke r3.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>($r8);
+        $r10 = (java.security.cert.X509Certificate[]) $r9;
+        return $r10;
+
+     label1:
+        interfaceinvoke r3.<java.util.List: boolean add(java.lang.Object)>(r4);
+        i0 = i0 + 1;
+        goto label0;
+
+     label2:
+        $i3 = lengthof r1;
+        $i4 = $i3 - 1;
+        r11 = r1[$i4];
+        virtualinvoke r11.<java.security.cert.X509Certificate: javax.security.auth.x500.X500Principal getSubjectX500Principal()>();
+        r13 = virtualinvoke r11.<java.security.cert.X509Certificate: javax.security.auth.x500.X500Principal getIssuerX500Principal()>();
+        $r14 = r0.<sun.security.validator.SimpleValidator: java.util.Map trustedX500Principals>;
+        $r15 = interfaceinvoke $r14.<java.util.Map: java.lang.Object get(java.lang.Object)>(r13);
+        r6 = (java.util.List) $r15;
+        if r6 == null goto label3;
+
+        $r16 = interfaceinvoke r6.<java.util.List: java.util.Iterator iterator()>();
+        $r17 = interfaceinvoke $r16.<java.util.Iterator: java.lang.Object next()>();
+        r7 = (java.security.cert.X509Certificate) $r17;
+        interfaceinvoke r3.<java.util.List: boolean add(java.lang.Object)>(r7);
+        $r18 = <sun.security.validator.SimpleValidator: java.security.cert.X509Certificate[] CHAIN0>;
+        $r19 = interfaceinvoke r3.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>($r18);
+        $r20 = (java.security.cert.X509Certificate[]) $r19;
+        return $r20;
+
+     label3:
+        $r21 = new sun.security.validator.ValidatorException;
+        $r22 = <sun.security.validator.ValidatorException: java.lang.Object T_NO_TRUST_ANCHOR>;
+        specialinvoke $r21.<sun.security.validator.ValidatorException: void <init>(java.lang.Object)>($r22);
+        throw $r21;
+    }
+
+    private java.security.cert.X509Certificate getTrustedCertificate(java.security.cert.X509Certificate)
+    {
+        sun.security.validator.SimpleValidator r0;
+        java.security.cert.X509Certificate r1, r7;
+        javax.security.auth.x500.X500Principal r2, r4, $r11;
+        java.util.List r3;
+        java.security.PublicKey r5, $r12;
+        java.util.Iterator r6;
+        java.util.Map $r8;
+        java.lang.Object $r9, $r10;
+        boolean $z0, $z1, $z2, $z3;
+
+        r0 := @this: sun.security.validator.SimpleValidator;
+        r1 := @parameter0: java.security.cert.X509Certificate;
+        r2 = virtualinvoke r1.<java.security.cert.X509Certificate: javax.security.auth.x500.X500Principal getSubjectX500Principal()>();
+        $r8 = r0.<sun.security.validator.SimpleValidator: java.util.Map trustedX500Principals>;
+        $r9 = interfaceinvoke $r8.<java.util.Map: java.lang.Object get(java.lang.Object)>(r2);
+        r3 = (java.util.List) $r9;
+        if r3 != null goto label0;
+
+        return null;
+
+     label0:
+        r4 = virtualinvoke r1.<java.security.cert.X509Certificate: javax.security.auth.x500.X500Principal getIssuerX500Principal()>();
+        r5 = virtualinvoke r1.<java.security.cert.X509Certificate: java.security.PublicKey getPublicKey()>();
+        r6 = interfaceinvoke r3.<java.util.List: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r6.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label5;
+
+        $r10 = interfaceinvoke r6.<java.util.Iterator: java.lang.Object next()>();
+        r7 = (java.security.cert.X509Certificate) $r10;
+        $z1 = virtualinvoke r7.<java.security.cert.X509Certificate: boolean equals(java.lang.Object)>(r1);
+        if $z1 == 0 goto label2;
+
+        return r1;
+
+     label2:
+        $r11 = virtualinvoke r7.<java.security.cert.X509Certificate: javax.security.auth.x500.X500Principal getIssuerX500Principal()>();
+        $z2 = virtualinvoke $r11.<javax.security.auth.x500.X500Principal: boolean equals(java.lang.Object)>(r4);
+        if $z2 != 0 goto label3;
+
+        goto label1;
+
+     label3:
+        $r12 = virtualinvoke r7.<java.security.cert.X509Certificate: java.security.PublicKey getPublicKey()>();
+        $z3 = virtualinvoke $r12.<java.lang.Object: boolean equals(java.lang.Object)>(r5);
+        if $z3 != 0 goto label4;
+
+        goto label1;
+
+     label4:
+        return r7;
+
+     label5:
+        return null;
+    }
+
+    static void <clinit>()
+    {
+        sun.security.util.ObjectIdentifier $r0;
+
+        $r0 = <sun.security.x509.NetscapeCertTypeExtension: sun.security.util.ObjectIdentifier NetscapeCertType_Id>;
+        <sun.security.validator.SimpleValidator: sun.security.util.ObjectIdentifier OBJID_NETSCAPE_CERT_TYPE> = $r0;
+        return;
+    }
+}

@@ -1,0 +1,789 @@
+public abstract class java.nio.CharBuffer extends java.nio.Buffer implements java.lang.Comparable, java.lang.Appendable, java.lang.CharSequence, java.lang.Readable
+{
+    final char[] hb;
+    final int offset;
+    boolean isReadOnly;
+
+    void <init>(int, int, int, int, char[], int)
+    {
+        java.nio.CharBuffer r0;
+        int i0, i1, i2, i3, i4;
+        char[] r1;
+
+        r0 := @this: java.nio.CharBuffer;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        i2 := @parameter2: int;
+        i3 := @parameter3: int;
+        r1 := @parameter4: char[];
+        i4 := @parameter5: int;
+        specialinvoke r0.<java.nio.Buffer: void <init>(int,int,int,int)>(i0, i1, i2, i3);
+        r0.<java.nio.CharBuffer: char[] hb> = r1;
+        r0.<java.nio.CharBuffer: int offset> = i4;
+        return;
+    }
+
+    void <init>(int, int, int, int)
+    {
+        java.nio.CharBuffer r0;
+        int i0, i1, i2, i3;
+
+        r0 := @this: java.nio.CharBuffer;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        i2 := @parameter2: int;
+        i3 := @parameter3: int;
+        specialinvoke r0.<java.nio.CharBuffer: void <init>(int,int,int,int,char[],int)>(i0, i1, i2, i3, null, 0);
+        return;
+    }
+
+    public static java.nio.CharBuffer allocate(int)
+    {
+        int i0;
+        java.lang.IllegalArgumentException $r0;
+        java.nio.HeapCharBuffer $r1;
+
+        i0 := @parameter0: int;
+        if i0 >= 0 goto label0;
+
+        $r0 = new java.lang.IllegalArgumentException;
+        specialinvoke $r0.<java.lang.IllegalArgumentException: void <init>()>();
+        throw $r0;
+
+     label0:
+        $r1 = new java.nio.HeapCharBuffer;
+        specialinvoke $r1.<java.nio.HeapCharBuffer: void <init>(int,int)>(i0, i0);
+        return $r1;
+    }
+
+    public static java.nio.CharBuffer wrap(char[], int, int)
+    {
+        char[] r0;
+        int i0, i1;
+        java.nio.HeapCharBuffer $r1;
+        java.lang.IllegalArgumentException r2, $r3;
+        java.lang.IndexOutOfBoundsException $r4;
+
+        r0 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+
+     label0:
+        $r1 = new java.nio.HeapCharBuffer;
+        specialinvoke $r1.<java.nio.HeapCharBuffer: void <init>(char[],int,int)>(r0, i0, i1);
+
+     label1:
+        return $r1;
+
+     label2:
+        $r3 := @caughtexception;
+        r2 = $r3;
+        $r4 = new java.lang.IndexOutOfBoundsException;
+        specialinvoke $r4.<java.lang.IndexOutOfBoundsException: void <init>()>();
+        throw $r4;
+
+        catch java.lang.IllegalArgumentException from label0 to label1 with label2;
+    }
+
+    public static java.nio.CharBuffer wrap(char[])
+    {
+        char[] r0;
+        int $i0;
+        java.nio.CharBuffer $r1;
+
+        r0 := @parameter0: char[];
+        $i0 = lengthof r0;
+        $r1 = staticinvoke <java.nio.CharBuffer: java.nio.CharBuffer wrap(char[],int,int)>(r0, 0, $i0);
+        return $r1;
+    }
+
+    public int read(java.nio.CharBuffer) throws java.io.IOException
+    {
+        java.nio.CharBuffer r0, r1;
+        int i0, i1, i2, i3, $i4, $i5;
+        java.lang.Throwable r2, $r6;
+
+        r0 := @this: java.nio.CharBuffer;
+        r1 := @parameter0: java.nio.CharBuffer;
+        i0 = virtualinvoke r1.<java.nio.CharBuffer: int remaining()>();
+        i1 = virtualinvoke r0.<java.nio.CharBuffer: int remaining()>();
+        if i1 != 0 goto label0;
+
+        return -1;
+
+     label0:
+        i2 = staticinvoke <java.lang.Math: int min(int,int)>(i1, i0);
+        i3 = virtualinvoke r0.<java.nio.CharBuffer: int limit()>();
+        if i0 >= i1 goto label1;
+
+        $i4 = virtualinvoke r0.<java.nio.CharBuffer: int position()>();
+        $i5 = $i4 + i2;
+        virtualinvoke r0.<java.nio.CharBuffer: java.nio.Buffer limit(int)>($i5);
+
+     label1:
+        if i2 <= 0 goto label2;
+
+        virtualinvoke r1.<java.nio.CharBuffer: java.nio.CharBuffer put(java.nio.CharBuffer)>(r0);
+
+     label2:
+        virtualinvoke r0.<java.nio.CharBuffer: java.nio.Buffer limit(int)>(i3);
+        goto label6;
+
+     label3:
+        $r6 := @caughtexception;
+
+     label4:
+        r2 = $r6;
+
+     label5:
+        virtualinvoke r0.<java.nio.CharBuffer: java.nio.Buffer limit(int)>(i3);
+        throw r2;
+
+     label6:
+        return i2;
+
+        catch java.lang.Throwable from label1 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    public static java.nio.CharBuffer wrap(java.lang.CharSequence, int, int)
+    {
+        java.lang.CharSequence r0;
+        int i0, i1;
+        java.nio.StringCharBuffer $r1;
+        java.lang.IllegalArgumentException r2, $r3;
+        java.lang.IndexOutOfBoundsException $r4;
+
+        r0 := @parameter0: java.lang.CharSequence;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+
+     label0:
+        $r1 = new java.nio.StringCharBuffer;
+        specialinvoke $r1.<java.nio.StringCharBuffer: void <init>(java.lang.CharSequence,int,int)>(r0, i0, i1);
+
+     label1:
+        return $r1;
+
+     label2:
+        $r3 := @caughtexception;
+        r2 = $r3;
+        $r4 = new java.lang.IndexOutOfBoundsException;
+        specialinvoke $r4.<java.lang.IndexOutOfBoundsException: void <init>()>();
+        throw $r4;
+
+        catch java.lang.IllegalArgumentException from label0 to label1 with label2;
+    }
+
+    public static java.nio.CharBuffer wrap(java.lang.CharSequence)
+    {
+        java.lang.CharSequence r0;
+        int $i0;
+        java.nio.CharBuffer $r1;
+
+        r0 := @parameter0: java.lang.CharSequence;
+        $i0 = interfaceinvoke r0.<java.lang.CharSequence: int length()>();
+        $r1 = staticinvoke <java.nio.CharBuffer: java.nio.CharBuffer wrap(java.lang.CharSequence,int,int)>(r0, 0, $i0);
+        return $r1;
+    }
+
+    public abstract java.nio.CharBuffer slice();
+
+    public abstract java.nio.CharBuffer duplicate();
+
+    public abstract java.nio.CharBuffer asReadOnlyBuffer();
+
+    public abstract char get();
+
+    public abstract java.nio.CharBuffer put(char);
+
+    public abstract char get(int);
+
+    public abstract java.nio.CharBuffer put(int, char);
+
+    public java.nio.CharBuffer get(char[], int, int)
+    {
+        java.nio.CharBuffer r0;
+        char[] r1;
+        int i0, i1, i2, i3, $i4, $i5;
+        java.nio.BufferUnderflowException $r2;
+        char $c6;
+
+        r0 := @this: java.nio.CharBuffer;
+        r1 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        $i4 = lengthof r1;
+        staticinvoke <java.nio.CharBuffer: void checkBounds(int,int,int)>(i0, i1, $i4);
+        $i5 = virtualinvoke r0.<java.nio.CharBuffer: int remaining()>();
+        if i1 <= $i5 goto label0;
+
+        $r2 = new java.nio.BufferUnderflowException;
+        specialinvoke $r2.<java.nio.BufferUnderflowException: void <init>()>();
+        throw $r2;
+
+     label0:
+        i2 = i0 + i1;
+        i3 = i0;
+
+     label1:
+        if i3 >= i2 goto label2;
+
+        $c6 = virtualinvoke r0.<java.nio.CharBuffer: char get()>();
+        r1[i3] = $c6;
+        i3 = i3 + 1;
+        goto label1;
+
+     label2:
+        return r0;
+    }
+
+    public java.nio.CharBuffer get(char[])
+    {
+        java.nio.CharBuffer r0, $r2;
+        char[] r1;
+        int $i0;
+
+        r0 := @this: java.nio.CharBuffer;
+        r1 := @parameter0: char[];
+        $i0 = lengthof r1;
+        $r2 = virtualinvoke r0.<java.nio.CharBuffer: java.nio.CharBuffer get(char[],int,int)>(r1, 0, $i0);
+        return $r2;
+    }
+
+    public java.nio.CharBuffer put(java.nio.CharBuffer)
+    {
+        java.nio.CharBuffer r0, r1;
+        int i0, i1, $i2;
+        java.lang.IllegalArgumentException $r2;
+        java.nio.BufferOverflowException $r3;
+        char $c3;
+
+        r0 := @this: java.nio.CharBuffer;
+        r1 := @parameter0: java.nio.CharBuffer;
+        if r1 != r0 goto label0;
+
+        $r2 = new java.lang.IllegalArgumentException;
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>()>();
+        throw $r2;
+
+     label0:
+        i0 = virtualinvoke r1.<java.nio.CharBuffer: int remaining()>();
+        $i2 = virtualinvoke r0.<java.nio.CharBuffer: int remaining()>();
+        if i0 <= $i2 goto label1;
+
+        $r3 = new java.nio.BufferOverflowException;
+        specialinvoke $r3.<java.nio.BufferOverflowException: void <init>()>();
+        throw $r3;
+
+     label1:
+        i1 = 0;
+
+     label2:
+        if i1 >= i0 goto label3;
+
+        $c3 = virtualinvoke r1.<java.nio.CharBuffer: char get()>();
+        virtualinvoke r0.<java.nio.CharBuffer: java.nio.CharBuffer put(char)>($c3);
+        i1 = i1 + 1;
+        goto label2;
+
+     label3:
+        return r0;
+    }
+
+    public java.nio.CharBuffer put(char[], int, int)
+    {
+        java.nio.CharBuffer r0;
+        char[] r1;
+        int i0, i1, i2, i3, $i4, $i5;
+        java.nio.BufferOverflowException $r2;
+        char $c6;
+
+        r0 := @this: java.nio.CharBuffer;
+        r1 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        $i4 = lengthof r1;
+        staticinvoke <java.nio.CharBuffer: void checkBounds(int,int,int)>(i0, i1, $i4);
+        $i5 = virtualinvoke r0.<java.nio.CharBuffer: int remaining()>();
+        if i1 <= $i5 goto label0;
+
+        $r2 = new java.nio.BufferOverflowException;
+        specialinvoke $r2.<java.nio.BufferOverflowException: void <init>()>();
+        throw $r2;
+
+     label0:
+        i2 = i0 + i1;
+        i3 = i0;
+
+     label1:
+        if i3 >= i2 goto label2;
+
+        $c6 = r1[i3];
+        virtualinvoke r0.<java.nio.CharBuffer: java.nio.CharBuffer put(char)>($c6);
+        i3 = i3 + 1;
+        goto label1;
+
+     label2:
+        return r0;
+    }
+
+    public final java.nio.CharBuffer put(char[])
+    {
+        java.nio.CharBuffer r0, $r2;
+        char[] r1;
+        int $i0;
+
+        r0 := @this: java.nio.CharBuffer;
+        r1 := @parameter0: char[];
+        $i0 = lengthof r1;
+        $r2 = virtualinvoke r0.<java.nio.CharBuffer: java.nio.CharBuffer put(char[],int,int)>(r1, 0, $i0);
+        return $r2;
+    }
+
+    public java.nio.CharBuffer put(java.lang.String, int, int)
+    {
+        java.nio.CharBuffer r0;
+        java.lang.String r1;
+        int i0, i1, i2, $i3, $i4;
+        char $c5;
+
+        r0 := @this: java.nio.CharBuffer;
+        r1 := @parameter0: java.lang.String;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        $i3 = i1 - i0;
+        $i4 = virtualinvoke r1.<java.lang.String: int length()>();
+        staticinvoke <java.nio.CharBuffer: void checkBounds(int,int,int)>(i0, $i3, $i4);
+        i2 = i0;
+
+     label0:
+        if i2 >= i1 goto label1;
+
+        $c5 = virtualinvoke r1.<java.lang.String: char charAt(int)>(i2);
+        virtualinvoke r0.<java.nio.CharBuffer: java.nio.CharBuffer put(char)>($c5);
+        i2 = i2 + 1;
+        goto label0;
+
+     label1:
+        return r0;
+    }
+
+    public final java.nio.CharBuffer put(java.lang.String)
+    {
+        java.nio.CharBuffer r0, $r2;
+        java.lang.String r1;
+        int $i0;
+
+        r0 := @this: java.nio.CharBuffer;
+        r1 := @parameter0: java.lang.String;
+        $i0 = virtualinvoke r1.<java.lang.String: int length()>();
+        $r2 = virtualinvoke r0.<java.nio.CharBuffer: java.nio.CharBuffer put(java.lang.String,int,int)>(r1, 0, $i0);
+        return $r2;
+    }
+
+    public final boolean hasArray()
+    {
+        java.nio.CharBuffer r0;
+        char[] $r1;
+        boolean $z0, $z1;
+
+        r0 := @this: java.nio.CharBuffer;
+        $r1 = r0.<java.nio.CharBuffer: char[] hb>;
+        if $r1 == null goto label0;
+
+        $z0 = r0.<java.nio.CharBuffer: boolean isReadOnly>;
+        if $z0 != 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        return $z1;
+    }
+
+    public final char[] array()
+    {
+        java.nio.CharBuffer r0;
+        char[] $r1, $r4;
+        java.lang.UnsupportedOperationException $r2;
+        boolean $z0;
+        java.nio.ReadOnlyBufferException $r3;
+
+        r0 := @this: java.nio.CharBuffer;
+        $r1 = r0.<java.nio.CharBuffer: char[] hb>;
+        if $r1 != null goto label0;
+
+        $r2 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r2.<java.lang.UnsupportedOperationException: void <init>()>();
+        throw $r2;
+
+     label0:
+        $z0 = r0.<java.nio.CharBuffer: boolean isReadOnly>;
+        if $z0 == 0 goto label1;
+
+        $r3 = new java.nio.ReadOnlyBufferException;
+        specialinvoke $r3.<java.nio.ReadOnlyBufferException: void <init>()>();
+        throw $r3;
+
+     label1:
+        $r4 = r0.<java.nio.CharBuffer: char[] hb>;
+        return $r4;
+    }
+
+    public final int arrayOffset()
+    {
+        java.nio.CharBuffer r0;
+        char[] $r1;
+        java.lang.UnsupportedOperationException $r2;
+        boolean $z0;
+        java.nio.ReadOnlyBufferException $r3;
+        int $i0;
+
+        r0 := @this: java.nio.CharBuffer;
+        $r1 = r0.<java.nio.CharBuffer: char[] hb>;
+        if $r1 != null goto label0;
+
+        $r2 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r2.<java.lang.UnsupportedOperationException: void <init>()>();
+        throw $r2;
+
+     label0:
+        $z0 = r0.<java.nio.CharBuffer: boolean isReadOnly>;
+        if $z0 == 0 goto label1;
+
+        $r3 = new java.nio.ReadOnlyBufferException;
+        specialinvoke $r3.<java.nio.ReadOnlyBufferException: void <init>()>();
+        throw $r3;
+
+     label1:
+        $i0 = r0.<java.nio.CharBuffer: int offset>;
+        return $i0;
+    }
+
+    public abstract java.nio.CharBuffer compact();
+
+    public abstract boolean isDirect();
+
+    public int hashCode()
+    {
+        java.nio.CharBuffer r0;
+        int i0, i1, i2, $i3, $i4;
+        char $c5;
+
+        r0 := @this: java.nio.CharBuffer;
+        i0 = 1;
+        i1 = virtualinvoke r0.<java.nio.CharBuffer: int position()>();
+        $i3 = virtualinvoke r0.<java.nio.CharBuffer: int limit()>();
+        i2 = $i3 - 1;
+
+     label0:
+        if i2 < i1 goto label1;
+
+        $i4 = 31 * i0;
+        $c5 = virtualinvoke r0.<java.nio.CharBuffer: char get(int)>(i2);
+        i0 = $i4 + $c5;
+        i2 = i2 + -1;
+        goto label0;
+
+     label1:
+        return i0;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        java.nio.CharBuffer r0, r2;
+        java.lang.Object r1;
+        int i0, i1, i2, $i3, $i4, $i5, $i6;
+        boolean $z0, $z1;
+        char $c7, $c8;
+
+        r0 := @this: java.nio.CharBuffer;
+        r1 := @parameter0: java.lang.Object;
+        if r0 != r1 goto label0;
+
+        return 1;
+
+     label0:
+        $z0 = r1 instanceof java.nio.CharBuffer;
+        if $z0 != 0 goto label1;
+
+        return 0;
+
+     label1:
+        r2 = (java.nio.CharBuffer) r1;
+        $i3 = virtualinvoke r0.<java.nio.CharBuffer: int remaining()>();
+        $i4 = virtualinvoke r2.<java.nio.CharBuffer: int remaining()>();
+        if $i3 == $i4 goto label2;
+
+        return 0;
+
+     label2:
+        i0 = virtualinvoke r0.<java.nio.CharBuffer: int position()>();
+        $i5 = virtualinvoke r0.<java.nio.CharBuffer: int limit()>();
+        i1 = $i5 - 1;
+        $i6 = virtualinvoke r2.<java.nio.CharBuffer: int limit()>();
+        i2 = $i6 - 1;
+
+     label3:
+        if i1 < i0 goto label5;
+
+        $c7 = virtualinvoke r0.<java.nio.CharBuffer: char get(int)>(i1);
+        $c8 = virtualinvoke r2.<java.nio.CharBuffer: char get(int)>(i2);
+        $z1 = staticinvoke <java.nio.CharBuffer: boolean equals(char,char)>($c7, $c8);
+        if $z1 != 0 goto label4;
+
+        return 0;
+
+     label4:
+        i1 = i1 + -1;
+        i2 = i2 + -1;
+        goto label3;
+
+     label5:
+        return 1;
+    }
+
+    private static boolean equals(char, char)
+    {
+        char c0, c1;
+        boolean $z0;
+
+        c0 := @parameter0: char;
+        c1 := @parameter1: char;
+        if c0 != c1 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public int compareTo(java.nio.CharBuffer)
+    {
+        java.nio.CharBuffer r0, r1;
+        int i0, i1, i2, i3, $i4, $i5, $i6, $i7, $i10, $i11, $i12;
+        char $c8, $c9;
+
+        r0 := @this: java.nio.CharBuffer;
+        r1 := @parameter0: java.nio.CharBuffer;
+        $i4 = virtualinvoke r0.<java.nio.CharBuffer: int position()>();
+        $i5 = virtualinvoke r0.<java.nio.CharBuffer: int remaining()>();
+        $i6 = virtualinvoke r1.<java.nio.CharBuffer: int remaining()>();
+        $i7 = staticinvoke <java.lang.Math: int min(int,int)>($i5, $i6);
+        i0 = $i4 + $i7;
+        i1 = virtualinvoke r0.<java.nio.CharBuffer: int position()>();
+        i2 = virtualinvoke r1.<java.nio.CharBuffer: int position()>();
+
+     label0:
+        if i1 >= i0 goto label2;
+
+        $c8 = virtualinvoke r0.<java.nio.CharBuffer: char get(int)>(i1);
+        $c9 = virtualinvoke r1.<java.nio.CharBuffer: char get(int)>(i2);
+        i3 = staticinvoke <java.nio.CharBuffer: int compare(char,char)>($c8, $c9);
+        if i3 == 0 goto label1;
+
+        return i3;
+
+     label1:
+        i1 = i1 + 1;
+        i2 = i2 + 1;
+        goto label0;
+
+     label2:
+        $i10 = virtualinvoke r0.<java.nio.CharBuffer: int remaining()>();
+        $i11 = virtualinvoke r1.<java.nio.CharBuffer: int remaining()>();
+        $i12 = $i10 - $i11;
+        return $i12;
+    }
+
+    private static int compare(char, char)
+    {
+        char c0, c1;
+        int $i2;
+
+        c0 := @parameter0: char;
+        c1 := @parameter1: char;
+        $i2 = staticinvoke <java.lang.Character: int compare(char,char)>(c0, c1);
+        return $i2;
+    }
+
+    public java.lang.String toString()
+    {
+        java.nio.CharBuffer r0;
+        int $i0, $i1;
+        java.lang.String $r1;
+
+        r0 := @this: java.nio.CharBuffer;
+        $i0 = virtualinvoke r0.<java.nio.CharBuffer: int position()>();
+        $i1 = virtualinvoke r0.<java.nio.CharBuffer: int limit()>();
+        $r1 = virtualinvoke r0.<java.nio.CharBuffer: java.lang.String toString(int,int)>($i0, $i1);
+        return $r1;
+    }
+
+    abstract java.lang.String toString(int, int);
+
+    public final int length()
+    {
+        java.nio.CharBuffer r0;
+        int $i0;
+
+        r0 := @this: java.nio.CharBuffer;
+        $i0 = virtualinvoke r0.<java.nio.CharBuffer: int remaining()>();
+        return $i0;
+    }
+
+    public final char charAt(int)
+    {
+        java.nio.CharBuffer r0;
+        int i0, $i1, $i2, $i3;
+        char $c4;
+
+        r0 := @this: java.nio.CharBuffer;
+        i0 := @parameter0: int;
+        $i1 = virtualinvoke r0.<java.nio.CharBuffer: int position()>();
+        $i2 = virtualinvoke r0.<java.nio.CharBuffer: int checkIndex(int,int)>(i0, 1);
+        $i3 = $i1 + $i2;
+        $c4 = virtualinvoke r0.<java.nio.CharBuffer: char get(int)>($i3);
+        return $c4;
+    }
+
+    public abstract java.nio.CharBuffer subSequence(int, int);
+
+    public java.nio.CharBuffer append(java.lang.CharSequence)
+    {
+        java.nio.CharBuffer r0, $r2, $r4;
+        java.lang.CharSequence r1;
+        java.lang.String $r3;
+
+        r0 := @this: java.nio.CharBuffer;
+        r1 := @parameter0: java.lang.CharSequence;
+        if r1 != null goto label0;
+
+        $r2 = virtualinvoke r0.<java.nio.CharBuffer: java.nio.CharBuffer put(java.lang.String)>("null");
+        return $r2;
+
+     label0:
+        $r3 = interfaceinvoke r1.<java.lang.CharSequence: java.lang.String toString()>();
+        $r4 = virtualinvoke r0.<java.nio.CharBuffer: java.nio.CharBuffer put(java.lang.String)>($r3);
+        return $r4;
+    }
+
+    public java.nio.CharBuffer append(java.lang.CharSequence, int, int)
+    {
+        java.nio.CharBuffer r0, $r6;
+        java.lang.CharSequence r1, r2, $r3, $r4;
+        int i0, i1;
+        java.lang.String $r5;
+
+        r0 := @this: java.nio.CharBuffer;
+        r1 := @parameter0: java.lang.CharSequence;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        if r1 != null goto label0;
+
+        $r3 = "null";
+        goto label1;
+
+     label0:
+        $r3 = r1;
+
+     label1:
+        r2 = $r3;
+        $r4 = interfaceinvoke r2.<java.lang.CharSequence: java.lang.CharSequence subSequence(int,int)>(i0, i1);
+        $r5 = interfaceinvoke $r4.<java.lang.CharSequence: java.lang.String toString()>();
+        $r6 = virtualinvoke r0.<java.nio.CharBuffer: java.nio.CharBuffer put(java.lang.String)>($r5);
+        return $r6;
+    }
+
+    public java.nio.CharBuffer append(char)
+    {
+        java.nio.CharBuffer r0, $r1;
+        char c0;
+
+        r0 := @this: java.nio.CharBuffer;
+        c0 := @parameter0: char;
+        $r1 = virtualinvoke r0.<java.nio.CharBuffer: java.nio.CharBuffer put(char)>(c0);
+        return $r1;
+    }
+
+    public abstract java.nio.ByteOrder order();
+
+    public volatile java.lang.Object array()
+    {
+        java.nio.CharBuffer r0;
+        char[] $r1;
+
+        r0 := @this: java.nio.CharBuffer;
+        $r1 = virtualinvoke r0.<java.nio.CharBuffer: char[] array()>();
+        return $r1;
+    }
+
+    public volatile int compareTo(java.lang.Object)
+    {
+        java.nio.CharBuffer r0, $r2;
+        java.lang.Object r1;
+        int $i0;
+
+        r0 := @this: java.nio.CharBuffer;
+        r1 := @parameter0: java.lang.Object;
+        $r2 = (java.nio.CharBuffer) r1;
+        $i0 = virtualinvoke r0.<java.nio.CharBuffer: int compareTo(java.nio.CharBuffer)>($r2);
+        return $i0;
+    }
+
+    public volatile java.lang.Appendable append(char) throws java.io.IOException
+    {
+        java.nio.CharBuffer r0, $r1;
+        char c0;
+
+        r0 := @this: java.nio.CharBuffer;
+        c0 := @parameter0: char;
+        $r1 = virtualinvoke r0.<java.nio.CharBuffer: java.nio.CharBuffer append(char)>(c0);
+        return $r1;
+    }
+
+    public volatile java.lang.Appendable append(java.lang.CharSequence, int, int) throws java.io.IOException
+    {
+        java.nio.CharBuffer r0, $r2;
+        java.lang.CharSequence r1;
+        int i0, i1;
+
+        r0 := @this: java.nio.CharBuffer;
+        r1 := @parameter0: java.lang.CharSequence;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        $r2 = virtualinvoke r0.<java.nio.CharBuffer: java.nio.CharBuffer append(java.lang.CharSequence,int,int)>(r1, i0, i1);
+        return $r2;
+    }
+
+    public volatile java.lang.Appendable append(java.lang.CharSequence) throws java.io.IOException
+    {
+        java.nio.CharBuffer r0, $r2;
+        java.lang.CharSequence r1;
+
+        r0 := @this: java.nio.CharBuffer;
+        r1 := @parameter0: java.lang.CharSequence;
+        $r2 = virtualinvoke r0.<java.nio.CharBuffer: java.nio.CharBuffer append(java.lang.CharSequence)>(r1);
+        return $r2;
+    }
+
+    public volatile java.lang.CharSequence subSequence(int, int)
+    {
+        java.nio.CharBuffer r0, $r1;
+        int i0, i1;
+
+        r0 := @this: java.nio.CharBuffer;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $r1 = virtualinvoke r0.<java.nio.CharBuffer: java.nio.CharBuffer subSequence(int,int)>(i0, i1);
+        return $r1;
+    }
+}

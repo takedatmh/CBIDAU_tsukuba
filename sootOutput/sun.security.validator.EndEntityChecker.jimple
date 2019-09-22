@@ -1,0 +1,517 @@
+class sun.security.validator.EndEntityChecker extends java.lang.Object
+{
+    private static final java.lang.String OID_EXTENDED_KEY_USAGE;
+    private static final java.lang.String OID_EKU_TLS_SERVER;
+    private static final java.lang.String OID_EKU_TLS_CLIENT;
+    private static final java.lang.String OID_EKU_CODE_SIGNING;
+    private static final java.lang.String OID_EKU_TIME_STAMPING;
+    private static final java.lang.String OID_EKU_ANY_USAGE;
+    private static final java.lang.String OID_EKU_NS_SGC;
+    private static final java.lang.String OID_EKU_MS_SGC;
+    private static final java.lang.String OID_SUBJECT_ALT_NAME;
+    private static final java.lang.String NSCT_SSL_CLIENT;
+    private static final java.lang.String NSCT_SSL_SERVER;
+    private static final java.lang.String NSCT_CODE_SIGNING;
+    private static final int KU_SIGNATURE;
+    private static final int KU_KEY_ENCIPHERMENT;
+    private static final int KU_KEY_AGREEMENT;
+    private static final java.util.Collection KU_SERVER_SIGNATURE;
+    private static final java.util.Collection KU_SERVER_ENCRYPTION;
+    private static final java.util.Collection KU_SERVER_KEY_AGREEMENT;
+    private final java.lang.String variant;
+    private final java.lang.String type;
+
+    private void <init>(java.lang.String, java.lang.String)
+    {
+        sun.security.validator.EndEntityChecker r0;
+        java.lang.String r1, r2;
+
+        r0 := @this: sun.security.validator.EndEntityChecker;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.security.validator.EndEntityChecker: java.lang.String type> = r1;
+        r0.<sun.security.validator.EndEntityChecker: java.lang.String variant> = r2;
+        return;
+    }
+
+    static sun.security.validator.EndEntityChecker getInstance(java.lang.String, java.lang.String)
+    {
+        java.lang.String r0, r1;
+        sun.security.validator.EndEntityChecker $r2;
+
+        r0 := @parameter0: java.lang.String;
+        r1 := @parameter1: java.lang.String;
+        $r2 = new sun.security.validator.EndEntityChecker;
+        specialinvoke $r2.<sun.security.validator.EndEntityChecker: void <init>(java.lang.String,java.lang.String)>(r0, r1);
+        return $r2;
+    }
+
+    void check(java.security.cert.X509Certificate, java.lang.Object) throws java.security.cert.CertificateException
+    {
+        sun.security.validator.EndEntityChecker r0;
+        java.security.cert.X509Certificate r1;
+        java.lang.Object r2;
+        java.lang.String $r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r14, $r16;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6;
+        java.security.cert.CertificateException $r11;
+        java.lang.StringBuilder $r12, $r13, $r15;
+
+        r0 := @this: sun.security.validator.EndEntityChecker;
+        r1 := @parameter0: java.security.cert.X509Certificate;
+        r2 := @parameter1: java.lang.Object;
+        $r3 = r0.<sun.security.validator.EndEntityChecker: java.lang.String variant>;
+        $z0 = virtualinvoke $r3.<java.lang.String: boolean equals(java.lang.Object)>("generic");
+        if $z0 == 0 goto label0;
+
+        return;
+
+     label0:
+        $r4 = r0.<sun.security.validator.EndEntityChecker: java.lang.String variant>;
+        $z1 = virtualinvoke $r4.<java.lang.String: boolean equals(java.lang.Object)>("tls server");
+        if $z1 == 0 goto label1;
+
+        $r5 = (java.lang.String) r2;
+        specialinvoke r0.<sun.security.validator.EndEntityChecker: void checkTLSServer(java.security.cert.X509Certificate,java.lang.String)>(r1, $r5);
+        goto label7;
+
+     label1:
+        $r6 = r0.<sun.security.validator.EndEntityChecker: java.lang.String variant>;
+        $z2 = virtualinvoke $r6.<java.lang.String: boolean equals(java.lang.Object)>("tls client");
+        if $z2 == 0 goto label2;
+
+        specialinvoke r0.<sun.security.validator.EndEntityChecker: void checkTLSClient(java.security.cert.X509Certificate)>(r1);
+        goto label7;
+
+     label2:
+        $r7 = r0.<sun.security.validator.EndEntityChecker: java.lang.String variant>;
+        $z3 = virtualinvoke $r7.<java.lang.String: boolean equals(java.lang.Object)>("code signing");
+        if $z3 == 0 goto label3;
+
+        specialinvoke r0.<sun.security.validator.EndEntityChecker: void checkCodeSigning(java.security.cert.X509Certificate)>(r1);
+        goto label7;
+
+     label3:
+        $r8 = r0.<sun.security.validator.EndEntityChecker: java.lang.String variant>;
+        $z4 = virtualinvoke $r8.<java.lang.String: boolean equals(java.lang.Object)>("jce signing");
+        if $z4 == 0 goto label4;
+
+        specialinvoke r0.<sun.security.validator.EndEntityChecker: void checkCodeSigning(java.security.cert.X509Certificate)>(r1);
+        goto label7;
+
+     label4:
+        $r9 = r0.<sun.security.validator.EndEntityChecker: java.lang.String variant>;
+        $z5 = virtualinvoke $r9.<java.lang.String: boolean equals(java.lang.Object)>("plugin code signing");
+        if $z5 == 0 goto label5;
+
+        specialinvoke r0.<sun.security.validator.EndEntityChecker: void checkCodeSigning(java.security.cert.X509Certificate)>(r1);
+        goto label7;
+
+     label5:
+        $r10 = r0.<sun.security.validator.EndEntityChecker: java.lang.String variant>;
+        $z6 = virtualinvoke $r10.<java.lang.String: boolean equals(java.lang.Object)>("tsa server");
+        if $z6 == 0 goto label6;
+
+        specialinvoke r0.<sun.security.validator.EndEntityChecker: void checkTSAServer(java.security.cert.X509Certificate)>(r1);
+        goto label7;
+
+     label6:
+        $r11 = new java.security.cert.CertificateException;
+        $r12 = new java.lang.StringBuilder;
+        specialinvoke $r12.<java.lang.StringBuilder: void <init>()>();
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Unknown variant: ");
+        $r14 = r0.<sun.security.validator.EndEntityChecker: java.lang.String variant>;
+        $r15 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r14);
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r11.<java.security.cert.CertificateException: void <init>(java.lang.String)>($r16);
+        throw $r11;
+
+     label7:
+        return;
+    }
+
+    private java.util.Set getCriticalExtensions(java.security.cert.X509Certificate)
+    {
+        sun.security.validator.EndEntityChecker r0;
+        java.security.cert.X509Certificate r1;
+        java.util.Set r2;
+
+        r0 := @this: sun.security.validator.EndEntityChecker;
+        r1 := @parameter0: java.security.cert.X509Certificate;
+        r2 = virtualinvoke r1.<java.security.cert.X509Certificate: java.util.Set getCriticalExtensionOIDs()>();
+        if r2 != null goto label0;
+
+        r2 = staticinvoke <java.util.Collections: java.util.Set emptySet()>();
+
+     label0:
+        return r2;
+    }
+
+    private void checkRemainingExtensions(java.util.Set) throws java.security.cert.CertificateException
+    {
+        sun.security.validator.EndEntityChecker r0;
+        java.util.Set r1;
+        java.lang.StringBuilder $r2, $r4, $r5;
+        boolean $z2;
+        java.security.cert.CertificateException $r3;
+        java.lang.String $r6;
+
+        r0 := @this: sun.security.validator.EndEntityChecker;
+        r1 := @parameter0: java.util.Set;
+        interfaceinvoke r1.<java.util.Set: boolean remove(java.lang.Object)>("2.5.29.19");
+        interfaceinvoke r1.<java.util.Set: boolean remove(java.lang.Object)>("2.5.29.17");
+        $z2 = interfaceinvoke r1.<java.util.Set: boolean isEmpty()>();
+        if $z2 != 0 goto label0;
+
+        $r3 = new java.security.cert.CertificateException;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+        $r4 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Certificate contains unsupported critical extensions: ");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r1);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r3.<java.security.cert.CertificateException: void <init>(java.lang.String)>($r6);
+        throw $r3;
+
+     label0:
+        return;
+    }
+
+    private boolean checkEKU(java.security.cert.X509Certificate, java.util.Set, java.lang.String) throws java.security.cert.CertificateException
+    {
+        sun.security.validator.EndEntityChecker r0;
+        java.security.cert.X509Certificate r1;
+        java.util.Set r2;
+        java.lang.String r3;
+        java.util.List r4;
+        boolean $z0, $z1, $z2;
+
+        r0 := @this: sun.security.validator.EndEntityChecker;
+        r1 := @parameter0: java.security.cert.X509Certificate;
+        r2 := @parameter1: java.util.Set;
+        r3 := @parameter2: java.lang.String;
+        r4 = virtualinvoke r1.<java.security.cert.X509Certificate: java.util.List getExtendedKeyUsage()>();
+        if r4 != null goto label0;
+
+        return 1;
+
+     label0:
+        $z0 = interfaceinvoke r4.<java.util.List: boolean contains(java.lang.Object)>(r3);
+        if $z0 != 0 goto label1;
+
+        $z1 = interfaceinvoke r4.<java.util.List: boolean contains(java.lang.Object)>("2.5.29.37.0");
+        if $z1 == 0 goto label2;
+
+     label1:
+        $z2 = 1;
+        goto label3;
+
+     label2:
+        $z2 = 0;
+
+     label3:
+        return $z2;
+    }
+
+    private boolean checkKeyUsage(java.security.cert.X509Certificate, int) throws java.security.cert.CertificateException
+    {
+        sun.security.validator.EndEntityChecker r0;
+        java.security.cert.X509Certificate r1;
+        int i0, $i1;
+        boolean[] r2;
+        boolean $z0, $z1;
+
+        r0 := @this: sun.security.validator.EndEntityChecker;
+        r1 := @parameter0: java.security.cert.X509Certificate;
+        i0 := @parameter1: int;
+        r2 = virtualinvoke r1.<java.security.cert.X509Certificate: boolean[] getKeyUsage()>();
+        if r2 != null goto label0;
+
+        return 1;
+
+     label0:
+        $i1 = lengthof r2;
+        if $i1 <= i0 goto label1;
+
+        $z0 = r2[i0];
+        if $z0 == 0 goto label1;
+
+        $z1 = 1;
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        return $z1;
+    }
+
+    private void checkTLSClient(java.security.cert.X509Certificate) throws java.security.cert.CertificateException
+    {
+        sun.security.validator.EndEntityChecker r0;
+        java.security.cert.X509Certificate r1;
+        java.util.Set r2;
+        java.lang.Object $r3, $r6, $r8;
+        boolean $z0, $z1, $z2;
+        sun.security.validator.ValidatorException $r4, $r5, $r7;
+
+        r0 := @this: sun.security.validator.EndEntityChecker;
+        r1 := @parameter0: java.security.cert.X509Certificate;
+        r2 = specialinvoke r0.<sun.security.validator.EndEntityChecker: java.util.Set getCriticalExtensions(java.security.cert.X509Certificate)>(r1);
+        $z0 = specialinvoke r0.<sun.security.validator.EndEntityChecker: boolean checkKeyUsage(java.security.cert.X509Certificate,int)>(r1, 0);
+        if $z0 != 0 goto label0;
+
+        $r4 = new sun.security.validator.ValidatorException;
+        $r3 = <sun.security.validator.ValidatorException: java.lang.Object T_EE_EXTENSIONS>;
+        specialinvoke $r4.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>("KeyUsage does not allow digital signatures", $r3, r1);
+        throw $r4;
+
+     label0:
+        $z1 = specialinvoke r0.<sun.security.validator.EndEntityChecker: boolean checkEKU(java.security.cert.X509Certificate,java.util.Set,java.lang.String)>(r1, r2, "1.3.6.1.5.5.7.3.2");
+        if $z1 != 0 goto label1;
+
+        $r5 = new sun.security.validator.ValidatorException;
+        $r6 = <sun.security.validator.ValidatorException: java.lang.Object T_EE_EXTENSIONS>;
+        specialinvoke $r5.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>("Extended key usage does not permit use for TLS client authentication", $r6, r1);
+        throw $r5;
+
+     label1:
+        $z2 = staticinvoke <sun.security.validator.SimpleValidator: boolean getNetscapeCertTypeBit(java.security.cert.X509Certificate,java.lang.String)>(r1, "ssl_client");
+        if $z2 != 0 goto label2;
+
+        $r7 = new sun.security.validator.ValidatorException;
+        $r8 = <sun.security.validator.ValidatorException: java.lang.Object T_EE_EXTENSIONS>;
+        specialinvoke $r7.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>("Netscape cert type does not permit use for SSL client", $r8, r1);
+        throw $r7;
+
+     label2:
+        interfaceinvoke r2.<java.util.Set: boolean remove(java.lang.Object)>("2.5.29.15");
+        interfaceinvoke r2.<java.util.Set: boolean remove(java.lang.Object)>("2.5.29.37");
+        interfaceinvoke r2.<java.util.Set: boolean remove(java.lang.Object)>("2.16.840.1.113730.1.1");
+        specialinvoke r0.<sun.security.validator.EndEntityChecker: void checkRemainingExtensions(java.util.Set)>(r2);
+        return;
+    }
+
+    private void checkTLSServer(java.security.cert.X509Certificate, java.lang.String) throws java.security.cert.CertificateException
+    {
+        sun.security.validator.EndEntityChecker r0;
+        java.security.cert.X509Certificate r1;
+        java.lang.String r2, $r17;
+        java.util.Set r3;
+        java.lang.Object $r4, $r9, $r12, $r19, $r21;
+        java.util.Collection $r5, $r7, $r10;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9;
+        sun.security.validator.ValidatorException $r6, $r8, $r11, $r18, $r20;
+        java.security.cert.CertificateException $r13;
+        java.lang.StringBuilder $r14, $r15, $r16;
+
+        r0 := @this: sun.security.validator.EndEntityChecker;
+        r1 := @parameter0: java.security.cert.X509Certificate;
+        r2 := @parameter1: java.lang.String;
+        r3 = specialinvoke r0.<sun.security.validator.EndEntityChecker: java.util.Set getCriticalExtensions(java.security.cert.X509Certificate)>(r1);
+        $r5 = <sun.security.validator.EndEntityChecker: java.util.Collection KU_SERVER_ENCRYPTION>;
+        $z0 = interfaceinvoke $r5.<java.util.Collection: boolean contains(java.lang.Object)>(r2);
+        if $z0 == 0 goto label0;
+
+        $z1 = specialinvoke r0.<sun.security.validator.EndEntityChecker: boolean checkKeyUsage(java.security.cert.X509Certificate,int)>(r1, 2);
+        if $z1 != 0 goto label3;
+
+        $r6 = new sun.security.validator.ValidatorException;
+        $r4 = <sun.security.validator.ValidatorException: java.lang.Object T_EE_EXTENSIONS>;
+        specialinvoke $r6.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>("KeyUsage does not allow key encipherment", $r4, r1);
+        throw $r6;
+
+     label0:
+        $r7 = <sun.security.validator.EndEntityChecker: java.util.Collection KU_SERVER_SIGNATURE>;
+        $z2 = interfaceinvoke $r7.<java.util.Collection: boolean contains(java.lang.Object)>(r2);
+        if $z2 == 0 goto label1;
+
+        $z3 = specialinvoke r0.<sun.security.validator.EndEntityChecker: boolean checkKeyUsage(java.security.cert.X509Certificate,int)>(r1, 0);
+        if $z3 != 0 goto label3;
+
+        $r8 = new sun.security.validator.ValidatorException;
+        $r9 = <sun.security.validator.ValidatorException: java.lang.Object T_EE_EXTENSIONS>;
+        specialinvoke $r8.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>("KeyUsage does not allow digital signatures", $r9, r1);
+        throw $r8;
+
+     label1:
+        $r10 = <sun.security.validator.EndEntityChecker: java.util.Collection KU_SERVER_KEY_AGREEMENT>;
+        $z4 = interfaceinvoke $r10.<java.util.Collection: boolean contains(java.lang.Object)>(r2);
+        if $z4 == 0 goto label2;
+
+        $z5 = specialinvoke r0.<sun.security.validator.EndEntityChecker: boolean checkKeyUsage(java.security.cert.X509Certificate,int)>(r1, 4);
+        if $z5 != 0 goto label3;
+
+        $r11 = new sun.security.validator.ValidatorException;
+        $r12 = <sun.security.validator.ValidatorException: java.lang.Object T_EE_EXTENSIONS>;
+        specialinvoke $r11.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>("KeyUsage does not allow key agreement", $r12, r1);
+        throw $r11;
+
+     label2:
+        $r13 = new java.security.cert.CertificateException;
+        $r14 = new java.lang.StringBuilder;
+        specialinvoke $r14.<java.lang.StringBuilder: void <init>()>();
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Unknown authType: ");
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r13.<java.security.cert.CertificateException: void <init>(java.lang.String)>($r17);
+        throw $r13;
+
+     label3:
+        $z6 = specialinvoke r0.<sun.security.validator.EndEntityChecker: boolean checkEKU(java.security.cert.X509Certificate,java.util.Set,java.lang.String)>(r1, r3, "1.3.6.1.5.5.7.3.1");
+        if $z6 != 0 goto label4;
+
+        $z7 = specialinvoke r0.<sun.security.validator.EndEntityChecker: boolean checkEKU(java.security.cert.X509Certificate,java.util.Set,java.lang.String)>(r1, r3, "1.3.6.1.4.1.311.10.3.3");
+        if $z7 != 0 goto label4;
+
+        $z8 = specialinvoke r0.<sun.security.validator.EndEntityChecker: boolean checkEKU(java.security.cert.X509Certificate,java.util.Set,java.lang.String)>(r1, r3, "2.16.840.1.113730.4.1");
+        if $z8 != 0 goto label4;
+
+        $r18 = new sun.security.validator.ValidatorException;
+        $r19 = <sun.security.validator.ValidatorException: java.lang.Object T_EE_EXTENSIONS>;
+        specialinvoke $r18.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>("Extended key usage does not permit use for TLS server authentication", $r19, r1);
+        throw $r18;
+
+     label4:
+        $z9 = staticinvoke <sun.security.validator.SimpleValidator: boolean getNetscapeCertTypeBit(java.security.cert.X509Certificate,java.lang.String)>(r1, "ssl_server");
+        if $z9 != 0 goto label5;
+
+        $r20 = new sun.security.validator.ValidatorException;
+        $r21 = <sun.security.validator.ValidatorException: java.lang.Object T_EE_EXTENSIONS>;
+        specialinvoke $r20.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>("Netscape cert type does not permit use for SSL server", $r21, r1);
+        throw $r20;
+
+     label5:
+        interfaceinvoke r3.<java.util.Set: boolean remove(java.lang.Object)>("2.5.29.15");
+        interfaceinvoke r3.<java.util.Set: boolean remove(java.lang.Object)>("2.5.29.37");
+        interfaceinvoke r3.<java.util.Set: boolean remove(java.lang.Object)>("2.16.840.1.113730.1.1");
+        specialinvoke r0.<sun.security.validator.EndEntityChecker: void checkRemainingExtensions(java.util.Set)>(r3);
+        return;
+    }
+
+    private void checkCodeSigning(java.security.cert.X509Certificate) throws java.security.cert.CertificateException
+    {
+        sun.security.validator.EndEntityChecker r0;
+        java.security.cert.X509Certificate r1;
+        java.util.Set r2;
+        java.lang.Object $r3, $r6, $r9;
+        boolean $z0, $z1, $z2, $z3;
+        sun.security.validator.ValidatorException $r4, $r5, $r8;
+        java.lang.String $r7;
+
+        r0 := @this: sun.security.validator.EndEntityChecker;
+        r1 := @parameter0: java.security.cert.X509Certificate;
+        r2 = specialinvoke r0.<sun.security.validator.EndEntityChecker: java.util.Set getCriticalExtensions(java.security.cert.X509Certificate)>(r1);
+        $z0 = specialinvoke r0.<sun.security.validator.EndEntityChecker: boolean checkKeyUsage(java.security.cert.X509Certificate,int)>(r1, 0);
+        if $z0 != 0 goto label0;
+
+        $r4 = new sun.security.validator.ValidatorException;
+        $r3 = <sun.security.validator.ValidatorException: java.lang.Object T_EE_EXTENSIONS>;
+        specialinvoke $r4.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>("KeyUsage does not allow digital signatures", $r3, r1);
+        throw $r4;
+
+     label0:
+        $z1 = specialinvoke r0.<sun.security.validator.EndEntityChecker: boolean checkEKU(java.security.cert.X509Certificate,java.util.Set,java.lang.String)>(r1, r2, "1.3.6.1.5.5.7.3.3");
+        if $z1 != 0 goto label1;
+
+        $r5 = new sun.security.validator.ValidatorException;
+        $r6 = <sun.security.validator.ValidatorException: java.lang.Object T_EE_EXTENSIONS>;
+        specialinvoke $r5.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>("Extended key usage does not permit use for code signing", $r6, r1);
+        throw $r5;
+
+     label1:
+        $r7 = r0.<sun.security.validator.EndEntityChecker: java.lang.String variant>;
+        $z2 = virtualinvoke $r7.<java.lang.String: boolean equals(java.lang.Object)>("jce signing");
+        if $z2 != 0 goto label3;
+
+        $z3 = staticinvoke <sun.security.validator.SimpleValidator: boolean getNetscapeCertTypeBit(java.security.cert.X509Certificate,java.lang.String)>(r1, "object_signing");
+        if $z3 != 0 goto label2;
+
+        $r8 = new sun.security.validator.ValidatorException;
+        $r9 = <sun.security.validator.ValidatorException: java.lang.Object T_EE_EXTENSIONS>;
+        specialinvoke $r8.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>("Netscape cert type does not permit use for code signing", $r9, r1);
+        throw $r8;
+
+     label2:
+        interfaceinvoke r2.<java.util.Set: boolean remove(java.lang.Object)>("2.16.840.1.113730.1.1");
+
+     label3:
+        interfaceinvoke r2.<java.util.Set: boolean remove(java.lang.Object)>("2.5.29.15");
+        interfaceinvoke r2.<java.util.Set: boolean remove(java.lang.Object)>("2.5.29.37");
+        specialinvoke r0.<sun.security.validator.EndEntityChecker: void checkRemainingExtensions(java.util.Set)>(r2);
+        return;
+    }
+
+    private void checkTSAServer(java.security.cert.X509Certificate) throws java.security.cert.CertificateException
+    {
+        sun.security.validator.EndEntityChecker r0;
+        java.security.cert.X509Certificate r1;
+        java.util.Set r2;
+        java.lang.Object $r3, $r7, $r9;
+        boolean $z0, $z1;
+        sun.security.validator.ValidatorException $r4, $r6, $r8;
+        java.util.List $r5;
+
+        r0 := @this: sun.security.validator.EndEntityChecker;
+        r1 := @parameter0: java.security.cert.X509Certificate;
+        r2 = specialinvoke r0.<sun.security.validator.EndEntityChecker: java.util.Set getCriticalExtensions(java.security.cert.X509Certificate)>(r1);
+        $z0 = specialinvoke r0.<sun.security.validator.EndEntityChecker: boolean checkKeyUsage(java.security.cert.X509Certificate,int)>(r1, 0);
+        if $z0 != 0 goto label0;
+
+        $r4 = new sun.security.validator.ValidatorException;
+        $r3 = <sun.security.validator.ValidatorException: java.lang.Object T_EE_EXTENSIONS>;
+        specialinvoke $r4.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>("KeyUsage does not allow digital signatures", $r3, r1);
+        throw $r4;
+
+     label0:
+        $r5 = virtualinvoke r1.<java.security.cert.X509Certificate: java.util.List getExtendedKeyUsage()>();
+        if $r5 != null goto label1;
+
+        $r6 = new sun.security.validator.ValidatorException;
+        $r7 = <sun.security.validator.ValidatorException: java.lang.Object T_EE_EXTENSIONS>;
+        specialinvoke $r6.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>("Certificate does not contain an extended key usage extension required for a TSA server", $r7, r1);
+        throw $r6;
+
+     label1:
+        $z1 = specialinvoke r0.<sun.security.validator.EndEntityChecker: boolean checkEKU(java.security.cert.X509Certificate,java.util.Set,java.lang.String)>(r1, r2, "1.3.6.1.5.5.7.3.8");
+        if $z1 != 0 goto label2;
+
+        $r8 = new sun.security.validator.ValidatorException;
+        $r9 = <sun.security.validator.ValidatorException: java.lang.Object T_EE_EXTENSIONS>;
+        specialinvoke $r8.<sun.security.validator.ValidatorException: void <init>(java.lang.String,java.lang.Object,java.security.cert.X509Certificate)>("Extended key usage does not permit use for TSA server", $r9, r1);
+        throw $r8;
+
+     label2:
+        interfaceinvoke r2.<java.util.Set: boolean remove(java.lang.Object)>("2.5.29.15");
+        interfaceinvoke r2.<java.util.Set: boolean remove(java.lang.Object)>("2.5.29.37");
+        specialinvoke r0.<sun.security.validator.EndEntityChecker: void checkRemainingExtensions(java.util.Set)>(r2);
+        return;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.String[] $r0, $r2, $r4;
+        java.util.List $r1, $r3, $r5;
+
+        $r0 = newarray (java.lang.String)[6];
+        $r0[0] = "DHE_DSS";
+        $r0[1] = "DHE_RSA";
+        $r0[2] = "ECDHE_ECDSA";
+        $r0[3] = "ECDHE_RSA";
+        $r0[4] = "RSA_EXPORT";
+        $r0[5] = "UNKNOWN";
+        $r1 = staticinvoke <java.util.Arrays: java.util.List asList(java.lang.Object[])>($r0);
+        <sun.security.validator.EndEntityChecker: java.util.Collection KU_SERVER_SIGNATURE> = $r1;
+        $r2 = newarray (java.lang.String)[1];
+        $r2[0] = "RSA";
+        $r3 = staticinvoke <java.util.Arrays: java.util.List asList(java.lang.Object[])>($r2);
+        <sun.security.validator.EndEntityChecker: java.util.Collection KU_SERVER_ENCRYPTION> = $r3;
+        $r4 = newarray (java.lang.String)[4];
+        $r4[0] = "DH_DSS";
+        $r4[1] = "DH_RSA";
+        $r4[2] = "ECDH_ECDSA";
+        $r4[3] = "ECDH_RSA";
+        $r5 = staticinvoke <java.util.Arrays: java.util.List asList(java.lang.Object[])>($r4);
+        <sun.security.validator.EndEntityChecker: java.util.Collection KU_SERVER_KEY_AGREEMENT> = $r5;
+        return;
+    }
+}

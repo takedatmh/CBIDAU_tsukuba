@@ -1,0 +1,264 @@
+public class org.apache.tomcat.util.modeler.OperationInfo extends org.apache.tomcat.util.modeler.FeatureInfo
+{
+    static final long serialVersionUID;
+    protected java.lang.String impact;
+    protected java.lang.String role;
+    protected final java.util.concurrent.locks.ReadWriteLock parametersLock;
+    protected org.apache.tomcat.util.modeler.ParameterInfo[] parameters;
+
+    public void <init>()
+    {
+        org.apache.tomcat.util.modeler.OperationInfo r0;
+        java.util.concurrent.locks.ReentrantReadWriteLock $r1;
+        org.apache.tomcat.util.modeler.ParameterInfo[] $r2;
+
+        r0 := @this: org.apache.tomcat.util.modeler.OperationInfo;
+        specialinvoke r0.<org.apache.tomcat.util.modeler.FeatureInfo: void <init>()>();
+        r0.<org.apache.tomcat.util.modeler.OperationInfo: java.lang.String impact> = "UNKNOWN";
+        r0.<org.apache.tomcat.util.modeler.OperationInfo: java.lang.String role> = "operation";
+        $r1 = new java.util.concurrent.locks.ReentrantReadWriteLock;
+        specialinvoke $r1.<java.util.concurrent.locks.ReentrantReadWriteLock: void <init>()>();
+        r0.<org.apache.tomcat.util.modeler.OperationInfo: java.util.concurrent.locks.ReadWriteLock parametersLock> = $r1;
+        $r2 = newarray (org.apache.tomcat.util.modeler.ParameterInfo)[0];
+        r0.<org.apache.tomcat.util.modeler.OperationInfo: org.apache.tomcat.util.modeler.ParameterInfo[] parameters> = $r2;
+        return;
+    }
+
+    public java.lang.String getImpact()
+    {
+        org.apache.tomcat.util.modeler.OperationInfo r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.tomcat.util.modeler.OperationInfo;
+        $r1 = r0.<org.apache.tomcat.util.modeler.OperationInfo: java.lang.String impact>;
+        return $r1;
+    }
+
+    public void setImpact(java.lang.String)
+    {
+        org.apache.tomcat.util.modeler.OperationInfo r0;
+        java.lang.String r1, $r3;
+        java.util.Locale $r2;
+
+        r0 := @this: org.apache.tomcat.util.modeler.OperationInfo;
+        r1 := @parameter0: java.lang.String;
+        if r1 != null goto label0;
+
+        r0.<org.apache.tomcat.util.modeler.OperationInfo: java.lang.String impact> = null;
+        goto label1;
+
+     label0:
+        $r2 = <java.util.Locale: java.util.Locale ENGLISH>;
+        $r3 = virtualinvoke r1.<java.lang.String: java.lang.String toUpperCase(java.util.Locale)>($r2);
+        r0.<org.apache.tomcat.util.modeler.OperationInfo: java.lang.String impact> = $r3;
+
+     label1:
+        return;
+    }
+
+    public java.lang.String getRole()
+    {
+        org.apache.tomcat.util.modeler.OperationInfo r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.tomcat.util.modeler.OperationInfo;
+        $r1 = r0.<org.apache.tomcat.util.modeler.OperationInfo: java.lang.String role>;
+        return $r1;
+    }
+
+    public void setRole(java.lang.String)
+    {
+        org.apache.tomcat.util.modeler.OperationInfo r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.tomcat.util.modeler.OperationInfo;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.tomcat.util.modeler.OperationInfo: java.lang.String role> = r1;
+        return;
+    }
+
+    public java.lang.String getReturnType()
+    {
+        org.apache.tomcat.util.modeler.OperationInfo r0;
+        java.lang.String $r1, $r2;
+
+        r0 := @this: org.apache.tomcat.util.modeler.OperationInfo;
+        $r1 = r0.<org.apache.tomcat.util.modeler.OperationInfo: java.lang.String type>;
+        if $r1 != null goto label0;
+
+        r0.<org.apache.tomcat.util.modeler.OperationInfo: java.lang.String type> = "void";
+
+     label0:
+        $r2 = r0.<org.apache.tomcat.util.modeler.OperationInfo: java.lang.String type>;
+        return $r2;
+    }
+
+    public void setReturnType(java.lang.String)
+    {
+        org.apache.tomcat.util.modeler.OperationInfo r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.tomcat.util.modeler.OperationInfo;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.tomcat.util.modeler.OperationInfo: java.lang.String type> = r1;
+        return;
+    }
+
+    public org.apache.tomcat.util.modeler.ParameterInfo[] getSignature()
+    {
+        org.apache.tomcat.util.modeler.OperationInfo r0;
+        java.util.concurrent.locks.Lock r1;
+        org.apache.tomcat.util.modeler.ParameterInfo[] r2;
+        java.lang.Throwable r3, $r5;
+        java.util.concurrent.locks.ReadWriteLock $r4;
+
+        r0 := @this: org.apache.tomcat.util.modeler.OperationInfo;
+        $r4 = r0.<org.apache.tomcat.util.modeler.OperationInfo: java.util.concurrent.locks.ReadWriteLock parametersLock>;
+        r1 = interfaceinvoke $r4.<java.util.concurrent.locks.ReadWriteLock: java.util.concurrent.locks.Lock readLock()>();
+
+     label0:
+        interfaceinvoke r1.<java.util.concurrent.locks.Lock: void lock()>();
+        r2 = r0.<org.apache.tomcat.util.modeler.OperationInfo: org.apache.tomcat.util.modeler.ParameterInfo[] parameters>;
+
+     label1:
+        interfaceinvoke r1.<java.util.concurrent.locks.Lock: void unlock()>();
+        return r2;
+
+     label2:
+        $r5 := @caughtexception;
+        r3 = $r5;
+        interfaceinvoke r1.<java.util.concurrent.locks.Lock: void unlock()>();
+        throw r3;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+    }
+
+    public void addParameter(org.apache.tomcat.util.modeler.ParameterInfo)
+    {
+        org.apache.tomcat.util.modeler.OperationInfo r0;
+        org.apache.tomcat.util.modeler.ParameterInfo r1;
+        java.util.concurrent.locks.Lock r2;
+        org.apache.tomcat.util.modeler.ParameterInfo[] r3, $r6, $r7, $r8, $r9;
+        java.lang.Throwable r4, $r10;
+        java.util.concurrent.locks.ReadWriteLock $r5;
+        int $i0, $i1, $i2, $i3;
+
+        r0 := @this: org.apache.tomcat.util.modeler.OperationInfo;
+        r1 := @parameter0: org.apache.tomcat.util.modeler.ParameterInfo;
+        $r5 = r0.<org.apache.tomcat.util.modeler.OperationInfo: java.util.concurrent.locks.ReadWriteLock parametersLock>;
+        r2 = interfaceinvoke $r5.<java.util.concurrent.locks.ReadWriteLock: java.util.concurrent.locks.Lock writeLock()>();
+
+     label0:
+        interfaceinvoke r2.<java.util.concurrent.locks.Lock: void lock()>();
+        $r6 = r0.<org.apache.tomcat.util.modeler.OperationInfo: org.apache.tomcat.util.modeler.ParameterInfo[] parameters>;
+        $i0 = lengthof $r6;
+        $i1 = $i0 + 1;
+        r3 = newarray (org.apache.tomcat.util.modeler.ParameterInfo)[$i1];
+        $r7 = r0.<org.apache.tomcat.util.modeler.OperationInfo: org.apache.tomcat.util.modeler.ParameterInfo[] parameters>;
+        $r8 = r0.<org.apache.tomcat.util.modeler.OperationInfo: org.apache.tomcat.util.modeler.ParameterInfo[] parameters>;
+        $i2 = lengthof $r8;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r7, 0, r3, 0, $i2);
+        $r9 = r0.<org.apache.tomcat.util.modeler.OperationInfo: org.apache.tomcat.util.modeler.ParameterInfo[] parameters>;
+        $i3 = lengthof $r9;
+        r3[$i3] = r1;
+        r0.<org.apache.tomcat.util.modeler.OperationInfo: org.apache.tomcat.util.modeler.ParameterInfo[] parameters> = r3;
+        r0.<org.apache.tomcat.util.modeler.OperationInfo: javax.management.MBeanFeatureInfo info> = null;
+        goto label2;
+
+     label1:
+        $r10 := @caughtexception;
+        r4 = $r10;
+        interfaceinvoke r2.<java.util.concurrent.locks.Lock: void unlock()>();
+        throw r4;
+
+     label2:
+        interfaceinvoke r2.<java.util.concurrent.locks.Lock: void unlock()>();
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label1;
+    }
+
+    javax.management.MBeanOperationInfo createOperationInfo()
+    {
+        org.apache.tomcat.util.modeler.OperationInfo r0;
+        byte b0;
+        javax.management.MBeanFeatureInfo $r1, $r13;
+        java.lang.String $r2, $r3, $r4, $r5, $r6, $r7, $r9, $r10, $r12;
+        boolean $z0, $z1, $z2;
+        javax.management.MBeanOperationInfo $r8, $r14;
+        javax.management.MBeanParameterInfo[] $r11;
+
+        r0 := @this: org.apache.tomcat.util.modeler.OperationInfo;
+        $r1 = r0.<org.apache.tomcat.util.modeler.OperationInfo: javax.management.MBeanFeatureInfo info>;
+        if $r1 != null goto label3;
+
+        b0 = 3;
+        $r2 = "ACTION";
+        $r3 = virtualinvoke r0.<org.apache.tomcat.util.modeler.OperationInfo: java.lang.String getImpact()>();
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>($r3);
+        if $z0 == 0 goto label0;
+
+        b0 = 1;
+        goto label2;
+
+     label0:
+        $r4 = "ACTION_INFO";
+        $r5 = virtualinvoke r0.<org.apache.tomcat.util.modeler.OperationInfo: java.lang.String getImpact()>();
+        $z1 = virtualinvoke $r4.<java.lang.String: boolean equals(java.lang.Object)>($r5);
+        if $z1 == 0 goto label1;
+
+        b0 = 2;
+        goto label2;
+
+     label1:
+        $r6 = "INFO";
+        $r7 = virtualinvoke r0.<org.apache.tomcat.util.modeler.OperationInfo: java.lang.String getImpact()>();
+        $z2 = virtualinvoke $r6.<java.lang.String: boolean equals(java.lang.Object)>($r7);
+        if $z2 == 0 goto label2;
+
+        b0 = 0;
+
+     label2:
+        $r8 = new javax.management.MBeanOperationInfo;
+        $r9 = virtualinvoke r0.<org.apache.tomcat.util.modeler.OperationInfo: java.lang.String getName()>();
+        $r10 = virtualinvoke r0.<org.apache.tomcat.util.modeler.OperationInfo: java.lang.String getDescription()>();
+        $r11 = virtualinvoke r0.<org.apache.tomcat.util.modeler.OperationInfo: javax.management.MBeanParameterInfo[] getMBeanParameterInfo()>();
+        $r12 = virtualinvoke r0.<org.apache.tomcat.util.modeler.OperationInfo: java.lang.String getReturnType()>();
+        specialinvoke $r8.<javax.management.MBeanOperationInfo: void <init>(java.lang.String,java.lang.String,javax.management.MBeanParameterInfo[],java.lang.String,int)>($r9, $r10, $r11, $r12, b0);
+        r0.<org.apache.tomcat.util.modeler.OperationInfo: javax.management.MBeanFeatureInfo info> = $r8;
+
+     label3:
+        $r13 = r0.<org.apache.tomcat.util.modeler.OperationInfo: javax.management.MBeanFeatureInfo info>;
+        $r14 = (javax.management.MBeanOperationInfo) $r13;
+        return $r14;
+    }
+
+    protected javax.management.MBeanParameterInfo[] getMBeanParameterInfo()
+    {
+        org.apache.tomcat.util.modeler.OperationInfo r0;
+        org.apache.tomcat.util.modeler.ParameterInfo[] r1;
+        javax.management.MBeanParameterInfo[] r2;
+        int i0, $i1, $i2;
+        org.apache.tomcat.util.modeler.ParameterInfo $r3;
+        javax.management.MBeanParameterInfo $r4;
+
+        r0 := @this: org.apache.tomcat.util.modeler.OperationInfo;
+        r1 = virtualinvoke r0.<org.apache.tomcat.util.modeler.OperationInfo: org.apache.tomcat.util.modeler.ParameterInfo[] getSignature()>();
+        $i1 = lengthof r1;
+        r2 = newarray (javax.management.MBeanParameterInfo)[$i1];
+        i0 = 0;
+        goto label1;
+
+     label0:
+        $r3 = r1[i0];
+        $r4 = virtualinvoke $r3.<org.apache.tomcat.util.modeler.ParameterInfo: javax.management.MBeanParameterInfo createParameterInfo()>();
+        r2[i0] = $r4;
+        i0 = i0 + 1;
+
+     label1:
+        $i2 = lengthof r1;
+        if i0 < $i2 goto label0;
+
+        return r2;
+    }
+}

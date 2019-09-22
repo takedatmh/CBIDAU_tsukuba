@@ -1,0 +1,114 @@
+public class org.apache.tomcat.util.file.ConfigFileLoader extends java.lang.Object
+{
+    private static final org.apache.tomcat.util.res.StringManager sm;
+    private static final java.io.File CATALINA_BASE_FILE;
+    private static final java.net.URI CATALINA_BASE_URI;
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        java.lang.String r1, $r3;
+        java.lang.Package $r2;
+        org.apache.tomcat.util.res.StringManager $r4;
+        java.io.File $r5, $r6;
+        java.net.URI $r7;
+
+        $r0 = class "org/apache/tomcat/util/file/ConfigFileLoader";
+        $r2 = virtualinvoke $r0.<java.lang.Class: java.lang.Package getPackage()>();
+        $r3 = virtualinvoke $r2.<java.lang.Package: java.lang.String getName()>();
+        $r4 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String)>($r3);
+        <org.apache.tomcat.util.file.ConfigFileLoader: org.apache.tomcat.util.res.StringManager sm> = $r4;
+        r1 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("catalina.base");
+        if r1 == null goto label0;
+
+        $r5 = new java.io.File;
+        specialinvoke $r5.<java.io.File: void <init>(java.lang.String)>(r1);
+        <org.apache.tomcat.util.file.ConfigFileLoader: java.io.File CATALINA_BASE_FILE> = $r5;
+        $r6 = <org.apache.tomcat.util.file.ConfigFileLoader: java.io.File CATALINA_BASE_FILE>;
+        $r7 = virtualinvoke $r6.<java.io.File: java.net.URI toURI()>();
+        <org.apache.tomcat.util.file.ConfigFileLoader: java.net.URI CATALINA_BASE_URI> = $r7;
+        goto label1;
+
+     label0:
+        <org.apache.tomcat.util.file.ConfigFileLoader: java.io.File CATALINA_BASE_FILE> = null;
+        <org.apache.tomcat.util.file.ConfigFileLoader: java.net.URI CATALINA_BASE_URI> = null;
+
+     label1:
+        return;
+    }
+
+    private void <init>()
+    {
+        org.apache.tomcat.util.file.ConfigFileLoader r0;
+
+        r0 := @this: org.apache.tomcat.util.file.ConfigFileLoader;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static java.io.InputStream getInputStream(java.lang.String) throws java.io.IOException
+    {
+        java.lang.String r0, $r16;
+        java.io.File $r1, r2, $r5, $r6;
+        java.net.URI r3, $r8, $r9;
+        java.lang.IllegalArgumentException r4, $r12;
+        boolean $z0, $z1;
+        java.io.FileInputStream $r7;
+        java.net.URL $r10;
+        java.io.InputStream $r11;
+        java.io.IOException $r13;
+        org.apache.tomcat.util.res.StringManager $r14;
+        java.lang.Object[] $r15;
+
+        r0 := @parameter0: java.lang.String;
+        $r1 = new java.io.File;
+        specialinvoke $r1.<java.io.File: void <init>(java.lang.String)>(r0);
+        r2 = $r1;
+        $z0 = virtualinvoke r2.<java.io.File: boolean isAbsolute()>();
+        if $z0 != 0 goto label0;
+
+        $r5 = new java.io.File;
+        $r6 = <org.apache.tomcat.util.file.ConfigFileLoader: java.io.File CATALINA_BASE_FILE>;
+        specialinvoke $r5.<java.io.File: void <init>(java.io.File,java.lang.String)>($r6, r0);
+        r2 = $r5;
+
+     label0:
+        $z1 = virtualinvoke r2.<java.io.File: boolean isFile()>();
+        if $z1 == 0 goto label1;
+
+        $r7 = new java.io.FileInputStream;
+        specialinvoke $r7.<java.io.FileInputStream: void <init>(java.io.File)>(r2);
+        return $r7;
+
+     label1:
+        $r8 = <org.apache.tomcat.util.file.ConfigFileLoader: java.net.URI CATALINA_BASE_URI>;
+        if $r8 == null goto label2;
+
+        $r9 = <org.apache.tomcat.util.file.ConfigFileLoader: java.net.URI CATALINA_BASE_URI>;
+        r3 = virtualinvoke $r9.<java.net.URI: java.net.URI resolve(java.lang.String)>(r0);
+        goto label3;
+
+     label2:
+        r3 = staticinvoke <java.net.URI: java.net.URI create(java.lang.String)>(r0);
+
+     label3:
+        $r10 = virtualinvoke r3.<java.net.URI: java.net.URL toURL()>();
+        $r11 = virtualinvoke $r10.<java.net.URL: java.io.InputStream openStream()>();
+
+     label4:
+        return $r11;
+
+     label5:
+        $r12 := @caughtexception;
+        r4 = $r12;
+        $r13 = new java.io.IOException;
+        $r14 = <org.apache.tomcat.util.file.ConfigFileLoader: org.apache.tomcat.util.res.StringManager sm>;
+        $r15 = newarray (java.lang.Object)[1];
+        $r15[0] = r0;
+        $r16 = virtualinvoke $r14.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("configFileLoader.cannotObtainURL", $r15);
+        specialinvoke $r13.<java.io.IOException: void <init>(java.lang.String,java.lang.Throwable)>($r16, r4);
+        throw $r13;
+
+        catch java.lang.IllegalArgumentException from label3 to label4 with label5;
+    }
+}

@@ -1,0 +1,174 @@
+public class sun.security.util.PropertyExpander extends java.lang.Object
+{
+
+    public void <init>()
+    {
+        sun.security.util.PropertyExpander r0;
+
+        r0 := @this: sun.security.util.PropertyExpander;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static java.lang.String expand(java.lang.String) throws sun.security.util.PropertyExpander$ExpandException
+    {
+        java.lang.String r0, $r1;
+
+        r0 := @parameter0: java.lang.String;
+        $r1 = staticinvoke <sun.security.util.PropertyExpander: java.lang.String expand(java.lang.String,boolean)>(r0, 0);
+        return $r1;
+    }
+
+    public static java.lang.String expand(java.lang.String, boolean) throws sun.security.util.PropertyExpander$ExpandException
+    {
+        java.lang.String r0, r2, r3, $r6, $r8, $r10, $r12, $r22, $r23, $r25;
+        boolean z0, $z1, $z2;
+        int i0, i1, i2, i3, $i4, i5, i7, $i8, $i9, $i11, $i13;
+        java.lang.StringBuffer r1, $r5;
+        java.net.URISyntaxException r4, $r16;
+        char $c6, $c10, $c12;
+        java.net.URI $r15;
+        sun.security.util.PropertyExpander$ExpandException $r18;
+        java.lang.StringBuilder $r19, $r20, $r21;
+
+        r0 := @parameter0: java.lang.String;
+        z0 := @parameter1: boolean;
+        if r0 != null goto label0;
+
+        return null;
+
+     label0:
+        i0 = virtualinvoke r0.<java.lang.String: int indexOf(java.lang.String,int)>("${", 0);
+        if i0 != -1 goto label1;
+
+        return r0;
+
+     label1:
+        $r5 = new java.lang.StringBuffer;
+        $i4 = virtualinvoke r0.<java.lang.String: int length()>();
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>(int)>($i4);
+        r1 = $r5;
+        i1 = virtualinvoke r0.<java.lang.String: int length()>();
+        i2 = 0;
+
+     label2:
+        if i0 >= i1 goto label18;
+
+        if i0 <= i2 goto label3;
+
+        $r6 = virtualinvoke r0.<java.lang.String: java.lang.String substring(int,int)>(i2, i0);
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        i5 = i0;
+
+     label3:
+        i3 = i0 + 2;
+        if i3 >= i1 goto label6;
+
+        $c6 = virtualinvoke r0.<java.lang.String: char charAt(int)>(i3);
+        if $c6 != 123 goto label6;
+
+        i7 = virtualinvoke r0.<java.lang.String: int indexOf(java.lang.String,int)>("}}", i3);
+        if i7 == -1 goto label4;
+
+        $i8 = i7 + 2;
+        if $i8 != i1 goto label5;
+
+     label4:
+        $r8 = virtualinvoke r0.<java.lang.String: java.lang.String substring(int)>(i0);
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r8);
+        goto label18;
+
+     label5:
+        i3 = i7 + 1;
+        $i9 = i3 + 1;
+        $r10 = virtualinvoke r0.<java.lang.String: java.lang.String substring(int,int)>(i0, $i9);
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r10);
+        goto label16;
+
+     label6:
+        if i3 >= i1 goto label7;
+
+        $c10 = virtualinvoke r0.<java.lang.String: char charAt(int)>(i3);
+        if $c10 == 125 goto label7;
+
+        i3 = i3 + 1;
+        goto label6;
+
+     label7:
+        if i3 != i1 goto label8;
+
+        $r12 = virtualinvoke r0.<java.lang.String: java.lang.String substring(int,int)>(i0, i3);
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r12);
+        goto label18;
+
+     label8:
+        $i11 = i0 + 2;
+        r2 = virtualinvoke r0.<java.lang.String: java.lang.String substring(int,int)>($i11, i3);
+        $z1 = virtualinvoke r2.<java.lang.String: boolean equals(java.lang.Object)>("/");
+        if $z1 == 0 goto label9;
+
+        $c12 = <java.io.File: char separatorChar>;
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c12);
+        goto label16;
+
+     label9:
+        r3 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>(r2);
+        if r3 == null goto label15;
+
+        if z0 == 0 goto label14;
+
+     label10:
+        $i13 = virtualinvoke r1.<java.lang.StringBuffer: int length()>();
+        if $i13 > 0 goto label11;
+
+        $r15 = new java.net.URI;
+        specialinvoke $r15.<java.net.URI: void <init>(java.lang.String)>(r3);
+        $z2 = virtualinvoke $r15.<java.net.URI: boolean isAbsolute()>();
+        if $z2 != 0 goto label12;
+
+     label11:
+        r3 = staticinvoke <sun.net.www.ParseUtil: java.lang.String encodePath(java.lang.String)>(r3);
+
+     label12:
+        goto label14;
+
+     label13:
+        $r16 := @caughtexception;
+        r4 = $r16;
+        r3 = staticinvoke <sun.net.www.ParseUtil: java.lang.String encodePath(java.lang.String)>(r3);
+
+     label14:
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(r3);
+        goto label16;
+
+     label15:
+        $r18 = new sun.security.util.PropertyExpander$ExpandException;
+        $r19 = new java.lang.StringBuilder;
+        specialinvoke $r19.<java.lang.StringBuilder: void <init>()>();
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("unable to expand property ");
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r18.<sun.security.util.PropertyExpander$ExpandException: void <init>(java.lang.String)>($r22);
+        throw $r18;
+
+     label16:
+        i2 = i3 + 1;
+        i0 = virtualinvoke r0.<java.lang.String: int indexOf(java.lang.String,int)>("${", i2);
+        if i0 != -1 goto label17;
+
+        if i2 >= i1 goto label18;
+
+        $r23 = virtualinvoke r0.<java.lang.String: java.lang.String substring(int,int)>(i2, i1);
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r23);
+        goto label18;
+
+     label17:
+        goto label2;
+
+     label18:
+        $r25 = virtualinvoke r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r25;
+
+        catch java.net.URISyntaxException from label10 to label12 with label13;
+    }
+}

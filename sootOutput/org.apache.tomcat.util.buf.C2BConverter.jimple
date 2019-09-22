@@ -1,0 +1,251 @@
+public final class org.apache.tomcat.util.buf.C2BConverter extends java.lang.Object
+{
+    java.nio.charset.CharsetEncoder encoder;
+    java.nio.ByteBuffer bb;
+    java.nio.CharBuffer cb;
+    java.nio.CharBuffer leftovers;
+
+    public void <init>(java.lang.String) throws java.io.IOException
+    {
+        org.apache.tomcat.util.buf.C2BConverter r0;
+        java.lang.String r1;
+        char[] r2;
+        java.nio.charset.Charset $r3;
+        java.nio.charset.CharsetEncoder $r4, $r5, $r7;
+        java.nio.charset.CodingErrorAction $r6, $r8;
+        java.nio.CharBuffer $r10;
+
+        r0 := @this: org.apache.tomcat.util.buf.C2BConverter;
+        r1 := @parameter0: java.lang.String;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.charset.CharsetEncoder encoder> = null;
+        r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.ByteBuffer bb> = null;
+        r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer cb> = null;
+        r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer leftovers> = null;
+        $r3 = staticinvoke <org.apache.tomcat.util.buf.B2CConverter: java.nio.charset.Charset getCharset(java.lang.String)>(r1);
+        $r4 = virtualinvoke $r3.<java.nio.charset.Charset: java.nio.charset.CharsetEncoder newEncoder()>();
+        r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.charset.CharsetEncoder encoder> = $r4;
+        $r5 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.charset.CharsetEncoder encoder>;
+        $r6 = <java.nio.charset.CodingErrorAction: java.nio.charset.CodingErrorAction REPLACE>;
+        $r7 = virtualinvoke $r5.<java.nio.charset.CharsetEncoder: java.nio.charset.CharsetEncoder onUnmappableCharacter(java.nio.charset.CodingErrorAction)>($r6);
+        $r8 = <java.nio.charset.CodingErrorAction: java.nio.charset.CodingErrorAction REPLACE>;
+        virtualinvoke $r7.<java.nio.charset.CharsetEncoder: java.nio.charset.CharsetEncoder onMalformedInput(java.nio.charset.CodingErrorAction)>($r8);
+        r2 = newarray (char)[4];
+        $r10 = staticinvoke <java.nio.CharBuffer: java.nio.CharBuffer wrap(char[])>(r2);
+        r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer leftovers> = $r10;
+        return;
+    }
+
+    public void recycle()
+    {
+        org.apache.tomcat.util.buf.C2BConverter r0;
+        java.nio.charset.CharsetEncoder $r1;
+        java.nio.CharBuffer $r3;
+
+        r0 := @this: org.apache.tomcat.util.buf.C2BConverter;
+        $r1 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.charset.CharsetEncoder encoder>;
+        virtualinvoke $r1.<java.nio.charset.CharsetEncoder: java.nio.charset.CharsetEncoder reset()>();
+        $r3 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer leftovers>;
+        virtualinvoke $r3.<java.nio.CharBuffer: java.nio.Buffer position(int)>(0);
+        return;
+    }
+
+    public boolean isUndeflow()
+    {
+        org.apache.tomcat.util.buf.C2BConverter r0;
+        java.nio.CharBuffer $r1;
+        int $i0;
+
+        r0 := @this: org.apache.tomcat.util.buf.C2BConverter;
+        $r1 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer leftovers>;
+        $i0 = virtualinvoke $r1.<java.nio.CharBuffer: int position()>();
+        if $i0 <= 0 goto label0;
+
+        return 1;
+
+     label0:
+        return 0;
+    }
+
+    public void convert(org.apache.tomcat.util.buf.CharChunk, org.apache.tomcat.util.buf.ByteChunk) throws java.io.IOException
+    {
+        org.apache.tomcat.util.buf.C2BConverter r0;
+        org.apache.tomcat.util.buf.CharChunk r1;
+        org.apache.tomcat.util.buf.ByteChunk r2;
+        null_type n0;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i22, $i23, $i24, $i25;
+        java.nio.ByteBuffer $r3, $r4, $r9, $r10, $r13, $r26, $r33, $r42, $r49, $r51, $r53;
+        byte[] $r5, $r6, $r7, $r8, $r11;
+        java.nio.CharBuffer $r15, $r16, $r20, $r21, $r23, $r25, $r27, $r29, $r32, $r35, $r36, $r38, $r39, $r43, $r45, $r48, $r52, $r54, $r55, $r56, $r59, $r61;
+        char[] $r17, $r18, $r19, $r40, $r57, $r62;
+        char $c13;
+        java.nio.charset.CharsetEncoder $r31, $r47;
+        java.nio.charset.CoderResult r34, r50;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6;
+
+        r0 := @this: org.apache.tomcat.util.buf.C2BConverter;
+        r1 := @parameter0: org.apache.tomcat.util.buf.CharChunk;
+        r2 := @parameter1: org.apache.tomcat.util.buf.ByteChunk;
+        $r3 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.ByteBuffer bb>;
+        if $r3 == null goto label0;
+
+        $r4 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.ByteBuffer bb>;
+        $r5 = virtualinvoke $r4.<java.nio.ByteBuffer: byte[] array()>();
+        $r6 = virtualinvoke r2.<org.apache.tomcat.util.buf.ByteChunk: byte[] getBuffer()>();
+        if $r5 == $r6 goto label1;
+
+     label0:
+        $r7 = virtualinvoke r2.<org.apache.tomcat.util.buf.ByteChunk: byte[] getBuffer()>();
+        $i1 = virtualinvoke r2.<org.apache.tomcat.util.buf.ByteChunk: int getEnd()>();
+        $r8 = virtualinvoke r2.<org.apache.tomcat.util.buf.ByteChunk: byte[] getBuffer()>();
+        $i2 = lengthof $r8;
+        $i3 = virtualinvoke r2.<org.apache.tomcat.util.buf.ByteChunk: int getEnd()>();
+        $i4 = $i2 - $i3;
+        $r9 = staticinvoke <java.nio.ByteBuffer: java.nio.ByteBuffer wrap(byte[],int,int)>($r7, $i1, $i4);
+        r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.ByteBuffer bb> = $r9;
+        goto label2;
+
+     label1:
+        $r10 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.ByteBuffer bb>;
+        $r11 = virtualinvoke r2.<org.apache.tomcat.util.buf.ByteChunk: byte[] getBuffer()>();
+        $i5 = lengthof $r11;
+        virtualinvoke $r10.<java.nio.ByteBuffer: java.nio.Buffer limit(int)>($i5);
+        $r13 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.ByteBuffer bb>;
+        $i6 = virtualinvoke r2.<org.apache.tomcat.util.buf.ByteChunk: int getEnd()>();
+        virtualinvoke $r13.<java.nio.ByteBuffer: java.nio.Buffer position(int)>($i6);
+
+     label2:
+        $r15 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer cb>;
+        if $r15 == null goto label3;
+
+        $r16 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer cb>;
+        $r17 = virtualinvoke $r16.<java.nio.CharBuffer: char[] array()>();
+        $r18 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        if $r17 == $r18 goto label4;
+
+     label3:
+        $r19 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        $i7 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: int getStart()>();
+        $i8 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: int getLength()>();
+        $r20 = staticinvoke <java.nio.CharBuffer: java.nio.CharBuffer wrap(char[],int,int)>($r19, $i7, $i8);
+        r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer cb> = $r20;
+        goto label5;
+
+     label4:
+        $r21 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer cb>;
+        $i9 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: int getEnd()>();
+        virtualinvoke $r21.<java.nio.CharBuffer: java.nio.Buffer limit(int)>($i9);
+        $r23 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer cb>;
+        $i10 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: int getStart()>();
+        virtualinvoke $r23.<java.nio.CharBuffer: java.nio.Buffer position(int)>($i10);
+
+     label5:
+        n0 = null;
+        $r25 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer leftovers>;
+        $i11 = virtualinvoke $r25.<java.nio.CharBuffer: int position()>();
+        if $i11 <= 0 goto label10;
+
+        $r26 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.ByteBuffer bb>;
+        i0 = virtualinvoke $r26.<java.nio.ByteBuffer: int position()>();
+
+     label6:
+        $r27 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer leftovers>;
+        $i12 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: int substract()>();
+        $c13 = (char) $i12;
+        virtualinvoke $r27.<java.nio.CharBuffer: java.nio.CharBuffer put(char)>($c13);
+        $r29 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer leftovers>;
+        virtualinvoke $r29.<java.nio.CharBuffer: java.nio.Buffer flip()>();
+        $r31 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.charset.CharsetEncoder encoder>;
+        $r32 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer leftovers>;
+        $r33 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.ByteBuffer bb>;
+        r34 = virtualinvoke $r31.<java.nio.charset.CharsetEncoder: java.nio.charset.CoderResult encode(java.nio.CharBuffer,java.nio.ByteBuffer,boolean)>($r32, $r33, 0);
+        $r35 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer leftovers>;
+        $r36 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer leftovers>;
+        $i14 = virtualinvoke $r36.<java.nio.CharBuffer: int limit()>();
+        virtualinvoke $r35.<java.nio.CharBuffer: java.nio.Buffer position(int)>($i14);
+        $r38 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer leftovers>;
+        $r39 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer leftovers>;
+        $r40 = virtualinvoke $r39.<java.nio.CharBuffer: char[] array()>();
+        $i15 = lengthof $r40;
+        virtualinvoke $r38.<java.nio.CharBuffer: java.nio.Buffer limit(int)>($i15);
+        $z0 = virtualinvoke r34.<java.nio.charset.CoderResult: boolean isUnderflow()>();
+        if $z0 == 0 goto label7;
+
+        $r42 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.ByteBuffer bb>;
+        $i16 = virtualinvoke $r42.<java.nio.ByteBuffer: int position()>();
+        if $i16 == i0 goto label6;
+
+     label7:
+        $z1 = virtualinvoke r34.<java.nio.charset.CoderResult: boolean isError()>();
+        if $z1 != 0 goto label8;
+
+        $z2 = virtualinvoke r34.<java.nio.charset.CoderResult: boolean isMalformed()>();
+        if $z2 == 0 goto label9;
+
+     label8:
+        virtualinvoke r34.<java.nio.charset.CoderResult: void throwException()>();
+
+     label9:
+        $r43 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer cb>;
+        $i17 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: int getStart()>();
+        virtualinvoke $r43.<java.nio.CharBuffer: java.nio.Buffer position(int)>($i17);
+        $r45 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer leftovers>;
+        virtualinvoke $r45.<java.nio.CharBuffer: java.nio.Buffer position(int)>(0);
+
+     label10:
+        $r47 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.charset.CharsetEncoder encoder>;
+        $r48 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer cb>;
+        $r49 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.ByteBuffer bb>;
+        r50 = virtualinvoke $r47.<java.nio.charset.CharsetEncoder: java.nio.charset.CoderResult encode(java.nio.CharBuffer,java.nio.ByteBuffer,boolean)>($r48, $r49, 0);
+        $z3 = virtualinvoke r50.<java.nio.charset.CoderResult: boolean isError()>();
+        if $z3 != 0 goto label11;
+
+        $z4 = virtualinvoke r50.<java.nio.charset.CoderResult: boolean isMalformed()>();
+        if $z4 == 0 goto label12;
+
+     label11:
+        virtualinvoke r50.<java.nio.charset.CoderResult: void throwException()>();
+        goto label14;
+
+     label12:
+        $z5 = virtualinvoke r50.<java.nio.charset.CoderResult: boolean isOverflow()>();
+        if $z5 == 0 goto label13;
+
+        $r51 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.ByteBuffer bb>;
+        $i18 = virtualinvoke $r51.<java.nio.ByteBuffer: int position()>();
+        virtualinvoke r2.<org.apache.tomcat.util.buf.ByteChunk: void setEnd(int)>($i18);
+        $r52 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer cb>;
+        $i19 = virtualinvoke $r52.<java.nio.CharBuffer: int position()>();
+        virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: void setOffset(int)>($i19);
+        goto label14;
+
+     label13:
+        $z6 = virtualinvoke r50.<java.nio.charset.CoderResult: boolean isUnderflow()>();
+        if $z6 == 0 goto label14;
+
+        $r53 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.ByteBuffer bb>;
+        $i20 = virtualinvoke $r53.<java.nio.ByteBuffer: int position()>();
+        virtualinvoke r2.<org.apache.tomcat.util.buf.ByteChunk: void setEnd(int)>($i20);
+        $r54 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer cb>;
+        $i21 = virtualinvoke $r54.<java.nio.CharBuffer: int position()>();
+        virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: void setOffset(int)>($i21);
+        $i22 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: int getLength()>();
+        if $i22 <= 0 goto label14;
+
+        $r55 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer leftovers>;
+        $r56 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer leftovers>;
+        $r57 = virtualinvoke $r56.<java.nio.CharBuffer: char[] array()>();
+        $i23 = lengthof $r57;
+        virtualinvoke $r55.<java.nio.CharBuffer: java.nio.Buffer limit(int)>($i23);
+        $r59 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer leftovers>;
+        $i24 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: int getLength()>();
+        virtualinvoke $r59.<java.nio.CharBuffer: java.nio.Buffer position(int)>($i24);
+        $r61 = r0.<org.apache.tomcat.util.buf.C2BConverter: java.nio.CharBuffer leftovers>;
+        $r62 = virtualinvoke $r61.<java.nio.CharBuffer: char[] array()>();
+        $i25 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: int getLength()>();
+        virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: int substract(char[],int,int)>($r62, 0, $i25);
+
+     label14:
+        return;
+    }
+}

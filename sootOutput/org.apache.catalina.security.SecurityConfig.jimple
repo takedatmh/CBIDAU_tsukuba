@@ -1,0 +1,152 @@
+public final class org.apache.catalina.security.SecurityConfig extends java.lang.Object
+{
+    private static org.apache.catalina.security.SecurityConfig singleton;
+    private static final org.apache.juli.logging.Log log;
+    private static final java.lang.String PACKAGE_ACCESS;
+    private static final java.lang.String PACKAGE_DEFINITION;
+    private java.lang.String packageDefinition;
+    private java.lang.String packageAccess;
+
+    static void <clinit>()
+    {
+        org.apache.juli.logging.Log $r0;
+
+        <org.apache.catalina.security.SecurityConfig: org.apache.catalina.security.SecurityConfig singleton> = null;
+        $r0 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/catalina/security/SecurityConfig");
+        <org.apache.catalina.security.SecurityConfig: org.apache.juli.logging.Log log> = $r0;
+        return;
+    }
+
+    private void <init>()
+    {
+        org.apache.catalina.security.SecurityConfig r0;
+        java.lang.Exception r1, $r4;
+        java.lang.String $r2, $r3;
+        org.apache.juli.logging.Log $r5, $r6;
+        boolean $z0;
+
+        r0 := @this: org.apache.catalina.security.SecurityConfig;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+
+     label0:
+        $r2 = staticinvoke <org.apache.catalina.startup.CatalinaProperties: java.lang.String getProperty(java.lang.String)>("package.definition");
+        r0.<org.apache.catalina.security.SecurityConfig: java.lang.String packageDefinition> = $r2;
+        $r3 = staticinvoke <org.apache.catalina.startup.CatalinaProperties: java.lang.String getProperty(java.lang.String)>("package.access");
+        r0.<org.apache.catalina.security.SecurityConfig: java.lang.String packageAccess> = $r3;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r4 := @caughtexception;
+        r1 = $r4;
+        $r5 = <org.apache.catalina.security.SecurityConfig: org.apache.juli.logging.Log log>;
+        $z0 = interfaceinvoke $r5.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label3;
+
+        $r6 = <org.apache.catalina.security.SecurityConfig: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r6.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>("Unable to load properties using CatalinaProperties", r1);
+
+     label3:
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    public static org.apache.catalina.security.SecurityConfig newInstance()
+    {
+        org.apache.catalina.security.SecurityConfig $r0, $r1, $r2;
+
+        $r0 = <org.apache.catalina.security.SecurityConfig: org.apache.catalina.security.SecurityConfig singleton>;
+        if $r0 != null goto label0;
+
+        $r1 = new org.apache.catalina.security.SecurityConfig;
+        specialinvoke $r1.<org.apache.catalina.security.SecurityConfig: void <init>()>();
+        <org.apache.catalina.security.SecurityConfig: org.apache.catalina.security.SecurityConfig singleton> = $r1;
+
+     label0:
+        $r2 = <org.apache.catalina.security.SecurityConfig: org.apache.catalina.security.SecurityConfig singleton>;
+        return $r2;
+    }
+
+    public void setPackageAccess()
+    {
+        org.apache.catalina.security.SecurityConfig r0;
+        java.lang.String $r1, $r2;
+
+        r0 := @this: org.apache.catalina.security.SecurityConfig;
+        $r1 = r0.<org.apache.catalina.security.SecurityConfig: java.lang.String packageAccess>;
+        if $r1 != null goto label0;
+
+        specialinvoke r0.<org.apache.catalina.security.SecurityConfig: void setSecurityProperty(java.lang.String,java.lang.String)>("package.access", "sun.,org.apache.catalina.,org.apache.jasper.,org.apache.coyote.,org.apache.tomcat.");
+        goto label1;
+
+     label0:
+        $r2 = r0.<org.apache.catalina.security.SecurityConfig: java.lang.String packageAccess>;
+        specialinvoke r0.<org.apache.catalina.security.SecurityConfig: void setSecurityProperty(java.lang.String,java.lang.String)>("package.access", $r2);
+
+     label1:
+        return;
+    }
+
+    public void setPackageDefinition()
+    {
+        org.apache.catalina.security.SecurityConfig r0;
+        java.lang.String $r1, $r2;
+
+        r0 := @this: org.apache.catalina.security.SecurityConfig;
+        $r1 = r0.<org.apache.catalina.security.SecurityConfig: java.lang.String packageDefinition>;
+        if $r1 != null goto label0;
+
+        specialinvoke r0.<org.apache.catalina.security.SecurityConfig: void setSecurityProperty(java.lang.String,java.lang.String)>("package.definition", "java.,sun.,org.apache.catalina.,org.apache.coyote.,org.apache.tomcat.,org.apache.jasper.");
+        goto label1;
+
+     label0:
+        $r2 = r0.<org.apache.catalina.security.SecurityConfig: java.lang.String packageDefinition>;
+        specialinvoke r0.<org.apache.catalina.security.SecurityConfig: void setSecurityProperty(java.lang.String,java.lang.String)>("package.definition", $r2);
+
+     label1:
+        return;
+    }
+
+    private final void setSecurityProperty(java.lang.String, java.lang.String)
+    {
+        org.apache.catalina.security.SecurityConfig r0;
+        java.lang.String r1, r2, r4, $r6;
+        java.lang.SecurityManager $r3;
+        int $i0, $i1;
+        java.lang.StringBuilder $r5, $r7, $r8;
+
+        r0 := @this: org.apache.catalina.security.SecurityConfig;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String;
+        $r3 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if $r3 == null goto label2;
+
+        r4 = staticinvoke <java.security.Security: java.lang.String getProperty(java.lang.String)>(r1);
+        if r4 == null goto label0;
+
+        $i0 = virtualinvoke r4.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label0;
+
+        $i1 = virtualinvoke r2.<java.lang.String: int length()>();
+        if $i1 <= 0 goto label1;
+
+        $r5 = new java.lang.StringBuilder;
+        $r6 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r4);
+        specialinvoke $r5.<java.lang.StringBuilder: void <init>(java.lang.String)>($r6);
+        $r7 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(44);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        r4 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.String toString()>();
+        goto label1;
+
+     label0:
+        r4 = r2;
+
+     label1:
+        staticinvoke <java.security.Security: void setProperty(java.lang.String,java.lang.String)>(r1, r4);
+
+     label2:
+        return;
+    }
+}

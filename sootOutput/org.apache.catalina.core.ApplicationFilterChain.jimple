@@ -1,0 +1,792 @@
+final class org.apache.catalina.core.ApplicationFilterChain extends java.lang.Object implements javax.servlet.FilterChain, org.apache.catalina.comet.CometFilterChain
+{
+    private static final java.lang.ThreadLocal lastServicedRequest;
+    private static final java.lang.ThreadLocal lastServicedResponse;
+    public static final int INCREMENT;
+    private org.apache.catalina.core.ApplicationFilterConfig[] filters;
+    private int pos;
+    private int n;
+    private javax.servlet.Servlet servlet;
+    private static final org.apache.tomcat.util.res.StringManager sm;
+    private org.apache.catalina.util.InstanceSupport support;
+    private static java.lang.Class[] classType;
+    private static java.lang.Class[] classTypeUsedInService;
+    private static java.lang.Class[] cometClassType;
+    private static java.lang.Class[] classTypeUsedInEvent;
+
+    static void <clinit>()
+    {
+        boolean $z0;
+        java.lang.ThreadLocal $r0, $r1;
+        org.apache.tomcat.util.res.StringManager $r2;
+        java.lang.Class[] $r3, $r4, $r5, $r6;
+
+        $z0 = <org.apache.catalina.core.ApplicationDispatcher: boolean WRAP_SAME_OBJECT>;
+        if $z0 == 0 goto label0;
+
+        $r0 = new java.lang.ThreadLocal;
+        specialinvoke $r0.<java.lang.ThreadLocal: void <init>()>();
+        <org.apache.catalina.core.ApplicationFilterChain: java.lang.ThreadLocal lastServicedRequest> = $r0;
+        $r1 = new java.lang.ThreadLocal;
+        specialinvoke $r1.<java.lang.ThreadLocal: void <init>()>();
+        <org.apache.catalina.core.ApplicationFilterChain: java.lang.ThreadLocal lastServicedResponse> = $r1;
+        goto label1;
+
+     label0:
+        <org.apache.catalina.core.ApplicationFilterChain: java.lang.ThreadLocal lastServicedRequest> = null;
+        <org.apache.catalina.core.ApplicationFilterChain: java.lang.ThreadLocal lastServicedResponse> = null;
+
+     label1:
+        $r2 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String)>("org.apache.catalina.core");
+        <org.apache.catalina.core.ApplicationFilterChain: org.apache.tomcat.util.res.StringManager sm> = $r2;
+        $r3 = newarray (java.lang.Class)[3];
+        $r3[0] = class "javax/servlet/ServletRequest";
+        $r3[1] = class "javax/servlet/ServletResponse";
+        $r3[2] = class "javax/servlet/FilterChain";
+        <org.apache.catalina.core.ApplicationFilterChain: java.lang.Class[] classType> = $r3;
+        $r4 = newarray (java.lang.Class)[2];
+        $r4[0] = class "javax/servlet/ServletRequest";
+        $r4[1] = class "javax/servlet/ServletResponse";
+        <org.apache.catalina.core.ApplicationFilterChain: java.lang.Class[] classTypeUsedInService> = $r4;
+        $r5 = newarray (java.lang.Class)[2];
+        $r5[0] = class "org/apache/catalina/comet/CometEvent";
+        $r5[1] = class "org/apache/catalina/comet/CometFilterChain";
+        <org.apache.catalina.core.ApplicationFilterChain: java.lang.Class[] cometClassType> = $r5;
+        $r6 = newarray (java.lang.Class)[1];
+        $r6[0] = class "org/apache/catalina/comet/CometEvent";
+        <org.apache.catalina.core.ApplicationFilterChain: java.lang.Class[] classTypeUsedInEvent> = $r6;
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.catalina.core.ApplicationFilterChain r0;
+        org.apache.catalina.core.ApplicationFilterConfig[] $r1;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterChain;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r1 = newarray (org.apache.catalina.core.ApplicationFilterConfig)[0];
+        r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.core.ApplicationFilterConfig[] filters> = $r1;
+        r0.<org.apache.catalina.core.ApplicationFilterChain: int pos> = 0;
+        r0.<org.apache.catalina.core.ApplicationFilterChain: int n> = 0;
+        r0.<org.apache.catalina.core.ApplicationFilterChain: javax.servlet.Servlet servlet> = null;
+        r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.util.InstanceSupport support> = null;
+        return;
+    }
+
+    public void doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse) throws java.io.IOException, javax.servlet.ServletException
+    {
+        org.apache.catalina.core.ApplicationFilterChain r0;
+        javax.servlet.ServletRequest r1, r3;
+        javax.servlet.ServletResponse r2, r4;
+        boolean $z0, $z1, $z2, $z3;
+        java.security.PrivilegedActionException r5, $r9;
+        java.lang.Exception r6;
+        org.apache.catalina.core.ApplicationFilterChain$1 $r7;
+        javax.servlet.ServletException $r10, $r13;
+        java.io.IOException $r11;
+        java.lang.RuntimeException $r12;
+        java.lang.String $r14;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterChain;
+        r1 := @parameter0: javax.servlet.ServletRequest;
+        r2 := @parameter1: javax.servlet.ServletResponse;
+        $z0 = <org.apache.catalina.Globals: boolean IS_SECURITY_ENABLED>;
+        if $z0 == 0 goto label6;
+
+        r3 = r1;
+        r4 = r2;
+
+     label0:
+        $r7 = new org.apache.catalina.core.ApplicationFilterChain$1;
+        specialinvoke $r7.<org.apache.catalina.core.ApplicationFilterChain$1: void <init>(org.apache.catalina.core.ApplicationFilterChain,javax.servlet.ServletRequest,javax.servlet.ServletResponse)>(r0, r3, r4);
+        staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedExceptionAction)>($r7);
+
+     label1:
+        goto label7;
+
+     label2:
+        $r9 := @caughtexception;
+        r5 = $r9;
+        r6 = virtualinvoke r5.<java.security.PrivilegedActionException: java.lang.Exception getException()>();
+        $z1 = r6 instanceof javax.servlet.ServletException;
+        if $z1 == 0 goto label3;
+
+        $r10 = (javax.servlet.ServletException) r6;
+        throw $r10;
+
+     label3:
+        $z2 = r6 instanceof java.io.IOException;
+        if $z2 == 0 goto label4;
+
+        $r11 = (java.io.IOException) r6;
+        throw $r11;
+
+     label4:
+        $z3 = r6 instanceof java.lang.RuntimeException;
+        if $z3 == 0 goto label5;
+
+        $r12 = (java.lang.RuntimeException) r6;
+        throw $r12;
+
+     label5:
+        $r13 = new javax.servlet.ServletException;
+        $r14 = virtualinvoke r6.<java.lang.Exception: java.lang.String getMessage()>();
+        specialinvoke $r13.<javax.servlet.ServletException: void <init>(java.lang.String,java.lang.Throwable)>($r14, r6);
+        throw $r13;
+
+     label6:
+        specialinvoke r0.<org.apache.catalina.core.ApplicationFilterChain: void internalDoFilter(javax.servlet.ServletRequest,javax.servlet.ServletResponse)>(r1, r2);
+
+     label7:
+        return;
+
+        catch java.security.PrivilegedActionException from label0 to label1 with label2;
+    }
+
+    private void internalDoFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse) throws java.io.IOException, javax.servlet.ServletException
+    {
+        org.apache.catalina.core.ApplicationFilterChain r0;
+        javax.servlet.ServletRequest r1, r5, r43;
+        javax.servlet.ServletResponse r2, r6, r44;
+        int $i0, $i1, $i2, $i3;
+        org.apache.catalina.core.ApplicationFilterConfig r3;
+        javax.servlet.Filter r4;
+        java.security.Principal r7, r46;
+        java.lang.Object[] r8, $r17, $r47, r48;
+        org.apache.catalina.core.ApplicationFilterConfig[] $r9;
+        org.apache.catalina.util.InstanceSupport $r11, $r19, $r22, $r25, $r28, $r32, $r38, $r40, $r53, $r57, $r61, $r65, $r69;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10;
+        java.lang.String $r12, $r14, $r35, $r73;
+        org.apache.catalina.deploy.FilterDef $r13;
+        java.lang.Boolean $r15, $r42;
+        javax.servlet.http.HttpServletRequest $r16, $r45;
+        java.lang.Class[] $r18, $r50;
+        java.io.IOException $r20, r21, $r55, r56;
+        javax.servlet.ServletException $r23, r24, $r33, $r59, r60, $r71;
+        java.lang.RuntimeException $r26, r27, $r63, r64;
+        java.lang.Throwable $r29, r30, r31, $r67, r68, $r74, r75;
+        org.apache.tomcat.util.res.StringManager $r34, $r72;
+        java.lang.ThreadLocal $r36, $r37, $r76, $r77, $r78, $r79;
+        javax.servlet.Servlet $r39, $r49, $r51, $r52, $r54, $r58, $r62, $r66, $r70;
+        org.apache.catalina.Wrapper $r41;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterChain;
+        r1 := @parameter0: javax.servlet.ServletRequest;
+        r2 := @parameter1: javax.servlet.ServletResponse;
+        $i1 = r0.<org.apache.catalina.core.ApplicationFilterChain: int pos>;
+        $i2 = r0.<org.apache.catalina.core.ApplicationFilterChain: int n>;
+        if $i1 >= $i2 goto label14;
+
+        $r9 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.core.ApplicationFilterConfig[] filters>;
+        $i0 = r0.<org.apache.catalina.core.ApplicationFilterChain: int pos>;
+        $i3 = $i0 + 1;
+        r0.<org.apache.catalina.core.ApplicationFilterChain: int pos> = $i3;
+        r3 = $r9[$i0];
+        r4 = null;
+
+     label0:
+        r4 = virtualinvoke r3.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.Filter getFilter()>();
+        $r11 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.util.InstanceSupport support>;
+        virtualinvoke $r11.<org.apache.catalina.util.InstanceSupport: void fireInstanceEvent(java.lang.String,javax.servlet.Filter,javax.servlet.ServletRequest,javax.servlet.ServletResponse)>("beforeFilter", r4, r1, r2);
+        $z0 = interfaceinvoke r1.<javax.servlet.ServletRequest: boolean isAsyncSupported()>();
+        if $z0 == 0 goto label1;
+
+        $r12 = "false";
+        $r13 = virtualinvoke r3.<org.apache.catalina.core.ApplicationFilterConfig: org.apache.catalina.deploy.FilterDef getFilterDef()>();
+        $r14 = virtualinvoke $r13.<org.apache.catalina.deploy.FilterDef: java.lang.String getAsyncSupported()>();
+        $z1 = virtualinvoke $r12.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>($r14);
+        if $z1 == 0 goto label1;
+
+        $r15 = <java.lang.Boolean: java.lang.Boolean FALSE>;
+        interfaceinvoke r1.<javax.servlet.ServletRequest: void setAttribute(java.lang.String,java.lang.Object)>("org.apache.catalina.ASYNC_SUPPORTED", $r15);
+
+     label1:
+        $z2 = <org.apache.catalina.Globals: boolean IS_SECURITY_ENABLED>;
+        if $z2 == 0 goto label2;
+
+        r5 = r1;
+        r6 = r2;
+        $r16 = (javax.servlet.http.HttpServletRequest) r5;
+        r7 = interfaceinvoke $r16.<javax.servlet.http.HttpServletRequest: java.security.Principal getUserPrincipal()>();
+        $r17 = newarray (java.lang.Object)[3];
+        $r17[0] = r5;
+        $r17[1] = r6;
+        $r17[2] = r0;
+        r8 = $r17;
+        $r18 = <org.apache.catalina.core.ApplicationFilterChain: java.lang.Class[] classType>;
+        staticinvoke <org.apache.catalina.security.SecurityUtil: void doAsPrivilege(java.lang.String,javax.servlet.Filter,java.lang.Class[],java.lang.Object[],java.security.Principal)>("doFilter", r4, $r18, r8, r7);
+        goto label3;
+
+     label2:
+        interfaceinvoke r4.<javax.servlet.Filter: void doFilter(javax.servlet.ServletRequest,javax.servlet.ServletResponse,javax.servlet.FilterChain)>(r1, r2, r0);
+
+     label3:
+        $r19 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.util.InstanceSupport support>;
+        virtualinvoke $r19.<org.apache.catalina.util.InstanceSupport: void fireInstanceEvent(java.lang.String,javax.servlet.Filter,javax.servlet.ServletRequest,javax.servlet.ServletResponse)>("afterFilter", r4, r1, r2);
+
+     label4:
+        goto label13;
+
+     label5:
+        $r20 := @caughtexception;
+        r21 = $r20;
+        if r4 == null goto label6;
+
+        $r22 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.util.InstanceSupport support>;
+        virtualinvoke $r22.<org.apache.catalina.util.InstanceSupport: void fireInstanceEvent(java.lang.String,javax.servlet.Filter,javax.servlet.ServletRequest,javax.servlet.ServletResponse,java.lang.Throwable)>("afterFilter", r4, r1, r2, r21);
+
+     label6:
+        throw r21;
+
+     label7:
+        $r23 := @caughtexception;
+        r24 = $r23;
+        if r4 == null goto label8;
+
+        $r25 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.util.InstanceSupport support>;
+        virtualinvoke $r25.<org.apache.catalina.util.InstanceSupport: void fireInstanceEvent(java.lang.String,javax.servlet.Filter,javax.servlet.ServletRequest,javax.servlet.ServletResponse,java.lang.Throwable)>("afterFilter", r4, r1, r2, r24);
+
+     label8:
+        throw r24;
+
+     label9:
+        $r26 := @caughtexception;
+        r27 = $r26;
+        if r4 == null goto label10;
+
+        $r28 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.util.InstanceSupport support>;
+        virtualinvoke $r28.<org.apache.catalina.util.InstanceSupport: void fireInstanceEvent(java.lang.String,javax.servlet.Filter,javax.servlet.ServletRequest,javax.servlet.ServletResponse,java.lang.Throwable)>("afterFilter", r4, r1, r2, r27);
+
+     label10:
+        throw r27;
+
+     label11:
+        $r29 := @caughtexception;
+        r30 = $r29;
+        r31 = staticinvoke <org.apache.tomcat.util.ExceptionUtils: java.lang.Throwable unwrapInvocationTargetException(java.lang.Throwable)>(r30);
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r31);
+        if r4 == null goto label12;
+
+        $r32 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.util.InstanceSupport support>;
+        virtualinvoke $r32.<org.apache.catalina.util.InstanceSupport: void fireInstanceEvent(java.lang.String,javax.servlet.Filter,javax.servlet.ServletRequest,javax.servlet.ServletResponse,java.lang.Throwable)>("afterFilter", r4, r1, r2, r31);
+
+     label12:
+        $r33 = new javax.servlet.ServletException;
+        $r34 = <org.apache.catalina.core.ApplicationFilterChain: org.apache.tomcat.util.res.StringManager sm>;
+        $r35 = virtualinvoke $r34.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("filterChain.filter");
+        specialinvoke $r33.<javax.servlet.ServletException: void <init>(java.lang.String,java.lang.Throwable)>($r35, r31);
+        throw $r33;
+
+     label13:
+        return;
+
+     label14:
+        $z3 = <org.apache.catalina.core.ApplicationDispatcher: boolean WRAP_SAME_OBJECT>;
+        if $z3 == 0 goto label15;
+
+        $r36 = <org.apache.catalina.core.ApplicationFilterChain: java.lang.ThreadLocal lastServicedRequest>;
+        virtualinvoke $r36.<java.lang.ThreadLocal: void set(java.lang.Object)>(r1);
+        $r37 = <org.apache.catalina.core.ApplicationFilterChain: java.lang.ThreadLocal lastServicedResponse>;
+        virtualinvoke $r37.<java.lang.ThreadLocal: void set(java.lang.Object)>(r2);
+
+     label15:
+        $r38 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.util.InstanceSupport support>;
+        $r39 = r0.<org.apache.catalina.core.ApplicationFilterChain: javax.servlet.Servlet servlet>;
+        virtualinvoke $r38.<org.apache.catalina.util.InstanceSupport: void fireInstanceEvent(java.lang.String,javax.servlet.Servlet,javax.servlet.ServletRequest,javax.servlet.ServletResponse)>("beforeService", $r39, r1, r2);
+        $z4 = interfaceinvoke r1.<javax.servlet.ServletRequest: boolean isAsyncSupported()>();
+        if $z4 == 0 goto label16;
+
+        $r40 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.util.InstanceSupport support>;
+        $r41 = virtualinvoke $r40.<org.apache.catalina.util.InstanceSupport: org.apache.catalina.Wrapper getWrapper()>();
+        $z5 = interfaceinvoke $r41.<org.apache.catalina.Wrapper: boolean isAsyncSupported()>();
+        if $z5 != 0 goto label16;
+
+        $r42 = <java.lang.Boolean: java.lang.Boolean FALSE>;
+        interfaceinvoke r1.<javax.servlet.ServletRequest: void setAttribute(java.lang.String,java.lang.Object)>("org.apache.catalina.ASYNC_SUPPORTED", $r42);
+
+     label16:
+        $z6 = r1 instanceof javax.servlet.http.HttpServletRequest;
+        if $z6 == 0 goto label18;
+
+        $z7 = r2 instanceof javax.servlet.http.HttpServletResponse;
+        if $z7 == 0 goto label18;
+
+        $z8 = <org.apache.catalina.Globals: boolean IS_SECURITY_ENABLED>;
+        if $z8 == 0 goto label17;
+
+        r43 = r1;
+        r44 = r2;
+        $r45 = (javax.servlet.http.HttpServletRequest) r43;
+        r46 = interfaceinvoke $r45.<javax.servlet.http.HttpServletRequest: java.security.Principal getUserPrincipal()>();
+        $r47 = newarray (java.lang.Object)[2];
+        $r47[0] = r43;
+        $r47[1] = r44;
+        r48 = $r47;
+        $r49 = r0.<org.apache.catalina.core.ApplicationFilterChain: javax.servlet.Servlet servlet>;
+        $r50 = <org.apache.catalina.core.ApplicationFilterChain: java.lang.Class[] classTypeUsedInService>;
+        staticinvoke <org.apache.catalina.security.SecurityUtil: void doAsPrivilege(java.lang.String,javax.servlet.Servlet,java.lang.Class[],java.lang.Object[],java.security.Principal)>("service", $r49, $r50, r48, r46);
+        goto label19;
+
+     label17:
+        $r51 = r0.<org.apache.catalina.core.ApplicationFilterChain: javax.servlet.Servlet servlet>;
+        interfaceinvoke $r51.<javax.servlet.Servlet: void service(javax.servlet.ServletRequest,javax.servlet.ServletResponse)>(r1, r2);
+        goto label19;
+
+     label18:
+        $r52 = r0.<org.apache.catalina.core.ApplicationFilterChain: javax.servlet.Servlet servlet>;
+        interfaceinvoke $r52.<javax.servlet.Servlet: void service(javax.servlet.ServletRequest,javax.servlet.ServletResponse)>(r1, r2);
+
+     label19:
+        $r53 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.util.InstanceSupport support>;
+        $r54 = r0.<org.apache.catalina.core.ApplicationFilterChain: javax.servlet.Servlet servlet>;
+        virtualinvoke $r53.<org.apache.catalina.util.InstanceSupport: void fireInstanceEvent(java.lang.String,javax.servlet.Servlet,javax.servlet.ServletRequest,javax.servlet.ServletResponse)>("afterService", $r54, r1, r2);
+
+     label20:
+        goto label27;
+
+     label21:
+        $r55 := @caughtexception;
+        r56 = $r55;
+        $r57 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.util.InstanceSupport support>;
+        $r58 = r0.<org.apache.catalina.core.ApplicationFilterChain: javax.servlet.Servlet servlet>;
+        virtualinvoke $r57.<org.apache.catalina.util.InstanceSupport: void fireInstanceEvent(java.lang.String,javax.servlet.Servlet,javax.servlet.ServletRequest,javax.servlet.ServletResponse,java.lang.Throwable)>("afterService", $r58, r1, r2, r56);
+        throw r56;
+
+     label22:
+        $r59 := @caughtexception;
+        r60 = $r59;
+        $r61 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.util.InstanceSupport support>;
+        $r62 = r0.<org.apache.catalina.core.ApplicationFilterChain: javax.servlet.Servlet servlet>;
+        virtualinvoke $r61.<org.apache.catalina.util.InstanceSupport: void fireInstanceEvent(java.lang.String,javax.servlet.Servlet,javax.servlet.ServletRequest,javax.servlet.ServletResponse,java.lang.Throwable)>("afterService", $r62, r1, r2, r60);
+        throw r60;
+
+     label23:
+        $r63 := @caughtexception;
+        r64 = $r63;
+        $r65 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.util.InstanceSupport support>;
+        $r66 = r0.<org.apache.catalina.core.ApplicationFilterChain: javax.servlet.Servlet servlet>;
+        virtualinvoke $r65.<org.apache.catalina.util.InstanceSupport: void fireInstanceEvent(java.lang.String,javax.servlet.Servlet,javax.servlet.ServletRequest,javax.servlet.ServletResponse,java.lang.Throwable)>("afterService", $r66, r1, r2, r64);
+        throw r64;
+
+     label24:
+        $r67 := @caughtexception;
+        r68 = $r67;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r68);
+        $r69 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.util.InstanceSupport support>;
+        $r70 = r0.<org.apache.catalina.core.ApplicationFilterChain: javax.servlet.Servlet servlet>;
+        virtualinvoke $r69.<org.apache.catalina.util.InstanceSupport: void fireInstanceEvent(java.lang.String,javax.servlet.Servlet,javax.servlet.ServletRequest,javax.servlet.ServletResponse,java.lang.Throwable)>("afterService", $r70, r1, r2, r68);
+        $r71 = new javax.servlet.ServletException;
+        $r72 = <org.apache.catalina.core.ApplicationFilterChain: org.apache.tomcat.util.res.StringManager sm>;
+        $r73 = virtualinvoke $r72.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("filterChain.servlet");
+        specialinvoke $r71.<javax.servlet.ServletException: void <init>(java.lang.String,java.lang.Throwable)>($r73, r68);
+        throw $r71;
+
+     label25:
+        $r74 := @caughtexception;
+        r75 = $r74;
+        $z9 = <org.apache.catalina.core.ApplicationDispatcher: boolean WRAP_SAME_OBJECT>;
+        if $z9 == 0 goto label26;
+
+        $r76 = <org.apache.catalina.core.ApplicationFilterChain: java.lang.ThreadLocal lastServicedRequest>;
+        virtualinvoke $r76.<java.lang.ThreadLocal: void set(java.lang.Object)>(null);
+        $r77 = <org.apache.catalina.core.ApplicationFilterChain: java.lang.ThreadLocal lastServicedResponse>;
+        virtualinvoke $r77.<java.lang.ThreadLocal: void set(java.lang.Object)>(null);
+
+     label26:
+        throw r75;
+
+     label27:
+        $z10 = <org.apache.catalina.core.ApplicationDispatcher: boolean WRAP_SAME_OBJECT>;
+        if $z10 == 0 goto label28;
+
+        $r78 = <org.apache.catalina.core.ApplicationFilterChain: java.lang.ThreadLocal lastServicedRequest>;
+        virtualinvoke $r78.<java.lang.ThreadLocal: void set(java.lang.Object)>(null);
+        $r79 = <org.apache.catalina.core.ApplicationFilterChain: java.lang.ThreadLocal lastServicedResponse>;
+        virtualinvoke $r79.<java.lang.ThreadLocal: void set(java.lang.Object)>(null);
+
+     label28:
+        return;
+
+        catch java.io.IOException from label0 to label4 with label5;
+        catch javax.servlet.ServletException from label0 to label4 with label7;
+        catch java.lang.RuntimeException from label0 to label4 with label9;
+        catch java.lang.Throwable from label0 to label4 with label11;
+        catch java.io.IOException from label14 to label20 with label21;
+        catch javax.servlet.ServletException from label14 to label20 with label22;
+        catch java.lang.RuntimeException from label14 to label20 with label23;
+        catch java.lang.Throwable from label14 to label20 with label24;
+        catch java.lang.Throwable from label14 to label25 with label25;
+    }
+
+    public void doFilterEvent(org.apache.catalina.comet.CometEvent) throws java.io.IOException, javax.servlet.ServletException
+    {
+        org.apache.catalina.core.ApplicationFilterChain r0;
+        org.apache.catalina.comet.CometEvent r1, r2;
+        boolean $z0, $z1, $z2, $z3;
+        java.security.PrivilegedActionException r3, $r7;
+        java.lang.Exception r4;
+        org.apache.catalina.core.ApplicationFilterChain$2 $r5;
+        javax.servlet.ServletException $r8, $r11;
+        java.io.IOException $r9;
+        java.lang.RuntimeException $r10;
+        java.lang.String $r12;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterChain;
+        r1 := @parameter0: org.apache.catalina.comet.CometEvent;
+        $z0 = <org.apache.catalina.Globals: boolean IS_SECURITY_ENABLED>;
+        if $z0 == 0 goto label6;
+
+        r2 = r1;
+
+     label0:
+        $r5 = new org.apache.catalina.core.ApplicationFilterChain$2;
+        specialinvoke $r5.<org.apache.catalina.core.ApplicationFilterChain$2: void <init>(org.apache.catalina.core.ApplicationFilterChain,org.apache.catalina.comet.CometEvent)>(r0, r2);
+        staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedExceptionAction)>($r5);
+
+     label1:
+        goto label7;
+
+     label2:
+        $r7 := @caughtexception;
+        r3 = $r7;
+        r4 = virtualinvoke r3.<java.security.PrivilegedActionException: java.lang.Exception getException()>();
+        $z1 = r4 instanceof javax.servlet.ServletException;
+        if $z1 == 0 goto label3;
+
+        $r8 = (javax.servlet.ServletException) r4;
+        throw $r8;
+
+     label3:
+        $z2 = r4 instanceof java.io.IOException;
+        if $z2 == 0 goto label4;
+
+        $r9 = (java.io.IOException) r4;
+        throw $r9;
+
+     label4:
+        $z3 = r4 instanceof java.lang.RuntimeException;
+        if $z3 == 0 goto label5;
+
+        $r10 = (java.lang.RuntimeException) r4;
+        throw $r10;
+
+     label5:
+        $r11 = new javax.servlet.ServletException;
+        $r12 = virtualinvoke r4.<java.lang.Exception: java.lang.String getMessage()>();
+        specialinvoke $r11.<javax.servlet.ServletException: void <init>(java.lang.String,java.lang.Throwable)>($r12, r4);
+        throw $r11;
+
+     label6:
+        specialinvoke r0.<org.apache.catalina.core.ApplicationFilterChain: void internalDoFilterEvent(org.apache.catalina.comet.CometEvent)>(r1);
+
+     label7:
+        return;
+
+        catch java.security.PrivilegedActionException from label0 to label1 with label2;
+    }
+
+    public static javax.servlet.ServletRequest getLastServicedRequest()
+    {
+        java.lang.ThreadLocal $r0;
+        java.lang.Object $r1;
+        javax.servlet.ServletRequest $r2;
+
+        $r0 = <org.apache.catalina.core.ApplicationFilterChain: java.lang.ThreadLocal lastServicedRequest>;
+        $r1 = virtualinvoke $r0.<java.lang.ThreadLocal: java.lang.Object get()>();
+        $r2 = (javax.servlet.ServletRequest) $r1;
+        return $r2;
+    }
+
+    public static javax.servlet.ServletResponse getLastServicedResponse()
+    {
+        java.lang.ThreadLocal $r0;
+        java.lang.Object $r1;
+        javax.servlet.ServletResponse $r2;
+
+        $r0 = <org.apache.catalina.core.ApplicationFilterChain: java.lang.ThreadLocal lastServicedResponse>;
+        $r1 = virtualinvoke $r0.<java.lang.ThreadLocal: java.lang.Object get()>();
+        $r2 = (javax.servlet.ServletResponse) $r1;
+        return $r2;
+    }
+
+    private void internalDoFilterEvent(org.apache.catalina.comet.CometEvent) throws java.io.IOException, javax.servlet.ServletException
+    {
+        org.apache.catalina.core.ApplicationFilterChain r0;
+        org.apache.catalina.comet.CometEvent r1, r3, r25;
+        int $i0, $i1, $i2, $i3;
+        org.apache.catalina.core.ApplicationFilterConfig r2;
+        null_type n0;
+        java.security.Principal r4, r27;
+        java.lang.Object[] r5, $r11, $r28, r29;
+        org.apache.catalina.core.ApplicationFilterConfig[] $r6;
+        javax.servlet.Filter $r8;
+        org.apache.catalina.comet.CometFilter r9;
+        boolean $z0, $z1;
+        javax.servlet.http.HttpServletRequest $r10, $r26;
+        java.lang.Class[] $r12, $r31;
+        java.io.IOException $r13, r14, $r34, r35;
+        javax.servlet.ServletException $r15, r16, $r22, $r36, r37, $r42;
+        java.lang.RuntimeException $r17, r18, $r38, r39;
+        java.lang.Throwable $r19, r20, r21, $r40, r41;
+        org.apache.tomcat.util.res.StringManager $r23, $r43;
+        java.lang.String $r24, $r44;
+        javax.servlet.Servlet $r30, $r32;
+        org.apache.catalina.comet.CometProcessor $r33;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterChain;
+        r1 := @parameter0: org.apache.catalina.comet.CometEvent;
+        $i1 = r0.<org.apache.catalina.core.ApplicationFilterChain: int pos>;
+        $i2 = r0.<org.apache.catalina.core.ApplicationFilterChain: int n>;
+        if $i1 >= $i2 goto label8;
+
+        $r6 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.core.ApplicationFilterConfig[] filters>;
+        $i0 = r0.<org.apache.catalina.core.ApplicationFilterChain: int pos>;
+        $i3 = $i0 + 1;
+        r0.<org.apache.catalina.core.ApplicationFilterChain: int pos> = $i3;
+        r2 = $r6[$i0];
+        n0 = null;
+
+     label0:
+        $r8 = virtualinvoke r2.<org.apache.catalina.core.ApplicationFilterConfig: javax.servlet.Filter getFilter()>();
+        r9 = (org.apache.catalina.comet.CometFilter) $r8;
+        $z0 = <org.apache.catalina.Globals: boolean IS_SECURITY_ENABLED>;
+        if $z0 == 0 goto label1;
+
+        r3 = r1;
+        $r10 = interfaceinvoke r3.<org.apache.catalina.comet.CometEvent: javax.servlet.http.HttpServletRequest getHttpServletRequest()>();
+        r4 = interfaceinvoke $r10.<javax.servlet.http.HttpServletRequest: java.security.Principal getUserPrincipal()>();
+        $r11 = newarray (java.lang.Object)[2];
+        $r11[0] = r3;
+        $r11[1] = r0;
+        r5 = $r11;
+        $r12 = <org.apache.catalina.core.ApplicationFilterChain: java.lang.Class[] cometClassType>;
+        staticinvoke <org.apache.catalina.security.SecurityUtil: void doAsPrivilege(java.lang.String,javax.servlet.Filter,java.lang.Class[],java.lang.Object[],java.security.Principal)>("doFilterEvent", r9, $r12, r5, r4);
+        goto label7;
+
+     label1:
+        interfaceinvoke r9.<org.apache.catalina.comet.CometFilter: void doFilterEvent(org.apache.catalina.comet.CometEvent,org.apache.catalina.comet.CometFilterChain)>(r1, r0);
+
+     label2:
+        goto label7;
+
+     label3:
+        $r13 := @caughtexception;
+        r14 = $r13;
+        throw r14;
+
+     label4:
+        $r15 := @caughtexception;
+        r16 = $r15;
+        throw r16;
+
+     label5:
+        $r17 := @caughtexception;
+        r18 = $r17;
+        throw r18;
+
+     label6:
+        $r19 := @caughtexception;
+        r20 = $r19;
+        r21 = staticinvoke <org.apache.tomcat.util.ExceptionUtils: java.lang.Throwable unwrapInvocationTargetException(java.lang.Throwable)>(r20);
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r21);
+        $r22 = new javax.servlet.ServletException;
+        $r23 = <org.apache.catalina.core.ApplicationFilterChain: org.apache.tomcat.util.res.StringManager sm>;
+        $r24 = virtualinvoke $r23.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("filterChain.filter");
+        specialinvoke $r22.<javax.servlet.ServletException: void <init>(java.lang.String,java.lang.Throwable)>($r24, r21);
+        throw $r22;
+
+     label7:
+        return;
+
+     label8:
+        $z1 = <org.apache.catalina.Globals: boolean IS_SECURITY_ENABLED>;
+        if $z1 == 0 goto label9;
+
+        r25 = r1;
+        $r26 = interfaceinvoke r25.<org.apache.catalina.comet.CometEvent: javax.servlet.http.HttpServletRequest getHttpServletRequest()>();
+        r27 = interfaceinvoke $r26.<javax.servlet.http.HttpServletRequest: java.security.Principal getUserPrincipal()>();
+        $r28 = newarray (java.lang.Object)[1];
+        $r28[0] = r25;
+        r29 = $r28;
+        $r30 = r0.<org.apache.catalina.core.ApplicationFilterChain: javax.servlet.Servlet servlet>;
+        $r31 = <org.apache.catalina.core.ApplicationFilterChain: java.lang.Class[] classTypeUsedInEvent>;
+        staticinvoke <org.apache.catalina.security.SecurityUtil: void doAsPrivilege(java.lang.String,javax.servlet.Servlet,java.lang.Class[],java.lang.Object[],java.security.Principal)>("event", $r30, $r31, r29, r27);
+        goto label15;
+
+     label9:
+        $r32 = r0.<org.apache.catalina.core.ApplicationFilterChain: javax.servlet.Servlet servlet>;
+        $r33 = (org.apache.catalina.comet.CometProcessor) $r32;
+        interfaceinvoke $r33.<org.apache.catalina.comet.CometProcessor: void event(org.apache.catalina.comet.CometEvent)>(r1);
+
+     label10:
+        goto label15;
+
+     label11:
+        $r34 := @caughtexception;
+        r35 = $r34;
+        throw r35;
+
+     label12:
+        $r36 := @caughtexception;
+        r37 = $r36;
+        throw r37;
+
+     label13:
+        $r38 := @caughtexception;
+        r39 = $r38;
+        throw r39;
+
+     label14:
+        $r40 := @caughtexception;
+        r41 = $r40;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r41);
+        $r42 = new javax.servlet.ServletException;
+        $r43 = <org.apache.catalina.core.ApplicationFilterChain: org.apache.tomcat.util.res.StringManager sm>;
+        $r44 = virtualinvoke $r43.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("filterChain.servlet");
+        specialinvoke $r42.<javax.servlet.ServletException: void <init>(java.lang.String,java.lang.Throwable)>($r44, r41);
+        throw $r42;
+
+     label15:
+        return;
+
+        catch java.io.IOException from label0 to label2 with label3;
+        catch javax.servlet.ServletException from label0 to label2 with label4;
+        catch java.lang.RuntimeException from label0 to label2 with label5;
+        catch java.lang.Throwable from label0 to label2 with label6;
+        catch java.io.IOException from label8 to label10 with label11;
+        catch javax.servlet.ServletException from label8 to label10 with label12;
+        catch java.lang.RuntimeException from label8 to label10 with label13;
+        catch java.lang.Throwable from label8 to label10 with label14;
+    }
+
+    void addFilter(org.apache.catalina.core.ApplicationFilterConfig)
+    {
+        org.apache.catalina.core.ApplicationFilterChain r0;
+        org.apache.catalina.core.ApplicationFilterConfig r1, r3;
+        org.apache.catalina.core.ApplicationFilterConfig[] r2, $r4, $r5, r6, $r7, $r8;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterChain;
+        r1 := @parameter0: org.apache.catalina.core.ApplicationFilterConfig;
+        $r4 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.core.ApplicationFilterConfig[] filters>;
+        r2 = $r4;
+        i0 = lengthof $r4;
+        i1 = 0;
+        goto label2;
+
+     label0:
+        r3 = r2[i1];
+        if r3 != r1 goto label1;
+
+        return;
+
+     label1:
+        i1 = i1 + 1;
+
+     label2:
+        if i1 < i0 goto label0;
+
+        $i2 = r0.<org.apache.catalina.core.ApplicationFilterChain: int n>;
+        $r5 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.core.ApplicationFilterConfig[] filters>;
+        $i3 = lengthof $r5;
+        if $i2 != $i3 goto label3;
+
+        $i4 = r0.<org.apache.catalina.core.ApplicationFilterChain: int n>;
+        $i5 = $i4 + 10;
+        r6 = newarray (org.apache.catalina.core.ApplicationFilterConfig)[$i5];
+        $r7 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.core.ApplicationFilterConfig[] filters>;
+        $i6 = r0.<org.apache.catalina.core.ApplicationFilterChain: int n>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r7, 0, r6, 0, $i6);
+        r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.core.ApplicationFilterConfig[] filters> = r6;
+
+     label3:
+        $r8 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.core.ApplicationFilterConfig[] filters>;
+        $i7 = r0.<org.apache.catalina.core.ApplicationFilterChain: int n>;
+        $i8 = $i7 + 1;
+        r0.<org.apache.catalina.core.ApplicationFilterChain: int n> = $i8;
+        $r8[$i7] = r1;
+        return;
+    }
+
+    void release()
+    {
+        org.apache.catalina.core.ApplicationFilterChain r0;
+        int i0, $i1;
+        org.apache.catalina.core.ApplicationFilterConfig[] $r1;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterChain;
+        i0 = 0;
+        goto label1;
+
+     label0:
+        $r1 = r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.core.ApplicationFilterConfig[] filters>;
+        $r1[i0] = null;
+        i0 = i0 + 1;
+
+     label1:
+        $i1 = r0.<org.apache.catalina.core.ApplicationFilterChain: int n>;
+        if i0 < $i1 goto label0;
+
+        r0.<org.apache.catalina.core.ApplicationFilterChain: int n> = 0;
+        r0.<org.apache.catalina.core.ApplicationFilterChain: int pos> = 0;
+        r0.<org.apache.catalina.core.ApplicationFilterChain: javax.servlet.Servlet servlet> = null;
+        r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.util.InstanceSupport support> = null;
+        return;
+    }
+
+    void reuse()
+    {
+        org.apache.catalina.core.ApplicationFilterChain r0;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterChain;
+        r0.<org.apache.catalina.core.ApplicationFilterChain: int pos> = 0;
+        return;
+    }
+
+    void setServlet(javax.servlet.Servlet)
+    {
+        org.apache.catalina.core.ApplicationFilterChain r0;
+        javax.servlet.Servlet r1;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterChain;
+        r1 := @parameter0: javax.servlet.Servlet;
+        r0.<org.apache.catalina.core.ApplicationFilterChain: javax.servlet.Servlet servlet> = r1;
+        return;
+    }
+
+    void setSupport(org.apache.catalina.util.InstanceSupport)
+    {
+        org.apache.catalina.core.ApplicationFilterChain r0;
+        org.apache.catalina.util.InstanceSupport r1;
+
+        r0 := @this: org.apache.catalina.core.ApplicationFilterChain;
+        r1 := @parameter0: org.apache.catalina.util.InstanceSupport;
+        r0.<org.apache.catalina.core.ApplicationFilterChain: org.apache.catalina.util.InstanceSupport support> = r1;
+        return;
+    }
+
+    static void access$0(org.apache.catalina.core.ApplicationFilterChain, javax.servlet.ServletRequest, javax.servlet.ServletResponse) throws java.io.IOException, javax.servlet.ServletException
+    {
+        org.apache.catalina.core.ApplicationFilterChain r0;
+        javax.servlet.ServletRequest r1;
+        javax.servlet.ServletResponse r2;
+
+        r0 := @parameter0: org.apache.catalina.core.ApplicationFilterChain;
+        r1 := @parameter1: javax.servlet.ServletRequest;
+        r2 := @parameter2: javax.servlet.ServletResponse;
+        specialinvoke r0.<org.apache.catalina.core.ApplicationFilterChain: void internalDoFilter(javax.servlet.ServletRequest,javax.servlet.ServletResponse)>(r1, r2);
+        return;
+    }
+
+    static void access$1(org.apache.catalina.core.ApplicationFilterChain, org.apache.catalina.comet.CometEvent) throws java.io.IOException, javax.servlet.ServletException
+    {
+        org.apache.catalina.core.ApplicationFilterChain r0;
+        org.apache.catalina.comet.CometEvent r1;
+
+        r0 := @parameter0: org.apache.catalina.core.ApplicationFilterChain;
+        r1 := @parameter1: org.apache.catalina.comet.CometEvent;
+        specialinvoke r0.<org.apache.catalina.core.ApplicationFilterChain: void internalDoFilterEvent(org.apache.catalina.comet.CometEvent)>(r1);
+        return;
+    }
+}

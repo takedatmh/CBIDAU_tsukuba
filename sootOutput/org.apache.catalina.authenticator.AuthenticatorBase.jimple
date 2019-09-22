@@ -1,0 +1,1290 @@
+public abstract class org.apache.catalina.authenticator.AuthenticatorBase extends org.apache.catalina.valves.ValveBase implements org.apache.catalina.Authenticator
+{
+    private final org.apache.juli.logging.Log log;
+    protected static final java.lang.String AUTH_HEADER_NAME;
+    protected static final java.lang.String REALM_NAME;
+    protected boolean alwaysUseSession;
+    protected boolean cache;
+    protected boolean changeSessionIdOnAuthentication;
+    protected org.apache.catalina.Context context;
+    protected static final java.lang.String info;
+    protected boolean disableProxyCaching;
+    protected boolean securePagesWithPragma;
+    protected java.lang.String secureRandomClass;
+    protected java.lang.String secureRandomAlgorithm;
+    protected java.lang.String secureRandomProvider;
+    protected org.apache.catalina.util.SessionIdGeneratorBase sessionIdGenerator;
+    protected static final org.apache.tomcat.util.res.StringManager sm;
+    protected org.apache.catalina.authenticator.SingleSignOn sso;
+    private static final java.lang.String DATE_ONE;
+
+    static void <clinit>()
+    {
+        org.apache.tomcat.util.res.StringManager $r0;
+        java.util.Date $r1;
+        java.lang.String $r2;
+
+        $r0 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String)>("org.apache.catalina.authenticator");
+        <org.apache.catalina.authenticator.AuthenticatorBase: org.apache.tomcat.util.res.StringManager sm> = $r0;
+        $r1 = new java.util.Date;
+        specialinvoke $r1.<java.util.Date: void <init>(long)>(1L);
+        $r2 = staticinvoke <org.apache.catalina.util.ConcurrentDateFormat: java.lang.String formatRfc1123(java.util.Date)>($r1);
+        <org.apache.catalina.authenticator.AuthenticatorBase: java.lang.String DATE_ONE> = $r2;
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        org.apache.juli.logging.Log $r1;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        specialinvoke r0.<org.apache.catalina.valves.ValveBase: void <init>(boolean)>(1);
+        $r1 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/catalina/authenticator/AuthenticatorBase");
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log> = $r1;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean alwaysUseSession> = 0;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean cache> = 1;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean changeSessionIdOnAuthentication> = 1;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Context context> = null;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean disableProxyCaching> = 1;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean securePagesWithPragma> = 0;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: java.lang.String secureRandomClass> = null;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: java.lang.String secureRandomAlgorithm> = "SHA1PRNG";
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: java.lang.String secureRandomProvider> = null;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.util.SessionIdGeneratorBase sessionIdGenerator> = null;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.authenticator.SingleSignOn sso> = null;
+        return;
+    }
+
+    public boolean getAlwaysUseSession()
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        $z0 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean alwaysUseSession>;
+        return $z0;
+    }
+
+    public void setAlwaysUseSession(boolean)
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        boolean z0;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean alwaysUseSession> = z0;
+        return;
+    }
+
+    public boolean getCache()
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        $z0 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean cache>;
+        return $z0;
+    }
+
+    public void setCache(boolean)
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        boolean z0;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean cache> = z0;
+        return;
+    }
+
+    public org.apache.catalina.Container getContainer()
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        org.apache.catalina.Context $r1;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        $r1 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Context context>;
+        return $r1;
+    }
+
+    public void setContainer(org.apache.catalina.Container)
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        org.apache.catalina.Container r1;
+        org.apache.tomcat.util.res.StringManager $r2;
+        boolean $z0;
+        java.lang.IllegalArgumentException $r3;
+        java.lang.String $r4;
+        org.apache.catalina.Context $r5;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        r1 := @parameter0: org.apache.catalina.Container;
+        if r1 == null goto label0;
+
+        $z0 = r1 instanceof org.apache.catalina.Context;
+        if $z0 != 0 goto label0;
+
+        $r3 = new java.lang.IllegalArgumentException;
+        $r2 = <org.apache.catalina.authenticator.AuthenticatorBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r4 = virtualinvoke $r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("authenticator.notContext");
+        specialinvoke $r3.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r4);
+        throw $r3;
+
+     label0:
+        specialinvoke r0.<org.apache.catalina.valves.ValveBase: void setContainer(org.apache.catalina.Container)>(r1);
+        $r5 = (org.apache.catalina.Context) r1;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Context context> = $r5;
+        return;
+    }
+
+    public java.lang.String getInfo()
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        return "org.apache.catalina.authenticator.AuthenticatorBase/1.0";
+    }
+
+    public boolean getDisableProxyCaching()
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        $z0 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean disableProxyCaching>;
+        return $z0;
+    }
+
+    public void setDisableProxyCaching(boolean)
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        boolean z0;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean disableProxyCaching> = z0;
+        return;
+    }
+
+    public boolean getSecurePagesWithPragma()
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        $z0 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean securePagesWithPragma>;
+        return $z0;
+    }
+
+    public void setSecurePagesWithPragma(boolean)
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        boolean z0;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean securePagesWithPragma> = z0;
+        return;
+    }
+
+    public boolean getChangeSessionIdOnAuthentication()
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        $z0 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean changeSessionIdOnAuthentication>;
+        return $z0;
+    }
+
+    public void setChangeSessionIdOnAuthentication(boolean)
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        boolean z0;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean changeSessionIdOnAuthentication> = z0;
+        return;
+    }
+
+    public java.lang.String getSecureRandomClass()
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        $r1 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: java.lang.String secureRandomClass>;
+        return $r1;
+    }
+
+    public void setSecureRandomClass(java.lang.String)
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: java.lang.String secureRandomClass> = r1;
+        return;
+    }
+
+    public java.lang.String getSecureRandomAlgorithm()
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        $r1 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: java.lang.String secureRandomAlgorithm>;
+        return $r1;
+    }
+
+    public void setSecureRandomAlgorithm(java.lang.String)
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: java.lang.String secureRandomAlgorithm> = r1;
+        return;
+    }
+
+    public java.lang.String getSecureRandomProvider()
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        $r1 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: java.lang.String secureRandomProvider>;
+        return $r1;
+    }
+
+    public void setSecureRandomProvider(java.lang.String)
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: java.lang.String secureRandomProvider> = r1;
+        return;
+    }
+
+    public void invoke(org.apache.catalina.connector.Request, org.apache.catalina.connector.Response) throws java.io.IOException, javax.servlet.ServletException
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        org.apache.catalina.connector.Request r1;
+        org.apache.catalina.connector.Response r2;
+        java.lang.StringBuilder $r3, $r14, $r15, $r17, $r23, $r25, $r26, $r28, $r36, $r37;
+        org.apache.catalina.deploy.LoginConfig r4;
+        java.security.Principal r5, r20, $r27;
+        org.apache.catalina.Session r6, r7;
+        org.apache.catalina.authenticator.SavedRequest r8;
+        java.lang.String r9, $r13, $r16, $r18, $r24, $r29, $r30, r32, r33, $r38, $r40, $r51, $r52, $r53, $r66, $r67;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14, $z15, $z16, $z17, $z18, $z19, $z20, $z21, $z22, $z23, $z24, $z25, $z26, $z27, $z28, $z29, $z30, $z31, $z32;
+        int i0, $i1, $i2, $i3;
+        java.lang.String[] r10;
+        org.apache.juli.logging.Log $r11, $r12, $r21, $r22, $r34, $r35, $r41, $r42, $r48, $r49, $r54, $r55, $r56, $r57, $r69, $r70, $r71, $r72, $r73, $r74, $r76, $r77, $r78, $r79;
+        org.apache.catalina.Context $r19, $r31, $r43, $r45, $r47, $r61, $r65, $r75;
+        java.lang.Object $r39;
+        org.apache.catalina.Realm r44;
+        org.apache.catalina.deploy.SecurityConstraint[] r46;
+        org.apache.catalina.Valve $r50, $r80;
+        org.apache.catalina.deploy.SecurityConstraint $r58, $r59, $r60;
+        org.apache.coyote.Request $r62;
+        org.apache.tomcat.util.http.MimeHeaders $r63;
+        org.apache.tomcat.util.buf.MessageBytes $r64;
+        java.security.cert.X509Certificate[] r68;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        r1 := @parameter0: org.apache.catalina.connector.Request;
+        r2 := @parameter1: org.apache.catalina.connector.Response;
+        $r11 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $z1 = interfaceinvoke $r11.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z1 == 0 goto label0;
+
+        $r12 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $r3 = new java.lang.StringBuilder;
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>(java.lang.String)>("Security checking request ");
+        $r13 = virtualinvoke r1.<org.apache.catalina.connector.Request: java.lang.String getMethod()>();
+        $r14 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r13);
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" ");
+        $r16 = virtualinvoke r1.<org.apache.catalina.connector.Request: java.lang.String getRequestURI()>();
+        $r17 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r16);
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r12.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r18);
+
+     label0:
+        $r19 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Context context>;
+        r4 = interfaceinvoke $r19.<org.apache.catalina.Context: org.apache.catalina.deploy.LoginConfig getLoginConfig()>();
+        $z2 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean cache>;
+        if $z2 == 0 goto label2;
+
+        r5 = virtualinvoke r1.<org.apache.catalina.connector.Request: java.security.Principal getUserPrincipal()>();
+        if r5 != null goto label2;
+
+        r6 = virtualinvoke r1.<org.apache.catalina.connector.Request: org.apache.catalina.Session getSessionInternal(boolean)>(0);
+        if r6 == null goto label2;
+
+        r20 = interfaceinvoke r6.<org.apache.catalina.Session: java.security.Principal getPrincipal()>();
+        if r20 == null goto label2;
+
+        $r21 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $z3 = interfaceinvoke $r21.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z3 == 0 goto label1;
+
+        $r22 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $r23 = new java.lang.StringBuilder;
+        specialinvoke $r23.<java.lang.StringBuilder: void <init>(java.lang.String)>("We have cached auth type ");
+        $r24 = interfaceinvoke r6.<org.apache.catalina.Session: java.lang.String getAuthType()>();
+        $r25 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r24);
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" for principal ");
+        $r27 = interfaceinvoke r6.<org.apache.catalina.Session: java.security.Principal getPrincipal()>();
+        $r28 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r27);
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r22.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r29);
+
+     label1:
+        $r30 = interfaceinvoke r6.<org.apache.catalina.Session: java.lang.String getAuthType()>();
+        virtualinvoke r1.<org.apache.catalina.connector.Request: void setAuthType(java.lang.String)>($r30);
+        virtualinvoke r1.<org.apache.catalina.connector.Request: void setUserPrincipal(java.security.Principal)>(r20);
+
+     label2:
+        $r31 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Context context>;
+        r32 = interfaceinvoke $r31.<org.apache.catalina.Context: java.lang.String getPath()>();
+        r33 = virtualinvoke r1.<org.apache.catalina.connector.Request: java.lang.String getDecodedRequestURI()>();
+        $z4 = virtualinvoke r33.<java.lang.String: boolean startsWith(java.lang.String)>(r32);
+        if $z4 == 0 goto label4;
+
+        $z5 = virtualinvoke r33.<java.lang.String: boolean endsWith(java.lang.String)>("/j_security_check");
+        if $z5 == 0 goto label4;
+
+        $z6 = virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean authenticate(org.apache.catalina.connector.Request,javax.servlet.http.HttpServletResponse,org.apache.catalina.deploy.LoginConfig)>(r1, r2, r4);
+        if $z6 != 0 goto label4;
+
+        $r34 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $z7 = interfaceinvoke $r34.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z7 == 0 goto label3;
+
+        $r35 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $r36 = new java.lang.StringBuilder;
+        specialinvoke $r36.<java.lang.StringBuilder: void <init>(java.lang.String)>(" Failed authenticate() test ??");
+        $r37 = virtualinvoke $r36.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r33);
+        $r38 = virtualinvoke $r37.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r35.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r38);
+
+     label3:
+        return;
+
+     label4:
+        r7 = virtualinvoke r1.<org.apache.catalina.connector.Request: org.apache.catalina.Session getSessionInternal(boolean)>(0);
+        if r7 == null goto label6;
+
+        $r39 = interfaceinvoke r7.<org.apache.catalina.Session: java.lang.Object getNote(java.lang.String)>("org.apache.catalina.authenticator.REQUEST");
+        r8 = (org.apache.catalina.authenticator.SavedRequest) $r39;
+        if r8 == null goto label6;
+
+        r9 = virtualinvoke r1.<org.apache.catalina.connector.Request: java.lang.String getDecodedRequestURI()>();
+        if r9 == null goto label6;
+
+        $r40 = virtualinvoke r8.<org.apache.catalina.authenticator.SavedRequest: java.lang.String getDecodedRequestURI()>();
+        $z8 = virtualinvoke r9.<java.lang.String: boolean equals(java.lang.Object)>($r40);
+        if $z8 == 0 goto label6;
+
+        $z9 = virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean authenticate(org.apache.catalina.connector.Request,javax.servlet.http.HttpServletResponse)>(r1, r2);
+        if $z9 != 0 goto label6;
+
+        $r41 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $z10 = interfaceinvoke $r41.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z10 == 0 goto label5;
+
+        $r42 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r42.<org.apache.juli.logging.Log: void debug(java.lang.Object)>(" Failed authenticate() test");
+
+     label5:
+        return;
+
+     label6:
+        $r43 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Context context>;
+        r44 = interfaceinvoke $r43.<org.apache.catalina.Context: org.apache.catalina.Realm getRealm()>();
+        $r45 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Context context>;
+        r46 = interfaceinvoke r44.<org.apache.catalina.Realm: org.apache.catalina.deploy.SecurityConstraint[] findSecurityConstraints(org.apache.catalina.connector.Request,org.apache.catalina.Context)>(r1, $r45);
+        if r46 != null goto label8;
+
+        $r47 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Context context>;
+        $z11 = interfaceinvoke $r47.<org.apache.catalina.Context: boolean getPreemptiveAuthentication()>();
+        if $z11 != 0 goto label8;
+
+        $r48 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $z12 = interfaceinvoke $r48.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z12 == 0 goto label7;
+
+        $r49 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r49.<org.apache.juli.logging.Log: void debug(java.lang.Object)>(" Not subject to any constraint");
+
+     label7:
+        $r50 = virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Valve getNext()>();
+        interfaceinvoke $r50.<org.apache.catalina.Valve: void invoke(org.apache.catalina.connector.Request,org.apache.catalina.connector.Response)>(r1, r2);
+        return;
+
+     label8:
+        if r46 == null goto label11;
+
+        $z13 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean disableProxyCaching>;
+        if $z13 == 0 goto label11;
+
+        $r51 = "POST";
+        $r52 = virtualinvoke r1.<org.apache.catalina.connector.Request: java.lang.String getMethod()>();
+        $z14 = virtualinvoke $r51.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>($r52);
+        if $z14 != 0 goto label11;
+
+        $z15 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean securePagesWithPragma>;
+        if $z15 == 0 goto label9;
+
+        virtualinvoke r2.<org.apache.catalina.connector.Response: void setHeader(java.lang.String,java.lang.String)>("Pragma", "No-cache");
+        virtualinvoke r2.<org.apache.catalina.connector.Response: void setHeader(java.lang.String,java.lang.String)>("Cache-Control", "no-cache");
+        goto label10;
+
+     label9:
+        virtualinvoke r2.<org.apache.catalina.connector.Response: void setHeader(java.lang.String,java.lang.String)>("Cache-Control", "private");
+
+     label10:
+        $r53 = <org.apache.catalina.authenticator.AuthenticatorBase: java.lang.String DATE_ONE>;
+        virtualinvoke r2.<org.apache.catalina.connector.Response: void setHeader(java.lang.String,java.lang.String)>("Expires", $r53);
+
+     label11:
+        if r46 == null goto label14;
+
+        $r54 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $z16 = interfaceinvoke $r54.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z16 == 0 goto label12;
+
+        $r55 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r55.<org.apache.juli.logging.Log: void debug(java.lang.Object)>(" Calling hasUserDataPermission()");
+
+     label12:
+        $z17 = interfaceinvoke r44.<org.apache.catalina.Realm: boolean hasUserDataPermission(org.apache.catalina.connector.Request,org.apache.catalina.connector.Response,org.apache.catalina.deploy.SecurityConstraint[])>(r1, r2, r46);
+        if $z17 != 0 goto label14;
+
+        $r56 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $z18 = interfaceinvoke $r56.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z18 == 0 goto label13;
+
+        $r57 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r57.<org.apache.juli.logging.Log: void debug(java.lang.Object)>(" Failed hasUserDataPermission() test");
+
+     label13:
+        return;
+
+     label14:
+        if r46 != null goto label15;
+
+        z0 = 0;
+        goto label21;
+
+     label15:
+        z0 = 1;
+        i0 = 0;
+        goto label20;
+
+     label16:
+        $r58 = r46[i0];
+        $z19 = virtualinvoke $r58.<org.apache.catalina.deploy.SecurityConstraint: boolean getAuthConstraint()>();
+        if $z19 != 0 goto label17;
+
+        z0 = 0;
+        goto label19;
+
+     label17:
+        $r59 = r46[i0];
+        $z20 = virtualinvoke $r59.<org.apache.catalina.deploy.SecurityConstraint: boolean getAllRoles()>();
+        if $z20 != 0 goto label19;
+
+        $r60 = r46[i0];
+        r10 = virtualinvoke $r60.<org.apache.catalina.deploy.SecurityConstraint: java.lang.String[] findAuthRoles()>();
+        if r10 == null goto label18;
+
+        $i1 = lengthof r10;
+        if $i1 != 0 goto label19;
+
+     label18:
+        z0 = 0;
+
+     label19:
+        i0 = i0 + 1;
+
+     label20:
+        $i2 = lengthof r46;
+        if i0 >= $i2 goto label21;
+
+        if z0 != 0 goto label16;
+
+     label21:
+        if z0 != 0 goto label24;
+
+        $r61 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Context context>;
+        $z21 = interfaceinvoke $r61.<org.apache.catalina.Context: boolean getPreemptiveAuthentication()>();
+        if $z21 == 0 goto label24;
+
+        $r62 = virtualinvoke r1.<org.apache.catalina.connector.Request: org.apache.coyote.Request getCoyoteRequest()>();
+        $r63 = virtualinvoke $r62.<org.apache.coyote.Request: org.apache.tomcat.util.http.MimeHeaders getMimeHeaders()>();
+        $r64 = virtualinvoke $r63.<org.apache.tomcat.util.http.MimeHeaders: org.apache.tomcat.util.buf.MessageBytes getValue(java.lang.String)>("authorization");
+        if $r64 == null goto label22;
+
+        $z22 = 1;
+        goto label23;
+
+     label22:
+        $z22 = 0;
+
+     label23:
+        z0 = $z22;
+
+     label24:
+        if z0 != 0 goto label27;
+
+        $r65 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Context context>;
+        $z23 = interfaceinvoke $r65.<org.apache.catalina.Context: boolean getPreemptiveAuthentication()>();
+        if $z23 == 0 goto label27;
+
+        $r66 = "CLIENT_CERT";
+        $r67 = virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: java.lang.String getAuthMethod()>();
+        $z24 = virtualinvoke $r66.<java.lang.String: boolean equals(java.lang.Object)>($r67);
+        if $z24 == 0 goto label27;
+
+        r68 = virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: java.security.cert.X509Certificate[] getRequestCertificates(org.apache.catalina.connector.Request)>(r1);
+        if r68 == null goto label25;
+
+        $i3 = lengthof r68;
+        if $i3 <= 0 goto label25;
+
+        $z25 = 1;
+        goto label26;
+
+     label25:
+        $z25 = 0;
+
+     label26:
+        z0 = $z25;
+
+     label27:
+        if z0 == 0 goto label30;
+
+        $r69 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $z26 = interfaceinvoke $r69.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z26 == 0 goto label28;
+
+        $r70 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r70.<org.apache.juli.logging.Log: void debug(java.lang.Object)>(" Calling authenticate()");
+
+     label28:
+        $z27 = virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean authenticate(org.apache.catalina.connector.Request,javax.servlet.http.HttpServletResponse,org.apache.catalina.deploy.LoginConfig)>(r1, r2, r4);
+        if $z27 != 0 goto label30;
+
+        $r71 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $z28 = interfaceinvoke $r71.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z28 == 0 goto label29;
+
+        $r72 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r72.<org.apache.juli.logging.Log: void debug(java.lang.Object)>(" Failed authenticate() test");
+
+     label29:
+        return;
+
+     label30:
+        if r46 == null goto label33;
+
+        $r73 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $z29 = interfaceinvoke $r73.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z29 == 0 goto label31;
+
+        $r74 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r74.<org.apache.juli.logging.Log: void debug(java.lang.Object)>(" Calling accessControl()");
+
+     label31:
+        $r75 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Context context>;
+        $z30 = interfaceinvoke r44.<org.apache.catalina.Realm: boolean hasResourcePermission(org.apache.catalina.connector.Request,org.apache.catalina.connector.Response,org.apache.catalina.deploy.SecurityConstraint[],org.apache.catalina.Context)>(r1, r2, r46, $r75);
+        if $z30 != 0 goto label33;
+
+        $r76 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $z31 = interfaceinvoke $r76.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z31 == 0 goto label32;
+
+        $r77 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r77.<org.apache.juli.logging.Log: void debug(java.lang.Object)>(" Failed accessControl() test");
+
+     label32:
+        return;
+
+     label33:
+        $r78 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $z32 = interfaceinvoke $r78.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z32 == 0 goto label34;
+
+        $r79 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r79.<org.apache.juli.logging.Log: void debug(java.lang.Object)>(" Successfully passed all security constraints");
+
+     label34:
+        $r80 = virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Valve getNext()>();
+        interfaceinvoke $r80.<org.apache.catalina.Valve: void invoke(org.apache.catalina.connector.Request,org.apache.catalina.connector.Response)>(r1, r2);
+        return;
+    }
+
+    protected java.security.cert.X509Certificate[] getRequestCertificates(org.apache.catalina.connector.Request) throws java.lang.IllegalStateException
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        org.apache.catalina.connector.Request r1;
+        java.security.cert.X509Certificate[] r2;
+        java.lang.IllegalStateException r3, $r8;
+        java.lang.Object $r4, $r7;
+        int $i0;
+        org.apache.coyote.Request $r5;
+        org.apache.coyote.ActionCode $r6;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        r1 := @parameter0: org.apache.catalina.connector.Request;
+        $r4 = virtualinvoke r1.<org.apache.catalina.connector.Request: java.lang.Object getAttribute(java.lang.String)>("javax.servlet.request.X509Certificate");
+        r2 = (java.security.cert.X509Certificate[]) $r4;
+        if r2 == null goto label0;
+
+        $i0 = lengthof r2;
+        if $i0 >= 1 goto label3;
+
+     label0:
+        $r5 = virtualinvoke r1.<org.apache.catalina.connector.Request: org.apache.coyote.Request getCoyoteRequest()>();
+        $r6 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_SSL_CERTIFICATE>;
+        virtualinvoke $r5.<org.apache.coyote.Request: void action(org.apache.coyote.ActionCode,java.lang.Object)>($r6, null);
+        $r7 = virtualinvoke r1.<org.apache.catalina.connector.Request: java.lang.Object getAttribute(java.lang.String)>("javax.servlet.request.X509Certificate");
+        r2 = (java.security.cert.X509Certificate[]) $r7;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r8 := @caughtexception;
+        r3 = $r8;
+
+     label3:
+        return r2;
+
+        catch java.lang.IllegalStateException from label0 to label1 with label2;
+    }
+
+    protected void associate(java.lang.String, org.apache.catalina.Session)
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        java.lang.String r1;
+        org.apache.catalina.Session r2;
+        org.apache.catalina.authenticator.SingleSignOn $r3, $r4;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: org.apache.catalina.Session;
+        $r3 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.authenticator.SingleSignOn sso>;
+        if $r3 != null goto label0;
+
+        return;
+
+     label0:
+        $r4 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.authenticator.SingleSignOn sso>;
+        virtualinvoke $r4.<org.apache.catalina.authenticator.SingleSignOn: boolean associate(java.lang.String,org.apache.catalina.Session)>(r1, r2);
+        return;
+    }
+
+    public boolean authenticate(org.apache.catalina.connector.Request, javax.servlet.http.HttpServletResponse) throws java.io.IOException
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        org.apache.catalina.connector.Request r1;
+        javax.servlet.http.HttpServletResponse r2;
+        org.apache.catalina.Context $r3, $r4, $r6;
+        org.apache.catalina.deploy.LoginConfig $r5, $r7;
+        boolean $z0;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        r1 := @parameter0: org.apache.catalina.connector.Request;
+        r2 := @parameter1: javax.servlet.http.HttpServletResponse;
+        $r3 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Context context>;
+        if $r3 == null goto label0;
+
+        $r4 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Context context>;
+        $r5 = interfaceinvoke $r4.<org.apache.catalina.Context: org.apache.catalina.deploy.LoginConfig getLoginConfig()>();
+        if $r5 != null goto label1;
+
+     label0:
+        return 1;
+
+     label1:
+        $r6 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Context context>;
+        $r7 = interfaceinvoke $r6.<org.apache.catalina.Context: org.apache.catalina.deploy.LoginConfig getLoginConfig()>();
+        $z0 = virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean authenticate(org.apache.catalina.connector.Request,javax.servlet.http.HttpServletResponse,org.apache.catalina.deploy.LoginConfig)>(r1, r2, $r7);
+        return $z0;
+    }
+
+    public abstract boolean authenticate(org.apache.catalina.connector.Request, javax.servlet.http.HttpServletResponse, org.apache.catalina.deploy.LoginConfig) throws java.io.IOException;
+
+    protected boolean checkForCachedAuthentication(org.apache.catalina.connector.Request, javax.servlet.http.HttpServletResponse, boolean)
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        org.apache.catalina.connector.Request r1;
+        javax.servlet.http.HttpServletResponse r2;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6;
+        java.security.Principal r3, r6;
+        java.lang.String r4, r5, r7, $r13, $r14, $r20, $r28, $r35;
+        java.lang.Object $r8;
+        org.apache.juli.logging.Log $r9, $r10, $r16, $r17, $r24, $r25, $r31, $r32;
+        org.apache.tomcat.util.res.StringManager $r11, $r18, $r26, $r33;
+        java.lang.Object[] $r12, $r19, $r27, $r34;
+        org.apache.catalina.Session $r15;
+        org.apache.coyote.Request $r21, $r22;
+        org.apache.tomcat.util.buf.MessageBytes $r23;
+        org.apache.catalina.Context $r29;
+        org.apache.catalina.Realm $r30;
+        org.apache.catalina.realm.GenericPrincipal $r36;
+        int $i0;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        r1 := @parameter0: org.apache.catalina.connector.Request;
+        r2 := @parameter1: javax.servlet.http.HttpServletResponse;
+        z0 := @parameter2: boolean;
+        r3 = virtualinvoke r1.<org.apache.catalina.connector.Request: java.security.Principal getUserPrincipal()>();
+        $r8 = virtualinvoke r1.<org.apache.catalina.connector.Request: java.lang.Object getNote(java.lang.String)>("org.apache.catalina.request.SSOID");
+        r4 = (java.lang.String) $r8;
+        if r3 == null goto label2;
+
+        $r9 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $z1 = interfaceinvoke $r9.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z1 == 0 goto label0;
+
+        $r10 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $r11 = <org.apache.catalina.authenticator.AuthenticatorBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r12 = newarray (java.lang.Object)[1];
+        $r13 = interfaceinvoke r3.<java.security.Principal: java.lang.String getName()>();
+        $r12[0] = $r13;
+        $r14 = virtualinvoke $r11.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("authenticator.check.found", $r12);
+        interfaceinvoke $r10.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r14);
+
+     label0:
+        if r4 == null goto label1;
+
+        $r15 = virtualinvoke r1.<org.apache.catalina.connector.Request: org.apache.catalina.Session getSessionInternal(boolean)>(1);
+        virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: void associate(java.lang.String,org.apache.catalina.Session)>(r4, $r15);
+
+     label1:
+        return 1;
+
+     label2:
+        if z0 == 0 goto label4;
+
+        if r4 == null goto label4;
+
+        $r16 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $z2 = interfaceinvoke $r16.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z2 == 0 goto label3;
+
+        $r17 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $r18 = <org.apache.catalina.authenticator.AuthenticatorBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r19 = newarray (java.lang.Object)[1];
+        $r19[0] = r4;
+        $r20 = virtualinvoke $r18.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("authenticator.check.sso", $r19);
+        interfaceinvoke $r17.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r20);
+
+     label3:
+        $z3 = virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean reauthenticateFromSSO(java.lang.String,org.apache.catalina.connector.Request)>(r4, r1);
+        if $z3 == 0 goto label4;
+
+        return 1;
+
+     label4:
+        $r21 = virtualinvoke r1.<org.apache.catalina.connector.Request: org.apache.coyote.Request getCoyoteRequest()>();
+        $z4 = virtualinvoke $r21.<org.apache.coyote.Request: boolean getRemoteUserNeedsAuthorization()>();
+        if $z4 == 0 goto label10;
+
+        $r22 = virtualinvoke r1.<org.apache.catalina.connector.Request: org.apache.coyote.Request getCoyoteRequest()>();
+        $r23 = virtualinvoke $r22.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes getRemoteUser()>();
+        r5 = virtualinvoke $r23.<org.apache.tomcat.util.buf.MessageBytes: java.lang.String toString()>();
+        if r5 == null goto label10;
+
+        $r24 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $z5 = interfaceinvoke $r24.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z5 == 0 goto label5;
+
+        $r25 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $r26 = <org.apache.catalina.authenticator.AuthenticatorBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r27 = newarray (java.lang.Object)[1];
+        $r27[0] = r5;
+        $r28 = virtualinvoke $r26.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("authenticator.check.authorize", $r27);
+        interfaceinvoke $r25.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r28);
+
+     label5:
+        $r29 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Context context>;
+        $r30 = interfaceinvoke $r29.<org.apache.catalina.Context: org.apache.catalina.Realm getRealm()>();
+        r6 = interfaceinvoke $r30.<org.apache.catalina.Realm: java.security.Principal authenticate(java.lang.String)>(r5);
+        if r6 != null goto label7;
+
+        $r31 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $z6 = interfaceinvoke $r31.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z6 == 0 goto label6;
+
+        $r32 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $r33 = <org.apache.catalina.authenticator.AuthenticatorBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r34 = newarray (java.lang.Object)[1];
+        $r34[0] = r5;
+        $r35 = virtualinvoke $r33.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("authenticator.check.authorizeFail", $r34);
+        interfaceinvoke $r32.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r35);
+
+     label6:
+        $r36 = new org.apache.catalina.realm.GenericPrincipal;
+        specialinvoke $r36.<org.apache.catalina.realm.GenericPrincipal: void <init>(java.lang.String,java.lang.String,java.util.List)>(r5, null, null);
+        r6 = $r36;
+
+     label7:
+        r7 = virtualinvoke r1.<org.apache.catalina.connector.Request: java.lang.String getAuthType()>();
+        if r7 == null goto label8;
+
+        $i0 = virtualinvoke r7.<java.lang.String: int length()>();
+        if $i0 != 0 goto label9;
+
+     label8:
+        r7 = virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: java.lang.String getAuthMethod()>();
+
+     label9:
+        virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: void register(org.apache.catalina.connector.Request,javax.servlet.http.HttpServletResponse,java.security.Principal,java.lang.String,java.lang.String,java.lang.String)>(r1, r2, r6, r7, r5, null);
+        return 1;
+
+     label10:
+        return 0;
+    }
+
+    protected boolean reauthenticateFromSSO(java.lang.String, org.apache.catalina.connector.Request)
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        java.lang.String r1, $r12, $r15, $r18;
+        org.apache.catalina.connector.Request r2;
+        boolean z0, $z1;
+        org.apache.catalina.Container r3;
+        org.apache.catalina.Realm r4;
+        org.apache.catalina.authenticator.SingleSignOn $r5, $r6;
+        org.apache.catalina.Session $r7;
+        org.apache.juli.logging.Log $r8, $r9;
+        java.lang.StringBuilder $r10, $r13, $r14, $r16, $r17;
+        java.security.Principal $r11;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: org.apache.catalina.connector.Request;
+        $r5 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.authenticator.SingleSignOn sso>;
+        if $r5 == null goto label0;
+
+        if r1 != null goto label1;
+
+     label0:
+        return 0;
+
+     label1:
+        z0 = 0;
+        r3 = virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Container getContainer()>();
+        if r3 == null goto label2;
+
+        r4 = interfaceinvoke r3.<org.apache.catalina.Container: org.apache.catalina.Realm getRealm()>();
+        if r4 == null goto label2;
+
+        $r6 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.authenticator.SingleSignOn sso>;
+        z0 = virtualinvoke $r6.<org.apache.catalina.authenticator.SingleSignOn: boolean reauthenticate(java.lang.String,org.apache.catalina.Realm,org.apache.catalina.connector.Request)>(r1, r4, r2);
+
+     label2:
+        if z0 == 0 goto label3;
+
+        $r7 = virtualinvoke r2.<org.apache.catalina.connector.Request: org.apache.catalina.Session getSessionInternal(boolean)>(1);
+        virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: void associate(java.lang.String,org.apache.catalina.Session)>(r1, $r7);
+        $r8 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $z1 = interfaceinvoke $r8.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z1 == 0 goto label3;
+
+        $r9 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $r10 = new java.lang.StringBuilder;
+        specialinvoke $r10.<java.lang.StringBuilder: void <init>(java.lang.String)>(" Reauthenticated cached principal \'");
+        $r11 = virtualinvoke r2.<org.apache.catalina.connector.Request: java.security.Principal getUserPrincipal()>();
+        $r12 = interfaceinvoke $r11.<java.security.Principal: java.lang.String getName()>();
+        $r13 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r12);
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\' with auth type \'");
+        $r15 = virtualinvoke r2.<org.apache.catalina.connector.Request: java.lang.String getAuthType()>();
+        $r16 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r15);
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r9.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r18);
+
+     label3:
+        return z0;
+    }
+
+    public void register(org.apache.catalina.connector.Request, javax.servlet.http.HttpServletResponse, java.security.Principal, java.lang.String, java.lang.String, java.lang.String)
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        org.apache.catalina.connector.Request r1;
+        javax.servlet.http.HttpServletResponse r2;
+        java.security.Principal r3;
+        java.lang.String r4, r5, r6, r7, r11, $r13, $r19, $r22, r25, $r28;
+        java.lang.StringBuilder $r8, $r15, $r16, $r17, $r18;
+        org.apache.catalina.Manager r9;
+        javax.servlet.http.Cookie r10, $r27;
+        org.apache.juli.logging.Log $r12, $r14;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6;
+        org.apache.catalina.Session r20;
+        org.apache.catalina.Context $r21, $r32;
+        org.apache.catalina.authenticator.SingleSignOn $r23, $r29, $r33, $r34, $r35, $r36;
+        java.lang.Object $r24;
+        org.apache.catalina.util.SessionIdGeneratorBase $r26;
+        javax.servlet.ServletContext $r30;
+        javax.servlet.SessionCookieConfig $r31;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        r1 := @parameter0: org.apache.catalina.connector.Request;
+        r2 := @parameter1: javax.servlet.http.HttpServletResponse;
+        r3 := @parameter2: java.security.Principal;
+        r4 := @parameter3: java.lang.String;
+        r5 := @parameter4: java.lang.String;
+        r6 := @parameter5: java.lang.String;
+        $r12 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $z0 = interfaceinvoke $r12.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label2;
+
+        if r3 != null goto label0;
+
+        $r13 = "none";
+        goto label1;
+
+     label0:
+        $r13 = interfaceinvoke r3.<java.security.Principal: java.lang.String getName()>();
+
+     label1:
+        r7 = $r13;
+        $r14 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $r8 = new java.lang.StringBuilder;
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>(java.lang.String)>("Authenticated \'");
+        $r15 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r7);
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\' with type \'");
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r4);
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r14.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r19);
+
+     label2:
+        virtualinvoke r1.<org.apache.catalina.connector.Request: void setAuthType(java.lang.String)>(r4);
+        virtualinvoke r1.<org.apache.catalina.connector.Request: void setUserPrincipal(java.security.Principal)>(r3);
+        r20 = virtualinvoke r1.<org.apache.catalina.connector.Request: org.apache.catalina.Session getSessionInternal(boolean)>(0);
+        if r20 == null goto label3;
+
+        $z1 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean changeSessionIdOnAuthentication>;
+        if $z1 == 0 goto label4;
+
+        if r3 == null goto label4;
+
+        $r21 = virtualinvoke r1.<org.apache.catalina.connector.Request: org.apache.catalina.Context getContext()>();
+        r9 = interfaceinvoke $r21.<org.apache.catalina.Context: org.apache.catalina.Manager getManager()>();
+        interfaceinvoke r9.<org.apache.catalina.Manager: void changeSessionId(org.apache.catalina.Session)>(r20);
+        $r22 = interfaceinvoke r20.<org.apache.catalina.Session: java.lang.String getId()>();
+        virtualinvoke r1.<org.apache.catalina.connector.Request: void changeSessionId(java.lang.String)>($r22);
+        goto label4;
+
+     label3:
+        $z2 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean alwaysUseSession>;
+        if $z2 == 0 goto label4;
+
+        r20 = virtualinvoke r1.<org.apache.catalina.connector.Request: org.apache.catalina.Session getSessionInternal(boolean)>(1);
+
+     label4:
+        $z3 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: boolean cache>;
+        if $z3 == 0 goto label8;
+
+        if r20 == null goto label8;
+
+        interfaceinvoke r20.<org.apache.catalina.Session: void setAuthType(java.lang.String)>(r4);
+        interfaceinvoke r20.<org.apache.catalina.Session: void setPrincipal(java.security.Principal)>(r3);
+        if r5 == null goto label5;
+
+        interfaceinvoke r20.<org.apache.catalina.Session: void setNote(java.lang.String,java.lang.Object)>("org.apache.catalina.session.USERNAME", r5);
+        goto label6;
+
+     label5:
+        interfaceinvoke r20.<org.apache.catalina.Session: void removeNote(java.lang.String)>("org.apache.catalina.session.USERNAME");
+
+     label6:
+        if r6 == null goto label7;
+
+        interfaceinvoke r20.<org.apache.catalina.Session: void setNote(java.lang.String,java.lang.Object)>("org.apache.catalina.session.PASSWORD", r6);
+        goto label8;
+
+     label7:
+        interfaceinvoke r20.<org.apache.catalina.Session: void removeNote(java.lang.String)>("org.apache.catalina.session.PASSWORD");
+
+     label8:
+        $r23 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.authenticator.SingleSignOn sso>;
+        if $r23 != null goto label9;
+
+        return;
+
+     label9:
+        $r24 = virtualinvoke r1.<org.apache.catalina.connector.Request: java.lang.Object getNote(java.lang.String)>("org.apache.catalina.request.SSOID");
+        r25 = (java.lang.String) $r24;
+        if r25 != null goto label13;
+
+        $r26 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.util.SessionIdGeneratorBase sessionIdGenerator>;
+        r25 = virtualinvoke $r26.<org.apache.catalina.util.SessionIdGeneratorBase: java.lang.String generateSessionId()>();
+        $r27 = new javax.servlet.http.Cookie;
+        $r28 = <org.apache.catalina.authenticator.Constants: java.lang.String SINGLE_SIGN_ON_COOKIE>;
+        specialinvoke $r27.<javax.servlet.http.Cookie: void <init>(java.lang.String,java.lang.String)>($r28, r25);
+        r10 = $r27;
+        virtualinvoke r10.<javax.servlet.http.Cookie: void setMaxAge(int)>(-1);
+        virtualinvoke r10.<javax.servlet.http.Cookie: void setPath(java.lang.String)>("/");
+        $z4 = virtualinvoke r1.<org.apache.catalina.connector.Request: boolean isSecure()>();
+        virtualinvoke r10.<javax.servlet.http.Cookie: void setSecure(boolean)>($z4);
+        $r29 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.authenticator.SingleSignOn sso>;
+        r11 = virtualinvoke $r29.<org.apache.catalina.authenticator.SingleSignOn: java.lang.String getCookieDomain()>();
+        if r11 == null goto label10;
+
+        virtualinvoke r10.<javax.servlet.http.Cookie: void setDomain(java.lang.String)>(r11);
+
+     label10:
+        $r30 = virtualinvoke r1.<org.apache.catalina.connector.Request: javax.servlet.ServletContext getServletContext()>();
+        $r31 = interfaceinvoke $r30.<javax.servlet.ServletContext: javax.servlet.SessionCookieConfig getSessionCookieConfig()>();
+        $z5 = interfaceinvoke $r31.<javax.servlet.SessionCookieConfig: boolean isHttpOnly()>();
+        if $z5 != 0 goto label11;
+
+        $r32 = virtualinvoke r1.<org.apache.catalina.connector.Request: org.apache.catalina.Context getContext()>();
+        $z6 = interfaceinvoke $r32.<org.apache.catalina.Context: boolean getUseHttpOnly()>();
+        if $z6 == 0 goto label12;
+
+     label11:
+        virtualinvoke r10.<javax.servlet.http.Cookie: void setHttpOnly(boolean)>(1);
+
+     label12:
+        interfaceinvoke r2.<javax.servlet.http.HttpServletResponse: void addCookie(javax.servlet.http.Cookie)>(r10);
+        $r33 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.authenticator.SingleSignOn sso>;
+        virtualinvoke $r33.<org.apache.catalina.authenticator.SingleSignOn: void register(java.lang.String,java.security.Principal,java.lang.String,java.lang.String,java.lang.String)>(r25, r3, r4, r5, r6);
+        virtualinvoke r1.<org.apache.catalina.connector.Request: void setNote(java.lang.String,java.lang.Object)>("org.apache.catalina.request.SSOID", r25);
+        goto label15;
+
+     label13:
+        if r3 != null goto label14;
+
+        $r34 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.authenticator.SingleSignOn sso>;
+        virtualinvoke $r34.<org.apache.catalina.authenticator.SingleSignOn: void deregister(java.lang.String)>(r25);
+        virtualinvoke r1.<org.apache.catalina.connector.Request: void removeNote(java.lang.String)>("org.apache.catalina.request.SSOID");
+        return;
+
+     label14:
+        $r35 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.authenticator.SingleSignOn sso>;
+        virtualinvoke $r35.<org.apache.catalina.authenticator.SingleSignOn: boolean update(java.lang.String,java.security.Principal,java.lang.String,java.lang.String,java.lang.String)>(r25, r3, r4, r5, r6);
+
+     label15:
+        if r20 != null goto label16;
+
+        r20 = virtualinvoke r1.<org.apache.catalina.connector.Request: org.apache.catalina.Session getSessionInternal(boolean)>(1);
+
+     label16:
+        $r36 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.authenticator.SingleSignOn sso>;
+        virtualinvoke $r36.<org.apache.catalina.authenticator.SingleSignOn: boolean associate(java.lang.String,org.apache.catalina.Session)>(r25, r20);
+        return;
+    }
+
+    public void login(java.lang.String, java.lang.String, org.apache.catalina.connector.Request) throws javax.servlet.ServletException
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        java.lang.String r1, r2, $r6;
+        org.apache.catalina.connector.Request r3;
+        java.security.Principal r4;
+        org.apache.catalina.connector.Response $r5;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: org.apache.catalina.connector.Request;
+        r4 = virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: java.security.Principal doLogin(org.apache.catalina.connector.Request,java.lang.String,java.lang.String)>(r3, r1, r2);
+        $r5 = virtualinvoke r3.<org.apache.catalina.connector.Request: org.apache.catalina.connector.Response getResponse()>();
+        $r6 = virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: java.lang.String getAuthMethod()>();
+        virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: void register(org.apache.catalina.connector.Request,javax.servlet.http.HttpServletResponse,java.security.Principal,java.lang.String,java.lang.String,java.lang.String)>(r3, $r5, r4, $r6, r1, r2);
+        return;
+    }
+
+    protected abstract java.lang.String getAuthMethod();
+
+    protected java.security.Principal doLogin(org.apache.catalina.connector.Request, java.lang.String, java.lang.String) throws javax.servlet.ServletException
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        org.apache.catalina.connector.Request r1;
+        java.lang.String r2, r3, $r9;
+        java.security.Principal r4;
+        org.apache.catalina.Context $r5;
+        org.apache.catalina.Realm $r6;
+        javax.servlet.ServletException $r7;
+        org.apache.tomcat.util.res.StringManager $r8;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        r1 := @parameter0: org.apache.catalina.connector.Request;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: java.lang.String;
+        $r5 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Context context>;
+        $r6 = interfaceinvoke $r5.<org.apache.catalina.Context: org.apache.catalina.Realm getRealm()>();
+        r4 = interfaceinvoke $r6.<org.apache.catalina.Realm: java.security.Principal authenticate(java.lang.String,java.lang.String)>(r2, r3);
+        if r4 != null goto label0;
+
+        $r7 = new javax.servlet.ServletException;
+        $r8 = <org.apache.catalina.authenticator.AuthenticatorBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r9 = virtualinvoke $r8.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("authenticator.loginFail");
+        specialinvoke $r7.<javax.servlet.ServletException: void <init>(java.lang.String)>($r9);
+        throw $r7;
+
+     label0:
+        return r4;
+    }
+
+    public void logout(org.apache.catalina.connector.Request) throws javax.servlet.ServletException
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        org.apache.catalina.connector.Request r1;
+        java.security.Principal r2;
+        java.lang.Throwable r3, $r6;
+        org.apache.tomcat.util.res.StringManager $r4;
+        boolean $z0;
+        org.apache.catalina.realm.GenericPrincipal $r5;
+        org.apache.juli.logging.Log $r7;
+        java.lang.String $r8;
+        org.apache.catalina.connector.Response $r9;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        r1 := @parameter0: org.apache.catalina.connector.Request;
+        r2 = virtualinvoke r1.<org.apache.catalina.connector.Request: java.security.Principal getPrincipal()>();
+        $z0 = r2 instanceof org.apache.catalina.realm.GenericPrincipal;
+        if $z0 == 0 goto label3;
+
+     label0:
+        $r5 = (org.apache.catalina.realm.GenericPrincipal) r2;
+        virtualinvoke $r5.<org.apache.catalina.realm.GenericPrincipal: void logout()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r6 := @caughtexception;
+        r3 = $r6;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r3);
+        $r7 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $r4 = <org.apache.catalina.authenticator.AuthenticatorBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r8 = virtualinvoke $r4.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("authenticator.tomcatPrincipalLogoutFail");
+        interfaceinvoke $r7.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r8, r3);
+
+     label3:
+        $r9 = virtualinvoke r1.<org.apache.catalina.connector.Request: org.apache.catalina.connector.Response getResponse()>();
+        virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: void register(org.apache.catalina.connector.Request,javax.servlet.http.HttpServletResponse,java.security.Principal,java.lang.String,java.lang.String,java.lang.String)>(r1, $r9, null, null, null, null);
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+    }
+
+    protected synchronized void startInternal() throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+        org.apache.catalina.Container r1;
+        org.apache.catalina.Valve[] r2;
+        int i0, $i1;
+        org.apache.catalina.Context $r3;
+        org.apache.catalina.Pipeline $r4;
+        org.apache.catalina.Valve $r5, $r6;
+        boolean $z0, $z1;
+        org.apache.catalina.authenticator.SingleSignOn $r7, $r8, $r9, $r11, $r14;
+        org.apache.juli.logging.Log $r10, $r12, $r17;
+        java.lang.StringBuilder $r13, $r15;
+        java.lang.String $r16, $r20, $r22, $r24;
+        org.apache.catalina.util.StandardSessionIdGenerator $r18;
+        org.apache.catalina.util.SessionIdGeneratorBase $r19, $r21, $r23;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        $r3 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.Context context>;
+        r1 = interfaceinvoke $r3.<org.apache.catalina.Context: org.apache.catalina.Container getParent()>();
+        goto label5;
+
+     label0:
+        $r4 = interfaceinvoke r1.<org.apache.catalina.Container: org.apache.catalina.Pipeline getPipeline()>();
+        r2 = interfaceinvoke $r4.<org.apache.catalina.Pipeline: org.apache.catalina.Valve[] getValves()>();
+        i0 = 0;
+        goto label3;
+
+     label1:
+        $r5 = r2[i0];
+        $z0 = $r5 instanceof org.apache.catalina.authenticator.SingleSignOn;
+        if $z0 == 0 goto label2;
+
+        $r6 = r2[i0];
+        $r7 = (org.apache.catalina.authenticator.SingleSignOn) $r6;
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.authenticator.SingleSignOn sso> = $r7;
+        goto label4;
+
+     label2:
+        i0 = i0 + 1;
+
+     label3:
+        $i1 = lengthof r2;
+        if i0 < $i1 goto label1;
+
+     label4:
+        $r8 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.authenticator.SingleSignOn sso>;
+        if $r8 != null goto label5;
+
+        r1 = interfaceinvoke r1.<org.apache.catalina.Container: org.apache.catalina.Container getParent()>();
+
+     label5:
+        $r9 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.authenticator.SingleSignOn sso>;
+        if $r9 != null goto label6;
+
+        if r1 != null goto label0;
+
+     label6:
+        $r10 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $z1 = interfaceinvoke $r10.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z1 == 0 goto label8;
+
+        $r11 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.authenticator.SingleSignOn sso>;
+        if $r11 == null goto label7;
+
+        $r12 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        $r13 = new java.lang.StringBuilder;
+        specialinvoke $r13.<java.lang.StringBuilder: void <init>(java.lang.String)>("Found SingleSignOn Valve at ");
+        $r14 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.authenticator.SingleSignOn sso>;
+        $r15 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r14);
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r12.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r16);
+        goto label8;
+
+     label7:
+        $r17 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r17.<org.apache.juli.logging.Log: void debug(java.lang.Object)>("No SingleSignOn Valve is present");
+
+     label8:
+        $r18 = new org.apache.catalina.util.StandardSessionIdGenerator;
+        specialinvoke $r18.<org.apache.catalina.util.StandardSessionIdGenerator: void <init>()>();
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.util.SessionIdGeneratorBase sessionIdGenerator> = $r18;
+        $r19 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.util.SessionIdGeneratorBase sessionIdGenerator>;
+        $r20 = virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: java.lang.String getSecureRandomAlgorithm()>();
+        virtualinvoke $r19.<org.apache.catalina.util.SessionIdGeneratorBase: void setSecureRandomAlgorithm(java.lang.String)>($r20);
+        $r21 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.util.SessionIdGeneratorBase sessionIdGenerator>;
+        $r22 = virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: java.lang.String getSecureRandomClass()>();
+        virtualinvoke $r21.<org.apache.catalina.util.SessionIdGeneratorBase: void setSecureRandomClass(java.lang.String)>($r22);
+        $r23 = r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.util.SessionIdGeneratorBase sessionIdGenerator>;
+        $r24 = virtualinvoke r0.<org.apache.catalina.authenticator.AuthenticatorBase: java.lang.String getSecureRandomProvider()>();
+        virtualinvoke $r23.<org.apache.catalina.util.SessionIdGeneratorBase: void setSecureRandomProvider(java.lang.String)>($r24);
+        specialinvoke r0.<org.apache.catalina.valves.ValveBase: void startInternal()>();
+        return;
+    }
+
+    protected synchronized void stopInternal() throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.authenticator.AuthenticatorBase r0;
+
+        r0 := @this: org.apache.catalina.authenticator.AuthenticatorBase;
+        specialinvoke r0.<org.apache.catalina.valves.ValveBase: void stopInternal()>();
+        r0.<org.apache.catalina.authenticator.AuthenticatorBase: org.apache.catalina.authenticator.SingleSignOn sso> = null;
+        return;
+    }
+}

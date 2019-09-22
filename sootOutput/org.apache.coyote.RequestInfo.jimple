@@ -1,0 +1,539 @@
+public class org.apache.coyote.RequestInfo extends java.lang.Object
+{
+    org.apache.coyote.RequestGroupInfo global;
+    org.apache.coyote.Request req;
+    int stage;
+    java.lang.String workerThreadName;
+    javax.management.ObjectName rpName;
+    private long bytesSent;
+    private long bytesReceived;
+    private long processingTime;
+    private long maxTime;
+    private java.lang.String maxRequestUri;
+    private int requestCount;
+    private int errorCount;
+    private long lastRequestProcessingTime;
+
+    public void <init>(org.apache.coyote.Request)
+    {
+        org.apache.coyote.RequestInfo r0;
+        org.apache.coyote.Request r1;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        r1 := @parameter0: org.apache.coyote.Request;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<org.apache.coyote.RequestInfo: org.apache.coyote.RequestGroupInfo global> = null;
+        r0.<org.apache.coyote.RequestInfo: int stage> = 0;
+        r0.<org.apache.coyote.RequestInfo: long lastRequestProcessingTime> = 0L;
+        r0.<org.apache.coyote.RequestInfo: org.apache.coyote.Request req> = r1;
+        return;
+    }
+
+    public org.apache.coyote.RequestGroupInfo getGlobalProcessor()
+    {
+        org.apache.coyote.RequestInfo r0;
+        org.apache.coyote.RequestGroupInfo $r1;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $r1 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.RequestGroupInfo global>;
+        return $r1;
+    }
+
+    public void setGlobalProcessor(org.apache.coyote.RequestGroupInfo)
+    {
+        org.apache.coyote.RequestInfo r0;
+        org.apache.coyote.RequestGroupInfo r1, $r2, $r3;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        r1 := @parameter0: org.apache.coyote.RequestGroupInfo;
+        if r1 == null goto label0;
+
+        r0.<org.apache.coyote.RequestInfo: org.apache.coyote.RequestGroupInfo global> = r1;
+        virtualinvoke r1.<org.apache.coyote.RequestGroupInfo: void addRequestProcessor(org.apache.coyote.RequestInfo)>(r0);
+        goto label1;
+
+     label0:
+        $r2 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.RequestGroupInfo global>;
+        if $r2 == null goto label1;
+
+        $r3 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.RequestGroupInfo global>;
+        virtualinvoke $r3.<org.apache.coyote.RequestGroupInfo: void removeRequestProcessor(org.apache.coyote.RequestInfo)>(r0);
+        r0.<org.apache.coyote.RequestInfo: org.apache.coyote.RequestGroupInfo global> = null;
+
+     label1:
+        return;
+    }
+
+    public java.lang.String getMethod()
+    {
+        org.apache.coyote.RequestInfo r0;
+        org.apache.coyote.Request $r1;
+        org.apache.tomcat.util.buf.MessageBytes $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $r1 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.Request req>;
+        $r2 = virtualinvoke $r1.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes method()>();
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.buf.MessageBytes: java.lang.String toString()>();
+        return $r3;
+    }
+
+    public java.lang.String getCurrentUri()
+    {
+        org.apache.coyote.RequestInfo r0;
+        org.apache.coyote.Request $r1;
+        org.apache.tomcat.util.buf.MessageBytes $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $r1 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.Request req>;
+        $r2 = virtualinvoke $r1.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes requestURI()>();
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.buf.MessageBytes: java.lang.String toString()>();
+        return $r3;
+    }
+
+    public java.lang.String getCurrentQueryString()
+    {
+        org.apache.coyote.RequestInfo r0;
+        org.apache.coyote.Request $r1;
+        org.apache.tomcat.util.buf.MessageBytes $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $r1 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.Request req>;
+        $r2 = virtualinvoke $r1.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes queryString()>();
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.buf.MessageBytes: java.lang.String toString()>();
+        return $r3;
+    }
+
+    public java.lang.String getProtocol()
+    {
+        org.apache.coyote.RequestInfo r0;
+        org.apache.coyote.Request $r1;
+        org.apache.tomcat.util.buf.MessageBytes $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $r1 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.Request req>;
+        $r2 = virtualinvoke $r1.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes protocol()>();
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.buf.MessageBytes: java.lang.String toString()>();
+        return $r3;
+    }
+
+    public java.lang.String getVirtualHost()
+    {
+        org.apache.coyote.RequestInfo r0;
+        org.apache.coyote.Request $r1;
+        org.apache.tomcat.util.buf.MessageBytes $r2;
+        java.lang.String $r3;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $r1 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.Request req>;
+        $r2 = virtualinvoke $r1.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes serverName()>();
+        $r3 = virtualinvoke $r2.<org.apache.tomcat.util.buf.MessageBytes: java.lang.String toString()>();
+        return $r3;
+    }
+
+    public int getServerPort()
+    {
+        org.apache.coyote.RequestInfo r0;
+        org.apache.coyote.Request $r1;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $r1 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.Request req>;
+        $i0 = virtualinvoke $r1.<org.apache.coyote.Request: int getServerPort()>();
+        return $i0;
+    }
+
+    public java.lang.String getRemoteAddr()
+    {
+        org.apache.coyote.RequestInfo r0;
+        org.apache.coyote.ActionCode $r1;
+        org.apache.coyote.Request $r2, $r3;
+        org.apache.tomcat.util.buf.MessageBytes $r4;
+        java.lang.String $r5;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $r2 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.Request req>;
+        $r1 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode REQ_HOST_ADDR_ATTRIBUTE>;
+        virtualinvoke $r2.<org.apache.coyote.Request: void action(org.apache.coyote.ActionCode,java.lang.Object)>($r1, null);
+        $r3 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.Request req>;
+        $r4 = virtualinvoke $r3.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes remoteAddr()>();
+        $r5 = virtualinvoke $r4.<org.apache.tomcat.util.buf.MessageBytes: java.lang.String toString()>();
+        return $r5;
+    }
+
+    public java.lang.String getRemoteAddrForwarded()
+    {
+        org.apache.coyote.RequestInfo r0;
+        java.lang.String r1, $r4;
+        org.apache.coyote.Request $r2;
+        java.lang.Object $r3;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $r2 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.Request req>;
+        $r3 = virtualinvoke $r2.<org.apache.coyote.Request: java.lang.Object getAttribute(java.lang.String)>("org.apache.tomcat.remoteAddr");
+        r1 = (java.lang.String) $r3;
+        if r1 != null goto label0;
+
+        $r4 = virtualinvoke r0.<org.apache.coyote.RequestInfo: java.lang.String getRemoteAddr()>();
+        return $r4;
+
+     label0:
+        return r1;
+    }
+
+    public int getContentLength()
+    {
+        org.apache.coyote.RequestInfo r0;
+        org.apache.coyote.Request $r1;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $r1 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.Request req>;
+        $i0 = virtualinvoke $r1.<org.apache.coyote.Request: int getContentLength()>();
+        return $i0;
+    }
+
+    public long getRequestBytesReceived()
+    {
+        org.apache.coyote.RequestInfo r0;
+        org.apache.coyote.Request $r1;
+        long $l0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $r1 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.Request req>;
+        $l0 = virtualinvoke $r1.<org.apache.coyote.Request: long getBytesRead()>();
+        return $l0;
+    }
+
+    public long getRequestBytesSent()
+    {
+        org.apache.coyote.RequestInfo r0;
+        org.apache.coyote.Request $r1;
+        org.apache.coyote.Response $r2;
+        long $l0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $r1 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.Request req>;
+        $r2 = virtualinvoke $r1.<org.apache.coyote.Request: org.apache.coyote.Response getResponse()>();
+        $l0 = virtualinvoke $r2.<org.apache.coyote.Response: long getContentWritten()>();
+        return $l0;
+    }
+
+    public long getRequestProcessingTime()
+    {
+        org.apache.coyote.RequestInfo r0;
+        long l0, $l3, $l4;
+        org.apache.coyote.Request $r1;
+        int $i1;
+        byte $b2;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $r1 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.Request req>;
+        l0 = virtualinvoke $r1.<org.apache.coyote.Request: long getStartTime()>();
+        $i1 = virtualinvoke r0.<org.apache.coyote.RequestInfo: int getStage()>();
+        if $i1 == 7 goto label0;
+
+        $b2 = l0 cmp 0L;
+        if $b2 >= 0 goto label1;
+
+     label0:
+        return 0L;
+
+     label1:
+        $l3 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        $l4 = $l3 - l0;
+        return $l4;
+    }
+
+    void updateCounters()
+    {
+        org.apache.coyote.RequestInfo r0;
+        long l0, l1, l2, $l3, $l4, $l5, $l6, $l7, $l8, $l14, $l15, $l16;
+        org.apache.coyote.Request $r2, $r4, $r7, $r10, $r12;
+        org.apache.coyote.Response $r5, $r8;
+        int $i9, $i10, $i11, $i12, $i13;
+        byte $b17;
+        org.apache.tomcat.util.buf.MessageBytes $r13;
+        java.lang.String $r14;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $l3 = r0.<org.apache.coyote.RequestInfo: long bytesReceived>;
+        $r2 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.Request req>;
+        $l4 = virtualinvoke $r2.<org.apache.coyote.Request: long getBytesRead()>();
+        $l5 = $l3 + $l4;
+        r0.<org.apache.coyote.RequestInfo: long bytesReceived> = $l5;
+        $l6 = r0.<org.apache.coyote.RequestInfo: long bytesSent>;
+        $r4 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.Request req>;
+        $r5 = virtualinvoke $r4.<org.apache.coyote.Request: org.apache.coyote.Response getResponse()>();
+        $l7 = virtualinvoke $r5.<org.apache.coyote.Response: long getContentWritten()>();
+        $l8 = $l6 + $l7;
+        r0.<org.apache.coyote.RequestInfo: long bytesSent> = $l8;
+        $i9 = r0.<org.apache.coyote.RequestInfo: int requestCount>;
+        $i10 = $i9 + 1;
+        r0.<org.apache.coyote.RequestInfo: int requestCount> = $i10;
+        $r7 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.Request req>;
+        $r8 = virtualinvoke $r7.<org.apache.coyote.Request: org.apache.coyote.Response getResponse()>();
+        $i11 = virtualinvoke $r8.<org.apache.coyote.Response: int getStatus()>();
+        if $i11 < 400 goto label0;
+
+        $i12 = r0.<org.apache.coyote.RequestInfo: int errorCount>;
+        $i13 = $i12 + 1;
+        r0.<org.apache.coyote.RequestInfo: int errorCount> = $i13;
+
+     label0:
+        $r10 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.Request req>;
+        l0 = virtualinvoke $r10.<org.apache.coyote.Request: long getStartTime()>();
+        l1 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        l2 = l1 - l0;
+        r0.<org.apache.coyote.RequestInfo: long lastRequestProcessingTime> = l2;
+        $l14 = r0.<org.apache.coyote.RequestInfo: long processingTime>;
+        $l15 = $l14 + l2;
+        r0.<org.apache.coyote.RequestInfo: long processingTime> = $l15;
+        $l16 = r0.<org.apache.coyote.RequestInfo: long maxTime>;
+        $b17 = $l16 cmp l2;
+        if $b17 >= 0 goto label1;
+
+        r0.<org.apache.coyote.RequestInfo: long maxTime> = l2;
+        $r12 = r0.<org.apache.coyote.RequestInfo: org.apache.coyote.Request req>;
+        $r13 = virtualinvoke $r12.<org.apache.coyote.Request: org.apache.tomcat.util.buf.MessageBytes requestURI()>();
+        $r14 = virtualinvoke $r13.<org.apache.tomcat.util.buf.MessageBytes: java.lang.String toString()>();
+        r0.<org.apache.coyote.RequestInfo: java.lang.String maxRequestUri> = $r14;
+
+     label1:
+        return;
+    }
+
+    public int getStage()
+    {
+        org.apache.coyote.RequestInfo r0;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $i0 = r0.<org.apache.coyote.RequestInfo: int stage>;
+        return $i0;
+    }
+
+    public void setStage(int)
+    {
+        org.apache.coyote.RequestInfo r0;
+        int i0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        i0 := @parameter0: int;
+        r0.<org.apache.coyote.RequestInfo: int stage> = i0;
+        return;
+    }
+
+    public long getBytesSent()
+    {
+        org.apache.coyote.RequestInfo r0;
+        long $l0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $l0 = r0.<org.apache.coyote.RequestInfo: long bytesSent>;
+        return $l0;
+    }
+
+    public void setBytesSent(long)
+    {
+        org.apache.coyote.RequestInfo r0;
+        long l0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        l0 := @parameter0: long;
+        r0.<org.apache.coyote.RequestInfo: long bytesSent> = l0;
+        return;
+    }
+
+    public long getBytesReceived()
+    {
+        org.apache.coyote.RequestInfo r0;
+        long $l0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $l0 = r0.<org.apache.coyote.RequestInfo: long bytesReceived>;
+        return $l0;
+    }
+
+    public void setBytesReceived(long)
+    {
+        org.apache.coyote.RequestInfo r0;
+        long l0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        l0 := @parameter0: long;
+        r0.<org.apache.coyote.RequestInfo: long bytesReceived> = l0;
+        return;
+    }
+
+    public long getProcessingTime()
+    {
+        org.apache.coyote.RequestInfo r0;
+        long $l0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $l0 = r0.<org.apache.coyote.RequestInfo: long processingTime>;
+        return $l0;
+    }
+
+    public void setProcessingTime(long)
+    {
+        org.apache.coyote.RequestInfo r0;
+        long l0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        l0 := @parameter0: long;
+        r0.<org.apache.coyote.RequestInfo: long processingTime> = l0;
+        return;
+    }
+
+    public long getMaxTime()
+    {
+        org.apache.coyote.RequestInfo r0;
+        long $l0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $l0 = r0.<org.apache.coyote.RequestInfo: long maxTime>;
+        return $l0;
+    }
+
+    public void setMaxTime(long)
+    {
+        org.apache.coyote.RequestInfo r0;
+        long l0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        l0 := @parameter0: long;
+        r0.<org.apache.coyote.RequestInfo: long maxTime> = l0;
+        return;
+    }
+
+    public java.lang.String getMaxRequestUri()
+    {
+        org.apache.coyote.RequestInfo r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $r1 = r0.<org.apache.coyote.RequestInfo: java.lang.String maxRequestUri>;
+        return $r1;
+    }
+
+    public void setMaxRequestUri(java.lang.String)
+    {
+        org.apache.coyote.RequestInfo r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.coyote.RequestInfo: java.lang.String maxRequestUri> = r1;
+        return;
+    }
+
+    public int getRequestCount()
+    {
+        org.apache.coyote.RequestInfo r0;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $i0 = r0.<org.apache.coyote.RequestInfo: int requestCount>;
+        return $i0;
+    }
+
+    public void setRequestCount(int)
+    {
+        org.apache.coyote.RequestInfo r0;
+        int i0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        i0 := @parameter0: int;
+        r0.<org.apache.coyote.RequestInfo: int requestCount> = i0;
+        return;
+    }
+
+    public int getErrorCount()
+    {
+        org.apache.coyote.RequestInfo r0;
+        int $i0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $i0 = r0.<org.apache.coyote.RequestInfo: int errorCount>;
+        return $i0;
+    }
+
+    public void setErrorCount(int)
+    {
+        org.apache.coyote.RequestInfo r0;
+        int i0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        i0 := @parameter0: int;
+        r0.<org.apache.coyote.RequestInfo: int errorCount> = i0;
+        return;
+    }
+
+    public java.lang.String getWorkerThreadName()
+    {
+        org.apache.coyote.RequestInfo r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $r1 = r0.<org.apache.coyote.RequestInfo: java.lang.String workerThreadName>;
+        return $r1;
+    }
+
+    public javax.management.ObjectName getRpName()
+    {
+        org.apache.coyote.RequestInfo r0;
+        javax.management.ObjectName $r1;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $r1 = r0.<org.apache.coyote.RequestInfo: javax.management.ObjectName rpName>;
+        return $r1;
+    }
+
+    public long getLastRequestProcessingTime()
+    {
+        org.apache.coyote.RequestInfo r0;
+        long $l0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        $l0 = r0.<org.apache.coyote.RequestInfo: long lastRequestProcessingTime>;
+        return $l0;
+    }
+
+    public void setWorkerThreadName(java.lang.String)
+    {
+        org.apache.coyote.RequestInfo r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.coyote.RequestInfo: java.lang.String workerThreadName> = r1;
+        return;
+    }
+
+    public void setRpName(javax.management.ObjectName)
+    {
+        org.apache.coyote.RequestInfo r0;
+        javax.management.ObjectName r1;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        r1 := @parameter0: javax.management.ObjectName;
+        r0.<org.apache.coyote.RequestInfo: javax.management.ObjectName rpName> = r1;
+        return;
+    }
+
+    public void setLastRequestProcessingTime(long)
+    {
+        org.apache.coyote.RequestInfo r0;
+        long l0;
+
+        r0 := @this: org.apache.coyote.RequestInfo;
+        l0 := @parameter0: long;
+        r0.<org.apache.coyote.RequestInfo: long lastRequestProcessingTime> = l0;
+        return;
+    }
+}

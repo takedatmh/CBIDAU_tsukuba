@@ -1,0 +1,64 @@
+public class java.security.cert.CertPath$CertPathRep extends java.lang.Object implements java.io.Serializable
+{
+    private static final long serialVersionUID;
+    private java.lang.String type;
+    private byte[] data;
+
+    protected void <init>(java.lang.String, byte[])
+    {
+        java.security.cert.CertPath$CertPathRep r0;
+        java.lang.String r1;
+        byte[] r2;
+
+        r0 := @this: java.security.cert.CertPath$CertPathRep;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: byte[];
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.security.cert.CertPath$CertPathRep: java.lang.String type> = r1;
+        r0.<java.security.cert.CertPath$CertPathRep: byte[] data> = r2;
+        return;
+    }
+
+    protected java.lang.Object readResolve() throws java.io.ObjectStreamException
+    {
+        java.security.cert.CertPath$CertPathRep r0;
+        java.security.cert.CertificateFactory r1;
+        java.io.ByteArrayInputStream $r2;
+        java.io.NotSerializableException r3, $r9;
+        java.lang.String $r4, $r12, $r14;
+        byte[] $r5;
+        java.security.cert.CertPath $r6;
+        java.security.cert.CertificateException $r7, r8;
+        java.lang.StringBuilder $r10, $r11, $r13;
+
+        r0 := @this: java.security.cert.CertPath$CertPathRep;
+
+     label0:
+        $r4 = r0.<java.security.cert.CertPath$CertPathRep: java.lang.String type>;
+        r1 = staticinvoke <java.security.cert.CertificateFactory: java.security.cert.CertificateFactory getInstance(java.lang.String)>($r4);
+        $r2 = new java.io.ByteArrayInputStream;
+        $r5 = r0.<java.security.cert.CertPath$CertPathRep: byte[] data>;
+        specialinvoke $r2.<java.io.ByteArrayInputStream: void <init>(byte[])>($r5);
+        $r6 = virtualinvoke r1.<java.security.cert.CertificateFactory: java.security.cert.CertPath generateCertPath(java.io.InputStream)>($r2);
+
+     label1:
+        return $r6;
+
+     label2:
+        $r7 := @caughtexception;
+        r8 = $r7;
+        $r9 = new java.io.NotSerializableException;
+        $r10 = new java.lang.StringBuilder;
+        specialinvoke $r10.<java.lang.StringBuilder: void <init>()>();
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("java.security.cert.CertPath: ");
+        $r12 = r0.<java.security.cert.CertPath$CertPathRep: java.lang.String type>;
+        $r13 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r12);
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r9.<java.io.NotSerializableException: void <init>(java.lang.String)>($r14);
+        r3 = $r9;
+        virtualinvoke r3.<java.io.NotSerializableException: java.lang.Throwable initCause(java.lang.Throwable)>(r8);
+        throw r3;
+
+        catch java.security.cert.CertificateException from label0 to label1 with label2;
+    }
+}

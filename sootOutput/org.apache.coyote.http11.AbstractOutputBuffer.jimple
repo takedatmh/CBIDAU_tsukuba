@@ -1,0 +1,743 @@
+public abstract class org.apache.coyote.http11.AbstractOutputBuffer extends java.lang.Object implements org.apache.coyote.OutputBuffer
+{
+    protected org.apache.coyote.Response response;
+    protected boolean committed;
+    protected boolean finished;
+    protected byte[] buf;
+    protected int pos;
+    protected org.apache.coyote.http11.OutputFilter[] filterLibrary;
+    protected org.apache.coyote.http11.OutputFilter[] activeFilters;
+    protected int lastActiveFilter;
+    protected org.apache.coyote.OutputBuffer outputStreamOutputBuffer;
+    protected long byteCount;
+    protected static final org.apache.tomcat.util.res.StringManager sm;
+    private static final org.apache.juli.logging.Log log;
+
+    static void <clinit>()
+    {
+        org.apache.tomcat.util.res.StringManager $r0;
+        org.apache.juli.logging.Log $r1;
+
+        $r0 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String)>("org.apache.coyote.http11");
+        <org.apache.coyote.http11.AbstractOutputBuffer: org.apache.tomcat.util.res.StringManager sm> = $r0;
+        $r1 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/coyote/http11/AbstractOutputBuffer");
+        <org.apache.coyote.http11.AbstractOutputBuffer: org.apache.juli.logging.Log log> = $r1;
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: long byteCount> = 0L;
+        return;
+    }
+
+    public void addFilter(org.apache.coyote.http11.OutputFilter)
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+        org.apache.coyote.http11.OutputFilter r1, $r5;
+        org.apache.coyote.http11.OutputFilter[] r2, $r3, $r4, $r6, $r7, $r8, $r9;
+        int i0, $i1, $i2, $i3, $i4, $i5;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        r1 := @parameter0: org.apache.coyote.http11.OutputFilter;
+        $r3 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.http11.OutputFilter[] filterLibrary>;
+        $i1 = lengthof $r3;
+        $i2 = $i1 + 1;
+        r2 = newarray (org.apache.coyote.http11.OutputFilter)[$i2];
+        i0 = 0;
+        goto label1;
+
+     label0:
+        $r4 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.http11.OutputFilter[] filterLibrary>;
+        $r5 = $r4[i0];
+        r2[i0] = $r5;
+        i0 = i0 + 1;
+
+     label1:
+        $r6 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.http11.OutputFilter[] filterLibrary>;
+        $i3 = lengthof $r6;
+        if i0 < $i3 goto label0;
+
+        $r7 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.http11.OutputFilter[] filterLibrary>;
+        $i4 = lengthof $r7;
+        r2[$i4] = r1;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.http11.OutputFilter[] filterLibrary> = r2;
+        $r8 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.http11.OutputFilter[] filterLibrary>;
+        $i5 = lengthof $r8;
+        $r9 = newarray (org.apache.coyote.http11.OutputFilter)[$i5];
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.http11.OutputFilter[] activeFilters> = $r9;
+        return;
+    }
+
+    public org.apache.coyote.http11.OutputFilter[] getFilters()
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+        org.apache.coyote.http11.OutputFilter[] $r1;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        $r1 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.http11.OutputFilter[] filterLibrary>;
+        return $r1;
+    }
+
+    public void addActiveFilter(org.apache.coyote.http11.OutputFilter)
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+        org.apache.coyote.http11.OutputFilter r1, $r4, $r6;
+        int i0, $i1, $i2, $i3, $i4, $i5;
+        org.apache.coyote.OutputBuffer $r2;
+        org.apache.coyote.http11.OutputFilter[] $r3, $r5, $r7;
+        org.apache.coyote.Response $r9;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        r1 := @parameter0: org.apache.coyote.http11.OutputFilter;
+        $i1 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int lastActiveFilter>;
+        if $i1 != -1 goto label0;
+
+        $r2 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.OutputBuffer outputStreamOutputBuffer>;
+        interfaceinvoke r1.<org.apache.coyote.http11.OutputFilter: void setBuffer(org.apache.coyote.OutputBuffer)>($r2);
+        goto label4;
+
+     label0:
+        i0 = 0;
+        goto label3;
+
+     label1:
+        $r3 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.http11.OutputFilter[] activeFilters>;
+        $r4 = $r3[i0];
+        if $r4 != r1 goto label2;
+
+        return;
+
+     label2:
+        i0 = i0 + 1;
+
+     label3:
+        $i2 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int lastActiveFilter>;
+        if i0 <= $i2 goto label1;
+
+        $r5 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.http11.OutputFilter[] activeFilters>;
+        $i3 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int lastActiveFilter>;
+        $r6 = $r5[$i3];
+        interfaceinvoke r1.<org.apache.coyote.http11.OutputFilter: void setBuffer(org.apache.coyote.OutputBuffer)>($r6);
+
+     label4:
+        $r7 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.http11.OutputFilter[] activeFilters>;
+        $i4 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int lastActiveFilter>;
+        $i5 = $i4 + 1;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: int lastActiveFilter> = $i5;
+        $r7[$i5] = r1;
+        $r9 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.Response response>;
+        interfaceinvoke r1.<org.apache.coyote.http11.OutputFilter: void setResponse(org.apache.coyote.Response)>($r9);
+        return;
+    }
+
+    public int doWrite(org.apache.tomcat.util.buf.ByteChunk, org.apache.coyote.Response) throws java.io.IOException
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+        org.apache.tomcat.util.buf.ByteChunk r1;
+        org.apache.coyote.Response r2, $r4;
+        org.apache.coyote.ActionCode $r3;
+        boolean $z0;
+        int $i0, $i1, $i2, $i3;
+        org.apache.coyote.OutputBuffer $r5;
+        org.apache.coyote.http11.OutputFilter[] $r6;
+        org.apache.coyote.http11.OutputFilter $r7;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        r1 := @parameter0: org.apache.tomcat.util.buf.ByteChunk;
+        r2 := @parameter1: org.apache.coyote.Response;
+        $z0 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: boolean committed>;
+        if $z0 != 0 goto label0;
+
+        $r4 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.Response response>;
+        $r3 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode COMMIT>;
+        virtualinvoke $r4.<org.apache.coyote.Response: void action(org.apache.coyote.ActionCode,java.lang.Object)>($r3, null);
+
+     label0:
+        $i0 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int lastActiveFilter>;
+        if $i0 != -1 goto label1;
+
+        $r5 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.OutputBuffer outputStreamOutputBuffer>;
+        $i1 = interfaceinvoke $r5.<org.apache.coyote.OutputBuffer: int doWrite(org.apache.tomcat.util.buf.ByteChunk,org.apache.coyote.Response)>(r1, r2);
+        return $i1;
+
+     label1:
+        $r6 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.http11.OutputFilter[] activeFilters>;
+        $i2 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int lastActiveFilter>;
+        $r7 = $r6[$i2];
+        $i3 = interfaceinvoke $r7.<org.apache.coyote.http11.OutputFilter: int doWrite(org.apache.tomcat.util.buf.ByteChunk,org.apache.coyote.Response)>(r1, r2);
+        return $i3;
+    }
+
+    public long getBytesWritten()
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+        int $i0, $i2;
+        org.apache.coyote.OutputBuffer $r1;
+        long $l1, $l3;
+        org.apache.coyote.http11.OutputFilter[] $r2;
+        org.apache.coyote.http11.OutputFilter $r3;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        $i0 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int lastActiveFilter>;
+        if $i0 != -1 goto label0;
+
+        $r1 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.OutputBuffer outputStreamOutputBuffer>;
+        $l1 = interfaceinvoke $r1.<org.apache.coyote.OutputBuffer: long getBytesWritten()>();
+        return $l1;
+
+     label0:
+        $r2 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.http11.OutputFilter[] activeFilters>;
+        $i2 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int lastActiveFilter>;
+        $r3 = $r2[$i2];
+        $l3 = interfaceinvoke $r3.<org.apache.coyote.http11.OutputFilter: long getBytesWritten()>();
+        return $l3;
+    }
+
+    public void flush() throws java.io.IOException
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+        org.apache.coyote.ActionCode $r1;
+        int i0, $i1;
+        boolean $z0, $z1, $z2;
+        org.apache.coyote.Response $r2;
+        org.apache.coyote.http11.OutputFilter[] $r3, $r11;
+        org.apache.coyote.http11.OutputFilter $r4, $r12;
+        org.apache.juli.logging.Log $r5, $r6;
+        java.lang.StringBuilder $r7, $r8, $r9;
+        java.lang.String $r10;
+        org.apache.coyote.http11.filters.GzipOutputFilter $r13;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        $z0 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: boolean committed>;
+        if $z0 != 0 goto label0;
+
+        $r2 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.Response response>;
+        $r1 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode COMMIT>;
+        virtualinvoke $r2.<org.apache.coyote.Response: void action(org.apache.coyote.ActionCode,java.lang.Object)>($r1, null);
+
+     label0:
+        i0 = 0;
+        goto label4;
+
+     label1:
+        $r3 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.http11.OutputFilter[] activeFilters>;
+        $r4 = $r3[i0];
+        $z1 = $r4 instanceof org.apache.coyote.http11.filters.GzipOutputFilter;
+        if $z1 == 0 goto label3;
+
+        $r5 = <org.apache.coyote.http11.AbstractOutputBuffer: org.apache.juli.logging.Log log>;
+        $z2 = interfaceinvoke $r5.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z2 == 0 goto label2;
+
+        $r6 = <org.apache.coyote.http11.AbstractOutputBuffer: org.apache.juli.logging.Log log>;
+        $r7 = new java.lang.StringBuilder;
+        specialinvoke $r7.<java.lang.StringBuilder: void <init>(java.lang.String)>("Flushing the gzip filter at position ");
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" of the filter chain...");
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r6.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r10);
+
+     label2:
+        $r11 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.http11.OutputFilter[] activeFilters>;
+        $r12 = $r11[i0];
+        $r13 = (org.apache.coyote.http11.filters.GzipOutputFilter) $r12;
+        virtualinvoke $r13.<org.apache.coyote.http11.filters.GzipOutputFilter: void flush()>();
+        goto label5;
+
+     label3:
+        i0 = i0 + 1;
+
+     label4:
+        $i1 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int lastActiveFilter>;
+        if i0 <= $i1 goto label1;
+
+     label5:
+        return;
+    }
+
+    public void reset()
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+        boolean $z0;
+        java.lang.IllegalStateException $r1;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        $z0 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: boolean committed>;
+        if $z0 == 0 goto label0;
+
+        $r1 = new java.lang.IllegalStateException;
+        specialinvoke $r1.<java.lang.IllegalStateException: void <init>()>();
+        throw $r1;
+
+     label0:
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos> = 0;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: long byteCount> = 0L;
+        return;
+    }
+
+    public void recycle()
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void nextRequest()>();
+        return;
+    }
+
+    public void nextRequest()
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+        int i0, $i1;
+        org.apache.coyote.http11.OutputFilter[] $r1;
+        org.apache.coyote.http11.OutputFilter $r2;
+        org.apache.coyote.Response $r3;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        i0 = 0;
+        goto label1;
+
+     label0:
+        $r1 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.http11.OutputFilter[] activeFilters>;
+        $r2 = $r1[i0];
+        interfaceinvoke $r2.<org.apache.coyote.http11.OutputFilter: void recycle()>();
+        i0 = i0 + 1;
+
+     label1:
+        $i1 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int lastActiveFilter>;
+        if i0 <= $i1 goto label0;
+
+        $r3 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.Response response>;
+        virtualinvoke $r3.<org.apache.coyote.Response: void recycle()>();
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos> = 0;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: int lastActiveFilter> = -1;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: boolean committed> = 0;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: boolean finished> = 0;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: long byteCount> = 0L;
+        return;
+    }
+
+    public void endRequest() throws java.io.IOException
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+        org.apache.coyote.ActionCode $r1;
+        boolean $z0, $z1;
+        org.apache.coyote.Response $r2;
+        int $i0, $i1;
+        org.apache.coyote.http11.OutputFilter[] $r3;
+        org.apache.coyote.http11.OutputFilter $r4;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        $z0 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: boolean committed>;
+        if $z0 != 0 goto label0;
+
+        $r2 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.Response response>;
+        $r1 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode COMMIT>;
+        virtualinvoke $r2.<org.apache.coyote.Response: void action(org.apache.coyote.ActionCode,java.lang.Object)>($r1, null);
+
+     label0:
+        $z1 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: boolean finished>;
+        if $z1 == 0 goto label1;
+
+        return;
+
+     label1:
+        $i0 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int lastActiveFilter>;
+        if $i0 == -1 goto label2;
+
+        $r3 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.http11.OutputFilter[] activeFilters>;
+        $i1 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int lastActiveFilter>;
+        $r4 = $r3[$i1];
+        interfaceinvoke $r4.<org.apache.coyote.http11.OutputFilter: long end()>();
+
+     label2:
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: boolean finished> = 1;
+        return;
+    }
+
+    public abstract void init(org.apache.tomcat.util.net.SocketWrapper, org.apache.tomcat.util.net.AbstractEndpoint) throws java.io.IOException;
+
+    public abstract void sendAck() throws java.io.IOException;
+
+    protected abstract void commit() throws java.io.IOException;
+
+    public void sendStatus()
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+        byte[] $r1, $r3, $r6, $r7, $r8, $r9, $r20, $r22;
+        int $i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8;
+        java.lang.String r2, $r12, $r17;
+        org.apache.coyote.Response $r5, $r11, $r13, $r14;
+        boolean $z0, $z1, $z2;
+        java.util.Locale $r15;
+        org.apache.tomcat.util.http.HttpMessages $r16;
+        org.apache.coyote.http11.AbstractOutputBuffer$1 $r18;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        $r1 = <org.apache.coyote.http11.Constants: byte[] HTTP_11_BYTES>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void write(byte[])>($r1);
+        $r3 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: byte[] buf>;
+        $i0 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos>;
+        $i2 = $i0 + 1;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos> = $i2;
+        $r3[$i0] = 32;
+        $r5 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.Response response>;
+        i1 = virtualinvoke $r5.<org.apache.coyote.Response: int getStatus()>();
+        lookupswitch(i1)
+        {
+            case 200: goto label0;
+            case 400: goto label1;
+            case 404: goto label2;
+            default: goto label3;
+        };
+
+     label0:
+        $r6 = <org.apache.coyote.http11.Constants: byte[] _200_BYTES>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void write(byte[])>($r6);
+        goto label4;
+
+     label1:
+        $r7 = <org.apache.coyote.http11.Constants: byte[] _400_BYTES>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void write(byte[])>($r7);
+        goto label4;
+
+     label2:
+        $r8 = <org.apache.coyote.http11.Constants: byte[] _404_BYTES>;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void write(byte[])>($r8);
+        goto label4;
+
+     label3:
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void write(int)>(i1);
+
+     label4:
+        $r9 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: byte[] buf>;
+        $i3 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos>;
+        $i4 = $i3 + 1;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos> = $i4;
+        $r9[$i3] = 32;
+        r2 = null;
+        $z0 = <org.apache.coyote.Constants: boolean USE_CUSTOM_STATUS_MSG_IN_HEADER>;
+        if $z0 == 0 goto label5;
+
+        $r11 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.Response response>;
+        $r12 = virtualinvoke $r11.<org.apache.coyote.Response: java.lang.String getMessage()>();
+        $z1 = staticinvoke <org.apache.tomcat.util.http.HttpMessages: boolean isSafeInHttpHeader(java.lang.String)>($r12);
+        if $z1 == 0 goto label5;
+
+        $r13 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.Response response>;
+        r2 = virtualinvoke $r13.<org.apache.coyote.Response: java.lang.String getMessage()>();
+
+     label5:
+        if r2 != null goto label6;
+
+        $r14 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: org.apache.coyote.Response response>;
+        $r15 = virtualinvoke $r14.<org.apache.coyote.Response: java.util.Locale getLocale()>();
+        $r16 = staticinvoke <org.apache.tomcat.util.http.HttpMessages: org.apache.tomcat.util.http.HttpMessages getInstance(java.util.Locale)>($r15);
+        $r17 = virtualinvoke $r16.<org.apache.tomcat.util.http.HttpMessages: java.lang.String getMessage(int)>(i1);
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void write(java.lang.String)>($r17);
+        goto label7;
+
+     label6:
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void write(java.lang.String)>(r2);
+
+     label7:
+        $z2 = <org.apache.coyote.Constants: boolean IS_SECURITY_ENABLED>;
+        if $z2 == 0 goto label8;
+
+        $r18 = new org.apache.coyote.http11.AbstractOutputBuffer$1;
+        specialinvoke $r18.<org.apache.coyote.http11.AbstractOutputBuffer$1: void <init>(org.apache.coyote.http11.AbstractOutputBuffer)>(r0);
+        staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r18);
+        goto label9;
+
+     label8:
+        $r20 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: byte[] buf>;
+        $i5 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos>;
+        $i6 = $i5 + 1;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos> = $i6;
+        $r20[$i5] = 13;
+        $r22 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: byte[] buf>;
+        $i7 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos>;
+        $i8 = $i7 + 1;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos> = $i8;
+        $r22[$i7] = 10;
+
+     label9:
+        return;
+    }
+
+    public void sendHeader(org.apache.tomcat.util.buf.MessageBytes, org.apache.tomcat.util.buf.MessageBytes)
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+        org.apache.tomcat.util.buf.MessageBytes r1, r2;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7;
+        byte[] $r3, $r5, $r7, $r9;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        r1 := @parameter0: org.apache.tomcat.util.buf.MessageBytes;
+        r2 := @parameter1: org.apache.tomcat.util.buf.MessageBytes;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void write(org.apache.tomcat.util.buf.MessageBytes)>(r1);
+        $r3 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: byte[] buf>;
+        $i0 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos>;
+        $i1 = $i0 + 1;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos> = $i1;
+        $r3[$i0] = 58;
+        $r5 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: byte[] buf>;
+        $i2 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos>;
+        $i3 = $i2 + 1;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos> = $i3;
+        $r5[$i2] = 32;
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void write(org.apache.tomcat.util.buf.MessageBytes)>(r2);
+        $r7 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: byte[] buf>;
+        $i4 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos>;
+        $i5 = $i4 + 1;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos> = $i5;
+        $r7[$i4] = 13;
+        $r9 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: byte[] buf>;
+        $i6 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos>;
+        $i7 = $i6 + 1;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos> = $i7;
+        $r9[$i6] = 10;
+        return;
+    }
+
+    public void endHeaders()
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+        int $i0, $i1, $i2, $i3;
+        byte[] $r2, $r3;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        $r2 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: byte[] buf>;
+        $i0 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos>;
+        $i1 = $i0 + 1;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos> = $i1;
+        $r2[$i0] = 13;
+        $r3 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: byte[] buf>;
+        $i2 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos>;
+        $i3 = $i2 + 1;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos> = $i3;
+        $r3[$i2] = 10;
+        return;
+    }
+
+    protected void write(org.apache.tomcat.util.buf.MessageBytes)
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+        org.apache.tomcat.util.buf.MessageBytes r1;
+        org.apache.tomcat.util.buf.ByteChunk r2;
+        int $i0, $i1;
+        org.apache.tomcat.util.buf.CharChunk r3;
+        java.lang.String $r4;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        r1 := @parameter0: org.apache.tomcat.util.buf.MessageBytes;
+        $i0 = virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: int getType()>();
+        if $i0 != 2 goto label0;
+
+        r2 = virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: org.apache.tomcat.util.buf.ByteChunk getByteChunk()>();
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void write(org.apache.tomcat.util.buf.ByteChunk)>(r2);
+        goto label2;
+
+     label0:
+        $i1 = virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: int getType()>();
+        if $i1 != 3 goto label1;
+
+        r3 = virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: org.apache.tomcat.util.buf.CharChunk getCharChunk()>();
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void write(org.apache.tomcat.util.buf.CharChunk)>(r3);
+        goto label2;
+
+     label1:
+        $r4 = virtualinvoke r1.<org.apache.tomcat.util.buf.MessageBytes: java.lang.String toString()>();
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void write(java.lang.String)>($r4);
+
+     label2:
+        return;
+    }
+
+    protected void write(org.apache.tomcat.util.buf.ByteChunk)
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+        org.apache.tomcat.util.buf.ByteChunk r1;
+        int i0, $i1, $i2, $i3, $i4;
+        byte[] $r2, $r3;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        r1 := @parameter0: org.apache.tomcat.util.buf.ByteChunk;
+        i0 = virtualinvoke r1.<org.apache.tomcat.util.buf.ByteChunk: int getLength()>();
+        specialinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void checkLengthBeforeWrite(int)>(i0);
+        $r2 = virtualinvoke r1.<org.apache.tomcat.util.buf.ByteChunk: byte[] getBytes()>();
+        $i1 = virtualinvoke r1.<org.apache.tomcat.util.buf.ByteChunk: int getStart()>();
+        $r3 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: byte[] buf>;
+        $i2 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r2, $i1, $r3, $i2, i0);
+        $i3 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos>;
+        $i4 = $i3 + i0;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos> = $i4;
+        return;
+    }
+
+    protected void write(org.apache.tomcat.util.buf.CharChunk)
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+        org.apache.tomcat.util.buf.CharChunk r1;
+        int i0, i1, i2, $i4, $i5, $i6;
+        char[] r2;
+        char c3;
+        byte[] $r3;
+        byte $b7;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        r1 := @parameter0: org.apache.tomcat.util.buf.CharChunk;
+        i0 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: int getStart()>();
+        i1 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: int getEnd()>();
+        $i5 = i1 - i0;
+        specialinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void checkLengthBeforeWrite(int)>($i5);
+        r2 = virtualinvoke r1.<org.apache.tomcat.util.buf.CharChunk: char[] getBuffer()>();
+        i2 = i0;
+        goto label4;
+
+     label0:
+        c3 = r2[i2];
+        if c3 > 31 goto label1;
+
+        if c3 != 9 goto label2;
+
+     label1:
+        if c3 == 127 goto label2;
+
+        if c3 <= 255 goto label3;
+
+     label2:
+        c3 = 32;
+
+     label3:
+        $r3 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: byte[] buf>;
+        $i4 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos>;
+        $i6 = $i4 + 1;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos> = $i6;
+        $b7 = (byte) c3;
+        $r3[$i4] = $b7;
+        i2 = i2 + 1;
+
+     label4:
+        if i2 < i1 goto label0;
+
+        return;
+    }
+
+    public void write(byte[])
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+        byte[] r1, $r2;
+        int $i0, $i1, $i2, $i3, $i4, $i5;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        r1 := @parameter0: byte[];
+        $i0 = lengthof r1;
+        specialinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void checkLengthBeforeWrite(int)>($i0);
+        $r2 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: byte[] buf>;
+        $i1 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos>;
+        $i2 = lengthof r1;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r1, 0, $r2, $i1, $i2);
+        $i3 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos>;
+        $i4 = lengthof r1;
+        $i5 = $i3 + $i4;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos> = $i5;
+        return;
+    }
+
+    protected void write(java.lang.String)
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+        java.lang.String r1;
+        int i0, i1, $i3, $i4;
+        char c2;
+        byte[] $r2;
+        byte $b5;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        r1 := @parameter0: java.lang.String;
+        if r1 != null goto label0;
+
+        return;
+
+     label0:
+        i0 = virtualinvoke r1.<java.lang.String: int length()>();
+        specialinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void checkLengthBeforeWrite(int)>(i0);
+        i1 = 0;
+        goto label5;
+
+     label1:
+        c2 = virtualinvoke r1.<java.lang.String: char charAt(int)>(i1);
+        if c2 > 31 goto label2;
+
+        if c2 != 9 goto label3;
+
+     label2:
+        if c2 == 127 goto label3;
+
+        if c2 <= 255 goto label4;
+
+     label3:
+        c2 = 32;
+
+     label4:
+        $r2 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: byte[] buf>;
+        $i3 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos>;
+        $i4 = $i3 + 1;
+        r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos> = $i4;
+        $b5 = (byte) c2;
+        $r2[$i3] = $b5;
+        i1 = i1 + 1;
+
+     label5:
+        if i1 < i0 goto label1;
+
+        return;
+    }
+
+    protected void write(int)
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+        int i0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        i0 := @parameter0: int;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>(i0);
+        virtualinvoke r0.<org.apache.coyote.http11.AbstractOutputBuffer: void write(java.lang.String)>($r1);
+        return;
+    }
+
+    private void checkLengthBeforeWrite(int)
+    {
+        org.apache.coyote.http11.AbstractOutputBuffer r0;
+        int i0, $i1, $i2, $i3, $i4;
+        org.apache.tomcat.util.res.StringManager $r1;
+        byte[] $r2;
+        org.apache.coyote.http11.HeadersTooLargeException $r3;
+        java.lang.String $r4;
+
+        r0 := @this: org.apache.coyote.http11.AbstractOutputBuffer;
+        i0 := @parameter0: int;
+        $i1 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: int pos>;
+        $i2 = $i1 + i0;
+        $i3 = $i2 + 4;
+        $r2 = r0.<org.apache.coyote.http11.AbstractOutputBuffer: byte[] buf>;
+        $i4 = lengthof $r2;
+        if $i3 <= $i4 goto label0;
+
+        $r3 = new org.apache.coyote.http11.HeadersTooLargeException;
+        $r1 = <org.apache.coyote.http11.AbstractOutputBuffer: org.apache.tomcat.util.res.StringManager sm>;
+        $r4 = virtualinvoke $r1.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("iob.responseheadertoolarge.error");
+        specialinvoke $r3.<org.apache.coyote.http11.HeadersTooLargeException: void <init>(java.lang.String)>($r4);
+        throw $r3;
+
+     label0:
+        return;
+    }
+}

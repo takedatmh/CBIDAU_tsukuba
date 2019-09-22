@@ -1,0 +1,3733 @@
+public class java.io.ObjectStreamClass extends java.lang.Object implements java.io.Serializable
+{
+    public static final java.io.ObjectStreamField[] NO_FIELDS;
+    private static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    private static final sun.reflect.ReflectionFactory reflFactory;
+    private java.lang.Class cl;
+    private java.lang.String name;
+    private volatile java.lang.Long suid;
+    private boolean isProxy;
+    private boolean isEnum;
+    private boolean serializable;
+    private boolean externalizable;
+    private boolean hasWriteObjectData;
+    private boolean hasBlockExternalData;
+    private java.lang.ClassNotFoundException resolveEx;
+    private java.io.ObjectStreamClass$ExceptionInfo deserializeEx;
+    private java.io.ObjectStreamClass$ExceptionInfo serializeEx;
+    private java.io.ObjectStreamClass$ExceptionInfo defaultSerializeEx;
+    private java.io.ObjectStreamField[] fields;
+    private int primDataSize;
+    private int numObjFields;
+    private java.io.ObjectStreamClass$FieldReflector fieldRefl;
+    private volatile java.io.ObjectStreamClass$ClassDataSlot[] dataLayout;
+    private java.lang.reflect.Constructor cons;
+    private java.lang.reflect.Method writeObjectMethod;
+    private java.lang.reflect.Method readObjectMethod;
+    private java.lang.reflect.Method readObjectNoDataMethod;
+    private java.lang.reflect.Method writeReplaceMethod;
+    private java.lang.reflect.Method readResolveMethod;
+    private java.io.ObjectStreamClass localDesc;
+    private java.io.ObjectStreamClass superDesc;
+
+    private static native void initNative();
+
+    public static java.io.ObjectStreamClass lookup(java.lang.Class)
+    {
+        java.lang.Class r0;
+        java.io.ObjectStreamClass $r1;
+
+        r0 := @parameter0: java.lang.Class;
+        $r1 = staticinvoke <java.io.ObjectStreamClass: java.io.ObjectStreamClass lookup(java.lang.Class,boolean)>(r0, 0);
+        return $r1;
+    }
+
+    public static java.io.ObjectStreamClass lookupAny(java.lang.Class)
+    {
+        java.lang.Class r0;
+        java.io.ObjectStreamClass $r1;
+
+        r0 := @parameter0: java.lang.Class;
+        $r1 = staticinvoke <java.io.ObjectStreamClass: java.io.ObjectStreamClass lookup(java.lang.Class,boolean)>(r0, 1);
+        return $r1;
+    }
+
+    public java.lang.String getName()
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.String $r1;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r1 = r0.<java.io.ObjectStreamClass: java.lang.String name>;
+        return $r1;
+    }
+
+    public long getSerialVersionUID()
+    {
+        java.io.ObjectStreamClass r0;
+        java.io.ObjectStreamClass$1 $r1;
+        java.lang.Long $r2, $r4, $r5;
+        java.lang.Object $r3;
+        long $l0;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r2 = r0.<java.io.ObjectStreamClass: java.lang.Long suid>;
+        if $r2 != null goto label0;
+
+        $r1 = new java.io.ObjectStreamClass$1;
+        specialinvoke $r1.<java.io.ObjectStreamClass$1: void <init>(java.io.ObjectStreamClass)>(r0);
+        $r3 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r1);
+        $r4 = (java.lang.Long) $r3;
+        r0.<java.io.ObjectStreamClass: java.lang.Long suid> = $r4;
+
+     label0:
+        $r5 = r0.<java.io.ObjectStreamClass: java.lang.Long suid>;
+        $l0 = virtualinvoke $r5.<java.lang.Long: long longValue()>();
+        return $l0;
+    }
+
+    public java.lang.Class forClass()
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.Class r1, $r2, $r5, $r7, $r8;
+        java.lang.SecurityManager $r3;
+        java.lang.ClassLoader $r4, $r6;
+        boolean $z0;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r2 = r0.<java.io.ObjectStreamClass: java.lang.Class cl>;
+        if $r2 != null goto label0;
+
+        return null;
+
+     label0:
+        $r3 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if $r3 == null goto label1;
+
+        r1 = staticinvoke <sun.reflect.Reflection: java.lang.Class getCallerClass()>();
+        $r4 = virtualinvoke r1.<java.lang.Class: java.lang.ClassLoader getClassLoader()>();
+        $r5 = r0.<java.io.ObjectStreamClass: java.lang.Class cl>;
+        $r6 = virtualinvoke $r5.<java.lang.Class: java.lang.ClassLoader getClassLoader()>();
+        $z0 = staticinvoke <sun.reflect.misc.ReflectUtil: boolean needsPackageAccessCheck(java.lang.ClassLoader,java.lang.ClassLoader)>($r4, $r6);
+        if $z0 == 0 goto label1;
+
+        $r7 = r0.<java.io.ObjectStreamClass: java.lang.Class cl>;
+        staticinvoke <sun.reflect.misc.ReflectUtil: void checkPackageAccess(java.lang.Class)>($r7);
+
+     label1:
+        $r8 = r0.<java.io.ObjectStreamClass: java.lang.Class cl>;
+        return $r8;
+    }
+
+    public java.io.ObjectStreamField[] getFields()
+    {
+        java.io.ObjectStreamClass r0;
+        java.io.ObjectStreamField[] $r1;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r1 = virtualinvoke r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] getFields(boolean)>(1);
+        return $r1;
+    }
+
+    public java.io.ObjectStreamField getField(java.lang.String)
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.String r1;
+        java.io.ObjectStreamField $r2;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        r1 := @parameter0: java.lang.String;
+        $r2 = virtualinvoke r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField getField(java.lang.String,java.lang.Class)>(r1, null);
+        return $r2;
+    }
+
+    public java.lang.String toString()
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.StringBuilder $r1, $r3, $r4, $r5, $r6;
+        java.lang.String $r2, $r7;
+        long $l0;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r2 = r0.<java.io.ObjectStreamClass: java.lang.String name>;
+        $r3 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r2);
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(": static final long serialVersionUID = ");
+        $l0 = virtualinvoke r0.<java.io.ObjectStreamClass: long getSerialVersionUID()>();
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(long)>($l0);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("L;");
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r7;
+    }
+
+    static java.io.ObjectStreamClass lookup(java.lang.Class, boolean)
+    {
+        java.lang.Class r0, $r8;
+        boolean z0, $z1, $z3, $z4, $z5, $z6, $z7, $z8;
+        java.lang.ref.ReferenceQueue $r1, $r9;
+        java.io.ObjectStreamClass$WeakClassKey r2, $r11;
+        java.lang.ref.Reference r3;
+        java.lang.Object r4, $r13, $r18;
+        java.io.ObjectStreamClass$EntryFuture r5, r6, $r14;
+        java.lang.ref.SoftReference r7, $r15, $r26;
+        java.util.concurrent.ConcurrentMap $r10, $r12, $r16, $r17, $r25;
+        java.io.ObjectStreamClass $r19, $r22, $r28;
+        java.lang.Thread $r20, $r21;
+        java.lang.Throwable $r23, r24;
+        java.lang.RuntimeException $r29;
+        java.lang.Error $r30;
+        java.lang.InternalError $r31;
+        java.lang.StringBuilder $r32, $r33, $r34;
+        java.lang.String $r35;
+
+        r0 := @parameter0: java.lang.Class;
+        z0 := @parameter1: boolean;
+        if z0 != 0 goto label0;
+
+        $r8 = class "java/io/Serializable";
+        $z1 = virtualinvoke $r8.<java.lang.Class: boolean isAssignableFrom(java.lang.Class)>(r0);
+        if $z1 != 0 goto label0;
+
+        return null;
+
+     label0:
+        $r9 = staticinvoke <java.io.ObjectStreamClass$Caches: java.lang.ref.ReferenceQueue access$200()>();
+        $r10 = <java.io.ObjectStreamClass$Caches: java.util.concurrent.ConcurrentMap localDescs>;
+        staticinvoke <java.io.ObjectStreamClass: void processQueue(java.lang.ref.ReferenceQueue,java.util.concurrent.ConcurrentMap)>($r9, $r10);
+        $r11 = new java.io.ObjectStreamClass$WeakClassKey;
+        $r1 = staticinvoke <java.io.ObjectStreamClass$Caches: java.lang.ref.ReferenceQueue access$200()>();
+        specialinvoke $r11.<java.io.ObjectStreamClass$WeakClassKey: void <init>(java.lang.Class,java.lang.ref.ReferenceQueue)>(r0, $r1);
+        r2 = $r11;
+        $r12 = <java.io.ObjectStreamClass$Caches: java.util.concurrent.ConcurrentMap localDescs>;
+        $r13 = interfaceinvoke $r12.<java.util.concurrent.ConcurrentMap: java.lang.Object get(java.lang.Object)>(r2);
+        r3 = (java.lang.ref.Reference) $r13;
+        r4 = null;
+        if r3 == null goto label1;
+
+        r4 = virtualinvoke r3.<java.lang.ref.Reference: java.lang.Object get()>();
+
+     label1:
+        r5 = null;
+        if r4 != null goto label6;
+
+        $r14 = new java.io.ObjectStreamClass$EntryFuture;
+        specialinvoke $r14.<java.io.ObjectStreamClass$EntryFuture: void <init>(java.io.ObjectStreamClass$1)>(null);
+        r6 = $r14;
+        $r15 = new java.lang.ref.SoftReference;
+        specialinvoke $r15.<java.lang.ref.SoftReference: void <init>(java.lang.Object)>(r6);
+        r7 = $r15;
+
+     label2:
+        if r3 == null goto label3;
+
+        $r16 = <java.io.ObjectStreamClass$Caches: java.util.concurrent.ConcurrentMap localDescs>;
+        interfaceinvoke $r16.<java.util.concurrent.ConcurrentMap: boolean remove(java.lang.Object,java.lang.Object)>(r2, r3);
+
+     label3:
+        $r17 = <java.io.ObjectStreamClass$Caches: java.util.concurrent.ConcurrentMap localDescs>;
+        $r18 = interfaceinvoke $r17.<java.util.concurrent.ConcurrentMap: java.lang.Object putIfAbsent(java.lang.Object,java.lang.Object)>(r2, r7);
+        r3 = (java.lang.ref.Reference) $r18;
+        if r3 == null goto label4;
+
+        r4 = virtualinvoke r3.<java.lang.ref.Reference: java.lang.Object get()>();
+
+     label4:
+        if r3 == null goto label5;
+
+        if r4 == null goto label2;
+
+     label5:
+        if r4 != null goto label6;
+
+        r5 = r6;
+
+     label6:
+        $z3 = r4 instanceof java.io.ObjectStreamClass;
+        if $z3 == 0 goto label7;
+
+        $r19 = (java.io.ObjectStreamClass) r4;
+        return $r19;
+
+     label7:
+        $z4 = r4 instanceof java.io.ObjectStreamClass$EntryFuture;
+        if $z4 == 0 goto label9;
+
+        r5 = (java.io.ObjectStreamClass$EntryFuture) r4;
+        $r20 = virtualinvoke r5.<java.io.ObjectStreamClass$EntryFuture: java.lang.Thread getOwner()>();
+        $r21 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        if $r20 != $r21 goto label8;
+
+        r4 = null;
+        goto label9;
+
+     label8:
+        r4 = virtualinvoke r5.<java.io.ObjectStreamClass$EntryFuture: java.lang.Object get()>();
+
+     label9:
+        if r4 != null goto label15;
+
+     label10:
+        $r22 = new java.io.ObjectStreamClass;
+        specialinvoke $r22.<java.io.ObjectStreamClass: void <init>(java.lang.Class)>(r0);
+        r4 = $r22;
+
+     label11:
+        goto label13;
+
+     label12:
+        $r23 := @caughtexception;
+        r24 = $r23;
+        r4 = r24;
+
+     label13:
+        $z5 = virtualinvoke r5.<java.io.ObjectStreamClass$EntryFuture: boolean set(java.lang.Object)>(r4);
+        if $z5 == 0 goto label14;
+
+        $r25 = <java.io.ObjectStreamClass$Caches: java.util.concurrent.ConcurrentMap localDescs>;
+        $r26 = new java.lang.ref.SoftReference;
+        specialinvoke $r26.<java.lang.ref.SoftReference: void <init>(java.lang.Object)>(r4);
+        interfaceinvoke $r25.<java.util.concurrent.ConcurrentMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(r2, $r26);
+        goto label15;
+
+     label14:
+        r4 = virtualinvoke r5.<java.io.ObjectStreamClass$EntryFuture: java.lang.Object get()>();
+
+     label15:
+        $z6 = r4 instanceof java.io.ObjectStreamClass;
+        if $z6 == 0 goto label16;
+
+        $r28 = (java.io.ObjectStreamClass) r4;
+        return $r28;
+
+     label16:
+        $z7 = r4 instanceof java.lang.RuntimeException;
+        if $z7 == 0 goto label17;
+
+        $r29 = (java.lang.RuntimeException) r4;
+        throw $r29;
+
+     label17:
+        $z8 = r4 instanceof java.lang.Error;
+        if $z8 == 0 goto label18;
+
+        $r30 = (java.lang.Error) r4;
+        throw $r30;
+
+     label18:
+        $r31 = new java.lang.InternalError;
+        $r32 = new java.lang.StringBuilder;
+        specialinvoke $r32.<java.lang.StringBuilder: void <init>()>();
+        $r33 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("unexpected entry: ");
+        $r34 = virtualinvoke $r33.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r4);
+        $r35 = virtualinvoke $r34.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r31.<java.lang.InternalError: void <init>(java.lang.String)>($r35);
+        throw $r31;
+
+        catch java.lang.Throwable from label10 to label11 with label12;
+    }
+
+    private void <init>(java.lang.Class)
+    {
+        java.io.ObjectStreamClass r0, $r9;
+        java.lang.Class r1, r2, $r5, $r6, $r7;
+        java.io.InvalidClassException r3, $r16;
+        java.lang.String $r4, $r20, $r23, $r29;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5;
+        java.io.ObjectStreamClass$2 $r10;
+        java.lang.Long $r12;
+        java.io.ObjectStreamField[] $r13, $r14, $r24, $r25;
+        java.io.ObjectStreamClass$FieldReflector $r15;
+        java.lang.InternalError $r17;
+        java.io.ObjectStreamClass$ExceptionInfo $r18, $r19, $r22, $r28;
+        java.lang.reflect.Constructor $r21;
+        int i0, $i1;
+        java.io.ObjectStreamField $r26;
+        java.lang.reflect.Field $r27;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        r1 := @parameter0: java.lang.Class;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.io.ObjectStreamClass: boolean hasBlockExternalData> = 1;
+        r0.<java.io.ObjectStreamClass: java.lang.Class cl> = r1;
+        $r4 = virtualinvoke r1.<java.lang.Class: java.lang.String getName()>();
+        r0.<java.io.ObjectStreamClass: java.lang.String name> = $r4;
+        $z0 = staticinvoke <java.lang.reflect.Proxy: boolean isProxyClass(java.lang.Class)>(r1);
+        r0.<java.io.ObjectStreamClass: boolean isProxy> = $z0;
+        $r5 = class "java/lang/Enum";
+        $z1 = virtualinvoke $r5.<java.lang.Class: boolean isAssignableFrom(java.lang.Class)>(r1);
+        r0.<java.io.ObjectStreamClass: boolean isEnum> = $z1;
+        $r6 = class "java/io/Serializable";
+        $z2 = virtualinvoke $r6.<java.lang.Class: boolean isAssignableFrom(java.lang.Class)>(r1);
+        r0.<java.io.ObjectStreamClass: boolean serializable> = $z2;
+        $r7 = class "java/io/Externalizable";
+        $z3 = virtualinvoke $r7.<java.lang.Class: boolean isAssignableFrom(java.lang.Class)>(r1);
+        r0.<java.io.ObjectStreamClass: boolean externalizable> = $z3;
+        r2 = virtualinvoke r1.<java.lang.Class: java.lang.Class getSuperclass()>();
+        if r2 == null goto label0;
+
+        $r9 = staticinvoke <java.io.ObjectStreamClass: java.io.ObjectStreamClass lookup(java.lang.Class,boolean)>(r2, 0);
+        goto label1;
+
+     label0:
+        $r9 = null;
+
+     label1:
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass superDesc> = $r9;
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc> = r0;
+        $z4 = r0.<java.io.ObjectStreamClass: boolean serializable>;
+        if $z4 == 0 goto label2;
+
+        $r10 = new java.io.ObjectStreamClass$2;
+        specialinvoke $r10.<java.io.ObjectStreamClass$2: void <init>(java.io.ObjectStreamClass,java.lang.Class)>(r0, r1);
+        staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r10);
+        goto label3;
+
+     label2:
+        $r12 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>(0L);
+        r0.<java.io.ObjectStreamClass: java.lang.Long suid> = $r12;
+        $r13 = <java.io.ObjectStreamClass: java.io.ObjectStreamField[] NO_FIELDS>;
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields> = $r13;
+
+     label3:
+        $r14 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields>;
+        $r15 = staticinvoke <java.io.ObjectStreamClass: java.io.ObjectStreamClass$FieldReflector getReflector(java.io.ObjectStreamField[],java.io.ObjectStreamClass)>($r14, r0);
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$FieldReflector fieldRefl> = $r15;
+
+     label4:
+        goto label6;
+
+     label5:
+        $r16 := @caughtexception;
+        r3 = $r16;
+        $r17 = new java.lang.InternalError;
+        specialinvoke $r17.<java.lang.InternalError: void <init>()>();
+        throw $r17;
+
+     label6:
+        $r18 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ExceptionInfo deserializeEx>;
+        if $r18 != null goto label8;
+
+        $z5 = r0.<java.io.ObjectStreamClass: boolean isEnum>;
+        if $z5 == 0 goto label7;
+
+        $r19 = new java.io.ObjectStreamClass$ExceptionInfo;
+        $r20 = r0.<java.io.ObjectStreamClass: java.lang.String name>;
+        specialinvoke $r19.<java.io.ObjectStreamClass$ExceptionInfo: void <init>(java.lang.String,java.lang.String)>($r20, "enum type");
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ExceptionInfo deserializeEx> = $r19;
+        goto label8;
+
+     label7:
+        $r21 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Constructor cons>;
+        if $r21 != null goto label8;
+
+        $r22 = new java.io.ObjectStreamClass$ExceptionInfo;
+        $r23 = r0.<java.io.ObjectStreamClass: java.lang.String name>;
+        specialinvoke $r22.<java.io.ObjectStreamClass$ExceptionInfo: void <init>(java.lang.String,java.lang.String)>($r23, "no valid constructor");
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ExceptionInfo deserializeEx> = $r22;
+
+     label8:
+        i0 = 0;
+
+     label9:
+        $r24 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields>;
+        $i1 = lengthof $r24;
+        if i0 >= $i1 goto label11;
+
+        $r25 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields>;
+        $r26 = $r25[i0];
+        $r27 = virtualinvoke $r26.<java.io.ObjectStreamField: java.lang.reflect.Field getField()>();
+        if $r27 != null goto label10;
+
+        $r28 = new java.io.ObjectStreamClass$ExceptionInfo;
+        $r29 = r0.<java.io.ObjectStreamClass: java.lang.String name>;
+        specialinvoke $r28.<java.io.ObjectStreamClass$ExceptionInfo: void <init>(java.lang.String,java.lang.String)>($r29, "unmatched serializable field(s) declared");
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ExceptionInfo defaultSerializeEx> = $r28;
+
+     label10:
+        i0 = i0 + 1;
+        goto label9;
+
+     label11:
+        return;
+
+        catch java.io.InvalidClassException from label3 to label4 with label5;
+    }
+
+    void <init>()
+    {
+        java.io.ObjectStreamClass r0;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.io.ObjectStreamClass: boolean hasBlockExternalData> = 1;
+        return;
+    }
+
+    void initProxy(java.lang.Class, java.lang.ClassNotFoundException, java.io.ObjectStreamClass) throws java.io.InvalidClassException
+    {
+        java.io.ObjectStreamClass r0, r3, $r6, $r7, $r9, $r11, $r12, $r14, $r16, $r18, $r21;
+        java.lang.Class r1;
+        java.lang.ClassNotFoundException r2;
+        java.lang.Long $r4;
+        java.io.ObjectStreamField[] $r5, $r20;
+        boolean $z0, $z1;
+        java.io.InvalidClassException $r8;
+        java.lang.String $r10;
+        java.lang.reflect.Constructor $r13;
+        java.lang.reflect.Method $r15, $r17;
+        java.io.ObjectStreamClass$ExceptionInfo $r19;
+        java.io.ObjectStreamClass$FieldReflector $r22;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        r1 := @parameter0: java.lang.Class;
+        r2 := @parameter1: java.lang.ClassNotFoundException;
+        r3 := @parameter2: java.io.ObjectStreamClass;
+        r0.<java.io.ObjectStreamClass: java.lang.Class cl> = r1;
+        r0.<java.io.ObjectStreamClass: java.lang.ClassNotFoundException resolveEx> = r2;
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass superDesc> = r3;
+        r0.<java.io.ObjectStreamClass: boolean isProxy> = 1;
+        r0.<java.io.ObjectStreamClass: boolean serializable> = 1;
+        $r4 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>(0L);
+        r0.<java.io.ObjectStreamClass: java.lang.Long suid> = $r4;
+        $r5 = <java.io.ObjectStreamClass: java.io.ObjectStreamField[] NO_FIELDS>;
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields> = $r5;
+        if r1 == null goto label1;
+
+        $r6 = staticinvoke <java.io.ObjectStreamClass: java.io.ObjectStreamClass lookup(java.lang.Class,boolean)>(r1, 1);
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc> = $r6;
+        $r7 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $z0 = $r7.<java.io.ObjectStreamClass: boolean isProxy>;
+        if $z0 != 0 goto label0;
+
+        $r8 = new java.io.InvalidClassException;
+        specialinvoke $r8.<java.io.InvalidClassException: void <init>(java.lang.String)>("cannot bind proxy descriptor to a non-proxy class");
+        throw $r8;
+
+     label0:
+        $r9 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $r10 = $r9.<java.io.ObjectStreamClass: java.lang.String name>;
+        r0.<java.io.ObjectStreamClass: java.lang.String name> = $r10;
+        $r11 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $z1 = $r11.<java.io.ObjectStreamClass: boolean externalizable>;
+        r0.<java.io.ObjectStreamClass: boolean externalizable> = $z1;
+        $r12 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $r13 = $r12.<java.io.ObjectStreamClass: java.lang.reflect.Constructor cons>;
+        r0.<java.io.ObjectStreamClass: java.lang.reflect.Constructor cons> = $r13;
+        $r14 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $r15 = $r14.<java.io.ObjectStreamClass: java.lang.reflect.Method writeReplaceMethod>;
+        r0.<java.io.ObjectStreamClass: java.lang.reflect.Method writeReplaceMethod> = $r15;
+        $r16 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $r17 = $r16.<java.io.ObjectStreamClass: java.lang.reflect.Method readResolveMethod>;
+        r0.<java.io.ObjectStreamClass: java.lang.reflect.Method readResolveMethod> = $r17;
+        $r18 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $r19 = $r18.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ExceptionInfo deserializeEx>;
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ExceptionInfo deserializeEx> = $r19;
+
+     label1:
+        $r20 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields>;
+        $r21 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $r22 = staticinvoke <java.io.ObjectStreamClass: java.io.ObjectStreamClass$FieldReflector getReflector(java.io.ObjectStreamField[],java.io.ObjectStreamClass)>($r20, $r21);
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$FieldReflector fieldRefl> = $r22;
+        return;
+    }
+
+    void initNonProxy(java.io.ObjectStreamClass, java.lang.Class, java.lang.ClassNotFoundException, java.io.ObjectStreamClass) throws java.io.InvalidClassException
+    {
+        java.io.ObjectStreamClass r0, r1, r4, $r9, $r10, $r12, $r16, $r18, $r20, $r26, $r30, $r33, $r41, $r42, $r44, $r46, $r47, $r49, $r51, $r53, $r55, $r57, $r59, $r61, $r64, $r67;
+        java.lang.Class r2;
+        java.lang.ClassNotFoundException r3;
+        java.lang.StringBuilder $r5, $r22, $r24, $r25, $r27, $r35, $r36, $r38, $r39;
+        java.lang.String $r6, $r15, $r21, $r28, $r29, $r31, $r34, $r37, $r40, $r45, $r50;
+        long $l0, $l3, $l4, $l6;
+        java.lang.Long $r7, $r17, $r23;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14, $z15, $z16, $z17, $z18, $z19, $z20, $z21, $z22, $z23;
+        java.io.ObjectStreamField[] $r8, $r66, $r70;
+        int $i1, $i2;
+        java.io.InvalidClassException $r11, $r13, $r19, $r32, $r43;
+        byte $b5;
+        java.io.ObjectStreamClass$ExceptionInfo $r48, $r63, $r65;
+        java.lang.reflect.Constructor $r52;
+        java.lang.reflect.Method $r54, $r56, $r58, $r60, $r62;
+        java.io.ObjectStreamClass$FieldReflector $r68, $r69;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        r1 := @parameter0: java.io.ObjectStreamClass;
+        r2 := @parameter1: java.lang.Class;
+        r3 := @parameter2: java.lang.ClassNotFoundException;
+        r4 := @parameter3: java.io.ObjectStreamClass;
+        r0.<java.io.ObjectStreamClass: java.lang.Class cl> = r2;
+        r0.<java.io.ObjectStreamClass: java.lang.ClassNotFoundException resolveEx> = r3;
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass superDesc> = r4;
+        $r6 = r1.<java.io.ObjectStreamClass: java.lang.String name>;
+        r0.<java.io.ObjectStreamClass: java.lang.String name> = $r6;
+        $l0 = virtualinvoke r1.<java.io.ObjectStreamClass: long getSerialVersionUID()>();
+        $r7 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>($l0);
+        r0.<java.io.ObjectStreamClass: java.lang.Long suid> = $r7;
+        r0.<java.io.ObjectStreamClass: boolean isProxy> = 0;
+        $z0 = r1.<java.io.ObjectStreamClass: boolean isEnum>;
+        r0.<java.io.ObjectStreamClass: boolean isEnum> = $z0;
+        $z1 = r1.<java.io.ObjectStreamClass: boolean serializable>;
+        r0.<java.io.ObjectStreamClass: boolean serializable> = $z1;
+        $z2 = r1.<java.io.ObjectStreamClass: boolean externalizable>;
+        r0.<java.io.ObjectStreamClass: boolean externalizable> = $z2;
+        $z3 = r1.<java.io.ObjectStreamClass: boolean hasBlockExternalData>;
+        r0.<java.io.ObjectStreamClass: boolean hasBlockExternalData> = $z3;
+        $z4 = r1.<java.io.ObjectStreamClass: boolean hasWriteObjectData>;
+        r0.<java.io.ObjectStreamClass: boolean hasWriteObjectData> = $z4;
+        $r8 = r1.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields>;
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields> = $r8;
+        $i1 = r1.<java.io.ObjectStreamClass: int primDataSize>;
+        r0.<java.io.ObjectStreamClass: int primDataSize> = $i1;
+        $i2 = r1.<java.io.ObjectStreamClass: int numObjFields>;
+        r0.<java.io.ObjectStreamClass: int numObjFields> = $i2;
+        if r2 == null goto label9;
+
+        $r9 = staticinvoke <java.io.ObjectStreamClass: java.io.ObjectStreamClass lookup(java.lang.Class,boolean)>(r2, 1);
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc> = $r9;
+        $r10 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $z5 = $r10.<java.io.ObjectStreamClass: boolean isProxy>;
+        if $z5 == 0 goto label0;
+
+        $r11 = new java.io.InvalidClassException;
+        specialinvoke $r11.<java.io.InvalidClassException: void <init>(java.lang.String)>("cannot bind non-proxy descriptor to a proxy class");
+        throw $r11;
+
+     label0:
+        $z6 = r0.<java.io.ObjectStreamClass: boolean isEnum>;
+        $r12 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $z7 = $r12.<java.io.ObjectStreamClass: boolean isEnum>;
+        if $z6 == $z7 goto label3;
+
+        $r13 = new java.io.InvalidClassException;
+        $z8 = r0.<java.io.ObjectStreamClass: boolean isEnum>;
+        if $z8 == 0 goto label1;
+
+        $r15 = "cannot bind enum descriptor to a non-enum class";
+        goto label2;
+
+     label1:
+        $r15 = "cannot bind non-enum descriptor to an enum class";
+
+     label2:
+        specialinvoke $r13.<java.io.InvalidClassException: void <init>(java.lang.String)>($r15);
+        throw $r13;
+
+     label3:
+        $z9 = r0.<java.io.ObjectStreamClass: boolean serializable>;
+        $r16 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $z10 = $r16.<java.io.ObjectStreamClass: boolean serializable>;
+        if $z9 != $z10 goto label4;
+
+        $z11 = virtualinvoke r2.<java.lang.Class: boolean isArray()>();
+        if $z11 != 0 goto label4;
+
+        $r17 = r0.<java.io.ObjectStreamClass: java.lang.Long suid>;
+        $l3 = virtualinvoke $r17.<java.lang.Long: long longValue()>();
+        $r18 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $l4 = virtualinvoke $r18.<java.io.ObjectStreamClass: long getSerialVersionUID()>();
+        $b5 = $l3 cmp $l4;
+        if $b5 == 0 goto label4;
+
+        $r19 = new java.io.InvalidClassException;
+        $r20 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $r21 = $r20.<java.io.ObjectStreamClass: java.lang.String name>;
+        $r5 = new java.lang.StringBuilder;
+        specialinvoke $r5.<java.lang.StringBuilder: void <init>()>();
+        $r22 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("local class incompatible: stream classdesc serialVersionUID = ");
+        $r23 = r0.<java.io.ObjectStreamClass: java.lang.Long suid>;
+        $r24 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r23);
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", local class serialVersionUID = ");
+        $r26 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $l6 = virtualinvoke $r26.<java.io.ObjectStreamClass: long getSerialVersionUID()>();
+        $r27 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(long)>($l6);
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r19.<java.io.InvalidClassException: void <init>(java.lang.String,java.lang.String)>($r21, $r28);
+        throw $r19;
+
+     label4:
+        $r29 = r0.<java.io.ObjectStreamClass: java.lang.String name>;
+        $r30 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $r31 = $r30.<java.io.ObjectStreamClass: java.lang.String name>;
+        $z12 = staticinvoke <java.io.ObjectStreamClass: boolean classNamesEqual(java.lang.String,java.lang.String)>($r29, $r31);
+        if $z12 != 0 goto label5;
+
+        $r32 = new java.io.InvalidClassException;
+        $r33 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $r34 = $r33.<java.io.ObjectStreamClass: java.lang.String name>;
+        $r35 = new java.lang.StringBuilder;
+        specialinvoke $r35.<java.lang.StringBuilder: void <init>()>();
+        $r36 = virtualinvoke $r35.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("local class name incompatible with stream class name \"");
+        $r37 = r0.<java.io.ObjectStreamClass: java.lang.String name>;
+        $r38 = virtualinvoke $r36.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r37);
+        $r39 = virtualinvoke $r38.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\"");
+        $r40 = virtualinvoke $r39.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r32.<java.io.InvalidClassException: void <init>(java.lang.String,java.lang.String)>($r34, $r40);
+        throw $r32;
+
+     label5:
+        $z13 = r0.<java.io.ObjectStreamClass: boolean isEnum>;
+        if $z13 != 0 goto label8;
+
+        $z14 = r0.<java.io.ObjectStreamClass: boolean serializable>;
+        $r41 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $z15 = $r41.<java.io.ObjectStreamClass: boolean serializable>;
+        if $z14 != $z15 goto label6;
+
+        $z16 = r0.<java.io.ObjectStreamClass: boolean externalizable>;
+        $r42 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $z17 = $r42.<java.io.ObjectStreamClass: boolean externalizable>;
+        if $z16 == $z17 goto label6;
+
+        $r43 = new java.io.InvalidClassException;
+        $r44 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $r45 = $r44.<java.io.ObjectStreamClass: java.lang.String name>;
+        specialinvoke $r43.<java.io.InvalidClassException: void <init>(java.lang.String,java.lang.String)>($r45, "Serializable incompatible with Externalizable");
+        throw $r43;
+
+     label6:
+        $z18 = r0.<java.io.ObjectStreamClass: boolean serializable>;
+        $r46 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $z19 = $r46.<java.io.ObjectStreamClass: boolean serializable>;
+        if $z18 != $z19 goto label7;
+
+        $z20 = r0.<java.io.ObjectStreamClass: boolean externalizable>;
+        $r47 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $z21 = $r47.<java.io.ObjectStreamClass: boolean externalizable>;
+        if $z20 != $z21 goto label7;
+
+        $z22 = r0.<java.io.ObjectStreamClass: boolean serializable>;
+        if $z22 != 0 goto label8;
+
+        $z23 = r0.<java.io.ObjectStreamClass: boolean externalizable>;
+        if $z23 != 0 goto label8;
+
+     label7:
+        $r48 = new java.io.ObjectStreamClass$ExceptionInfo;
+        $r49 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $r50 = $r49.<java.io.ObjectStreamClass: java.lang.String name>;
+        specialinvoke $r48.<java.io.ObjectStreamClass$ExceptionInfo: void <init>(java.lang.String,java.lang.String)>($r50, "class invalid for deserialization");
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ExceptionInfo deserializeEx> = $r48;
+
+     label8:
+        $r51 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $r52 = $r51.<java.io.ObjectStreamClass: java.lang.reflect.Constructor cons>;
+        r0.<java.io.ObjectStreamClass: java.lang.reflect.Constructor cons> = $r52;
+        $r53 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $r54 = $r53.<java.io.ObjectStreamClass: java.lang.reflect.Method writeObjectMethod>;
+        r0.<java.io.ObjectStreamClass: java.lang.reflect.Method writeObjectMethod> = $r54;
+        $r55 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $r56 = $r55.<java.io.ObjectStreamClass: java.lang.reflect.Method readObjectMethod>;
+        r0.<java.io.ObjectStreamClass: java.lang.reflect.Method readObjectMethod> = $r56;
+        $r57 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $r58 = $r57.<java.io.ObjectStreamClass: java.lang.reflect.Method readObjectNoDataMethod>;
+        r0.<java.io.ObjectStreamClass: java.lang.reflect.Method readObjectNoDataMethod> = $r58;
+        $r59 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $r60 = $r59.<java.io.ObjectStreamClass: java.lang.reflect.Method writeReplaceMethod>;
+        r0.<java.io.ObjectStreamClass: java.lang.reflect.Method writeReplaceMethod> = $r60;
+        $r61 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $r62 = $r61.<java.io.ObjectStreamClass: java.lang.reflect.Method readResolveMethod>;
+        r0.<java.io.ObjectStreamClass: java.lang.reflect.Method readResolveMethod> = $r62;
+        $r63 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ExceptionInfo deserializeEx>;
+        if $r63 != null goto label9;
+
+        $r64 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $r65 = $r64.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ExceptionInfo deserializeEx>;
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ExceptionInfo deserializeEx> = $r65;
+
+     label9:
+        $r66 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields>;
+        $r67 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        $r68 = staticinvoke <java.io.ObjectStreamClass: java.io.ObjectStreamClass$FieldReflector getReflector(java.io.ObjectStreamField[],java.io.ObjectStreamClass)>($r66, $r67);
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$FieldReflector fieldRefl> = $r68;
+        $r69 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$FieldReflector fieldRefl>;
+        $r70 = virtualinvoke $r69.<java.io.ObjectStreamClass$FieldReflector: java.io.ObjectStreamField[] getFields()>();
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields> = $r70;
+        return;
+    }
+
+    void readNonProxy(java.io.ObjectInputStream) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        java.io.ObjectStreamClass r0;
+        java.io.ObjectInputStream r1;
+        byte b0, $b5, $b6, $b7, $b8, $b9, $b11, $b12;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10;
+        short s1;
+        int i2;
+        char c3;
+        java.lang.String r2, r3, $r5, $r11, $r16, $r21, $r23, $r27, $r30, $r36, $r40;
+        java.lang.RuntimeException r4, $r34;
+        long $l4, $l10;
+        java.lang.Long $r6, $r14, $r19;
+        java.io.InvalidClassException $r10, $r15, $r22, $r35;
+        java.lang.StringBuilder $r17, $r18, $r20, $r24, $r25, $r26, $r37, $r38, $r39;
+        java.io.ObjectStreamField[] $r29, $r32;
+        char[] $r31;
+        java.io.ObjectStreamField $r33;
+        java.lang.Throwable $r41;
+        java.io.IOException $r42;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        r1 := @parameter0: java.io.ObjectInputStream;
+        $r5 = virtualinvoke r1.<java.io.ObjectInputStream: java.lang.String readUTF()>();
+        r0.<java.io.ObjectStreamClass: java.lang.String name> = $r5;
+        $l4 = virtualinvoke r1.<java.io.ObjectInputStream: long readLong()>();
+        $r6 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>($l4);
+        r0.<java.io.ObjectStreamClass: java.lang.Long suid> = $r6;
+        r0.<java.io.ObjectStreamClass: boolean isProxy> = 0;
+        b0 = virtualinvoke r1.<java.io.ObjectInputStream: byte readByte()>();
+        $b5 = b0 & 1;
+        if $b5 == 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        r0.<java.io.ObjectStreamClass: boolean hasWriteObjectData> = $z1;
+        $b6 = b0 & 8;
+        if $b6 == 0 goto label2;
+
+        $z2 = 1;
+        goto label3;
+
+     label2:
+        $z2 = 0;
+
+     label3:
+        r0.<java.io.ObjectStreamClass: boolean hasBlockExternalData> = $z2;
+        $b7 = b0 & 4;
+        if $b7 == 0 goto label4;
+
+        $z3 = 1;
+        goto label5;
+
+     label4:
+        $z3 = 0;
+
+     label5:
+        r0.<java.io.ObjectStreamClass: boolean externalizable> = $z3;
+        $b8 = b0 & 2;
+        if $b8 == 0 goto label6;
+
+        $z4 = 1;
+        goto label7;
+
+     label6:
+        $z4 = 0;
+
+     label7:
+        z0 = $z4;
+        $z5 = r0.<java.io.ObjectStreamClass: boolean externalizable>;
+        if $z5 == 0 goto label8;
+
+        if z0 == 0 goto label8;
+
+        $r10 = new java.io.InvalidClassException;
+        $r11 = r0.<java.io.ObjectStreamClass: java.lang.String name>;
+        specialinvoke $r10.<java.io.InvalidClassException: void <init>(java.lang.String,java.lang.String)>($r11, "serializable and externalizable flags conflict");
+        throw $r10;
+
+     label8:
+        $z6 = r0.<java.io.ObjectStreamClass: boolean externalizable>;
+        if $z6 != 0 goto label9;
+
+        if z0 == 0 goto label10;
+
+     label9:
+        $z7 = 1;
+        goto label11;
+
+     label10:
+        $z7 = 0;
+
+     label11:
+        r0.<java.io.ObjectStreamClass: boolean serializable> = $z7;
+        $b9 = b0 & 16;
+        if $b9 == 0 goto label12;
+
+        $z8 = 1;
+        goto label13;
+
+     label12:
+        $z8 = 0;
+
+     label13:
+        r0.<java.io.ObjectStreamClass: boolean isEnum> = $z8;
+        $z9 = r0.<java.io.ObjectStreamClass: boolean isEnum>;
+        if $z9 == 0 goto label14;
+
+        $r14 = r0.<java.io.ObjectStreamClass: java.lang.Long suid>;
+        $l10 = virtualinvoke $r14.<java.lang.Long: long longValue()>();
+        $b11 = $l10 cmp 0L;
+        if $b11 == 0 goto label14;
+
+        $r15 = new java.io.InvalidClassException;
+        $r16 = r0.<java.io.ObjectStreamClass: java.lang.String name>;
+        $r17 = new java.lang.StringBuilder;
+        specialinvoke $r17.<java.lang.StringBuilder: void <init>()>();
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("enum descriptor has non-zero serialVersionUID: ");
+        $r19 = r0.<java.io.ObjectStreamClass: java.lang.Long suid>;
+        $r20 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r19);
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r15.<java.io.InvalidClassException: void <init>(java.lang.String,java.lang.String)>($r16, $r21);
+        throw $r15;
+
+     label14:
+        s1 = virtualinvoke r1.<java.io.ObjectInputStream: short readShort()>();
+        $z10 = r0.<java.io.ObjectStreamClass: boolean isEnum>;
+        if $z10 == 0 goto label15;
+
+        if s1 == 0 goto label15;
+
+        $r22 = new java.io.InvalidClassException;
+        $r23 = r0.<java.io.ObjectStreamClass: java.lang.String name>;
+        $r24 = new java.lang.StringBuilder;
+        specialinvoke $r24.<java.lang.StringBuilder: void <init>()>();
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("enum descriptor has non-zero field count: ");
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(s1);
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r22.<java.io.InvalidClassException: void <init>(java.lang.String,java.lang.String)>($r23, $r27);
+        throw $r22;
+
+     label15:
+        if s1 <= 0 goto label16;
+
+        $r29 = newarray (java.io.ObjectStreamField)[s1];
+        goto label17;
+
+     label16:
+        $r29 = <java.io.ObjectStreamClass: java.io.ObjectStreamField[] NO_FIELDS>;
+
+     label17:
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields> = $r29;
+        i2 = 0;
+
+     label18:
+        if i2 >= s1 goto label26;
+
+        $b12 = virtualinvoke r1.<java.io.ObjectInputStream: byte readByte()>();
+        c3 = (char) $b12;
+        r2 = virtualinvoke r1.<java.io.ObjectInputStream: java.lang.String readUTF()>();
+        if c3 == 76 goto label19;
+
+        if c3 != 91 goto label20;
+
+     label19:
+        $r30 = virtualinvoke r1.<java.io.ObjectInputStream: java.lang.String readTypeString()>();
+        goto label21;
+
+     label20:
+        $r30 = new java.lang.String;
+        $r31 = newarray (char)[1];
+        $r31[0] = c3;
+        specialinvoke $r30.<java.lang.String: void <init>(char[])>($r31);
+
+     label21:
+        r3 = $r30;
+
+     label22:
+        $r32 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields>;
+        $r33 = new java.io.ObjectStreamField;
+        specialinvoke $r33.<java.io.ObjectStreamField: void <init>(java.lang.String,java.lang.String,boolean)>(r2, r3, 0);
+        $r32[i2] = $r33;
+
+     label23:
+        goto label25;
+
+     label24:
+        $r34 := @caughtexception;
+        r4 = $r34;
+        $r35 = new java.io.InvalidClassException;
+        $r36 = r0.<java.io.ObjectStreamClass: java.lang.String name>;
+        $r37 = new java.lang.StringBuilder;
+        specialinvoke $r37.<java.lang.StringBuilder: void <init>()>();
+        $r38 = virtualinvoke $r37.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("invalid descriptor for field ");
+        $r39 = virtualinvoke $r38.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r40 = virtualinvoke $r39.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r35.<java.io.InvalidClassException: void <init>(java.lang.String,java.lang.String)>($r36, $r40);
+        $r41 = virtualinvoke $r35.<java.io.InvalidClassException: java.lang.Throwable initCause(java.lang.Throwable)>(r4);
+        $r42 = (java.io.IOException) $r41;
+        throw $r42;
+
+     label25:
+        i2 = i2 + 1;
+        goto label18;
+
+     label26:
+        specialinvoke r0.<java.io.ObjectStreamClass: void computeFieldOffsets()>();
+        return;
+
+        catch java.lang.RuntimeException from label22 to label23 with label24;
+    }
+
+    void writeNonProxy(java.io.ObjectOutputStream) throws java.io.IOException
+    {
+        java.io.ObjectStreamClass r0;
+        java.io.ObjectOutputStream r1;
+        byte b0, $b3, $b4, $b5, $b6, $b7;
+        int i1, $i8, i9, $i10;
+        java.io.ObjectStreamField r2;
+        java.lang.String $r3, $r7, $r8;
+        long $l2;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        java.io.ObjectStreamField[] $r4, $r5, $r6;
+        char $c11;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        r1 := @parameter0: java.io.ObjectOutputStream;
+        $r3 = r0.<java.io.ObjectStreamClass: java.lang.String name>;
+        virtualinvoke r1.<java.io.ObjectOutputStream: void writeUTF(java.lang.String)>($r3);
+        $l2 = virtualinvoke r0.<java.io.ObjectStreamClass: long getSerialVersionUID()>();
+        virtualinvoke r1.<java.io.ObjectOutputStream: void writeLong(long)>($l2);
+        b0 = 0;
+        $z0 = r0.<java.io.ObjectStreamClass: boolean externalizable>;
+        if $z0 == 0 goto label1;
+
+        $b3 = b0 | 4;
+        b0 = (byte) $b3;
+        i1 = virtualinvoke r1.<java.io.ObjectOutputStream: int getProtocolVersion()>();
+        if i1 == 1 goto label0;
+
+        $b4 = b0 | 8;
+        b0 = (byte) $b4;
+
+     label0:
+        goto label2;
+
+     label1:
+        $z1 = r0.<java.io.ObjectStreamClass: boolean serializable>;
+        if $z1 == 0 goto label2;
+
+        $b5 = b0 | 2;
+        b0 = (byte) $b5;
+
+     label2:
+        $z2 = r0.<java.io.ObjectStreamClass: boolean hasWriteObjectData>;
+        if $z2 == 0 goto label3;
+
+        $b6 = b0 | 1;
+        b0 = (byte) $b6;
+
+     label3:
+        $z3 = r0.<java.io.ObjectStreamClass: boolean isEnum>;
+        if $z3 == 0 goto label4;
+
+        $b7 = b0 | 16;
+        b0 = (byte) $b7;
+
+     label4:
+        virtualinvoke r1.<java.io.ObjectOutputStream: void writeByte(int)>(b0);
+        $r4 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields>;
+        $i8 = lengthof $r4;
+        virtualinvoke r1.<java.io.ObjectOutputStream: void writeShort(int)>($i8);
+        i9 = 0;
+
+     label5:
+        $r5 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields>;
+        $i10 = lengthof $r5;
+        if i9 >= $i10 goto label7;
+
+        $r6 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields>;
+        r2 = $r6[i9];
+        $c11 = virtualinvoke r2.<java.io.ObjectStreamField: char getTypeCode()>();
+        virtualinvoke r1.<java.io.ObjectOutputStream: void writeByte(int)>($c11);
+        $r7 = virtualinvoke r2.<java.io.ObjectStreamField: java.lang.String getName()>();
+        virtualinvoke r1.<java.io.ObjectOutputStream: void writeUTF(java.lang.String)>($r7);
+        $z4 = virtualinvoke r2.<java.io.ObjectStreamField: boolean isPrimitive()>();
+        if $z4 != 0 goto label6;
+
+        $r8 = virtualinvoke r2.<java.io.ObjectStreamField: java.lang.String getTypeString()>();
+        virtualinvoke r1.<java.io.ObjectOutputStream: void writeTypeString(java.lang.String)>($r8);
+
+     label6:
+        i9 = i9 + 1;
+        goto label5;
+
+     label7:
+        return;
+    }
+
+    java.lang.ClassNotFoundException getResolveException()
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.ClassNotFoundException $r1;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r1 = r0.<java.io.ObjectStreamClass: java.lang.ClassNotFoundException resolveEx>;
+        return $r1;
+    }
+
+    void checkDeserialize() throws java.io.InvalidClassException
+    {
+        java.io.ObjectStreamClass r0;
+        java.io.ObjectStreamClass$ExceptionInfo $r1, $r2;
+        java.io.InvalidClassException $r3;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r1 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ExceptionInfo deserializeEx>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ExceptionInfo deserializeEx>;
+        $r3 = virtualinvoke $r2.<java.io.ObjectStreamClass$ExceptionInfo: java.io.InvalidClassException newInvalidClassException()>();
+        throw $r3;
+
+     label0:
+        return;
+    }
+
+    void checkSerialize() throws java.io.InvalidClassException
+    {
+        java.io.ObjectStreamClass r0;
+        java.io.ObjectStreamClass$ExceptionInfo $r1, $r2;
+        java.io.InvalidClassException $r3;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r1 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ExceptionInfo serializeEx>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ExceptionInfo serializeEx>;
+        $r3 = virtualinvoke $r2.<java.io.ObjectStreamClass$ExceptionInfo: java.io.InvalidClassException newInvalidClassException()>();
+        throw $r3;
+
+     label0:
+        return;
+    }
+
+    void checkDefaultSerialize() throws java.io.InvalidClassException
+    {
+        java.io.ObjectStreamClass r0;
+        java.io.ObjectStreamClass$ExceptionInfo $r1, $r2;
+        java.io.InvalidClassException $r3;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r1 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ExceptionInfo defaultSerializeEx>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ExceptionInfo defaultSerializeEx>;
+        $r3 = virtualinvoke $r2.<java.io.ObjectStreamClass$ExceptionInfo: java.io.InvalidClassException newInvalidClassException()>();
+        throw $r3;
+
+     label0:
+        return;
+    }
+
+    java.io.ObjectStreamClass getSuperDesc()
+    {
+        java.io.ObjectStreamClass r0, $r1;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r1 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass superDesc>;
+        return $r1;
+    }
+
+    java.io.ObjectStreamClass getLocalDesc()
+    {
+        java.io.ObjectStreamClass r0, $r1;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r1 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass localDesc>;
+        return $r1;
+    }
+
+    java.io.ObjectStreamField[] getFields(boolean)
+    {
+        java.io.ObjectStreamClass r0;
+        boolean z0;
+        java.io.ObjectStreamField[] $r1, $r3;
+        java.lang.Object $r2;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        z0 := @parameter0: boolean;
+        if z0 == 0 goto label0;
+
+        $r1 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields>;
+        $r2 = virtualinvoke $r1.<java.lang.Object: java.lang.Object clone()>();
+        $r3 = (java.io.ObjectStreamField[]) $r2;
+        goto label1;
+
+     label0:
+        $r3 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields>;
+
+     label1:
+        return $r3;
+    }
+
+    java.io.ObjectStreamField getField(java.lang.String, java.lang.Class)
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.String r1, $r7;
+        java.lang.Class r2, r4;
+        int i0, $i1;
+        java.io.ObjectStreamField r3;
+        java.io.ObjectStreamField[] $r5, $r6;
+        boolean $z0, $z1, $z2;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.Class;
+        i0 = 0;
+
+     label0:
+        $r5 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields>;
+        $i1 = lengthof $r5;
+        if i0 >= $i1 goto label4;
+
+        $r6 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields>;
+        r3 = $r6[i0];
+        $r7 = virtualinvoke r3.<java.io.ObjectStreamField: java.lang.String getName()>();
+        $z0 = virtualinvoke $r7.<java.lang.String: boolean equals(java.lang.Object)>(r1);
+        if $z0 == 0 goto label3;
+
+        if r2 == null goto label1;
+
+        if r2 != class "java/lang/Object" goto label2;
+
+        $z1 = virtualinvoke r3.<java.io.ObjectStreamField: boolean isPrimitive()>();
+        if $z1 != 0 goto label2;
+
+     label1:
+        return r3;
+
+     label2:
+        r4 = virtualinvoke r3.<java.io.ObjectStreamField: java.lang.Class getType()>();
+        if r4 == null goto label3;
+
+        $z2 = virtualinvoke r2.<java.lang.Class: boolean isAssignableFrom(java.lang.Class)>(r4);
+        if $z2 == 0 goto label3;
+
+        return r3;
+
+     label3:
+        i0 = i0 + 1;
+        goto label0;
+
+     label4:
+        return null;
+    }
+
+    boolean isProxy()
+    {
+        java.io.ObjectStreamClass r0;
+        boolean $z0;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $z0 = r0.<java.io.ObjectStreamClass: boolean isProxy>;
+        return $z0;
+    }
+
+    boolean isEnum()
+    {
+        java.io.ObjectStreamClass r0;
+        boolean $z0;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $z0 = r0.<java.io.ObjectStreamClass: boolean isEnum>;
+        return $z0;
+    }
+
+    boolean isExternalizable()
+    {
+        java.io.ObjectStreamClass r0;
+        boolean $z0;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $z0 = r0.<java.io.ObjectStreamClass: boolean externalizable>;
+        return $z0;
+    }
+
+    boolean isSerializable()
+    {
+        java.io.ObjectStreamClass r0;
+        boolean $z0;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $z0 = r0.<java.io.ObjectStreamClass: boolean serializable>;
+        return $z0;
+    }
+
+    boolean hasBlockExternalData()
+    {
+        java.io.ObjectStreamClass r0;
+        boolean $z0;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $z0 = r0.<java.io.ObjectStreamClass: boolean hasBlockExternalData>;
+        return $z0;
+    }
+
+    boolean hasWriteObjectData()
+    {
+        java.io.ObjectStreamClass r0;
+        boolean $z0;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $z0 = r0.<java.io.ObjectStreamClass: boolean hasWriteObjectData>;
+        return $z0;
+    }
+
+    boolean isInstantiable()
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.reflect.Constructor $r1;
+        boolean $z0;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r1 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Constructor cons>;
+        if $r1 == null goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    boolean hasWriteObjectMethod()
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.reflect.Method $r1;
+        boolean $z0;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r1 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Method writeObjectMethod>;
+        if $r1 == null goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    boolean hasReadObjectMethod()
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.reflect.Method $r1;
+        boolean $z0;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r1 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Method readObjectMethod>;
+        if $r1 == null goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    boolean hasReadObjectNoDataMethod()
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.reflect.Method $r1;
+        boolean $z0;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r1 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Method readObjectNoDataMethod>;
+        if $r1 == null goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    boolean hasWriteReplaceMethod()
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.reflect.Method $r1;
+        boolean $z0;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r1 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Method writeReplaceMethod>;
+        if $r1 == null goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    boolean hasReadResolveMethod()
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.reflect.Method $r1;
+        boolean $z0;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r1 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Method readResolveMethod>;
+        if $r1 == null goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    java.lang.Object newInstance() throws java.lang.InstantiationException, java.lang.reflect.InvocationTargetException, java.lang.UnsupportedOperationException
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.IllegalAccessException r1, $r6;
+        java.lang.reflect.Constructor $r2, $r3;
+        java.lang.Object[] $r4;
+        java.lang.Object $r5;
+        java.lang.InternalError $r7;
+        java.lang.UnsupportedOperationException $r8;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r2 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Constructor cons>;
+        if $r2 == null goto label3;
+
+     label0:
+        $r3 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Constructor cons>;
+        $r4 = newarray (java.lang.Object)[0];
+        $r5 = virtualinvoke $r3.<java.lang.reflect.Constructor: java.lang.Object newInstance(java.lang.Object[])>($r4);
+
+     label1:
+        return $r5;
+
+     label2:
+        $r6 := @caughtexception;
+        r1 = $r6;
+        $r7 = new java.lang.InternalError;
+        specialinvoke $r7.<java.lang.InternalError: void <init>()>();
+        throw $r7;
+
+     label3:
+        $r8 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r8.<java.lang.UnsupportedOperationException: void <init>()>();
+        throw $r8;
+
+        catch java.lang.IllegalAccessException from label0 to label1 with label2;
+    }
+
+    void invokeWriteObject(java.lang.Object, java.io.ObjectOutputStream) throws java.io.IOException, java.lang.UnsupportedOperationException
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.Object r1;
+        java.io.ObjectOutputStream r2;
+        java.lang.reflect.InvocationTargetException r3, $r9;
+        java.lang.Throwable r4;
+        java.lang.reflect.Method $r5, $r6;
+        java.lang.Object[] $r7;
+        boolean $z0;
+        java.io.IOException $r10;
+        java.lang.IllegalAccessException $r11, r12;
+        java.lang.InternalError $r13;
+        java.lang.UnsupportedOperationException $r14;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        r1 := @parameter0: java.lang.Object;
+        r2 := @parameter1: java.io.ObjectOutputStream;
+        $r5 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Method writeObjectMethod>;
+        if $r5 == null goto label5;
+
+     label0:
+        $r6 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Method writeObjectMethod>;
+        $r7 = newarray (java.lang.Object)[1];
+        $r7[0] = r2;
+        virtualinvoke $r6.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(r1, $r7);
+
+     label1:
+        goto label6;
+
+     label2:
+        $r9 := @caughtexception;
+        r3 = $r9;
+        r4 = virtualinvoke r3.<java.lang.reflect.InvocationTargetException: java.lang.Throwable getTargetException()>();
+        $z0 = r4 instanceof java.io.IOException;
+        if $z0 == 0 goto label3;
+
+        $r10 = (java.io.IOException) r4;
+        throw $r10;
+
+     label3:
+        staticinvoke <java.io.ObjectStreamClass: void throwMiscException(java.lang.Throwable)>(r4);
+        goto label6;
+
+     label4:
+        $r11 := @caughtexception;
+        r12 = $r11;
+        $r13 = new java.lang.InternalError;
+        specialinvoke $r13.<java.lang.InternalError: void <init>()>();
+        throw $r13;
+
+     label5:
+        $r14 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r14.<java.lang.UnsupportedOperationException: void <init>()>();
+        throw $r14;
+
+     label6:
+        return;
+
+        catch java.lang.reflect.InvocationTargetException from label0 to label1 with label2;
+        catch java.lang.IllegalAccessException from label0 to label1 with label4;
+    }
+
+    void invokeReadObject(java.lang.Object, java.io.ObjectInputStream) throws java.lang.ClassNotFoundException, java.io.IOException, java.lang.UnsupportedOperationException
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.Object r1;
+        java.io.ObjectInputStream r2;
+        java.lang.reflect.InvocationTargetException r3, $r9;
+        java.lang.Throwable r4;
+        java.lang.reflect.Method $r5, $r6;
+        java.lang.Object[] $r7;
+        boolean $z0, $z1;
+        java.lang.ClassNotFoundException $r10;
+        java.io.IOException $r11;
+        java.lang.IllegalAccessException $r12, r13;
+        java.lang.InternalError $r14;
+        java.lang.UnsupportedOperationException $r15;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        r1 := @parameter0: java.lang.Object;
+        r2 := @parameter1: java.io.ObjectInputStream;
+        $r5 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Method readObjectMethod>;
+        if $r5 == null goto label6;
+
+     label0:
+        $r6 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Method readObjectMethod>;
+        $r7 = newarray (java.lang.Object)[1];
+        $r7[0] = r2;
+        virtualinvoke $r6.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(r1, $r7);
+
+     label1:
+        goto label7;
+
+     label2:
+        $r9 := @caughtexception;
+        r3 = $r9;
+        r4 = virtualinvoke r3.<java.lang.reflect.InvocationTargetException: java.lang.Throwable getTargetException()>();
+        $z0 = r4 instanceof java.lang.ClassNotFoundException;
+        if $z0 == 0 goto label3;
+
+        $r10 = (java.lang.ClassNotFoundException) r4;
+        throw $r10;
+
+     label3:
+        $z1 = r4 instanceof java.io.IOException;
+        if $z1 == 0 goto label4;
+
+        $r11 = (java.io.IOException) r4;
+        throw $r11;
+
+     label4:
+        staticinvoke <java.io.ObjectStreamClass: void throwMiscException(java.lang.Throwable)>(r4);
+        goto label7;
+
+     label5:
+        $r12 := @caughtexception;
+        r13 = $r12;
+        $r14 = new java.lang.InternalError;
+        specialinvoke $r14.<java.lang.InternalError: void <init>()>();
+        throw $r14;
+
+     label6:
+        $r15 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r15.<java.lang.UnsupportedOperationException: void <init>()>();
+        throw $r15;
+
+     label7:
+        return;
+
+        catch java.lang.reflect.InvocationTargetException from label0 to label1 with label2;
+        catch java.lang.IllegalAccessException from label0 to label1 with label5;
+    }
+
+    void invokeReadObjectNoData(java.lang.Object) throws java.io.IOException, java.lang.UnsupportedOperationException
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.Object r1;
+        java.lang.reflect.InvocationTargetException r2, $r8;
+        java.lang.Throwable r3;
+        java.lang.reflect.Method $r4, $r5;
+        java.lang.Object[] $r6;
+        boolean $z0;
+        java.io.ObjectStreamException $r9;
+        java.lang.IllegalAccessException $r10, r11;
+        java.lang.InternalError $r12;
+        java.lang.UnsupportedOperationException $r13;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        r1 := @parameter0: java.lang.Object;
+        $r4 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Method readObjectNoDataMethod>;
+        if $r4 == null goto label5;
+
+     label0:
+        $r5 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Method readObjectNoDataMethod>;
+        $r6 = (java.lang.Object[]) null;
+        virtualinvoke $r5.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(r1, $r6);
+
+     label1:
+        goto label6;
+
+     label2:
+        $r8 := @caughtexception;
+        r2 = $r8;
+        r3 = virtualinvoke r2.<java.lang.reflect.InvocationTargetException: java.lang.Throwable getTargetException()>();
+        $z0 = r3 instanceof java.io.ObjectStreamException;
+        if $z0 == 0 goto label3;
+
+        $r9 = (java.io.ObjectStreamException) r3;
+        throw $r9;
+
+     label3:
+        staticinvoke <java.io.ObjectStreamClass: void throwMiscException(java.lang.Throwable)>(r3);
+        goto label6;
+
+     label4:
+        $r10 := @caughtexception;
+        r11 = $r10;
+        $r12 = new java.lang.InternalError;
+        specialinvoke $r12.<java.lang.InternalError: void <init>()>();
+        throw $r12;
+
+     label5:
+        $r13 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r13.<java.lang.UnsupportedOperationException: void <init>()>();
+        throw $r13;
+
+     label6:
+        return;
+
+        catch java.lang.reflect.InvocationTargetException from label0 to label1 with label2;
+        catch java.lang.IllegalAccessException from label0 to label1 with label4;
+    }
+
+    java.lang.Object invokeWriteReplace(java.lang.Object) throws java.io.IOException, java.lang.UnsupportedOperationException
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.Object r1, $r7;
+        java.lang.reflect.InvocationTargetException r2, $r8;
+        java.lang.Throwable r3;
+        java.lang.reflect.Method $r4, $r5;
+        java.lang.Object[] $r6;
+        boolean $z0;
+        java.io.ObjectStreamException $r9;
+        java.lang.InternalError $r10, $r13;
+        java.lang.IllegalAccessException $r11, r12;
+        java.lang.UnsupportedOperationException $r14;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        r1 := @parameter0: java.lang.Object;
+        $r4 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Method writeReplaceMethod>;
+        if $r4 == null goto label5;
+
+     label0:
+        $r5 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Method writeReplaceMethod>;
+        $r6 = (java.lang.Object[]) null;
+        $r7 = virtualinvoke $r5.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(r1, $r6);
+
+     label1:
+        return $r7;
+
+     label2:
+        $r8 := @caughtexception;
+        r2 = $r8;
+        r3 = virtualinvoke r2.<java.lang.reflect.InvocationTargetException: java.lang.Throwable getTargetException()>();
+        $z0 = r3 instanceof java.io.ObjectStreamException;
+        if $z0 == 0 goto label3;
+
+        $r9 = (java.io.ObjectStreamException) r3;
+        throw $r9;
+
+     label3:
+        staticinvoke <java.io.ObjectStreamClass: void throwMiscException(java.lang.Throwable)>(r3);
+        $r10 = new java.lang.InternalError;
+        specialinvoke $r10.<java.lang.InternalError: void <init>()>();
+        throw $r10;
+
+     label4:
+        $r11 := @caughtexception;
+        r12 = $r11;
+        $r13 = new java.lang.InternalError;
+        specialinvoke $r13.<java.lang.InternalError: void <init>()>();
+        throw $r13;
+
+     label5:
+        $r14 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r14.<java.lang.UnsupportedOperationException: void <init>()>();
+        throw $r14;
+
+        catch java.lang.reflect.InvocationTargetException from label0 to label1 with label2;
+        catch java.lang.IllegalAccessException from label0 to label1 with label4;
+    }
+
+    java.lang.Object invokeReadResolve(java.lang.Object) throws java.io.IOException, java.lang.UnsupportedOperationException
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.Object r1, $r7;
+        java.lang.reflect.InvocationTargetException r2, $r8;
+        java.lang.Throwable r3;
+        java.lang.reflect.Method $r4, $r5;
+        java.lang.Object[] $r6;
+        boolean $z0;
+        java.io.ObjectStreamException $r9;
+        java.lang.InternalError $r10, $r13;
+        java.lang.IllegalAccessException $r11, r12;
+        java.lang.UnsupportedOperationException $r14;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        r1 := @parameter0: java.lang.Object;
+        $r4 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Method readResolveMethod>;
+        if $r4 == null goto label5;
+
+     label0:
+        $r5 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Method readResolveMethod>;
+        $r6 = (java.lang.Object[]) null;
+        $r7 = virtualinvoke $r5.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(r1, $r6);
+
+     label1:
+        return $r7;
+
+     label2:
+        $r8 := @caughtexception;
+        r2 = $r8;
+        r3 = virtualinvoke r2.<java.lang.reflect.InvocationTargetException: java.lang.Throwable getTargetException()>();
+        $z0 = r3 instanceof java.io.ObjectStreamException;
+        if $z0 == 0 goto label3;
+
+        $r9 = (java.io.ObjectStreamException) r3;
+        throw $r9;
+
+     label3:
+        staticinvoke <java.io.ObjectStreamClass: void throwMiscException(java.lang.Throwable)>(r3);
+        $r10 = new java.lang.InternalError;
+        specialinvoke $r10.<java.lang.InternalError: void <init>()>();
+        throw $r10;
+
+     label4:
+        $r11 := @caughtexception;
+        r12 = $r11;
+        $r13 = new java.lang.InternalError;
+        specialinvoke $r13.<java.lang.InternalError: void <init>()>();
+        throw $r13;
+
+     label5:
+        $r14 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r14.<java.lang.UnsupportedOperationException: void <init>()>();
+        throw $r14;
+
+        catch java.lang.reflect.InvocationTargetException from label0 to label1 with label2;
+        catch java.lang.IllegalAccessException from label0 to label1 with label4;
+    }
+
+    java.io.ObjectStreamClass$ClassDataSlot[] getClassDataLayout() throws java.io.InvalidClassException
+    {
+        java.io.ObjectStreamClass r0;
+        java.io.ObjectStreamClass$ClassDataSlot[] $r1, $r2, $r3;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r1 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ClassDataSlot[] dataLayout>;
+        if $r1 != null goto label0;
+
+        $r2 = specialinvoke r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ClassDataSlot[] getClassDataLayout0()>();
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ClassDataSlot[] dataLayout> = $r2;
+
+     label0:
+        $r3 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ClassDataSlot[] dataLayout>;
+        return $r3;
+    }
+
+    private java.io.ObjectStreamClass$ClassDataSlot[] getClassDataLayout0() throws java.io.InvalidClassException
+    {
+        java.io.ObjectStreamClass r0, r6, $r21, $r23, $r26;
+        java.util.ArrayList $r1, r2;
+        java.lang.Class r3, r4, r8, r9, $r10, $r15, $r16, r19, r24;
+        java.util.HashSet r5, $r11;
+        java.lang.String r7, $r12, $r14, $r17, $r18;
+        boolean $z0, $z1, $z3;
+        java.io.InvalidClassException $r13;
+        java.io.ObjectStreamClass$ClassDataSlot $r20, $r22, $r25;
+        int $i0;
+        java.io.ObjectStreamClass$ClassDataSlot[] $r27, $r29;
+        java.lang.Object[] $r28;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        r2 = $r1;
+        r3 = r0.<java.io.ObjectStreamClass: java.lang.Class cl>;
+        r4 = r0.<java.io.ObjectStreamClass: java.lang.Class cl>;
+
+     label0:
+        if r4 == null goto label1;
+
+        $r10 = class "java/io/Serializable";
+        $z0 = virtualinvoke $r10.<java.lang.Class: boolean isAssignableFrom(java.lang.Class)>(r4);
+        if $z0 == 0 goto label1;
+
+        r4 = virtualinvoke r4.<java.lang.Class: java.lang.Class getSuperclass()>();
+        goto label0;
+
+     label1:
+        $r11 = new java.util.HashSet;
+        specialinvoke $r11.<java.util.HashSet: void <init>(int)>(3);
+        r5 = $r11;
+        r6 = r0;
+
+     label2:
+        if r6 == null goto label12;
+
+        $r12 = r6.<java.io.ObjectStreamClass: java.lang.String name>;
+        $z1 = virtualinvoke r5.<java.util.HashSet: boolean contains(java.lang.Object)>($r12);
+        if $z1 == 0 goto label3;
+
+        $r13 = new java.io.InvalidClassException;
+        specialinvoke $r13.<java.io.InvalidClassException: void <init>(java.lang.String)>("Circular reference.");
+        throw $r13;
+
+     label3:
+        $r14 = r6.<java.io.ObjectStreamClass: java.lang.String name>;
+        virtualinvoke r5.<java.util.HashSet: boolean add(java.lang.Object)>($r14);
+        $r15 = r6.<java.io.ObjectStreamClass: java.lang.Class cl>;
+        if $r15 == null goto label4;
+
+        $r16 = r6.<java.io.ObjectStreamClass: java.lang.Class cl>;
+        $r17 = virtualinvoke $r16.<java.lang.Class: java.lang.String getName()>();
+        goto label5;
+
+     label4:
+        $r17 = r6.<java.io.ObjectStreamClass: java.lang.String name>;
+
+     label5:
+        r7 = $r17;
+        r8 = null;
+        r9 = r3;
+
+     label6:
+        if r9 == r4 goto label8;
+
+        $r18 = virtualinvoke r9.<java.lang.Class: java.lang.String getName()>();
+        $z3 = virtualinvoke r7.<java.lang.String: boolean equals(java.lang.Object)>($r18);
+        if $z3 == 0 goto label7;
+
+        r8 = r9;
+        goto label8;
+
+     label7:
+        r9 = virtualinvoke r9.<java.lang.Class: java.lang.Class getSuperclass()>();
+        goto label6;
+
+     label8:
+        if r8 == null goto label11;
+
+        r19 = r3;
+
+     label9:
+        if r19 == r8 goto label10;
+
+        $r20 = new java.io.ObjectStreamClass$ClassDataSlot;
+        $r21 = staticinvoke <java.io.ObjectStreamClass: java.io.ObjectStreamClass lookup(java.lang.Class,boolean)>(r19, 1);
+        specialinvoke $r20.<java.io.ObjectStreamClass$ClassDataSlot: void <init>(java.io.ObjectStreamClass,boolean)>($r21, 0);
+        virtualinvoke r2.<java.util.ArrayList: boolean add(java.lang.Object)>($r20);
+        r19 = virtualinvoke r19.<java.lang.Class: java.lang.Class getSuperclass()>();
+        goto label9;
+
+     label10:
+        r3 = virtualinvoke r8.<java.lang.Class: java.lang.Class getSuperclass()>();
+
+     label11:
+        $r22 = new java.io.ObjectStreamClass$ClassDataSlot;
+        $r23 = specialinvoke r6.<java.io.ObjectStreamClass: java.io.ObjectStreamClass getVariantFor(java.lang.Class)>(r8);
+        specialinvoke $r22.<java.io.ObjectStreamClass$ClassDataSlot: void <init>(java.io.ObjectStreamClass,boolean)>($r23, 1);
+        virtualinvoke r2.<java.util.ArrayList: boolean add(java.lang.Object)>($r22);
+        r6 = r6.<java.io.ObjectStreamClass: java.io.ObjectStreamClass superDesc>;
+        goto label2;
+
+     label12:
+        r24 = r3;
+
+     label13:
+        if r24 == r4 goto label14;
+
+        $r25 = new java.io.ObjectStreamClass$ClassDataSlot;
+        $r26 = staticinvoke <java.io.ObjectStreamClass: java.io.ObjectStreamClass lookup(java.lang.Class,boolean)>(r24, 1);
+        specialinvoke $r25.<java.io.ObjectStreamClass$ClassDataSlot: void <init>(java.io.ObjectStreamClass,boolean)>($r26, 0);
+        virtualinvoke r2.<java.util.ArrayList: boolean add(java.lang.Object)>($r25);
+        r24 = virtualinvoke r24.<java.lang.Class: java.lang.Class getSuperclass()>();
+        goto label13;
+
+     label14:
+        staticinvoke <java.util.Collections: void reverse(java.util.List)>(r2);
+        $i0 = virtualinvoke r2.<java.util.ArrayList: int size()>();
+        $r27 = newarray (java.io.ObjectStreamClass$ClassDataSlot)[$i0];
+        $r28 = virtualinvoke r2.<java.util.ArrayList: java.lang.Object[] toArray(java.lang.Object[])>($r27);
+        $r29 = (java.io.ObjectStreamClass$ClassDataSlot[]) $r28;
+        return $r29;
+    }
+
+    int getPrimDataSize()
+    {
+        java.io.ObjectStreamClass r0;
+        int $i0;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $i0 = r0.<java.io.ObjectStreamClass: int primDataSize>;
+        return $i0;
+    }
+
+    int getNumObjFields()
+    {
+        java.io.ObjectStreamClass r0;
+        int $i0;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        $i0 = r0.<java.io.ObjectStreamClass: int numObjFields>;
+        return $i0;
+    }
+
+    void getPrimFieldValues(java.lang.Object, byte[])
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.Object r1;
+        byte[] r2;
+        java.io.ObjectStreamClass$FieldReflector $r3;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        r1 := @parameter0: java.lang.Object;
+        r2 := @parameter1: byte[];
+        $r3 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$FieldReflector fieldRefl>;
+        virtualinvoke $r3.<java.io.ObjectStreamClass$FieldReflector: void getPrimFieldValues(java.lang.Object,byte[])>(r1, r2);
+        return;
+    }
+
+    void setPrimFieldValues(java.lang.Object, byte[])
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.Object r1;
+        byte[] r2;
+        java.io.ObjectStreamClass$FieldReflector $r3;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        r1 := @parameter0: java.lang.Object;
+        r2 := @parameter1: byte[];
+        $r3 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$FieldReflector fieldRefl>;
+        virtualinvoke $r3.<java.io.ObjectStreamClass$FieldReflector: void setPrimFieldValues(java.lang.Object,byte[])>(r1, r2);
+        return;
+    }
+
+    void getObjFieldValues(java.lang.Object, java.lang.Object[])
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.Object r1;
+        java.lang.Object[] r2;
+        java.io.ObjectStreamClass$FieldReflector $r3;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        r1 := @parameter0: java.lang.Object;
+        r2 := @parameter1: java.lang.Object[];
+        $r3 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$FieldReflector fieldRefl>;
+        virtualinvoke $r3.<java.io.ObjectStreamClass$FieldReflector: void getObjFieldValues(java.lang.Object,java.lang.Object[])>(r1, r2);
+        return;
+    }
+
+    void setObjFieldValues(java.lang.Object, java.lang.Object[])
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.Object r1;
+        java.lang.Object[] r2;
+        java.io.ObjectStreamClass$FieldReflector $r3;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        r1 := @parameter0: java.lang.Object;
+        r2 := @parameter1: java.lang.Object[];
+        $r3 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$FieldReflector fieldRefl>;
+        virtualinvoke $r3.<java.io.ObjectStreamClass$FieldReflector: void setObjFieldValues(java.lang.Object,java.lang.Object[])>(r1, r2);
+        return;
+    }
+
+    private void computeFieldOffsets() throws java.io.InvalidClassException
+    {
+        java.io.ObjectStreamClass r0;
+        int i0, i1, $i2, $i3, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19;
+        java.io.ObjectStreamField r1;
+        java.io.ObjectStreamField[] $r2, $r3, $r10;
+        char $c4;
+        java.lang.InternalError $r9;
+        java.io.InvalidClassException $r11;
+        java.lang.String $r12;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        r0.<java.io.ObjectStreamClass: int primDataSize> = 0;
+        r0.<java.io.ObjectStreamClass: int numObjFields> = 0;
+        i0 = -1;
+        i1 = 0;
+
+     label0:
+        $r2 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields>;
+        $i3 = lengthof $r2;
+        if i1 >= $i3 goto label8;
+
+        $r3 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields>;
+        r1 = $r3[i1];
+        $c4 = virtualinvoke r1.<java.io.ObjectStreamField: char getTypeCode()>();
+        tableswitch($c4)
+        {
+            case 66: goto label1;
+            case 67: goto label2;
+            case 68: goto label4;
+            case 69: goto label6;
+            case 70: goto label3;
+            case 71: goto label6;
+            case 72: goto label6;
+            case 73: goto label3;
+            case 74: goto label4;
+            case 75: goto label6;
+            case 76: goto label5;
+            case 77: goto label6;
+            case 78: goto label6;
+            case 79: goto label6;
+            case 80: goto label6;
+            case 81: goto label6;
+            case 82: goto label6;
+            case 83: goto label2;
+            case 84: goto label6;
+            case 85: goto label6;
+            case 86: goto label6;
+            case 87: goto label6;
+            case 88: goto label6;
+            case 89: goto label6;
+            case 90: goto label1;
+            case 91: goto label5;
+            default: goto label6;
+        };
+
+     label1:
+        $i2 = r0.<java.io.ObjectStreamClass: int primDataSize>;
+        $i5 = $i2 + 1;
+        r0.<java.io.ObjectStreamClass: int primDataSize> = $i5;
+        virtualinvoke r1.<java.io.ObjectStreamField: void setOffset(int)>($i2);
+        goto label7;
+
+     label2:
+        $i6 = r0.<java.io.ObjectStreamClass: int primDataSize>;
+        virtualinvoke r1.<java.io.ObjectStreamField: void setOffset(int)>($i6);
+        $i7 = r0.<java.io.ObjectStreamClass: int primDataSize>;
+        $i8 = $i7 + 2;
+        r0.<java.io.ObjectStreamClass: int primDataSize> = $i8;
+        goto label7;
+
+     label3:
+        $i9 = r0.<java.io.ObjectStreamClass: int primDataSize>;
+        virtualinvoke r1.<java.io.ObjectStreamField: void setOffset(int)>($i9);
+        $i10 = r0.<java.io.ObjectStreamClass: int primDataSize>;
+        $i11 = $i10 + 4;
+        r0.<java.io.ObjectStreamClass: int primDataSize> = $i11;
+        goto label7;
+
+     label4:
+        $i12 = r0.<java.io.ObjectStreamClass: int primDataSize>;
+        virtualinvoke r1.<java.io.ObjectStreamField: void setOffset(int)>($i12);
+        $i13 = r0.<java.io.ObjectStreamClass: int primDataSize>;
+        $i14 = $i13 + 8;
+        r0.<java.io.ObjectStreamClass: int primDataSize> = $i14;
+        goto label7;
+
+     label5:
+        $i15 = r0.<java.io.ObjectStreamClass: int numObjFields>;
+        $i16 = $i15 + 1;
+        r0.<java.io.ObjectStreamClass: int numObjFields> = $i16;
+        virtualinvoke r1.<java.io.ObjectStreamField: void setOffset(int)>($i15);
+        if i0 != -1 goto label7;
+
+        i0 = i1;
+        goto label7;
+
+     label6:
+        $r9 = new java.lang.InternalError;
+        specialinvoke $r9.<java.lang.InternalError: void <init>()>();
+        throw $r9;
+
+     label7:
+        i1 = i1 + 1;
+        goto label0;
+
+     label8:
+        if i0 == -1 goto label9;
+
+        $i17 = r0.<java.io.ObjectStreamClass: int numObjFields>;
+        $i18 = i0 + $i17;
+        $r10 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields>;
+        $i19 = lengthof $r10;
+        if $i18 == $i19 goto label9;
+
+        $r11 = new java.io.InvalidClassException;
+        $r12 = r0.<java.io.ObjectStreamClass: java.lang.String name>;
+        specialinvoke $r11.<java.io.InvalidClassException: void <init>(java.lang.String,java.lang.String)>($r12, "illegal field order");
+        throw $r11;
+
+     label9:
+        return;
+    }
+
+    private java.io.ObjectStreamClass getVariantFor(java.lang.Class) throws java.io.InvalidClassException
+    {
+        java.io.ObjectStreamClass r0, r2, $r4, $r5, $r6;
+        java.lang.Class r1, $r3;
+        boolean $z0;
+
+        r0 := @this: java.io.ObjectStreamClass;
+        r1 := @parameter0: java.lang.Class;
+        $r3 = r0.<java.io.ObjectStreamClass: java.lang.Class cl>;
+        if $r3 != r1 goto label0;
+
+        return r0;
+
+     label0:
+        $r4 = new java.io.ObjectStreamClass;
+        specialinvoke $r4.<java.io.ObjectStreamClass: void <init>()>();
+        r2 = $r4;
+        $z0 = r0.<java.io.ObjectStreamClass: boolean isProxy>;
+        if $z0 == 0 goto label1;
+
+        $r5 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass superDesc>;
+        virtualinvoke r2.<java.io.ObjectStreamClass: void initProxy(java.lang.Class,java.lang.ClassNotFoundException,java.io.ObjectStreamClass)>(r1, null, $r5);
+        goto label2;
+
+     label1:
+        $r6 = r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass superDesc>;
+        virtualinvoke r2.<java.io.ObjectStreamClass: void initNonProxy(java.io.ObjectStreamClass,java.lang.Class,java.lang.ClassNotFoundException,java.io.ObjectStreamClass)>(r0, r1, null, $r6);
+
+     label2:
+        return r2;
+    }
+
+    private static java.lang.reflect.Constructor getExternalizableConstructor(java.lang.Class)
+    {
+        java.lang.Class r0;
+        java.lang.reflect.Constructor r1, $r3;
+        java.lang.Class[] $r2;
+        int $i0, $i1;
+        java.lang.NoSuchMethodException $r4, r5;
+
+        r0 := @parameter0: java.lang.Class;
+
+     label0:
+        $r2 = (java.lang.Class[]) null;
+        r1 = virtualinvoke r0.<java.lang.Class: java.lang.reflect.Constructor getDeclaredConstructor(java.lang.Class[])>($r2);
+        virtualinvoke r1.<java.lang.reflect.Constructor: void setAccessible(boolean)>(1);
+        $i0 = virtualinvoke r1.<java.lang.reflect.Constructor: int getModifiers()>();
+        $i1 = $i0 & 1;
+        if $i1 == 0 goto label1;
+
+        $r3 = r1;
+        goto label2;
+
+     label1:
+        $r3 = null;
+
+     label2:
+        return $r3;
+
+     label3:
+        $r4 := @caughtexception;
+        r5 = $r4;
+        return null;
+
+        catch java.lang.NoSuchMethodException from label0 to label2 with label3;
+    }
+
+    private static java.lang.reflect.Constructor getSerializableConstructor(java.lang.Class)
+    {
+        java.lang.Class r0, r1, $r3, $r4;
+        java.lang.reflect.Constructor r2, r7;
+        int i0, $i1, $i2;
+        boolean $z0, $z1;
+        java.lang.Class[] $r5;
+        null_type $n0;
+        sun.reflect.ReflectionFactory $r6;
+        java.lang.NoSuchMethodException $r9, r10;
+
+        r0 := @parameter0: java.lang.Class;
+        r1 = r0;
+
+     label0:
+        $r3 = class "java/io/Serializable";
+        $z0 = virtualinvoke $r3.<java.lang.Class: boolean isAssignableFrom(java.lang.Class)>(r1);
+        if $z0 == 0 goto label1;
+
+        $r4 = virtualinvoke r1.<java.lang.Class: java.lang.Class getSuperclass()>();
+        r1 = $r4;
+        if $r4 != null goto label0;
+
+        return null;
+
+     label1:
+        $r5 = (java.lang.Class[]) null;
+        r2 = virtualinvoke r1.<java.lang.Class: java.lang.reflect.Constructor getDeclaredConstructor(java.lang.Class[])>($r5);
+        i0 = virtualinvoke r2.<java.lang.reflect.Constructor: int getModifiers()>();
+        $i1 = i0 & 2;
+        if $i1 != 0 goto label2;
+
+        $i2 = i0 & 5;
+        if $i2 != 0 goto label4;
+
+        $z1 = staticinvoke <java.io.ObjectStreamClass: boolean packageEquals(java.lang.Class,java.lang.Class)>(r0, r1);
+        if $z1 != 0 goto label4;
+
+     label2:
+        $n0 = null;
+
+     label3:
+        return $n0;
+
+     label4:
+        $r6 = <java.io.ObjectStreamClass: sun.reflect.ReflectionFactory reflFactory>;
+        r7 = virtualinvoke $r6.<sun.reflect.ReflectionFactory: java.lang.reflect.Constructor newConstructorForSerialization(java.lang.Class,java.lang.reflect.Constructor)>(r0, r2);
+        virtualinvoke r7.<java.lang.reflect.Constructor: void setAccessible(boolean)>(1);
+
+     label5:
+        return r7;
+
+     label6:
+        $r9 := @caughtexception;
+        r10 = $r9;
+        return null;
+
+        catch java.lang.NoSuchMethodException from label1 to label3 with label6;
+        catch java.lang.NoSuchMethodException from label4 to label5 with label6;
+    }
+
+    private static java.lang.reflect.Method getInheritableMethod(java.lang.Class, java.lang.String, java.lang.Class[], java.lang.Class)
+    {
+        java.lang.Class r0, r3, r5, $r8;
+        java.lang.String r1;
+        java.lang.Class[] r2;
+        java.lang.reflect.Method r4, $r9, $r10;
+        java.lang.NoSuchMethodException r6, $r7;
+        int i0, $i1, $i2, $i3;
+        boolean $z0;
+
+        r0 := @parameter0: java.lang.Class;
+        r1 := @parameter1: java.lang.String;
+        r2 := @parameter2: java.lang.Class[];
+        r3 := @parameter3: java.lang.Class;
+        r4 = null;
+        r5 = r0;
+
+     label0:
+        if r5 == null goto label4;
+
+     label1:
+        r4 = virtualinvoke r5.<java.lang.Class: java.lang.reflect.Method getDeclaredMethod(java.lang.String,java.lang.Class[])>(r1, r2);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r7 := @caughtexception;
+        r6 = $r7;
+        r5 = virtualinvoke r5.<java.lang.Class: java.lang.Class getSuperclass()>();
+        goto label0;
+
+     label4:
+        if r4 == null goto label5;
+
+        $r8 = virtualinvoke r4.<java.lang.reflect.Method: java.lang.Class getReturnType()>();
+        if $r8 == r3 goto label6;
+
+     label5:
+        return null;
+
+     label6:
+        virtualinvoke r4.<java.lang.reflect.Method: void setAccessible(boolean)>(1);
+        i0 = virtualinvoke r4.<java.lang.reflect.Method: int getModifiers()>();
+        $i1 = i0 & 1032;
+        if $i1 == 0 goto label7;
+
+        return null;
+
+     label7:
+        $i2 = i0 & 5;
+        if $i2 == 0 goto label8;
+
+        return r4;
+
+     label8:
+        $i3 = i0 & 2;
+        if $i3 == 0 goto label11;
+
+        if r0 != r5 goto label9;
+
+        $r9 = r4;
+        goto label10;
+
+     label9:
+        $r9 = null;
+
+     label10:
+        return $r9;
+
+     label11:
+        $z0 = staticinvoke <java.io.ObjectStreamClass: boolean packageEquals(java.lang.Class,java.lang.Class)>(r0, r5);
+        if $z0 == 0 goto label12;
+
+        $r10 = r4;
+        goto label13;
+
+     label12:
+        $r10 = null;
+
+     label13:
+        return $r10;
+
+        catch java.lang.NoSuchMethodException from label1 to label2 with label3;
+    }
+
+    private static java.lang.reflect.Method getPrivateMethod(java.lang.Class, java.lang.String, java.lang.Class[], java.lang.Class)
+    {
+        java.lang.Class r0, r3, $r5;
+        java.lang.String r1;
+        java.lang.Class[] r2;
+        java.lang.reflect.Method r4, $r6;
+        int i0, $i1, $i2;
+        java.lang.NoSuchMethodException $r7, r8;
+
+        r0 := @parameter0: java.lang.Class;
+        r1 := @parameter1: java.lang.String;
+        r2 := @parameter2: java.lang.Class[];
+        r3 := @parameter3: java.lang.Class;
+
+     label0:
+        r4 = virtualinvoke r0.<java.lang.Class: java.lang.reflect.Method getDeclaredMethod(java.lang.String,java.lang.Class[])>(r1, r2);
+        virtualinvoke r4.<java.lang.reflect.Method: void setAccessible(boolean)>(1);
+        i0 = virtualinvoke r4.<java.lang.reflect.Method: int getModifiers()>();
+        $r5 = virtualinvoke r4.<java.lang.reflect.Method: java.lang.Class getReturnType()>();
+        if $r5 != r3 goto label1;
+
+        $i1 = i0 & 8;
+        if $i1 != 0 goto label1;
+
+        $i2 = i0 & 2;
+        if $i2 == 0 goto label1;
+
+        $r6 = r4;
+        goto label2;
+
+     label1:
+        $r6 = null;
+
+     label2:
+        return $r6;
+
+     label3:
+        $r7 := @caughtexception;
+        r8 = $r7;
+        return null;
+
+        catch java.lang.NoSuchMethodException from label0 to label2 with label3;
+    }
+
+    private static boolean packageEquals(java.lang.Class, java.lang.Class)
+    {
+        java.lang.Class r0, r1;
+        java.lang.ClassLoader $r2, $r3;
+        java.lang.String $r4, $r5;
+        boolean $z0, $z1;
+
+        r0 := @parameter0: java.lang.Class;
+        r1 := @parameter1: java.lang.Class;
+        $r2 = virtualinvoke r0.<java.lang.Class: java.lang.ClassLoader getClassLoader()>();
+        $r3 = virtualinvoke r1.<java.lang.Class: java.lang.ClassLoader getClassLoader()>();
+        if $r2 != $r3 goto label0;
+
+        $r4 = staticinvoke <java.io.ObjectStreamClass: java.lang.String getPackageName(java.lang.Class)>(r0);
+        $r5 = staticinvoke <java.io.ObjectStreamClass: java.lang.String getPackageName(java.lang.Class)>(r1);
+        $z0 = virtualinvoke $r4.<java.lang.String: boolean equals(java.lang.Object)>($r5);
+        if $z0 == 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        return $z1;
+    }
+
+    private static java.lang.String getPackageName(java.lang.Class)
+    {
+        java.lang.Class r0;
+        java.lang.String r1, $r2;
+        int i0, $i1, i2;
+
+        r0 := @parameter0: java.lang.Class;
+        r1 = virtualinvoke r0.<java.lang.Class: java.lang.String getName()>();
+        i0 = virtualinvoke r1.<java.lang.String: int lastIndexOf(int)>(91);
+        if i0 < 0 goto label0;
+
+        $i1 = i0 + 2;
+        r1 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int)>($i1);
+
+     label0:
+        i2 = virtualinvoke r1.<java.lang.String: int lastIndexOf(int)>(46);
+        if i2 < 0 goto label1;
+
+        $r2 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int,int)>(0, i2);
+        goto label2;
+
+     label1:
+        $r2 = "";
+
+     label2:
+        return $r2;
+    }
+
+    private static boolean classNamesEqual(java.lang.String, java.lang.String)
+    {
+        java.lang.String r0, r1, r2, r3;
+        int $i0, $i1, $i2, $i3;
+        boolean $z0;
+
+        r0 := @parameter0: java.lang.String;
+        r1 := @parameter1: java.lang.String;
+        $i0 = virtualinvoke r0.<java.lang.String: int lastIndexOf(int)>(46);
+        $i1 = $i0 + 1;
+        r2 = virtualinvoke r0.<java.lang.String: java.lang.String substring(int)>($i1);
+        $i2 = virtualinvoke r1.<java.lang.String: int lastIndexOf(int)>(46);
+        $i3 = $i2 + 1;
+        r3 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int)>($i3);
+        $z0 = virtualinvoke r2.<java.lang.String: boolean equals(java.lang.Object)>(r3);
+        return $z0;
+    }
+
+    private static java.lang.String getClassSignature(java.lang.Class)
+    {
+        java.lang.Class r0, $r4, $r6, $r8, $r10, $r12, $r14, $r16, $r18, $r20;
+        java.lang.StringBuilder $r1, r2, $r23, $r24, $r27, $r28;
+        boolean $z0, $z1;
+        java.lang.InternalError $r22;
+        java.lang.String $r25, $r26, $r29, $r31;
+
+        r0 := @parameter0: java.lang.Class;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        r2 = $r1;
+
+     label0:
+        $z0 = virtualinvoke r0.<java.lang.Class: boolean isArray()>();
+        if $z0 == 0 goto label1;
+
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(91);
+        r0 = virtualinvoke r0.<java.lang.Class: java.lang.Class getComponentType()>();
+        goto label0;
+
+     label1:
+        $z1 = virtualinvoke r0.<java.lang.Class: boolean isPrimitive()>();
+        if $z1 == 0 goto label11;
+
+        $r4 = <java.lang.Integer: java.lang.Class TYPE>;
+        if r0 != $r4 goto label2;
+
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(73);
+        goto label12;
+
+     label2:
+        $r6 = <java.lang.Byte: java.lang.Class TYPE>;
+        if r0 != $r6 goto label3;
+
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(66);
+        goto label12;
+
+     label3:
+        $r8 = <java.lang.Long: java.lang.Class TYPE>;
+        if r0 != $r8 goto label4;
+
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(74);
+        goto label12;
+
+     label4:
+        $r10 = <java.lang.Float: java.lang.Class TYPE>;
+        if r0 != $r10 goto label5;
+
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(70);
+        goto label12;
+
+     label5:
+        $r12 = <java.lang.Double: java.lang.Class TYPE>;
+        if r0 != $r12 goto label6;
+
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(68);
+        goto label12;
+
+     label6:
+        $r14 = <java.lang.Short: java.lang.Class TYPE>;
+        if r0 != $r14 goto label7;
+
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(83);
+        goto label12;
+
+     label7:
+        $r16 = <java.lang.Character: java.lang.Class TYPE>;
+        if r0 != $r16 goto label8;
+
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(67);
+        goto label12;
+
+     label8:
+        $r18 = <java.lang.Boolean: java.lang.Class TYPE>;
+        if r0 != $r18 goto label9;
+
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(90);
+        goto label12;
+
+     label9:
+        $r20 = <java.lang.Void: java.lang.Class TYPE>;
+        if r0 != $r20 goto label10;
+
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(86);
+        goto label12;
+
+     label10:
+        $r22 = new java.lang.InternalError;
+        specialinvoke $r22.<java.lang.InternalError: void <init>()>();
+        throw $r22;
+
+     label11:
+        $r23 = new java.lang.StringBuilder;
+        specialinvoke $r23.<java.lang.StringBuilder: void <init>()>();
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(76);
+        $r25 = virtualinvoke r0.<java.lang.Class: java.lang.String getName()>();
+        $r26 = virtualinvoke $r25.<java.lang.String: java.lang.String replace(char,char)>(46, 47);
+        $r27 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r26);
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(59);
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r29);
+
+     label12:
+        $r31 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r31;
+    }
+
+    private static java.lang.String getMethodSignature(java.lang.Class[], java.lang.Class)
+    {
+        java.lang.Class[] r0;
+        java.lang.Class r1, $r5;
+        java.lang.StringBuilder $r2, r3;
+        int i0, $i1;
+        java.lang.String $r6, $r9, $r11;
+
+        r0 := @parameter0: java.lang.Class[];
+        r1 := @parameter1: java.lang.Class;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+        r3 = $r2;
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(40);
+        i0 = 0;
+
+     label0:
+        $i1 = lengthof r0;
+        if i0 >= $i1 goto label1;
+
+        $r5 = r0[i0];
+        $r6 = staticinvoke <java.io.ObjectStreamClass: java.lang.String getClassSignature(java.lang.Class)>($r5);
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+        i0 = i0 + 1;
+        goto label0;
+
+     label1:
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(41);
+        $r9 = staticinvoke <java.io.ObjectStreamClass: java.lang.String getClassSignature(java.lang.Class)>(r1);
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r9);
+        $r11 = virtualinvoke r3.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r11;
+    }
+
+    private static void throwMiscException(java.lang.Throwable) throws java.io.IOException
+    {
+        java.lang.Throwable r0;
+        java.io.IOException r1, $r4;
+        boolean $z0, $z1;
+        java.lang.RuntimeException $r2;
+        java.lang.Error $r3;
+
+        r0 := @parameter0: java.lang.Throwable;
+        $z0 = r0 instanceof java.lang.RuntimeException;
+        if $z0 == 0 goto label0;
+
+        $r2 = (java.lang.RuntimeException) r0;
+        throw $r2;
+
+     label0:
+        $z1 = r0 instanceof java.lang.Error;
+        if $z1 == 0 goto label1;
+
+        $r3 = (java.lang.Error) r0;
+        throw $r3;
+
+     label1:
+        $r4 = new java.io.IOException;
+        specialinvoke $r4.<java.io.IOException: void <init>(java.lang.String)>("unexpected exception type");
+        r1 = $r4;
+        virtualinvoke r1.<java.io.IOException: java.lang.Throwable initCause(java.lang.Throwable)>(r0);
+        throw r1;
+    }
+
+    private static java.io.ObjectStreamField[] getSerialFields(java.lang.Class) throws java.io.InvalidClassException
+    {
+        java.lang.Class r0, $r1, $r3;
+        java.io.ObjectStreamField[] r2, $r4;
+        boolean $z0, $z1, $z2, $z3;
+
+        r0 := @parameter0: java.lang.Class;
+        $r1 = class "java/io/Serializable";
+        $z0 = virtualinvoke $r1.<java.lang.Class: boolean isAssignableFrom(java.lang.Class)>(r0);
+        if $z0 == 0 goto label1;
+
+        $r3 = class "java/io/Externalizable";
+        $z1 = virtualinvoke $r3.<java.lang.Class: boolean isAssignableFrom(java.lang.Class)>(r0);
+        if $z1 != 0 goto label1;
+
+        $z2 = staticinvoke <java.lang.reflect.Proxy: boolean isProxyClass(java.lang.Class)>(r0);
+        if $z2 != 0 goto label1;
+
+        $z3 = virtualinvoke r0.<java.lang.Class: boolean isInterface()>();
+        if $z3 != 0 goto label1;
+
+        $r4 = staticinvoke <java.io.ObjectStreamClass: java.io.ObjectStreamField[] getDeclaredSerialFields(java.lang.Class)>(r0);
+        r2 = $r4;
+        if $r4 != null goto label0;
+
+        r2 = staticinvoke <java.io.ObjectStreamClass: java.io.ObjectStreamField[] getDefaultSerialFields(java.lang.Class)>(r0);
+
+     label0:
+        staticinvoke <java.util.Arrays: void sort(java.lang.Object[])>(r2);
+        goto label2;
+
+     label1:
+        r2 = <java.io.ObjectStreamClass: java.io.ObjectStreamField[] NO_FIELDS>;
+
+     label2:
+        return r2;
+    }
+
+    private static java.io.ObjectStreamField[] getDeclaredSerialFields(java.lang.Class) throws java.io.InvalidClassException
+    {
+        java.lang.Class r0, $r19, $r20, $r26;
+        java.io.ObjectStreamField[] r1, $r7, $r10, r11;
+        java.lang.reflect.Field r2, r5;
+        byte b0;
+        int i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9;
+        java.io.ObjectStreamField r3, $r21, $r24, $r25;
+        java.lang.String r4, $r18;
+        java.lang.Object $r6;
+        java.lang.Exception $r8, r9;
+        java.util.HashSet $r12, r13;
+        boolean $z0, $z2, $z3;
+        java.io.InvalidClassException $r14;
+        java.lang.StringBuilder $r15, $r16, $r17;
+        java.lang.NoSuchFieldException $r22, r23;
+
+        r0 := @parameter0: java.lang.Class;
+        r1 = null;
+
+     label0:
+        r2 = virtualinvoke r0.<java.lang.Class: java.lang.reflect.Field getDeclaredField(java.lang.String)>("serialPersistentFields");
+        b0 = 26;
+        $i2 = virtualinvoke r2.<java.lang.reflect.Field: int getModifiers()>();
+        $i3 = $i2 & b0;
+        if $i3 != b0 goto label1;
+
+        virtualinvoke r2.<java.lang.reflect.Field: void setAccessible(boolean)>(1);
+        $r6 = virtualinvoke r2.<java.lang.reflect.Field: java.lang.Object get(java.lang.Object)>(null);
+        $r7 = (java.io.ObjectStreamField[]) $r6;
+        r1 = (java.io.ObjectStreamField[]) $r7;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r8 := @caughtexception;
+        r9 = $r8;
+
+     label3:
+        if r1 != null goto label4;
+
+        return null;
+
+     label4:
+        $i4 = lengthof r1;
+        if $i4 != 0 goto label5;
+
+        $r10 = <java.io.ObjectStreamClass: java.io.ObjectStreamField[] NO_FIELDS>;
+        return $r10;
+
+     label5:
+        $i5 = lengthof r1;
+        r11 = newarray (java.io.ObjectStreamField)[$i5];
+        $r12 = new java.util.HashSet;
+        $i6 = lengthof r1;
+        specialinvoke $r12.<java.util.HashSet: void <init>(int)>($i6);
+        r13 = $r12;
+        i1 = 0;
+
+     label6:
+        $i7 = lengthof r1;
+        if i1 >= $i7 goto label13;
+
+        r3 = r1[i1];
+        r4 = virtualinvoke r3.<java.io.ObjectStreamField: java.lang.String getName()>();
+        $z0 = interfaceinvoke r13.<java.util.Set: boolean contains(java.lang.Object)>(r4);
+        if $z0 == 0 goto label7;
+
+        $r14 = new java.io.InvalidClassException;
+        $r15 = new java.lang.StringBuilder;
+        specialinvoke $r15.<java.lang.StringBuilder: void <init>()>();
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("multiple serializable fields named ");
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r4);
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r14.<java.io.InvalidClassException: void <init>(java.lang.String)>($r18);
+        throw $r14;
+
+     label7:
+        interfaceinvoke r13.<java.util.Set: boolean add(java.lang.Object)>(r4);
+
+     label8:
+        r5 = virtualinvoke r0.<java.lang.Class: java.lang.reflect.Field getDeclaredField(java.lang.String)>(r4);
+        $r19 = virtualinvoke r5.<java.lang.reflect.Field: java.lang.Class getType()>();
+        $r20 = virtualinvoke r3.<java.io.ObjectStreamField: java.lang.Class getType()>();
+        if $r19 != $r20 goto label9;
+
+        $i8 = virtualinvoke r5.<java.lang.reflect.Field: int getModifiers()>();
+        $i9 = $i8 & 8;
+        if $i9 != 0 goto label9;
+
+        $r21 = new java.io.ObjectStreamField;
+        $z2 = virtualinvoke r3.<java.io.ObjectStreamField: boolean isUnshared()>();
+        specialinvoke $r21.<java.io.ObjectStreamField: void <init>(java.lang.reflect.Field,boolean,boolean)>(r5, $z2, 1);
+        r11[i1] = $r21;
+
+     label9:
+        goto label11;
+
+     label10:
+        $r22 := @caughtexception;
+        r23 = $r22;
+
+     label11:
+        $r24 = r11[i1];
+        if $r24 != null goto label12;
+
+        $r25 = new java.io.ObjectStreamField;
+        $r26 = virtualinvoke r3.<java.io.ObjectStreamField: java.lang.Class getType()>();
+        $z3 = virtualinvoke r3.<java.io.ObjectStreamField: boolean isUnshared()>();
+        specialinvoke $r25.<java.io.ObjectStreamField: void <init>(java.lang.String,java.lang.Class,boolean)>(r4, $r26, $z3);
+        r11[i1] = $r25;
+
+     label12:
+        i1 = i1 + 1;
+        goto label6;
+
+     label13:
+        return r11;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+        catch java.lang.NoSuchFieldException from label8 to label9 with label10;
+    }
+
+    private static java.io.ObjectStreamField[] getDefaultSerialFields(java.lang.Class)
+    {
+        java.lang.Class r0;
+        java.lang.reflect.Field[] r1;
+        java.util.ArrayList r2, $r3;
+        short s0;
+        int i1, $i2, $i3, $i4, i5;
+        java.lang.reflect.Field $r4, $r6;
+        java.io.ObjectStreamField $r5;
+        java.io.ObjectStreamField[] $r7, $r8;
+        java.lang.Object[] $r9;
+
+        r0 := @parameter0: java.lang.Class;
+        r1 = virtualinvoke r0.<java.lang.Class: java.lang.reflect.Field[] getDeclaredFields()>();
+        $r3 = new java.util.ArrayList;
+        specialinvoke $r3.<java.util.ArrayList: void <init>()>();
+        r2 = $r3;
+        s0 = 136;
+        i1 = 0;
+
+     label0:
+        $i2 = lengthof r1;
+        if i1 >= $i2 goto label2;
+
+        $r4 = r1[i1];
+        $i3 = virtualinvoke $r4.<java.lang.reflect.Field: int getModifiers()>();
+        $i4 = $i3 & s0;
+        if $i4 != 0 goto label1;
+
+        $r5 = new java.io.ObjectStreamField;
+        $r6 = r1[i1];
+        specialinvoke $r5.<java.io.ObjectStreamField: void <init>(java.lang.reflect.Field,boolean,boolean)>($r6, 0, 1);
+        virtualinvoke r2.<java.util.ArrayList: boolean add(java.lang.Object)>($r5);
+
+     label1:
+        i1 = i1 + 1;
+        goto label0;
+
+     label2:
+        i5 = virtualinvoke r2.<java.util.ArrayList: int size()>();
+        if i5 != 0 goto label3;
+
+        $r7 = <java.io.ObjectStreamClass: java.io.ObjectStreamField[] NO_FIELDS>;
+        goto label4;
+
+     label3:
+        $r8 = newarray (java.io.ObjectStreamField)[i5];
+        $r9 = virtualinvoke r2.<java.util.ArrayList: java.lang.Object[] toArray(java.lang.Object[])>($r8);
+        $r7 = (java.io.ObjectStreamField[]) $r9;
+
+     label4:
+        return $r7;
+    }
+
+    private static java.lang.Long getDeclaredSUID(java.lang.Class)
+    {
+        java.lang.Class r0;
+        java.lang.reflect.Field r1;
+        byte b0;
+        int $i1, $i2;
+        long $l3;
+        java.lang.Long $r2;
+        java.lang.Exception $r3, r4;
+
+        r0 := @parameter0: java.lang.Class;
+
+     label0:
+        r1 = virtualinvoke r0.<java.lang.Class: java.lang.reflect.Field getDeclaredField(java.lang.String)>("serialVersionUID");
+        b0 = 24;
+        $i1 = virtualinvoke r1.<java.lang.reflect.Field: int getModifiers()>();
+        $i2 = $i1 & b0;
+        if $i2 != b0 goto label2;
+
+        virtualinvoke r1.<java.lang.reflect.Field: void setAccessible(boolean)>(1);
+        $l3 = virtualinvoke r1.<java.lang.reflect.Field: long getLong(java.lang.Object)>(null);
+        $r2 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>($l3);
+
+     label1:
+        return $r2;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r3 := @caughtexception;
+        r4 = $r3;
+
+     label4:
+        return null;
+
+        catch java.lang.Exception from label0 to label1 with label3;
+    }
+
+    private static long computeDefaultSUID(java.lang.Class)
+    {
+        java.lang.Class r0, $r1, $r12;
+        java.io.ByteArrayOutputStream r2, $r9;
+        java.io.DataOutputStream r3, $r10;
+        int i0, i1, i2, i3, i4, i5, $i6, $i7, $i8, $i9, $i10, $i11, i12, $i13, $i14, i15, $i16, i17, $i18, $i19, $i20, $i21, $i22, i23, $i24, i25, $i26, $i27, $i28, $i29, i30, $i31, i32, $i33, $i34, $i35, $i37, $i38;
+        java.lang.reflect.Method[] r4;
+        java.lang.Class[] r5;
+        java.lang.String[] r6;
+        java.io.ObjectStreamClass$MemberSignature r7, r8, $r17, $r25, $r32, r35;
+        boolean $z0, $z1, $z2, $z3;
+        java.lang.String $r11, $r13, $r14, $r21, $r22, $r29, $r30, $r37, $r38, $r39, $r49;
+        java.lang.reflect.Field[] r15;
+        java.io.ObjectStreamClass$MemberSignature[] r16, r24, r31;
+        java.lang.reflect.Field $r18;
+        java.io.ObjectStreamClass$3 $r19;
+        java.lang.reflect.Member $r20, $r28, $r36;
+        java.lang.reflect.Constructor[] r23;
+        java.lang.reflect.Constructor $r26;
+        java.io.ObjectStreamClass$4 $r27;
+        java.lang.reflect.Method $r33;
+        java.io.ObjectStreamClass$5 $r34;
+        java.security.MessageDigest r40;
+        byte[] $r41, r42;
+        long l36, $l39, $l42;
+        byte $b40;
+        short $s41;
+        java.io.IOException $r43, r44;
+        java.lang.InternalError $r45;
+        java.security.NoSuchAlgorithmException $r46, r47;
+        java.lang.SecurityException $r48;
+
+        r0 := @parameter0: java.lang.Class;
+        $r1 = class "java/io/Serializable";
+        $z0 = virtualinvoke $r1.<java.lang.Class: boolean isAssignableFrom(java.lang.Class)>(r0);
+        if $z0 == 0 goto label0;
+
+        $z1 = staticinvoke <java.lang.reflect.Proxy: boolean isProxyClass(java.lang.Class)>(r0);
+        if $z1 == 0 goto label1;
+
+     label0:
+        return 0L;
+
+     label1:
+        $r9 = new java.io.ByteArrayOutputStream;
+        specialinvoke $r9.<java.io.ByteArrayOutputStream: void <init>()>();
+        r2 = $r9;
+        $r10 = new java.io.DataOutputStream;
+        specialinvoke $r10.<java.io.DataOutputStream: void <init>(java.io.OutputStream)>(r2);
+        r3 = $r10;
+        $r11 = virtualinvoke r0.<java.lang.Class: java.lang.String getName()>();
+        virtualinvoke r3.<java.io.DataOutputStream: void writeUTF(java.lang.String)>($r11);
+        $i6 = virtualinvoke r0.<java.lang.Class: int getModifiers()>();
+        i0 = $i6 & 1553;
+        r4 = virtualinvoke r0.<java.lang.Class: java.lang.reflect.Method[] getDeclaredMethods()>();
+        $i7 = i0 & 512;
+        if $i7 == 0 goto label4;
+
+        $i8 = lengthof r4;
+        if $i8 <= 0 goto label2;
+
+        $i9 = i0 | 1024;
+        goto label3;
+
+     label2:
+        $i9 = i0 & -1025;
+
+     label3:
+        i0 = $i9;
+
+     label4:
+        virtualinvoke r3.<java.io.DataOutputStream: void writeInt(int)>(i0);
+        $z2 = virtualinvoke r0.<java.lang.Class: boolean isArray()>();
+        if $z2 != 0 goto label8;
+
+        r5 = virtualinvoke r0.<java.lang.Class: java.lang.Class[] getInterfaces()>();
+        $i10 = lengthof r5;
+        r6 = newarray (java.lang.String)[$i10];
+        i1 = 0;
+
+     label5:
+        $i11 = lengthof r5;
+        if i1 >= $i11 goto label6;
+
+        $r12 = r5[i1];
+        $r13 = virtualinvoke $r12.<java.lang.Class: java.lang.String getName()>();
+        r6[i1] = $r13;
+        i1 = i1 + 1;
+        goto label5;
+
+     label6:
+        staticinvoke <java.util.Arrays: void sort(java.lang.Object[])>(r6);
+        i12 = 0;
+
+     label7:
+        $i13 = lengthof r6;
+        if i12 >= $i13 goto label8;
+
+        $r14 = r6[i12];
+        virtualinvoke r3.<java.io.DataOutputStream: void writeUTF(java.lang.String)>($r14);
+        i12 = i12 + 1;
+        goto label7;
+
+     label8:
+        r15 = virtualinvoke r0.<java.lang.Class: java.lang.reflect.Field[] getDeclaredFields()>();
+        $i14 = lengthof r15;
+        r16 = newarray (java.io.ObjectStreamClass$MemberSignature)[$i14];
+        i15 = 0;
+
+     label9:
+        $i16 = lengthof r15;
+        if i15 >= $i16 goto label10;
+
+        $r17 = new java.io.ObjectStreamClass$MemberSignature;
+        $r18 = r15[i15];
+        specialinvoke $r17.<java.io.ObjectStreamClass$MemberSignature: void <init>(java.lang.reflect.Field)>($r18);
+        r16[i15] = $r17;
+        i15 = i15 + 1;
+        goto label9;
+
+     label10:
+        $r19 = new java.io.ObjectStreamClass$3;
+        specialinvoke $r19.<java.io.ObjectStreamClass$3: void <init>()>();
+        staticinvoke <java.util.Arrays: void sort(java.lang.Object[],java.util.Comparator)>(r16, $r19);
+        i17 = 0;
+
+     label11:
+        $i18 = lengthof r16;
+        if i17 >= $i18 goto label14;
+
+        r7 = r16[i17];
+        $r20 = r7.<java.io.ObjectStreamClass$MemberSignature: java.lang.reflect.Member member>;
+        $i19 = interfaceinvoke $r20.<java.lang.reflect.Member: int getModifiers()>();
+        i2 = $i19 & 223;
+        $i20 = i2 & 2;
+        if $i20 == 0 goto label12;
+
+        $i21 = i2 & 136;
+        if $i21 != 0 goto label13;
+
+     label12:
+        $r21 = r7.<java.io.ObjectStreamClass$MemberSignature: java.lang.String name>;
+        virtualinvoke r3.<java.io.DataOutputStream: void writeUTF(java.lang.String)>($r21);
+        virtualinvoke r3.<java.io.DataOutputStream: void writeInt(int)>(i2);
+        $r22 = r7.<java.io.ObjectStreamClass$MemberSignature: java.lang.String signature>;
+        virtualinvoke r3.<java.io.DataOutputStream: void writeUTF(java.lang.String)>($r22);
+
+     label13:
+        i17 = i17 + 1;
+        goto label11;
+
+     label14:
+        $z3 = staticinvoke <java.io.ObjectStreamClass: boolean hasStaticInitializer(java.lang.Class)>(r0);
+        if $z3 == 0 goto label15;
+
+        virtualinvoke r3.<java.io.DataOutputStream: void writeUTF(java.lang.String)>("<clinit>");
+        virtualinvoke r3.<java.io.DataOutputStream: void writeInt(int)>(8);
+        virtualinvoke r3.<java.io.DataOutputStream: void writeUTF(java.lang.String)>("()V");
+
+     label15:
+        r23 = virtualinvoke r0.<java.lang.Class: java.lang.reflect.Constructor[] getDeclaredConstructors()>();
+        $i22 = lengthof r23;
+        r24 = newarray (java.io.ObjectStreamClass$MemberSignature)[$i22];
+        i23 = 0;
+
+     label16:
+        $i24 = lengthof r23;
+        if i23 >= $i24 goto label17;
+
+        $r25 = new java.io.ObjectStreamClass$MemberSignature;
+        $r26 = r23[i23];
+        specialinvoke $r25.<java.io.ObjectStreamClass$MemberSignature: void <init>(java.lang.reflect.Constructor)>($r26);
+        r24[i23] = $r25;
+        i23 = i23 + 1;
+        goto label16;
+
+     label17:
+        $r27 = new java.io.ObjectStreamClass$4;
+        specialinvoke $r27.<java.io.ObjectStreamClass$4: void <init>()>();
+        staticinvoke <java.util.Arrays: void sort(java.lang.Object[],java.util.Comparator)>(r24, $r27);
+        i25 = 0;
+
+     label18:
+        $i26 = lengthof r24;
+        if i25 >= $i26 goto label20;
+
+        r8 = r24[i25];
+        $r28 = r8.<java.io.ObjectStreamClass$MemberSignature: java.lang.reflect.Member member>;
+        $i27 = interfaceinvoke $r28.<java.lang.reflect.Member: int getModifiers()>();
+        i3 = $i27 & 3391;
+        $i28 = i3 & 2;
+        if $i28 != 0 goto label19;
+
+        virtualinvoke r3.<java.io.DataOutputStream: void writeUTF(java.lang.String)>("<init>");
+        virtualinvoke r3.<java.io.DataOutputStream: void writeInt(int)>(i3);
+        $r29 = r8.<java.io.ObjectStreamClass$MemberSignature: java.lang.String signature>;
+        $r30 = virtualinvoke $r29.<java.lang.String: java.lang.String replace(char,char)>(47, 46);
+        virtualinvoke r3.<java.io.DataOutputStream: void writeUTF(java.lang.String)>($r30);
+
+     label19:
+        i25 = i25 + 1;
+        goto label18;
+
+     label20:
+        $i29 = lengthof r4;
+        r31 = newarray (java.io.ObjectStreamClass$MemberSignature)[$i29];
+        i30 = 0;
+
+     label21:
+        $i31 = lengthof r4;
+        if i30 >= $i31 goto label22;
+
+        $r32 = new java.io.ObjectStreamClass$MemberSignature;
+        $r33 = r4[i30];
+        specialinvoke $r32.<java.io.ObjectStreamClass$MemberSignature: void <init>(java.lang.reflect.Method)>($r33);
+        r31[i30] = $r32;
+        i30 = i30 + 1;
+        goto label21;
+
+     label22:
+        $r34 = new java.io.ObjectStreamClass$5;
+        specialinvoke $r34.<java.io.ObjectStreamClass$5: void <init>()>();
+        staticinvoke <java.util.Arrays: void sort(java.lang.Object[],java.util.Comparator)>(r31, $r34);
+        i32 = 0;
+
+     label23:
+        $i33 = lengthof r31;
+        if i32 >= $i33 goto label25;
+
+        r35 = r31[i32];
+        $r36 = r35.<java.io.ObjectStreamClass$MemberSignature: java.lang.reflect.Member member>;
+        $i34 = interfaceinvoke $r36.<java.lang.reflect.Member: int getModifiers()>();
+        i4 = $i34 & 3391;
+        $i35 = i4 & 2;
+        if $i35 != 0 goto label24;
+
+        $r37 = r35.<java.io.ObjectStreamClass$MemberSignature: java.lang.String name>;
+        virtualinvoke r3.<java.io.DataOutputStream: void writeUTF(java.lang.String)>($r37);
+        virtualinvoke r3.<java.io.DataOutputStream: void writeInt(int)>(i4);
+        $r38 = r35.<java.io.ObjectStreamClass$MemberSignature: java.lang.String signature>;
+        $r39 = virtualinvoke $r38.<java.lang.String: java.lang.String replace(char,char)>(47, 46);
+        virtualinvoke r3.<java.io.DataOutputStream: void writeUTF(java.lang.String)>($r39);
+
+     label24:
+        i32 = i32 + 1;
+        goto label23;
+
+     label25:
+        virtualinvoke r3.<java.io.DataOutputStream: void flush()>();
+        r40 = staticinvoke <java.security.MessageDigest: java.security.MessageDigest getInstance(java.lang.String)>("SHA");
+        $r41 = virtualinvoke r2.<java.io.ByteArrayOutputStream: byte[] toByteArray()>();
+        r42 = virtualinvoke r40.<java.security.MessageDigest: byte[] digest(byte[])>($r41);
+        l36 = 0L;
+        $i37 = lengthof r42;
+        $i38 = staticinvoke <java.lang.Math: int min(int,int)>($i37, 8);
+        i5 = $i38 - 1;
+
+     label26:
+        if i5 < 0 goto label27;
+
+        $l39 = l36 << 8;
+        $b40 = r42[i5];
+        $s41 = $b40 & 255;
+        $l42 = (long) $s41;
+        l36 = $l39 | $l42;
+        i5 = i5 + -1;
+        goto label26;
+
+     label27:
+        return l36;
+
+     label28:
+        $r43 := @caughtexception;
+        r44 = $r43;
+        $r45 = new java.lang.InternalError;
+        specialinvoke $r45.<java.lang.InternalError: void <init>()>();
+        throw $r45;
+
+     label29:
+        $r46 := @caughtexception;
+        r47 = $r46;
+        $r48 = new java.lang.SecurityException;
+        $r49 = virtualinvoke r47.<java.security.NoSuchAlgorithmException: java.lang.String getMessage()>();
+        specialinvoke $r48.<java.lang.SecurityException: void <init>(java.lang.String)>($r49);
+        throw $r48;
+
+        catch java.io.IOException from label1 to label27 with label28;
+        catch java.security.NoSuchAlgorithmException from label1 to label27 with label29;
+    }
+
+    private static native boolean hasStaticInitializer(java.lang.Class);
+
+    private static java.io.ObjectStreamClass$FieldReflector getReflector(java.io.ObjectStreamField[], java.io.ObjectStreamClass) throws java.io.InvalidClassException
+    {
+        java.io.ObjectStreamField[] r0, $r24;
+        java.io.ObjectStreamClass r1;
+        java.lang.Class r2, $r11;
+        java.util.concurrent.ConcurrentMap $r3, $r14, $r18, $r19, $r27;
+        java.lang.ref.ReferenceQueue $r4, $r12;
+        java.io.ObjectStreamClass$FieldReflectorKey r5, $r13;
+        java.lang.ref.Reference r6;
+        java.lang.Object r7, $r15, $r20;
+        java.io.ObjectStreamClass$EntryFuture r8, r9, $r16, $r22;
+        java.lang.ref.SoftReference r10, $r17, $r28;
+        int $i0;
+        boolean $z1, $z2, $z4, $z5, $z6, $z7;
+        java.io.ObjectStreamClass$FieldReflector $r21, $r23, $r30;
+        java.lang.Throwable $r25, r26;
+        java.io.InvalidClassException $r31;
+        java.lang.RuntimeException $r32;
+        java.lang.Error $r33;
+        java.lang.InternalError $r34;
+        java.lang.StringBuilder $r35, $r36, $r37;
+        java.lang.String $r38;
+
+        r0 := @parameter0: java.io.ObjectStreamField[];
+        r1 := @parameter1: java.io.ObjectStreamClass;
+        if r1 == null goto label0;
+
+        $i0 = lengthof r0;
+        if $i0 <= 0 goto label0;
+
+        $r11 = r1.<java.io.ObjectStreamClass: java.lang.Class cl>;
+        goto label1;
+
+     label0:
+        $r11 = null;
+
+     label1:
+        r2 = $r11;
+        $r12 = staticinvoke <java.io.ObjectStreamClass$Caches: java.lang.ref.ReferenceQueue access$2600()>();
+        $r3 = <java.io.ObjectStreamClass$Caches: java.util.concurrent.ConcurrentMap reflectors>;
+        staticinvoke <java.io.ObjectStreamClass: void processQueue(java.lang.ref.ReferenceQueue,java.util.concurrent.ConcurrentMap)>($r12, $r3);
+        $r13 = new java.io.ObjectStreamClass$FieldReflectorKey;
+        $r4 = staticinvoke <java.io.ObjectStreamClass$Caches: java.lang.ref.ReferenceQueue access$2600()>();
+        specialinvoke $r13.<java.io.ObjectStreamClass$FieldReflectorKey: void <init>(java.lang.Class,java.io.ObjectStreamField[],java.lang.ref.ReferenceQueue)>(r2, r0, $r4);
+        r5 = $r13;
+        $r14 = <java.io.ObjectStreamClass$Caches: java.util.concurrent.ConcurrentMap reflectors>;
+        $r15 = interfaceinvoke $r14.<java.util.concurrent.ConcurrentMap: java.lang.Object get(java.lang.Object)>(r5);
+        r6 = (java.lang.ref.Reference) $r15;
+        r7 = null;
+        if r6 == null goto label2;
+
+        r7 = virtualinvoke r6.<java.lang.ref.Reference: java.lang.Object get()>();
+
+     label2:
+        r8 = null;
+        if r7 != null goto label7;
+
+        $r16 = new java.io.ObjectStreamClass$EntryFuture;
+        specialinvoke $r16.<java.io.ObjectStreamClass$EntryFuture: void <init>(java.io.ObjectStreamClass$1)>(null);
+        r9 = $r16;
+        $r17 = new java.lang.ref.SoftReference;
+        specialinvoke $r17.<java.lang.ref.SoftReference: void <init>(java.lang.Object)>(r9);
+        r10 = $r17;
+
+     label3:
+        if r6 == null goto label4;
+
+        $r18 = <java.io.ObjectStreamClass$Caches: java.util.concurrent.ConcurrentMap reflectors>;
+        interfaceinvoke $r18.<java.util.concurrent.ConcurrentMap: boolean remove(java.lang.Object,java.lang.Object)>(r5, r6);
+
+     label4:
+        $r19 = <java.io.ObjectStreamClass$Caches: java.util.concurrent.ConcurrentMap reflectors>;
+        $r20 = interfaceinvoke $r19.<java.util.concurrent.ConcurrentMap: java.lang.Object putIfAbsent(java.lang.Object,java.lang.Object)>(r5, r10);
+        r6 = (java.lang.ref.Reference) $r20;
+        if r6 == null goto label5;
+
+        r7 = virtualinvoke r6.<java.lang.ref.Reference: java.lang.Object get()>();
+
+     label5:
+        if r6 == null goto label6;
+
+        if r7 == null goto label3;
+
+     label6:
+        if r7 != null goto label7;
+
+        r8 = r9;
+
+     label7:
+        $z1 = r7 instanceof java.io.ObjectStreamClass$FieldReflector;
+        if $z1 == 0 goto label8;
+
+        $r21 = (java.io.ObjectStreamClass$FieldReflector) r7;
+        return $r21;
+
+     label8:
+        $z2 = r7 instanceof java.io.ObjectStreamClass$EntryFuture;
+        if $z2 == 0 goto label9;
+
+        $r22 = (java.io.ObjectStreamClass$EntryFuture) r7;
+        r7 = virtualinvoke $r22.<java.io.ObjectStreamClass$EntryFuture: java.lang.Object get()>();
+        goto label14;
+
+     label9:
+        if r7 != null goto label14;
+
+     label10:
+        $r23 = new java.io.ObjectStreamClass$FieldReflector;
+        $r24 = staticinvoke <java.io.ObjectStreamClass: java.io.ObjectStreamField[] matchFields(java.io.ObjectStreamField[],java.io.ObjectStreamClass)>(r0, r1);
+        specialinvoke $r23.<java.io.ObjectStreamClass$FieldReflector: void <init>(java.io.ObjectStreamField[])>($r24);
+        r7 = $r23;
+
+     label11:
+        goto label13;
+
+     label12:
+        $r25 := @caughtexception;
+        r26 = $r25;
+        r7 = r26;
+
+     label13:
+        virtualinvoke r8.<java.io.ObjectStreamClass$EntryFuture: boolean set(java.lang.Object)>(r7);
+        $r27 = <java.io.ObjectStreamClass$Caches: java.util.concurrent.ConcurrentMap reflectors>;
+        $r28 = new java.lang.ref.SoftReference;
+        specialinvoke $r28.<java.lang.ref.SoftReference: void <init>(java.lang.Object)>(r7);
+        interfaceinvoke $r27.<java.util.concurrent.ConcurrentMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(r5, $r28);
+
+     label14:
+        $z4 = r7 instanceof java.io.ObjectStreamClass$FieldReflector;
+        if $z4 == 0 goto label15;
+
+        $r30 = (java.io.ObjectStreamClass$FieldReflector) r7;
+        return $r30;
+
+     label15:
+        $z5 = r7 instanceof java.io.InvalidClassException;
+        if $z5 == 0 goto label16;
+
+        $r31 = (java.io.InvalidClassException) r7;
+        throw $r31;
+
+     label16:
+        $z6 = r7 instanceof java.lang.RuntimeException;
+        if $z6 == 0 goto label17;
+
+        $r32 = (java.lang.RuntimeException) r7;
+        throw $r32;
+
+     label17:
+        $z7 = r7 instanceof java.lang.Error;
+        if $z7 == 0 goto label18;
+
+        $r33 = (java.lang.Error) r7;
+        throw $r33;
+
+     label18:
+        $r34 = new java.lang.InternalError;
+        $r35 = new java.lang.StringBuilder;
+        specialinvoke $r35.<java.lang.StringBuilder: void <init>()>();
+        $r36 = virtualinvoke $r35.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("unexpected entry: ");
+        $r37 = virtualinvoke $r36.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r7);
+        $r38 = virtualinvoke $r37.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r34.<java.lang.InternalError: void <init>(java.lang.String)>($r38);
+        throw $r34;
+
+        catch java.lang.Throwable from label10 to label11 with label12;
+    }
+
+    private static java.io.ObjectStreamField[] matchFields(java.io.ObjectStreamField[], java.io.ObjectStreamClass) throws java.io.InvalidClassException
+    {
+        java.io.ObjectStreamField[] r0, r2, r3, $r8;
+        java.io.ObjectStreamClass r1;
+        int i0, i1, $i2, $i3, $i4, $i7;
+        java.io.ObjectStreamField r4, r5, r6, $r18, $r20, $r23;
+        java.lang.StringBuilder $r7, $r13, $r15;
+        java.lang.String $r9, $r10, $r12, $r14, $r16, $r21, $r22, $r24, $r25;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        char $c5, $c6;
+        java.io.InvalidClassException $r11;
+        java.lang.reflect.Field $r17, $r19;
+
+        r0 := @parameter0: java.io.ObjectStreamField[];
+        r1 := @parameter1: java.io.ObjectStreamClass;
+        if r1 == null goto label0;
+
+        $r8 = r1.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields>;
+        goto label1;
+
+     label0:
+        $r8 = <java.io.ObjectStreamClass: java.io.ObjectStreamField[] NO_FIELDS>;
+
+     label1:
+        r2 = $r8;
+        $i2 = lengthof r0;
+        r3 = newarray (java.io.ObjectStreamField)[$i2];
+        i0 = 0;
+
+     label2:
+        $i3 = lengthof r0;
+        if i0 >= $i3 goto label10;
+
+        r4 = r0[i0];
+        r5 = null;
+        i1 = 0;
+
+     label3:
+        $i4 = lengthof r2;
+        if i1 >= $i4 goto label8;
+
+        r6 = r2[i1];
+        $r9 = virtualinvoke r4.<java.io.ObjectStreamField: java.lang.String getName()>();
+        $r10 = virtualinvoke r6.<java.io.ObjectStreamField: java.lang.String getName()>();
+        $z0 = virtualinvoke $r9.<java.lang.String: boolean equals(java.lang.Object)>($r10);
+        if $z0 == 0 goto label7;
+
+        $z1 = virtualinvoke r4.<java.io.ObjectStreamField: boolean isPrimitive()>();
+        if $z1 != 0 goto label4;
+
+        $z2 = virtualinvoke r6.<java.io.ObjectStreamField: boolean isPrimitive()>();
+        if $z2 == 0 goto label5;
+
+     label4:
+        $c5 = virtualinvoke r4.<java.io.ObjectStreamField: char getTypeCode()>();
+        $c6 = virtualinvoke r6.<java.io.ObjectStreamField: char getTypeCode()>();
+        if $c5 == $c6 goto label5;
+
+        $r11 = new java.io.InvalidClassException;
+        $r12 = r1.<java.io.ObjectStreamClass: java.lang.String name>;
+        $r7 = new java.lang.StringBuilder;
+        specialinvoke $r7.<java.lang.StringBuilder: void <init>()>();
+        $r13 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("incompatible types for field ");
+        $r14 = virtualinvoke r4.<java.io.ObjectStreamField: java.lang.String getName()>();
+        $r15 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r14);
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r11.<java.io.InvalidClassException: void <init>(java.lang.String,java.lang.String)>($r12, $r16);
+        throw $r11;
+
+     label5:
+        $r17 = virtualinvoke r6.<java.io.ObjectStreamField: java.lang.reflect.Field getField()>();
+        if $r17 == null goto label6;
+
+        $r18 = new java.io.ObjectStreamField;
+        $r19 = virtualinvoke r6.<java.io.ObjectStreamField: java.lang.reflect.Field getField()>();
+        $z3 = virtualinvoke r6.<java.io.ObjectStreamField: boolean isUnshared()>();
+        specialinvoke $r18.<java.io.ObjectStreamField: void <init>(java.lang.reflect.Field,boolean,boolean)>($r19, $z3, 0);
+        r5 = $r18;
+        goto label7;
+
+     label6:
+        $r20 = new java.io.ObjectStreamField;
+        $r21 = virtualinvoke r6.<java.io.ObjectStreamField: java.lang.String getName()>();
+        $r22 = virtualinvoke r6.<java.io.ObjectStreamField: java.lang.String getSignature()>();
+        $z4 = virtualinvoke r6.<java.io.ObjectStreamField: boolean isUnshared()>();
+        specialinvoke $r20.<java.io.ObjectStreamField: void <init>(java.lang.String,java.lang.String,boolean)>($r21, $r22, $z4);
+        r5 = $r20;
+
+     label7:
+        i1 = i1 + 1;
+        goto label3;
+
+     label8:
+        if r5 != null goto label9;
+
+        $r23 = new java.io.ObjectStreamField;
+        $r24 = virtualinvoke r4.<java.io.ObjectStreamField: java.lang.String getName()>();
+        $r25 = virtualinvoke r4.<java.io.ObjectStreamField: java.lang.String getSignature()>();
+        specialinvoke $r23.<java.io.ObjectStreamField: void <init>(java.lang.String,java.lang.String,boolean)>($r24, $r25, 0);
+        r5 = $r23;
+
+     label9:
+        $i7 = virtualinvoke r4.<java.io.ObjectStreamField: int getOffset()>();
+        virtualinvoke r5.<java.io.ObjectStreamField: void setOffset(int)>($i7);
+        r3[i0] = r5;
+        i0 = i0 + 1;
+        goto label2;
+
+     label10:
+        return r3;
+    }
+
+    static void processQueue(java.lang.ref.ReferenceQueue, java.util.concurrent.ConcurrentMap)
+    {
+        java.lang.ref.ReferenceQueue r0;
+        java.util.concurrent.ConcurrentMap r1;
+        java.lang.ref.Reference r2, $r3;
+
+        r0 := @parameter0: java.lang.ref.ReferenceQueue;
+        r1 := @parameter1: java.util.concurrent.ConcurrentMap;
+
+     label0:
+        $r3 = virtualinvoke r0.<java.lang.ref.ReferenceQueue: java.lang.ref.Reference poll()>();
+        r2 = $r3;
+        if $r3 == null goto label1;
+
+        interfaceinvoke r1.<java.util.concurrent.ConcurrentMap: java.lang.Object remove(java.lang.Object)>(r2);
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    static java.lang.Class access$000(java.io.ObjectStreamClass)
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.Class $r1;
+
+        r0 := @parameter0: java.io.ObjectStreamClass;
+        $r1 = r0.<java.io.ObjectStreamClass: java.lang.Class cl>;
+        return $r1;
+    }
+
+    static long access$100(java.lang.Class)
+    {
+        java.lang.Class r0;
+        long $l0;
+
+        r0 := @parameter0: java.lang.Class;
+        $l0 = staticinvoke <java.io.ObjectStreamClass: long computeDefaultSUID(java.lang.Class)>(r0);
+        return $l0;
+    }
+
+    static boolean access$400(java.io.ObjectStreamClass)
+    {
+        java.io.ObjectStreamClass r0;
+        boolean $z0;
+
+        r0 := @parameter0: java.io.ObjectStreamClass;
+        $z0 = r0.<java.io.ObjectStreamClass: boolean isEnum>;
+        return $z0;
+    }
+
+    static java.lang.Long access$502(java.io.ObjectStreamClass, java.lang.Long)
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.Long r1;
+
+        r0 := @parameter0: java.io.ObjectStreamClass;
+        r1 := @parameter1: java.lang.Long;
+        r0.<java.io.ObjectStreamClass: java.lang.Long suid> = r1;
+        return r1;
+    }
+
+    static java.io.ObjectStreamField[] access$602(java.io.ObjectStreamClass, java.io.ObjectStreamField[])
+    {
+        java.io.ObjectStreamClass r0;
+        java.io.ObjectStreamField[] r1;
+
+        r0 := @parameter0: java.io.ObjectStreamClass;
+        r1 := @parameter1: java.io.ObjectStreamField[];
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamField[] fields> = r1;
+        return r1;
+    }
+
+    static java.lang.Long access$700(java.lang.Class)
+    {
+        java.lang.Class r0;
+        java.lang.Long $r1;
+
+        r0 := @parameter0: java.lang.Class;
+        $r1 = staticinvoke <java.io.ObjectStreamClass: java.lang.Long getDeclaredSUID(java.lang.Class)>(r0);
+        return $r1;
+    }
+
+    static java.io.ObjectStreamField[] access$800(java.lang.Class) throws java.io.InvalidClassException
+    {
+        java.lang.Class r0;
+        java.io.ObjectStreamField[] $r1;
+
+        r0 := @parameter0: java.lang.Class;
+        $r1 = staticinvoke <java.io.ObjectStreamClass: java.io.ObjectStreamField[] getSerialFields(java.lang.Class)>(r0);
+        return $r1;
+    }
+
+    static void access$900(java.io.ObjectStreamClass) throws java.io.InvalidClassException
+    {
+        java.io.ObjectStreamClass r0;
+
+        r0 := @parameter0: java.io.ObjectStreamClass;
+        specialinvoke r0.<java.io.ObjectStreamClass: void computeFieldOffsets()>();
+        return;
+    }
+
+    static java.io.ObjectStreamClass$ExceptionInfo access$1002(java.io.ObjectStreamClass, java.io.ObjectStreamClass$ExceptionInfo)
+    {
+        java.io.ObjectStreamClass r0;
+        java.io.ObjectStreamClass$ExceptionInfo r1;
+
+        r0 := @parameter0: java.io.ObjectStreamClass;
+        r1 := @parameter1: java.io.ObjectStreamClass$ExceptionInfo;
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ExceptionInfo serializeEx> = r1;
+        return r1;
+    }
+
+    static java.io.ObjectStreamClass$ExceptionInfo access$1102(java.io.ObjectStreamClass, java.io.ObjectStreamClass$ExceptionInfo)
+    {
+        java.io.ObjectStreamClass r0;
+        java.io.ObjectStreamClass$ExceptionInfo r1;
+
+        r0 := @parameter0: java.io.ObjectStreamClass;
+        r1 := @parameter1: java.io.ObjectStreamClass$ExceptionInfo;
+        r0.<java.io.ObjectStreamClass: java.io.ObjectStreamClass$ExceptionInfo deserializeEx> = r1;
+        return r1;
+    }
+
+    static boolean access$1200(java.io.ObjectStreamClass)
+    {
+        java.io.ObjectStreamClass r0;
+        boolean $z0;
+
+        r0 := @parameter0: java.io.ObjectStreamClass;
+        $z0 = r0.<java.io.ObjectStreamClass: boolean externalizable>;
+        return $z0;
+    }
+
+    static java.lang.reflect.Constructor access$1302(java.io.ObjectStreamClass, java.lang.reflect.Constructor)
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.reflect.Constructor r1;
+
+        r0 := @parameter0: java.io.ObjectStreamClass;
+        r1 := @parameter1: java.lang.reflect.Constructor;
+        r0.<java.io.ObjectStreamClass: java.lang.reflect.Constructor cons> = r1;
+        return r1;
+    }
+
+    static java.lang.reflect.Constructor access$1400(java.lang.Class)
+    {
+        java.lang.Class r0;
+        java.lang.reflect.Constructor $r1;
+
+        r0 := @parameter0: java.lang.Class;
+        $r1 = staticinvoke <java.io.ObjectStreamClass: java.lang.reflect.Constructor getExternalizableConstructor(java.lang.Class)>(r0);
+        return $r1;
+    }
+
+    static java.lang.reflect.Constructor access$1500(java.lang.Class)
+    {
+        java.lang.Class r0;
+        java.lang.reflect.Constructor $r1;
+
+        r0 := @parameter0: java.lang.Class;
+        $r1 = staticinvoke <java.io.ObjectStreamClass: java.lang.reflect.Constructor getSerializableConstructor(java.lang.Class)>(r0);
+        return $r1;
+    }
+
+    static java.lang.reflect.Method access$1602(java.io.ObjectStreamClass, java.lang.reflect.Method)
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.reflect.Method r1;
+
+        r0 := @parameter0: java.io.ObjectStreamClass;
+        r1 := @parameter1: java.lang.reflect.Method;
+        r0.<java.io.ObjectStreamClass: java.lang.reflect.Method writeObjectMethod> = r1;
+        return r1;
+    }
+
+    static java.lang.reflect.Method access$1700(java.lang.Class, java.lang.String, java.lang.Class[], java.lang.Class)
+    {
+        java.lang.Class r0, r3;
+        java.lang.String r1;
+        java.lang.Class[] r2;
+        java.lang.reflect.Method $r4;
+
+        r0 := @parameter0: java.lang.Class;
+        r1 := @parameter1: java.lang.String;
+        r2 := @parameter2: java.lang.Class[];
+        r3 := @parameter3: java.lang.Class;
+        $r4 = staticinvoke <java.io.ObjectStreamClass: java.lang.reflect.Method getPrivateMethod(java.lang.Class,java.lang.String,java.lang.Class[],java.lang.Class)>(r0, r1, r2, r3);
+        return $r4;
+    }
+
+    static java.lang.reflect.Method access$1802(java.io.ObjectStreamClass, java.lang.reflect.Method)
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.reflect.Method r1;
+
+        r0 := @parameter0: java.io.ObjectStreamClass;
+        r1 := @parameter1: java.lang.reflect.Method;
+        r0.<java.io.ObjectStreamClass: java.lang.reflect.Method readObjectMethod> = r1;
+        return r1;
+    }
+
+    static java.lang.reflect.Method access$1902(java.io.ObjectStreamClass, java.lang.reflect.Method)
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.reflect.Method r1;
+
+        r0 := @parameter0: java.io.ObjectStreamClass;
+        r1 := @parameter1: java.lang.reflect.Method;
+        r0.<java.io.ObjectStreamClass: java.lang.reflect.Method readObjectNoDataMethod> = r1;
+        return r1;
+    }
+
+    static boolean access$2002(java.io.ObjectStreamClass, boolean)
+    {
+        java.io.ObjectStreamClass r0;
+        boolean z0;
+
+        r0 := @parameter0: java.io.ObjectStreamClass;
+        z0 := @parameter1: boolean;
+        r0.<java.io.ObjectStreamClass: boolean hasWriteObjectData> = z0;
+        return z0;
+    }
+
+    static java.lang.reflect.Method access$1600(java.io.ObjectStreamClass)
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.reflect.Method $r1;
+
+        r0 := @parameter0: java.io.ObjectStreamClass;
+        $r1 = r0.<java.io.ObjectStreamClass: java.lang.reflect.Method writeObjectMethod>;
+        return $r1;
+    }
+
+    static java.lang.reflect.Method access$2102(java.io.ObjectStreamClass, java.lang.reflect.Method)
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.reflect.Method r1;
+
+        r0 := @parameter0: java.io.ObjectStreamClass;
+        r1 := @parameter1: java.lang.reflect.Method;
+        r0.<java.io.ObjectStreamClass: java.lang.reflect.Method writeReplaceMethod> = r1;
+        return r1;
+    }
+
+    static java.lang.reflect.Method access$2200(java.lang.Class, java.lang.String, java.lang.Class[], java.lang.Class)
+    {
+        java.lang.Class r0, r3;
+        java.lang.String r1;
+        java.lang.Class[] r2;
+        java.lang.reflect.Method $r4;
+
+        r0 := @parameter0: java.lang.Class;
+        r1 := @parameter1: java.lang.String;
+        r2 := @parameter2: java.lang.Class[];
+        r3 := @parameter3: java.lang.Class;
+        $r4 = staticinvoke <java.io.ObjectStreamClass: java.lang.reflect.Method getInheritableMethod(java.lang.Class,java.lang.String,java.lang.Class[],java.lang.Class)>(r0, r1, r2, r3);
+        return $r4;
+    }
+
+    static java.lang.reflect.Method access$2302(java.io.ObjectStreamClass, java.lang.reflect.Method)
+    {
+        java.io.ObjectStreamClass r0;
+        java.lang.reflect.Method r1;
+
+        r0 := @parameter0: java.io.ObjectStreamClass;
+        r1 := @parameter1: java.lang.reflect.Method;
+        r0.<java.io.ObjectStreamClass: java.lang.reflect.Method readResolveMethod> = r1;
+        return r1;
+    }
+
+    static java.lang.String access$2400(java.lang.Class)
+    {
+        java.lang.Class r0;
+        java.lang.String $r1;
+
+        r0 := @parameter0: java.lang.Class;
+        $r1 = staticinvoke <java.io.ObjectStreamClass: java.lang.String getClassSignature(java.lang.Class)>(r0);
+        return $r1;
+    }
+
+    static java.lang.String access$2500(java.lang.Class[], java.lang.Class)
+    {
+        java.lang.Class[] r0;
+        java.lang.Class r1;
+        java.lang.String $r2;
+
+        r0 := @parameter0: java.lang.Class[];
+        r1 := @parameter1: java.lang.Class;
+        $r2 = staticinvoke <java.io.ObjectStreamClass: java.lang.String getMethodSignature(java.lang.Class[],java.lang.Class)>(r0, r1);
+        return $r2;
+    }
+
+    static void <clinit>()
+    {
+        java.io.ObjectStreamField[] $r0, $r1;
+        sun.reflect.ReflectionFactory$GetReflectionFactoryAction $r2;
+        java.lang.Object $r3;
+        sun.reflect.ReflectionFactory $r4;
+
+        $r0 = newarray (java.io.ObjectStreamField)[0];
+        <java.io.ObjectStreamClass: java.io.ObjectStreamField[] NO_FIELDS> = $r0;
+        $r1 = <java.io.ObjectStreamClass: java.io.ObjectStreamField[] NO_FIELDS>;
+        <java.io.ObjectStreamClass: java.io.ObjectStreamField[] serialPersistentFields> = $r1;
+        $r2 = new sun.reflect.ReflectionFactory$GetReflectionFactoryAction;
+        specialinvoke $r2.<sun.reflect.ReflectionFactory$GetReflectionFactoryAction: void <init>()>();
+        $r3 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r2);
+        $r4 = (sun.reflect.ReflectionFactory) $r3;
+        <java.io.ObjectStreamClass: sun.reflect.ReflectionFactory reflFactory> = $r4;
+        staticinvoke <java.io.ObjectStreamClass: void initNative()>();
+        return;
+    }
+}

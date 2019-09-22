@@ -1,0 +1,297 @@
+public class org.apache.catalina.util.Introspection extends java.lang.Object
+{
+    private static org.apache.tomcat.util.res.StringManager sm;
+
+    static void <clinit>()
+    {
+        org.apache.tomcat.util.res.StringManager $r0;
+
+        $r0 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String)>("org.apache.catalina.util");
+        <org.apache.catalina.util.Introspection: org.apache.tomcat.util.res.StringManager sm> = $r0;
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.catalina.util.Introspection r0;
+
+        r0 := @this: org.apache.catalina.util.Introspection;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static java.lang.String getPropertyName(java.lang.reflect.Method)
+    {
+        java.lang.reflect.Method r0;
+        java.lang.String $r1, $r2, $r3;
+
+        r0 := @parameter0: java.lang.reflect.Method;
+        $r1 = virtualinvoke r0.<java.lang.reflect.Method: java.lang.String getName()>();
+        $r2 = virtualinvoke $r1.<java.lang.String: java.lang.String substring(int)>(3);
+        $r3 = staticinvoke <java.beans.Introspector: java.lang.String decapitalize(java.lang.String)>($r2);
+        return $r3;
+    }
+
+    public static boolean isValidSetter(java.lang.reflect.Method)
+    {
+        java.lang.reflect.Method r0;
+        java.lang.String $r1, $r2, $r5;
+        boolean $z0, $z1;
+        int $i0, $i1;
+        java.lang.Class[] $r3;
+        java.lang.Class $r4;
+
+        r0 := @parameter0: java.lang.reflect.Method;
+        $r1 = virtualinvoke r0.<java.lang.reflect.Method: java.lang.String getName()>();
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean startsWith(java.lang.String)>("set");
+        if $z0 == 0 goto label0;
+
+        $r2 = virtualinvoke r0.<java.lang.reflect.Method: java.lang.String getName()>();
+        $i0 = virtualinvoke $r2.<java.lang.String: int length()>();
+        if $i0 <= 3 goto label0;
+
+        $r3 = virtualinvoke r0.<java.lang.reflect.Method: java.lang.Class[] getParameterTypes()>();
+        $i1 = lengthof $r3;
+        if $i1 != 1 goto label0;
+
+        $r4 = virtualinvoke r0.<java.lang.reflect.Method: java.lang.Class getReturnType()>();
+        $r5 = virtualinvoke $r4.<java.lang.Class: java.lang.String getName()>();
+        $z1 = virtualinvoke $r5.<java.lang.String: boolean equals(java.lang.Object)>("void");
+        if $z1 == 0 goto label0;
+
+        return 1;
+
+     label0:
+        return 0;
+    }
+
+    public static boolean isValidLifecycleCallback(java.lang.reflect.Method)
+    {
+        java.lang.reflect.Method r0;
+        java.lang.Class[] $r1, $r2;
+        int $i0, $i1, $i2;
+        boolean $z0, $z1;
+        java.lang.Class $r3;
+        java.lang.String $r4;
+
+        r0 := @parameter0: java.lang.reflect.Method;
+        $r1 = virtualinvoke r0.<java.lang.reflect.Method: java.lang.Class[] getParameterTypes()>();
+        $i0 = lengthof $r1;
+        if $i0 != 0 goto label0;
+
+        $i1 = virtualinvoke r0.<java.lang.reflect.Method: int getModifiers()>();
+        $z0 = staticinvoke <java.lang.reflect.Modifier: boolean isStatic(int)>($i1);
+        if $z0 != 0 goto label0;
+
+        $r2 = virtualinvoke r0.<java.lang.reflect.Method: java.lang.Class[] getExceptionTypes()>();
+        $i2 = lengthof $r2;
+        if $i2 > 0 goto label0;
+
+        $r3 = virtualinvoke r0.<java.lang.reflect.Method: java.lang.Class getReturnType()>();
+        $r4 = virtualinvoke $r3.<java.lang.Class: java.lang.String getName()>();
+        $z1 = virtualinvoke $r4.<java.lang.String: boolean equals(java.lang.Object)>("void");
+        if $z1 != 0 goto label1;
+
+     label0:
+        return 0;
+
+     label1:
+        return 1;
+    }
+
+    public static java.lang.reflect.Field[] getDeclaredFields(java.lang.Class)
+    {
+        java.lang.Class r0;
+        null_type n0;
+        boolean $z0;
+        org.apache.catalina.util.Introspection$1 $r1;
+        java.lang.Object $r2;
+        java.lang.reflect.Field[] r3;
+
+        r0 := @parameter0: java.lang.Class;
+        n0 = null;
+        $z0 = <org.apache.catalina.Globals: boolean IS_SECURITY_ENABLED>;
+        if $z0 == 0 goto label0;
+
+        $r1 = new org.apache.catalina.util.Introspection$1;
+        specialinvoke $r1.<org.apache.catalina.util.Introspection$1: void <init>(java.lang.Class)>(r0);
+        $r2 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r1);
+        r3 = (java.lang.reflect.Field[]) $r2;
+        goto label1;
+
+     label0:
+        r3 = virtualinvoke r0.<java.lang.Class: java.lang.reflect.Field[] getDeclaredFields()>();
+
+     label1:
+        return r3;
+    }
+
+    public static java.lang.reflect.Method[] getDeclaredMethods(java.lang.Class)
+    {
+        java.lang.Class r0;
+        null_type n0;
+        boolean $z0;
+        org.apache.catalina.util.Introspection$2 $r1;
+        java.lang.Object $r2;
+        java.lang.reflect.Method[] r3;
+
+        r0 := @parameter0: java.lang.Class;
+        n0 = null;
+        $z0 = <org.apache.catalina.Globals: boolean IS_SECURITY_ENABLED>;
+        if $z0 == 0 goto label0;
+
+        $r1 = new org.apache.catalina.util.Introspection$2;
+        specialinvoke $r1.<org.apache.catalina.util.Introspection$2: void <init>(java.lang.Class)>(r0);
+        $r2 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r1);
+        r3 = (java.lang.reflect.Method[]) $r2;
+        goto label1;
+
+     label0:
+        r3 = virtualinvoke r0.<java.lang.Class: java.lang.reflect.Method[] getDeclaredMethods()>();
+
+     label1:
+        return r3;
+    }
+
+    public static java.lang.Class loadClass(org.apache.catalina.Container, java.lang.String)
+    {
+        org.apache.catalina.Container r0;
+        java.lang.String r1, $r10, $r15, $r20, $r25;
+        java.lang.ClassLoader r2;
+        org.apache.juli.logging.Log r3;
+        java.lang.Class r4;
+        java.lang.ClassNotFoundException r5, $r7;
+        org.apache.catalina.Loader $r6;
+        org.apache.tomcat.util.res.StringManager $r8, $r13, $r18, $r23;
+        java.lang.Object[] $r9, $r14, $r19, $r24;
+        java.lang.NoClassDefFoundError $r11, r12;
+        java.lang.ClassFormatError $r16, r17;
+        java.lang.Throwable $r21, r22;
+
+        r0 := @parameter0: org.apache.catalina.Container;
+        r1 := @parameter1: java.lang.String;
+        $r6 = interfaceinvoke r0.<org.apache.catalina.Container: org.apache.catalina.Loader getLoader()>();
+        r2 = interfaceinvoke $r6.<org.apache.catalina.Loader: java.lang.ClassLoader getClassLoader()>();
+        r3 = interfaceinvoke r0.<org.apache.catalina.Container: org.apache.juli.logging.Log getLogger()>();
+        r4 = null;
+
+     label0:
+        r4 = virtualinvoke r2.<java.lang.ClassLoader: java.lang.Class loadClass(java.lang.String)>(r1);
+
+     label1:
+        goto label6;
+
+     label2:
+        $r7 := @caughtexception;
+        r5 = $r7;
+        $r8 = <org.apache.catalina.util.Introspection: org.apache.tomcat.util.res.StringManager sm>;
+        $r9 = newarray (java.lang.Object)[1];
+        $r9[0] = r1;
+        $r10 = virtualinvoke $r8.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("introspection.classLoadFailed", $r9);
+        interfaceinvoke r3.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r10, r5);
+        goto label6;
+
+     label3:
+        $r11 := @caughtexception;
+        r12 = $r11;
+        $r13 = <org.apache.catalina.util.Introspection: org.apache.tomcat.util.res.StringManager sm>;
+        $r14 = newarray (java.lang.Object)[1];
+        $r14[0] = r1;
+        $r15 = virtualinvoke $r13.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("introspection.classLoadFailed", $r14);
+        interfaceinvoke r3.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r15, r12);
+        goto label6;
+
+     label4:
+        $r16 := @caughtexception;
+        r17 = $r16;
+        $r18 = <org.apache.catalina.util.Introspection: org.apache.tomcat.util.res.StringManager sm>;
+        $r19 = newarray (java.lang.Object)[1];
+        $r19[0] = r1;
+        $r20 = virtualinvoke $r18.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("introspection.classLoadFailed", $r19);
+        interfaceinvoke r3.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r20, r17);
+        goto label6;
+
+     label5:
+        $r21 := @caughtexception;
+        r22 = $r21;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r22);
+        $r23 = <org.apache.catalina.util.Introspection: org.apache.tomcat.util.res.StringManager sm>;
+        $r24 = newarray (java.lang.Object)[1];
+        $r24[0] = r1;
+        $r25 = virtualinvoke $r23.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("introspection.classLoadFailed", $r24);
+        interfaceinvoke r3.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r25, r22);
+
+     label6:
+        return r4;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+        catch java.lang.NoClassDefFoundError from label0 to label1 with label3;
+        catch java.lang.ClassFormatError from label0 to label1 with label4;
+        catch java.lang.Throwable from label0 to label1 with label5;
+    }
+
+    public static java.lang.Class convertPrimitiveType(java.lang.Class)
+    {
+        java.lang.Class r0, $r1, $r2, $r3, $r4, $r5, $r6, $r7, $r8;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+
+        r0 := @parameter0: java.lang.Class;
+        $r1 = <java.lang.Character: java.lang.Class TYPE>;
+        $z0 = virtualinvoke r0.<java.lang.Object: boolean equals(java.lang.Object)>($r1);
+        if $z0 == 0 goto label0;
+
+        return class "java/lang/Character";
+
+     label0:
+        $r2 = <java.lang.Integer: java.lang.Class TYPE>;
+        $z1 = virtualinvoke r0.<java.lang.Object: boolean equals(java.lang.Object)>($r2);
+        if $z1 == 0 goto label1;
+
+        return class "java/lang/Integer";
+
+     label1:
+        $r3 = <java.lang.Boolean: java.lang.Class TYPE>;
+        $z2 = virtualinvoke r0.<java.lang.Object: boolean equals(java.lang.Object)>($r3);
+        if $z2 == 0 goto label2;
+
+        return class "java/lang/Boolean";
+
+     label2:
+        $r4 = <java.lang.Double: java.lang.Class TYPE>;
+        $z3 = virtualinvoke r0.<java.lang.Object: boolean equals(java.lang.Object)>($r4);
+        if $z3 == 0 goto label3;
+
+        return class "java/lang/Double";
+
+     label3:
+        $r5 = <java.lang.Byte: java.lang.Class TYPE>;
+        $z4 = virtualinvoke r0.<java.lang.Object: boolean equals(java.lang.Object)>($r5);
+        if $z4 == 0 goto label4;
+
+        return class "java/lang/Byte";
+
+     label4:
+        $r6 = <java.lang.Short: java.lang.Class TYPE>;
+        $z5 = virtualinvoke r0.<java.lang.Object: boolean equals(java.lang.Object)>($r6);
+        if $z5 == 0 goto label5;
+
+        return class "java/lang/Short";
+
+     label5:
+        $r7 = <java.lang.Long: java.lang.Class TYPE>;
+        $z6 = virtualinvoke r0.<java.lang.Object: boolean equals(java.lang.Object)>($r7);
+        if $z6 == 0 goto label6;
+
+        return class "java/lang/Long";
+
+     label6:
+        $r8 = <java.lang.Float: java.lang.Class TYPE>;
+        $z7 = virtualinvoke r0.<java.lang.Object: boolean equals(java.lang.Object)>($r8);
+        if $z7 == 0 goto label7;
+
+        return class "java/lang/Float";
+
+     label7:
+        return r0;
+    }
+}

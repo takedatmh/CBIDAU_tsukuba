@@ -1,0 +1,1169 @@
+class sun.nio.fs.UnixNativeDispatcher extends java.lang.Object
+{
+    private static final boolean hasAtSysCalls;
+    private static final int HAS_AT_SYSCALLS;
+
+    protected void <init>()
+    {
+        sun.nio.fs.UnixNativeDispatcher r0;
+
+        r0 := @this: sun.nio.fs.UnixNativeDispatcher;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    private static sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)
+    {
+        sun.nio.fs.UnixPath r0;
+        byte[] r1;
+        int i0, $i1;
+        sun.nio.fs.NativeBuffer r2;
+        java.lang.Object $r3;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        r1 = virtualinvoke r0.<sun.nio.fs.UnixPath: byte[] getByteArrayForSysCalls()>();
+        $i1 = lengthof r1;
+        i0 = $i1 + 1;
+        r2 = staticinvoke <sun.nio.fs.NativeBuffers: sun.nio.fs.NativeBuffer getNativeBufferFromCache(int)>(i0);
+        if r2 != null goto label0;
+
+        r2 = staticinvoke <sun.nio.fs.NativeBuffers: sun.nio.fs.NativeBuffer allocNativeBuffer(int)>(i0);
+        goto label1;
+
+     label0:
+        $r3 = virtualinvoke r2.<sun.nio.fs.NativeBuffer: java.lang.Object owner()>();
+        if $r3 != r0 goto label1;
+
+        return r2;
+
+     label1:
+        staticinvoke <sun.nio.fs.NativeBuffers: void copyCStringToNativeBuffer(byte[],sun.nio.fs.NativeBuffer)>(r1, r2);
+        virtualinvoke r2.<sun.nio.fs.NativeBuffer: void setOwner(java.lang.Object)>(r0);
+        return r2;
+    }
+
+    static native byte[] getcwd();
+
+    static native int dup(int) throws sun.nio.fs.UnixException;
+
+    static int open(sun.nio.fs.UnixPath, int, int) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0;
+        int i0, i1, i2;
+        sun.nio.fs.NativeBuffer r1;
+        java.lang.Throwable r2, $r3;
+        long $l3;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        r1 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+
+     label0:
+        $l3 = virtualinvoke r1.<sun.nio.fs.NativeBuffer: long address()>();
+        i2 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: int open0(long,int,int)>($l3, i0, i1);
+
+     label1:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        return i2;
+
+     label2:
+        $r3 := @caughtexception;
+
+     label3:
+        r2 = $r3;
+
+     label4:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native int open0(long, int, int) throws sun.nio.fs.UnixException;
+
+    static int openat(int, byte[], int, int) throws sun.nio.fs.UnixException
+    {
+        int i0, i1, i2, i3;
+        byte[] r0;
+        sun.nio.fs.NativeBuffer r1;
+        java.lang.Throwable r2, $r3;
+        long $l4;
+
+        i0 := @parameter0: int;
+        r0 := @parameter1: byte[];
+        i1 := @parameter2: int;
+        i2 := @parameter3: int;
+        r1 = staticinvoke <sun.nio.fs.NativeBuffers: sun.nio.fs.NativeBuffer asNativeBuffer(byte[])>(r0);
+
+     label0:
+        $l4 = virtualinvoke r1.<sun.nio.fs.NativeBuffer: long address()>();
+        i3 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: int openat0(int,long,int,int)>(i0, $l4, i1, i2);
+
+     label1:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        return i3;
+
+     label2:
+        $r3 := @caughtexception;
+
+     label3:
+        r2 = $r3;
+
+     label4:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native int openat0(int, long, int, int) throws sun.nio.fs.UnixException;
+
+    static native void close(int);
+
+    static long fopen(sun.nio.fs.UnixPath, java.lang.String) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0;
+        java.lang.String r1;
+        sun.nio.fs.NativeBuffer r2, r3;
+        long l0, $l1, $l2;
+        java.lang.Throwable r4, $r6;
+        byte[] $r5;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        r1 := @parameter1: java.lang.String;
+        r2 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+        $r5 = virtualinvoke r1.<java.lang.String: byte[] getBytes()>();
+        r3 = staticinvoke <sun.nio.fs.NativeBuffers: sun.nio.fs.NativeBuffer asNativeBuffer(byte[])>($r5);
+
+     label0:
+        $l1 = virtualinvoke r2.<sun.nio.fs.NativeBuffer: long address()>();
+        $l2 = virtualinvoke r3.<sun.nio.fs.NativeBuffer: long address()>();
+        l0 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: long fopen0(long,long)>($l1, $l2);
+
+     label1:
+        virtualinvoke r3.<sun.nio.fs.NativeBuffer: void release()>();
+        virtualinvoke r2.<sun.nio.fs.NativeBuffer: void release()>();
+        return l0;
+
+     label2:
+        $r6 := @caughtexception;
+
+     label3:
+        r4 = $r6;
+
+     label4:
+        virtualinvoke r3.<sun.nio.fs.NativeBuffer: void release()>();
+        virtualinvoke r2.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r4;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native long fopen0(long, long) throws sun.nio.fs.UnixException;
+
+    static native void fclose(long) throws sun.nio.fs.UnixException;
+
+    static void link(sun.nio.fs.UnixPath, sun.nio.fs.UnixPath) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0, r1;
+        sun.nio.fs.NativeBuffer r2, r3;
+        java.lang.Throwable r4, $r5;
+        long $l0, $l1;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        r1 := @parameter1: sun.nio.fs.UnixPath;
+        r2 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+        r3 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r1);
+
+     label0:
+        $l0 = virtualinvoke r2.<sun.nio.fs.NativeBuffer: long address()>();
+        $l1 = virtualinvoke r3.<sun.nio.fs.NativeBuffer: long address()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void link0(long,long)>($l0, $l1);
+
+     label1:
+        virtualinvoke r3.<sun.nio.fs.NativeBuffer: void release()>();
+        virtualinvoke r2.<sun.nio.fs.NativeBuffer: void release()>();
+        goto label5;
+
+     label2:
+        $r5 := @caughtexception;
+
+     label3:
+        r4 = $r5;
+
+     label4:
+        virtualinvoke r3.<sun.nio.fs.NativeBuffer: void release()>();
+        virtualinvoke r2.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r4;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native void link0(long, long) throws sun.nio.fs.UnixException;
+
+    static void unlink(sun.nio.fs.UnixPath) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0;
+        sun.nio.fs.NativeBuffer r1;
+        java.lang.Throwable r2, $r3;
+        long $l0;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        r1 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+
+     label0:
+        $l0 = virtualinvoke r1.<sun.nio.fs.NativeBuffer: long address()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void unlink0(long)>($l0);
+
+     label1:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        goto label5;
+
+     label2:
+        $r3 := @caughtexception;
+
+     label3:
+        r2 = $r3;
+
+     label4:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r2;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native void unlink0(long) throws sun.nio.fs.UnixException;
+
+    static void unlinkat(int, byte[], int) throws sun.nio.fs.UnixException
+    {
+        int i0, i1;
+        byte[] r0;
+        sun.nio.fs.NativeBuffer r1;
+        java.lang.Throwable r2, $r3;
+        long $l2;
+
+        i0 := @parameter0: int;
+        r0 := @parameter1: byte[];
+        i1 := @parameter2: int;
+        r1 = staticinvoke <sun.nio.fs.NativeBuffers: sun.nio.fs.NativeBuffer asNativeBuffer(byte[])>(r0);
+
+     label0:
+        $l2 = virtualinvoke r1.<sun.nio.fs.NativeBuffer: long address()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void unlinkat0(int,long,int)>(i0, $l2, i1);
+
+     label1:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        goto label5;
+
+     label2:
+        $r3 := @caughtexception;
+
+     label3:
+        r2 = $r3;
+
+     label4:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r2;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native void unlinkat0(int, long, int) throws sun.nio.fs.UnixException;
+
+    static void mknod(sun.nio.fs.UnixPath, int, long) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0;
+        int i0;
+        long l1, $l2;
+        sun.nio.fs.NativeBuffer r1;
+        java.lang.Throwable r2, $r3;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        i0 := @parameter1: int;
+        l1 := @parameter2: long;
+        r1 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+
+     label0:
+        $l2 = virtualinvoke r1.<sun.nio.fs.NativeBuffer: long address()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void mknod0(long,int,long)>($l2, i0, l1);
+
+     label1:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        goto label5;
+
+     label2:
+        $r3 := @caughtexception;
+
+     label3:
+        r2 = $r3;
+
+     label4:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r2;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native void mknod0(long, int, long) throws sun.nio.fs.UnixException;
+
+    static void rename(sun.nio.fs.UnixPath, sun.nio.fs.UnixPath) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0, r1;
+        sun.nio.fs.NativeBuffer r2, r3;
+        java.lang.Throwable r4, $r5;
+        long $l0, $l1;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        r1 := @parameter1: sun.nio.fs.UnixPath;
+        r2 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+        r3 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r1);
+
+     label0:
+        $l0 = virtualinvoke r2.<sun.nio.fs.NativeBuffer: long address()>();
+        $l1 = virtualinvoke r3.<sun.nio.fs.NativeBuffer: long address()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void rename0(long,long)>($l0, $l1);
+
+     label1:
+        virtualinvoke r3.<sun.nio.fs.NativeBuffer: void release()>();
+        virtualinvoke r2.<sun.nio.fs.NativeBuffer: void release()>();
+        goto label5;
+
+     label2:
+        $r5 := @caughtexception;
+
+     label3:
+        r4 = $r5;
+
+     label4:
+        virtualinvoke r3.<sun.nio.fs.NativeBuffer: void release()>();
+        virtualinvoke r2.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r4;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native void rename0(long, long) throws sun.nio.fs.UnixException;
+
+    static void renameat(int, byte[], int, byte[]) throws sun.nio.fs.UnixException
+    {
+        int i0, i1;
+        byte[] r0, r1;
+        sun.nio.fs.NativeBuffer r2, r3;
+        java.lang.Throwable r4, $r5;
+        long $l2, $l3;
+
+        i0 := @parameter0: int;
+        r0 := @parameter1: byte[];
+        i1 := @parameter2: int;
+        r1 := @parameter3: byte[];
+        r2 = staticinvoke <sun.nio.fs.NativeBuffers: sun.nio.fs.NativeBuffer asNativeBuffer(byte[])>(r0);
+        r3 = staticinvoke <sun.nio.fs.NativeBuffers: sun.nio.fs.NativeBuffer asNativeBuffer(byte[])>(r1);
+
+     label0:
+        $l2 = virtualinvoke r2.<sun.nio.fs.NativeBuffer: long address()>();
+        $l3 = virtualinvoke r3.<sun.nio.fs.NativeBuffer: long address()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void renameat0(int,long,int,long)>(i0, $l2, i1, $l3);
+
+     label1:
+        virtualinvoke r3.<sun.nio.fs.NativeBuffer: void release()>();
+        virtualinvoke r2.<sun.nio.fs.NativeBuffer: void release()>();
+        goto label5;
+
+     label2:
+        $r5 := @caughtexception;
+
+     label3:
+        r4 = $r5;
+
+     label4:
+        virtualinvoke r3.<sun.nio.fs.NativeBuffer: void release()>();
+        virtualinvoke r2.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r4;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native void renameat0(int, long, int, long) throws sun.nio.fs.UnixException;
+
+    static void mkdir(sun.nio.fs.UnixPath, int) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0;
+        int i0;
+        sun.nio.fs.NativeBuffer r1;
+        java.lang.Throwable r2, $r3;
+        long $l1;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        i0 := @parameter1: int;
+        r1 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+
+     label0:
+        $l1 = virtualinvoke r1.<sun.nio.fs.NativeBuffer: long address()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void mkdir0(long,int)>($l1, i0);
+
+     label1:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        goto label5;
+
+     label2:
+        $r3 := @caughtexception;
+
+     label3:
+        r2 = $r3;
+
+     label4:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r2;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native void mkdir0(long, int) throws sun.nio.fs.UnixException;
+
+    static void rmdir(sun.nio.fs.UnixPath) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0;
+        sun.nio.fs.NativeBuffer r1;
+        java.lang.Throwable r2, $r3;
+        long $l0;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        r1 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+
+     label0:
+        $l0 = virtualinvoke r1.<sun.nio.fs.NativeBuffer: long address()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void rmdir0(long)>($l0);
+
+     label1:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        goto label5;
+
+     label2:
+        $r3 := @caughtexception;
+
+     label3:
+        r2 = $r3;
+
+     label4:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r2;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native void rmdir0(long) throws sun.nio.fs.UnixException;
+
+    static byte[] readlink(sun.nio.fs.UnixPath) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0;
+        sun.nio.fs.NativeBuffer r1;
+        byte[] r2;
+        java.lang.Throwable r3, $r4;
+        long $l0;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        r1 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+
+     label0:
+        $l0 = virtualinvoke r1.<sun.nio.fs.NativeBuffer: long address()>();
+        r2 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: byte[] readlink0(long)>($l0);
+
+     label1:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        return r2;
+
+     label2:
+        $r4 := @caughtexception;
+
+     label3:
+        r3 = $r4;
+
+     label4:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r3;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native byte[] readlink0(long) throws sun.nio.fs.UnixException;
+
+    static byte[] realpath(sun.nio.fs.UnixPath) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0;
+        sun.nio.fs.NativeBuffer r1;
+        byte[] r2;
+        java.lang.Throwable r3, $r4;
+        long $l0;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        r1 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+
+     label0:
+        $l0 = virtualinvoke r1.<sun.nio.fs.NativeBuffer: long address()>();
+        r2 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: byte[] realpath0(long)>($l0);
+
+     label1:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        return r2;
+
+     label2:
+        $r4 := @caughtexception;
+
+     label3:
+        r3 = $r4;
+
+     label4:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r3;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native byte[] realpath0(long) throws sun.nio.fs.UnixException;
+
+    static void symlink(byte[], sun.nio.fs.UnixPath) throws sun.nio.fs.UnixException
+    {
+        byte[] r0;
+        sun.nio.fs.UnixPath r1;
+        sun.nio.fs.NativeBuffer r2, r3;
+        java.lang.Throwable r4, $r5;
+        long $l0, $l1;
+
+        r0 := @parameter0: byte[];
+        r1 := @parameter1: sun.nio.fs.UnixPath;
+        r2 = staticinvoke <sun.nio.fs.NativeBuffers: sun.nio.fs.NativeBuffer asNativeBuffer(byte[])>(r0);
+        r3 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r1);
+
+     label0:
+        $l0 = virtualinvoke r2.<sun.nio.fs.NativeBuffer: long address()>();
+        $l1 = virtualinvoke r3.<sun.nio.fs.NativeBuffer: long address()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void symlink0(long,long)>($l0, $l1);
+
+     label1:
+        virtualinvoke r3.<sun.nio.fs.NativeBuffer: void release()>();
+        virtualinvoke r2.<sun.nio.fs.NativeBuffer: void release()>();
+        goto label5;
+
+     label2:
+        $r5 := @caughtexception;
+
+     label3:
+        r4 = $r5;
+
+     label4:
+        virtualinvoke r3.<sun.nio.fs.NativeBuffer: void release()>();
+        virtualinvoke r2.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r4;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native void symlink0(long, long) throws sun.nio.fs.UnixException;
+
+    static void stat(sun.nio.fs.UnixPath, sun.nio.fs.UnixFileAttributes) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0;
+        sun.nio.fs.UnixFileAttributes r1;
+        sun.nio.fs.NativeBuffer r2;
+        java.lang.Throwable r3, $r4;
+        long $l0;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        r1 := @parameter1: sun.nio.fs.UnixFileAttributes;
+        r2 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+
+     label0:
+        $l0 = virtualinvoke r2.<sun.nio.fs.NativeBuffer: long address()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void stat0(long,sun.nio.fs.UnixFileAttributes)>($l0, r1);
+
+     label1:
+        virtualinvoke r2.<sun.nio.fs.NativeBuffer: void release()>();
+        goto label5;
+
+     label2:
+        $r4 := @caughtexception;
+
+     label3:
+        r3 = $r4;
+
+     label4:
+        virtualinvoke r2.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r3;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native void stat0(long, sun.nio.fs.UnixFileAttributes) throws sun.nio.fs.UnixException;
+
+    static void lstat(sun.nio.fs.UnixPath, sun.nio.fs.UnixFileAttributes) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0;
+        sun.nio.fs.UnixFileAttributes r1;
+        sun.nio.fs.NativeBuffer r2;
+        java.lang.Throwable r3, $r4;
+        long $l0;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        r1 := @parameter1: sun.nio.fs.UnixFileAttributes;
+        r2 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+
+     label0:
+        $l0 = virtualinvoke r2.<sun.nio.fs.NativeBuffer: long address()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void lstat0(long,sun.nio.fs.UnixFileAttributes)>($l0, r1);
+
+     label1:
+        virtualinvoke r2.<sun.nio.fs.NativeBuffer: void release()>();
+        goto label5;
+
+     label2:
+        $r4 := @caughtexception;
+
+     label3:
+        r3 = $r4;
+
+     label4:
+        virtualinvoke r2.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r3;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native void lstat0(long, sun.nio.fs.UnixFileAttributes) throws sun.nio.fs.UnixException;
+
+    static native void fstat(int, sun.nio.fs.UnixFileAttributes) throws sun.nio.fs.UnixException;
+
+    static void fstatat(int, byte[], int, sun.nio.fs.UnixFileAttributes) throws sun.nio.fs.UnixException
+    {
+        int i0, i1;
+        byte[] r0;
+        sun.nio.fs.UnixFileAttributes r1;
+        sun.nio.fs.NativeBuffer r2;
+        java.lang.Throwable r3, $r4;
+        long $l2;
+
+        i0 := @parameter0: int;
+        r0 := @parameter1: byte[];
+        i1 := @parameter2: int;
+        r1 := @parameter3: sun.nio.fs.UnixFileAttributes;
+        r2 = staticinvoke <sun.nio.fs.NativeBuffers: sun.nio.fs.NativeBuffer asNativeBuffer(byte[])>(r0);
+
+     label0:
+        $l2 = virtualinvoke r2.<sun.nio.fs.NativeBuffer: long address()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void fstatat0(int,long,int,sun.nio.fs.UnixFileAttributes)>(i0, $l2, i1, r1);
+
+     label1:
+        virtualinvoke r2.<sun.nio.fs.NativeBuffer: void release()>();
+        goto label5;
+
+     label2:
+        $r4 := @caughtexception;
+
+     label3:
+        r3 = $r4;
+
+     label4:
+        virtualinvoke r2.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r3;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native void fstatat0(int, long, int, sun.nio.fs.UnixFileAttributes) throws sun.nio.fs.UnixException;
+
+    static void chown(sun.nio.fs.UnixPath, int, int) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0;
+        int i0, i1;
+        sun.nio.fs.NativeBuffer r1;
+        java.lang.Throwable r2, $r3;
+        long $l2;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        r1 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+
+     label0:
+        $l2 = virtualinvoke r1.<sun.nio.fs.NativeBuffer: long address()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void chown0(long,int,int)>($l2, i0, i1);
+
+     label1:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        goto label5;
+
+     label2:
+        $r3 := @caughtexception;
+
+     label3:
+        r2 = $r3;
+
+     label4:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r2;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native void chown0(long, int, int) throws sun.nio.fs.UnixException;
+
+    static void lchown(sun.nio.fs.UnixPath, int, int) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0;
+        int i0, i1;
+        sun.nio.fs.NativeBuffer r1;
+        java.lang.Throwable r2, $r3;
+        long $l2;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        r1 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+
+     label0:
+        $l2 = virtualinvoke r1.<sun.nio.fs.NativeBuffer: long address()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void lchown0(long,int,int)>($l2, i0, i1);
+
+     label1:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        goto label5;
+
+     label2:
+        $r3 := @caughtexception;
+
+     label3:
+        r2 = $r3;
+
+     label4:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r2;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native void lchown0(long, int, int) throws sun.nio.fs.UnixException;
+
+    static native void fchown(int, int, int) throws sun.nio.fs.UnixException;
+
+    static void chmod(sun.nio.fs.UnixPath, int) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0;
+        int i0;
+        sun.nio.fs.NativeBuffer r1;
+        java.lang.Throwable r2, $r3;
+        long $l1;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        i0 := @parameter1: int;
+        r1 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+
+     label0:
+        $l1 = virtualinvoke r1.<sun.nio.fs.NativeBuffer: long address()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void chmod0(long,int)>($l1, i0);
+
+     label1:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        goto label5;
+
+     label2:
+        $r3 := @caughtexception;
+
+     label3:
+        r2 = $r3;
+
+     label4:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r2;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native void chmod0(long, int) throws sun.nio.fs.UnixException;
+
+    static native void fchmod(int, int) throws sun.nio.fs.UnixException;
+
+    static void utimes(sun.nio.fs.UnixPath, long, long) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0;
+        long l0, l1, $l2;
+        sun.nio.fs.NativeBuffer r1;
+        java.lang.Throwable r2, $r3;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        l0 := @parameter1: long;
+        l1 := @parameter2: long;
+        r1 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+
+     label0:
+        $l2 = virtualinvoke r1.<sun.nio.fs.NativeBuffer: long address()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void utimes0(long,long,long)>($l2, l0, l1);
+
+     label1:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        goto label5;
+
+     label2:
+        $r3 := @caughtexception;
+
+     label3:
+        r2 = $r3;
+
+     label4:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r2;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native void utimes0(long, long, long) throws sun.nio.fs.UnixException;
+
+    static native void futimes(int, long, long) throws sun.nio.fs.UnixException;
+
+    static long opendir(sun.nio.fs.UnixPath) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0;
+        sun.nio.fs.NativeBuffer r1;
+        long l0, $l1;
+        java.lang.Throwable r2, $r3;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        r1 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+
+     label0:
+        $l1 = virtualinvoke r1.<sun.nio.fs.NativeBuffer: long address()>();
+        l0 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: long opendir0(long)>($l1);
+
+     label1:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        return l0;
+
+     label2:
+        $r3 := @caughtexception;
+
+     label3:
+        r2 = $r3;
+
+     label4:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native long opendir0(long) throws sun.nio.fs.UnixException;
+
+    static native long fdopendir(int) throws sun.nio.fs.UnixException;
+
+    static native void closedir(long) throws sun.nio.fs.UnixException;
+
+    static native byte[] readdir(long) throws sun.nio.fs.UnixException;
+
+    static native int read(int, long, int) throws sun.nio.fs.UnixException;
+
+    static native int write(int, long, int) throws sun.nio.fs.UnixException;
+
+    static void access(sun.nio.fs.UnixPath, int) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0;
+        int i0;
+        sun.nio.fs.NativeBuffer r1;
+        java.lang.Throwable r2, $r3;
+        long $l1;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        i0 := @parameter1: int;
+        r1 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+
+     label0:
+        $l1 = virtualinvoke r1.<sun.nio.fs.NativeBuffer: long address()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void access0(long,int)>($l1, i0);
+
+     label1:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        goto label5;
+
+     label2:
+        $r3 := @caughtexception;
+
+     label3:
+        r2 = $r3;
+
+     label4:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r2;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native void access0(long, int) throws sun.nio.fs.UnixException;
+
+    static native byte[] getpwuid(int) throws sun.nio.fs.UnixException;
+
+    static native byte[] getgrgid(int) throws sun.nio.fs.UnixException;
+
+    static int getpwnam(java.lang.String) throws sun.nio.fs.UnixException
+    {
+        java.lang.String r0;
+        sun.nio.fs.NativeBuffer r1;
+        int i0;
+        java.lang.Throwable r2, $r4;
+        byte[] $r3;
+        long $l1;
+
+        r0 := @parameter0: java.lang.String;
+        $r3 = virtualinvoke r0.<java.lang.String: byte[] getBytes()>();
+        r1 = staticinvoke <sun.nio.fs.NativeBuffers: sun.nio.fs.NativeBuffer asNativeBuffer(byte[])>($r3);
+
+     label0:
+        $l1 = virtualinvoke r1.<sun.nio.fs.NativeBuffer: long address()>();
+        i0 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: int getpwnam0(long)>($l1);
+
+     label1:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        return i0;
+
+     label2:
+        $r4 := @caughtexception;
+
+     label3:
+        r2 = $r4;
+
+     label4:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native int getpwnam0(long) throws sun.nio.fs.UnixException;
+
+    static int getgrnam(java.lang.String) throws sun.nio.fs.UnixException
+    {
+        java.lang.String r0;
+        sun.nio.fs.NativeBuffer r1;
+        int i0;
+        java.lang.Throwable r2, $r4;
+        byte[] $r3;
+        long $l1;
+
+        r0 := @parameter0: java.lang.String;
+        $r3 = virtualinvoke r0.<java.lang.String: byte[] getBytes()>();
+        r1 = staticinvoke <sun.nio.fs.NativeBuffers: sun.nio.fs.NativeBuffer asNativeBuffer(byte[])>($r3);
+
+     label0:
+        $l1 = virtualinvoke r1.<sun.nio.fs.NativeBuffer: long address()>();
+        i0 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: int getgrnam0(long)>($l1);
+
+     label1:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        return i0;
+
+     label2:
+        $r4 := @caughtexception;
+
+     label3:
+        r2 = $r4;
+
+     label4:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native int getgrnam0(long) throws sun.nio.fs.UnixException;
+
+    static void statvfs(sun.nio.fs.UnixPath, sun.nio.fs.UnixFileStoreAttributes) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0;
+        sun.nio.fs.UnixFileStoreAttributes r1;
+        sun.nio.fs.NativeBuffer r2;
+        java.lang.Throwable r3, $r4;
+        long $l0;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        r1 := @parameter1: sun.nio.fs.UnixFileStoreAttributes;
+        r2 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+
+     label0:
+        $l0 = virtualinvoke r2.<sun.nio.fs.NativeBuffer: long address()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void statvfs0(long,sun.nio.fs.UnixFileStoreAttributes)>($l0, r1);
+
+     label1:
+        virtualinvoke r2.<sun.nio.fs.NativeBuffer: void release()>();
+        goto label5;
+
+     label2:
+        $r4 := @caughtexception;
+
+     label3:
+        r3 = $r4;
+
+     label4:
+        virtualinvoke r2.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r3;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native void statvfs0(long, sun.nio.fs.UnixFileStoreAttributes) throws sun.nio.fs.UnixException;
+
+    static long pathconf(sun.nio.fs.UnixPath, int) throws sun.nio.fs.UnixException
+    {
+        sun.nio.fs.UnixPath r0;
+        int i0;
+        sun.nio.fs.NativeBuffer r1;
+        long l1, $l2;
+        java.lang.Throwable r2, $r3;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        i0 := @parameter1: int;
+        r1 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: sun.nio.fs.NativeBuffer copyToNativeBuffer(sun.nio.fs.UnixPath)>(r0);
+
+     label0:
+        $l2 = virtualinvoke r1.<sun.nio.fs.NativeBuffer: long address()>();
+        l1 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: long pathconf0(long,int)>($l2, i0);
+
+     label1:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        return l1;
+
+     label2:
+        $r3 := @caughtexception;
+
+     label3:
+        r2 = $r3;
+
+     label4:
+        virtualinvoke r1.<sun.nio.fs.NativeBuffer: void release()>();
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private static native long pathconf0(long, int) throws sun.nio.fs.UnixException;
+
+    static native long fpathconf(int, int) throws sun.nio.fs.UnixException;
+
+    static native byte[] strerror(int);
+
+    static boolean supportsAtSysCalls()
+    {
+        boolean $z0;
+
+        $z0 = <sun.nio.fs.UnixNativeDispatcher: boolean hasAtSysCalls>;
+        return $z0;
+    }
+
+    static boolean supportsNoFollowLinks()
+    {
+        return 1;
+    }
+
+    private static native int init();
+
+    static void <clinit>()
+    {
+        sun.nio.fs.UnixNativeDispatcher$1 $r0;
+        int i0, $i1;
+        boolean $z0;
+
+        $r0 = new sun.nio.fs.UnixNativeDispatcher$1;
+        specialinvoke $r0.<sun.nio.fs.UnixNativeDispatcher$1: void <init>()>();
+        staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r0);
+        i0 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: int init()>();
+        $i1 = i0 & 1;
+        if $i1 <= 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        <sun.nio.fs.UnixNativeDispatcher: boolean hasAtSysCalls> = $z0;
+        return;
+    }
+}

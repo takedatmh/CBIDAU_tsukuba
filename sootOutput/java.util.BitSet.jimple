@@ -1,0 +1,1926 @@
+public class java.util.BitSet extends java.lang.Object implements java.lang.Cloneable, java.io.Serializable
+{
+    private static final int ADDRESS_BITS_PER_WORD;
+    private static final int BITS_PER_WORD;
+    private static final int BIT_INDEX_MASK;
+    private static final long WORD_MASK;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    private long[] words;
+    private transient int wordsInUse;
+    private transient boolean sizeIsSticky;
+    private static final long serialVersionUID;
+    static final boolean $assertionsDisabled;
+
+    private static int wordIndex(int)
+    {
+        int i0, $i1;
+
+        i0 := @parameter0: int;
+        $i1 = i0 >> 6;
+        return $i1;
+    }
+
+    private void checkInvariants()
+    {
+        java.util.BitSet r0;
+        boolean $z0, $z1, $z2;
+        int $i0, $i1, $i2, $i5, $i6, $i7, $i8, $i9, $i10;
+        long[] $r1, $r3, $r5, $r6;
+        long $l3, $l11;
+        byte $b4, $b12;
+        java.lang.AssertionError $r2, $r4, $r7;
+
+        r0 := @this: java.util.BitSet;
+        $z0 = <java.util.BitSet: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label0;
+
+        $i0 = r0.<java.util.BitSet: int wordsInUse>;
+        if $i0 == 0 goto label0;
+
+        $r1 = r0.<java.util.BitSet: long[] words>;
+        $i1 = r0.<java.util.BitSet: int wordsInUse>;
+        $i2 = $i1 - 1;
+        $l3 = $r1[$i2];
+        $b4 = $l3 cmp 0L;
+        if $b4 != 0 goto label0;
+
+        $r2 = new java.lang.AssertionError;
+        specialinvoke $r2.<java.lang.AssertionError: void <init>()>();
+        throw $r2;
+
+     label0:
+        $z1 = <java.util.BitSet: boolean $assertionsDisabled>;
+        if $z1 != 0 goto label2;
+
+        $i5 = r0.<java.util.BitSet: int wordsInUse>;
+        if $i5 < 0 goto label1;
+
+        $i6 = r0.<java.util.BitSet: int wordsInUse>;
+        $r3 = r0.<java.util.BitSet: long[] words>;
+        $i7 = lengthof $r3;
+        if $i6 <= $i7 goto label2;
+
+     label1:
+        $r4 = new java.lang.AssertionError;
+        specialinvoke $r4.<java.lang.AssertionError: void <init>()>();
+        throw $r4;
+
+     label2:
+        $z2 = <java.util.BitSet: boolean $assertionsDisabled>;
+        if $z2 != 0 goto label3;
+
+        $i8 = r0.<java.util.BitSet: int wordsInUse>;
+        $r5 = r0.<java.util.BitSet: long[] words>;
+        $i9 = lengthof $r5;
+        if $i8 == $i9 goto label3;
+
+        $r6 = r0.<java.util.BitSet: long[] words>;
+        $i10 = r0.<java.util.BitSet: int wordsInUse>;
+        $l11 = $r6[$i10];
+        $b12 = $l11 cmp 0L;
+        if $b12 == 0 goto label3;
+
+        $r7 = new java.lang.AssertionError;
+        specialinvoke $r7.<java.lang.AssertionError: void <init>()>();
+        throw $r7;
+
+     label3:
+        return;
+    }
+
+    private void recalculateWordsInUse()
+    {
+        java.util.BitSet r0;
+        int i0, $i1, $i4;
+        long[] $r1;
+        long $l2;
+        byte $b3;
+
+        r0 := @this: java.util.BitSet;
+        $i1 = r0.<java.util.BitSet: int wordsInUse>;
+        i0 = $i1 - 1;
+
+     label0:
+        if i0 < 0 goto label2;
+
+        $r1 = r0.<java.util.BitSet: long[] words>;
+        $l2 = $r1[i0];
+        $b3 = $l2 cmp 0L;
+        if $b3 == 0 goto label1;
+
+        goto label2;
+
+     label1:
+        i0 = i0 + -1;
+        goto label0;
+
+     label2:
+        $i4 = i0 + 1;
+        r0.<java.util.BitSet: int wordsInUse> = $i4;
+        return;
+    }
+
+    public void <init>()
+    {
+        java.util.BitSet r0;
+
+        r0 := @this: java.util.BitSet;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.util.BitSet: int wordsInUse> = 0;
+        r0.<java.util.BitSet: boolean sizeIsSticky> = 0;
+        specialinvoke r0.<java.util.BitSet: void initWords(int)>(64);
+        r0.<java.util.BitSet: boolean sizeIsSticky> = 0;
+        return;
+    }
+
+    public void <init>(int)
+    {
+        java.util.BitSet r0;
+        int i0;
+        java.lang.StringBuilder $r1, $r3, $r4;
+        java.lang.NegativeArraySizeException $r2;
+        java.lang.String $r5;
+
+        r0 := @this: java.util.BitSet;
+        i0 := @parameter0: int;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.util.BitSet: int wordsInUse> = 0;
+        r0.<java.util.BitSet: boolean sizeIsSticky> = 0;
+        if i0 >= 0 goto label0;
+
+        $r2 = new java.lang.NegativeArraySizeException;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r3 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("nbits < 0: ");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.NegativeArraySizeException: void <init>(java.lang.String)>($r5);
+        throw $r2;
+
+     label0:
+        specialinvoke r0.<java.util.BitSet: void initWords(int)>(i0);
+        r0.<java.util.BitSet: boolean sizeIsSticky> = 1;
+        return;
+    }
+
+    private void initWords(int)
+    {
+        java.util.BitSet r0;
+        int i0, $i1, $i2, $i3;
+        long[] $r1;
+
+        r0 := @this: java.util.BitSet;
+        i0 := @parameter0: int;
+        $i1 = i0 - 1;
+        $i2 = staticinvoke <java.util.BitSet: int wordIndex(int)>($i1);
+        $i3 = $i2 + 1;
+        $r1 = newarray (long)[$i3];
+        r0.<java.util.BitSet: long[] words> = $r1;
+        return;
+    }
+
+    private void <init>(long[])
+    {
+        java.util.BitSet r0;
+        long[] r1;
+        int $i0;
+
+        r0 := @this: java.util.BitSet;
+        r1 := @parameter0: long[];
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.util.BitSet: int wordsInUse> = 0;
+        r0.<java.util.BitSet: boolean sizeIsSticky> = 0;
+        r0.<java.util.BitSet: long[] words> = r1;
+        $i0 = lengthof r1;
+        r0.<java.util.BitSet: int wordsInUse> = $i0;
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        return;
+    }
+
+    public static java.util.BitSet valueOf(long[])
+    {
+        long[] r0, $r2;
+        int i0, $i1;
+        long $l2;
+        byte $b3;
+        java.util.BitSet $r1;
+
+        r0 := @parameter0: long[];
+        i0 = lengthof r0;
+
+     label0:
+        if i0 <= 0 goto label1;
+
+        $i1 = i0 - 1;
+        $l2 = r0[$i1];
+        $b3 = $l2 cmp 0L;
+        if $b3 != 0 goto label1;
+
+        i0 = i0 + -1;
+        goto label0;
+
+     label1:
+        $r1 = new java.util.BitSet;
+        $r2 = staticinvoke <java.util.Arrays: long[] copyOf(long[],int)>(r0, i0);
+        specialinvoke $r1.<java.util.BitSet: void <init>(long[])>($r2);
+        return $r1;
+    }
+
+    public static java.util.BitSet valueOf(java.nio.LongBuffer)
+    {
+        java.nio.LongBuffer r0, r2;
+        int i0, $i1;
+        long[] r1;
+        long $l2;
+        byte $b3;
+        java.util.BitSet $r4;
+
+        r0 := @parameter0: java.nio.LongBuffer;
+        r2 = virtualinvoke r0.<java.nio.LongBuffer: java.nio.LongBuffer slice()>();
+        i0 = virtualinvoke r2.<java.nio.LongBuffer: int remaining()>();
+
+     label0:
+        if i0 <= 0 goto label1;
+
+        $i1 = i0 - 1;
+        $l2 = virtualinvoke r2.<java.nio.LongBuffer: long get(int)>($i1);
+        $b3 = $l2 cmp 0L;
+        if $b3 != 0 goto label1;
+
+        i0 = i0 + -1;
+        goto label0;
+
+     label1:
+        r1 = newarray (long)[i0];
+        virtualinvoke r2.<java.nio.LongBuffer: java.nio.LongBuffer get(long[])>(r1);
+        $r4 = new java.util.BitSet;
+        specialinvoke $r4.<java.util.BitSet: void <init>(long[])>(r1);
+        return $r4;
+    }
+
+    public static java.util.BitSet valueOf(byte[])
+    {
+        byte[] r0;
+        java.nio.ByteBuffer $r1;
+        java.util.BitSet $r2;
+
+        r0 := @parameter0: byte[];
+        $r1 = staticinvoke <java.nio.ByteBuffer: java.nio.ByteBuffer wrap(byte[])>(r0);
+        $r2 = staticinvoke <java.util.BitSet: java.util.BitSet valueOf(java.nio.ByteBuffer)>($r1);
+        return $r2;
+    }
+
+    public static java.util.BitSet valueOf(java.nio.ByteBuffer)
+    {
+        java.nio.ByteBuffer r0, $r3, r4;
+        java.nio.ByteOrder $r1;
+        int i0, i1, i2, i3, $i4, $i6, $i7, $i8, $i9, $i16;
+        long[] r2;
+        byte $b5, $b13;
+        long $l10, $l12, $l14, $l15, $l17, $l18;
+        java.util.BitSet $r7;
+
+        r0 := @parameter0: java.nio.ByteBuffer;
+        $r3 = virtualinvoke r0.<java.nio.ByteBuffer: java.nio.ByteBuffer slice()>();
+        $r1 = <java.nio.ByteOrder: java.nio.ByteOrder LITTLE_ENDIAN>;
+        r4 = virtualinvoke $r3.<java.nio.ByteBuffer: java.nio.ByteBuffer order(java.nio.ByteOrder)>($r1);
+        i0 = virtualinvoke r4.<java.nio.ByteBuffer: int remaining()>();
+
+     label0:
+        if i0 <= 0 goto label1;
+
+        $i4 = i0 - 1;
+        $b5 = virtualinvoke r4.<java.nio.ByteBuffer: byte get(int)>($i4);
+        if $b5 != 0 goto label1;
+
+        i0 = i0 + -1;
+        goto label0;
+
+     label1:
+        $i6 = i0 + 7;
+        $i7 = $i6 / 8;
+        r2 = newarray (long)[$i7];
+        virtualinvoke r4.<java.nio.ByteBuffer: java.nio.Buffer limit(int)>(i0);
+        i1 = 0;
+
+     label2:
+        $i8 = virtualinvoke r4.<java.nio.ByteBuffer: int remaining()>();
+        if $i8 < 8 goto label3;
+
+        $i9 = i1;
+        i1 = i1 + 1;
+        $l10 = virtualinvoke r4.<java.nio.ByteBuffer: long getLong()>();
+        r2[$i9] = $l10;
+        goto label2;
+
+     label3:
+        i2 = virtualinvoke r4.<java.nio.ByteBuffer: int remaining()>();
+        i3 = 0;
+
+     label4:
+        if i3 >= i2 goto label5;
+
+        $l12 = r2[i1];
+        $b13 = virtualinvoke r4.<java.nio.ByteBuffer: byte get()>();
+        $l14 = (long) $b13;
+        $l15 = $l14 & 255L;
+        $i16 = 8 * i3;
+        $l17 = $l15 << $i16;
+        $l18 = $l12 | $l17;
+        r2[i1] = $l18;
+        i3 = i3 + 1;
+        goto label4;
+
+     label5:
+        $r7 = new java.util.BitSet;
+        specialinvoke $r7.<java.util.BitSet: void <init>(long[])>(r2);
+        return $r7;
+    }
+
+    public byte[] toByteArray()
+    {
+        java.util.BitSet r0;
+        int i0, i1, i3, $i4, $i5, $i7, $i9, $i13;
+        long l2, $l8, l10, $l12;
+        java.nio.ByteBuffer r1, $r5;
+        byte[] $r2, r4;
+        long[] $r3, $r7, $r9;
+        byte $b6, $b11, $b14;
+        java.nio.ByteOrder $r6;
+
+        r0 := @this: java.util.BitSet;
+        i0 = r0.<java.util.BitSet: int wordsInUse>;
+        if i0 != 0 goto label0;
+
+        $r2 = newarray (byte)[0];
+        return $r2;
+
+     label0:
+        $i4 = i0 - 1;
+        i1 = 8 * $i4;
+        $r3 = r0.<java.util.BitSet: long[] words>;
+        $i5 = i0 - 1;
+        l2 = $r3[$i5];
+
+     label1:
+        $b6 = l2 cmp 0L;
+        if $b6 == 0 goto label2;
+
+        i1 = i1 + 1;
+        l2 = l2 >>> 8;
+        goto label1;
+
+     label2:
+        r4 = newarray (byte)[i1];
+        $r5 = staticinvoke <java.nio.ByteBuffer: java.nio.ByteBuffer wrap(byte[])>(r4);
+        $r6 = <java.nio.ByteOrder: java.nio.ByteOrder LITTLE_ENDIAN>;
+        r1 = virtualinvoke $r5.<java.nio.ByteBuffer: java.nio.ByteBuffer order(java.nio.ByteOrder)>($r6);
+        i3 = 0;
+
+     label3:
+        $i7 = i0 - 1;
+        if i3 >= $i7 goto label4;
+
+        $r7 = r0.<java.util.BitSet: long[] words>;
+        $l8 = $r7[i3];
+        virtualinvoke r1.<java.nio.ByteBuffer: java.nio.ByteBuffer putLong(long)>($l8);
+        i3 = i3 + 1;
+        goto label3;
+
+     label4:
+        $r9 = r0.<java.util.BitSet: long[] words>;
+        $i9 = i0 - 1;
+        l10 = $r9[$i9];
+
+     label5:
+        $b11 = l10 cmp 0L;
+        if $b11 == 0 goto label6;
+
+        $l12 = l10 & 255L;
+        $i13 = (int) $l12;
+        $b14 = (byte) $i13;
+        virtualinvoke r1.<java.nio.ByteBuffer: java.nio.ByteBuffer put(byte)>($b14);
+        l10 = l10 >>> 8;
+        goto label5;
+
+     label6:
+        return r4;
+    }
+
+    public long[] toLongArray()
+    {
+        java.util.BitSet r0;
+        long[] $r1, $r2;
+        int $i0;
+
+        r0 := @this: java.util.BitSet;
+        $r1 = r0.<java.util.BitSet: long[] words>;
+        $i0 = r0.<java.util.BitSet: int wordsInUse>;
+        $r2 = staticinvoke <java.util.Arrays: long[] copyOf(long[],int)>($r1, $i0);
+        return $r2;
+    }
+
+    private void ensureCapacity(int)
+    {
+        java.util.BitSet r0;
+        int i0, i1, $i2, $i3, $i4;
+        long[] $r1, $r2, $r3, $r4;
+
+        r0 := @this: java.util.BitSet;
+        i0 := @parameter0: int;
+        $r1 = r0.<java.util.BitSet: long[] words>;
+        $i2 = lengthof $r1;
+        if $i2 >= i0 goto label0;
+
+        $r2 = r0.<java.util.BitSet: long[] words>;
+        $i3 = lengthof $r2;
+        $i4 = 2 * $i3;
+        i1 = staticinvoke <java.lang.Math: int max(int,int)>($i4, i0);
+        $r3 = r0.<java.util.BitSet: long[] words>;
+        $r4 = staticinvoke <java.util.Arrays: long[] copyOf(long[],int)>($r3, i1);
+        r0.<java.util.BitSet: long[] words> = $r4;
+        r0.<java.util.BitSet: boolean sizeIsSticky> = 0;
+
+     label0:
+        return;
+    }
+
+    private void expandTo(int)
+    {
+        java.util.BitSet r0;
+        int i0, i1, $i2;
+
+        r0 := @this: java.util.BitSet;
+        i0 := @parameter0: int;
+        i1 = i0 + 1;
+        $i2 = r0.<java.util.BitSet: int wordsInUse>;
+        if $i2 >= i1 goto label0;
+
+        specialinvoke r0.<java.util.BitSet: void ensureCapacity(int)>(i1);
+        r0.<java.util.BitSet: int wordsInUse> = i1;
+
+     label0:
+        return;
+    }
+
+    private static void checkRange(int, int)
+    {
+        int i0, i1;
+        java.lang.StringBuilder $r0, $r2, $r3, $r6, $r7, $r8, $r11, $r12, $r13, $r14, $r15;
+        java.lang.IndexOutOfBoundsException $r1, $r5, $r10;
+        java.lang.String $r4, $r9, $r16;
+
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        if i0 >= 0 goto label0;
+
+        $r1 = new java.lang.IndexOutOfBoundsException;
+        $r0 = new java.lang.StringBuilder;
+        specialinvoke $r0.<java.lang.StringBuilder: void <init>()>();
+        $r2 = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("fromIndex < 0: ");
+        $r3 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r1.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r4);
+        throw $r1;
+
+     label0:
+        if i1 >= 0 goto label1;
+
+        $r5 = new java.lang.IndexOutOfBoundsException;
+        $r6 = new java.lang.StringBuilder;
+        specialinvoke $r6.<java.lang.StringBuilder: void <init>()>();
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("toIndex < 0: ");
+        $r8 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i1);
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r5.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r9);
+        throw $r5;
+
+     label1:
+        if i0 <= i1 goto label2;
+
+        $r10 = new java.lang.IndexOutOfBoundsException;
+        $r11 = new java.lang.StringBuilder;
+        specialinvoke $r11.<java.lang.StringBuilder: void <init>()>();
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("fromIndex: ");
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" > toIndex: ");
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i1);
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r10.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r16);
+        throw $r10;
+
+     label2:
+        return;
+    }
+
+    public void flip(int)
+    {
+        java.util.BitSet r0;
+        int i0, i1;
+        java.lang.StringBuilder $r1, $r3, $r4;
+        java.lang.IndexOutOfBoundsException $r2;
+        java.lang.String $r5;
+        long[] $r6;
+        long $l3, $l4, $l5;
+
+        r0 := @this: java.util.BitSet;
+        i0 := @parameter0: int;
+        if i0 >= 0 goto label0;
+
+        $r2 = new java.lang.IndexOutOfBoundsException;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r3 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("bitIndex < 0: ");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r5);
+        throw $r2;
+
+     label0:
+        i1 = staticinvoke <java.util.BitSet: int wordIndex(int)>(i0);
+        specialinvoke r0.<java.util.BitSet: void expandTo(int)>(i1);
+        $r6 = r0.<java.util.BitSet: long[] words>;
+        $l3 = $r6[i1];
+        $l4 = 1L << i0;
+        $l5 = $l3 ^ $l4;
+        $r6[i1] = $l5;
+        specialinvoke r0.<java.util.BitSet: void recalculateWordsInUse()>();
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        return;
+    }
+
+    public void flip(int, int)
+    {
+        java.util.BitSet r0;
+        int i0, i1, i2, i3, i6, $i7, $i8;
+        long l4, l5, $l10, $l11, $l12, $l14, $l15, $l17, $l18, $l20, $l21;
+        long[] $r1, $r2, $r3, $r4;
+
+        r0 := @this: java.util.BitSet;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        staticinvoke <java.util.BitSet: void checkRange(int,int)>(i0, i1);
+        if i0 != i1 goto label0;
+
+        return;
+
+     label0:
+        i2 = staticinvoke <java.util.BitSet: int wordIndex(int)>(i0);
+        $i7 = i1 - 1;
+        i3 = staticinvoke <java.util.BitSet: int wordIndex(int)>($i7);
+        specialinvoke r0.<java.util.BitSet: void expandTo(int)>(i3);
+        l4 = -1L << i0;
+        $i8 = neg i1;
+        l5 = -1L >>> $i8;
+        if i2 != i3 goto label1;
+
+        $r1 = r0.<java.util.BitSet: long[] words>;
+        $l10 = $r1[i2];
+        $l11 = l4 & l5;
+        $l12 = $l10 ^ $l11;
+        $r1[i2] = $l12;
+        goto label4;
+
+     label1:
+        $r2 = r0.<java.util.BitSet: long[] words>;
+        $l14 = $r2[i2];
+        $l15 = $l14 ^ l4;
+        $r2[i2] = $l15;
+        i6 = i2 + 1;
+
+     label2:
+        if i6 >= i3 goto label3;
+
+        $r3 = r0.<java.util.BitSet: long[] words>;
+        $l17 = $r3[i6];
+        $l18 = $l17 ^ -1L;
+        $r3[i6] = $l18;
+        i6 = i6 + 1;
+        goto label2;
+
+     label3:
+        $r4 = r0.<java.util.BitSet: long[] words>;
+        $l20 = $r4[i3];
+        $l21 = $l20 ^ l5;
+        $r4[i3] = $l21;
+
+     label4:
+        specialinvoke r0.<java.util.BitSet: void recalculateWordsInUse()>();
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        return;
+    }
+
+    public void set(int)
+    {
+        java.util.BitSet r0;
+        int i0, i1;
+        java.lang.StringBuilder $r1, $r3, $r4;
+        java.lang.IndexOutOfBoundsException $r2;
+        java.lang.String $r5;
+        long[] $r6;
+        long $l3, $l4, $l5;
+
+        r0 := @this: java.util.BitSet;
+        i0 := @parameter0: int;
+        if i0 >= 0 goto label0;
+
+        $r2 = new java.lang.IndexOutOfBoundsException;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r3 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("bitIndex < 0: ");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r5);
+        throw $r2;
+
+     label0:
+        i1 = staticinvoke <java.util.BitSet: int wordIndex(int)>(i0);
+        specialinvoke r0.<java.util.BitSet: void expandTo(int)>(i1);
+        $r6 = r0.<java.util.BitSet: long[] words>;
+        $l3 = $r6[i1];
+        $l4 = 1L << i0;
+        $l5 = $l3 | $l4;
+        $r6[i1] = $l5;
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        return;
+    }
+
+    public void set(int, boolean)
+    {
+        java.util.BitSet r0;
+        int i0;
+        boolean z0;
+
+        r0 := @this: java.util.BitSet;
+        i0 := @parameter0: int;
+        z0 := @parameter1: boolean;
+        if z0 == 0 goto label0;
+
+        virtualinvoke r0.<java.util.BitSet: void set(int)>(i0);
+        goto label1;
+
+     label0:
+        virtualinvoke r0.<java.util.BitSet: void clear(int)>(i0);
+
+     label1:
+        return;
+    }
+
+    public void set(int, int)
+    {
+        java.util.BitSet r0;
+        int i0, i1, i2, i3, i6, $i7, $i8;
+        long l4, l5, $l10, $l11, $l12, $l14, $l15, $l17, $l18;
+        long[] $r1, $r2, $r3, $r4;
+
+        r0 := @this: java.util.BitSet;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        staticinvoke <java.util.BitSet: void checkRange(int,int)>(i0, i1);
+        if i0 != i1 goto label0;
+
+        return;
+
+     label0:
+        i2 = staticinvoke <java.util.BitSet: int wordIndex(int)>(i0);
+        $i7 = i1 - 1;
+        i3 = staticinvoke <java.util.BitSet: int wordIndex(int)>($i7);
+        specialinvoke r0.<java.util.BitSet: void expandTo(int)>(i3);
+        l4 = -1L << i0;
+        $i8 = neg i1;
+        l5 = -1L >>> $i8;
+        if i2 != i3 goto label1;
+
+        $r1 = r0.<java.util.BitSet: long[] words>;
+        $l10 = $r1[i2];
+        $l11 = l4 & l5;
+        $l12 = $l10 | $l11;
+        $r1[i2] = $l12;
+        goto label4;
+
+     label1:
+        $r2 = r0.<java.util.BitSet: long[] words>;
+        $l14 = $r2[i2];
+        $l15 = $l14 | l4;
+        $r2[i2] = $l15;
+        i6 = i2 + 1;
+
+     label2:
+        if i6 >= i3 goto label3;
+
+        $r3 = r0.<java.util.BitSet: long[] words>;
+        $r3[i6] = -1L;
+        i6 = i6 + 1;
+        goto label2;
+
+     label3:
+        $r4 = r0.<java.util.BitSet: long[] words>;
+        $l17 = $r4[i3];
+        $l18 = $l17 | l5;
+        $r4[i3] = $l18;
+
+     label4:
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        return;
+    }
+
+    public void set(int, int, boolean)
+    {
+        java.util.BitSet r0;
+        int i0, i1;
+        boolean z0;
+
+        r0 := @this: java.util.BitSet;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        z0 := @parameter2: boolean;
+        if z0 == 0 goto label0;
+
+        virtualinvoke r0.<java.util.BitSet: void set(int,int)>(i0, i1);
+        goto label1;
+
+     label0:
+        virtualinvoke r0.<java.util.BitSet: void clear(int,int)>(i0, i1);
+
+     label1:
+        return;
+    }
+
+    public void clear(int)
+    {
+        java.util.BitSet r0;
+        int i0, i1, $i2;
+        java.lang.StringBuilder $r1, $r3, $r4;
+        java.lang.IndexOutOfBoundsException $r2;
+        java.lang.String $r5;
+        long[] $r6;
+        long $l4, $l5, $l6, $l7;
+
+        r0 := @this: java.util.BitSet;
+        i0 := @parameter0: int;
+        if i0 >= 0 goto label0;
+
+        $r2 = new java.lang.IndexOutOfBoundsException;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r3 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("bitIndex < 0: ");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r5);
+        throw $r2;
+
+     label0:
+        i1 = staticinvoke <java.util.BitSet: int wordIndex(int)>(i0);
+        $i2 = r0.<java.util.BitSet: int wordsInUse>;
+        if i1 < $i2 goto label1;
+
+        return;
+
+     label1:
+        $r6 = r0.<java.util.BitSet: long[] words>;
+        $l4 = $r6[i1];
+        $l5 = 1L << i0;
+        $l6 = $l5 ^ -1L;
+        $l7 = $l4 & $l6;
+        $r6[i1] = $l7;
+        specialinvoke r0.<java.util.BitSet: void recalculateWordsInUse()>();
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        return;
+    }
+
+    public void clear(int, int)
+    {
+        java.util.BitSet r0;
+        int i0, i1, i2, i3, i6, $i7, $i8, $i9, $i10, $i11;
+        long l4, l5, $l13, $l14, $l15, $l16, $l18, $l19, $l20, $l22, $l23, $l24;
+        long[] $r1, $r2, $r3, $r4;
+
+        r0 := @this: java.util.BitSet;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        staticinvoke <java.util.BitSet: void checkRange(int,int)>(i0, i1);
+        if i0 != i1 goto label0;
+
+        return;
+
+     label0:
+        i2 = staticinvoke <java.util.BitSet: int wordIndex(int)>(i0);
+        $i7 = r0.<java.util.BitSet: int wordsInUse>;
+        if i2 < $i7 goto label1;
+
+        return;
+
+     label1:
+        $i8 = i1 - 1;
+        i3 = staticinvoke <java.util.BitSet: int wordIndex(int)>($i8);
+        $i9 = r0.<java.util.BitSet: int wordsInUse>;
+        if i3 < $i9 goto label2;
+
+        i1 = virtualinvoke r0.<java.util.BitSet: int length()>();
+        $i10 = r0.<java.util.BitSet: int wordsInUse>;
+        i3 = $i10 - 1;
+
+     label2:
+        l4 = -1L << i0;
+        $i11 = neg i1;
+        l5 = -1L >>> $i11;
+        if i2 != i3 goto label3;
+
+        $r1 = r0.<java.util.BitSet: long[] words>;
+        $l13 = $r1[i2];
+        $l14 = l4 & l5;
+        $l15 = $l14 ^ -1L;
+        $l16 = $l13 & $l15;
+        $r1[i2] = $l16;
+        goto label6;
+
+     label3:
+        $r2 = r0.<java.util.BitSet: long[] words>;
+        $l18 = $r2[i2];
+        $l19 = l4 ^ -1L;
+        $l20 = $l18 & $l19;
+        $r2[i2] = $l20;
+        i6 = i2 + 1;
+
+     label4:
+        if i6 >= i3 goto label5;
+
+        $r3 = r0.<java.util.BitSet: long[] words>;
+        $r3[i6] = 0L;
+        i6 = i6 + 1;
+        goto label4;
+
+     label5:
+        $r4 = r0.<java.util.BitSet: long[] words>;
+        $l22 = $r4[i3];
+        $l23 = l5 ^ -1L;
+        $l24 = $l22 & $l23;
+        $r4[i3] = $l24;
+
+     label6:
+        specialinvoke r0.<java.util.BitSet: void recalculateWordsInUse()>();
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        return;
+    }
+
+    public void clear()
+    {
+        java.util.BitSet r0;
+        int $i0, $i1, $i2;
+        long[] $r2;
+
+        r0 := @this: java.util.BitSet;
+
+     label0:
+        $i0 = r0.<java.util.BitSet: int wordsInUse>;
+        if $i0 <= 0 goto label1;
+
+        $r2 = r0.<java.util.BitSet: long[] words>;
+        $i1 = r0.<java.util.BitSet: int wordsInUse>;
+        $i2 = $i1 - 1;
+        r0.<java.util.BitSet: int wordsInUse> = $i2;
+        $r2[$i2] = 0L;
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    public boolean get(int)
+    {
+        java.util.BitSet r0;
+        int i0, i1, $i2;
+        java.lang.StringBuilder $r1, $r3, $r4;
+        java.lang.IndexOutOfBoundsException $r2;
+        java.lang.String $r5;
+        long[] $r6;
+        long $l3, $l4, $l5;
+        byte $b6;
+        boolean $z0;
+
+        r0 := @this: java.util.BitSet;
+        i0 := @parameter0: int;
+        if i0 >= 0 goto label0;
+
+        $r2 = new java.lang.IndexOutOfBoundsException;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r3 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("bitIndex < 0: ");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r5);
+        throw $r2;
+
+     label0:
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        i1 = staticinvoke <java.util.BitSet: int wordIndex(int)>(i0);
+        $i2 = r0.<java.util.BitSet: int wordsInUse>;
+        if i1 >= $i2 goto label1;
+
+        $r6 = r0.<java.util.BitSet: long[] words>;
+        $l3 = $r6[i1];
+        $l4 = 1L << i0;
+        $l5 = $l3 & $l4;
+        $b6 = $l5 cmp 0L;
+        if $b6 == 0 goto label1;
+
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    public java.util.BitSet get(int, int)
+    {
+        java.util.BitSet r0, r1, $r2, $r3;
+        int i0, i1, i2, i3, i4, i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i16, $i18, $i20, $i22, $i23, $i24, $i25, $i28, $i31;
+        boolean z0, $z1;
+        long[] $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r11;
+        long $l13, $l14, $l15, $l17, $l19, l21, $l26, $l27, $l29, $l30, $l32, $l33, $l34, $l35;
+
+        r0 := @this: java.util.BitSet;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        staticinvoke <java.util.BitSet: void checkRange(int,int)>(i0, i1);
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        i2 = virtualinvoke r0.<java.util.BitSet: int length()>();
+        if i2 <= i0 goto label0;
+
+        if i0 != i1 goto label1;
+
+     label0:
+        $r2 = new java.util.BitSet;
+        specialinvoke $r2.<java.util.BitSet: void <init>(int)>(0);
+        return $r2;
+
+     label1:
+        if i1 <= i2 goto label2;
+
+        i1 = i2;
+
+     label2:
+        $r3 = new java.util.BitSet;
+        $i6 = i1 - i0;
+        specialinvoke $r3.<java.util.BitSet: void <init>(int)>($i6);
+        r1 = $r3;
+        $i7 = i1 - i0;
+        $i8 = $i7 - 1;
+        $i9 = staticinvoke <java.util.BitSet: int wordIndex(int)>($i8);
+        i3 = $i9 + 1;
+        i4 = staticinvoke <java.util.BitSet: int wordIndex(int)>(i0);
+        $i10 = i0 & 63;
+        if $i10 != 0 goto label3;
+
+        $z1 = 1;
+        goto label4;
+
+     label3:
+        $z1 = 0;
+
+     label4:
+        z0 = $z1;
+        i5 = 0;
+
+     label5:
+        $i11 = i3 - 1;
+        if i5 >= $i11 goto label8;
+
+        $r4 = r1.<java.util.BitSet: long[] words>;
+        $i12 = i5;
+        if z0 == 0 goto label6;
+
+        $r5 = r0.<java.util.BitSet: long[] words>;
+        $l13 = $r5[i4];
+        goto label7;
+
+     label6:
+        $r6 = r0.<java.util.BitSet: long[] words>;
+        $l14 = $r6[i4];
+        $l15 = $l14 >>> i0;
+        $r7 = r0.<java.util.BitSet: long[] words>;
+        $i16 = i4 + 1;
+        $l17 = $r7[$i16];
+        $i18 = neg i0;
+        $l19 = $l17 << $i18;
+        $l13 = $l15 | $l19;
+
+     label7:
+        $r4[$i12] = $l13;
+        i5 = i5 + 1;
+        i4 = i4 + 1;
+        goto label5;
+
+     label8:
+        $i20 = neg i1;
+        l21 = -1L >>> $i20;
+        $r8 = r1.<java.util.BitSet: long[] words>;
+        $i22 = i3 - 1;
+        $i23 = i1 - 1;
+        $i24 = $i23 & 63;
+        $i25 = i0 & 63;
+        if $i24 >= $i25 goto label9;
+
+        $r9 = r0.<java.util.BitSet: long[] words>;
+        $l26 = $r9[i4];
+        $l27 = $l26 >>> i0;
+        $r10 = r0.<java.util.BitSet: long[] words>;
+        $i28 = i4 + 1;
+        $l29 = $r10[$i28];
+        $l30 = $l29 & l21;
+        $i31 = neg i0;
+        $l32 = $l30 << $i31;
+        $l33 = $l27 | $l32;
+        goto label10;
+
+     label9:
+        $r11 = r0.<java.util.BitSet: long[] words>;
+        $l34 = $r11[i4];
+        $l35 = $l34 & l21;
+        $l33 = $l35 >>> i0;
+
+     label10:
+        $r8[$i22] = $l33;
+        r1.<java.util.BitSet: int wordsInUse> = i3;
+        specialinvoke r1.<java.util.BitSet: void recalculateWordsInUse()>();
+        specialinvoke r1.<java.util.BitSet: void checkInvariants()>();
+        return r1;
+    }
+
+    public int nextSetBit(int)
+    {
+        java.util.BitSet r0;
+        int i0, i1, $i3, $i7, $i8, $i9, $i10;
+        java.lang.StringBuilder $r1, $r3, $r4;
+        long l2, $l4, $l5;
+        java.lang.IndexOutOfBoundsException $r2;
+        java.lang.String $r5;
+        long[] $r6, $r7;
+        byte $b6;
+
+        r0 := @this: java.util.BitSet;
+        i0 := @parameter0: int;
+        if i0 >= 0 goto label0;
+
+        $r2 = new java.lang.IndexOutOfBoundsException;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r3 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("fromIndex < 0: ");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r5);
+        throw $r2;
+
+     label0:
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        i1 = staticinvoke <java.util.BitSet: int wordIndex(int)>(i0);
+        $i3 = r0.<java.util.BitSet: int wordsInUse>;
+        if i1 < $i3 goto label1;
+
+        return -1;
+
+     label1:
+        $r6 = r0.<java.util.BitSet: long[] words>;
+        $l4 = $r6[i1];
+        $l5 = -1L << i0;
+        l2 = $l4 & $l5;
+
+     label2:
+        $b6 = l2 cmp 0L;
+        if $b6 == 0 goto label3;
+
+        $i7 = i1 * 64;
+        $i8 = staticinvoke <java.lang.Long: int numberOfTrailingZeros(long)>(l2);
+        $i9 = $i7 + $i8;
+        return $i9;
+
+     label3:
+        i1 = i1 + 1;
+        $i10 = r0.<java.util.BitSet: int wordsInUse>;
+        if i1 != $i10 goto label4;
+
+        return -1;
+
+     label4:
+        $r7 = r0.<java.util.BitSet: long[] words>;
+        l2 = $r7[i1];
+        goto label2;
+    }
+
+    public int nextClearBit(int)
+    {
+        java.util.BitSet r0;
+        int i0, i1, $i3, $i8, $i9, $i10, $i11, $i12, $i13;
+        java.lang.StringBuilder $r1, $r3, $r4;
+        long l2, $l4, $l5, $l6, $l14;
+        java.lang.IndexOutOfBoundsException $r2;
+        java.lang.String $r5;
+        long[] $r6, $r7;
+        byte $b7;
+
+        r0 := @this: java.util.BitSet;
+        i0 := @parameter0: int;
+        if i0 >= 0 goto label0;
+
+        $r2 = new java.lang.IndexOutOfBoundsException;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r3 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("fromIndex < 0: ");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r5);
+        throw $r2;
+
+     label0:
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        i1 = staticinvoke <java.util.BitSet: int wordIndex(int)>(i0);
+        $i3 = r0.<java.util.BitSet: int wordsInUse>;
+        if i1 < $i3 goto label1;
+
+        return i0;
+
+     label1:
+        $r6 = r0.<java.util.BitSet: long[] words>;
+        $l4 = $r6[i1];
+        $l5 = $l4 ^ -1L;
+        $l6 = -1L << i0;
+        l2 = $l5 & $l6;
+
+     label2:
+        $b7 = l2 cmp 0L;
+        if $b7 == 0 goto label3;
+
+        $i8 = i1 * 64;
+        $i9 = staticinvoke <java.lang.Long: int numberOfTrailingZeros(long)>(l2);
+        $i10 = $i8 + $i9;
+        return $i10;
+
+     label3:
+        i1 = i1 + 1;
+        $i11 = r0.<java.util.BitSet: int wordsInUse>;
+        if i1 != $i11 goto label4;
+
+        $i12 = r0.<java.util.BitSet: int wordsInUse>;
+        $i13 = $i12 * 64;
+        return $i13;
+
+     label4:
+        $r7 = r0.<java.util.BitSet: long[] words>;
+        $l14 = $r7[i1];
+        l2 = $l14 ^ -1L;
+        goto label2;
+    }
+
+    public int previousSetBit(int)
+    {
+        java.util.BitSet r0;
+        int i0, i1, $i3, $i4, $i5, $i7, $i8, $i11, $i12, $i13, $i14, $i15, $i16;
+        java.lang.StringBuilder $r1, $r3, $r4;
+        long l2, $l6, $l9;
+        java.lang.IndexOutOfBoundsException $r2;
+        java.lang.String $r5;
+        long[] $r6, $r7;
+        byte $b10;
+
+        r0 := @this: java.util.BitSet;
+        i0 := @parameter0: int;
+        if i0 >= 0 goto label1;
+
+        if i0 != -1 goto label0;
+
+        return -1;
+
+     label0:
+        $r2 = new java.lang.IndexOutOfBoundsException;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r3 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("fromIndex < -1: ");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r5);
+        throw $r2;
+
+     label1:
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        i1 = staticinvoke <java.util.BitSet: int wordIndex(int)>(i0);
+        $i3 = r0.<java.util.BitSet: int wordsInUse>;
+        if i1 < $i3 goto label2;
+
+        $i4 = virtualinvoke r0.<java.util.BitSet: int length()>();
+        $i5 = $i4 - 1;
+        return $i5;
+
+     label2:
+        $r6 = r0.<java.util.BitSet: long[] words>;
+        $l6 = $r6[i1];
+        $i7 = i0 + 1;
+        $i8 = neg $i7;
+        $l9 = -1L >>> $i8;
+        l2 = $l6 & $l9;
+
+     label3:
+        $b10 = l2 cmp 0L;
+        if $b10 == 0 goto label4;
+
+        $i11 = i1 + 1;
+        $i12 = $i11 * 64;
+        $i13 = $i12 - 1;
+        $i14 = staticinvoke <java.lang.Long: int numberOfLeadingZeros(long)>(l2);
+        $i15 = $i13 - $i14;
+        return $i15;
+
+     label4:
+        $i16 = i1;
+        i1 = i1 + -1;
+        if $i16 != 0 goto label5;
+
+        return -1;
+
+     label5:
+        $r7 = r0.<java.util.BitSet: long[] words>;
+        l2 = $r7[i1];
+        goto label3;
+    }
+
+    public int previousClearBit(int)
+    {
+        java.util.BitSet r0;
+        int i0, i1, $i3, $i6, $i7, $i10, $i11, $i12, $i13, $i14, $i15;
+        java.lang.StringBuilder $r1, $r3, $r4;
+        long l2, $l4, $l5, $l8, $l16;
+        java.lang.IndexOutOfBoundsException $r2;
+        java.lang.String $r5;
+        long[] $r6, $r7;
+        byte $b9;
+
+        r0 := @this: java.util.BitSet;
+        i0 := @parameter0: int;
+        if i0 >= 0 goto label1;
+
+        if i0 != -1 goto label0;
+
+        return -1;
+
+     label0:
+        $r2 = new java.lang.IndexOutOfBoundsException;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r3 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("fromIndex < -1: ");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r5);
+        throw $r2;
+
+     label1:
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        i1 = staticinvoke <java.util.BitSet: int wordIndex(int)>(i0);
+        $i3 = r0.<java.util.BitSet: int wordsInUse>;
+        if i1 < $i3 goto label2;
+
+        return i0;
+
+     label2:
+        $r6 = r0.<java.util.BitSet: long[] words>;
+        $l4 = $r6[i1];
+        $l5 = $l4 ^ -1L;
+        $i6 = i0 + 1;
+        $i7 = neg $i6;
+        $l8 = -1L >>> $i7;
+        l2 = $l5 & $l8;
+
+     label3:
+        $b9 = l2 cmp 0L;
+        if $b9 == 0 goto label4;
+
+        $i10 = i1 + 1;
+        $i11 = $i10 * 64;
+        $i12 = $i11 - 1;
+        $i13 = staticinvoke <java.lang.Long: int numberOfLeadingZeros(long)>(l2);
+        $i14 = $i12 - $i13;
+        return $i14;
+
+     label4:
+        $i15 = i1;
+        i1 = i1 + -1;
+        if $i15 != 0 goto label5;
+
+        return -1;
+
+     label5:
+        $r7 = r0.<java.util.BitSet: long[] words>;
+        $l16 = $r7[i1];
+        l2 = $l16 ^ -1L;
+        goto label3;
+    }
+
+    public int length()
+    {
+        java.util.BitSet r0;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i7, $i8, $i9;
+        long[] $r1;
+        long $l6;
+
+        r0 := @this: java.util.BitSet;
+        $i0 = r0.<java.util.BitSet: int wordsInUse>;
+        if $i0 != 0 goto label0;
+
+        return 0;
+
+     label0:
+        $i1 = r0.<java.util.BitSet: int wordsInUse>;
+        $i2 = $i1 - 1;
+        $i3 = 64 * $i2;
+        $r1 = r0.<java.util.BitSet: long[] words>;
+        $i4 = r0.<java.util.BitSet: int wordsInUse>;
+        $i5 = $i4 - 1;
+        $l6 = $r1[$i5];
+        $i7 = staticinvoke <java.lang.Long: int numberOfLeadingZeros(long)>($l6);
+        $i8 = 64 - $i7;
+        $i9 = $i3 + $i8;
+        return $i9;
+    }
+
+    public boolean isEmpty()
+    {
+        java.util.BitSet r0;
+        int $i0;
+        boolean $z0;
+
+        r0 := @this: java.util.BitSet;
+        $i0 = r0.<java.util.BitSet: int wordsInUse>;
+        if $i0 != 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public boolean intersects(java.util.BitSet)
+    {
+        java.util.BitSet r0, r1;
+        int i0, $i1, $i2, $i3;
+        long[] $r2, $r3;
+        long $l4, $l5, $l6;
+        byte $b7;
+
+        r0 := @this: java.util.BitSet;
+        r1 := @parameter0: java.util.BitSet;
+        $i1 = r0.<java.util.BitSet: int wordsInUse>;
+        $i2 = r1.<java.util.BitSet: int wordsInUse>;
+        $i3 = staticinvoke <java.lang.Math: int min(int,int)>($i1, $i2);
+        i0 = $i3 - 1;
+
+     label0:
+        if i0 < 0 goto label2;
+
+        $r2 = r0.<java.util.BitSet: long[] words>;
+        $l4 = $r2[i0];
+        $r3 = r1.<java.util.BitSet: long[] words>;
+        $l5 = $r3[i0];
+        $l6 = $l4 & $l5;
+        $b7 = $l6 cmp 0L;
+        if $b7 == 0 goto label1;
+
+        return 1;
+
+     label1:
+        i0 = i0 + -1;
+        goto label0;
+
+     label2:
+        return 0;
+    }
+
+    public int cardinality()
+    {
+        java.util.BitSet r0;
+        int i0, i1, $i2, $i4;
+        long[] $r1;
+        long $l3;
+
+        r0 := @this: java.util.BitSet;
+        i0 = 0;
+        i1 = 0;
+
+     label0:
+        $i2 = r0.<java.util.BitSet: int wordsInUse>;
+        if i1 >= $i2 goto label1;
+
+        $r1 = r0.<java.util.BitSet: long[] words>;
+        $l3 = $r1[i1];
+        $i4 = staticinvoke <java.lang.Long: int bitCount(long)>($l3);
+        i0 = i0 + $i4;
+        i1 = i1 + 1;
+        goto label0;
+
+     label1:
+        return i0;
+    }
+
+    public void and(java.util.BitSet)
+    {
+        java.util.BitSet r0, r1;
+        int i0, $i1, $i2, $i3, $i4, $i5;
+        long[] $r2, $r4, $r5;
+        long $l7, $l8, $l9;
+
+        r0 := @this: java.util.BitSet;
+        r1 := @parameter0: java.util.BitSet;
+        if r0 != r1 goto label0;
+
+        return;
+
+     label0:
+        $i1 = r0.<java.util.BitSet: int wordsInUse>;
+        $i2 = r1.<java.util.BitSet: int wordsInUse>;
+        if $i1 <= $i2 goto label1;
+
+        $r2 = r0.<java.util.BitSet: long[] words>;
+        $i3 = r0.<java.util.BitSet: int wordsInUse>;
+        $i4 = $i3 - 1;
+        r0.<java.util.BitSet: int wordsInUse> = $i4;
+        $r2[$i4] = 0L;
+        goto label0;
+
+     label1:
+        i0 = 0;
+
+     label2:
+        $i5 = r0.<java.util.BitSet: int wordsInUse>;
+        if i0 >= $i5 goto label3;
+
+        $r4 = r0.<java.util.BitSet: long[] words>;
+        $l7 = $r4[i0];
+        $r5 = r1.<java.util.BitSet: long[] words>;
+        $l8 = $r5[i0];
+        $l9 = $l7 & $l8;
+        $r4[i0] = $l9;
+        i0 = i0 + 1;
+        goto label2;
+
+     label3:
+        specialinvoke r0.<java.util.BitSet: void recalculateWordsInUse()>();
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        return;
+    }
+
+    public void or(java.util.BitSet)
+    {
+        java.util.BitSet r0, r1;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i12, $i13, $i14;
+        long[] $r2, $r3, $r4, $r5;
+        long $l9, $l10, $l11;
+
+        r0 := @this: java.util.BitSet;
+        r1 := @parameter0: java.util.BitSet;
+        if r0 != r1 goto label0;
+
+        return;
+
+     label0:
+        $i2 = r0.<java.util.BitSet: int wordsInUse>;
+        $i3 = r1.<java.util.BitSet: int wordsInUse>;
+        i0 = staticinvoke <java.lang.Math: int min(int,int)>($i2, $i3);
+        $i4 = r0.<java.util.BitSet: int wordsInUse>;
+        $i5 = r1.<java.util.BitSet: int wordsInUse>;
+        if $i4 >= $i5 goto label1;
+
+        $i6 = r1.<java.util.BitSet: int wordsInUse>;
+        specialinvoke r0.<java.util.BitSet: void ensureCapacity(int)>($i6);
+        $i7 = r1.<java.util.BitSet: int wordsInUse>;
+        r0.<java.util.BitSet: int wordsInUse> = $i7;
+
+     label1:
+        i1 = 0;
+
+     label2:
+        if i1 >= i0 goto label3;
+
+        $r2 = r0.<java.util.BitSet: long[] words>;
+        $l9 = $r2[i1];
+        $r3 = r1.<java.util.BitSet: long[] words>;
+        $l10 = $r3[i1];
+        $l11 = $l9 | $l10;
+        $r2[i1] = $l11;
+        i1 = i1 + 1;
+        goto label2;
+
+     label3:
+        $i12 = r1.<java.util.BitSet: int wordsInUse>;
+        if i0 >= $i12 goto label4;
+
+        $r4 = r1.<java.util.BitSet: long[] words>;
+        $r5 = r0.<java.util.BitSet: long[] words>;
+        $i13 = r0.<java.util.BitSet: int wordsInUse>;
+        $i14 = $i13 - i0;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r4, i0, $r5, i0, $i14);
+
+     label4:
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        return;
+    }
+
+    public void xor(java.util.BitSet)
+    {
+        java.util.BitSet r0, r1;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i12, $i13, $i14;
+        long[] $r2, $r3, $r4, $r5;
+        long $l9, $l10, $l11;
+
+        r0 := @this: java.util.BitSet;
+        r1 := @parameter0: java.util.BitSet;
+        $i2 = r0.<java.util.BitSet: int wordsInUse>;
+        $i3 = r1.<java.util.BitSet: int wordsInUse>;
+        i0 = staticinvoke <java.lang.Math: int min(int,int)>($i2, $i3);
+        $i4 = r0.<java.util.BitSet: int wordsInUse>;
+        $i5 = r1.<java.util.BitSet: int wordsInUse>;
+        if $i4 >= $i5 goto label0;
+
+        $i6 = r1.<java.util.BitSet: int wordsInUse>;
+        specialinvoke r0.<java.util.BitSet: void ensureCapacity(int)>($i6);
+        $i7 = r1.<java.util.BitSet: int wordsInUse>;
+        r0.<java.util.BitSet: int wordsInUse> = $i7;
+
+     label0:
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        $r2 = r0.<java.util.BitSet: long[] words>;
+        $l9 = $r2[i1];
+        $r3 = r1.<java.util.BitSet: long[] words>;
+        $l10 = $r3[i1];
+        $l11 = $l9 ^ $l10;
+        $r2[i1] = $l11;
+        i1 = i1 + 1;
+        goto label1;
+
+     label2:
+        $i12 = r1.<java.util.BitSet: int wordsInUse>;
+        if i0 >= $i12 goto label3;
+
+        $r4 = r1.<java.util.BitSet: long[] words>;
+        $r5 = r0.<java.util.BitSet: long[] words>;
+        $i13 = r1.<java.util.BitSet: int wordsInUse>;
+        $i14 = $i13 - i0;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r4, i0, $r5, i0, $i14);
+
+     label3:
+        specialinvoke r0.<java.util.BitSet: void recalculateWordsInUse()>();
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        return;
+    }
+
+    public void andNot(java.util.BitSet)
+    {
+        java.util.BitSet r0, r1;
+        int i0, $i1, $i2, $i3;
+        long[] $r2, $r3;
+        long $l5, $l6, $l7, $l8;
+
+        r0 := @this: java.util.BitSet;
+        r1 := @parameter0: java.util.BitSet;
+        $i1 = r0.<java.util.BitSet: int wordsInUse>;
+        $i2 = r1.<java.util.BitSet: int wordsInUse>;
+        $i3 = staticinvoke <java.lang.Math: int min(int,int)>($i1, $i2);
+        i0 = $i3 - 1;
+
+     label0:
+        if i0 < 0 goto label1;
+
+        $r2 = r0.<java.util.BitSet: long[] words>;
+        $l5 = $r2[i0];
+        $r3 = r1.<java.util.BitSet: long[] words>;
+        $l6 = $r3[i0];
+        $l7 = $l6 ^ -1L;
+        $l8 = $l5 & $l7;
+        $r2[i0] = $l8;
+        i0 = i0 + -1;
+        goto label0;
+
+     label1:
+        specialinvoke r0.<java.util.BitSet: void recalculateWordsInUse()>();
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        return;
+    }
+
+    public int hashCode()
+    {
+        java.util.BitSet r0;
+        long l0, $l2, $l4, $l5, $l6, $l7;
+        int i1, $i3, $i8;
+        long[] $r1;
+
+        r0 := @this: java.util.BitSet;
+        l0 = 1234L;
+        i1 = r0.<java.util.BitSet: int wordsInUse>;
+
+     label0:
+        i1 = i1 + -1;
+        if i1 < 0 goto label1;
+
+        $r1 = r0.<java.util.BitSet: long[] words>;
+        $l2 = $r1[i1];
+        $i3 = i1 + 1;
+        $l4 = (long) $i3;
+        $l5 = $l2 * $l4;
+        l0 = l0 ^ $l5;
+        goto label0;
+
+     label1:
+        $l6 = l0 >> 32;
+        $l7 = $l6 ^ l0;
+        $i8 = (int) $l7;
+        return $i8;
+    }
+
+    public int size()
+    {
+        java.util.BitSet r0;
+        long[] $r1;
+        int $i0, $i1;
+
+        r0 := @this: java.util.BitSet;
+        $r1 = r0.<java.util.BitSet: long[] words>;
+        $i0 = lengthof $r1;
+        $i1 = $i0 * 64;
+        return $i1;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        java.util.BitSet r0, r2;
+        java.lang.Object r1;
+        int i0, $i1, $i2, $i3;
+        boolean $z0;
+        long[] $r3, $r4;
+        long $l4, $l5;
+        byte $b6;
+
+        r0 := @this: java.util.BitSet;
+        r1 := @parameter0: java.lang.Object;
+        $z0 = r1 instanceof java.util.BitSet;
+        if $z0 != 0 goto label0;
+
+        return 0;
+
+     label0:
+        if r0 != r1 goto label1;
+
+        return 1;
+
+     label1:
+        r2 = (java.util.BitSet) r1;
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        specialinvoke r2.<java.util.BitSet: void checkInvariants()>();
+        $i1 = r0.<java.util.BitSet: int wordsInUse>;
+        $i2 = r2.<java.util.BitSet: int wordsInUse>;
+        if $i1 == $i2 goto label2;
+
+        return 0;
+
+     label2:
+        i0 = 0;
+
+     label3:
+        $i3 = r0.<java.util.BitSet: int wordsInUse>;
+        if i0 >= $i3 goto label5;
+
+        $r3 = r0.<java.util.BitSet: long[] words>;
+        $l4 = $r3[i0];
+        $r4 = r2.<java.util.BitSet: long[] words>;
+        $l5 = $r4[i0];
+        $b6 = $l4 cmp $l5;
+        if $b6 == 0 goto label4;
+
+        return 0;
+
+     label4:
+        i0 = i0 + 1;
+        goto label3;
+
+     label5:
+        return 1;
+    }
+
+    public java.lang.Object clone()
+    {
+        java.util.BitSet r0, r1;
+        boolean $z0;
+        java.lang.Object $r2, $r4;
+        long[] $r3, $r5;
+        java.lang.CloneNotSupportedException $r7, r8;
+        java.lang.InternalError $r9;
+
+        r0 := @this: java.util.BitSet;
+        $z0 = r0.<java.util.BitSet: boolean sizeIsSticky>;
+        if $z0 != 0 goto label0;
+
+        specialinvoke r0.<java.util.BitSet: void trimToSize()>();
+
+     label0:
+        $r2 = specialinvoke r0.<java.lang.Object: java.lang.Object clone()>();
+        r1 = (java.util.BitSet) $r2;
+        $r3 = r0.<java.util.BitSet: long[] words>;
+        $r4 = virtualinvoke $r3.<java.lang.Object: java.lang.Object clone()>();
+        $r5 = (long[]) $r4;
+        r1.<java.util.BitSet: long[] words> = $r5;
+        specialinvoke r1.<java.util.BitSet: void checkInvariants()>();
+
+     label1:
+        return r1;
+
+     label2:
+        $r7 := @caughtexception;
+        r8 = $r7;
+        $r9 = new java.lang.InternalError;
+        specialinvoke $r9.<java.lang.InternalError: void <init>()>();
+        throw $r9;
+
+        catch java.lang.CloneNotSupportedException from label0 to label1 with label2;
+    }
+
+    private void trimToSize()
+    {
+        java.util.BitSet r0;
+        int $i0, $i1, $i2;
+        long[] $r1, $r2, $r3;
+
+        r0 := @this: java.util.BitSet;
+        $i0 = r0.<java.util.BitSet: int wordsInUse>;
+        $r1 = r0.<java.util.BitSet: long[] words>;
+        $i1 = lengthof $r1;
+        if $i0 == $i1 goto label0;
+
+        $r2 = r0.<java.util.BitSet: long[] words>;
+        $i2 = r0.<java.util.BitSet: int wordsInUse>;
+        $r3 = staticinvoke <java.util.Arrays: long[] copyOf(long[],int)>($r2, $i2);
+        r0.<java.util.BitSet: long[] words> = $r3;
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+
+     label0:
+        return;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream) throws java.io.IOException
+    {
+        java.util.BitSet r0;
+        java.io.ObjectOutputStream r1;
+        java.io.ObjectOutputStream$PutField r2;
+        boolean $z0;
+        long[] $r3;
+
+        r0 := @this: java.util.BitSet;
+        r1 := @parameter0: java.io.ObjectOutputStream;
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        $z0 = r0.<java.util.BitSet: boolean sizeIsSticky>;
+        if $z0 != 0 goto label0;
+
+        specialinvoke r0.<java.util.BitSet: void trimToSize()>();
+
+     label0:
+        r2 = virtualinvoke r1.<java.io.ObjectOutputStream: java.io.ObjectOutputStream$PutField putFields()>();
+        $r3 = r0.<java.util.BitSet: long[] words>;
+        virtualinvoke r2.<java.io.ObjectOutputStream$PutField: void put(java.lang.String,java.lang.Object)>("bits", $r3);
+        virtualinvoke r1.<java.io.ObjectOutputStream: void writeFields()>();
+        return;
+    }
+
+    private void readObject(java.io.ObjectInputStream) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        java.util.BitSet r0;
+        java.io.ObjectInputStream r1;
+        java.io.ObjectInputStream$GetField r2;
+        java.lang.Object $r3;
+        long[] $r4, $r5, $r6, $r8, $r9, $r10;
+        int $i0, $i1, $i2, $i3;
+        long $l4;
+        byte $b5;
+        boolean $z0;
+
+        r0 := @this: java.util.BitSet;
+        r1 := @parameter0: java.io.ObjectInputStream;
+        r2 = virtualinvoke r1.<java.io.ObjectInputStream: java.io.ObjectInputStream$GetField readFields()>();
+        $r3 = virtualinvoke r2.<java.io.ObjectInputStream$GetField: java.lang.Object get(java.lang.String,java.lang.Object)>("bits", null);
+        $r4 = (long[]) $r3;
+        $r5 = (long[]) $r4;
+        r0.<java.util.BitSet: long[] words> = $r5;
+        $r6 = r0.<java.util.BitSet: long[] words>;
+        $i0 = lengthof $r6;
+        r0.<java.util.BitSet: int wordsInUse> = $i0;
+        specialinvoke r0.<java.util.BitSet: void recalculateWordsInUse()>();
+        $r8 = r0.<java.util.BitSet: long[] words>;
+        $i1 = lengthof $r8;
+        if $i1 <= 0 goto label0;
+
+        $r9 = r0.<java.util.BitSet: long[] words>;
+        $r10 = r0.<java.util.BitSet: long[] words>;
+        $i2 = lengthof $r10;
+        $i3 = $i2 - 1;
+        $l4 = $r9[$i3];
+        $b5 = $l4 cmp 0L;
+        if $b5 != 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        r0.<java.util.BitSet: boolean sizeIsSticky> = $z0;
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        return;
+    }
+
+    public java.lang.String toString()
+    {
+        java.util.BitSet r0;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8, i9, $i10;
+        java.lang.StringBuilder r1, $r2, $r5;
+        java.lang.String $r8;
+
+        r0 := @this: java.util.BitSet;
+        specialinvoke r0.<java.util.BitSet: void checkInvariants()>();
+        $i3 = r0.<java.util.BitSet: int wordsInUse>;
+        if $i3 <= 128 goto label0;
+
+        $i4 = virtualinvoke r0.<java.util.BitSet: int cardinality()>();
+        goto label1;
+
+     label0:
+        $i5 = r0.<java.util.BitSet: int wordsInUse>;
+        $i4 = $i5 * 64;
+
+     label1:
+        i0 = $i4;
+        $r2 = new java.lang.StringBuilder;
+        $i6 = 6 * i0;
+        $i7 = $i6 + 2;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>(int)>($i7);
+        r1 = $r2;
+        virtualinvoke r1.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(123);
+        i1 = virtualinvoke r0.<java.util.BitSet: int nextSetBit(int)>(0);
+        if i1 == -1 goto label4;
+
+        virtualinvoke r1.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i1);
+        $i8 = i1 + 1;
+        i9 = virtualinvoke r0.<java.util.BitSet: int nextSetBit(int)>($i8);
+
+     label2:
+        if i9 < 0 goto label4;
+
+        i2 = virtualinvoke r0.<java.util.BitSet: int nextClearBit(int)>(i9);
+
+     label3:
+        $r5 = virtualinvoke r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", ");
+        virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i9);
+        i9 = i9 + 1;
+        if i9 < i2 goto label3;
+
+        $i10 = i9 + 1;
+        i9 = virtualinvoke r0.<java.util.BitSet: int nextSetBit(int)>($i10);
+        goto label2;
+
+     label4:
+        virtualinvoke r1.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(125);
+        $r8 = virtualinvoke r1.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r8;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        java.io.ObjectStreamField $r1;
+        boolean $z0, $z1;
+        java.io.ObjectStreamField[] $r2;
+
+        $r0 = class "java/util/BitSet";
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        <java.util.BitSet: boolean $assertionsDisabled> = $z1;
+        $r2 = newarray (java.io.ObjectStreamField)[1];
+        $r1 = new java.io.ObjectStreamField;
+        specialinvoke $r1.<java.io.ObjectStreamField: void <init>(java.lang.String,java.lang.Class)>("bits", class "[J");
+        $r2[0] = $r1;
+        <java.util.BitSet: java.io.ObjectStreamField[] serialPersistentFields> = $r2;
+        return;
+    }
+}

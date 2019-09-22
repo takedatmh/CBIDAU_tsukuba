@@ -1,0 +1,528 @@
+public class java.io.FileInputStream extends java.io.InputStream
+{
+    private final java.io.FileDescriptor fd;
+    private final java.lang.String path;
+    private java.nio.channels.FileChannel channel;
+    private final java.lang.Object closeLock;
+    private volatile boolean closed;
+    private static final java.lang.ThreadLocal runningFinalize;
+
+    private static boolean isRunningFinalize()
+    {
+        java.lang.ThreadLocal $r0;
+        java.lang.Boolean r1, $r3;
+        java.lang.Object $r2;
+        boolean $z0;
+
+        $r0 = <java.io.FileInputStream: java.lang.ThreadLocal runningFinalize>;
+        $r2 = virtualinvoke $r0.<java.lang.ThreadLocal: java.lang.Object get()>();
+        $r3 = (java.lang.Boolean) $r2;
+        r1 = $r3;
+        if $r3 == null goto label0;
+
+        $z0 = virtualinvoke r1.<java.lang.Boolean: boolean booleanValue()>();
+        return $z0;
+
+     label0:
+        return 0;
+    }
+
+    public void <init>(java.lang.String) throws java.io.FileNotFoundException
+    {
+        java.io.FileInputStream r0;
+        java.lang.String r1;
+        java.io.File $r3;
+
+        r0 := @this: java.io.FileInputStream;
+        r1 := @parameter0: java.lang.String;
+        if r1 == null goto label0;
+
+        $r3 = new java.io.File;
+        specialinvoke $r3.<java.io.File: void <init>(java.lang.String)>(r1);
+        goto label1;
+
+     label0:
+        $r3 = null;
+
+     label1:
+        specialinvoke r0.<java.io.FileInputStream: void <init>(java.io.File)>($r3);
+        return;
+    }
+
+    public void <init>(java.io.File) throws java.io.FileNotFoundException
+    {
+        java.io.FileInputStream r0;
+        java.io.File r1;
+        java.lang.String r2, $r5;
+        java.lang.SecurityManager r3;
+        java.lang.Object $r4;
+        java.lang.NullPointerException $r6;
+        boolean $z0;
+        java.io.FileNotFoundException $r7;
+        java.io.FileDescriptor $r8, $r9;
+
+        r0 := @this: java.io.FileInputStream;
+        r1 := @parameter0: java.io.File;
+        specialinvoke r0.<java.io.InputStream: void <init>()>();
+        r0.<java.io.FileInputStream: java.nio.channels.FileChannel channel> = null;
+        $r4 = new java.lang.Object;
+        specialinvoke $r4.<java.lang.Object: void <init>()>();
+        r0.<java.io.FileInputStream: java.lang.Object closeLock> = $r4;
+        r0.<java.io.FileInputStream: boolean closed> = 0;
+        if r1 == null goto label0;
+
+        $r5 = virtualinvoke r1.<java.io.File: java.lang.String getPath()>();
+        goto label1;
+
+     label0:
+        $r5 = null;
+
+     label1:
+        r2 = $r5;
+        r3 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r3 == null goto label2;
+
+        virtualinvoke r3.<java.lang.SecurityManager: void checkRead(java.lang.String)>(r2);
+
+     label2:
+        if r2 != null goto label3;
+
+        $r6 = new java.lang.NullPointerException;
+        specialinvoke $r6.<java.lang.NullPointerException: void <init>()>();
+        throw $r6;
+
+     label3:
+        $z0 = virtualinvoke r1.<java.io.File: boolean isInvalid()>();
+        if $z0 == 0 goto label4;
+
+        $r7 = new java.io.FileNotFoundException;
+        specialinvoke $r7.<java.io.FileNotFoundException: void <init>(java.lang.String)>("Invalid file path");
+        throw $r7;
+
+     label4:
+        $r8 = new java.io.FileDescriptor;
+        specialinvoke $r8.<java.io.FileDescriptor: void <init>()>();
+        r0.<java.io.FileInputStream: java.io.FileDescriptor fd> = $r8;
+        $r9 = r0.<java.io.FileInputStream: java.io.FileDescriptor fd>;
+        virtualinvoke $r9.<java.io.FileDescriptor: int incrementAndGetUseCount()>();
+        r0.<java.io.FileInputStream: java.lang.String path> = r2;
+        specialinvoke r0.<java.io.FileInputStream: void open(java.lang.String)>(r2);
+        return;
+    }
+
+    public void <init>(java.io.FileDescriptor)
+    {
+        java.io.FileInputStream r0;
+        java.io.FileDescriptor r1, $r5;
+        java.lang.SecurityManager r2;
+        java.lang.Object $r3;
+        java.lang.NullPointerException $r4;
+
+        r0 := @this: java.io.FileInputStream;
+        r1 := @parameter0: java.io.FileDescriptor;
+        specialinvoke r0.<java.io.InputStream: void <init>()>();
+        r0.<java.io.FileInputStream: java.nio.channels.FileChannel channel> = null;
+        $r3 = new java.lang.Object;
+        specialinvoke $r3.<java.lang.Object: void <init>()>();
+        r0.<java.io.FileInputStream: java.lang.Object closeLock> = $r3;
+        r0.<java.io.FileInputStream: boolean closed> = 0;
+        r2 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r1 != null goto label0;
+
+        $r4 = new java.lang.NullPointerException;
+        specialinvoke $r4.<java.lang.NullPointerException: void <init>()>();
+        throw $r4;
+
+     label0:
+        if r2 == null goto label1;
+
+        virtualinvoke r2.<java.lang.SecurityManager: void checkRead(java.io.FileDescriptor)>(r1);
+
+     label1:
+        r0.<java.io.FileInputStream: java.io.FileDescriptor fd> = r1;
+        r0.<java.io.FileInputStream: java.lang.String path> = null;
+        $r5 = r0.<java.io.FileInputStream: java.io.FileDescriptor fd>;
+        virtualinvoke $r5.<java.io.FileDescriptor: int incrementAndGetUseCount()>();
+        return;
+    }
+
+    private native void open(java.lang.String) throws java.io.FileNotFoundException;
+
+    public int read() throws java.io.IOException
+    {
+        java.io.FileInputStream r0;
+        java.lang.Object r1;
+        int i0;
+        java.lang.Throwable r2, $r5;
+        java.lang.String $r3;
+        long $l1, $l2;
+
+        r0 := @this: java.io.FileInputStream;
+        $r3 = r0.<java.io.FileInputStream: java.lang.String path>;
+        r1 = staticinvoke <sun.misc.IoTrace: java.lang.Object fileReadBegin(java.lang.String)>($r3);
+        i0 = 0;
+
+     label0:
+        i0 = specialinvoke r0.<java.io.FileInputStream: int read0()>();
+
+     label1:
+        if i0 != -1 goto label2;
+
+        $l1 = 0L;
+        goto label3;
+
+     label2:
+        $l1 = 1L;
+
+     label3:
+        staticinvoke <sun.misc.IoTrace: void fileReadEnd(java.lang.Object,long)>(r1, $l1);
+        goto label9;
+
+     label4:
+        $r5 := @caughtexception;
+
+     label5:
+        r2 = $r5;
+
+     label6:
+        if i0 != -1 goto label7;
+
+        $l2 = 0L;
+        goto label8;
+
+     label7:
+        $l2 = 1L;
+
+     label8:
+        staticinvoke <sun.misc.IoTrace: void fileReadEnd(java.lang.Object,long)>(r1, $l2);
+        throw r2;
+
+     label9:
+        return i0;
+
+        catch java.lang.Throwable from label0 to label1 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+    }
+
+    private native int read0() throws java.io.IOException;
+
+    private native int readBytes(byte[], int, int) throws java.io.IOException;
+
+    public int read(byte[]) throws java.io.IOException
+    {
+        java.io.FileInputStream r0;
+        byte[] r1;
+        java.lang.Object r2;
+        int i0, $i1;
+        java.lang.Throwable r3, $r6;
+        java.lang.String $r4;
+        long $l2, $l3;
+
+        r0 := @this: java.io.FileInputStream;
+        r1 := @parameter0: byte[];
+        $r4 = r0.<java.io.FileInputStream: java.lang.String path>;
+        r2 = staticinvoke <sun.misc.IoTrace: java.lang.Object fileReadBegin(java.lang.String)>($r4);
+        i0 = 0;
+
+     label0:
+        $i1 = lengthof r1;
+        i0 = specialinvoke r0.<java.io.FileInputStream: int readBytes(byte[],int,int)>(r1, 0, $i1);
+
+     label1:
+        if i0 != -1 goto label2;
+
+        $l2 = 0L;
+        goto label3;
+
+     label2:
+        $l2 = (long) i0;
+
+     label3:
+        staticinvoke <sun.misc.IoTrace: void fileReadEnd(java.lang.Object,long)>(r2, $l2);
+        goto label9;
+
+     label4:
+        $r6 := @caughtexception;
+
+     label5:
+        r3 = $r6;
+
+     label6:
+        if i0 != -1 goto label7;
+
+        $l3 = 0L;
+        goto label8;
+
+     label7:
+        $l3 = (long) i0;
+
+     label8:
+        staticinvoke <sun.misc.IoTrace: void fileReadEnd(java.lang.Object,long)>(r2, $l3);
+        throw r3;
+
+     label9:
+        return i0;
+
+        catch java.lang.Throwable from label0 to label1 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+    }
+
+    public int read(byte[], int, int) throws java.io.IOException
+    {
+        java.io.FileInputStream r0;
+        byte[] r1;
+        int i0, i1, i2;
+        java.lang.Object r2;
+        java.lang.Throwable r3, $r6;
+        java.lang.String $r4;
+        long $l3, $l4;
+
+        r0 := @this: java.io.FileInputStream;
+        r1 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        $r4 = r0.<java.io.FileInputStream: java.lang.String path>;
+        r2 = staticinvoke <sun.misc.IoTrace: java.lang.Object fileReadBegin(java.lang.String)>($r4);
+        i2 = 0;
+
+     label0:
+        i2 = specialinvoke r0.<java.io.FileInputStream: int readBytes(byte[],int,int)>(r1, i0, i1);
+
+     label1:
+        if i2 != -1 goto label2;
+
+        $l3 = 0L;
+        goto label3;
+
+     label2:
+        $l3 = (long) i2;
+
+     label3:
+        staticinvoke <sun.misc.IoTrace: void fileReadEnd(java.lang.Object,long)>(r2, $l3);
+        goto label9;
+
+     label4:
+        $r6 := @caughtexception;
+
+     label5:
+        r3 = $r6;
+
+     label6:
+        if i2 != -1 goto label7;
+
+        $l4 = 0L;
+        goto label8;
+
+     label7:
+        $l4 = (long) i2;
+
+     label8:
+        staticinvoke <sun.misc.IoTrace: void fileReadEnd(java.lang.Object,long)>(r2, $l4);
+        throw r3;
+
+     label9:
+        return i2;
+
+        catch java.lang.Throwable from label0 to label1 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+    }
+
+    public native long skip(long) throws java.io.IOException;
+
+    public native int available() throws java.io.IOException;
+
+    public void close() throws java.io.IOException
+    {
+        java.io.FileInputStream r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r4;
+        boolean $z0, $z1;
+        java.nio.channels.FileChannel $r5, $r7;
+        java.io.FileDescriptor $r6, $r8;
+        int i1;
+
+        r0 := @this: java.io.FileInputStream;
+        $r3 = r0.<java.io.FileInputStream: java.lang.Object closeLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $z0 = r0.<java.io.FileInputStream: boolean closed>;
+        if $z0 == 0 goto label2;
+
+        exitmonitor r1;
+
+     label1:
+        return;
+
+     label2:
+        r0.<java.io.FileInputStream: boolean closed> = 1;
+        exitmonitor r1;
+
+     label3:
+        goto label7;
+
+     label4:
+        $r4 := @caughtexception;
+
+     label5:
+        r2 = $r4;
+        exitmonitor r1;
+
+     label6:
+        throw r2;
+
+     label7:
+        $r5 = r0.<java.io.FileInputStream: java.nio.channels.FileChannel channel>;
+        if $r5 == null goto label8;
+
+        $r6 = r0.<java.io.FileInputStream: java.io.FileDescriptor fd>;
+        virtualinvoke $r6.<java.io.FileDescriptor: int decrementAndGetUseCount()>();
+        $r7 = r0.<java.io.FileInputStream: java.nio.channels.FileChannel channel>;
+        virtualinvoke $r7.<java.nio.channels.FileChannel: void close()>();
+
+     label8:
+        $r8 = r0.<java.io.FileInputStream: java.io.FileDescriptor fd>;
+        i1 = virtualinvoke $r8.<java.io.FileDescriptor: int decrementAndGetUseCount()>();
+        if i1 <= 0 goto label9;
+
+        $z1 = staticinvoke <java.io.FileInputStream: boolean isRunningFinalize()>();
+        if $z1 != 0 goto label10;
+
+     label9:
+        specialinvoke r0.<java.io.FileInputStream: void close0()>();
+
+     label10:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label4;
+        catch java.lang.Throwable from label2 to label3 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+    }
+
+    public final java.io.FileDescriptor getFD() throws java.io.IOException
+    {
+        java.io.FileInputStream r0;
+        java.io.FileDescriptor $r1, $r2;
+        java.io.IOException $r3;
+
+        r0 := @this: java.io.FileInputStream;
+        $r1 = r0.<java.io.FileInputStream: java.io.FileDescriptor fd>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<java.io.FileInputStream: java.io.FileDescriptor fd>;
+        return $r2;
+
+     label0:
+        $r3 = new java.io.IOException;
+        specialinvoke $r3.<java.io.IOException: void <init>()>();
+        throw $r3;
+    }
+
+    public java.nio.channels.FileChannel getChannel()
+    {
+        java.io.FileInputStream r0, r2;
+        java.lang.Throwable r3, $r10;
+        java.nio.channels.FileChannel $r4, $r7, $r9;
+        java.io.FileDescriptor $r5, $r8;
+        java.lang.String $r6;
+
+        r0 := @this: java.io.FileInputStream;
+        r2 = r0;
+        entermonitor r0;
+
+     label0:
+        $r4 = r0.<java.io.FileInputStream: java.nio.channels.FileChannel channel>;
+        if $r4 != null goto label1;
+
+        $r5 = r0.<java.io.FileInputStream: java.io.FileDescriptor fd>;
+        $r6 = r0.<java.io.FileInputStream: java.lang.String path>;
+        $r7 = staticinvoke <sun.nio.ch.FileChannelImpl: java.nio.channels.FileChannel open(java.io.FileDescriptor,java.lang.String,boolean,boolean,java.lang.Object)>($r5, $r6, 1, 0, r0);
+        r0.<java.io.FileInputStream: java.nio.channels.FileChannel channel> = $r7;
+        $r8 = r0.<java.io.FileInputStream: java.io.FileDescriptor fd>;
+        virtualinvoke $r8.<java.io.FileDescriptor: int incrementAndGetUseCount()>();
+
+     label1:
+        $r9 = r0.<java.io.FileInputStream: java.nio.channels.FileChannel channel>;
+        exitmonitor r2;
+
+     label2:
+        return $r9;
+
+     label3:
+        $r10 := @caughtexception;
+
+     label4:
+        r3 = $r10;
+        exitmonitor r2;
+
+     label5:
+        throw r3;
+
+        catch java.lang.Throwable from label0 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    private static native void initIDs();
+
+    private native void close0() throws java.io.IOException;
+
+    protected void finalize() throws java.io.IOException
+    {
+        java.io.FileInputStream r0;
+        java.io.FileDescriptor $r1, $r3, $r4;
+        java.lang.Throwable r2, $r9;
+        java.lang.ThreadLocal $r5, $r7, $r10;
+        java.lang.Boolean $r6, $r8, $r11;
+
+        r0 := @this: java.io.FileInputStream;
+        $r3 = r0.<java.io.FileInputStream: java.io.FileDescriptor fd>;
+        if $r3 == null goto label5;
+
+        $r4 = r0.<java.io.FileInputStream: java.io.FileDescriptor fd>;
+        $r1 = <java.io.FileDescriptor: java.io.FileDescriptor in>;
+        if $r4 == $r1 goto label5;
+
+        $r5 = <java.io.FileInputStream: java.lang.ThreadLocal runningFinalize>;
+        $r6 = <java.lang.Boolean: java.lang.Boolean TRUE>;
+        virtualinvoke $r5.<java.lang.ThreadLocal: void set(java.lang.Object)>($r6);
+
+     label0:
+        virtualinvoke r0.<java.io.FileInputStream: void close()>();
+
+     label1:
+        $r7 = <java.io.FileInputStream: java.lang.ThreadLocal runningFinalize>;
+        $r8 = <java.lang.Boolean: java.lang.Boolean FALSE>;
+        virtualinvoke $r7.<java.lang.ThreadLocal: void set(java.lang.Object)>($r8);
+        goto label5;
+
+     label2:
+        $r9 := @caughtexception;
+
+     label3:
+        r2 = $r9;
+
+     label4:
+        $r10 = <java.io.FileInputStream: java.lang.ThreadLocal runningFinalize>;
+        $r11 = <java.lang.Boolean: java.lang.Boolean FALSE>;
+        virtualinvoke $r10.<java.lang.ThreadLocal: void set(java.lang.Object)>($r11);
+        throw r2;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.ThreadLocal $r0;
+
+        $r0 = new java.lang.ThreadLocal;
+        specialinvoke $r0.<java.lang.ThreadLocal: void <init>()>();
+        <java.io.FileInputStream: java.lang.ThreadLocal runningFinalize> = $r0;
+        staticinvoke <java.io.FileInputStream: void initIDs()>();
+        return;
+    }
+}

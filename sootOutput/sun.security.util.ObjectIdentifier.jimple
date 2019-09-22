@@ -1,0 +1,1168 @@
+public final class sun.security.util.ObjectIdentifier extends java.lang.Object implements java.io.Serializable
+{
+    private byte[] encoding;
+    private transient volatile java.lang.String stringForm;
+    private static final long serialVersionUID;
+    private java.lang.Object components;
+    private int componentLen;
+    private transient boolean componentsCalculated;
+    static final boolean $assertionsDisabled;
+
+    private void readObject(java.io.ObjectInputStream) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        sun.security.util.ObjectIdentifier r0;
+        java.io.ObjectInputStream r1;
+        byte[] $r2;
+        java.lang.Object $r3;
+        int[] $r4, $r5;
+        int $i0;
+
+        r0 := @this: sun.security.util.ObjectIdentifier;
+        r1 := @parameter0: java.io.ObjectInputStream;
+        virtualinvoke r1.<java.io.ObjectInputStream: void defaultReadObject()>();
+        $r2 = r0.<sun.security.util.ObjectIdentifier: byte[] encoding>;
+        if $r2 != null goto label0;
+
+        $r3 = r0.<sun.security.util.ObjectIdentifier: java.lang.Object components>;
+        $r4 = (int[]) $r3;
+        $r5 = (int[]) $r4;
+        $i0 = r0.<sun.security.util.ObjectIdentifier: int componentLen>;
+        specialinvoke r0.<sun.security.util.ObjectIdentifier: void init(int[],int)>($r5, $i0);
+
+     label0:
+        return;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream) throws java.io.IOException
+    {
+        sun.security.util.ObjectIdentifier r0;
+        java.io.ObjectOutputStream r1;
+        int[] r2;
+        boolean $z0;
+        int $i0;
+        sun.security.util.ObjectIdentifier$HugeOidNotSupportedByOldJDK $r3;
+
+        r0 := @this: sun.security.util.ObjectIdentifier;
+        r1 := @parameter0: java.io.ObjectOutputStream;
+        $z0 = r0.<sun.security.util.ObjectIdentifier: boolean componentsCalculated>;
+        if $z0 != 0 goto label2;
+
+        r2 = specialinvoke r0.<sun.security.util.ObjectIdentifier: int[] toIntArray()>();
+        if r2 == null goto label0;
+
+        r0.<sun.security.util.ObjectIdentifier: java.lang.Object components> = r2;
+        $i0 = lengthof r2;
+        r0.<sun.security.util.ObjectIdentifier: int componentLen> = $i0;
+        goto label1;
+
+     label0:
+        $r3 = <sun.security.util.ObjectIdentifier$HugeOidNotSupportedByOldJDK: sun.security.util.ObjectIdentifier$HugeOidNotSupportedByOldJDK theOne>;
+        r0.<sun.security.util.ObjectIdentifier: java.lang.Object components> = $r3;
+
+     label1:
+        r0.<sun.security.util.ObjectIdentifier: boolean componentsCalculated> = 1;
+
+     label2:
+        virtualinvoke r1.<java.io.ObjectOutputStream: void defaultWriteObject()>();
+        return;
+    }
+
+    public void <init>(java.lang.String) throws java.io.IOException
+    {
+        sun.security.util.ObjectIdentifier r0;
+        java.lang.String r1, r4, $r16, $r18;
+        byte b0;
+        int i1, i2, i3, i4, $i5, i6, $i7, i8, $i9, $i11, i12, $i13, $i14;
+        boolean z0, z1;
+        byte[] r2, $r7, $r8;
+        null_type n0;
+        java.math.BigInteger r3, $r5, $r6;
+        long $l10;
+        java.io.IOException $r9, r10, $r13;
+        java.lang.Exception $r11, r12;
+        java.lang.StringBuilder $r14, $r15, $r17;
+
+        r0 := @this: sun.security.util.ObjectIdentifier;
+        r1 := @parameter0: java.lang.String;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.security.util.ObjectIdentifier: byte[] encoding> = null;
+        r0.<sun.security.util.ObjectIdentifier: java.lang.Object components> = null;
+        r0.<sun.security.util.ObjectIdentifier: int componentLen> = -1;
+        r0.<sun.security.util.ObjectIdentifier: boolean componentsCalculated> = 0;
+        b0 = 46;
+        i1 = 0;
+        z0 = 0;
+        i2 = 0;
+        $i5 = virtualinvoke r1.<java.lang.String: int length()>();
+        r2 = newarray (byte)[$i5];
+        i3 = 0;
+        i4 = 0;
+
+     label0:
+        n0 = null;
+
+     label1:
+        z1 = 0;
+        i6 = virtualinvoke r1.<java.lang.String: int indexOf(int,int)>(b0, i1);
+        if i6 != -1 goto label2;
+
+        r4 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int)>(i1);
+        $i7 = virtualinvoke r1.<java.lang.String: int length()>();
+        i8 = $i7 - i1;
+        goto label3;
+
+     label2:
+        r4 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int,int)>(i1, i6);
+        i8 = i6 - i1;
+
+     label3:
+        if i8 <= 9 goto label8;
+
+        $r5 = new java.math.BigInteger;
+        specialinvoke $r5.<java.math.BigInteger: void <init>(java.lang.String)>(r4);
+        r3 = $r5;
+        if i4 != 0 goto label4;
+
+        staticinvoke <sun.security.util.ObjectIdentifier: void checkFirstComponent(java.math.BigInteger)>(r3);
+        i3 = virtualinvoke r3.<java.math.BigInteger: int intValue()>();
+        goto label7;
+
+     label4:
+        if i4 != 1 goto label5;
+
+        staticinvoke <sun.security.util.ObjectIdentifier: void checkSecondComponent(int,java.math.BigInteger)>(i3, r3);
+        $i9 = 40 * i3;
+        $l10 = (long) $i9;
+        $r6 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>($l10);
+        r3 = virtualinvoke r3.<java.math.BigInteger: java.math.BigInteger add(java.math.BigInteger)>($r6);
+        goto label6;
+
+     label5:
+        staticinvoke <sun.security.util.ObjectIdentifier: void checkOtherComponent(int,java.math.BigInteger)>(i4, r3);
+
+     label6:
+        $i11 = staticinvoke <sun.security.util.ObjectIdentifier: int pack7Oid(java.math.BigInteger,byte[],int)>(r3, r2, i2);
+        i2 = i2 + $i11;
+
+     label7:
+        goto label12;
+
+     label8:
+        i12 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>(r4);
+        if i4 != 0 goto label9;
+
+        staticinvoke <sun.security.util.ObjectIdentifier: void checkFirstComponent(int)>(i12);
+        i3 = i12;
+        goto label12;
+
+     label9:
+        if i4 != 1 goto label10;
+
+        staticinvoke <sun.security.util.ObjectIdentifier: void checkSecondComponent(int,int)>(i3, i12);
+        $i13 = 40 * i3;
+        i12 = i12 + $i13;
+        goto label11;
+
+     label10:
+        staticinvoke <sun.security.util.ObjectIdentifier: void checkOtherComponent(int,int)>(i4, i12);
+
+     label11:
+        $i14 = staticinvoke <sun.security.util.ObjectIdentifier: int pack7Oid(int,byte[],int)>(i12, r2, i2);
+        i2 = i2 + $i14;
+
+     label12:
+        i1 = i6 + 1;
+        i4 = i4 + 1;
+        if i6 != -1 goto label1;
+
+        staticinvoke <sun.security.util.ObjectIdentifier: void checkCount(int)>(i4);
+        $r7 = newarray (byte)[i2];
+        r0.<sun.security.util.ObjectIdentifier: byte[] encoding> = $r7;
+        $r8 = r0.<sun.security.util.ObjectIdentifier: byte[] encoding>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r2, 0, $r8, 0, i2);
+        r0.<sun.security.util.ObjectIdentifier: java.lang.String stringForm> = r1;
+
+     label13:
+        goto label16;
+
+     label14:
+        $r9 := @caughtexception;
+        r10 = $r9;
+        throw r10;
+
+     label15:
+        $r11 := @caughtexception;
+        r12 = $r11;
+        $r13 = new java.io.IOException;
+        $r14 = new java.lang.StringBuilder;
+        specialinvoke $r14.<java.lang.StringBuilder: void <init>()>();
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("ObjectIdentifier() -- Invalid format: ");
+        $r16 = virtualinvoke r12.<java.lang.Exception: java.lang.String toString()>();
+        $r17 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r16);
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r13.<java.io.IOException: void <init>(java.lang.String,java.lang.Throwable)>($r18, r12);
+        throw $r13;
+
+     label16:
+        return;
+
+        catch java.io.IOException from label0 to label13 with label14;
+        catch java.lang.Exception from label0 to label13 with label15;
+    }
+
+    public void <init>(int[]) throws java.io.IOException
+    {
+        sun.security.util.ObjectIdentifier r0;
+        int[] r1;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7;
+
+        r0 := @this: sun.security.util.ObjectIdentifier;
+        r1 := @parameter0: int[];
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.security.util.ObjectIdentifier: byte[] encoding> = null;
+        r0.<sun.security.util.ObjectIdentifier: java.lang.Object components> = null;
+        r0.<sun.security.util.ObjectIdentifier: int componentLen> = -1;
+        r0.<sun.security.util.ObjectIdentifier: boolean componentsCalculated> = 0;
+        $i1 = lengthof r1;
+        staticinvoke <sun.security.util.ObjectIdentifier: void checkCount(int)>($i1);
+        $i2 = r1[0];
+        staticinvoke <sun.security.util.ObjectIdentifier: void checkFirstComponent(int)>($i2);
+        $i3 = r1[0];
+        $i4 = r1[1];
+        staticinvoke <sun.security.util.ObjectIdentifier: void checkSecondComponent(int,int)>($i3, $i4);
+        i0 = 2;
+
+     label0:
+        $i5 = lengthof r1;
+        if i0 >= $i5 goto label1;
+
+        $i6 = r1[i0];
+        staticinvoke <sun.security.util.ObjectIdentifier: void checkOtherComponent(int,int)>(i0, $i6);
+        i0 = i0 + 1;
+        goto label0;
+
+     label1:
+        $i7 = lengthof r1;
+        specialinvoke r0.<sun.security.util.ObjectIdentifier: void init(int[],int)>(r1, $i7);
+        return;
+    }
+
+    public void <init>(sun.security.util.DerInputStream) throws java.io.IOException
+    {
+        sun.security.util.ObjectIdentifier r0;
+        sun.security.util.DerInputStream r1;
+        byte b0;
+        java.lang.StringBuilder $r2, $r4, $r5, $r6;
+        int $i1, $i2;
+        java.io.IOException $r3;
+        java.lang.String $r7;
+        byte[] $r8, $r9, $r10;
+
+        r0 := @this: sun.security.util.ObjectIdentifier;
+        r1 := @parameter0: sun.security.util.DerInputStream;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.security.util.ObjectIdentifier: byte[] encoding> = null;
+        r0.<sun.security.util.ObjectIdentifier: java.lang.Object components> = null;
+        r0.<sun.security.util.ObjectIdentifier: int componentLen> = -1;
+        r0.<sun.security.util.ObjectIdentifier: boolean componentsCalculated> = 0;
+        $i1 = virtualinvoke r1.<sun.security.util.DerInputStream: int getByte()>();
+        b0 = (byte) $i1;
+        if b0 == 6 goto label0;
+
+        $r3 = new java.io.IOException;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+        $r4 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("ObjectIdentifier() -- data isn\'t an object ID (tag = ");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(b0);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(")");
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r3.<java.io.IOException: void <init>(java.lang.String)>($r7);
+        throw $r3;
+
+     label0:
+        $i2 = virtualinvoke r1.<sun.security.util.DerInputStream: int getLength()>();
+        $r8 = newarray (byte)[$i2];
+        r0.<sun.security.util.ObjectIdentifier: byte[] encoding> = $r8;
+        $r9 = r0.<sun.security.util.ObjectIdentifier: byte[] encoding>;
+        virtualinvoke r1.<sun.security.util.DerInputStream: void getBytes(byte[])>($r9);
+        $r10 = r0.<sun.security.util.ObjectIdentifier: byte[] encoding>;
+        staticinvoke <sun.security.util.ObjectIdentifier: void check(byte[])>($r10);
+        return;
+    }
+
+    void <init>(sun.security.util.DerInputBuffer) throws java.io.IOException
+    {
+        sun.security.util.ObjectIdentifier r0;
+        sun.security.util.DerInputBuffer r1;
+        sun.security.util.DerInputStream r2, $r3;
+        int $i0;
+        byte[] $r4, $r5, $r6;
+
+        r0 := @this: sun.security.util.ObjectIdentifier;
+        r1 := @parameter0: sun.security.util.DerInputBuffer;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.security.util.ObjectIdentifier: byte[] encoding> = null;
+        r0.<sun.security.util.ObjectIdentifier: java.lang.Object components> = null;
+        r0.<sun.security.util.ObjectIdentifier: int componentLen> = -1;
+        r0.<sun.security.util.ObjectIdentifier: boolean componentsCalculated> = 0;
+        $r3 = new sun.security.util.DerInputStream;
+        specialinvoke $r3.<sun.security.util.DerInputStream: void <init>(sun.security.util.DerInputBuffer)>(r1);
+        r2 = $r3;
+        $i0 = virtualinvoke r2.<sun.security.util.DerInputStream: int available()>();
+        $r4 = newarray (byte)[$i0];
+        r0.<sun.security.util.ObjectIdentifier: byte[] encoding> = $r4;
+        $r5 = r0.<sun.security.util.ObjectIdentifier: byte[] encoding>;
+        virtualinvoke r2.<sun.security.util.DerInputStream: void getBytes(byte[])>($r5);
+        $r6 = r0.<sun.security.util.ObjectIdentifier: byte[] encoding>;
+        staticinvoke <sun.security.util.ObjectIdentifier: void check(byte[])>($r6);
+        return;
+    }
+
+    private void init(int[], int)
+    {
+        sun.security.util.ObjectIdentifier r0;
+        int[] r1;
+        int i0, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, i13, $i14, $i16, $i17, $i19, i20, $i21, $i22;
+        byte b1;
+        byte[] r2, $r6, $r7;
+        java.math.BigInteger r3, $r4, r5;
+        long $l15, $l18;
+
+        r0 := @this: sun.security.util.ObjectIdentifier;
+        r1 := @parameter0: int[];
+        i0 := @parameter1: int;
+        b1 = 0;
+        $i2 = i0 * 5;
+        $i3 = $i2 + 1;
+        r2 = newarray (byte)[$i3];
+        $i4 = r1[1];
+        $i5 = r1[0];
+        $i6 = $i5 * 40;
+        $i7 = 2147483647 - $i6;
+        if $i4 >= $i7 goto label0;
+
+        $i8 = r1[0];
+        $i9 = $i8 * 40;
+        $i10 = r1[1];
+        $i11 = $i9 + $i10;
+        $i12 = staticinvoke <sun.security.util.ObjectIdentifier: int pack7Oid(int,byte[],int)>($i11, r2, b1);
+        i13 = b1 + $i12;
+        goto label1;
+
+     label0:
+        $i14 = r1[1];
+        $l15 = (long) $i14;
+        r3 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>($l15);
+        $i16 = r1[0];
+        $i17 = $i16 * 40;
+        $l18 = (long) $i17;
+        $r4 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>($l18);
+        r5 = virtualinvoke r3.<java.math.BigInteger: java.math.BigInteger add(java.math.BigInteger)>($r4);
+        $i19 = staticinvoke <sun.security.util.ObjectIdentifier: int pack7Oid(java.math.BigInteger,byte[],int)>(r5, r2, b1);
+        i13 = b1 + $i19;
+
+     label1:
+        i20 = 2;
+
+     label2:
+        if i20 >= i0 goto label3;
+
+        $i21 = r1[i20];
+        $i22 = staticinvoke <sun.security.util.ObjectIdentifier: int pack7Oid(int,byte[],int)>($i21, r2, i13);
+        i13 = i13 + $i22;
+        i20 = i20 + 1;
+        goto label2;
+
+     label3:
+        $r6 = newarray (byte)[i13];
+        r0.<sun.security.util.ObjectIdentifier: byte[] encoding> = $r6;
+        $r7 = r0.<sun.security.util.ObjectIdentifier: byte[] encoding>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r2, 0, $r7, 0, i13);
+        return;
+    }
+
+    public static sun.security.util.ObjectIdentifier newInternal(int[])
+    {
+        int[] r0;
+        sun.security.util.ObjectIdentifier $r1;
+        java.io.IOException r2, $r3;
+        java.lang.RuntimeException $r4;
+
+        r0 := @parameter0: int[];
+
+     label0:
+        $r1 = new sun.security.util.ObjectIdentifier;
+        specialinvoke $r1.<sun.security.util.ObjectIdentifier: void <init>(int[])>(r0);
+
+     label1:
+        return $r1;
+
+     label2:
+        $r3 := @caughtexception;
+        r2 = $r3;
+        $r4 = new java.lang.RuntimeException;
+        specialinvoke $r4.<java.lang.RuntimeException: void <init>(java.lang.Throwable)>(r2);
+        throw $r4;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    void encode(sun.security.util.DerOutputStream) throws java.io.IOException
+    {
+        sun.security.util.ObjectIdentifier r0;
+        sun.security.util.DerOutputStream r1;
+        byte[] $r2;
+
+        r0 := @this: sun.security.util.ObjectIdentifier;
+        r1 := @parameter0: sun.security.util.DerOutputStream;
+        $r2 = r0.<sun.security.util.ObjectIdentifier: byte[] encoding>;
+        virtualinvoke r1.<sun.security.util.DerOutputStream: void write(byte,byte[])>(6, $r2);
+        return;
+    }
+
+    public boolean equals(sun.security.util.ObjectIdentifier)
+    {
+        sun.security.util.ObjectIdentifier r0, r1;
+        boolean $z0;
+
+        r0 := @this: sun.security.util.ObjectIdentifier;
+        r1 := @parameter0: sun.security.util.ObjectIdentifier;
+        $z0 = virtualinvoke r0.<sun.security.util.ObjectIdentifier: boolean equals(java.lang.Object)>(r1);
+        return $z0;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        sun.security.util.ObjectIdentifier r0, r2;
+        java.lang.Object r1;
+        boolean $z0, $z1;
+        byte[] $r3, $r4;
+
+        r0 := @this: sun.security.util.ObjectIdentifier;
+        r1 := @parameter0: java.lang.Object;
+        if r0 != r1 goto label0;
+
+        return 1;
+
+     label0:
+        $z0 = r1 instanceof sun.security.util.ObjectIdentifier;
+        if $z0 != 0 goto label1;
+
+        return 0;
+
+     label1:
+        r2 = (sun.security.util.ObjectIdentifier) r1;
+        $r3 = r0.<sun.security.util.ObjectIdentifier: byte[] encoding>;
+        $r4 = r2.<sun.security.util.ObjectIdentifier: byte[] encoding>;
+        $z1 = staticinvoke <java.util.Arrays: boolean equals(byte[],byte[])>($r3, $r4);
+        return $z1;
+    }
+
+    public int hashCode()
+    {
+        sun.security.util.ObjectIdentifier r0;
+        byte[] $r1;
+        int $i0;
+
+        r0 := @this: sun.security.util.ObjectIdentifier;
+        $r1 = r0.<sun.security.util.ObjectIdentifier: byte[] encoding>;
+        $i0 = staticinvoke <java.util.Arrays: int hashCode(byte[])>($r1);
+        return $i0;
+    }
+
+    private int[] toIntArray()
+    {
+        sun.security.util.ObjectIdentifier r0;
+        int i0, i1, i2, i3, $i7, $i8, $i9, $i10, i11, $i12, $i13, $i14, $i15, $i16, i17, i18, i19, i21, $i22, $i23, i24, $i25, $i26, $i27, $i28;
+        int[] r1, $r13;
+        java.math.BigInteger r2, r3, $r6, $r9, $r10, $r11;
+        byte b4, $b5, $b20;
+        byte[] $r4, $r5, $r7, $r8, $r12;
+        short $s6;
+
+        r0 := @this: sun.security.util.ObjectIdentifier;
+        $r4 = r0.<sun.security.util.ObjectIdentifier: byte[] encoding>;
+        i0 = lengthof $r4;
+        r1 = newarray (int)[20];
+        i1 = 0;
+        i2 = 0;
+        i3 = 0;
+
+     label0:
+        if i3 >= i0 goto label13;
+
+        $r5 = r0.<sun.security.util.ObjectIdentifier: byte[] encoding>;
+        $b5 = $r5[i3];
+        $s6 = $b5 & 128;
+        if $s6 != 0 goto label11;
+
+        $i7 = i3 - i2;
+        $i8 = $i7 + 1;
+        if $i8 <= 4 goto label5;
+
+        $r6 = new java.math.BigInteger;
+        $r7 = r0.<sun.security.util.ObjectIdentifier: byte[] encoding>;
+        $i9 = i3 - i2;
+        $i10 = $i9 + 1;
+        $r8 = staticinvoke <sun.security.util.ObjectIdentifier: byte[] pack(byte[],int,int,int,int)>($r7, i2, $i10, 7, 8);
+        specialinvoke $r6.<java.math.BigInteger: void <init>(byte[])>($r8);
+        r2 = $r6;
+        if i2 != 0 goto label2;
+
+        i11 = i1 + 1;
+        r1[i1] = 2;
+        $r9 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(80L);
+        r3 = virtualinvoke r2.<java.math.BigInteger: java.math.BigInteger subtract(java.math.BigInteger)>($r9);
+        $r10 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(2147483647L);
+        $i12 = virtualinvoke r3.<java.math.BigInteger: int compareTo(java.math.BigInteger)>($r10);
+        if $i12 != 1 goto label1;
+
+        return null;
+
+     label1:
+        i1 = i11 + 1;
+        $i13 = virtualinvoke r3.<java.math.BigInteger: int intValue()>();
+        r1[i11] = $i13;
+        goto label4;
+
+     label2:
+        $r11 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(2147483647L);
+        $i14 = virtualinvoke r2.<java.math.BigInteger: int compareTo(java.math.BigInteger)>($r11);
+        if $i14 != 1 goto label3;
+
+        return null;
+
+     label3:
+        $i15 = i1;
+        i1 = i1 + 1;
+        $i16 = virtualinvoke r2.<java.math.BigInteger: int intValue()>();
+        r1[$i15] = $i16;
+
+     label4:
+        goto label10;
+
+     label5:
+        i17 = 0;
+        i18 = i2;
+
+     label6:
+        if i18 > i3 goto label7;
+
+        i19 = i17 << 7;
+        $r12 = r0.<sun.security.util.ObjectIdentifier: byte[] encoding>;
+        b4 = $r12[i18];
+        $b20 = b4 & 127;
+        i17 = i19 | $b20;
+        i18 = i18 + 1;
+        goto label6;
+
+     label7:
+        if i2 != 0 goto label9;
+
+        if i17 >= 80 goto label8;
+
+        i21 = i1 + 1;
+        $i22 = i17 / 40;
+        r1[i1] = $i22;
+        i1 = i21 + 1;
+        $i23 = i17 % 40;
+        r1[i21] = $i23;
+        goto label10;
+
+     label8:
+        i24 = i1 + 1;
+        r1[i1] = 2;
+        i1 = i24 + 1;
+        $i25 = i17 - 80;
+        r1[i24] = $i25;
+        goto label10;
+
+     label9:
+        $i26 = i1;
+        i1 = i1 + 1;
+        r1[$i26] = i17;
+
+     label10:
+        i2 = i3 + 1;
+
+     label11:
+        $i27 = lengthof r1;
+        if i1 < $i27 goto label12;
+
+        $i28 = i1 + 10;
+        r1 = staticinvoke <java.util.Arrays: int[] copyOf(int[],int)>(r1, $i28);
+
+     label12:
+        i3 = i3 + 1;
+        goto label0;
+
+     label13:
+        $r13 = staticinvoke <java.util.Arrays: int[] copyOf(int[],int)>(r1, i1);
+        return $r13;
+    }
+
+    public java.lang.String toString()
+    {
+        sun.security.util.ObjectIdentifier r0;
+        java.lang.String r1;
+        int i0, i1, i2, i3, $i5, $i8, $i9, $i10, $i11, i12, i13, $i15, $i16, $i17;
+        java.lang.StringBuffer r2, $r5;
+        java.math.BigInteger r3, $r8, $r12, $r13;
+        byte b4, $b6, $b14;
+        byte[] $r4, $r6, $r9, $r10, $r16;
+        short $s7;
+
+        r0 := @this: sun.security.util.ObjectIdentifier;
+        r1 = r0.<sun.security.util.ObjectIdentifier: java.lang.String stringForm>;
+        if r1 != null goto label12;
+
+        $r4 = r0.<sun.security.util.ObjectIdentifier: byte[] encoding>;
+        i0 = lengthof $r4;
+        $r5 = new java.lang.StringBuffer;
+        $i5 = i0 * 4;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>(int)>($i5);
+        r2 = $r5;
+        i1 = 0;
+        i2 = 0;
+
+     label0:
+        if i2 >= i0 goto label11;
+
+        $r6 = r0.<sun.security.util.ObjectIdentifier: byte[] encoding>;
+        $b6 = $r6[i2];
+        $s7 = $b6 & 128;
+        if $s7 != 0 goto label10;
+
+        if i1 == 0 goto label1;
+
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(46);
+
+     label1:
+        $i8 = i2 - i1;
+        $i9 = $i8 + 1;
+        if $i9 <= 4 goto label4;
+
+        $r8 = new java.math.BigInteger;
+        $r9 = r0.<sun.security.util.ObjectIdentifier: byte[] encoding>;
+        $i10 = i2 - i1;
+        $i11 = $i10 + 1;
+        $r10 = staticinvoke <sun.security.util.ObjectIdentifier: byte[] pack(byte[],int,int,int,int)>($r9, i1, $i11, 7, 8);
+        specialinvoke $r8.<java.math.BigInteger: void <init>(byte[])>($r10);
+        r3 = $r8;
+        if i1 != 0 goto label2;
+
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("2.");
+        $r12 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(80L);
+        $r13 = virtualinvoke r3.<java.math.BigInteger: java.math.BigInteger subtract(java.math.BigInteger)>($r12);
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r13);
+        goto label3;
+
+     label2:
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(r3);
+
+     label3:
+        goto label9;
+
+     label4:
+        i12 = 0;
+        i3 = i1;
+
+     label5:
+        if i3 > i2 goto label6;
+
+        i13 = i12 << 7;
+        $r16 = r0.<sun.security.util.ObjectIdentifier: byte[] encoding>;
+        b4 = $r16[i3];
+        $b14 = b4 & 127;
+        i12 = i13 | $b14;
+        i3 = i3 + 1;
+        goto label5;
+
+     label6:
+        if i1 != 0 goto label8;
+
+        if i12 >= 80 goto label7;
+
+        $i15 = i12 / 40;
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i15);
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(46);
+        $i16 = i12 % 40;
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i16);
+        goto label9;
+
+     label7:
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("2.");
+        $i17 = i12 - 80;
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i17);
+        goto label9;
+
+     label8:
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(i12);
+
+     label9:
+        i1 = i2 + 1;
+
+     label10:
+        i2 = i2 + 1;
+        goto label0;
+
+     label11:
+        r1 = virtualinvoke r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        r0.<sun.security.util.ObjectIdentifier: java.lang.String stringForm> = r1;
+
+     label12:
+        return r1;
+    }
+
+    private static byte[] pack(byte[], int, int, int, int)
+    {
+        byte[] r0, r1, $r5;
+        int i0, i1, i2, i3, i4, i5, i6, i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i21, $i22, $i24, $i25, $i26, $i27, $i28, $i29, $i30, $i31, $i32, $i33, $i34, $i35, $i36;
+        boolean $z0, $z1;
+        java.lang.AssertionError $r2, $r3;
+        java.lang.Object $r4;
+        byte $b20, $b23, $b37;
+
+        r0 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        i2 := @parameter3: int;
+        i3 := @parameter4: int;
+        $z0 = <sun.security.util.ObjectIdentifier: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label1;
+
+        if i2 <= 0 goto label0;
+
+        if i2 <= 8 goto label1;
+
+     label0:
+        $r2 = new java.lang.AssertionError;
+        specialinvoke $r2.<java.lang.AssertionError: void <init>(java.lang.Object)>("input NUB must be between 1 and 8");
+        throw $r2;
+
+     label1:
+        $z1 = <sun.security.util.ObjectIdentifier: boolean $assertionsDisabled>;
+        if $z1 != 0 goto label3;
+
+        if i3 <= 0 goto label2;
+
+        if i3 <= 8 goto label3;
+
+     label2:
+        $r3 = new java.lang.AssertionError;
+        specialinvoke $r3.<java.lang.AssertionError: void <init>(java.lang.Object)>("output NUB must be between 1 and 8");
+        throw $r3;
+
+     label3:
+        if i2 != i3 goto label4;
+
+        $r4 = virtualinvoke r0.<java.lang.Object: java.lang.Object clone()>();
+        $r5 = (byte[]) $r4;
+        return $r5;
+
+     label4:
+        i4 = i1 * i2;
+        $i8 = i4 + i3;
+        $i9 = $i8 - 1;
+        $i10 = $i9 / i3;
+        r1 = newarray (byte)[$i10];
+        i5 = 0;
+        $i11 = i4 + i3;
+        $i12 = $i11 - 1;
+        $i13 = $i12 / i3;
+        $i14 = $i13 * i3;
+        i6 = $i14 - i4;
+
+     label5:
+        if i5 >= i4 goto label7;
+
+        $i15 = i5 % i2;
+        i7 = i2 - $i15;
+        $i16 = i6 % i3;
+        $i17 = i3 - $i16;
+        if i7 <= $i17 goto label6;
+
+        $i18 = i6 % i3;
+        i7 = i3 - $i18;
+
+     label6:
+        $i19 = i6 / i3;
+        $b20 = r1[$i19];
+        $i21 = i5 / i2;
+        $i22 = i0 + $i21;
+        $b23 = r0[$i22];
+        $i24 = $b23 + 256;
+        $i25 = i5 % i2;
+        $i26 = i2 - $i25;
+        $i27 = $i26 - i7;
+        $i28 = $i24 >> $i27;
+        $i29 = 1 << i7;
+        $i30 = $i29 - 1;
+        $i31 = $i28 & $i30;
+        $i32 = i6 % i3;
+        $i33 = i3 - $i32;
+        $i34 = $i33 - i7;
+        $i35 = $i31 << $i34;
+        $i36 = $b20 | $i35;
+        $b37 = (byte) $i36;
+        r1[$i19] = $b37;
+        i5 = i5 + i7;
+        i6 = i6 + i7;
+        goto label5;
+
+     label7:
+        return r1;
+    }
+
+    private static int pack7Oid(byte[], int, int, byte[], int)
+    {
+        byte[] r0, r1, r2;
+        int i0, i1, i2, i3, i4, $i5, $i6, $i12, $i13, $i14, $i15;
+        byte $b7, $b9, $b11;
+        short $s10;
+
+        r0 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        r1 := @parameter3: byte[];
+        i2 := @parameter4: int;
+        r2 = staticinvoke <sun.security.util.ObjectIdentifier: byte[] pack(byte[],int,int,int,int)>(r0, i0, i1, 8, 7);
+        $i5 = lengthof r2;
+        i3 = $i5 - 1;
+        $i6 = lengthof r2;
+        i4 = $i6 - 2;
+
+     label0:
+        if i4 < 0 goto label2;
+
+        $b7 = r2[i4];
+        if $b7 == 0 goto label1;
+
+        i3 = i4;
+
+     label1:
+        $b9 = r2[i4];
+        $s10 = $b9 | 128;
+        $b11 = (byte) $s10;
+        r2[i4] = $b11;
+        i4 = i4 + -1;
+        goto label0;
+
+     label2:
+        $i12 = lengthof r2;
+        $i13 = $i12 - i3;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r2, i3, r1, i2, $i13);
+        $i14 = lengthof r2;
+        $i15 = $i14 - i3;
+        return $i15;
+    }
+
+    private static int pack8(byte[], int, int, byte[], int)
+    {
+        byte[] r0, r1, r2;
+        int i0, i1, i2, i3, i4, $i5, $i6, $i8, $i9, $i10, $i11;
+        byte $b7;
+
+        r0 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        r1 := @parameter3: byte[];
+        i2 := @parameter4: int;
+        r2 = staticinvoke <sun.security.util.ObjectIdentifier: byte[] pack(byte[],int,int,int,int)>(r0, i0, i1, 7, 8);
+        $i5 = lengthof r2;
+        i3 = $i5 - 1;
+        $i6 = lengthof r2;
+        i4 = $i6 - 2;
+
+     label0:
+        if i4 < 0 goto label2;
+
+        $b7 = r2[i4];
+        if $b7 == 0 goto label1;
+
+        i3 = i4;
+
+     label1:
+        i4 = i4 + -1;
+        goto label0;
+
+     label2:
+        $i8 = lengthof r2;
+        $i9 = $i8 - i3;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r2, i3, r1, i2, $i9);
+        $i10 = lengthof r2;
+        $i11 = $i10 - i3;
+        return $i11;
+    }
+
+    private static int pack7Oid(int, byte[], int)
+    {
+        int i0, i1, $i2, $i4, $i6, $i9;
+        byte[] r0, r1;
+        byte $b3, $b5, $b7, $b8;
+
+        i0 := @parameter0: int;
+        r0 := @parameter1: byte[];
+        i1 := @parameter2: int;
+        r1 = newarray (byte)[4];
+        $i2 = i0 >> 24;
+        $b3 = (byte) $i2;
+        r1[0] = $b3;
+        $i4 = i0 >> 16;
+        $b5 = (byte) $i4;
+        r1[1] = $b5;
+        $i6 = i0 >> 8;
+        $b7 = (byte) $i6;
+        r1[2] = $b7;
+        $b8 = (byte) i0;
+        r1[3] = $b8;
+        $i9 = staticinvoke <sun.security.util.ObjectIdentifier: int pack7Oid(byte[],int,int,byte[],int)>(r1, 0, 4, r0, i1);
+        return $i9;
+    }
+
+    private static int pack7Oid(java.math.BigInteger, byte[], int)
+    {
+        java.math.BigInteger r0;
+        byte[] r1, r2;
+        int i0, $i1, $i2;
+
+        r0 := @parameter0: java.math.BigInteger;
+        r1 := @parameter1: byte[];
+        i0 := @parameter2: int;
+        r2 = virtualinvoke r0.<java.math.BigInteger: byte[] toByteArray()>();
+        $i1 = lengthof r2;
+        $i2 = staticinvoke <sun.security.util.ObjectIdentifier: int pack7Oid(byte[],int,int,byte[],int)>(r2, 0, $i1, r1, i0);
+        return $i2;
+    }
+
+    private static void check(byte[]) throws java.io.IOException
+    {
+        byte[] r0;
+        int i0, i1, $i2, $i6;
+        byte $b3, $b5, $b7;
+        short $s4, $s8;
+        java.io.IOException $r1, $r2;
+
+        r0 := @parameter0: byte[];
+        i0 = lengthof r0;
+        if i0 < 1 goto label0;
+
+        $i2 = i0 - 1;
+        $b3 = r0[$i2];
+        $s4 = $b3 & 128;
+        if $s4 == 0 goto label1;
+
+     label0:
+        $r1 = new java.io.IOException;
+        specialinvoke $r1.<java.io.IOException: void <init>(java.lang.String)>("ObjectIdentifier() -- Invalid DER encoding, not ended");
+        throw $r1;
+
+     label1:
+        i1 = 0;
+
+     label2:
+        if i1 >= i0 goto label5;
+
+        $b5 = r0[i1];
+        if $b5 != -128 goto label4;
+
+        if i1 == 0 goto label3;
+
+        $i6 = i1 - 1;
+        $b7 = r0[$i6];
+        $s8 = $b7 & 128;
+        if $s8 != 0 goto label4;
+
+     label3:
+        $r2 = new java.io.IOException;
+        specialinvoke $r2.<java.io.IOException: void <init>(java.lang.String)>("ObjectIdentifier() -- Invalid DER encoding, useless extra octet detected");
+        throw $r2;
+
+     label4:
+        i1 = i1 + 1;
+        goto label2;
+
+     label5:
+        return;
+    }
+
+    private static void checkCount(int) throws java.io.IOException
+    {
+        int i0;
+        java.io.IOException $r0;
+
+        i0 := @parameter0: int;
+        if i0 >= 2 goto label0;
+
+        $r0 = new java.io.IOException;
+        specialinvoke $r0.<java.io.IOException: void <init>(java.lang.String)>("ObjectIdentifier() -- Must be at least two oid components ");
+        throw $r0;
+
+     label0:
+        return;
+    }
+
+    private static void checkFirstComponent(int) throws java.io.IOException
+    {
+        int i0;
+        java.io.IOException $r0;
+
+        i0 := @parameter0: int;
+        if i0 < 0 goto label0;
+
+        if i0 <= 2 goto label1;
+
+     label0:
+        $r0 = new java.io.IOException;
+        specialinvoke $r0.<java.io.IOException: void <init>(java.lang.String)>("ObjectIdentifier() -- First oid component is invalid ");
+        throw $r0;
+
+     label1:
+        return;
+    }
+
+    private static void checkFirstComponent(java.math.BigInteger) throws java.io.IOException
+    {
+        java.math.BigInteger r0, $r1;
+        int $i0, $i1;
+        java.io.IOException $r2;
+
+        r0 := @parameter0: java.math.BigInteger;
+        $i0 = virtualinvoke r0.<java.math.BigInteger: int signum()>();
+        if $i0 == -1 goto label0;
+
+        $r1 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(2L);
+        $i1 = virtualinvoke r0.<java.math.BigInteger: int compareTo(java.math.BigInteger)>($r1);
+        if $i1 != 1 goto label1;
+
+     label0:
+        $r2 = new java.io.IOException;
+        specialinvoke $r2.<java.io.IOException: void <init>(java.lang.String)>("ObjectIdentifier() -- First oid component is invalid ");
+        throw $r2;
+
+     label1:
+        return;
+    }
+
+    private static void checkSecondComponent(int, int) throws java.io.IOException
+    {
+        int i0, i1;
+        java.io.IOException $r0;
+
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        if i1 < 0 goto label0;
+
+        if i0 == 2 goto label1;
+
+        if i1 <= 39 goto label1;
+
+     label0:
+        $r0 = new java.io.IOException;
+        specialinvoke $r0.<java.io.IOException: void <init>(java.lang.String)>("ObjectIdentifier() -- Second oid component is invalid ");
+        throw $r0;
+
+     label1:
+        return;
+    }
+
+    private static void checkSecondComponent(int, java.math.BigInteger) throws java.io.IOException
+    {
+        int i0, $i1, $i2;
+        java.math.BigInteger r0, $r1;
+        java.io.IOException $r2;
+
+        i0 := @parameter0: int;
+        r0 := @parameter1: java.math.BigInteger;
+        $i1 = virtualinvoke r0.<java.math.BigInteger: int signum()>();
+        if $i1 == -1 goto label0;
+
+        if i0 == 2 goto label1;
+
+        $r1 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(39L);
+        $i2 = virtualinvoke r0.<java.math.BigInteger: int compareTo(java.math.BigInteger)>($r1);
+        if $i2 != 1 goto label1;
+
+     label0:
+        $r2 = new java.io.IOException;
+        specialinvoke $r2.<java.io.IOException: void <init>(java.lang.String)>("ObjectIdentifier() -- Second oid component is invalid ");
+        throw $r2;
+
+     label1:
+        return;
+    }
+
+    private static void checkOtherComponent(int, int) throws java.io.IOException
+    {
+        int i0, i1, $i2;
+        java.lang.StringBuilder $r0, $r2, $r3, $r4;
+        java.io.IOException $r1;
+        java.lang.String $r5;
+
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        if i1 >= 0 goto label0;
+
+        $r1 = new java.io.IOException;
+        $r0 = new java.lang.StringBuilder;
+        specialinvoke $r0.<java.lang.StringBuilder: void <init>()>();
+        $r2 = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("ObjectIdentifier() -- oid component #");
+        $i2 = i0 + 1;
+        $r3 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i2);
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" must be non-negative ");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r1.<java.io.IOException: void <init>(java.lang.String)>($r5);
+        throw $r1;
+
+     label0:
+        return;
+    }
+
+    private static void checkOtherComponent(int, java.math.BigInteger) throws java.io.IOException
+    {
+        int i0, $i1, $i2;
+        java.math.BigInteger r0;
+        java.lang.StringBuilder $r1, $r3, $r4, $r5;
+        java.io.IOException $r2;
+        java.lang.String $r6;
+
+        i0 := @parameter0: int;
+        r0 := @parameter1: java.math.BigInteger;
+        $i1 = virtualinvoke r0.<java.math.BigInteger: int signum()>();
+        if $i1 != -1 goto label0;
+
+        $r2 = new java.io.IOException;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r3 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("ObjectIdentifier() -- oid component #");
+        $i2 = i0 + 1;
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i2);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" must be non-negative ");
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r2.<java.io.IOException: void <init>(java.lang.String)>($r6);
+        throw $r2;
+
+     label0:
+        return;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        boolean $z0, $z1;
+
+        $r0 = class "sun/security/util/ObjectIdentifier";
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        <sun.security.util.ObjectIdentifier: boolean $assertionsDisabled> = $z1;
+        return;
+    }
+}

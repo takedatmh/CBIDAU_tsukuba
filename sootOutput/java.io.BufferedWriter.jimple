@@ -1,0 +1,503 @@
+public class java.io.BufferedWriter extends java.io.Writer
+{
+    private java.io.Writer out;
+    private char[] cb;
+    private int nChars;
+    private int nextChar;
+    private static int defaultCharBufferSize;
+    private java.lang.String lineSeparator;
+
+    public void <init>(java.io.Writer)
+    {
+        java.io.BufferedWriter r0;
+        java.io.Writer r1;
+        int $i0;
+
+        r0 := @this: java.io.BufferedWriter;
+        r1 := @parameter0: java.io.Writer;
+        $i0 = <java.io.BufferedWriter: int defaultCharBufferSize>;
+        specialinvoke r0.<java.io.BufferedWriter: void <init>(java.io.Writer,int)>(r1, $i0);
+        return;
+    }
+
+    public void <init>(java.io.Writer, int)
+    {
+        java.io.BufferedWriter r0;
+        java.io.Writer r1;
+        int i0;
+        java.lang.IllegalArgumentException $r2;
+        char[] $r3;
+        sun.security.action.GetPropertyAction $r4;
+        java.lang.Object $r5;
+        java.lang.String $r6;
+
+        r0 := @this: java.io.BufferedWriter;
+        r1 := @parameter0: java.io.Writer;
+        i0 := @parameter1: int;
+        specialinvoke r0.<java.io.Writer: void <init>(java.lang.Object)>(r1);
+        if i0 > 0 goto label0;
+
+        $r2 = new java.lang.IllegalArgumentException;
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Buffer size <= 0");
+        throw $r2;
+
+     label0:
+        r0.<java.io.BufferedWriter: java.io.Writer out> = r1;
+        $r3 = newarray (char)[i0];
+        r0.<java.io.BufferedWriter: char[] cb> = $r3;
+        r0.<java.io.BufferedWriter: int nChars> = i0;
+        r0.<java.io.BufferedWriter: int nextChar> = 0;
+        $r4 = new sun.security.action.GetPropertyAction;
+        specialinvoke $r4.<sun.security.action.GetPropertyAction: void <init>(java.lang.String)>("line.separator");
+        $r5 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r4);
+        $r6 = (java.lang.String) $r5;
+        r0.<java.io.BufferedWriter: java.lang.String lineSeparator> = $r6;
+        return;
+    }
+
+    private void ensureOpen() throws java.io.IOException
+    {
+        java.io.BufferedWriter r0;
+        java.io.Writer $r1;
+        java.io.IOException $r2;
+
+        r0 := @this: java.io.BufferedWriter;
+        $r1 = r0.<java.io.BufferedWriter: java.io.Writer out>;
+        if $r1 != null goto label0;
+
+        $r2 = new java.io.IOException;
+        specialinvoke $r2.<java.io.IOException: void <init>(java.lang.String)>("Stream closed");
+        throw $r2;
+
+     label0:
+        return;
+    }
+
+    void flushBuffer() throws java.io.IOException
+    {
+        java.io.BufferedWriter r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r6;
+        int $i0, $i1;
+        java.io.Writer $r4;
+        char[] $r5;
+
+        r0 := @this: java.io.BufferedWriter;
+        $r3 = r0.<java.io.BufferedWriter: java.lang.Object lock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        specialinvoke r0.<java.io.BufferedWriter: void ensureOpen()>();
+        $i0 = r0.<java.io.BufferedWriter: int nextChar>;
+        if $i0 != 0 goto label2;
+
+        exitmonitor r1;
+
+     label1:
+        return;
+
+     label2:
+        $r4 = r0.<java.io.BufferedWriter: java.io.Writer out>;
+        $r5 = r0.<java.io.BufferedWriter: char[] cb>;
+        $i1 = r0.<java.io.BufferedWriter: int nextChar>;
+        virtualinvoke $r4.<java.io.Writer: void write(char[],int,int)>($r5, 0, $i1);
+        r0.<java.io.BufferedWriter: int nextChar> = 0;
+        exitmonitor r1;
+
+     label3:
+        goto label7;
+
+     label4:
+        $r6 := @caughtexception;
+
+     label5:
+        r2 = $r6;
+        exitmonitor r1;
+
+     label6:
+        throw r2;
+
+     label7:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label4;
+        catch java.lang.Throwable from label2 to label3 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+    }
+
+    public void write(int) throws java.io.IOException
+    {
+        java.io.BufferedWriter r0;
+        int i0, $i1, $i2, $i3, $i4;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r6;
+        char[] $r4;
+        char $c5;
+
+        r0 := @this: java.io.BufferedWriter;
+        i0 := @parameter0: int;
+        $r3 = r0.<java.io.BufferedWriter: java.lang.Object lock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        specialinvoke r0.<java.io.BufferedWriter: void ensureOpen()>();
+        $i2 = r0.<java.io.BufferedWriter: int nextChar>;
+        $i3 = r0.<java.io.BufferedWriter: int nChars>;
+        if $i2 < $i3 goto label1;
+
+        virtualinvoke r0.<java.io.BufferedWriter: void flushBuffer()>();
+
+     label1:
+        $r4 = r0.<java.io.BufferedWriter: char[] cb>;
+        $i1 = r0.<java.io.BufferedWriter: int nextChar>;
+        $i4 = $i1 + 1;
+        r0.<java.io.BufferedWriter: int nextChar> = $i4;
+        $c5 = (char) i0;
+        $r4[$i1] = $c5;
+        exitmonitor r1;
+
+     label2:
+        goto label6;
+
+     label3:
+        $r6 := @caughtexception;
+
+     label4:
+        r2 = $r6;
+        exitmonitor r1;
+
+     label5:
+        throw r2;
+
+     label6:
+        return;
+
+        catch java.lang.Throwable from label0 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    private int min(int, int)
+    {
+        java.io.BufferedWriter r0;
+        int i0, i1;
+
+        r0 := @this: java.io.BufferedWriter;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        if i0 >= i1 goto label0;
+
+        return i0;
+
+     label0:
+        return i1;
+    }
+
+    public void write(char[], int, int) throws java.io.IOException
+    {
+        java.io.BufferedWriter r0;
+        char[] r1, $r7;
+        int i0, i1, i2, i3, i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18;
+        java.lang.Object r2, $r4;
+        java.lang.Throwable r3, $r9;
+        java.lang.IndexOutOfBoundsException $r5;
+        java.io.Writer $r6;
+
+        r0 := @this: java.io.BufferedWriter;
+        r1 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        $r4 = r0.<java.io.BufferedWriter: java.lang.Object lock>;
+        r2 = $r4;
+        entermonitor $r4;
+
+     label0:
+        specialinvoke r0.<java.io.BufferedWriter: void ensureOpen()>();
+        if i0 < 0 goto label1;
+
+        $i5 = lengthof r1;
+        if i0 > $i5 goto label1;
+
+        if i1 < 0 goto label1;
+
+        $i6 = i0 + i1;
+        $i7 = lengthof r1;
+        if $i6 > $i7 goto label1;
+
+        $i8 = i0 + i1;
+        if $i8 >= 0 goto label2;
+
+     label1:
+        $r5 = new java.lang.IndexOutOfBoundsException;
+        specialinvoke $r5.<java.lang.IndexOutOfBoundsException: void <init>()>();
+        throw $r5;
+
+     label2:
+        if i1 != 0 goto label4;
+
+        exitmonitor r2;
+
+     label3:
+        return;
+
+     label4:
+        $i9 = r0.<java.io.BufferedWriter: int nChars>;
+        if i1 < $i9 goto label6;
+
+        virtualinvoke r0.<java.io.BufferedWriter: void flushBuffer()>();
+        $r6 = r0.<java.io.BufferedWriter: java.io.Writer out>;
+        virtualinvoke $r6.<java.io.Writer: void write(char[],int,int)>(r1, i0, i1);
+        exitmonitor r2;
+
+     label5:
+        return;
+
+     label6:
+        i2 = i0;
+        i3 = i0 + i1;
+
+     label7:
+        if i2 >= i3 goto label9;
+
+        $i10 = r0.<java.io.BufferedWriter: int nChars>;
+        $i11 = r0.<java.io.BufferedWriter: int nextChar>;
+        $i12 = $i10 - $i11;
+        $i13 = i3 - i2;
+        i4 = specialinvoke r0.<java.io.BufferedWriter: int min(int,int)>($i12, $i13);
+        $r7 = r0.<java.io.BufferedWriter: char[] cb>;
+        $i14 = r0.<java.io.BufferedWriter: int nextChar>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r1, i2, $r7, $i14, i4);
+        i2 = i2 + i4;
+        $i15 = r0.<java.io.BufferedWriter: int nextChar>;
+        $i16 = $i15 + i4;
+        r0.<java.io.BufferedWriter: int nextChar> = $i16;
+        $i17 = r0.<java.io.BufferedWriter: int nextChar>;
+        $i18 = r0.<java.io.BufferedWriter: int nChars>;
+        if $i17 < $i18 goto label8;
+
+        virtualinvoke r0.<java.io.BufferedWriter: void flushBuffer()>();
+
+     label8:
+        goto label7;
+
+     label9:
+        exitmonitor r2;
+
+     label10:
+        goto label14;
+
+     label11:
+        $r9 := @caughtexception;
+
+     label12:
+        r3 = $r9;
+        exitmonitor r2;
+
+     label13:
+        throw r3;
+
+     label14:
+        return;
+
+        catch java.lang.Throwable from label0 to label3 with label11;
+        catch java.lang.Throwable from label4 to label5 with label11;
+        catch java.lang.Throwable from label6 to label10 with label11;
+        catch java.lang.Throwable from label12 to label13 with label11;
+    }
+
+    public void write(java.lang.String, int, int) throws java.io.IOException
+    {
+        java.io.BufferedWriter r0;
+        java.lang.String r1;
+        int i0, i1, i2, i3, i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14;
+        java.lang.Object r2, $r4;
+        java.lang.Throwable r3, $r7;
+        char[] $r5;
+
+        r0 := @this: java.io.BufferedWriter;
+        r1 := @parameter0: java.lang.String;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        $r4 = r0.<java.io.BufferedWriter: java.lang.Object lock>;
+        r2 = $r4;
+        entermonitor $r4;
+
+     label0:
+        specialinvoke r0.<java.io.BufferedWriter: void ensureOpen()>();
+        i2 = i0;
+        i3 = i0 + i1;
+
+     label1:
+        if i2 >= i3 goto label3;
+
+        $i5 = r0.<java.io.BufferedWriter: int nChars>;
+        $i6 = r0.<java.io.BufferedWriter: int nextChar>;
+        $i7 = $i5 - $i6;
+        $i8 = i3 - i2;
+        i4 = specialinvoke r0.<java.io.BufferedWriter: int min(int,int)>($i7, $i8);
+        $i9 = i2 + i4;
+        $r5 = r0.<java.io.BufferedWriter: char[] cb>;
+        $i10 = r0.<java.io.BufferedWriter: int nextChar>;
+        virtualinvoke r1.<java.lang.String: void getChars(int,int,char[],int)>(i2, $i9, $r5, $i10);
+        i2 = i2 + i4;
+        $i11 = r0.<java.io.BufferedWriter: int nextChar>;
+        $i12 = $i11 + i4;
+        r0.<java.io.BufferedWriter: int nextChar> = $i12;
+        $i13 = r0.<java.io.BufferedWriter: int nextChar>;
+        $i14 = r0.<java.io.BufferedWriter: int nChars>;
+        if $i13 < $i14 goto label2;
+
+        virtualinvoke r0.<java.io.BufferedWriter: void flushBuffer()>();
+
+     label2:
+        goto label1;
+
+     label3:
+        exitmonitor r2;
+
+     label4:
+        goto label8;
+
+     label5:
+        $r7 := @caughtexception;
+
+     label6:
+        r3 = $r7;
+        exitmonitor r2;
+
+     label7:
+        throw r3;
+
+     label8:
+        return;
+
+        catch java.lang.Throwable from label0 to label4 with label5;
+        catch java.lang.Throwable from label6 to label7 with label5;
+    }
+
+    public void newLine() throws java.io.IOException
+    {
+        java.io.BufferedWriter r0;
+        java.lang.String $r1;
+
+        r0 := @this: java.io.BufferedWriter;
+        $r1 = r0.<java.io.BufferedWriter: java.lang.String lineSeparator>;
+        virtualinvoke r0.<java.io.BufferedWriter: void write(java.lang.String)>($r1);
+        return;
+    }
+
+    public void flush() throws java.io.IOException
+    {
+        java.io.BufferedWriter r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r5;
+        java.io.Writer $r4;
+
+        r0 := @this: java.io.BufferedWriter;
+        $r3 = r0.<java.io.BufferedWriter: java.lang.Object lock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        virtualinvoke r0.<java.io.BufferedWriter: void flushBuffer()>();
+        $r4 = r0.<java.io.BufferedWriter: java.io.Writer out>;
+        virtualinvoke $r4.<java.io.Writer: void flush()>();
+        exitmonitor r1;
+
+     label1:
+        goto label5;
+
+     label2:
+        $r5 := @caughtexception;
+
+     label3:
+        r2 = $r5;
+        exitmonitor r1;
+
+     label4:
+        throw r2;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    public void close() throws java.io.IOException
+    {
+        java.io.BufferedWriter r0;
+        java.lang.Object r1, $r4;
+        java.lang.Throwable r2, r3, $r7, $r9;
+        java.io.Writer $r5, $r6, $r8;
+
+        r0 := @this: java.io.BufferedWriter;
+        $r4 = r0.<java.io.BufferedWriter: java.lang.Object lock>;
+        r1 = $r4;
+        entermonitor $r4;
+
+     label0:
+        $r5 = r0.<java.io.BufferedWriter: java.io.Writer out>;
+        if $r5 != null goto label2;
+
+        exitmonitor r1;
+
+     label1:
+        return;
+
+     label2:
+        virtualinvoke r0.<java.io.BufferedWriter: void flushBuffer()>();
+
+     label3:
+        $r6 = r0.<java.io.BufferedWriter: java.io.Writer out>;
+        virtualinvoke $r6.<java.io.Writer: void close()>();
+        r0.<java.io.BufferedWriter: java.io.Writer out> = null;
+        r0.<java.io.BufferedWriter: char[] cb> = null;
+        goto label7;
+
+     label4:
+        $r7 := @caughtexception;
+
+     label5:
+        r2 = $r7;
+
+     label6:
+        $r8 = r0.<java.io.BufferedWriter: java.io.Writer out>;
+        virtualinvoke $r8.<java.io.Writer: void close()>();
+        r0.<java.io.BufferedWriter: java.io.Writer out> = null;
+        r0.<java.io.BufferedWriter: char[] cb> = null;
+        throw r2;
+
+     label7:
+        exitmonitor r1;
+
+     label8:
+        goto label12;
+
+     label9:
+        $r9 := @caughtexception;
+
+     label10:
+        r3 = $r9;
+        exitmonitor r1;
+
+     label11:
+        throw r3;
+
+     label12:
+        return;
+
+        catch java.lang.Throwable from label2 to label3 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+        catch java.lang.Throwable from label0 to label1 with label9;
+        catch java.lang.Throwable from label2 to label8 with label9;
+        catch java.lang.Throwable from label10 to label11 with label9;
+    }
+
+    static void <clinit>()
+    {
+        <java.io.BufferedWriter: int defaultCharBufferSize> = 8192;
+        return;
+    }
+}

@@ -1,0 +1,1223 @@
+public final class org.apache.catalina.startup.TldConfig extends java.lang.Object implements org.apache.catalina.LifecycleListener
+{
+    private static final java.lang.String TLD_EXT;
+    private static final java.lang.String WEB_INF;
+    private static final java.lang.String WEB_INF_LIB;
+    private static volatile java.util.Set noTldJars;
+    private static final org.apache.juli.logging.Log log;
+    private static final org.apache.tomcat.util.res.StringManager sm;
+    private static org.apache.tomcat.util.digester.Digester[] tldDigesters;
+    private org.apache.catalina.Context context;
+    private org.apache.tomcat.util.digester.Digester tldDigester;
+    private java.util.Set taglibUris;
+    private java.util.Set webxmlTaglibUris;
+    private java.util.ArrayList listeners;
+
+    static void <clinit>()
+    {
+        java.lang.StringBuilder r0, $r5;
+        java.lang.String r1, $r6, $r9;
+        org.apache.juli.logging.Log $r2;
+        org.apache.tomcat.util.res.StringManager $r3;
+        org.apache.tomcat.util.digester.Digester[] $r4;
+        int $i0, $i1, $i2;
+
+        <org.apache.catalina.startup.TldConfig: java.util.Set noTldJars> = null;
+        $r2 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/catalina/startup/TldConfig");
+        <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log> = $r2;
+        $r3 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String)>("org.apache.catalina.startup");
+        <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.res.StringManager sm> = $r3;
+        $r4 = newarray (org.apache.tomcat.util.digester.Digester)[4];
+        <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.digester.Digester[] tldDigesters> = $r4;
+        $r5 = new java.lang.StringBuilder;
+        $r6 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String,java.lang.String)>("tomcat.util.scan.DefaultJarScanner.jarsToSkip", "");
+        specialinvoke $r5.<java.lang.StringBuilder: void <init>(java.lang.String)>($r6);
+        r0 = $r5;
+        r1 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String,java.lang.String)>("org.apache.catalina.startup.TldConfig.jarsToSkip", "");
+        $i0 = virtualinvoke r1.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label1;
+
+        $i1 = virtualinvoke r0.<java.lang.StringBuilder: int length()>();
+        if $i1 <= 0 goto label0;
+
+        virtualinvoke r0.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(44);
+
+     label0:
+        virtualinvoke r0.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+
+     label1:
+        $i2 = virtualinvoke r0.<java.lang.StringBuilder: int length()>();
+        if $i2 <= 0 goto label2;
+
+        $r9 = virtualinvoke r0.<java.lang.StringBuilder: java.lang.String toString()>();
+        staticinvoke <org.apache.catalina.startup.TldConfig: void setNoTldJars(java.lang.String)>($r9);
+
+     label2:
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.catalina.startup.TldConfig r0;
+        java.util.HashSet $r1, $r2;
+        java.util.ArrayList $r3;
+
+        r0 := @this: org.apache.catalina.startup.TldConfig;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<org.apache.catalina.startup.TldConfig: org.apache.catalina.Context context> = null;
+        r0.<org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.digester.Digester tldDigester> = null;
+        $r1 = new java.util.HashSet;
+        specialinvoke $r1.<java.util.HashSet: void <init>()>();
+        r0.<org.apache.catalina.startup.TldConfig: java.util.Set taglibUris> = $r1;
+        $r2 = new java.util.HashSet;
+        specialinvoke $r2.<java.util.HashSet: void <init>()>();
+        r0.<org.apache.catalina.startup.TldConfig: java.util.Set webxmlTaglibUris> = $r2;
+        $r3 = new java.util.ArrayList;
+        specialinvoke $r3.<java.util.ArrayList: void <init>()>();
+        r0.<org.apache.catalina.startup.TldConfig: java.util.ArrayList listeners> = $r3;
+        return;
+    }
+
+    private static synchronized org.apache.tomcat.util.digester.Digester createTldDigester(boolean, boolean)
+    {
+        boolean z0, z1;
+        int i0;
+        org.apache.tomcat.util.digester.Digester r0;
+        org.apache.catalina.startup.TldRuleSet $r1;
+        org.apache.tomcat.util.digester.Digester[] $r2, $r4;
+
+        z0 := @parameter0: boolean;
+        z1 := @parameter1: boolean;
+        i0 = 0;
+        if z0 == 0 goto label0;
+
+        i0 = i0 + 1;
+
+     label0:
+        if z1 == 0 goto label1;
+
+        i0 = i0 + 2;
+
+     label1:
+        $r2 = <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.digester.Digester[] tldDigesters>;
+        r0 = $r2[i0];
+        if r0 != null goto label2;
+
+        $r1 = new org.apache.catalina.startup.TldRuleSet;
+        specialinvoke $r1.<org.apache.catalina.startup.TldRuleSet: void <init>()>();
+        r0 = staticinvoke <org.apache.tomcat.util.descriptor.DigesterFactory: org.apache.tomcat.util.digester.Digester newDigester(boolean,boolean,org.apache.tomcat.util.digester.RuleSet,boolean)>(z0, 1, $r1, z1);
+        virtualinvoke r0.<org.apache.tomcat.util.digester.Digester: javax.xml.parsers.SAXParser getParser()>();
+        $r4 = <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.digester.Digester[] tldDigesters>;
+        $r4[i0] = r0;
+
+     label2:
+        return r0;
+    }
+
+    public static synchronized void setNoTldJars(java.lang.String)
+    {
+        java.lang.String r0, r2, $r7;
+        java.util.StringTokenizer r1, $r6;
+        java.util.Set $r3, $r5, $r8;
+        java.util.HashSet $r4;
+        int $i0;
+        boolean $z1;
+
+        r0 := @parameter0: java.lang.String;
+        if r0 != null goto label0;
+
+        <org.apache.catalina.startup.TldConfig: java.util.Set noTldJars> = null;
+        goto label5;
+
+     label0:
+        $r3 = <org.apache.catalina.startup.TldConfig: java.util.Set noTldJars>;
+        if $r3 != null goto label1;
+
+        $r4 = new java.util.HashSet;
+        specialinvoke $r4.<java.util.HashSet: void <init>()>();
+        <org.apache.catalina.startup.TldConfig: java.util.Set noTldJars> = $r4;
+        goto label2;
+
+     label1:
+        $r5 = <org.apache.catalina.startup.TldConfig: java.util.Set noTldJars>;
+        interfaceinvoke $r5.<java.util.Set: void clear()>();
+
+     label2:
+        $r6 = new java.util.StringTokenizer;
+        specialinvoke $r6.<java.util.StringTokenizer: void <init>(java.lang.String,java.lang.String)>(r0, ",");
+        r1 = $r6;
+        goto label4;
+
+     label3:
+        $r7 = virtualinvoke r1.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        r2 = virtualinvoke $r7.<java.lang.String: java.lang.String trim()>();
+        $i0 = virtualinvoke r2.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label4;
+
+        $r8 = <org.apache.catalina.startup.TldConfig: java.util.Set noTldJars>;
+        interfaceinvoke $r8.<java.util.Set: boolean add(java.lang.Object)>(r2);
+
+     label4:
+        $z1 = virtualinvoke r1.<java.util.StringTokenizer: boolean hasMoreElements()>();
+        if $z1 != 0 goto label3;
+
+     label5:
+        return;
+    }
+
+    public void addTaglibUri(java.lang.String)
+    {
+        org.apache.catalina.startup.TldConfig r0;
+        java.lang.String r1;
+        java.util.Set $r2;
+
+        r0 := @this: org.apache.catalina.startup.TldConfig;
+        r1 := @parameter0: java.lang.String;
+        $r2 = r0.<org.apache.catalina.startup.TldConfig: java.util.Set taglibUris>;
+        interfaceinvoke $r2.<java.util.Set: boolean add(java.lang.Object)>(r1);
+        return;
+    }
+
+    public boolean isKnownTaglibUri(java.lang.String)
+    {
+        org.apache.catalina.startup.TldConfig r0;
+        java.lang.String r1;
+        java.util.Set $r2;
+        boolean $z0;
+
+        r0 := @this: org.apache.catalina.startup.TldConfig;
+        r1 := @parameter0: java.lang.String;
+        $r2 = r0.<org.apache.catalina.startup.TldConfig: java.util.Set taglibUris>;
+        $z0 = interfaceinvoke $r2.<java.util.Set: boolean contains(java.lang.Object)>(r1);
+        return $z0;
+    }
+
+    public boolean isKnownWebxmlTaglibUri(java.lang.String)
+    {
+        org.apache.catalina.startup.TldConfig r0;
+        java.lang.String r1;
+        java.util.Set $r2;
+        boolean $z0;
+
+        r0 := @this: org.apache.catalina.startup.TldConfig;
+        r1 := @parameter0: java.lang.String;
+        $r2 = r0.<org.apache.catalina.startup.TldConfig: java.util.Set webxmlTaglibUris>;
+        $z0 = interfaceinvoke $r2.<java.util.Set: boolean contains(java.lang.Object)>(r1);
+        return $z0;
+    }
+
+    public org.apache.catalina.Context getContext()
+    {
+        org.apache.catalina.startup.TldConfig r0;
+        org.apache.catalina.Context $r1;
+
+        r0 := @this: org.apache.catalina.startup.TldConfig;
+        $r1 = r0.<org.apache.catalina.startup.TldConfig: org.apache.catalina.Context context>;
+        return $r1;
+    }
+
+    public void setContext(org.apache.catalina.Context)
+    {
+        org.apache.catalina.startup.TldConfig r0;
+        org.apache.catalina.Context r1;
+
+        r0 := @this: org.apache.catalina.startup.TldConfig;
+        r1 := @parameter0: org.apache.catalina.Context;
+        r0.<org.apache.catalina.startup.TldConfig: org.apache.catalina.Context context> = r1;
+        return;
+    }
+
+    public void addApplicationListener(java.lang.String)
+    {
+        org.apache.catalina.startup.TldConfig r0;
+        java.lang.String r1, $r6;
+        org.apache.juli.logging.Log $r2, $r4;
+        java.lang.StringBuilder $r3, $r5;
+        boolean $z0;
+        java.util.ArrayList $r7;
+
+        r0 := @this: org.apache.catalina.startup.TldConfig;
+        r1 := @parameter0: java.lang.String;
+        $r2 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $z0 = interfaceinvoke $r2.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r4 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $r3 = new java.lang.StringBuilder;
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>(java.lang.String)>("Add tld listener ");
+        $r5 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r6);
+
+     label0:
+        $r7 = r0.<org.apache.catalina.startup.TldConfig: java.util.ArrayList listeners>;
+        virtualinvoke $r7.<java.util.ArrayList: boolean add(java.lang.Object)>(r1);
+        return;
+    }
+
+    public java.lang.String[] getTldListeners()
+    {
+        org.apache.catalina.startup.TldConfig r0;
+        java.lang.String[] r1;
+        java.util.ArrayList $r2, $r3;
+        int $i0;
+
+        r0 := @this: org.apache.catalina.startup.TldConfig;
+        $r2 = r0.<org.apache.catalina.startup.TldConfig: java.util.ArrayList listeners>;
+        $i0 = virtualinvoke $r2.<java.util.ArrayList: int size()>();
+        r1 = newarray (java.lang.String)[$i0];
+        $r3 = r0.<org.apache.catalina.startup.TldConfig: java.util.ArrayList listeners>;
+        virtualinvoke $r3.<java.util.ArrayList: java.lang.Object[] toArray(java.lang.Object[])>(r1);
+        return r1;
+    }
+
+    public void execute()
+    {
+        org.apache.catalina.startup.TldConfig r0;
+        long l0, l4, $l5;
+        org.apache.tomcat.JarScanner r1;
+        org.apache.catalina.startup.TldConfig$TldJarScannerCallback r2, $r6;
+        java.util.Set $r3;
+        java.lang.String[] r4;
+        int i1, $i2, $i3;
+        org.apache.catalina.Context $r5, $r7, $r9, $r21, $r24, $r25;
+        javax.servlet.ServletContext $r8;
+        org.apache.catalina.Loader $r10;
+        java.lang.ClassLoader $r11;
+        boolean $z0, $z1, $z2;
+        org.apache.juli.logging.Log $r12, $r15, $r16;
+        org.apache.tomcat.util.res.StringManager $r13, $r17;
+        java.lang.String $r14, $r20, $r23;
+        java.lang.Object[] $r18;
+        java.lang.Integer $r19;
+        org.apache.catalina.deploy.ApplicationListener $r22;
+        org.apache.catalina.core.StandardContext $r26;
+
+        r0 := @this: org.apache.catalina.startup.TldConfig;
+        l0 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        specialinvoke r0.<org.apache.catalina.startup.TldConfig: void tldScanWebXml()>();
+        specialinvoke r0.<org.apache.catalina.startup.TldConfig: void tldScanResourcePaths(java.lang.String)>("/WEB-INF/");
+        $r5 = r0.<org.apache.catalina.startup.TldConfig: org.apache.catalina.Context context>;
+        r1 = interfaceinvoke $r5.<org.apache.catalina.Context: org.apache.tomcat.JarScanner getJarScanner()>();
+        $r6 = new org.apache.catalina.startup.TldConfig$TldJarScannerCallback;
+        specialinvoke $r6.<org.apache.catalina.startup.TldConfig$TldJarScannerCallback: void <init>(org.apache.catalina.startup.TldConfig,org.apache.catalina.startup.TldConfig$TldJarScannerCallback)>(r0, null);
+        r2 = $r6;
+        $r7 = r0.<org.apache.catalina.startup.TldConfig: org.apache.catalina.Context context>;
+        $r8 = interfaceinvoke $r7.<org.apache.catalina.Context: javax.servlet.ServletContext getServletContext()>();
+        $r9 = r0.<org.apache.catalina.startup.TldConfig: org.apache.catalina.Context context>;
+        $r10 = interfaceinvoke $r9.<org.apache.catalina.Context: org.apache.catalina.Loader getLoader()>();
+        $r11 = interfaceinvoke $r10.<org.apache.catalina.Loader: java.lang.ClassLoader getClassLoader()>();
+        $r3 = <org.apache.catalina.startup.TldConfig: java.util.Set noTldJars>;
+        interfaceinvoke r1.<org.apache.tomcat.JarScanner: void scan(javax.servlet.ServletContext,java.lang.ClassLoader,org.apache.tomcat.JarScannerCallback,java.util.Set)>($r8, $r11, r2, $r3);
+        $z0 = staticinvoke <org.apache.catalina.startup.TldConfig$TldJarScannerCallback: boolean access$1(org.apache.catalina.startup.TldConfig$TldJarScannerCallback)>(r2);
+        if $z0 == 0 goto label0;
+
+        $r12 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $r13 = <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r14 = virtualinvoke $r13.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("tldConfig.noTldSummary");
+        interfaceinvoke $r12.<org.apache.juli.logging.Log: void info(java.lang.Object)>($r14);
+
+     label0:
+        r4 = virtualinvoke r0.<org.apache.catalina.startup.TldConfig: java.lang.String[] getTldListeners()>();
+        $r15 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $z1 = interfaceinvoke $r15.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z1 == 0 goto label1;
+
+        $r16 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $r17 = <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r18 = newarray (java.lang.Object)[1];
+        $i2 = lengthof r4;
+        $r19 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i2);
+        $r18[0] = $r19;
+        $r20 = virtualinvoke $r17.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("tldConfig.addListeners", $r18);
+        interfaceinvoke $r16.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r20);
+
+     label1:
+        i1 = 0;
+        goto label3;
+
+     label2:
+        $r21 = r0.<org.apache.catalina.startup.TldConfig: org.apache.catalina.Context context>;
+        $r22 = new org.apache.catalina.deploy.ApplicationListener;
+        $r23 = r4[i1];
+        specialinvoke $r22.<org.apache.catalina.deploy.ApplicationListener: void <init>(java.lang.String,boolean)>($r23, 1);
+        interfaceinvoke $r21.<org.apache.catalina.Context: void addApplicationListener(org.apache.catalina.deploy.ApplicationListener)>($r22);
+        i1 = i1 + 1;
+
+     label3:
+        $i3 = lengthof r4;
+        if i1 < $i3 goto label2;
+
+        l4 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        $r24 = r0.<org.apache.catalina.startup.TldConfig: org.apache.catalina.Context context>;
+        $z2 = $r24 instanceof org.apache.catalina.core.StandardContext;
+        if $z2 == 0 goto label4;
+
+        $r25 = r0.<org.apache.catalina.startup.TldConfig: org.apache.catalina.Context context>;
+        $r26 = (org.apache.catalina.core.StandardContext) $r25;
+        $l5 = l4 - l0;
+        virtualinvoke $r26.<org.apache.catalina.core.StandardContext: void setTldScanTime(long)>($l5);
+
+     label4:
+        return;
+    }
+
+    private void tldScanWebXml()
+    {
+        org.apache.catalina.startup.TldConfig r0;
+        org.apache.juli.logging.Log $r1, $r11, $r20, $r25, $r26, $r33, $r38, $r45;
+        org.apache.tomcat.util.res.StringManager $r2, $r21, $r27, $r39, $r46;
+        java.util.Collection r3;
+        java.util.Iterator r4;
+        javax.servlet.descriptor.TaglibDescriptor r5;
+        java.lang.String r6, $r12, $r19, $r23, $r24, $r29, $r30, $r35, $r37, $r41, $r42, $r48, $r49;
+        java.io.InputStream r7;
+        org.apache.tomcat.util.descriptor.XmlErrorHandler r8;
+        java.lang.Throwable r9, r10, $r50, $r51, $r52, r53, $r54, r55;
+        boolean $z0, $z1, $z2, $z3, $z6;
+        org.apache.catalina.Context $r13, $r31;
+        javax.servlet.descriptor.JspConfigDescriptor $r14;
+        java.lang.Object $r15;
+        java.lang.StringBuilder $r16, $r17;
+        java.util.Set $r18, $r34, $r36;
+        java.lang.Object[] $r22, $r28, $r40, $r47;
+        javax.servlet.ServletContext $r32;
+        java.io.IOException $r43, r44;
+
+        r0 := @this: org.apache.catalina.startup.TldConfig;
+        $r1 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.juli.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r11 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $r2 = <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r12 = virtualinvoke $r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("tldConfig.webxmlStart");
+        interfaceinvoke $r11.<org.apache.juli.logging.Log: void trace(java.lang.Object)>($r12);
+
+     label0:
+        $r13 = r0.<org.apache.catalina.startup.TldConfig: org.apache.catalina.Context context>;
+        $r14 = interfaceinvoke $r13.<org.apache.catalina.Context: javax.servlet.descriptor.JspConfigDescriptor getJspConfigDescriptor()>();
+        r3 = interfaceinvoke $r14.<javax.servlet.descriptor.JspConfigDescriptor: java.util.Collection getTaglibs()>();
+        r4 = interfaceinvoke r3.<java.util.Collection: java.util.Iterator iterator()>();
+        goto label22;
+
+     label1:
+        $r15 = interfaceinvoke r4.<java.util.Iterator: java.lang.Object next()>();
+        r5 = (javax.servlet.descriptor.TaglibDescriptor) $r15;
+        r6 = interfaceinvoke r5.<javax.servlet.descriptor.TaglibDescriptor: java.lang.String getTaglibLocation()>();
+        $z1 = virtualinvoke r6.<java.lang.String: boolean startsWith(java.lang.String)>("/");
+        if $z1 != 0 goto label2;
+
+        $r16 = new java.lang.StringBuilder;
+        specialinvoke $r16.<java.lang.StringBuilder: void <init>(java.lang.String)>("/WEB-INF/");
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r6);
+        r6 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.String toString()>();
+
+     label2:
+        $r18 = r0.<org.apache.catalina.startup.TldConfig: java.util.Set taglibUris>;
+        $r19 = interfaceinvoke r5.<javax.servlet.descriptor.TaglibDescriptor: java.lang.String getTaglibURI()>();
+        $z2 = interfaceinvoke $r18.<java.util.Set: boolean contains(java.lang.Object)>($r19);
+        if $z2 == 0 goto label3;
+
+        $r20 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $r21 = <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r22 = newarray (java.lang.Object)[2];
+        $r22[0] = r6;
+        $r23 = interfaceinvoke r5.<javax.servlet.descriptor.TaglibDescriptor: java.lang.String getTaglibURI()>();
+        $r22[1] = $r23;
+        $r24 = virtualinvoke $r21.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("tldConfig.webxmlSkip", $r22);
+        interfaceinvoke $r20.<org.apache.juli.logging.Log: void warn(java.lang.Object)>($r24);
+        goto label22;
+
+     label3:
+        $r25 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $z3 = interfaceinvoke $r25.<org.apache.juli.logging.Log: boolean isTraceEnabled()>();
+        if $z3 == 0 goto label4;
+
+        $r26 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $r27 = <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r28 = newarray (java.lang.Object)[2];
+        $r28[0] = r6;
+        $r29 = interfaceinvoke r5.<javax.servlet.descriptor.TaglibDescriptor: java.lang.String getTaglibURI()>();
+        $r28[1] = $r29;
+        $r30 = virtualinvoke $r27.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("tldConfig.webxmlAdd", $r28);
+        interfaceinvoke $r26.<org.apache.juli.logging.Log: void trace(java.lang.Object)>($r30);
+
+     label4:
+        r7 = null;
+
+     label5:
+        $r31 = r0.<org.apache.catalina.startup.TldConfig: org.apache.catalina.Context context>;
+        $r32 = interfaceinvoke $r31.<org.apache.catalina.Context: javax.servlet.ServletContext getServletContext()>();
+        r7 = interfaceinvoke $r32.<javax.servlet.ServletContext: java.io.InputStream getResourceAsStream(java.lang.String)>(r6);
+        if r7 == null goto label6;
+
+        r8 = specialinvoke r0.<org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.descriptor.XmlErrorHandler tldScanStream(java.io.InputStream)>(r7);
+        $r33 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        virtualinvoke r8.<org.apache.tomcat.util.descriptor.XmlErrorHandler: void logFindings(org.apache.juli.logging.Log,java.lang.String)>($r33, r6);
+        $r34 = r0.<org.apache.catalina.startup.TldConfig: java.util.Set taglibUris>;
+        $r35 = interfaceinvoke r5.<javax.servlet.descriptor.TaglibDescriptor: java.lang.String getTaglibURI()>();
+        interfaceinvoke $r34.<java.util.Set: boolean add(java.lang.Object)>($r35);
+        $r36 = r0.<org.apache.catalina.startup.TldConfig: java.util.Set webxmlTaglibUris>;
+        $r37 = interfaceinvoke r5.<javax.servlet.descriptor.TaglibDescriptor: java.lang.String getTaglibURI()>();
+        interfaceinvoke $r36.<java.util.Set: boolean add(java.lang.Object)>($r37);
+        goto label18;
+
+     label6:
+        $r38 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $r39 = <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r40 = newarray (java.lang.Object)[2];
+        $r40[0] = r6;
+        $r41 = interfaceinvoke r5.<javax.servlet.descriptor.TaglibDescriptor: java.lang.String getTaglibURI()>();
+        $r40[1] = $r41;
+        $r42 = virtualinvoke $r39.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("tldConfig.webxmlFailPathDoesNotExist", $r40);
+        interfaceinvoke $r38.<org.apache.juli.logging.Log: void warn(java.lang.Object)>($r42);
+
+     label7:
+        goto label18;
+
+     label8:
+        $r43 := @caughtexception;
+        r44 = $r43;
+        $r45 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $r46 = <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r47 = newarray (java.lang.Object)[2];
+        $r47[0] = r6;
+        $r48 = interfaceinvoke r5.<javax.servlet.descriptor.TaglibDescriptor: java.lang.String getTaglibURI()>();
+        $r47[1] = $r48;
+        $r49 = virtualinvoke $r46.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("tldConfig.webxmlFail", $r47);
+        interfaceinvoke $r45.<org.apache.juli.logging.Log: void warn(java.lang.Object,java.lang.Throwable)>($r49, r44);
+
+     label9:
+        if r7 == null goto label22;
+
+     label10:
+        virtualinvoke r7.<java.io.InputStream: void close()>();
+
+     label11:
+        goto label22;
+
+     label12:
+        $r50 := @caughtexception;
+        r9 = $r50;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r9);
+        goto label22;
+
+     label13:
+        $r51 := @caughtexception;
+        r10 = $r51;
+        if r7 == null goto label17;
+
+     label14:
+        virtualinvoke r7.<java.io.InputStream: void close()>();
+
+     label15:
+        goto label17;
+
+     label16:
+        $r52 := @caughtexception;
+        r53 = $r52;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r53);
+
+     label17:
+        throw r10;
+
+     label18:
+        if r7 == null goto label22;
+
+     label19:
+        virtualinvoke r7.<java.io.InputStream: void close()>();
+
+     label20:
+        goto label22;
+
+     label21:
+        $r54 := @caughtexception;
+        r55 = $r54;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r55);
+
+     label22:
+        $z6 = interfaceinvoke r4.<java.util.Iterator: boolean hasNext()>();
+        if $z6 != 0 goto label1;
+
+        return;
+
+        catch java.io.IOException from label5 to label7 with label8;
+        catch java.lang.Throwable from label10 to label11 with label12;
+        catch java.lang.Throwable from label5 to label9 with label13;
+        catch java.lang.Throwable from label14 to label15 with label16;
+        catch java.lang.Throwable from label19 to label20 with label21;
+    }
+
+    private void tldScanResourcePaths(java.lang.String)
+    {
+        org.apache.catalina.startup.TldConfig r0;
+        java.lang.String r1, r7, $r14, $r23;
+        org.apache.juli.logging.Log $r2, $r12, $r17, $r20;
+        org.apache.tomcat.util.res.StringManager $r3, $r21;
+        javax.servlet.ServletContext r4;
+        java.util.Set r5;
+        java.util.Iterator r6;
+        java.io.InputStream r8;
+        org.apache.tomcat.util.descriptor.XmlErrorHandler r9;
+        java.lang.Throwable r10, r11, $r24, $r25, $r26, r27, $r28, r29;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+        java.lang.Object[] $r13, $r22;
+        org.apache.catalina.Context $r15;
+        java.lang.Object $r16;
+        java.io.IOException $r18, r19;
+
+        r0 := @this: org.apache.catalina.startup.TldConfig;
+        r1 := @parameter0: java.lang.String;
+        $r2 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $z0 = interfaceinvoke $r2.<org.apache.juli.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r12 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $r3 = <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r13 = newarray (java.lang.Object)[1];
+        $r13[0] = r1;
+        $r14 = virtualinvoke $r3.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("tldConfig.webinfScan", $r13);
+        interfaceinvoke $r12.<org.apache.juli.logging.Log: void trace(java.lang.Object)>($r14);
+
+     label0:
+        $r15 = r0.<org.apache.catalina.startup.TldConfig: org.apache.catalina.Context context>;
+        r4 = interfaceinvoke $r15.<org.apache.catalina.Context: javax.servlet.ServletContext getServletContext()>();
+        r5 = interfaceinvoke r4.<javax.servlet.ServletContext: java.util.Set getResourcePaths(java.lang.String)>(r1);
+        if r5 == null goto label22;
+
+        r6 = interfaceinvoke r5.<java.util.Set: java.util.Iterator iterator()>();
+        goto label21;
+
+     label1:
+        $r16 = interfaceinvoke r6.<java.util.Iterator: java.lang.Object next()>();
+        r7 = (java.lang.String) $r16;
+        $z1 = virtualinvoke r7.<java.lang.String: boolean endsWith(java.lang.String)>(".tld");
+        if $z1 != 0 goto label2;
+
+        $z2 = virtualinvoke r7.<java.lang.String: boolean startsWith(java.lang.String)>("/WEB-INF/lib/");
+        if $z2 != 0 goto label21;
+
+        $z3 = virtualinvoke r7.<java.lang.String: boolean startsWith(java.lang.String)>("/WEB-INF/classes/");
+        if $z3 == 0 goto label2;
+
+        goto label21;
+
+     label2:
+        $z4 = virtualinvoke r7.<java.lang.String: boolean endsWith(java.lang.String)>(".tld");
+        if $z4 == 0 goto label20;
+
+        $z5 = virtualinvoke r7.<java.lang.String: boolean startsWith(java.lang.String)>("/WEB-INF/tags/");
+        if $z5 == 0 goto label3;
+
+        $z6 = virtualinvoke r7.<java.lang.String: boolean endsWith(java.lang.String)>("implicit.tld");
+        if $z6 != 0 goto label3;
+
+        goto label21;
+
+     label3:
+        r8 = interfaceinvoke r4.<javax.servlet.ServletContext: java.io.InputStream getResourceAsStream(java.lang.String)>(r7);
+
+     label4:
+        r9 = specialinvoke r0.<org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.descriptor.XmlErrorHandler tldScanStream(java.io.InputStream)>(r8);
+        $r17 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        virtualinvoke r9.<org.apache.tomcat.util.descriptor.XmlErrorHandler: void logFindings(org.apache.juli.logging.Log,java.lang.String)>($r17, r7);
+
+     label5:
+        goto label16;
+
+     label6:
+        $r18 := @caughtexception;
+        r19 = $r18;
+        $r20 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $r21 = <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r22 = newarray (java.lang.Object)[1];
+        $r22[0] = r7;
+        $r23 = virtualinvoke $r21.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("tldConfig.webinfFail", $r22);
+        interfaceinvoke $r20.<org.apache.juli.logging.Log: void warn(java.lang.Object,java.lang.Throwable)>($r23, r19);
+
+     label7:
+        if r8 == null goto label21;
+
+     label8:
+        virtualinvoke r8.<java.io.InputStream: void close()>();
+
+     label9:
+        goto label21;
+
+     label10:
+        $r24 := @caughtexception;
+        r10 = $r24;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r10);
+        goto label21;
+
+     label11:
+        $r25 := @caughtexception;
+        r11 = $r25;
+        if r8 == null goto label15;
+
+     label12:
+        virtualinvoke r8.<java.io.InputStream: void close()>();
+
+     label13:
+        goto label15;
+
+     label14:
+        $r26 := @caughtexception;
+        r27 = $r26;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r27);
+
+     label15:
+        throw r11;
+
+     label16:
+        if r8 == null goto label21;
+
+     label17:
+        virtualinvoke r8.<java.io.InputStream: void close()>();
+
+     label18:
+        goto label21;
+
+     label19:
+        $r28 := @caughtexception;
+        r29 = $r28;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r29);
+        goto label21;
+
+     label20:
+        specialinvoke r0.<org.apache.catalina.startup.TldConfig: void tldScanResourcePaths(java.lang.String)>(r7);
+
+     label21:
+        $z7 = interfaceinvoke r6.<java.util.Iterator: boolean hasNext()>();
+        if $z7 != 0 goto label1;
+
+     label22:
+        return;
+
+        catch java.io.IOException from label4 to label5 with label6;
+        catch java.lang.Throwable from label8 to label9 with label10;
+        catch java.lang.Throwable from label4 to label7 with label11;
+        catch java.lang.Throwable from label12 to label13 with label14;
+        catch java.lang.Throwable from label17 to label18 with label19;
+    }
+
+    private boolean tldScanDir(java.io.File)
+    {
+        org.apache.catalina.startup.TldConfig r0;
+        java.io.File r1, $r13, $r14, $r15, $r18, $r20, $r27;
+        boolean z0, $z1, $z2, $z4, $z5;
+        org.apache.tomcat.util.res.StringManager $r2, $r25, $r38;
+        java.io.File[] r3;
+        int i0, $i1;
+        java.io.FileInputStream r4, $r17;
+        org.apache.tomcat.util.descriptor.XmlErrorHandler r5;
+        java.lang.Throwable r6, r7, $r30, $r31, $r32, r33, $r34, r35;
+        org.apache.juli.logging.Log $r8, $r9, $r19, $r24, $r36, $r37;
+        java.lang.Object[] $r10, $r26, $r39;
+        java.lang.String $r11, $r12, $r16, $r21, $r28, $r29, $r40, $r41;
+        java.io.IOException $r22, r23;
+
+        r0 := @this: org.apache.catalina.startup.TldConfig;
+        r1 := @parameter0: java.io.File;
+        z0 = 0;
+        $r8 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $z1 = interfaceinvoke $r8.<org.apache.juli.logging.Log: boolean isTraceEnabled()>();
+        if $z1 == 0 goto label0;
+
+        $r9 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $r2 = <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r10 = newarray (java.lang.Object)[1];
+        $r11 = virtualinvoke r1.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r10[0] = $r11;
+        $r12 = virtualinvoke $r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("tldConfig.dirScan", $r10);
+        interfaceinvoke $r9.<org.apache.juli.logging.Log: void trace(java.lang.Object)>($r12);
+
+     label0:
+        r3 = virtualinvoke r1.<java.io.File: java.io.File[] listFiles()>();
+        if r3 == null goto label21;
+
+        i0 = 0;
+        goto label20;
+
+     label1:
+        $r13 = r3[i0];
+        $z2 = virtualinvoke $r13.<java.io.File: boolean isDirectory()>();
+        if $z2 == 0 goto label2;
+
+        $r14 = r3[i0];
+        specialinvoke r0.<org.apache.catalina.startup.TldConfig: boolean tldScanDir(java.io.File)>($r14);
+        goto label19;
+
+     label2:
+        $r15 = r3[i0];
+        $r16 = virtualinvoke $r15.<java.io.File: java.lang.String getAbsolutePath()>();
+        $z4 = virtualinvoke $r16.<java.lang.String: boolean endsWith(java.lang.String)>(".tld");
+        if $z4 == 0 goto label19;
+
+        r4 = null;
+        z0 = 1;
+
+     label3:
+        $r17 = new java.io.FileInputStream;
+        $r18 = r3[i0];
+        specialinvoke $r17.<java.io.FileInputStream: void <init>(java.io.File)>($r18);
+        r4 = $r17;
+        r5 = specialinvoke r0.<org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.descriptor.XmlErrorHandler tldScanStream(java.io.InputStream)>(r4);
+        $r19 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $r20 = r3[i0];
+        $r21 = virtualinvoke $r20.<java.io.File: java.lang.String getAbsolutePath()>();
+        virtualinvoke r5.<org.apache.tomcat.util.descriptor.XmlErrorHandler: void logFindings(org.apache.juli.logging.Log,java.lang.String)>($r19, $r21);
+
+     label4:
+        goto label15;
+
+     label5:
+        $r22 := @caughtexception;
+        r23 = $r22;
+        $r24 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $r25 = <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r26 = newarray (java.lang.Object)[1];
+        $r27 = r3[i0];
+        $r28 = virtualinvoke $r27.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r26[0] = $r28;
+        $r29 = virtualinvoke $r25.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("tldConfig.dirFail", $r26);
+        interfaceinvoke $r24.<org.apache.juli.logging.Log: void warn(java.lang.Object,java.lang.Throwable)>($r29, r23);
+
+     label6:
+        if r4 == null goto label19;
+
+     label7:
+        virtualinvoke r4.<java.io.InputStream: void close()>();
+
+     label8:
+        goto label19;
+
+     label9:
+        $r30 := @caughtexception;
+        r6 = $r30;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r6);
+        goto label19;
+
+     label10:
+        $r31 := @caughtexception;
+        r7 = $r31;
+        if r4 == null goto label14;
+
+     label11:
+        virtualinvoke r4.<java.io.InputStream: void close()>();
+
+     label12:
+        goto label14;
+
+     label13:
+        $r32 := @caughtexception;
+        r33 = $r32;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r33);
+
+     label14:
+        throw r7;
+
+     label15:
+        if r4 == null goto label19;
+
+     label16:
+        virtualinvoke r4.<java.io.InputStream: void close()>();
+
+     label17:
+        goto label19;
+
+     label18:
+        $r34 := @caughtexception;
+        r35 = $r34;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r35);
+
+     label19:
+        i0 = i0 + 1;
+
+     label20:
+        $i1 = lengthof r3;
+        if i0 < $i1 goto label1;
+
+     label21:
+        if z0 != 0 goto label22;
+
+        $r36 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $z5 = interfaceinvoke $r36.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z5 == 0 goto label22;
+
+        $r37 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $r38 = <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r39 = newarray (java.lang.Object)[1];
+        $r40 = virtualinvoke r1.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r39[0] = $r40;
+        $r41 = virtualinvoke $r38.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("tldConfig.noTldInDir", $r39);
+        interfaceinvoke $r37.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r41);
+
+     label22:
+        return z0;
+
+        catch java.io.IOException from label3 to label4 with label5;
+        catch java.lang.Throwable from label7 to label8 with label9;
+        catch java.lang.Throwable from label3 to label6 with label10;
+        catch java.lang.Throwable from label11 to label12 with label13;
+        catch java.lang.Throwable from label16 to label17 with label18;
+    }
+
+    private boolean tldScanJar(java.net.JarURLConnection)
+    {
+        org.apache.catalina.startup.TldConfig r0;
+        java.net.JarURLConnection r1;
+        org.apache.tomcat.util.scan.Jar r2;
+        boolean z0, $z1, $z2, $z3;
+        java.lang.String r3, $r15, $r25, $r26, $r33;
+        java.io.InputStream r4;
+        org.apache.tomcat.util.descriptor.XmlErrorHandler r5;
+        java.lang.StringBuilder $r6, $r13, $r14;
+        java.lang.Throwable r7, r9, $r16, $r34;
+        java.io.IOException r8, $r17, $r18, r19, $r27, r28;
+        java.net.URL $r10, $r12, $r24, $r32;
+        org.apache.juli.logging.Log $r11, $r20, $r21, $r29;
+        org.apache.tomcat.util.res.StringManager $r22, $r30;
+        java.lang.Object[] $r23, $r31;
+
+        r0 := @this: org.apache.catalina.startup.TldConfig;
+        r1 := @parameter0: java.net.JarURLConnection;
+        r2 = null;
+        z0 = 0;
+
+     label0:
+        $r10 = virtualinvoke r1.<java.net.JarURLConnection: java.net.URL getURL()>();
+        r2 = staticinvoke <org.apache.tomcat.util.scan.JarFactory: org.apache.tomcat.util.scan.Jar newInstance(java.net.URL)>($r10);
+        interfaceinvoke r2.<org.apache.tomcat.util.scan.Jar: void nextEntry()>();
+        r3 = interfaceinvoke r2.<org.apache.tomcat.util.scan.Jar: java.lang.String getEntryName()>();
+        goto label13;
+
+     label1:
+        $z1 = virtualinvoke r3.<java.lang.String: boolean startsWith(java.lang.String)>("META-INF/");
+        if $z1 == 0 goto label12;
+
+        $z2 = virtualinvoke r3.<java.lang.String: boolean endsWith(java.lang.String)>(".tld");
+        if $z2 == 0 goto label12;
+
+        z0 = 1;
+        r4 = null;
+
+     label2:
+        r4 = interfaceinvoke r2.<org.apache.tomcat.util.scan.Jar: java.io.InputStream getEntryInputStream()>();
+        r5 = specialinvoke r0.<org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.descriptor.XmlErrorHandler tldScanStream(java.io.InputStream)>(r4);
+        $r11 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $r6 = new java.lang.StringBuilder;
+        specialinvoke $r6.<java.lang.StringBuilder: void <init>()>();
+        $r12 = virtualinvoke r1.<java.net.JarURLConnection: java.net.URL getURL()>();
+        $r13 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r12);
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r3);
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r5.<org.apache.tomcat.util.descriptor.XmlErrorHandler: void logFindings(org.apache.juli.logging.Log,java.lang.String)>($r11, $r15);
+        goto label8;
+
+     label3:
+        $r16 := @caughtexception;
+        r7 = $r16;
+        if r4 == null goto label7;
+
+     label4:
+        virtualinvoke r4.<java.io.InputStream: void close()>();
+
+     label5:
+        goto label7;
+
+     label6:
+        $r17 := @caughtexception;
+        r8 = $r17;
+
+     label7:
+        throw r7;
+
+     label8:
+        if r4 == null goto label12;
+
+     label9:
+        virtualinvoke r4.<java.io.InputStream: void close()>();
+
+     label10:
+        goto label12;
+
+     label11:
+        $r18 := @caughtexception;
+        r19 = $r18;
+
+     label12:
+        interfaceinvoke r2.<org.apache.tomcat.util.scan.Jar: void nextEntry()>();
+        r3 = interfaceinvoke r2.<org.apache.tomcat.util.scan.Jar: java.lang.String getEntryName()>();
+
+     label13:
+        if r3 != null goto label1;
+
+        if z0 != 0 goto label19;
+
+        $r20 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $z3 = interfaceinvoke $r20.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z3 == 0 goto label19;
+
+        $r21 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $r22 = <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r23 = newarray (java.lang.Object)[1];
+        $r24 = virtualinvoke r1.<java.net.JarURLConnection: java.net.URL getURL()>();
+        $r25 = virtualinvoke $r24.<java.net.URL: java.lang.String getFile()>();
+        $r23[0] = $r25;
+        $r26 = virtualinvoke $r22.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("tldConfig.noTldInJar", $r23);
+        interfaceinvoke $r21.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r26);
+
+     label14:
+        goto label19;
+
+     label15:
+        $r27 := @caughtexception;
+        r28 = $r27;
+        $r29 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $r30 = <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r31 = newarray (java.lang.Object)[1];
+        $r32 = virtualinvoke r1.<java.net.JarURLConnection: java.net.URL getURL()>();
+        $r31[0] = $r32;
+        $r33 = virtualinvoke $r30.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("tldConfig.jarFail", $r31);
+        interfaceinvoke $r29.<org.apache.juli.logging.Log: void warn(java.lang.Object,java.lang.Throwable)>($r33, r28);
+
+     label16:
+        if r2 == null goto label20;
+
+        interfaceinvoke r2.<org.apache.tomcat.util.scan.Jar: void close()>();
+        goto label20;
+
+     label17:
+        $r34 := @caughtexception;
+        r9 = $r34;
+        if r2 == null goto label18;
+
+        interfaceinvoke r2.<org.apache.tomcat.util.scan.Jar: void close()>();
+
+     label18:
+        throw r9;
+
+     label19:
+        if r2 == null goto label20;
+
+        interfaceinvoke r2.<org.apache.tomcat.util.scan.Jar: void close()>();
+
+     label20:
+        return z0;
+
+        catch java.lang.Throwable from label2 to label3 with label3;
+        catch java.io.IOException from label4 to label5 with label6;
+        catch java.io.IOException from label9 to label10 with label11;
+        catch java.io.IOException from label0 to label14 with label15;
+        catch java.lang.Throwable from label0 to label16 with label17;
+    }
+
+    private org.apache.tomcat.util.descriptor.XmlErrorHandler tldScanStream(java.io.InputStream) throws java.io.IOException
+    {
+        org.apache.catalina.startup.TldConfig r0;
+        java.io.InputStream r1;
+        org.xml.sax.InputSource $r2, r3;
+        org.apache.tomcat.util.descriptor.XmlErrorHandler r4, $r8;
+        org.apache.tomcat.util.digester.Digester r5, $r9, $r10, $r11, $r12, $r17, $r18;
+        org.xml.sax.SAXException r6, $r14;
+        java.lang.Throwable r7, $r16, $r20;
+        java.io.IOException $r15;
+
+        r0 := @this: org.apache.catalina.startup.TldConfig;
+        r1 := @parameter0: java.io.InputStream;
+        $r2 = new org.xml.sax.InputSource;
+        specialinvoke $r2.<org.xml.sax.InputSource: void <init>(java.io.InputStream)>(r1);
+        r3 = $r2;
+        $r8 = new org.apache.tomcat.util.descriptor.XmlErrorHandler;
+        specialinvoke $r8.<org.apache.tomcat.util.descriptor.XmlErrorHandler: void <init>()>();
+        r4 = $r8;
+        $r9 = r0.<org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.digester.Digester tldDigester>;
+        r5 = $r9;
+        entermonitor $r9;
+
+     label0:
+        $r10 = r0.<org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.digester.Digester tldDigester>;
+        virtualinvoke $r10.<org.apache.tomcat.util.digester.Digester: void setErrorHandler(org.xml.sax.ErrorHandler)>(r4);
+        $r11 = r0.<org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.digester.Digester tldDigester>;
+        virtualinvoke $r11.<org.apache.tomcat.util.digester.Digester: void push(java.lang.Object)>(r0);
+        $r12 = r0.<org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.digester.Digester tldDigester>;
+        virtualinvoke $r12.<org.apache.tomcat.util.digester.Digester: java.lang.Object parse(org.xml.sax.InputSource)>(r3);
+
+     label1:
+        goto label4;
+
+     label2:
+        $r14 := @caughtexception;
+        r6 = $r14;
+        $r15 = new java.io.IOException;
+        specialinvoke $r15.<java.io.IOException: void <init>(java.lang.Throwable)>(r6);
+        throw $r15;
+
+     label3:
+        $r16 := @caughtexception;
+        r7 = $r16;
+        $r17 = r0.<org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.digester.Digester tldDigester>;
+        virtualinvoke $r17.<org.apache.tomcat.util.digester.Digester: void reset()>();
+        throw r7;
+
+     label4:
+        $r18 = r0.<org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.digester.Digester tldDigester>;
+        virtualinvoke $r18.<org.apache.tomcat.util.digester.Digester: void reset()>();
+        exitmonitor r5;
+
+     label5:
+        return r4;
+
+     label6:
+        $r20 := @caughtexception;
+
+     label7:
+        exitmonitor r5;
+
+     label8:
+        throw $r20;
+
+        catch org.xml.sax.SAXException from label0 to label1 with label2;
+        catch java.lang.Throwable from label0 to label3 with label3;
+        catch java.lang.Throwable from label0 to label5 with label6;
+        catch java.lang.Throwable from label7 to label8 with label6;
+    }
+
+    public void lifecycleEvent(org.apache.catalina.LifecycleEvent)
+    {
+        org.apache.catalina.startup.TldConfig r0;
+        org.apache.catalina.LifecycleEvent r1;
+        java.lang.ClassCastException r2, $r5;
+        org.apache.catalina.Lifecycle $r3, $r9;
+        org.apache.catalina.Context $r4, $r18;
+        org.apache.juli.logging.Log $r6, $r15;
+        org.apache.tomcat.util.res.StringManager $r7, $r16;
+        java.lang.Object[] $r8, $r17;
+        java.lang.String $r10, $r11, $r12, $r19, $r20, $r21;
+        boolean $z0, $z1, $z2;
+        java.lang.Exception $r13, r14;
+        java.util.Set $r22, $r23;
+        java.util.ArrayList $r24;
+
+        r0 := @this: org.apache.catalina.startup.TldConfig;
+        r1 := @parameter0: org.apache.catalina.LifecycleEvent;
+
+     label0:
+        $r3 = virtualinvoke r1.<org.apache.catalina.LifecycleEvent: org.apache.catalina.Lifecycle getLifecycle()>();
+        $r4 = (org.apache.catalina.Context) $r3;
+        r0.<org.apache.catalina.startup.TldConfig: org.apache.catalina.Context context> = $r4;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r5 := @caughtexception;
+        r2 = $r5;
+        $r6 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $r7 = <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r8 = newarray (java.lang.Object)[1];
+        $r9 = virtualinvoke r1.<org.apache.catalina.LifecycleEvent: org.apache.catalina.Lifecycle getLifecycle()>();
+        $r8[0] = $r9;
+        $r10 = virtualinvoke $r7.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("tldConfig.cce", $r8);
+        interfaceinvoke $r6.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r10, r2);
+        return;
+
+     label3:
+        $r11 = virtualinvoke r1.<org.apache.catalina.LifecycleEvent: java.lang.String getType()>();
+        $z0 = virtualinvoke $r11.<java.lang.String: boolean equals(java.lang.Object)>("after_init");
+        if $z0 == 0 goto label4;
+
+        specialinvoke r0.<org.apache.catalina.startup.TldConfig: void init()>();
+        goto label9;
+
+     label4:
+        $r12 = virtualinvoke r1.<org.apache.catalina.LifecycleEvent: java.lang.String getType()>();
+        $z1 = virtualinvoke $r12.<java.lang.String: boolean equals(java.lang.Object)>("configure_start");
+        if $z1 == 0 goto label8;
+
+     label5:
+        virtualinvoke r0.<org.apache.catalina.startup.TldConfig: void execute()>();
+
+     label6:
+        goto label9;
+
+     label7:
+        $r13 := @caughtexception;
+        r14 = $r13;
+        $r15 = <org.apache.catalina.startup.TldConfig: org.apache.juli.logging.Log log>;
+        $r16 = <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.res.StringManager sm>;
+        $r17 = newarray (java.lang.Object)[1];
+        $r18 = r0.<org.apache.catalina.startup.TldConfig: org.apache.catalina.Context context>;
+        $r19 = interfaceinvoke $r18.<org.apache.catalina.Context: java.lang.String getName()>();
+        $r17[0] = $r19;
+        $r20 = virtualinvoke $r16.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("tldConfig.execute", $r17);
+        interfaceinvoke $r15.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r20, r14);
+        goto label9;
+
+     label8:
+        $r21 = virtualinvoke r1.<org.apache.catalina.LifecycleEvent: java.lang.String getType()>();
+        $z2 = virtualinvoke $r21.<java.lang.String: boolean equals(java.lang.Object)>("stop");
+        if $z2 == 0 goto label9;
+
+        $r22 = r0.<org.apache.catalina.startup.TldConfig: java.util.Set taglibUris>;
+        interfaceinvoke $r22.<java.util.Set: void clear()>();
+        $r23 = r0.<org.apache.catalina.startup.TldConfig: java.util.Set webxmlTaglibUris>;
+        interfaceinvoke $r23.<java.util.Set: void clear()>();
+        $r24 = r0.<org.apache.catalina.startup.TldConfig: java.util.ArrayList listeners>;
+        virtualinvoke $r24.<java.util.ArrayList: void clear()>();
+
+     label9:
+        return;
+
+        catch java.lang.ClassCastException from label0 to label1 with label2;
+        catch java.lang.Exception from label5 to label6 with label7;
+    }
+
+    private void init()
+    {
+        org.apache.catalina.startup.TldConfig r0;
+        org.apache.tomcat.util.digester.Digester $r1, $r4;
+        org.apache.catalina.Context $r2, $r3;
+        boolean $z0, $z1;
+
+        r0 := @this: org.apache.catalina.startup.TldConfig;
+        $r1 = r0.<org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.digester.Digester tldDigester>;
+        if $r1 != null goto label0;
+
+        $r2 = r0.<org.apache.catalina.startup.TldConfig: org.apache.catalina.Context context>;
+        $z0 = interfaceinvoke $r2.<org.apache.catalina.Context: boolean getTldValidation()>();
+        $r3 = r0.<org.apache.catalina.startup.TldConfig: org.apache.catalina.Context context>;
+        $z1 = interfaceinvoke $r3.<org.apache.catalina.Context: boolean getXmlBlockExternal()>();
+        $r4 = staticinvoke <org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.digester.Digester createTldDigester(boolean,boolean)>($z0, $z1);
+        r0.<org.apache.catalina.startup.TldConfig: org.apache.tomcat.util.digester.Digester tldDigester> = $r4;
+
+     label0:
+        return;
+    }
+
+    static boolean access$0(org.apache.catalina.startup.TldConfig, java.net.JarURLConnection)
+    {
+        org.apache.catalina.startup.TldConfig r0;
+        java.net.JarURLConnection r1;
+        boolean $z0;
+
+        r0 := @parameter0: org.apache.catalina.startup.TldConfig;
+        r1 := @parameter1: java.net.JarURLConnection;
+        $z0 = specialinvoke r0.<org.apache.catalina.startup.TldConfig: boolean tldScanJar(java.net.JarURLConnection)>(r1);
+        return $z0;
+    }
+
+    static boolean access$1(org.apache.catalina.startup.TldConfig, java.io.File)
+    {
+        org.apache.catalina.startup.TldConfig r0;
+        java.io.File r1;
+        boolean $z0;
+
+        r0 := @parameter0: org.apache.catalina.startup.TldConfig;
+        r1 := @parameter1: java.io.File;
+        $z0 = specialinvoke r0.<org.apache.catalina.startup.TldConfig: boolean tldScanDir(java.io.File)>(r1);
+        return $z0;
+    }
+}

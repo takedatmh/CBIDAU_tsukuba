@@ -1,0 +1,138 @@
+class sun.misc.PathPermissions$1 extends java.lang.Object implements java.security.PrivilegedAction
+{
+    final sun.misc.PathPermissions this$0;
+
+    void <init>(sun.misc.PathPermissions)
+    {
+        sun.misc.PathPermissions$1 r0;
+        sun.misc.PathPermissions r1;
+
+        r0 := @this: sun.misc.PathPermissions$1;
+        r1 := @parameter0: sun.misc.PathPermissions;
+        r0.<sun.misc.PathPermissions$1: sun.misc.PathPermissions this$0> = r1;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public java.lang.Void run()
+    {
+        sun.misc.PathPermissions$1 r0;
+        int i0, $i1, i3, $i4;
+        java.io.File r1, $r10;
+        java.lang.String r2, $r12, $r19, $r25, $r28, $r30, r33;
+        java.io.IOException r3, $r8;
+        sun.misc.PathPermissions $r4, $r6, $r9, $r13, $r20, $r34;
+        java.io.File[] $r5, $r7;
+        java.net.URL $r11;
+        boolean $z0, $z1;
+        java.security.Permissions $r14, $r21, $r35;
+        java.io.FilePermission $r15, $r22, $r36;
+        java.lang.StringBuilder $r16, $r17, $r18, $r23, $r24, $r26, $r27, $r29, $r31, $r32;
+        char $c2;
+
+        r0 := @this: sun.misc.PathPermissions$1;
+        i0 = 0;
+
+     label0:
+        $r4 = r0.<sun.misc.PathPermissions$1: sun.misc.PathPermissions this$0>;
+        $r5 = staticinvoke <sun.misc.PathPermissions: java.io.File[] access$000(sun.misc.PathPermissions)>($r4);
+        $i1 = lengthof $r5;
+        if i0 >= $i1 goto label9;
+
+        $r6 = r0.<sun.misc.PathPermissions$1: sun.misc.PathPermissions this$0>;
+        $r7 = staticinvoke <sun.misc.PathPermissions: java.io.File[] access$000(sun.misc.PathPermissions)>($r6);
+        r1 = $r7[i0];
+
+     label1:
+        r2 = virtualinvoke r1.<java.io.File: java.lang.String getCanonicalPath()>();
+
+     label2:
+        goto label4;
+
+     label3:
+        $r8 := @caughtexception;
+        r3 = $r8;
+        r2 = virtualinvoke r1.<java.io.File: java.lang.String getAbsolutePath()>();
+
+     label4:
+        if i0 != 0 goto label5;
+
+        $r9 = r0.<sun.misc.PathPermissions$1: sun.misc.PathPermissions this$0>;
+        $r10 = new java.io.File;
+        specialinvoke $r10.<java.io.File: void <init>(java.lang.String)>(r2);
+        $r11 = staticinvoke <sun.misc.Launcher: java.net.URL getFileURL(java.io.File)>($r10);
+        $r9.<sun.misc.PathPermissions: java.net.URL codeBase> = $r11;
+
+     label5:
+        $z0 = virtualinvoke r1.<java.io.File: boolean isDirectory()>();
+        if $z0 == 0 goto label7;
+
+        $r12 = <java.io.File: java.lang.String separator>;
+        $z1 = virtualinvoke r2.<java.lang.String: boolean endsWith(java.lang.String)>($r12);
+        if $z1 == 0 goto label6;
+
+        $r13 = r0.<sun.misc.PathPermissions$1: sun.misc.PathPermissions this$0>;
+        $r14 = staticinvoke <sun.misc.PathPermissions: java.security.Permissions access$100(sun.misc.PathPermissions)>($r13);
+        $r15 = new java.io.FilePermission;
+        $r16 = new java.lang.StringBuilder;
+        specialinvoke $r16.<java.lang.StringBuilder: void <init>()>();
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("-");
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r15.<java.io.FilePermission: void <init>(java.lang.String,java.lang.String)>($r19, "read");
+        virtualinvoke $r14.<java.security.Permissions: void add(java.security.Permission)>($r15);
+        goto label8;
+
+     label6:
+        $r20 = r0.<sun.misc.PathPermissions$1: sun.misc.PathPermissions this$0>;
+        $r21 = staticinvoke <sun.misc.PathPermissions: java.security.Permissions access$100(sun.misc.PathPermissions)>($r20);
+        $r22 = new java.io.FilePermission;
+        $r23 = new java.lang.StringBuilder;
+        specialinvoke $r23.<java.lang.StringBuilder: void <init>()>();
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r25 = <java.io.File: java.lang.String separator>;
+        $r26 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r25);
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("-");
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r22.<java.io.FilePermission: void <init>(java.lang.String,java.lang.String)>($r28, "read");
+        virtualinvoke $r21.<java.security.Permissions: void add(java.security.Permission)>($r22);
+        goto label8;
+
+     label7:
+        $c2 = <java.io.File: char separatorChar>;
+        i3 = virtualinvoke r2.<java.lang.String: int lastIndexOf(int)>($c2);
+        if i3 == -1 goto label8;
+
+        $r29 = new java.lang.StringBuilder;
+        specialinvoke $r29.<java.lang.StringBuilder: void <init>()>();
+        $i4 = i3 + 1;
+        $r30 = virtualinvoke r2.<java.lang.String: java.lang.String substring(int,int)>(0, $i4);
+        $r31 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r30);
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("-");
+        r33 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r34 = r0.<sun.misc.PathPermissions$1: sun.misc.PathPermissions this$0>;
+        $r35 = staticinvoke <sun.misc.PathPermissions: java.security.Permissions access$100(sun.misc.PathPermissions)>($r34);
+        $r36 = new java.io.FilePermission;
+        specialinvoke $r36.<java.io.FilePermission: void <init>(java.lang.String,java.lang.String)>(r33, "read");
+        virtualinvoke $r35.<java.security.Permissions: void add(java.security.Permission)>($r36);
+
+     label8:
+        i0 = i0 + 1;
+        goto label0;
+
+     label9:
+        return null;
+
+        catch java.io.IOException from label1 to label2 with label3;
+    }
+
+    public volatile java.lang.Object run()
+    {
+        sun.misc.PathPermissions$1 r0;
+        java.lang.Void $r1;
+
+        r0 := @this: sun.misc.PathPermissions$1;
+        $r1 = virtualinvoke r0.<sun.misc.PathPermissions$1: java.lang.Void run()>();
+        return $r1;
+    }
+}

@@ -1,0 +1,158 @@
+public class sun.nio.ch.LinuxAsynchronousChannelProvider extends java.nio.channels.spi.AsynchronousChannelProvider
+{
+    private static volatile sun.nio.ch.EPollPort defaultPort;
+
+    private sun.nio.ch.EPollPort defaultEventPort() throws java.io.IOException
+    {
+        sun.nio.ch.LinuxAsynchronousChannelProvider r0;
+        sun.nio.ch.EPollPort $r1, $r6, $r7, $r8, $r10;
+        java.lang.Class r2, $r5;
+        sun.nio.ch.ThreadPool $r3;
+        java.lang.Throwable r4, $r9;
+
+        r0 := @this: sun.nio.ch.LinuxAsynchronousChannelProvider;
+        $r1 = <sun.nio.ch.LinuxAsynchronousChannelProvider: sun.nio.ch.EPollPort defaultPort>;
+        if $r1 != null goto label6;
+
+        $r5 = class "sun/nio/ch/LinuxAsynchronousChannelProvider";
+        r2 = $r5;
+        entermonitor $r5;
+
+     label0:
+        $r6 = <sun.nio.ch.LinuxAsynchronousChannelProvider: sun.nio.ch.EPollPort defaultPort>;
+        if $r6 != null goto label1;
+
+        $r7 = new sun.nio.ch.EPollPort;
+        $r3 = staticinvoke <sun.nio.ch.ThreadPool: sun.nio.ch.ThreadPool getDefault()>();
+        specialinvoke $r7.<sun.nio.ch.EPollPort: void <init>(java.nio.channels.spi.AsynchronousChannelProvider,sun.nio.ch.ThreadPool)>(r0, $r3);
+        $r8 = virtualinvoke $r7.<sun.nio.ch.EPollPort: sun.nio.ch.EPollPort start()>();
+        <sun.nio.ch.LinuxAsynchronousChannelProvider: sun.nio.ch.EPollPort defaultPort> = $r8;
+
+     label1:
+        exitmonitor r2;
+
+     label2:
+        goto label6;
+
+     label3:
+        $r9 := @caughtexception;
+
+     label4:
+        r4 = $r9;
+        exitmonitor r2;
+
+     label5:
+        throw r4;
+
+     label6:
+        $r10 = <sun.nio.ch.LinuxAsynchronousChannelProvider: sun.nio.ch.EPollPort defaultPort>;
+        return $r10;
+
+        catch java.lang.Throwable from label0 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    public void <init>()
+    {
+        sun.nio.ch.LinuxAsynchronousChannelProvider r0;
+
+        r0 := @this: sun.nio.ch.LinuxAsynchronousChannelProvider;
+        specialinvoke r0.<java.nio.channels.spi.AsynchronousChannelProvider: void <init>()>();
+        return;
+    }
+
+    public java.nio.channels.AsynchronousChannelGroup openAsynchronousChannelGroup(int, java.util.concurrent.ThreadFactory) throws java.io.IOException
+    {
+        sun.nio.ch.LinuxAsynchronousChannelProvider r0;
+        int i0;
+        java.util.concurrent.ThreadFactory r1;
+        sun.nio.ch.EPollPort $r2, $r4;
+        sun.nio.ch.ThreadPool $r3;
+
+        r0 := @this: sun.nio.ch.LinuxAsynchronousChannelProvider;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.util.concurrent.ThreadFactory;
+        $r2 = new sun.nio.ch.EPollPort;
+        $r3 = staticinvoke <sun.nio.ch.ThreadPool: sun.nio.ch.ThreadPool create(int,java.util.concurrent.ThreadFactory)>(i0, r1);
+        specialinvoke $r2.<sun.nio.ch.EPollPort: void <init>(java.nio.channels.spi.AsynchronousChannelProvider,sun.nio.ch.ThreadPool)>(r0, $r3);
+        $r4 = virtualinvoke $r2.<sun.nio.ch.EPollPort: sun.nio.ch.EPollPort start()>();
+        return $r4;
+    }
+
+    public java.nio.channels.AsynchronousChannelGroup openAsynchronousChannelGroup(java.util.concurrent.ExecutorService, int) throws java.io.IOException
+    {
+        sun.nio.ch.LinuxAsynchronousChannelProvider r0;
+        java.util.concurrent.ExecutorService r1;
+        int i0;
+        sun.nio.ch.EPollPort $r2, $r4;
+        sun.nio.ch.ThreadPool $r3;
+
+        r0 := @this: sun.nio.ch.LinuxAsynchronousChannelProvider;
+        r1 := @parameter0: java.util.concurrent.ExecutorService;
+        i0 := @parameter1: int;
+        $r2 = new sun.nio.ch.EPollPort;
+        $r3 = staticinvoke <sun.nio.ch.ThreadPool: sun.nio.ch.ThreadPool wrap(java.util.concurrent.ExecutorService,int)>(r1, i0);
+        specialinvoke $r2.<sun.nio.ch.EPollPort: void <init>(java.nio.channels.spi.AsynchronousChannelProvider,sun.nio.ch.ThreadPool)>(r0, $r3);
+        $r4 = virtualinvoke $r2.<sun.nio.ch.EPollPort: sun.nio.ch.EPollPort start()>();
+        return $r4;
+    }
+
+    private sun.nio.ch.Port toPort(java.nio.channels.AsynchronousChannelGroup) throws java.io.IOException
+    {
+        sun.nio.ch.LinuxAsynchronousChannelProvider r0;
+        java.nio.channels.AsynchronousChannelGroup r1;
+        sun.nio.ch.EPollPort $r2;
+        boolean $z0;
+        java.nio.channels.IllegalChannelGroupException $r3;
+        sun.nio.ch.Port $r4;
+
+        r0 := @this: sun.nio.ch.LinuxAsynchronousChannelProvider;
+        r1 := @parameter0: java.nio.channels.AsynchronousChannelGroup;
+        if r1 != null goto label0;
+
+        $r2 = specialinvoke r0.<sun.nio.ch.LinuxAsynchronousChannelProvider: sun.nio.ch.EPollPort defaultEventPort()>();
+        return $r2;
+
+     label0:
+        $z0 = r1 instanceof sun.nio.ch.EPollPort;
+        if $z0 != 0 goto label1;
+
+        $r3 = new java.nio.channels.IllegalChannelGroupException;
+        specialinvoke $r3.<java.nio.channels.IllegalChannelGroupException: void <init>()>();
+        throw $r3;
+
+     label1:
+        $r4 = (sun.nio.ch.Port) r1;
+        return $r4;
+    }
+
+    public java.nio.channels.AsynchronousServerSocketChannel openAsynchronousServerSocketChannel(java.nio.channels.AsynchronousChannelGroup) throws java.io.IOException
+    {
+        sun.nio.ch.LinuxAsynchronousChannelProvider r0;
+        java.nio.channels.AsynchronousChannelGroup r1;
+        sun.nio.ch.UnixAsynchronousServerSocketChannelImpl $r2;
+        sun.nio.ch.Port $r3;
+
+        r0 := @this: sun.nio.ch.LinuxAsynchronousChannelProvider;
+        r1 := @parameter0: java.nio.channels.AsynchronousChannelGroup;
+        $r2 = new sun.nio.ch.UnixAsynchronousServerSocketChannelImpl;
+        $r3 = specialinvoke r0.<sun.nio.ch.LinuxAsynchronousChannelProvider: sun.nio.ch.Port toPort(java.nio.channels.AsynchronousChannelGroup)>(r1);
+        specialinvoke $r2.<sun.nio.ch.UnixAsynchronousServerSocketChannelImpl: void <init>(sun.nio.ch.Port)>($r3);
+        return $r2;
+    }
+
+    public java.nio.channels.AsynchronousSocketChannel openAsynchronousSocketChannel(java.nio.channels.AsynchronousChannelGroup) throws java.io.IOException
+    {
+        sun.nio.ch.LinuxAsynchronousChannelProvider r0;
+        java.nio.channels.AsynchronousChannelGroup r1;
+        sun.nio.ch.UnixAsynchronousSocketChannelImpl $r2;
+        sun.nio.ch.Port $r3;
+
+        r0 := @this: sun.nio.ch.LinuxAsynchronousChannelProvider;
+        r1 := @parameter0: java.nio.channels.AsynchronousChannelGroup;
+        $r2 = new sun.nio.ch.UnixAsynchronousSocketChannelImpl;
+        $r3 = specialinvoke r0.<sun.nio.ch.LinuxAsynchronousChannelProvider: sun.nio.ch.Port toPort(java.nio.channels.AsynchronousChannelGroup)>(r1);
+        specialinvoke $r2.<sun.nio.ch.UnixAsynchronousSocketChannelImpl: void <init>(sun.nio.ch.Port)>($r3);
+        return $r2;
+    }
+}

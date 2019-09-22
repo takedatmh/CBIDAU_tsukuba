@@ -1,0 +1,105 @@
+public abstract class java.util.logging.Formatter extends java.lang.Object
+{
+
+    protected void <init>()
+    {
+        java.util.logging.Formatter r0;
+
+        r0 := @this: java.util.logging.Formatter;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public abstract java.lang.String format(java.util.logging.LogRecord);
+
+    public java.lang.String getHead(java.util.logging.Handler)
+    {
+        java.util.logging.Formatter r0;
+        java.util.logging.Handler r1;
+
+        r0 := @this: java.util.logging.Formatter;
+        r1 := @parameter0: java.util.logging.Handler;
+        return "";
+    }
+
+    public java.lang.String getTail(java.util.logging.Handler)
+    {
+        java.util.logging.Formatter r0;
+        java.util.logging.Handler r1;
+
+        r0 := @this: java.util.logging.Formatter;
+        r1 := @parameter0: java.util.logging.Handler;
+        return "";
+    }
+
+    public synchronized java.lang.String formatMessage(java.util.logging.LogRecord)
+    {
+        java.util.logging.Formatter r0;
+        java.util.logging.LogRecord r1;
+        java.lang.String r2, $r5, $r9;
+        java.util.ResourceBundle r3;
+        java.util.MissingResourceException r4, $r6;
+        java.lang.Object[] r7;
+        int $i0, $i1, $i2, $i3, $i4;
+        java.lang.Exception $r11, r12;
+
+        r0 := @this: java.util.logging.Formatter;
+        r1 := @parameter0: java.util.logging.LogRecord;
+        r2 = virtualinvoke r1.<java.util.logging.LogRecord: java.lang.String getMessage()>();
+        r3 = virtualinvoke r1.<java.util.logging.LogRecord: java.util.ResourceBundle getResourceBundle()>();
+        if r3 == null goto label3;
+
+     label0:
+        $r5 = virtualinvoke r1.<java.util.logging.LogRecord: java.lang.String getMessage()>();
+        r2 = virtualinvoke r3.<java.util.ResourceBundle: java.lang.String getString(java.lang.String)>($r5);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r6 := @caughtexception;
+        r4 = $r6;
+        r2 = virtualinvoke r1.<java.util.logging.LogRecord: java.lang.String getMessage()>();
+
+     label3:
+        r7 = virtualinvoke r1.<java.util.logging.LogRecord: java.lang.Object[] getParameters()>();
+        if r7 == null goto label4;
+
+        $i0 = lengthof r7;
+        if $i0 != 0 goto label5;
+
+     label4:
+        return r2;
+
+     label5:
+        $i1 = virtualinvoke r2.<java.lang.String: int indexOf(java.lang.String)>("{0");
+        if $i1 >= 0 goto label6;
+
+        $i2 = virtualinvoke r2.<java.lang.String: int indexOf(java.lang.String)>("{1");
+        if $i2 >= 0 goto label6;
+
+        $i3 = virtualinvoke r2.<java.lang.String: int indexOf(java.lang.String)>("{2");
+        if $i3 >= 0 goto label6;
+
+        $i4 = virtualinvoke r2.<java.lang.String: int indexOf(java.lang.String)>("{3");
+        if $i4 < 0 goto label8;
+
+     label6:
+        $r9 = staticinvoke <java.text.MessageFormat: java.lang.String format(java.lang.String,java.lang.Object[])>(r2, r7);
+
+     label7:
+        return $r9;
+
+     label8:
+        return r2;
+
+     label9:
+        $r11 := @caughtexception;
+        r12 = $r11;
+        return r2;
+
+        catch java.util.MissingResourceException from label0 to label1 with label2;
+        catch java.lang.Exception from label3 to label4 with label9;
+        catch java.lang.Exception from label5 to label7 with label9;
+    }
+}

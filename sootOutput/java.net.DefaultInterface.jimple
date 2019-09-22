@@ -1,0 +1,117 @@
+class java.net.DefaultInterface extends java.lang.Object
+{
+    private static final java.net.NetworkInterface defaultInterface;
+
+    void <init>()
+    {
+        java.net.DefaultInterface r0;
+
+        r0 := @this: java.net.DefaultInterface;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    static java.net.NetworkInterface getDefault()
+    {
+        java.net.NetworkInterface $r0;
+
+        $r0 = <java.net.DefaultInterface: java.net.NetworkInterface defaultInterface>;
+        return $r0;
+    }
+
+    private static java.net.NetworkInterface chooseDefaultInterface()
+    {
+        java.util.Enumeration r0;
+        java.io.IOException r1, $r4, $r8, r9;
+        java.net.NetworkInterface r2, r3, r5, $r10;
+        boolean z0, z1, $z2, $z3, $z4;
+        java.lang.Object $r6;
+
+     label0:
+        r0 = staticinvoke <java.net.NetworkInterface: java.util.Enumeration getNetworkInterfaces()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r4 := @caughtexception;
+        r1 = $r4;
+        return null;
+
+     label3:
+        r5 = null;
+        r2 = null;
+
+     label4:
+        $z2 = interfaceinvoke r0.<java.util.Enumeration: boolean hasMoreElements()>();
+        if $z2 == 0 goto label12;
+
+        $r6 = interfaceinvoke r0.<java.util.Enumeration: java.lang.Object nextElement()>();
+        r3 = (java.net.NetworkInterface) $r6;
+
+     label5:
+        $z3 = virtualinvoke r3.<java.net.NetworkInterface: boolean isUp()>();
+        if $z3 == 0 goto label9;
+
+        $z4 = virtualinvoke r3.<java.net.NetworkInterface: boolean supportsMulticast()>();
+        if $z4 == 0 goto label9;
+
+        z0 = virtualinvoke r3.<java.net.NetworkInterface: boolean isLoopback()>();
+        z1 = virtualinvoke r3.<java.net.NetworkInterface: boolean isPointToPoint()>();
+        if z0 != 0 goto label7;
+
+        if z1 != 0 goto label7;
+
+     label6:
+        return r3;
+
+     label7:
+        if r5 != null goto label8;
+
+        if z1 == 0 goto label8;
+
+        r5 = r3;
+
+     label8:
+        if r2 != null goto label9;
+
+        if z0 == 0 goto label9;
+
+        r2 = r3;
+
+     label9:
+        goto label11;
+
+     label10:
+        $r8 := @caughtexception;
+        r9 = $r8;
+
+     label11:
+        goto label4;
+
+     label12:
+        if r5 == null goto label13;
+
+        $r10 = r5;
+        goto label14;
+
+     label13:
+        $r10 = r2;
+
+     label14:
+        return $r10;
+
+        catch java.io.IOException from label0 to label1 with label2;
+        catch java.io.IOException from label5 to label6 with label10;
+        catch java.io.IOException from label7 to label9 with label10;
+    }
+
+    static void <clinit>()
+    {
+        java.net.NetworkInterface $r0;
+
+        $r0 = staticinvoke <java.net.DefaultInterface: java.net.NetworkInterface chooseDefaultInterface()>();
+        <java.net.DefaultInterface: java.net.NetworkInterface defaultInterface> = $r0;
+        return;
+    }
+}

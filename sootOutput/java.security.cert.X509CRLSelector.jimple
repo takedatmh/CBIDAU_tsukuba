@@ -1,0 +1,837 @@
+public class java.security.cert.X509CRLSelector extends java.lang.Object implements java.security.cert.CRLSelector
+{
+    private static final sun.security.util.Debug debug;
+    private java.util.HashSet issuerNames;
+    private java.util.HashSet issuerX500Principals;
+    private java.math.BigInteger minCRL;
+    private java.math.BigInteger maxCRL;
+    private java.util.Date dateAndTime;
+    private java.security.cert.X509Certificate certChecking;
+    private long skew;
+
+    public void <init>()
+    {
+        java.security.cert.X509CRLSelector r0;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.security.cert.X509CRLSelector: long skew> = 0L;
+        return;
+    }
+
+    public void setIssuers(java.util.Collection)
+    {
+        java.security.cert.X509CRLSelector r0;
+        java.util.Collection r1;
+        java.util.Iterator r2;
+        javax.security.auth.x500.X500Principal r3;
+        boolean $z0, $z1;
+        java.util.HashSet $r4, $r5, $r6, $r8;
+        java.lang.Object $r7;
+        byte[] $r9;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        r1 := @parameter0: java.util.Collection;
+        if r1 == null goto label0;
+
+        $z0 = interfaceinvoke r1.<java.util.Collection: boolean isEmpty()>();
+        if $z0 == 0 goto label1;
+
+     label0:
+        r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerNames> = null;
+        r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerX500Principals> = null;
+        goto label3;
+
+     label1:
+        $r4 = new java.util.HashSet;
+        specialinvoke $r4.<java.util.HashSet: void <init>(java.util.Collection)>(r1);
+        r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerX500Principals> = $r4;
+        $r5 = new java.util.HashSet;
+        specialinvoke $r5.<java.util.HashSet: void <init>()>();
+        r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerNames> = $r5;
+        $r6 = r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerX500Principals>;
+        r2 = virtualinvoke $r6.<java.util.HashSet: java.util.Iterator iterator()>();
+
+     label2:
+        $z1 = interfaceinvoke r2.<java.util.Iterator: boolean hasNext()>();
+        if $z1 == 0 goto label3;
+
+        $r7 = interfaceinvoke r2.<java.util.Iterator: java.lang.Object next()>();
+        r3 = (javax.security.auth.x500.X500Principal) $r7;
+        $r8 = r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerNames>;
+        $r9 = virtualinvoke r3.<javax.security.auth.x500.X500Principal: byte[] getEncoded()>();
+        virtualinvoke $r8.<java.util.HashSet: boolean add(java.lang.Object)>($r9);
+        goto label2;
+
+     label3:
+        return;
+    }
+
+    public void setIssuerNames(java.util.Collection) throws java.io.IOException
+    {
+        java.security.cert.X509CRLSelector r0;
+        java.util.Collection r1;
+        java.util.HashSet r2, $r3;
+        int $i0;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        r1 := @parameter0: java.util.Collection;
+        if r1 == null goto label0;
+
+        $i0 = interfaceinvoke r1.<java.util.Collection: int size()>();
+        if $i0 != 0 goto label1;
+
+     label0:
+        r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerNames> = null;
+        r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerX500Principals> = null;
+        goto label2;
+
+     label1:
+        r2 = staticinvoke <java.security.cert.X509CRLSelector: java.util.HashSet cloneAndCheckIssuerNames(java.util.Collection)>(r1);
+        $r3 = staticinvoke <java.security.cert.X509CRLSelector: java.util.HashSet parseIssuerNames(java.util.Collection)>(r2);
+        r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerX500Principals> = $r3;
+        r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerNames> = r2;
+
+     label2:
+        return;
+    }
+
+    public void addIssuer(javax.security.auth.x500.X500Principal)
+    {
+        java.security.cert.X509CRLSelector r0;
+        javax.security.auth.x500.X500Principal r1;
+        byte[] $r2;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        r1 := @parameter0: javax.security.auth.x500.X500Principal;
+        $r2 = virtualinvoke r1.<javax.security.auth.x500.X500Principal: byte[] getEncoded()>();
+        specialinvoke r0.<java.security.cert.X509CRLSelector: void addIssuerNameInternal(java.lang.Object,javax.security.auth.x500.X500Principal)>($r2, r1);
+        return;
+    }
+
+    public void addIssuerName(java.lang.String) throws java.io.IOException
+    {
+        java.security.cert.X509CRLSelector r0;
+        java.lang.String r1;
+        sun.security.x509.X500Name $r2;
+        javax.security.auth.x500.X500Principal $r3;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        r1 := @parameter0: java.lang.String;
+        $r2 = new sun.security.x509.X500Name;
+        specialinvoke $r2.<sun.security.x509.X500Name: void <init>(java.lang.String)>(r1);
+        $r3 = virtualinvoke $r2.<sun.security.x509.X500Name: javax.security.auth.x500.X500Principal asX500Principal()>();
+        specialinvoke r0.<java.security.cert.X509CRLSelector: void addIssuerNameInternal(java.lang.Object,javax.security.auth.x500.X500Principal)>(r1, $r3);
+        return;
+    }
+
+    public void addIssuerName(byte[]) throws java.io.IOException
+    {
+        java.security.cert.X509CRLSelector r0;
+        byte[] r1;
+        sun.security.x509.X500Name $r2;
+        java.lang.Object $r3;
+        javax.security.auth.x500.X500Principal $r4;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        r1 := @parameter0: byte[];
+        $r3 = virtualinvoke r1.<java.lang.Object: java.lang.Object clone()>();
+        $r2 = new sun.security.x509.X500Name;
+        specialinvoke $r2.<sun.security.x509.X500Name: void <init>(byte[])>(r1);
+        $r4 = virtualinvoke $r2.<sun.security.x509.X500Name: javax.security.auth.x500.X500Principal asX500Principal()>();
+        specialinvoke r0.<java.security.cert.X509CRLSelector: void addIssuerNameInternal(java.lang.Object,javax.security.auth.x500.X500Principal)>($r3, $r4);
+        return;
+    }
+
+    private void addIssuerNameInternal(java.lang.Object, javax.security.auth.x500.X500Principal)
+    {
+        java.security.cert.X509CRLSelector r0;
+        java.lang.Object r1;
+        javax.security.auth.x500.X500Principal r2;
+        java.util.HashSet $r3, $r4, $r5, $r6, $r7, $r8;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        r1 := @parameter0: java.lang.Object;
+        r2 := @parameter1: javax.security.auth.x500.X500Principal;
+        $r4 = r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerNames>;
+        if $r4 != null goto label0;
+
+        $r3 = new java.util.HashSet;
+        specialinvoke $r3.<java.util.HashSet: void <init>()>();
+        r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerNames> = $r3;
+
+     label0:
+        $r5 = r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerX500Principals>;
+        if $r5 != null goto label1;
+
+        $r6 = new java.util.HashSet;
+        specialinvoke $r6.<java.util.HashSet: void <init>()>();
+        r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerX500Principals> = $r6;
+
+     label1:
+        $r7 = r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerNames>;
+        virtualinvoke $r7.<java.util.HashSet: boolean add(java.lang.Object)>(r1);
+        $r8 = r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerX500Principals>;
+        virtualinvoke $r8.<java.util.HashSet: boolean add(java.lang.Object)>(r2);
+        return;
+    }
+
+    private static java.util.HashSet cloneAndCheckIssuerNames(java.util.Collection) throws java.io.IOException
+    {
+        java.util.Collection r0;
+        java.util.HashSet $r1, r2;
+        java.util.Iterator r3;
+        java.lang.Object r4, $r8;
+        boolean $z0, $z1, $z2, $z3;
+        java.io.IOException $r5;
+        byte[] $r6, $r7;
+
+        r0 := @parameter0: java.util.Collection;
+        $r1 = new java.util.HashSet;
+        specialinvoke $r1.<java.util.HashSet: void <init>()>();
+        r2 = $r1;
+        r3 = interfaceinvoke r0.<java.util.Collection: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label4;
+
+        r4 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+        $z1 = r4 instanceof byte[];
+        if $z1 != 0 goto label1;
+
+        $z2 = r4 instanceof java.lang.String;
+        if $z2 != 0 goto label1;
+
+        $r5 = new java.io.IOException;
+        specialinvoke $r5.<java.io.IOException: void <init>(java.lang.String)>("name not byte array or String");
+        throw $r5;
+
+     label1:
+        $z3 = r4 instanceof byte[];
+        if $z3 == 0 goto label2;
+
+        $r6 = (byte[]) r4;
+        $r7 = (byte[]) $r6;
+        $r8 = virtualinvoke $r7.<java.lang.Object: java.lang.Object clone()>();
+        virtualinvoke r2.<java.util.HashSet: boolean add(java.lang.Object)>($r8);
+        goto label3;
+
+     label2:
+        virtualinvoke r2.<java.util.HashSet: boolean add(java.lang.Object)>(r4);
+
+     label3:
+        goto label0;
+
+     label4:
+        return r2;
+    }
+
+    private static java.util.HashSet cloneIssuerNames(java.util.Collection)
+    {
+        java.util.Collection r0;
+        java.io.IOException r1, $r3;
+        java.util.HashSet $r2;
+        java.lang.RuntimeException $r4;
+
+        r0 := @parameter0: java.util.Collection;
+
+     label0:
+        $r2 = staticinvoke <java.security.cert.X509CRLSelector: java.util.HashSet cloneAndCheckIssuerNames(java.util.Collection)>(r0);
+
+     label1:
+        return $r2;
+
+     label2:
+        $r3 := @caughtexception;
+        r1 = $r3;
+        $r4 = new java.lang.RuntimeException;
+        specialinvoke $r4.<java.lang.RuntimeException: void <init>(java.lang.Throwable)>(r1);
+        throw $r4;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    private static java.util.HashSet parseIssuerNames(java.util.Collection) throws java.io.IOException
+    {
+        java.util.Collection r0;
+        java.util.HashSet $r1, r2;
+        java.util.Iterator r3;
+        java.lang.Object r4;
+        java.lang.IllegalArgumentException r5, $r12;
+        boolean $z0, $z1;
+        sun.security.x509.X500Name $r6;
+        java.lang.String $r7;
+        javax.security.auth.x500.X500Principal $r8, $r9;
+        byte[] $r10, $r11;
+        java.io.IOException $r13, $r15;
+        java.lang.Throwable $r14;
+
+        r0 := @parameter0: java.util.Collection;
+        $r1 = new java.util.HashSet;
+        specialinvoke $r1.<java.util.HashSet: void <init>()>();
+        r2 = $r1;
+        r3 = interfaceinvoke r0.<java.util.Collection: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label5;
+
+        r4 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+        $z1 = r4 instanceof java.lang.String;
+        if $z1 == 0 goto label1;
+
+        $r6 = new sun.security.x509.X500Name;
+        $r7 = (java.lang.String) r4;
+        specialinvoke $r6.<sun.security.x509.X500Name: void <init>(java.lang.String)>($r7);
+        $r8 = virtualinvoke $r6.<sun.security.x509.X500Name: javax.security.auth.x500.X500Principal asX500Principal()>();
+        virtualinvoke r2.<java.util.HashSet: boolean add(java.lang.Object)>($r8);
+        goto label4;
+
+     label1:
+        $r9 = new javax.security.auth.x500.X500Principal;
+        $r10 = (byte[]) r4;
+        $r11 = (byte[]) $r10;
+        specialinvoke $r9.<javax.security.auth.x500.X500Principal: void <init>(byte[])>($r11);
+        virtualinvoke r2.<java.util.HashSet: boolean add(java.lang.Object)>($r9);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r12 := @caughtexception;
+        r5 = $r12;
+        $r13 = new java.io.IOException;
+        specialinvoke $r13.<java.io.IOException: void <init>(java.lang.String)>("Invalid name");
+        $r14 = virtualinvoke $r13.<java.io.IOException: java.lang.Throwable initCause(java.lang.Throwable)>(r5);
+        $r15 = (java.io.IOException) $r14;
+        throw $r15;
+
+     label4:
+        goto label0;
+
+     label5:
+        return r2;
+
+        catch java.lang.IllegalArgumentException from label1 to label2 with label3;
+    }
+
+    public void setMinCRLNumber(java.math.BigInteger)
+    {
+        java.security.cert.X509CRLSelector r0;
+        java.math.BigInteger r1;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        r1 := @parameter0: java.math.BigInteger;
+        r0.<java.security.cert.X509CRLSelector: java.math.BigInteger minCRL> = r1;
+        return;
+    }
+
+    public void setMaxCRLNumber(java.math.BigInteger)
+    {
+        java.security.cert.X509CRLSelector r0;
+        java.math.BigInteger r1;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        r1 := @parameter0: java.math.BigInteger;
+        r0.<java.security.cert.X509CRLSelector: java.math.BigInteger maxCRL> = r1;
+        return;
+    }
+
+    public void setDateAndTime(java.util.Date)
+    {
+        java.security.cert.X509CRLSelector r0;
+        java.util.Date r1, $r2;
+        long $l0;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        r1 := @parameter0: java.util.Date;
+        if r1 != null goto label0;
+
+        r0.<java.security.cert.X509CRLSelector: java.util.Date dateAndTime> = null;
+        goto label1;
+
+     label0:
+        $r2 = new java.util.Date;
+        $l0 = virtualinvoke r1.<java.util.Date: long getTime()>();
+        specialinvoke $r2.<java.util.Date: void <init>(long)>($l0);
+        r0.<java.security.cert.X509CRLSelector: java.util.Date dateAndTime> = $r2;
+
+     label1:
+        r0.<java.security.cert.X509CRLSelector: long skew> = 0L;
+        return;
+    }
+
+    void setDateAndTime(java.util.Date, long)
+    {
+        java.security.cert.X509CRLSelector r0;
+        java.util.Date r1, $r3;
+        long l0, $l1;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        r1 := @parameter0: java.util.Date;
+        l0 := @parameter1: long;
+        if r1 != null goto label0;
+
+        $r3 = null;
+        goto label1;
+
+     label0:
+        $r3 = new java.util.Date;
+        $l1 = virtualinvoke r1.<java.util.Date: long getTime()>();
+        specialinvoke $r3.<java.util.Date: void <init>(long)>($l1);
+
+     label1:
+        r0.<java.security.cert.X509CRLSelector: java.util.Date dateAndTime> = $r3;
+        r0.<java.security.cert.X509CRLSelector: long skew> = l0;
+        return;
+    }
+
+    public void setCertificateChecking(java.security.cert.X509Certificate)
+    {
+        java.security.cert.X509CRLSelector r0;
+        java.security.cert.X509Certificate r1;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        r1 := @parameter0: java.security.cert.X509Certificate;
+        r0.<java.security.cert.X509CRLSelector: java.security.cert.X509Certificate certChecking> = r1;
+        return;
+    }
+
+    public java.util.Collection getIssuers()
+    {
+        java.security.cert.X509CRLSelector r0;
+        java.util.HashSet $r1, $r2;
+        java.util.Collection $r3;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        $r1 = r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerX500Principals>;
+        if $r1 != null goto label0;
+
+        return null;
+
+     label0:
+        $r2 = r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerX500Principals>;
+        $r3 = staticinvoke <java.util.Collections: java.util.Collection unmodifiableCollection(java.util.Collection)>($r2);
+        return $r3;
+    }
+
+    public java.util.Collection getIssuerNames()
+    {
+        java.security.cert.X509CRLSelector r0;
+        java.util.HashSet $r1, $r2, $r3;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        $r1 = r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerNames>;
+        if $r1 != null goto label0;
+
+        return null;
+
+     label0:
+        $r2 = r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerNames>;
+        $r3 = staticinvoke <java.security.cert.X509CRLSelector: java.util.HashSet cloneIssuerNames(java.util.Collection)>($r2);
+        return $r3;
+    }
+
+    public java.math.BigInteger getMinCRL()
+    {
+        java.security.cert.X509CRLSelector r0;
+        java.math.BigInteger $r1;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        $r1 = r0.<java.security.cert.X509CRLSelector: java.math.BigInteger minCRL>;
+        return $r1;
+    }
+
+    public java.math.BigInteger getMaxCRL()
+    {
+        java.security.cert.X509CRLSelector r0;
+        java.math.BigInteger $r1;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        $r1 = r0.<java.security.cert.X509CRLSelector: java.math.BigInteger maxCRL>;
+        return $r1;
+    }
+
+    public java.util.Date getDateAndTime()
+    {
+        java.security.cert.X509CRLSelector r0;
+        java.util.Date $r1, $r2, $r4;
+        java.lang.Object $r3;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        $r1 = r0.<java.security.cert.X509CRLSelector: java.util.Date dateAndTime>;
+        if $r1 != null goto label0;
+
+        return null;
+
+     label0:
+        $r2 = r0.<java.security.cert.X509CRLSelector: java.util.Date dateAndTime>;
+        $r3 = virtualinvoke $r2.<java.util.Date: java.lang.Object clone()>();
+        $r4 = (java.util.Date) $r3;
+        return $r4;
+    }
+
+    public java.security.cert.X509Certificate getCertificateChecking()
+    {
+        java.security.cert.X509CRLSelector r0;
+        java.security.cert.X509Certificate $r1;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        $r1 = r0.<java.security.cert.X509CRLSelector: java.security.cert.X509Certificate certChecking>;
+        return $r1;
+    }
+
+    public java.lang.String toString()
+    {
+        java.security.cert.X509CRLSelector r0;
+        java.lang.StringBuffer $r1, r2;
+        java.util.Iterator r3;
+        java.util.HashSet $r5, $r7;
+        boolean $z0;
+        java.lang.StringBuilder $r8, $r9, $r11, $r12, $r16, $r17, $r19, $r20, $r24, $r25, $r27, $r28, $r32, $r33, $r35, $r36, $r40, $r41, $r43, $r44;
+        java.lang.Object $r10;
+        java.lang.String $r13, $r21, $r29, $r37, $r45, $r48;
+        java.math.BigInteger $r15, $r18, $r23, $r26;
+        java.util.Date $r31, $r34;
+        java.security.cert.X509Certificate $r39, $r42;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        r2 = $r1;
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("X509CRLSelector: [\n");
+        $r5 = r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerNames>;
+        if $r5 == null goto label1;
+
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("  IssuerNames:\n");
+        $r7 = r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerNames>;
+        r3 = virtualinvoke $r7.<java.util.HashSet: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r8 = new java.lang.StringBuilder;
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>()>();
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("    ");
+        $r10 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+        $r11 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r10);
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\n");
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r13);
+        goto label0;
+
+     label1:
+        $r15 = r0.<java.security.cert.X509CRLSelector: java.math.BigInteger minCRL>;
+        if $r15 == null goto label2;
+
+        $r16 = new java.lang.StringBuilder;
+        specialinvoke $r16.<java.lang.StringBuilder: void <init>()>();
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("  minCRLNumber: ");
+        $r18 = r0.<java.security.cert.X509CRLSelector: java.math.BigInteger minCRL>;
+        $r19 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r18);
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\n");
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r21);
+
+     label2:
+        $r23 = r0.<java.security.cert.X509CRLSelector: java.math.BigInteger maxCRL>;
+        if $r23 == null goto label3;
+
+        $r24 = new java.lang.StringBuilder;
+        specialinvoke $r24.<java.lang.StringBuilder: void <init>()>();
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("  maxCRLNumber: ");
+        $r26 = r0.<java.security.cert.X509CRLSelector: java.math.BigInteger maxCRL>;
+        $r27 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r26);
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\n");
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r29);
+
+     label3:
+        $r31 = r0.<java.security.cert.X509CRLSelector: java.util.Date dateAndTime>;
+        if $r31 == null goto label4;
+
+        $r32 = new java.lang.StringBuilder;
+        specialinvoke $r32.<java.lang.StringBuilder: void <init>()>();
+        $r33 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("  dateAndTime: ");
+        $r34 = r0.<java.security.cert.X509CRLSelector: java.util.Date dateAndTime>;
+        $r35 = virtualinvoke $r33.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r34);
+        $r36 = virtualinvoke $r35.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\n");
+        $r37 = virtualinvoke $r36.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r37);
+
+     label4:
+        $r39 = r0.<java.security.cert.X509CRLSelector: java.security.cert.X509Certificate certChecking>;
+        if $r39 == null goto label5;
+
+        $r40 = new java.lang.StringBuilder;
+        specialinvoke $r40.<java.lang.StringBuilder: void <init>()>();
+        $r41 = virtualinvoke $r40.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("  Certificate being checked: ");
+        $r42 = r0.<java.security.cert.X509CRLSelector: java.security.cert.X509Certificate certChecking>;
+        $r43 = virtualinvoke $r41.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r42);
+        $r44 = virtualinvoke $r43.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\n");
+        $r45 = virtualinvoke $r44.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r45);
+
+     label5:
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("]");
+        $r48 = virtualinvoke r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r48;
+    }
+
+    public boolean match(java.security.cert.CRL)
+    {
+        java.security.cert.X509CRLSelector r0;
+        java.security.cert.CRL r1;
+        java.security.cert.X509CRL r2;
+        javax.security.auth.x500.X500Principal r3, $r10;
+        java.util.Iterator r4;
+        boolean z0, $z1, $z2, $z3, $z4, $z5;
+        byte[] r5, r15;
+        sun.security.x509.CRLNumberExtension r6, $r20;
+        java.util.HashSet $r7, $r8;
+        java.lang.Object $r9, $r22;
+        sun.security.util.Debug $r11, $r12, $r16, $r17, $r26, $r27, $r30, $r31, $r34, $r35, $r39, $r40, $r47, $r48;
+        java.math.BigInteger $r13, $r14, r23, $r28, $r29, $r32, $r33;
+        sun.security.util.DerInputStream $r18, r19;
+        java.lang.Boolean $r21;
+        java.io.IOException $r24, r25;
+        int $i0, $i1;
+        java.util.Date $r36, r37, r38, r41, r42, $r43, $r44, $r45, $r46;
+        long $l2, $l4, $l5, $l6, $l7, $l8, $l9;
+        byte $b3;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+        r1 := @parameter0: java.security.cert.CRL;
+        $z1 = r1 instanceof java.security.cert.X509CRL;
+        if $z1 != 0 goto label0;
+
+        return 0;
+
+     label0:
+        r2 = (java.security.cert.X509CRL) r1;
+        $r7 = r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerNames>;
+        if $r7 == null goto label4;
+
+        r3 = virtualinvoke r2.<java.security.cert.X509CRL: javax.security.auth.x500.X500Principal getIssuerX500Principal()>();
+        $r8 = r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerX500Principals>;
+        r4 = virtualinvoke $r8.<java.util.HashSet: java.util.Iterator iterator()>();
+        z0 = 0;
+
+     label1:
+        if z0 != 0 goto label2;
+
+        $z2 = interfaceinvoke r4.<java.util.Iterator: boolean hasNext()>();
+        if $z2 == 0 goto label2;
+
+        $r9 = interfaceinvoke r4.<java.util.Iterator: java.lang.Object next()>();
+        $r10 = (javax.security.auth.x500.X500Principal) $r9;
+        $z3 = virtualinvoke $r10.<javax.security.auth.x500.X500Principal: boolean equals(java.lang.Object)>(r3);
+        if $z3 == 0 goto label1;
+
+        z0 = 1;
+        goto label1;
+
+     label2:
+        if z0 != 0 goto label4;
+
+        $r11 = <java.security.cert.X509CRLSelector: sun.security.util.Debug debug>;
+        if $r11 == null goto label3;
+
+        $r12 = <java.security.cert.X509CRLSelector: sun.security.util.Debug debug>;
+        virtualinvoke $r12.<sun.security.util.Debug: void println(java.lang.String)>("X509CRLSelector.match: issuer DNs don\'t match");
+
+     label3:
+        return 0;
+
+     label4:
+        $r13 = r0.<java.security.cert.X509CRLSelector: java.math.BigInteger minCRL>;
+        if $r13 != null goto label5;
+
+        $r14 = r0.<java.security.cert.X509CRLSelector: java.math.BigInteger maxCRL>;
+        if $r14 == null goto label14;
+
+     label5:
+        r15 = virtualinvoke r2.<java.security.cert.X509CRL: byte[] getExtensionValue(java.lang.String)>("2.5.29.20");
+        if r15 != null goto label6;
+
+        $r16 = <java.security.cert.X509CRLSelector: sun.security.util.Debug debug>;
+        if $r16 == null goto label6;
+
+        $r17 = <java.security.cert.X509CRLSelector: sun.security.util.Debug debug>;
+        virtualinvoke $r17.<sun.security.util.Debug: void println(java.lang.String)>("X509CRLSelector.match: no CRLNumber");
+
+     label6:
+        $r18 = new sun.security.util.DerInputStream;
+        specialinvoke $r18.<sun.security.util.DerInputStream: void <init>(byte[])>(r15);
+        r19 = $r18;
+        r5 = virtualinvoke r19.<sun.security.util.DerInputStream: byte[] getOctetString()>();
+        $r20 = new sun.security.x509.CRLNumberExtension;
+        $r21 = <java.lang.Boolean: java.lang.Boolean FALSE>;
+        specialinvoke $r20.<sun.security.x509.CRLNumberExtension: void <init>(java.lang.Boolean,java.lang.Object)>($r21, r5);
+        r6 = $r20;
+        $r22 = virtualinvoke r6.<sun.security.x509.CRLNumberExtension: java.lang.Object get(java.lang.String)>("value");
+        r23 = (java.math.BigInteger) $r22;
+
+     label7:
+        goto label10;
+
+     label8:
+        $r24 := @caughtexception;
+        r25 = $r24;
+        $r26 = <java.security.cert.X509CRLSelector: sun.security.util.Debug debug>;
+        if $r26 == null goto label9;
+
+        $r27 = <java.security.cert.X509CRLSelector: sun.security.util.Debug debug>;
+        virtualinvoke $r27.<sun.security.util.Debug: void println(java.lang.String)>("X509CRLSelector.match: exception in decoding CRL number");
+
+     label9:
+        return 0;
+
+     label10:
+        $r28 = r0.<java.security.cert.X509CRLSelector: java.math.BigInteger minCRL>;
+        if $r28 == null goto label12;
+
+        $r29 = r0.<java.security.cert.X509CRLSelector: java.math.BigInteger minCRL>;
+        $i0 = virtualinvoke r23.<java.math.BigInteger: int compareTo(java.math.BigInteger)>($r29);
+        if $i0 >= 0 goto label12;
+
+        $r30 = <java.security.cert.X509CRLSelector: sun.security.util.Debug debug>;
+        if $r30 == null goto label11;
+
+        $r31 = <java.security.cert.X509CRLSelector: sun.security.util.Debug debug>;
+        virtualinvoke $r31.<sun.security.util.Debug: void println(java.lang.String)>("X509CRLSelector.match: CRLNumber too small");
+
+     label11:
+        return 0;
+
+     label12:
+        $r32 = r0.<java.security.cert.X509CRLSelector: java.math.BigInteger maxCRL>;
+        if $r32 == null goto label14;
+
+        $r33 = r0.<java.security.cert.X509CRLSelector: java.math.BigInteger maxCRL>;
+        $i1 = virtualinvoke r23.<java.math.BigInteger: int compareTo(java.math.BigInteger)>($r33);
+        if $i1 <= 0 goto label14;
+
+        $r34 = <java.security.cert.X509CRLSelector: sun.security.util.Debug debug>;
+        if $r34 == null goto label13;
+
+        $r35 = <java.security.cert.X509CRLSelector: sun.security.util.Debug debug>;
+        virtualinvoke $r35.<sun.security.util.Debug: void println(java.lang.String)>("X509CRLSelector.match: CRLNumber too large");
+
+     label13:
+        return 0;
+
+     label14:
+        $r36 = r0.<java.security.cert.X509CRLSelector: java.util.Date dateAndTime>;
+        if $r36 == null goto label20;
+
+        r37 = virtualinvoke r2.<java.security.cert.X509CRL: java.util.Date getThisUpdate()>();
+        r38 = virtualinvoke r2.<java.security.cert.X509CRL: java.util.Date getNextUpdate()>();
+        if r38 != null goto label16;
+
+        $r39 = <java.security.cert.X509CRLSelector: sun.security.util.Debug debug>;
+        if $r39 == null goto label15;
+
+        $r40 = <java.security.cert.X509CRLSelector: sun.security.util.Debug debug>;
+        virtualinvoke $r40.<sun.security.util.Debug: void println(java.lang.String)>("X509CRLSelector.match: nextUpdate null");
+
+     label15:
+        return 0;
+
+     label16:
+        r41 = r0.<java.security.cert.X509CRLSelector: java.util.Date dateAndTime>;
+        r42 = r0.<java.security.cert.X509CRLSelector: java.util.Date dateAndTime>;
+        $l2 = r0.<java.security.cert.X509CRLSelector: long skew>;
+        $b3 = $l2 cmp 0L;
+        if $b3 <= 0 goto label17;
+
+        $r43 = new java.util.Date;
+        $r44 = r0.<java.security.cert.X509CRLSelector: java.util.Date dateAndTime>;
+        $l4 = virtualinvoke $r44.<java.util.Date: long getTime()>();
+        $l5 = r0.<java.security.cert.X509CRLSelector: long skew>;
+        $l6 = $l4 + $l5;
+        specialinvoke $r43.<java.util.Date: void <init>(long)>($l6);
+        r41 = $r43;
+        $r45 = new java.util.Date;
+        $r46 = r0.<java.security.cert.X509CRLSelector: java.util.Date dateAndTime>;
+        $l7 = virtualinvoke $r46.<java.util.Date: long getTime()>();
+        $l8 = r0.<java.security.cert.X509CRLSelector: long skew>;
+        $l9 = $l7 - $l8;
+        specialinvoke $r45.<java.util.Date: void <init>(long)>($l9);
+        r42 = $r45;
+
+     label17:
+        $z4 = virtualinvoke r42.<java.util.Date: boolean after(java.util.Date)>(r38);
+        if $z4 != 0 goto label18;
+
+        $z5 = virtualinvoke r41.<java.util.Date: boolean before(java.util.Date)>(r37);
+        if $z5 == 0 goto label20;
+
+     label18:
+        $r47 = <java.security.cert.X509CRLSelector: sun.security.util.Debug debug>;
+        if $r47 == null goto label19;
+
+        $r48 = <java.security.cert.X509CRLSelector: sun.security.util.Debug debug>;
+        virtualinvoke $r48.<sun.security.util.Debug: void println(java.lang.String)>("X509CRLSelector.match: update out of range");
+
+     label19:
+        return 0;
+
+     label20:
+        return 1;
+
+        catch java.io.IOException from label6 to label7 with label8;
+    }
+
+    public java.lang.Object clone()
+    {
+        java.security.cert.X509CRLSelector r0, r1;
+        java.util.HashSet $r2, $r4, $r5, $r6, $r7;
+        java.lang.Object $r3;
+        java.lang.CloneNotSupportedException $r9, r10;
+        java.lang.InternalError $r11;
+        java.lang.String $r12;
+
+        r0 := @this: java.security.cert.X509CRLSelector;
+
+     label0:
+        $r3 = specialinvoke r0.<java.lang.Object: java.lang.Object clone()>();
+        r1 = (java.security.cert.X509CRLSelector) $r3;
+        $r4 = r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerNames>;
+        if $r4 == null goto label1;
+
+        $r2 = new java.util.HashSet;
+        $r5 = r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerNames>;
+        specialinvoke $r2.<java.util.HashSet: void <init>(java.util.Collection)>($r5);
+        r1.<java.security.cert.X509CRLSelector: java.util.HashSet issuerNames> = $r2;
+        $r6 = new java.util.HashSet;
+        $r7 = r0.<java.security.cert.X509CRLSelector: java.util.HashSet issuerX500Principals>;
+        specialinvoke $r6.<java.util.HashSet: void <init>(java.util.Collection)>($r7);
+        r1.<java.security.cert.X509CRLSelector: java.util.HashSet issuerX500Principals> = $r6;
+
+     label1:
+        return r1;
+
+     label2:
+        $r9 := @caughtexception;
+        r10 = $r9;
+        $r11 = new java.lang.InternalError;
+        $r12 = virtualinvoke r10.<java.lang.CloneNotSupportedException: java.lang.String toString()>();
+        specialinvoke $r11.<java.lang.InternalError: void <init>(java.lang.String)>($r12);
+        throw $r11;
+
+        catch java.lang.CloneNotSupportedException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        sun.security.util.Debug $r0;
+
+        staticinvoke <java.security.cert.CertPathHelperImpl: void initialize()>();
+        $r0 = staticinvoke <sun.security.util.Debug: sun.security.util.Debug getInstance(java.lang.String)>("certpath");
+        <java.security.cert.X509CRLSelector: sun.security.util.Debug debug> = $r0;
+        return;
+    }
+}

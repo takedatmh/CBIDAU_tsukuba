@@ -1,0 +1,1572 @@
+public class java.util.Date extends java.lang.Object implements java.io.Serializable, java.lang.Cloneable, java.lang.Comparable
+{
+    private static final sun.util.calendar.BaseCalendar gcal;
+    private static sun.util.calendar.BaseCalendar jcal;
+    private transient long fastTime;
+    private transient sun.util.calendar.BaseCalendar$Date cdate;
+    private static int defaultCenturyStart;
+    private static final long serialVersionUID;
+    private static final java.lang.String[] wtb;
+    private static final int[] ttb;
+
+    public void <init>()
+    {
+        java.util.Date r0;
+        long $l0;
+
+        r0 := @this: java.util.Date;
+        $l0 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        specialinvoke r0.<java.util.Date: void <init>(long)>($l0);
+        return;
+    }
+
+    public void <init>(long)
+    {
+        java.util.Date r0;
+        long l0;
+
+        r0 := @this: java.util.Date;
+        l0 := @parameter0: long;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.util.Date: long fastTime> = l0;
+        return;
+    }
+
+    public void <init>(int, int, int)
+    {
+        java.util.Date r0;
+        int i0, i1, i2;
+
+        r0 := @this: java.util.Date;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        i2 := @parameter2: int;
+        specialinvoke r0.<java.util.Date: void <init>(int,int,int,int,int,int)>(i0, i1, i2, 0, 0, 0);
+        return;
+    }
+
+    public void <init>(int, int, int, int, int)
+    {
+        java.util.Date r0;
+        int i0, i1, i2, i3, i4;
+
+        r0 := @this: java.util.Date;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        i2 := @parameter2: int;
+        i3 := @parameter3: int;
+        i4 := @parameter4: int;
+        specialinvoke r0.<java.util.Date: void <init>(int,int,int,int,int,int)>(i0, i1, i2, i3, i4, 0);
+        return;
+    }
+
+    public void <init>(int, int, int, int, int, int)
+    {
+        java.util.Date r0;
+        int i0, i1, i2, i3, i4, i5, i6, $i7, $i8, $i9;
+        sun.util.calendar.BaseCalendar r1;
+        java.util.TimeZone $r2;
+        sun.util.calendar.CalendarDate $r3;
+        sun.util.calendar.BaseCalendar$Date $r4, $r5, $r6;
+
+        r0 := @this: java.util.Date;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        i2 := @parameter2: int;
+        i3 := @parameter3: int;
+        i4 := @parameter4: int;
+        i5 := @parameter5: int;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        i6 = i0 + 1900;
+        if i1 < 12 goto label0;
+
+        $i7 = i1 / 12;
+        i6 = i6 + $i7;
+        i1 = i1 % 12;
+        goto label1;
+
+     label0:
+        if i1 >= 0 goto label1;
+
+        $i8 = staticinvoke <sun.util.calendar.CalendarUtils: int floorDivide(int,int)>(i1, 12);
+        i6 = i6 + $i8;
+        i1 = staticinvoke <sun.util.calendar.CalendarUtils: int mod(int,int)>(i1, 12);
+
+     label1:
+        r1 = staticinvoke <java.util.Date: sun.util.calendar.BaseCalendar getCalendarSystem(int)>(i6);
+        $r2 = staticinvoke <java.util.TimeZone: java.util.TimeZone getDefaultRef()>();
+        $r3 = virtualinvoke r1.<sun.util.calendar.BaseCalendar: sun.util.calendar.CalendarDate newCalendarDate(java.util.TimeZone)>($r2);
+        $r4 = (sun.util.calendar.BaseCalendar$Date) $r3;
+        r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate> = $r4;
+        $r5 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        $i9 = i1 + 1;
+        $r6 = virtualinvoke $r5.<sun.util.calendar.BaseCalendar$Date: sun.util.calendar.BaseCalendar$Date setNormalizedDate(int,int,int)>(i6, $i9, i2);
+        virtualinvoke $r6.<sun.util.calendar.BaseCalendar$Date: sun.util.calendar.CalendarDate setTimeOfDay(int,int,int,int)>(i3, i4, i5, 0);
+        specialinvoke r0.<java.util.Date: long getTimeImpl()>();
+        r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate> = null;
+        return;
+    }
+
+    public void <init>(java.lang.String)
+    {
+        java.util.Date r0;
+        java.lang.String r1;
+        long $l0;
+
+        r0 := @this: java.util.Date;
+        r1 := @parameter0: java.lang.String;
+        $l0 = staticinvoke <java.util.Date: long parse(java.lang.String)>(r1);
+        specialinvoke r0.<java.util.Date: void <init>(long)>($l0);
+        return;
+    }
+
+    public java.lang.Object clone()
+    {
+        java.util.Date r0, r1;
+        java.lang.CloneNotSupportedException r2, $r8;
+        java.lang.Object $r3, $r6;
+        sun.util.calendar.BaseCalendar$Date $r4, $r5, $r7;
+
+        r0 := @this: java.util.Date;
+        r1 = null;
+
+     label0:
+        $r3 = specialinvoke r0.<java.lang.Object: java.lang.Object clone()>();
+        r1 = (java.util.Date) $r3;
+        $r4 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        if $r4 == null goto label1;
+
+        $r5 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        $r6 = virtualinvoke $r5.<sun.util.calendar.BaseCalendar$Date: java.lang.Object clone()>();
+        $r7 = (sun.util.calendar.BaseCalendar$Date) $r6;
+        r1.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate> = $r7;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r8 := @caughtexception;
+        r2 = $r8;
+
+     label3:
+        return r1;
+
+        catch java.lang.CloneNotSupportedException from label0 to label1 with label2;
+    }
+
+    public static long UTC(int, int, int, int, int, int)
+    {
+        int i0, i1, i2, i3, i4, i5, i6, i7, $i8, $i9;
+        sun.util.calendar.BaseCalendar r0;
+        sun.util.calendar.BaseCalendar$Date r1, $r4;
+        java.util.Date r2, $r6;
+        sun.util.calendar.CalendarDate $r3;
+        long $l10;
+
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        i2 := @parameter2: int;
+        i3 := @parameter3: int;
+        i4 := @parameter4: int;
+        i5 := @parameter5: int;
+        i6 = i0 + 1900;
+        if i1 < 12 goto label0;
+
+        $i8 = i1 / 12;
+        i6 = i6 + $i8;
+        i1 = i1 % 12;
+        goto label1;
+
+     label0:
+        if i1 >= 0 goto label1;
+
+        $i9 = staticinvoke <sun.util.calendar.CalendarUtils: int floorDivide(int,int)>(i1, 12);
+        i6 = i6 + $i9;
+        i1 = staticinvoke <sun.util.calendar.CalendarUtils: int mod(int,int)>(i1, 12);
+
+     label1:
+        i7 = i1 + 1;
+        r0 = staticinvoke <java.util.Date: sun.util.calendar.BaseCalendar getCalendarSystem(int)>(i6);
+        $r3 = virtualinvoke r0.<sun.util.calendar.BaseCalendar: sun.util.calendar.CalendarDate newCalendarDate(java.util.TimeZone)>(null);
+        r1 = (sun.util.calendar.BaseCalendar$Date) $r3;
+        $r4 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: sun.util.calendar.BaseCalendar$Date setNormalizedDate(int,int,int)>(i6, i7, i2);
+        virtualinvoke $r4.<sun.util.calendar.BaseCalendar$Date: sun.util.calendar.CalendarDate setTimeOfDay(int,int,int,int)>(i3, i4, i5, 0);
+        $r6 = new java.util.Date;
+        specialinvoke $r6.<java.util.Date: void <init>(long)>(0L);
+        r2 = $r6;
+        specialinvoke r2.<java.util.Date: sun.util.calendar.BaseCalendar$Date normalize(sun.util.calendar.BaseCalendar$Date)>(r1);
+        $l10 = r2.<java.util.Date: long fastTime>;
+        return $l10;
+    }
+
+    public static long parse(java.lang.String)
+    {
+        java.lang.String r0, $r4;
+        int i0, i3, i8, i11, i13, i14, i15, i16, i19, $i21, $i22, i23, $i24, $i25, $i26, $i27, i28, $i30, $i31, $i32, $i33, $i34, $i35, $i36, $i37, $i38, $i39, $i40, $i42, $i44;
+        byte b1, b2, b4, b5, b6, b7, b9, b10;
+        char c12, c17, c18, $c20, c29;
+        java.lang.Throwable r1, $r10;
+        java.lang.String[] $r2, $r3;
+        boolean $z0;
+        int[] $r5;
+        java.lang.Class $r6, r7;
+        sun.util.calendar.BaseCalendar $r8, r11;
+        sun.util.calendar.CalendarDate $r9, $r13, $r17;
+        java.util.TimeZone $r12;
+        sun.util.calendar.BaseCalendar$Date r14, r18;
+        long $l41, $l43, $l45, $l46;
+        java.lang.IllegalArgumentException $r21;
+
+        r0 := @parameter0: java.lang.String;
+        i0 = -2147483648;
+        b1 = -1;
+        b2 = -1;
+        i3 = -1;
+        b4 = -1;
+        b5 = -1;
+        b6 = -1;
+        b7 = -1;
+        i8 = 0;
+        b9 = -1;
+        b10 = -1;
+        i11 = -1;
+        c12 = 0;
+        if r0 != null goto label0;
+
+        goto label56;
+
+     label0:
+        i13 = virtualinvoke r0.<java.lang.String: int length()>();
+
+     label1:
+        if i8 >= i13 goto label42;
+
+        c17 = virtualinvoke r0.<java.lang.String: char charAt(int)>(i8);
+        i8 = i8 + 1;
+        if c17 <= 32 goto label1;
+
+        if c17 != 44 goto label2;
+
+        goto label1;
+
+     label2:
+        if c17 != 40 goto label5;
+
+        i14 = 1;
+
+     label3:
+        if i8 >= i13 goto label1;
+
+        c18 = virtualinvoke r0.<java.lang.String: char charAt(int)>(i8);
+        i8 = i8 + 1;
+        if c18 != 40 goto label4;
+
+        i14 = i14 + 1;
+        goto label3;
+
+     label4:
+        if c18 != 41 goto label3;
+
+        i14 = i14 + -1;
+        if i14 > 0 goto label3;
+
+        goto label1;
+
+     label5:
+        if 48 > c17 goto label26;
+
+        if c17 > 57 goto label26;
+
+        i19 = c17 - 48;
+
+     label6:
+        if i8 >= i13 goto label7;
+
+        $c20 = virtualinvoke r0.<java.lang.String: char charAt(int)>(i8);
+        c17 = $c20;
+        if 48 > $c20 goto label7;
+
+        if c17 > 57 goto label7;
+
+        $i21 = i19 * 10;
+        $i22 = $i21 + c17;
+        i19 = $i22 - 48;
+        i8 = i8 + 1;
+        goto label6;
+
+     label7:
+        if c12 == 43 goto label8;
+
+        if c12 != 45 goto label13;
+
+        if i0 == -2147483648 goto label13;
+
+     label8:
+        if i19 >= 24 goto label9;
+
+        i23 = i19 * 60;
+        goto label10;
+
+     label9:
+        $i24 = i19 % 100;
+        $i25 = i19 / 100;
+        $i26 = $i25 * 60;
+        i23 = $i24 + $i26;
+
+     label10:
+        if c12 != 43 goto label11;
+
+        i23 = neg i23;
+
+     label11:
+        if i11 == 0 goto label12;
+
+        if i11 == -1 goto label12;
+
+        goto label56;
+
+     label12:
+        i11 = i23;
+        goto label25;
+
+     label13:
+        if i19 < 70 goto label16;
+
+        if i0 == -2147483648 goto label14;
+
+        goto label56;
+
+     label14:
+        if c17 <= 32 goto label15;
+
+        if c17 == 44 goto label15;
+
+        if c17 == 47 goto label15;
+
+        if i8 < i13 goto label56;
+
+     label15:
+        i0 = i19;
+        goto label25;
+
+     label16:
+        if c17 != 58 goto label18;
+
+        if i3 >= 0 goto label17;
+
+        i3 = (byte) i19;
+        goto label25;
+
+     label17:
+        if b4 >= 0 goto label56;
+
+        b4 = (byte) i19;
+        goto label25;
+
+     label18:
+        if c17 != 47 goto label20;
+
+        if b1 >= 0 goto label19;
+
+        $i27 = i19 - 1;
+        b1 = (byte) $i27;
+        goto label25;
+
+     label19:
+        if b2 >= 0 goto label56;
+
+        b2 = (byte) i19;
+        goto label25;
+
+     label20:
+        if i8 >= i13 goto label21;
+
+        if c17 == 44 goto label21;
+
+        if c17 <= 32 goto label21;
+
+        if c17 == 45 goto label21;
+
+        goto label56;
+
+     label21:
+        if i3 < 0 goto label22;
+
+        if b4 >= 0 goto label22;
+
+        b4 = (byte) i19;
+        goto label25;
+
+     label22:
+        if b4 < 0 goto label23;
+
+        if b5 >= 0 goto label23;
+
+        b5 = (byte) i19;
+        goto label25;
+
+     label23:
+        if b2 >= 0 goto label24;
+
+        b2 = (byte) i19;
+        goto label25;
+
+     label24:
+        if i0 != -2147483648 goto label56;
+
+        if b1 < 0 goto label56;
+
+        if b2 < 0 goto label56;
+
+        i0 = i19;
+
+     label25:
+        c12 = 0;
+        goto label1;
+
+     label26:
+        if c17 == 47 goto label27;
+
+        if c17 == 58 goto label27;
+
+        if c17 == 43 goto label27;
+
+        if c17 != 45 goto label28;
+
+     label27:
+        c12 = c17;
+        goto label1;
+
+     label28:
+        i28 = i8 - 1;
+
+     label29:
+        if i8 >= i13 goto label32;
+
+        c29 = virtualinvoke r0.<java.lang.String: char charAt(int)>(i8);
+        if 65 > c29 goto label30;
+
+        if c29 <= 90 goto label31;
+
+     label30:
+        if 97 > c29 goto label32;
+
+        if c29 <= 122 goto label31;
+
+        goto label32;
+
+     label31:
+        i8 = i8 + 1;
+        goto label29;
+
+     label32:
+        $i30 = i28 + 1;
+        if i8 > $i30 goto label33;
+
+        goto label56;
+
+     label33:
+        $r2 = <java.util.Date: java.lang.String[] wtb>;
+        i15 = lengthof $r2;
+
+     label34:
+        i15 = i15 + -1;
+        if i15 < 0 goto label40;
+
+        $r3 = <java.util.Date: java.lang.String[] wtb>;
+        $r4 = $r3[i15];
+        $i31 = i8 - i28;
+        $z0 = virtualinvoke $r4.<java.lang.String: boolean regionMatches(boolean,int,java.lang.String,int,int)>(1, 0, r0, i28, $i31);
+        if $z0 == 0 goto label34;
+
+        $r5 = <java.util.Date: int[] ttb>;
+        i16 = $r5[i15];
+        if i16 == 0 goto label40;
+
+        if i16 != 1 goto label36;
+
+        if i3 > 12 goto label56;
+
+        if i3 >= 1 goto label35;
+
+        goto label56;
+
+     label35:
+        if i3 >= 12 goto label40;
+
+        i3 = i3 + 12;
+        goto label40;
+
+     label36:
+        if i16 != 14 goto label38;
+
+        if i3 > 12 goto label56;
+
+        if i3 >= 1 goto label37;
+
+        goto label56;
+
+     label37:
+        if i3 != 12 goto label40;
+
+        i3 = 0;
+        goto label40;
+
+     label38:
+        if i16 > 13 goto label39;
+
+        if b1 >= 0 goto label56;
+
+        $i32 = i16 - 2;
+        b1 = (byte) $i32;
+        goto label40;
+
+     label39:
+        i11 = i16 - 10000;
+        goto label40;
+
+     label40:
+        if i15 >= 0 goto label41;
+
+        goto label56;
+
+     label41:
+        c12 = 0;
+        goto label1;
+
+     label42:
+        if i0 == -2147483648 goto label56;
+
+        if b1 < 0 goto label56;
+
+        if b2 >= 0 goto label43;
+
+        goto label56;
+
+     label43:
+        if i0 >= 100 goto label51;
+
+        $r6 = class "java/util/Date";
+        r7 = $r6;
+        entermonitor $r6;
+
+     label44:
+        $i33 = <java.util.Date: int defaultCenturyStart>;
+        if $i33 != 0 goto label45;
+
+        $r8 = <java.util.Date: sun.util.calendar.BaseCalendar gcal>;
+        $r9 = virtualinvoke $r8.<sun.util.calendar.BaseCalendar: sun.util.calendar.CalendarDate getCalendarDate()>();
+        $i34 = virtualinvoke $r9.<sun.util.calendar.CalendarDate: int getYear()>();
+        $i35 = $i34 - 80;
+        <java.util.Date: int defaultCenturyStart> = $i35;
+
+     label45:
+        exitmonitor r7;
+
+     label46:
+        goto label50;
+
+     label47:
+        $r10 := @caughtexception;
+
+     label48:
+        r1 = $r10;
+        exitmonitor r7;
+
+     label49:
+        throw r1;
+
+     label50:
+        $i36 = <java.util.Date: int defaultCenturyStart>;
+        $i37 = $i36 / 100;
+        $i38 = $i37 * 100;
+        i0 = i0 + $i38;
+        $i39 = <java.util.Date: int defaultCenturyStart>;
+        if i0 >= $i39 goto label51;
+
+        i0 = i0 + 100;
+
+     label51:
+        if b5 >= 0 goto label52;
+
+        b5 = 0;
+
+     label52:
+        if b4 >= 0 goto label53;
+
+        b4 = 0;
+
+     label53:
+        if i3 >= 0 goto label54;
+
+        i3 = 0;
+
+     label54:
+        r11 = staticinvoke <java.util.Date: sun.util.calendar.BaseCalendar getCalendarSystem(int)>(i0);
+        if i11 != -1 goto label55;
+
+        $r12 = staticinvoke <java.util.TimeZone: java.util.TimeZone getDefaultRef()>();
+        $r13 = virtualinvoke r11.<sun.util.calendar.BaseCalendar: sun.util.calendar.CalendarDate newCalendarDate(java.util.TimeZone)>($r12);
+        r14 = (sun.util.calendar.BaseCalendar$Date) $r13;
+        $i40 = b1 + 1;
+        virtualinvoke r14.<sun.util.calendar.BaseCalendar$Date: sun.util.calendar.CalendarDate setDate(int,int,int)>(i0, $i40, b2);
+        virtualinvoke r14.<sun.util.calendar.BaseCalendar$Date: sun.util.calendar.CalendarDate setTimeOfDay(int,int,int,int)>(i3, b4, b5, 0);
+        $l41 = virtualinvoke r11.<sun.util.calendar.BaseCalendar: long getTime(sun.util.calendar.CalendarDate)>(r14);
+        return $l41;
+
+     label55:
+        $r17 = virtualinvoke r11.<sun.util.calendar.BaseCalendar: sun.util.calendar.CalendarDate newCalendarDate(java.util.TimeZone)>(null);
+        r18 = (sun.util.calendar.BaseCalendar$Date) $r17;
+        $i42 = b1 + 1;
+        virtualinvoke r18.<sun.util.calendar.BaseCalendar$Date: sun.util.calendar.CalendarDate setDate(int,int,int)>(i0, $i42, b2);
+        virtualinvoke r18.<sun.util.calendar.BaseCalendar$Date: sun.util.calendar.CalendarDate setTimeOfDay(int,int,int,int)>(i3, b4, b5, 0);
+        $l43 = virtualinvoke r11.<sun.util.calendar.BaseCalendar: long getTime(sun.util.calendar.CalendarDate)>(r18);
+        $i44 = i11 * 60000;
+        $l45 = (long) $i44;
+        $l46 = $l43 + $l45;
+        return $l46;
+
+     label56:
+        $r21 = new java.lang.IllegalArgumentException;
+        specialinvoke $r21.<java.lang.IllegalArgumentException: void <init>()>();
+        throw $r21;
+
+        catch java.lang.Throwable from label44 to label46 with label47;
+        catch java.lang.Throwable from label48 to label49 with label47;
+    }
+
+    public int getYear()
+    {
+        java.util.Date r0;
+        sun.util.calendar.BaseCalendar$Date $r1;
+        int $i0, $i1;
+
+        r0 := @this: java.util.Date;
+        $r1 = specialinvoke r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date normalize()>();
+        $i0 = virtualinvoke $r1.<sun.util.calendar.BaseCalendar$Date: int getYear()>();
+        $i1 = $i0 - 1900;
+        return $i1;
+    }
+
+    public void setYear(int)
+    {
+        java.util.Date r0;
+        int i0, $i1;
+        sun.util.calendar.BaseCalendar$Date $r1;
+
+        r0 := @this: java.util.Date;
+        i0 := @parameter0: int;
+        $r1 = specialinvoke r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date getCalendarDate()>();
+        $i1 = i0 + 1900;
+        virtualinvoke $r1.<sun.util.calendar.BaseCalendar$Date: void setNormalizedYear(int)>($i1);
+        return;
+    }
+
+    public int getMonth()
+    {
+        java.util.Date r0;
+        sun.util.calendar.BaseCalendar$Date $r1;
+        int $i0, $i1;
+
+        r0 := @this: java.util.Date;
+        $r1 = specialinvoke r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date normalize()>();
+        $i0 = virtualinvoke $r1.<sun.util.calendar.BaseCalendar$Date: int getMonth()>();
+        $i1 = $i0 - 1;
+        return $i1;
+    }
+
+    public void setMonth(int)
+    {
+        java.util.Date r0;
+        int i0, i1, $i2, $i3, $i4;
+        sun.util.calendar.BaseCalendar$Date r1;
+
+        r0 := @this: java.util.Date;
+        i0 := @parameter0: int;
+        i1 = 0;
+        if i0 < 12 goto label0;
+
+        i1 = i0 / 12;
+        i0 = i0 % 12;
+        goto label1;
+
+     label0:
+        if i0 >= 0 goto label1;
+
+        i1 = staticinvoke <sun.util.calendar.CalendarUtils: int floorDivide(int,int)>(i0, 12);
+        i0 = staticinvoke <sun.util.calendar.CalendarUtils: int mod(int,int)>(i0, 12);
+
+     label1:
+        r1 = specialinvoke r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date getCalendarDate()>();
+        if i1 == 0 goto label2;
+
+        $i2 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: int getNormalizedYear()>();
+        $i3 = $i2 + i1;
+        virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: void setNormalizedYear(int)>($i3);
+
+     label2:
+        $i4 = i0 + 1;
+        virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: sun.util.calendar.CalendarDate setMonth(int)>($i4);
+        return;
+    }
+
+    public int getDate()
+    {
+        java.util.Date r0;
+        sun.util.calendar.BaseCalendar$Date $r1;
+        int $i0;
+
+        r0 := @this: java.util.Date;
+        $r1 = specialinvoke r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date normalize()>();
+        $i0 = virtualinvoke $r1.<sun.util.calendar.BaseCalendar$Date: int getDayOfMonth()>();
+        return $i0;
+    }
+
+    public void setDate(int)
+    {
+        java.util.Date r0;
+        int i0;
+        sun.util.calendar.BaseCalendar$Date $r1;
+
+        r0 := @this: java.util.Date;
+        i0 := @parameter0: int;
+        $r1 = specialinvoke r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date getCalendarDate()>();
+        virtualinvoke $r1.<sun.util.calendar.BaseCalendar$Date: sun.util.calendar.CalendarDate setDayOfMonth(int)>(i0);
+        return;
+    }
+
+    public int getDay()
+    {
+        java.util.Date r0;
+        sun.util.calendar.BaseCalendar $r1;
+        sun.util.calendar.BaseCalendar$Date $r2;
+        int $i0, $i1;
+
+        r0 := @this: java.util.Date;
+        $r2 = specialinvoke r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date normalize()>();
+        $i0 = virtualinvoke $r2.<sun.util.calendar.BaseCalendar$Date: int getDayOfWeek()>();
+        $r1 = <java.util.Date: sun.util.calendar.BaseCalendar gcal>;
+        $i1 = $i0 - 1;
+        return $i1;
+    }
+
+    public int getHours()
+    {
+        java.util.Date r0;
+        sun.util.calendar.BaseCalendar$Date $r1;
+        int $i0;
+
+        r0 := @this: java.util.Date;
+        $r1 = specialinvoke r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date normalize()>();
+        $i0 = virtualinvoke $r1.<sun.util.calendar.BaseCalendar$Date: int getHours()>();
+        return $i0;
+    }
+
+    public void setHours(int)
+    {
+        java.util.Date r0;
+        int i0;
+        sun.util.calendar.BaseCalendar$Date $r1;
+
+        r0 := @this: java.util.Date;
+        i0 := @parameter0: int;
+        $r1 = specialinvoke r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date getCalendarDate()>();
+        virtualinvoke $r1.<sun.util.calendar.BaseCalendar$Date: sun.util.calendar.CalendarDate setHours(int)>(i0);
+        return;
+    }
+
+    public int getMinutes()
+    {
+        java.util.Date r0;
+        sun.util.calendar.BaseCalendar$Date $r1;
+        int $i0;
+
+        r0 := @this: java.util.Date;
+        $r1 = specialinvoke r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date normalize()>();
+        $i0 = virtualinvoke $r1.<sun.util.calendar.BaseCalendar$Date: int getMinutes()>();
+        return $i0;
+    }
+
+    public void setMinutes(int)
+    {
+        java.util.Date r0;
+        int i0;
+        sun.util.calendar.BaseCalendar$Date $r1;
+
+        r0 := @this: java.util.Date;
+        i0 := @parameter0: int;
+        $r1 = specialinvoke r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date getCalendarDate()>();
+        virtualinvoke $r1.<sun.util.calendar.BaseCalendar$Date: sun.util.calendar.CalendarDate setMinutes(int)>(i0);
+        return;
+    }
+
+    public int getSeconds()
+    {
+        java.util.Date r0;
+        sun.util.calendar.BaseCalendar$Date $r1;
+        int $i0;
+
+        r0 := @this: java.util.Date;
+        $r1 = specialinvoke r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date normalize()>();
+        $i0 = virtualinvoke $r1.<sun.util.calendar.BaseCalendar$Date: int getSeconds()>();
+        return $i0;
+    }
+
+    public void setSeconds(int)
+    {
+        java.util.Date r0;
+        int i0;
+        sun.util.calendar.BaseCalendar$Date $r1;
+
+        r0 := @this: java.util.Date;
+        i0 := @parameter0: int;
+        $r1 = specialinvoke r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date getCalendarDate()>();
+        virtualinvoke $r1.<sun.util.calendar.BaseCalendar$Date: sun.util.calendar.CalendarDate setSeconds(int)>(i0);
+        return;
+    }
+
+    public long getTime()
+    {
+        java.util.Date r0;
+        long $l0;
+
+        r0 := @this: java.util.Date;
+        $l0 = specialinvoke r0.<java.util.Date: long getTimeImpl()>();
+        return $l0;
+    }
+
+    private final long getTimeImpl()
+    {
+        java.util.Date r0;
+        sun.util.calendar.BaseCalendar$Date $r1, $r2;
+        boolean $z0;
+        long $l0;
+
+        r0 := @this: java.util.Date;
+        $r1 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        $z0 = virtualinvoke $r2.<sun.util.calendar.BaseCalendar$Date: boolean isNormalized()>();
+        if $z0 != 0 goto label0;
+
+        specialinvoke r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date normalize()>();
+
+     label0:
+        $l0 = r0.<java.util.Date: long fastTime>;
+        return $l0;
+    }
+
+    public void setTime(long)
+    {
+        java.util.Date r0;
+        long l0;
+
+        r0 := @this: java.util.Date;
+        l0 := @parameter0: long;
+        r0.<java.util.Date: long fastTime> = l0;
+        r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate> = null;
+        return;
+    }
+
+    public boolean before(java.util.Date)
+    {
+        java.util.Date r0, r1;
+        long $l0, $l1;
+        byte $b2;
+        boolean $z0;
+
+        r0 := @this: java.util.Date;
+        r1 := @parameter0: java.util.Date;
+        $l0 = staticinvoke <java.util.Date: long getMillisOf(java.util.Date)>(r0);
+        $l1 = staticinvoke <java.util.Date: long getMillisOf(java.util.Date)>(r1);
+        $b2 = $l0 cmp $l1;
+        if $b2 >= 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public boolean after(java.util.Date)
+    {
+        java.util.Date r0, r1;
+        long $l0, $l1;
+        byte $b2;
+        boolean $z0;
+
+        r0 := @this: java.util.Date;
+        r1 := @parameter0: java.util.Date;
+        $l0 = staticinvoke <java.util.Date: long getMillisOf(java.util.Date)>(r0);
+        $l1 = staticinvoke <java.util.Date: long getMillisOf(java.util.Date)>(r1);
+        $b2 = $l0 cmp $l1;
+        if $b2 <= 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        java.util.Date r0, $r2;
+        java.lang.Object r1;
+        boolean $z0, $z1;
+        long $l0, $l1;
+        byte $b2;
+
+        r0 := @this: java.util.Date;
+        r1 := @parameter0: java.lang.Object;
+        $z0 = r1 instanceof java.util.Date;
+        if $z0 == 0 goto label0;
+
+        $l0 = virtualinvoke r0.<java.util.Date: long getTime()>();
+        $r2 = (java.util.Date) r1;
+        $l1 = virtualinvoke $r2.<java.util.Date: long getTime()>();
+        $b2 = $l0 cmp $l1;
+        if $b2 != 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        return $z1;
+    }
+
+    static final long getMillisOf(java.util.Date)
+    {
+        java.util.Date r0;
+        sun.util.calendar.BaseCalendar$Date r1, $r2, $r3, $r4;
+        boolean $z0;
+        long $l0, $l1;
+        java.lang.Object $r5;
+        sun.util.calendar.BaseCalendar $r6;
+
+        r0 := @parameter0: java.util.Date;
+        $r2 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        if $r2 == null goto label0;
+
+        $r3 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        $z0 = virtualinvoke $r3.<sun.util.calendar.BaseCalendar$Date: boolean isNormalized()>();
+        if $z0 == 0 goto label1;
+
+     label0:
+        $l0 = r0.<java.util.Date: long fastTime>;
+        return $l0;
+
+     label1:
+        $r4 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        $r5 = virtualinvoke $r4.<sun.util.calendar.BaseCalendar$Date: java.lang.Object clone()>();
+        r1 = (sun.util.calendar.BaseCalendar$Date) $r5;
+        $r6 = <java.util.Date: sun.util.calendar.BaseCalendar gcal>;
+        $l1 = virtualinvoke $r6.<sun.util.calendar.BaseCalendar: long getTime(sun.util.calendar.CalendarDate)>(r1);
+        return $l1;
+    }
+
+    public int compareTo(java.util.Date)
+    {
+        java.util.Date r0, r1;
+        long l0, l1;
+        byte $b2, $b3, $b4;
+
+        r0 := @this: java.util.Date;
+        r1 := @parameter0: java.util.Date;
+        l0 = staticinvoke <java.util.Date: long getMillisOf(java.util.Date)>(r0);
+        l1 = staticinvoke <java.util.Date: long getMillisOf(java.util.Date)>(r1);
+        $b2 = l0 cmp l1;
+        if $b2 >= 0 goto label0;
+
+        $b3 = -1;
+        goto label2;
+
+     label0:
+        $b4 = l0 cmp l1;
+        if $b4 != 0 goto label1;
+
+        $b3 = 0;
+        goto label2;
+
+     label1:
+        $b3 = 1;
+
+     label2:
+        return $b3;
+    }
+
+    public int hashCode()
+    {
+        java.util.Date r0;
+        long l0, $l2;
+        int $i1, $i3, $i4;
+
+        r0 := @this: java.util.Date;
+        l0 = virtualinvoke r0.<java.util.Date: long getTime()>();
+        $i1 = (int) l0;
+        $l2 = l0 >> 32;
+        $i3 = (int) $l2;
+        $i4 = $i1 ^ $i3;
+        return $i4;
+    }
+
+    public java.lang.String toString()
+    {
+        java.util.Date r0;
+        sun.util.calendar.BaseCalendar$Date r1;
+        java.lang.StringBuilder r2, $r5, $r9, $r13, $r15, $r17, $r19, $r21, $r27;
+        int i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9;
+        java.util.TimeZone r3;
+        java.util.Locale $r4;
+        sun.util.calendar.BaseCalendar $r6;
+        java.lang.String[] $r7, $r11;
+        java.lang.String $r8, $r12, $r24, $r29;
+        boolean $z0;
+
+        r0 := @this: java.util.Date;
+        r1 = specialinvoke r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date normalize()>();
+        $r5 = new java.lang.StringBuilder;
+        specialinvoke $r5.<java.lang.StringBuilder: void <init>(int)>(28);
+        r2 = $r5;
+        i0 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: int getDayOfWeek()>();
+        $r6 = <java.util.Date: sun.util.calendar.BaseCalendar gcal>;
+        if i0 != 1 goto label0;
+
+        i0 = 8;
+
+     label0:
+        $r7 = <java.util.Date: java.lang.String[] wtb>;
+        $r8 = $r7[i0];
+        $r9 = staticinvoke <java.util.Date: java.lang.StringBuilder convertToAbbr(java.lang.StringBuilder,java.lang.String)>(r2, $r8);
+        virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(32);
+        $r11 = <java.util.Date: java.lang.String[] wtb>;
+        $i1 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: int getMonth()>();
+        $i2 = $i1 - 1;
+        $i3 = $i2 + 2;
+        $i4 = $i3 + 7;
+        $r12 = $r11[$i4];
+        $r13 = staticinvoke <java.util.Date: java.lang.StringBuilder convertToAbbr(java.lang.StringBuilder,java.lang.String)>(r2, $r12);
+        virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(32);
+        $i5 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: int getDayOfMonth()>();
+        $r15 = staticinvoke <sun.util.calendar.CalendarUtils: java.lang.StringBuilder sprintf0d(java.lang.StringBuilder,int,int)>(r2, $i5, 2);
+        virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(32);
+        $i6 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: int getHours()>();
+        $r17 = staticinvoke <sun.util.calendar.CalendarUtils: java.lang.StringBuilder sprintf0d(java.lang.StringBuilder,int,int)>(r2, $i6, 2);
+        virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(58);
+        $i7 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: int getMinutes()>();
+        $r19 = staticinvoke <sun.util.calendar.CalendarUtils: java.lang.StringBuilder sprintf0d(java.lang.StringBuilder,int,int)>(r2, $i7, 2);
+        virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(58);
+        $i8 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: int getSeconds()>();
+        $r21 = staticinvoke <sun.util.calendar.CalendarUtils: java.lang.StringBuilder sprintf0d(java.lang.StringBuilder,int,int)>(r2, $i8, 2);
+        virtualinvoke $r21.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(32);
+        r3 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: java.util.TimeZone getZone()>();
+        if r3 == null goto label1;
+
+        $z0 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: boolean isDaylightTime()>();
+        $r4 = <java.util.Locale: java.util.Locale US>;
+        $r24 = virtualinvoke r3.<java.util.TimeZone: java.lang.String getDisplayName(boolean,int,java.util.Locale)>($z0, 0, $r4);
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r24);
+        goto label2;
+
+     label1:
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("GMT");
+
+     label2:
+        $r27 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(32);
+        $i9 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: int getYear()>();
+        virtualinvoke $r27.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i9);
+        $r29 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r29;
+    }
+
+    private static final java.lang.StringBuilder convertToAbbr(java.lang.StringBuilder, java.lang.String)
+    {
+        java.lang.StringBuilder r0, $r3;
+        java.lang.String r1;
+        char $c0, $c1, $c2, $c3;
+
+        r0 := @parameter0: java.lang.StringBuilder;
+        r1 := @parameter1: java.lang.String;
+        $c0 = virtualinvoke r1.<java.lang.String: char charAt(int)>(0);
+        $c1 = staticinvoke <java.lang.Character: char toUpperCase(char)>($c0);
+        virtualinvoke r0.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>($c1);
+        $c2 = virtualinvoke r1.<java.lang.String: char charAt(int)>(1);
+        $r3 = virtualinvoke r0.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>($c2);
+        $c3 = virtualinvoke r1.<java.lang.String: char charAt(int)>(2);
+        virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>($c3);
+        return r0;
+    }
+
+    public java.lang.String toLocaleString()
+    {
+        java.util.Date r0;
+        java.text.DateFormat r1;
+        java.lang.String $r2;
+
+        r0 := @this: java.util.Date;
+        r1 = staticinvoke <java.text.DateFormat: java.text.DateFormat getDateTimeInstance()>();
+        $r2 = virtualinvoke r1.<java.text.DateFormat: java.lang.String format(java.util.Date)>(r0);
+        return $r2;
+    }
+
+    public java.lang.String toGMTString()
+    {
+        java.util.Date r0;
+        long l0, $l1;
+        sun.util.calendar.BaseCalendar r1;
+        sun.util.calendar.BaseCalendar$Date r2;
+        java.lang.StringBuilder r3, $r6, $r7, $r11, $r13, $r15, $r17;
+        java.util.TimeZone $r4;
+        sun.util.calendar.CalendarDate $r5;
+        int $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10;
+        java.lang.String[] $r9;
+        java.lang.String $r10, $r21;
+
+        r0 := @this: java.util.Date;
+        l0 = virtualinvoke r0.<java.util.Date: long getTime()>();
+        r1 = staticinvoke <java.util.Date: sun.util.calendar.BaseCalendar getCalendarSystem(long)>(l0);
+        $l1 = virtualinvoke r0.<java.util.Date: long getTime()>();
+        $r4 = (java.util.TimeZone) null;
+        $r5 = virtualinvoke r1.<sun.util.calendar.BaseCalendar: sun.util.calendar.CalendarDate getCalendarDate(long,java.util.TimeZone)>($l1, $r4);
+        r2 = (sun.util.calendar.BaseCalendar$Date) $r5;
+        $r6 = new java.lang.StringBuilder;
+        specialinvoke $r6.<java.lang.StringBuilder: void <init>(int)>(32);
+        r3 = $r6;
+        $i2 = virtualinvoke r2.<sun.util.calendar.BaseCalendar$Date: int getDayOfMonth()>();
+        $r7 = staticinvoke <sun.util.calendar.CalendarUtils: java.lang.StringBuilder sprintf0d(java.lang.StringBuilder,int,int)>(r3, $i2, 1);
+        virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(32);
+        $r9 = <java.util.Date: java.lang.String[] wtb>;
+        $i3 = virtualinvoke r2.<sun.util.calendar.BaseCalendar$Date: int getMonth()>();
+        $i4 = $i3 - 1;
+        $i5 = $i4 + 2;
+        $i6 = $i5 + 7;
+        $r10 = $r9[$i6];
+        $r11 = staticinvoke <java.util.Date: java.lang.StringBuilder convertToAbbr(java.lang.StringBuilder,java.lang.String)>(r3, $r10);
+        virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(32);
+        $i7 = virtualinvoke r2.<sun.util.calendar.BaseCalendar$Date: int getYear()>();
+        $r13 = virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i7);
+        virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(32);
+        $i8 = virtualinvoke r2.<sun.util.calendar.BaseCalendar$Date: int getHours()>();
+        $r15 = staticinvoke <sun.util.calendar.CalendarUtils: java.lang.StringBuilder sprintf0d(java.lang.StringBuilder,int,int)>(r3, $i8, 2);
+        virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(58);
+        $i9 = virtualinvoke r2.<sun.util.calendar.BaseCalendar$Date: int getMinutes()>();
+        $r17 = staticinvoke <sun.util.calendar.CalendarUtils: java.lang.StringBuilder sprintf0d(java.lang.StringBuilder,int,int)>(r3, $i9, 2);
+        virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(58);
+        $i10 = virtualinvoke r2.<sun.util.calendar.BaseCalendar$Date: int getSeconds()>();
+        staticinvoke <sun.util.calendar.CalendarUtils: java.lang.StringBuilder sprintf0d(java.lang.StringBuilder,int,int)>(r3, $i10, 2);
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" GMT");
+        $r21 = virtualinvoke r3.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r21;
+    }
+
+    public int getTimezoneOffset()
+    {
+        java.util.Date r0;
+        java.util.TimeZone r1;
+        int i0, $i3, $i4;
+        sun.util.calendar.BaseCalendar$Date $r2, $r5;
+        boolean $z0;
+        sun.util.calendar.ZoneInfo $r3;
+        long $l1, $l2;
+
+        r0 := @this: java.util.Date;
+        $r2 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        if $r2 != null goto label2;
+
+        r1 = staticinvoke <java.util.TimeZone: java.util.TimeZone getDefaultRef()>();
+        $z0 = r1 instanceof sun.util.calendar.ZoneInfo;
+        if $z0 == 0 goto label0;
+
+        $r3 = (sun.util.calendar.ZoneInfo) r1;
+        $l1 = r0.<java.util.Date: long fastTime>;
+        i0 = virtualinvoke $r3.<sun.util.calendar.ZoneInfo: int getOffsets(long,int[])>($l1, null);
+        goto label1;
+
+     label0:
+        $l2 = r0.<java.util.Date: long fastTime>;
+        i0 = virtualinvoke r1.<java.util.TimeZone: int getOffset(long)>($l2);
+
+     label1:
+        goto label3;
+
+     label2:
+        specialinvoke r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date normalize()>();
+        $r5 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        i0 = virtualinvoke $r5.<sun.util.calendar.BaseCalendar$Date: int getZoneOffset()>();
+
+     label3:
+        $i3 = neg i0;
+        $i4 = $i3 / 60000;
+        return $i4;
+    }
+
+    private final sun.util.calendar.BaseCalendar$Date getCalendarDate()
+    {
+        java.util.Date r0;
+        sun.util.calendar.BaseCalendar r1;
+        java.util.TimeZone $r2;
+        sun.util.calendar.BaseCalendar$Date $r3, $r5, $r6;
+        long $l0, $l1;
+        sun.util.calendar.CalendarDate $r4;
+
+        r0 := @this: java.util.Date;
+        $r3 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        if $r3 != null goto label0;
+
+        $l0 = r0.<java.util.Date: long fastTime>;
+        r1 = staticinvoke <java.util.Date: sun.util.calendar.BaseCalendar getCalendarSystem(long)>($l0);
+        $l1 = r0.<java.util.Date: long fastTime>;
+        $r2 = staticinvoke <java.util.TimeZone: java.util.TimeZone getDefaultRef()>();
+        $r4 = virtualinvoke r1.<sun.util.calendar.BaseCalendar: sun.util.calendar.CalendarDate getCalendarDate(long,java.util.TimeZone)>($l1, $r2);
+        $r5 = (sun.util.calendar.BaseCalendar$Date) $r4;
+        r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate> = $r5;
+
+     label0:
+        $r6 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        return $r6;
+    }
+
+    private final sun.util.calendar.BaseCalendar$Date normalize()
+    {
+        java.util.Date r0;
+        sun.util.calendar.BaseCalendar r1, r3;
+        java.util.TimeZone $r2, r11, $r13;
+        sun.util.calendar.BaseCalendar$Date $r4, $r6, $r7, $r8, $r9, $r10, $r12, $r14, $r16, $r17, $r19;
+        long $l0, $l1, $l2;
+        sun.util.calendar.CalendarDate $r5;
+        boolean $z0;
+
+        r0 := @this: java.util.Date;
+        $r4 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        if $r4 != null goto label0;
+
+        $l0 = r0.<java.util.Date: long fastTime>;
+        r1 = staticinvoke <java.util.Date: sun.util.calendar.BaseCalendar getCalendarSystem(long)>($l0);
+        $l1 = r0.<java.util.Date: long fastTime>;
+        $r2 = staticinvoke <java.util.TimeZone: java.util.TimeZone getDefaultRef()>();
+        $r5 = virtualinvoke r1.<sun.util.calendar.BaseCalendar: sun.util.calendar.CalendarDate getCalendarDate(long,java.util.TimeZone)>($l1, $r2);
+        $r6 = (sun.util.calendar.BaseCalendar$Date) $r5;
+        r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate> = $r6;
+        $r7 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        return $r7;
+
+     label0:
+        $r8 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        $z0 = virtualinvoke $r8.<sun.util.calendar.BaseCalendar$Date: boolean isNormalized()>();
+        if $z0 != 0 goto label1;
+
+        $r9 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        $r10 = specialinvoke r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date normalize(sun.util.calendar.BaseCalendar$Date)>($r9);
+        r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate> = $r10;
+
+     label1:
+        r11 = staticinvoke <java.util.TimeZone: java.util.TimeZone getDefaultRef()>();
+        $r12 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        $r13 = virtualinvoke $r12.<sun.util.calendar.BaseCalendar$Date: java.util.TimeZone getZone()>();
+        if r11 == $r13 goto label2;
+
+        $r14 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        virtualinvoke $r14.<sun.util.calendar.BaseCalendar$Date: sun.util.calendar.CalendarDate setZone(java.util.TimeZone)>(r11);
+        $r16 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        r3 = staticinvoke <java.util.Date: sun.util.calendar.BaseCalendar getCalendarSystem(sun.util.calendar.BaseCalendar$Date)>($r16);
+        $l2 = r0.<java.util.Date: long fastTime>;
+        $r17 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        virtualinvoke r3.<sun.util.calendar.CalendarSystem: sun.util.calendar.CalendarDate getCalendarDate(long,sun.util.calendar.CalendarDate)>($l2, $r17);
+
+     label2:
+        $r19 = r0.<java.util.Date: sun.util.calendar.BaseCalendar$Date cdate>;
+        return $r19;
+    }
+
+    private final sun.util.calendar.BaseCalendar$Date normalize(sun.util.calendar.BaseCalendar$Date)
+    {
+        java.util.Date r0;
+        sun.util.calendar.BaseCalendar$Date r1, r8, $r12, $r16;
+        int i0, i1, i2, i3, i4, i5, i6, $i7;
+        java.util.TimeZone r2;
+        java.util.GregorianCalendar r3, $r5;
+        sun.util.calendar.BaseCalendar r4, r9, $r10, r14;
+        long $l8, $l9, $l10, $l11, $l12, $l13;
+        sun.util.calendar.CalendarDate $r7, $r11, $r15;
+
+        r0 := @this: java.util.Date;
+        r1 := @parameter0: sun.util.calendar.BaseCalendar$Date;
+        i0 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: int getNormalizedYear()>();
+        i1 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: int getMonth()>();
+        i2 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: int getDayOfMonth()>();
+        i3 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: int getHours()>();
+        i4 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: int getMinutes()>();
+        i5 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: int getSeconds()>();
+        i6 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: int getMillis()>();
+        r2 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: java.util.TimeZone getZone()>();
+        if i0 == 1582 goto label0;
+
+        if i0 > 280000000 goto label0;
+
+        if i0 >= -280000000 goto label2;
+
+     label0:
+        if r2 != null goto label1;
+
+        r2 = staticinvoke <java.util.TimeZone: java.util.TimeZone getTimeZone(java.lang.String)>("GMT");
+
+     label1:
+        $r5 = new java.util.GregorianCalendar;
+        specialinvoke $r5.<java.util.GregorianCalendar: void <init>(java.util.TimeZone)>(r2);
+        r3 = $r5;
+        virtualinvoke r3.<java.util.GregorianCalendar: void clear()>();
+        virtualinvoke r3.<java.util.GregorianCalendar: void set(int,int)>(14, i6);
+        $i7 = i1 - 1;
+        virtualinvoke r3.<java.util.GregorianCalendar: void set(int,int,int,int,int,int)>(i0, $i7, i2, i3, i4, i5);
+        $l8 = virtualinvoke r3.<java.util.GregorianCalendar: long getTimeInMillis()>();
+        r0.<java.util.Date: long fastTime> = $l8;
+        $l9 = r0.<java.util.Date: long fastTime>;
+        r4 = staticinvoke <java.util.Date: sun.util.calendar.BaseCalendar getCalendarSystem(long)>($l9);
+        $l10 = r0.<java.util.Date: long fastTime>;
+        $r7 = virtualinvoke r4.<sun.util.calendar.BaseCalendar: sun.util.calendar.CalendarDate getCalendarDate(long,java.util.TimeZone)>($l10, r2);
+        r8 = (sun.util.calendar.BaseCalendar$Date) $r7;
+        return r8;
+
+     label2:
+        r9 = staticinvoke <java.util.Date: sun.util.calendar.BaseCalendar getCalendarSystem(int)>(i0);
+        $r10 = staticinvoke <java.util.Date: sun.util.calendar.BaseCalendar getCalendarSystem(sun.util.calendar.BaseCalendar$Date)>(r1);
+        if r9 == $r10 goto label3;
+
+        $r11 = virtualinvoke r9.<sun.util.calendar.BaseCalendar: sun.util.calendar.CalendarDate newCalendarDate(java.util.TimeZone)>(r2);
+        r1 = (sun.util.calendar.BaseCalendar$Date) $r11;
+        $r12 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: sun.util.calendar.BaseCalendar$Date setNormalizedDate(int,int,int)>(i0, i1, i2);
+        virtualinvoke $r12.<sun.util.calendar.BaseCalendar$Date: sun.util.calendar.CalendarDate setTimeOfDay(int,int,int,int)>(i3, i4, i5, i6);
+
+     label3:
+        $l11 = virtualinvoke r9.<sun.util.calendar.BaseCalendar: long getTime(sun.util.calendar.CalendarDate)>(r1);
+        r0.<java.util.Date: long fastTime> = $l11;
+        $l12 = r0.<java.util.Date: long fastTime>;
+        r14 = staticinvoke <java.util.Date: sun.util.calendar.BaseCalendar getCalendarSystem(long)>($l12);
+        if r14 == r9 goto label4;
+
+        $r15 = virtualinvoke r14.<sun.util.calendar.BaseCalendar: sun.util.calendar.CalendarDate newCalendarDate(java.util.TimeZone)>(r2);
+        r1 = (sun.util.calendar.BaseCalendar$Date) $r15;
+        $r16 = virtualinvoke r1.<sun.util.calendar.BaseCalendar$Date: sun.util.calendar.BaseCalendar$Date setNormalizedDate(int,int,int)>(i0, i1, i2);
+        virtualinvoke $r16.<sun.util.calendar.BaseCalendar$Date: sun.util.calendar.CalendarDate setTimeOfDay(int,int,int,int)>(i3, i4, i5, i6);
+        $l13 = virtualinvoke r14.<sun.util.calendar.BaseCalendar: long getTime(sun.util.calendar.CalendarDate)>(r1);
+        r0.<java.util.Date: long fastTime> = $l13;
+
+     label4:
+        return r1;
+    }
+
+    private static final sun.util.calendar.BaseCalendar getCalendarSystem(int)
+    {
+        int i0;
+        sun.util.calendar.BaseCalendar $r0, $r1;
+
+        i0 := @parameter0: int;
+        if i0 < 1582 goto label0;
+
+        $r0 = <java.util.Date: sun.util.calendar.BaseCalendar gcal>;
+        return $r0;
+
+     label0:
+        $r1 = staticinvoke <java.util.Date: sun.util.calendar.BaseCalendar getJulianCalendar()>();
+        return $r1;
+    }
+
+    private static final sun.util.calendar.BaseCalendar getCalendarSystem(long)
+    {
+        long l0, $l3, $l4;
+        java.util.TimeZone $r0;
+        byte $b1, $b5;
+        int $i2;
+        sun.util.calendar.BaseCalendar $r1, $r2;
+
+        l0 := @parameter0: long;
+        $b1 = l0 cmp 0L;
+        if $b1 >= 0 goto label0;
+
+        $r0 = staticinvoke <java.util.TimeZone: java.util.TimeZone getDefaultRef()>();
+        $i2 = virtualinvoke $r0.<java.util.TimeZone: int getOffset(long)>(l0);
+        $l3 = (long) $i2;
+        $l4 = -12219292800000L - $l3;
+        $b5 = l0 cmp $l4;
+        if $b5 < 0 goto label1;
+
+     label0:
+        $r1 = <java.util.Date: sun.util.calendar.BaseCalendar gcal>;
+        return $r1;
+
+     label1:
+        $r2 = staticinvoke <java.util.Date: sun.util.calendar.BaseCalendar getJulianCalendar()>();
+        return $r2;
+    }
+
+    private static final sun.util.calendar.BaseCalendar getCalendarSystem(sun.util.calendar.BaseCalendar$Date)
+    {
+        sun.util.calendar.BaseCalendar$Date r0;
+        sun.util.calendar.BaseCalendar $r1, $r2, $r4, $r5;
+        sun.util.calendar.Era $r3;
+
+        r0 := @parameter0: sun.util.calendar.BaseCalendar$Date;
+        $r1 = <java.util.Date: sun.util.calendar.BaseCalendar jcal>;
+        if $r1 != null goto label0;
+
+        $r2 = <java.util.Date: sun.util.calendar.BaseCalendar gcal>;
+        return $r2;
+
+     label0:
+        $r3 = virtualinvoke r0.<sun.util.calendar.BaseCalendar$Date: sun.util.calendar.Era getEra()>();
+        if $r3 == null goto label1;
+
+        $r4 = <java.util.Date: sun.util.calendar.BaseCalendar jcal>;
+        return $r4;
+
+     label1:
+        $r5 = <java.util.Date: sun.util.calendar.BaseCalendar gcal>;
+        return $r5;
+    }
+
+    private static final synchronized sun.util.calendar.BaseCalendar getJulianCalendar()
+    {
+        sun.util.calendar.BaseCalendar $r0, $r2, $r3;
+        sun.util.calendar.CalendarSystem $r1;
+
+        $r0 = <java.util.Date: sun.util.calendar.BaseCalendar jcal>;
+        if $r0 != null goto label0;
+
+        $r1 = staticinvoke <sun.util.calendar.CalendarSystem: sun.util.calendar.CalendarSystem forName(java.lang.String)>("julian");
+        $r2 = (sun.util.calendar.BaseCalendar) $r1;
+        <java.util.Date: sun.util.calendar.BaseCalendar jcal> = $r2;
+
+     label0:
+        $r3 = <java.util.Date: sun.util.calendar.BaseCalendar jcal>;
+        return $r3;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream) throws java.io.IOException
+    {
+        java.util.Date r0;
+        java.io.ObjectOutputStream r1;
+        long $l0;
+
+        r0 := @this: java.util.Date;
+        r1 := @parameter0: java.io.ObjectOutputStream;
+        $l0 = specialinvoke r0.<java.util.Date: long getTimeImpl()>();
+        virtualinvoke r1.<java.io.ObjectOutputStream: void writeLong(long)>($l0);
+        return;
+    }
+
+    private void readObject(java.io.ObjectInputStream) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        java.util.Date r0;
+        java.io.ObjectInputStream r1;
+        long $l0;
+
+        r0 := @this: java.util.Date;
+        r1 := @parameter0: java.io.ObjectInputStream;
+        $l0 = virtualinvoke r1.<java.io.ObjectInputStream: long readLong()>();
+        r0.<java.util.Date: long fastTime> = $l0;
+        return;
+    }
+
+    public volatile int compareTo(java.lang.Object)
+    {
+        java.util.Date r0, $r2;
+        java.lang.Object r1;
+        int $i0;
+
+        r0 := @this: java.util.Date;
+        r1 := @parameter0: java.lang.Object;
+        $r2 = (java.util.Date) r1;
+        $i0 = virtualinvoke r0.<java.util.Date: int compareTo(java.util.Date)>($r2);
+        return $i0;
+    }
+
+    static void <clinit>()
+    {
+        sun.util.calendar.Gregorian $r0;
+        java.lang.String[] $r1;
+        int[] $r2;
+
+        $r0 = staticinvoke <sun.util.calendar.CalendarSystem: sun.util.calendar.Gregorian getGregorianCalendar()>();
+        <java.util.Date: sun.util.calendar.BaseCalendar gcal> = $r0;
+        $r1 = newarray (java.lang.String)[32];
+        $r1[0] = "am";
+        $r1[1] = "pm";
+        $r1[2] = "monday";
+        $r1[3] = "tuesday";
+        $r1[4] = "wednesday";
+        $r1[5] = "thursday";
+        $r1[6] = "friday";
+        $r1[7] = "saturday";
+        $r1[8] = "sunday";
+        $r1[9] = "january";
+        $r1[10] = "february";
+        $r1[11] = "march";
+        $r1[12] = "april";
+        $r1[13] = "may";
+        $r1[14] = "june";
+        $r1[15] = "july";
+        $r1[16] = "august";
+        $r1[17] = "september";
+        $r1[18] = "october";
+        $r1[19] = "november";
+        $r1[20] = "december";
+        $r1[21] = "gmt";
+        $r1[22] = "ut";
+        $r1[23] = "utc";
+        $r1[24] = "est";
+        $r1[25] = "edt";
+        $r1[26] = "cst";
+        $r1[27] = "cdt";
+        $r1[28] = "mst";
+        $r1[29] = "mdt";
+        $r1[30] = "pst";
+        $r1[31] = "pdt";
+        <java.util.Date: java.lang.String[] wtb> = $r1;
+        $r2 = newarray (int)[32];
+        $r2[0] = 14;
+        $r2[1] = 1;
+        $r2[2] = 0;
+        $r2[3] = 0;
+        $r2[4] = 0;
+        $r2[5] = 0;
+        $r2[6] = 0;
+        $r2[7] = 0;
+        $r2[8] = 0;
+        $r2[9] = 2;
+        $r2[10] = 3;
+        $r2[11] = 4;
+        $r2[12] = 5;
+        $r2[13] = 6;
+        $r2[14] = 7;
+        $r2[15] = 8;
+        $r2[16] = 9;
+        $r2[17] = 10;
+        $r2[18] = 11;
+        $r2[19] = 12;
+        $r2[20] = 13;
+        $r2[21] = 10000;
+        $r2[22] = 10000;
+        $r2[23] = 10000;
+        $r2[24] = 10300;
+        $r2[25] = 10240;
+        $r2[26] = 10360;
+        $r2[27] = 10300;
+        $r2[28] = 10420;
+        $r2[29] = 10360;
+        $r2[30] = 10480;
+        $r2[31] = 10420;
+        <java.util.Date: int[] ttb> = $r2;
+        return;
+    }
+}

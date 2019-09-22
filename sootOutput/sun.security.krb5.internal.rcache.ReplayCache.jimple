@@ -1,0 +1,188 @@
+public class sun.security.krb5.internal.rcache.ReplayCache extends java.util.LinkedList
+{
+    private static final long serialVersionUID;
+    private java.lang.String principal;
+    private sun.security.krb5.internal.rcache.CacheTable table;
+    private int nap;
+    private boolean DEBUG;
+
+    public void <init>(java.lang.String, sun.security.krb5.internal.rcache.CacheTable)
+    {
+        sun.security.krb5.internal.rcache.ReplayCache r0;
+        java.lang.String r1;
+        sun.security.krb5.internal.rcache.CacheTable r2;
+        boolean $z0;
+
+        r0 := @this: sun.security.krb5.internal.rcache.ReplayCache;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: sun.security.krb5.internal.rcache.CacheTable;
+        specialinvoke r0.<java.util.LinkedList: void <init>()>();
+        r0.<sun.security.krb5.internal.rcache.ReplayCache: int nap> = 600000;
+        $z0 = <sun.security.krb5.internal.Krb5: boolean DEBUG>;
+        r0.<sun.security.krb5.internal.rcache.ReplayCache: boolean DEBUG> = $z0;
+        r0.<sun.security.krb5.internal.rcache.ReplayCache: java.lang.String principal> = r1;
+        r0.<sun.security.krb5.internal.rcache.ReplayCache: sun.security.krb5.internal.rcache.CacheTable table> = r2;
+        return;
+    }
+
+    public synchronized void put(sun.security.krb5.internal.rcache.AuthTime, long)
+    {
+        sun.security.krb5.internal.rcache.ReplayCache r0;
+        sun.security.krb5.internal.rcache.AuthTime r1, r2, r7, r9;
+        long l0, $l3, $l4, $l6, $l7, $l11, $l12, $l15, $l16, $l22, $l23, l24, $l25;
+        java.util.ListIterator r3, r4;
+        null_type n0;
+        int i1, $i2, $i9, $i10, $i14, $i18, $i19, $i20, $i21, $i27;
+        java.lang.Object $r5, $r6, $r8;
+        byte $b5, $b8, $b13, $b17, $b26;
+        boolean $z0, $z1, $z2;
+
+        r0 := @this: sun.security.krb5.internal.rcache.ReplayCache;
+        r1 := @parameter0: sun.security.krb5.internal.rcache.AuthTime;
+        l0 := @parameter1: long;
+        $i2 = virtualinvoke r0.<sun.security.krb5.internal.rcache.ReplayCache: int size()>();
+        if $i2 != 0 goto label0;
+
+        virtualinvoke r0.<sun.security.krb5.internal.rcache.ReplayCache: void addFirst(java.lang.Object)>(r1);
+        goto label5;
+
+     label0:
+        $r5 = virtualinvoke r0.<sun.security.krb5.internal.rcache.ReplayCache: java.lang.Object getFirst()>();
+        r2 = (sun.security.krb5.internal.rcache.AuthTime) $r5;
+        $l3 = r2.<sun.security.krb5.internal.rcache.AuthTime: long kerberosTime>;
+        $l4 = r1.<sun.security.krb5.internal.rcache.AuthTime: long kerberosTime>;
+        $b5 = $l3 cmp $l4;
+        if $b5 >= 0 goto label1;
+
+        virtualinvoke r0.<sun.security.krb5.internal.rcache.ReplayCache: void addFirst(java.lang.Object)>(r1);
+        goto label5;
+
+     label1:
+        $l6 = r2.<sun.security.krb5.internal.rcache.AuthTime: long kerberosTime>;
+        $l7 = r1.<sun.security.krb5.internal.rcache.AuthTime: long kerberosTime>;
+        $b8 = $l6 cmp $l7;
+        if $b8 != 0 goto label2;
+
+        $i9 = r2.<sun.security.krb5.internal.rcache.AuthTime: int cusec>;
+        $i10 = r1.<sun.security.krb5.internal.rcache.AuthTime: int cusec>;
+        if $i9 >= $i10 goto label5;
+
+        virtualinvoke r0.<sun.security.krb5.internal.rcache.ReplayCache: void addFirst(java.lang.Object)>(r1);
+        goto label5;
+
+     label2:
+        r3 = virtualinvoke r0.<sun.security.krb5.internal.rcache.ReplayCache: java.util.ListIterator listIterator(int)>(1);
+
+     label3:
+        $z0 = interfaceinvoke r3.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label5;
+
+        $r6 = interfaceinvoke r3.<java.util.ListIterator: java.lang.Object next()>();
+        r7 = (sun.security.krb5.internal.rcache.AuthTime) $r6;
+        $l11 = r7.<sun.security.krb5.internal.rcache.AuthTime: long kerberosTime>;
+        $l12 = r1.<sun.security.krb5.internal.rcache.AuthTime: long kerberosTime>;
+        $b13 = $l11 cmp $l12;
+        if $b13 >= 0 goto label4;
+
+        $i14 = virtualinvoke r0.<sun.security.krb5.internal.rcache.ReplayCache: int indexOf(java.lang.Object)>(r7);
+        virtualinvoke r0.<sun.security.krb5.internal.rcache.ReplayCache: void add(int,java.lang.Object)>($i14, r1);
+        goto label5;
+
+     label4:
+        $l15 = r7.<sun.security.krb5.internal.rcache.AuthTime: long kerberosTime>;
+        $l16 = r1.<sun.security.krb5.internal.rcache.AuthTime: long kerberosTime>;
+        $b17 = $l15 cmp $l16;
+        if $b17 != 0 goto label3;
+
+        $i18 = r7.<sun.security.krb5.internal.rcache.AuthTime: int cusec>;
+        $i19 = r1.<sun.security.krb5.internal.rcache.AuthTime: int cusec>;
+        if $i18 >= $i19 goto label3;
+
+        $i20 = virtualinvoke r0.<sun.security.krb5.internal.rcache.ReplayCache: int indexOf(java.lang.Object)>(r7);
+        virtualinvoke r0.<sun.security.krb5.internal.rcache.ReplayCache: void add(int,java.lang.Object)>($i20, r1);
+        goto label5;
+
+     label5:
+        $i21 = staticinvoke <sun.security.krb5.internal.KerberosTime: int getDefaultSkew()>();
+        $l22 = (long) $i21;
+        $l23 = $l22 * 1000L;
+        l24 = l0 - $l23;
+        r4 = virtualinvoke r0.<sun.security.krb5.internal.rcache.ReplayCache: java.util.ListIterator listIterator(int)>(0);
+        n0 = null;
+        i1 = -1;
+
+     label6:
+        $z1 = interfaceinvoke r4.<java.util.ListIterator: boolean hasNext()>();
+        if $z1 == 0 goto label7;
+
+        $r8 = interfaceinvoke r4.<java.util.ListIterator: java.lang.Object next()>();
+        r9 = (sun.security.krb5.internal.rcache.AuthTime) $r8;
+        $l25 = r9.<sun.security.krb5.internal.rcache.AuthTime: long kerberosTime>;
+        $b26 = $l25 cmp l24;
+        if $b26 >= 0 goto label6;
+
+        i1 = virtualinvoke r0.<sun.security.krb5.internal.rcache.ReplayCache: int indexOf(java.lang.Object)>(r9);
+        goto label7;
+
+     label7:
+        if i1 <= -1 goto label9;
+
+     label8:
+        virtualinvoke r0.<sun.security.krb5.internal.rcache.ReplayCache: java.lang.Object removeLast()>();
+        $i27 = virtualinvoke r0.<sun.security.krb5.internal.rcache.ReplayCache: int size()>();
+        if $i27 > i1 goto label8;
+
+     label9:
+        $z2 = r0.<sun.security.krb5.internal.rcache.ReplayCache: boolean DEBUG>;
+        if $z2 == 0 goto label10;
+
+        specialinvoke r0.<sun.security.krb5.internal.rcache.ReplayCache: void printList()>();
+
+     label10:
+        return;
+    }
+
+    private void printList()
+    {
+        sun.security.krb5.internal.rcache.ReplayCache r0;
+        java.lang.Object[] r1;
+        int i0, $i1, $i3;
+        java.io.PrintStream $r2;
+        java.lang.StringBuilder $r3, $r4, $r5, $r6, $r9, $r10, $r13;
+        java.lang.Object $r7, $r11;
+        sun.security.krb5.internal.rcache.AuthTime $r8, $r12;
+        long $l2;
+        java.lang.String $r14;
+
+        r0 := @this: sun.security.krb5.internal.rcache.ReplayCache;
+        r1 = virtualinvoke r0.<sun.security.krb5.internal.rcache.ReplayCache: java.lang.Object[] toArray()>();
+        i0 = 0;
+
+     label0:
+        $i1 = lengthof r1;
+        if i0 >= $i1 goto label1;
+
+        $r2 = <java.lang.System: java.io.PrintStream out>;
+        $r3 = new java.lang.StringBuilder;
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>()>();
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("object ");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(": ");
+        $r7 = r1[i0];
+        $r8 = (sun.security.krb5.internal.rcache.AuthTime) $r7;
+        $l2 = $r8.<sun.security.krb5.internal.rcache.AuthTime: long kerberosTime>;
+        $r9 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(long)>($l2);
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("/");
+        $r11 = r1[i0];
+        $r12 = (sun.security.krb5.internal.rcache.AuthTime) $r11;
+        $i3 = $r12.<sun.security.krb5.internal.rcache.AuthTime: int cusec>;
+        $r13 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i3);
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke $r2.<java.io.PrintStream: void println(java.lang.String)>($r14);
+        i0 = i0 + 1;
+        goto label0;
+
+     label1:
+        return;
+    }
+}

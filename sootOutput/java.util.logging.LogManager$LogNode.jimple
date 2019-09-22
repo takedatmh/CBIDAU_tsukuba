@@ -1,0 +1,77 @@
+class java.util.logging.LogManager$LogNode extends java.lang.Object
+{
+    java.util.HashMap children;
+    java.util.logging.LogManager$LoggerWeakRef loggerRef;
+    java.util.logging.LogManager$LogNode parent;
+    final java.util.logging.LogManager$LoggerContext context;
+
+    void <init>(java.util.logging.LogManager$LogNode, java.util.logging.LogManager$LoggerContext)
+    {
+        java.util.logging.LogManager$LogNode r0, r1;
+        java.util.logging.LogManager$LoggerContext r2;
+
+        r0 := @this: java.util.logging.LogManager$LogNode;
+        r1 := @parameter0: java.util.logging.LogManager$LogNode;
+        r2 := @parameter1: java.util.logging.LogManager$LoggerContext;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.util.logging.LogManager$LogNode: java.util.logging.LogManager$LogNode parent> = r1;
+        r0.<java.util.logging.LogManager$LogNode: java.util.logging.LogManager$LoggerContext context> = r2;
+        return;
+    }
+
+    void walkAndSetParent(java.util.logging.Logger)
+    {
+        java.util.logging.LogManager$LogNode r0, r3;
+        java.util.logging.Logger r1, r5, $r10;
+        java.util.Iterator r2;
+        java.util.logging.LogManager$LoggerWeakRef r4;
+        java.util.HashMap $r6, $r7;
+        java.util.Collection $r8;
+        boolean $z0;
+        java.lang.Object $r9, $r11;
+
+        r0 := @this: java.util.logging.LogManager$LogNode;
+        r1 := @parameter0: java.util.logging.Logger;
+        $r6 = r0.<java.util.logging.LogManager$LogNode: java.util.HashMap children>;
+        if $r6 != null goto label0;
+
+        return;
+
+     label0:
+        $r7 = r0.<java.util.logging.LogManager$LogNode: java.util.HashMap children>;
+        $r8 = virtualinvoke $r7.<java.util.HashMap: java.util.Collection values()>();
+        r2 = interfaceinvoke $r8.<java.util.Collection: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r2.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label6;
+
+        $r9 = interfaceinvoke r2.<java.util.Iterator: java.lang.Object next()>();
+        r3 = (java.util.logging.LogManager$LogNode) $r9;
+        r4 = r3.<java.util.logging.LogManager$LogNode: java.util.logging.LogManager$LoggerWeakRef loggerRef>;
+        if r4 != null goto label2;
+
+        $r10 = null;
+        goto label3;
+
+     label2:
+        $r11 = virtualinvoke r4.<java.util.logging.LogManager$LoggerWeakRef: java.lang.Object get()>();
+        $r10 = (java.util.logging.Logger) $r11;
+
+     label3:
+        r5 = $r10;
+        if r5 != null goto label4;
+
+        virtualinvoke r3.<java.util.logging.LogManager$LogNode: void walkAndSetParent(java.util.logging.Logger)>(r1);
+        goto label5;
+
+     label4:
+        staticinvoke <java.util.logging.LogManager: void access$1100(java.util.logging.Logger,java.util.logging.Logger)>(r5, r1);
+
+     label5:
+        goto label1;
+
+     label6:
+        return;
+    }
+}

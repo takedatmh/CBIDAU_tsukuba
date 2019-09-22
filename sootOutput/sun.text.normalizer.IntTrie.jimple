@@ -1,0 +1,216 @@
+public class sun.text.normalizer.IntTrie extends sun.text.normalizer.Trie
+{
+    private int m_initialValue_;
+    private int[] m_data_;
+
+    public void <init>(java.io.InputStream, sun.text.normalizer.Trie$DataManipulate) throws java.io.IOException
+    {
+        sun.text.normalizer.IntTrie r0;
+        java.io.InputStream r1;
+        sun.text.normalizer.Trie$DataManipulate r2;
+        boolean $z0;
+        java.lang.IllegalArgumentException $r3;
+
+        r0 := @this: sun.text.normalizer.IntTrie;
+        r1 := @parameter0: java.io.InputStream;
+        r2 := @parameter1: sun.text.normalizer.Trie$DataManipulate;
+        specialinvoke r0.<sun.text.normalizer.Trie: void <init>(java.io.InputStream,sun.text.normalizer.Trie$DataManipulate)>(r1, r2);
+        $z0 = virtualinvoke r0.<sun.text.normalizer.IntTrie: boolean isIntTrie()>();
+        if $z0 != 0 goto label0;
+
+        $r3 = new java.lang.IllegalArgumentException;
+        specialinvoke $r3.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Data given does not belong to a int trie.");
+        throw $r3;
+
+     label0:
+        return;
+    }
+
+    public final int getCodePointValue(int)
+    {
+        sun.text.normalizer.IntTrie r0;
+        int i0, i1, $i2;
+        int[] $r1;
+
+        r0 := @this: sun.text.normalizer.IntTrie;
+        i0 := @parameter0: int;
+        i1 = virtualinvoke r0.<sun.text.normalizer.IntTrie: int getCodePointOffset(int)>(i0);
+        if i1 < 0 goto label0;
+
+        $r1 = r0.<sun.text.normalizer.IntTrie: int[] m_data_>;
+        $i2 = $r1[i1];
+        goto label1;
+
+     label0:
+        $i2 = r0.<sun.text.normalizer.IntTrie: int m_initialValue_>;
+
+     label1:
+        return $i2;
+    }
+
+    public final int getLeadValue(char)
+    {
+        sun.text.normalizer.IntTrie r0;
+        char c0;
+        int[] $r1;
+        int $i1, $i2;
+
+        r0 := @this: sun.text.normalizer.IntTrie;
+        c0 := @parameter0: char;
+        $r1 = r0.<sun.text.normalizer.IntTrie: int[] m_data_>;
+        $i1 = virtualinvoke r0.<sun.text.normalizer.IntTrie: int getLeadOffset(char)>(c0);
+        $i2 = $r1[$i1];
+        return $i2;
+    }
+
+    public final int getTrailValue(int, char)
+    {
+        sun.text.normalizer.IntTrie r0;
+        int i0, i2, $i5, $i6, $i7;
+        char c1, $c3, $c4;
+        sun.text.normalizer.Trie$DataManipulate $r1, $r3;
+        java.lang.NullPointerException $r2;
+        int[] $r4;
+
+        r0 := @this: sun.text.normalizer.IntTrie;
+        i0 := @parameter0: int;
+        c1 := @parameter1: char;
+        $r1 = r0.<sun.text.normalizer.IntTrie: sun.text.normalizer.Trie$DataManipulate m_dataManipulate_>;
+        if $r1 != null goto label0;
+
+        $r2 = new java.lang.NullPointerException;
+        specialinvoke $r2.<java.lang.NullPointerException: void <init>(java.lang.String)>("The field DataManipulate in this Trie is null");
+        throw $r2;
+
+     label0:
+        $r3 = r0.<sun.text.normalizer.IntTrie: sun.text.normalizer.Trie$DataManipulate m_dataManipulate_>;
+        i2 = interfaceinvoke $r3.<sun.text.normalizer.Trie$DataManipulate: int getFoldingOffset(int)>(i0);
+        if i2 <= 0 goto label1;
+
+        $r4 = r0.<sun.text.normalizer.IntTrie: int[] m_data_>;
+        $c3 = c1 & 1023;
+        $c4 = (char) $c3;
+        $i5 = virtualinvoke r0.<sun.text.normalizer.IntTrie: int getRawOffset(int,char)>(i2, $c4);
+        $i6 = $r4[$i5];
+        return $i6;
+
+     label1:
+        $i7 = r0.<sun.text.normalizer.IntTrie: int m_initialValue_>;
+        return $i7;
+    }
+
+    protected final void unserialize(java.io.InputStream) throws java.io.IOException
+    {
+        sun.text.normalizer.IntTrie r0;
+        java.io.InputStream r1;
+        java.io.DataInputStream r2, $r4;
+        int i0, $i1, $i2, $i3, $i4;
+        int[] $r3, $r5, $r6;
+
+        r0 := @this: sun.text.normalizer.IntTrie;
+        r1 := @parameter0: java.io.InputStream;
+        specialinvoke r0.<sun.text.normalizer.Trie: void unserialize(java.io.InputStream)>(r1);
+        $i1 = r0.<sun.text.normalizer.IntTrie: int m_dataLength_>;
+        $r3 = newarray (int)[$i1];
+        r0.<sun.text.normalizer.IntTrie: int[] m_data_> = $r3;
+        $r4 = new java.io.DataInputStream;
+        specialinvoke $r4.<java.io.DataInputStream: void <init>(java.io.InputStream)>(r1);
+        r2 = $r4;
+        i0 = 0;
+
+     label0:
+        $i2 = r0.<sun.text.normalizer.IntTrie: int m_dataLength_>;
+        if i0 >= $i2 goto label1;
+
+        $r5 = r0.<sun.text.normalizer.IntTrie: int[] m_data_>;
+        $i3 = virtualinvoke r2.<java.io.DataInputStream: int readInt()>();
+        $r5[i0] = $i3;
+        i0 = i0 + 1;
+        goto label0;
+
+     label1:
+        $r6 = r0.<sun.text.normalizer.IntTrie: int[] m_data_>;
+        $i4 = $r6[0];
+        r0.<sun.text.normalizer.IntTrie: int m_initialValue_> = $i4;
+        return;
+    }
+
+    protected final int getSurrogateOffset(char, char)
+    {
+        sun.text.normalizer.IntTrie r0;
+        char c0, c1, $c4, $c5;
+        int i2, $i3, $i6;
+        sun.text.normalizer.Trie$DataManipulate $r1, $r3;
+        java.lang.NullPointerException $r2;
+
+        r0 := @this: sun.text.normalizer.IntTrie;
+        c0 := @parameter0: char;
+        c1 := @parameter1: char;
+        $r1 = r0.<sun.text.normalizer.IntTrie: sun.text.normalizer.Trie$DataManipulate m_dataManipulate_>;
+        if $r1 != null goto label0;
+
+        $r2 = new java.lang.NullPointerException;
+        specialinvoke $r2.<java.lang.NullPointerException: void <init>(java.lang.String)>("The field DataManipulate in this Trie is null");
+        throw $r2;
+
+     label0:
+        $r3 = r0.<sun.text.normalizer.IntTrie: sun.text.normalizer.Trie$DataManipulate m_dataManipulate_>;
+        $i3 = virtualinvoke r0.<sun.text.normalizer.IntTrie: int getLeadValue(char)>(c0);
+        i2 = interfaceinvoke $r3.<sun.text.normalizer.Trie$DataManipulate: int getFoldingOffset(int)>($i3);
+        if i2 <= 0 goto label1;
+
+        $c4 = c1 & 1023;
+        $c5 = (char) $c4;
+        $i6 = virtualinvoke r0.<sun.text.normalizer.IntTrie: int getRawOffset(int,char)>(i2, $c5);
+        return $i6;
+
+     label1:
+        return -1;
+    }
+
+    protected final int getValue(int)
+    {
+        sun.text.normalizer.IntTrie r0;
+        int i0, $i1;
+        int[] $r1;
+
+        r0 := @this: sun.text.normalizer.IntTrie;
+        i0 := @parameter0: int;
+        $r1 = r0.<sun.text.normalizer.IntTrie: int[] m_data_>;
+        $i1 = $r1[i0];
+        return $i1;
+    }
+
+    protected final int getInitialValue()
+    {
+        sun.text.normalizer.IntTrie r0;
+        int $i0;
+
+        r0 := @this: sun.text.normalizer.IntTrie;
+        $i0 = r0.<sun.text.normalizer.IntTrie: int m_initialValue_>;
+        return $i0;
+    }
+
+    void <init>(char[], int[], int, int, sun.text.normalizer.Trie$DataManipulate)
+    {
+        sun.text.normalizer.IntTrie r0;
+        char[] r1;
+        int[] r2, $r4;
+        int i0, i1, $i2;
+        sun.text.normalizer.Trie$DataManipulate r3;
+
+        r0 := @this: sun.text.normalizer.IntTrie;
+        r1 := @parameter0: char[];
+        r2 := @parameter1: int[];
+        i0 := @parameter2: int;
+        i1 := @parameter3: int;
+        r3 := @parameter4: sun.text.normalizer.Trie$DataManipulate;
+        specialinvoke r0.<sun.text.normalizer.Trie: void <init>(char[],int,sun.text.normalizer.Trie$DataManipulate)>(r1, i1, r3);
+        r0.<sun.text.normalizer.IntTrie: int[] m_data_> = r2;
+        $r4 = r0.<sun.text.normalizer.IntTrie: int[] m_data_>;
+        $i2 = lengthof $r4;
+        r0.<sun.text.normalizer.IntTrie: int m_dataLength_> = $i2;
+        r0.<sun.text.normalizer.IntTrie: int m_initialValue_> = i0;
+        return;
+    }
+}

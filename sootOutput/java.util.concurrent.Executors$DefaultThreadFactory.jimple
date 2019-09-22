@@ -1,0 +1,98 @@
+class java.util.concurrent.Executors$DefaultThreadFactory extends java.lang.Object implements java.util.concurrent.ThreadFactory
+{
+    private static final java.util.concurrent.atomic.AtomicInteger poolNumber;
+    private final java.lang.ThreadGroup group;
+    private final java.util.concurrent.atomic.AtomicInteger threadNumber;
+    private final java.lang.String namePrefix;
+
+    void <init>()
+    {
+        java.util.concurrent.Executors$DefaultThreadFactory r0;
+        java.util.concurrent.atomic.AtomicInteger $r1, $r8;
+        java.lang.SecurityManager r2;
+        java.lang.ThreadGroup $r4;
+        java.lang.Thread $r5;
+        java.lang.StringBuilder $r6, $r7, $r9, $r10;
+        int $i0;
+        java.lang.String $r11;
+
+        r0 := @this: java.util.concurrent.Executors$DefaultThreadFactory;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r1 = new java.util.concurrent.atomic.AtomicInteger;
+        specialinvoke $r1.<java.util.concurrent.atomic.AtomicInteger: void <init>(int)>(1);
+        r0.<java.util.concurrent.Executors$DefaultThreadFactory: java.util.concurrent.atomic.AtomicInteger threadNumber> = $r1;
+        r2 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r2 == null goto label0;
+
+        $r4 = virtualinvoke r2.<java.lang.SecurityManager: java.lang.ThreadGroup getThreadGroup()>();
+        goto label1;
+
+     label0:
+        $r5 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        $r4 = virtualinvoke $r5.<java.lang.Thread: java.lang.ThreadGroup getThreadGroup()>();
+
+     label1:
+        r0.<java.util.concurrent.Executors$DefaultThreadFactory: java.lang.ThreadGroup group> = $r4;
+        $r6 = new java.lang.StringBuilder;
+        specialinvoke $r6.<java.lang.StringBuilder: void <init>()>();
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("pool-");
+        $r8 = <java.util.concurrent.Executors$DefaultThreadFactory: java.util.concurrent.atomic.AtomicInteger poolNumber>;
+        $i0 = virtualinvoke $r8.<java.util.concurrent.atomic.AtomicInteger: int getAndIncrement()>();
+        $r9 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i0);
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("-thread-");
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.String toString()>();
+        r0.<java.util.concurrent.Executors$DefaultThreadFactory: java.lang.String namePrefix> = $r11;
+        return;
+    }
+
+    public java.lang.Thread newThread(java.lang.Runnable)
+    {
+        java.util.concurrent.Executors$DefaultThreadFactory r0;
+        java.lang.Runnable r1;
+        java.lang.Thread $r2, r4;
+        java.lang.StringBuilder $r3, $r7, $r9;
+        java.lang.ThreadGroup $r5;
+        java.lang.String $r6, $r10;
+        java.util.concurrent.atomic.AtomicInteger $r8;
+        int $i0, $i1;
+        boolean $z0;
+
+        r0 := @this: java.util.concurrent.Executors$DefaultThreadFactory;
+        r1 := @parameter0: java.lang.Runnable;
+        $r2 = new java.lang.Thread;
+        $r5 = r0.<java.util.concurrent.Executors$DefaultThreadFactory: java.lang.ThreadGroup group>;
+        $r3 = new java.lang.StringBuilder;
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>()>();
+        $r6 = r0.<java.util.concurrent.Executors$DefaultThreadFactory: java.lang.String namePrefix>;
+        $r7 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+        $r8 = r0.<java.util.concurrent.Executors$DefaultThreadFactory: java.util.concurrent.atomic.AtomicInteger threadNumber>;
+        $i0 = virtualinvoke $r8.<java.util.concurrent.atomic.AtomicInteger: int getAndIncrement()>();
+        $r9 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i0);
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.Thread: void <init>(java.lang.ThreadGroup,java.lang.Runnable,java.lang.String,long)>($r5, r1, $r10, 0L);
+        r4 = $r2;
+        $z0 = virtualinvoke r4.<java.lang.Thread: boolean isDaemon()>();
+        if $z0 == 0 goto label0;
+
+        virtualinvoke r4.<java.lang.Thread: void setDaemon(boolean)>(0);
+
+     label0:
+        $i1 = virtualinvoke r4.<java.lang.Thread: int getPriority()>();
+        if $i1 == 5 goto label1;
+
+        virtualinvoke r4.<java.lang.Thread: void setPriority(int)>(5);
+
+     label1:
+        return r4;
+    }
+
+    static void <clinit>()
+    {
+        java.util.concurrent.atomic.AtomicInteger $r0;
+
+        $r0 = new java.util.concurrent.atomic.AtomicInteger;
+        specialinvoke $r0.<java.util.concurrent.atomic.AtomicInteger: void <init>(int)>(1);
+        <java.util.concurrent.Executors$DefaultThreadFactory: java.util.concurrent.atomic.AtomicInteger poolNumber> = $r0;
+        return;
+    }
+}

@@ -1,0 +1,400 @@
+class sun.nio.ch.KQueueArrayWrapper extends java.lang.Object
+{
+    static final short POLLIN;
+    static final short POLLOUT;
+    static short EVFILT_READ;
+    static short EVFILT_WRITE;
+    static short SIZEOF_KEVENT;
+    static short FD_OFFSET;
+    static short FILTER_OFFSET;
+    static final int NUM_KEVENTS;
+    static boolean is64bit;
+    private sun.nio.ch.AllocatedNativeObject keventArray;
+    private long keventArrayAddress;
+    private int kq;
+    private int outgoingInterruptFD;
+    private int incomingInterruptFD;
+    private java.util.LinkedList updateList;
+    static final boolean $assertionsDisabled;
+
+    void <init>()
+    {
+        sun.nio.ch.KQueueArrayWrapper r0;
+        int i0, $i3;
+        java.util.LinkedList $r1;
+        short $s1;
+        sun.nio.ch.AllocatedNativeObject $r2, $r3;
+        long $l2;
+
+        r0 := @this: sun.nio.ch.KQueueArrayWrapper;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.nio.ch.KQueueArrayWrapper: sun.nio.ch.AllocatedNativeObject keventArray> = null;
+        r0.<sun.nio.ch.KQueueArrayWrapper: int kq> = -1;
+        $r1 = new java.util.LinkedList;
+        specialinvoke $r1.<java.util.LinkedList: void <init>()>();
+        r0.<sun.nio.ch.KQueueArrayWrapper: java.util.LinkedList updateList> = $r1;
+        $s1 = <sun.nio.ch.KQueueArrayWrapper: short SIZEOF_KEVENT>;
+        i0 = $s1 * 128;
+        $r2 = new sun.nio.ch.AllocatedNativeObject;
+        specialinvoke $r2.<sun.nio.ch.AllocatedNativeObject: void <init>(int,boolean)>(i0, 1);
+        r0.<sun.nio.ch.KQueueArrayWrapper: sun.nio.ch.AllocatedNativeObject keventArray> = $r2;
+        $r3 = r0.<sun.nio.ch.KQueueArrayWrapper: sun.nio.ch.AllocatedNativeObject keventArray>;
+        $l2 = virtualinvoke $r3.<sun.nio.ch.AllocatedNativeObject: long address()>();
+        r0.<sun.nio.ch.KQueueArrayWrapper: long keventArrayAddress> = $l2;
+        $i3 = specialinvoke r0.<sun.nio.ch.KQueueArrayWrapper: int init()>();
+        r0.<sun.nio.ch.KQueueArrayWrapper: int kq> = $i3;
+        return;
+    }
+
+    void initInterrupt(int, int)
+    {
+        sun.nio.ch.KQueueArrayWrapper r0;
+        int i0, i1, $i2;
+
+        r0 := @this: sun.nio.ch.KQueueArrayWrapper;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        r0.<sun.nio.ch.KQueueArrayWrapper: int outgoingInterruptFD> = i1;
+        r0.<sun.nio.ch.KQueueArrayWrapper: int incomingInterruptFD> = i0;
+        $i2 = r0.<sun.nio.ch.KQueueArrayWrapper: int kq>;
+        specialinvoke r0.<sun.nio.ch.KQueueArrayWrapper: void register0(int,int,int,int)>($i2, i0, 1, 0);
+        return;
+    }
+
+    int getReventOps(int)
+    {
+        sun.nio.ch.KQueueArrayWrapper r0;
+        int i0, i2, $i5;
+        byte b1;
+        short s3, $s4, $s6, $s7, $s8;
+        sun.nio.ch.AllocatedNativeObject $r1;
+
+        r0 := @this: sun.nio.ch.KQueueArrayWrapper;
+        i0 := @parameter0: int;
+        b1 = 0;
+        $s4 = <sun.nio.ch.KQueueArrayWrapper: short SIZEOF_KEVENT>;
+        $i5 = $s4 * i0;
+        $s6 = <sun.nio.ch.KQueueArrayWrapper: short FILTER_OFFSET>;
+        i2 = $i5 + $s6;
+        $r1 = r0.<sun.nio.ch.KQueueArrayWrapper: sun.nio.ch.AllocatedNativeObject keventArray>;
+        s3 = virtualinvoke $r1.<sun.nio.ch.AllocatedNativeObject: short getShort(int)>(i2);
+        $s7 = <sun.nio.ch.KQueueArrayWrapper: short EVFILT_READ>;
+        if s3 != $s7 goto label0;
+
+        b1 = b1 | 1;
+        goto label1;
+
+     label0:
+        $s8 = <sun.nio.ch.KQueueArrayWrapper: short EVFILT_WRITE>;
+        if s3 != $s8 goto label1;
+
+        b1 = b1 | 4;
+
+     label1:
+        return b1;
+    }
+
+    int getDescriptor(int)
+    {
+        sun.nio.ch.KQueueArrayWrapper r0;
+        int i0, i2, $i4, $i7, $i8;
+        short $s1, $s5;
+        long l3;
+        boolean $z0, $z1;
+        sun.nio.ch.AllocatedNativeObject $r1, $r3;
+        byte $b6;
+        java.lang.AssertionError $r2;
+
+        r0 := @this: sun.nio.ch.KQueueArrayWrapper;
+        i0 := @parameter0: int;
+        $s1 = <sun.nio.ch.KQueueArrayWrapper: short SIZEOF_KEVENT>;
+        $i4 = $s1 * i0;
+        $s5 = <sun.nio.ch.KQueueArrayWrapper: short FD_OFFSET>;
+        i2 = $i4 + $s5;
+        $z0 = <sun.nio.ch.KQueueArrayWrapper: boolean is64bit>;
+        if $z0 == 0 goto label1;
+
+        $r1 = r0.<sun.nio.ch.KQueueArrayWrapper: sun.nio.ch.AllocatedNativeObject keventArray>;
+        l3 = virtualinvoke $r1.<sun.nio.ch.AllocatedNativeObject: long getLong(int)>(i2);
+        $z1 = <sun.nio.ch.KQueueArrayWrapper: boolean $assertionsDisabled>;
+        if $z1 != 0 goto label0;
+
+        $b6 = l3 cmp 2147483647L;
+        if $b6 <= 0 goto label0;
+
+        $r2 = new java.lang.AssertionError;
+        specialinvoke $r2.<java.lang.AssertionError: void <init>()>();
+        throw $r2;
+
+     label0:
+        $i7 = (int) l3;
+        return $i7;
+
+     label1:
+        $r3 = r0.<sun.nio.ch.KQueueArrayWrapper: sun.nio.ch.AllocatedNativeObject keventArray>;
+        $i8 = virtualinvoke $r3.<sun.nio.ch.AllocatedNativeObject: int getInt(int)>(i2);
+        return $i8;
+    }
+
+    void setInterest(sun.nio.ch.SelChImpl, int)
+    {
+        sun.nio.ch.KQueueArrayWrapper r0;
+        sun.nio.ch.SelChImpl r1;
+        int i0;
+        java.util.LinkedList r2, $r4, $r5;
+        java.lang.Throwable r3, $r7;
+        sun.nio.ch.KQueueArrayWrapper$Update $r6;
+
+        r0 := @this: sun.nio.ch.KQueueArrayWrapper;
+        r1 := @parameter0: sun.nio.ch.SelChImpl;
+        i0 := @parameter1: int;
+        $r4 = r0.<sun.nio.ch.KQueueArrayWrapper: java.util.LinkedList updateList>;
+        r2 = $r4;
+        entermonitor $r4;
+
+     label0:
+        $r5 = r0.<sun.nio.ch.KQueueArrayWrapper: java.util.LinkedList updateList>;
+        $r6 = new sun.nio.ch.KQueueArrayWrapper$Update;
+        specialinvoke $r6.<sun.nio.ch.KQueueArrayWrapper$Update: void <init>(sun.nio.ch.SelChImpl,int)>(r1, i0);
+        virtualinvoke $r5.<java.util.LinkedList: boolean add(java.lang.Object)>($r6);
+        exitmonitor r2;
+
+     label1:
+        goto label5;
+
+     label2:
+        $r7 := @caughtexception;
+
+     label3:
+        r3 = $r7;
+        exitmonitor r2;
+
+     label4:
+        throw r3;
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    void release(sun.nio.ch.SelChImpl)
+    {
+        sun.nio.ch.KQueueArrayWrapper r0;
+        sun.nio.ch.SelChImpl r1, $r9;
+        java.util.LinkedList r2, $r5, $r6;
+        java.util.Iterator r3;
+        java.lang.Throwable r4, $r10;
+        boolean $z0;
+        java.lang.Object $r7;
+        sun.nio.ch.KQueueArrayWrapper$Update $r8;
+        int $i0, $i1;
+
+        r0 := @this: sun.nio.ch.KQueueArrayWrapper;
+        r1 := @parameter0: sun.nio.ch.SelChImpl;
+        $r5 = r0.<sun.nio.ch.KQueueArrayWrapper: java.util.LinkedList updateList>;
+        r2 = $r5;
+        entermonitor $r5;
+
+     label0:
+        $r6 = r0.<sun.nio.ch.KQueueArrayWrapper: java.util.LinkedList updateList>;
+        r3 = virtualinvoke $r6.<java.util.LinkedList: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r7 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+        $r8 = (sun.nio.ch.KQueueArrayWrapper$Update) $r7;
+        $r9 = $r8.<sun.nio.ch.KQueueArrayWrapper$Update: sun.nio.ch.SelChImpl channel>;
+        if $r9 != r1 goto label1;
+
+        interfaceinvoke r3.<java.util.Iterator: void remove()>();
+        goto label1;
+
+     label2:
+        $i0 = r0.<sun.nio.ch.KQueueArrayWrapper: int kq>;
+        $i1 = interfaceinvoke r1.<sun.nio.ch.SelChImpl: int getFDVal()>();
+        specialinvoke r0.<sun.nio.ch.KQueueArrayWrapper: void register0(int,int,int,int)>($i0, $i1, 0, 0);
+        exitmonitor r2;
+
+     label3:
+        goto label7;
+
+     label4:
+        $r10 := @caughtexception;
+
+     label5:
+        r4 = $r10;
+        exitmonitor r2;
+
+     label6:
+        throw r4;
+
+     label7:
+        return;
+
+        catch java.lang.Throwable from label0 to label3 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+    }
+
+    void updateRegistrations()
+    {
+        sun.nio.ch.KQueueArrayWrapper r0;
+        java.util.LinkedList r1, $r4, $r5;
+        null_type n0;
+        sun.nio.ch.SelChImpl r2;
+        java.lang.Throwable r3, $r9;
+        java.lang.Object $r6;
+        sun.nio.ch.KQueueArrayWrapper$Update $r7, r8;
+        boolean $z0;
+        int $i0, $i1, $i2, $i3, $i4, $i5;
+
+        r0 := @this: sun.nio.ch.KQueueArrayWrapper;
+        $r4 = r0.<sun.nio.ch.KQueueArrayWrapper: java.util.LinkedList updateList>;
+        r1 = $r4;
+        entermonitor $r4;
+
+     label0:
+        n0 = null;
+
+     label1:
+        $r5 = r0.<sun.nio.ch.KQueueArrayWrapper: java.util.LinkedList updateList>;
+        $r6 = virtualinvoke $r5.<java.util.LinkedList: java.lang.Object poll()>();
+        $r7 = (sun.nio.ch.KQueueArrayWrapper$Update) $r6;
+        r8 = $r7;
+        if $r7 == null goto label3;
+
+        r2 = r8.<sun.nio.ch.KQueueArrayWrapper$Update: sun.nio.ch.SelChImpl channel>;
+        $z0 = interfaceinvoke r2.<sun.nio.ch.SelChImpl: boolean isOpen()>();
+        if $z0 != 0 goto label2;
+
+        goto label1;
+
+     label2:
+        $i0 = r0.<sun.nio.ch.KQueueArrayWrapper: int kq>;
+        $i1 = interfaceinvoke r2.<sun.nio.ch.SelChImpl: int getFDVal()>();
+        $i2 = r8.<sun.nio.ch.KQueueArrayWrapper$Update: int events>;
+        $i3 = $i2 & 1;
+        $i4 = r8.<sun.nio.ch.KQueueArrayWrapper$Update: int events>;
+        $i5 = $i4 & 4;
+        specialinvoke r0.<sun.nio.ch.KQueueArrayWrapper: void register0(int,int,int,int)>($i0, $i1, $i3, $i5);
+        goto label1;
+
+     label3:
+        exitmonitor r1;
+
+     label4:
+        goto label8;
+
+     label5:
+        $r9 := @caughtexception;
+
+     label6:
+        r3 = $r9;
+        exitmonitor r1;
+
+     label7:
+        throw r3;
+
+     label8:
+        return;
+
+        catch java.lang.Throwable from label0 to label4 with label5;
+        catch java.lang.Throwable from label6 to label7 with label5;
+    }
+
+    void close() throws java.io.IOException
+    {
+        sun.nio.ch.KQueueArrayWrapper r0;
+        sun.nio.ch.AllocatedNativeObject $r1, $r2;
+        int $i0, $i1;
+
+        r0 := @this: sun.nio.ch.KQueueArrayWrapper;
+        $r1 = r0.<sun.nio.ch.KQueueArrayWrapper: sun.nio.ch.AllocatedNativeObject keventArray>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<sun.nio.ch.KQueueArrayWrapper: sun.nio.ch.AllocatedNativeObject keventArray>;
+        virtualinvoke $r2.<sun.nio.ch.AllocatedNativeObject: void free()>();
+        r0.<sun.nio.ch.KQueueArrayWrapper: sun.nio.ch.AllocatedNativeObject keventArray> = null;
+
+     label0:
+        $i0 = r0.<sun.nio.ch.KQueueArrayWrapper: int kq>;
+        if $i0 < 0 goto label1;
+
+        $i1 = r0.<sun.nio.ch.KQueueArrayWrapper: int kq>;
+        staticinvoke <sun.nio.ch.FileDispatcherImpl: void closeIntFD(int)>($i1);
+        r0.<sun.nio.ch.KQueueArrayWrapper: int kq> = -1;
+
+     label1:
+        return;
+    }
+
+    int poll(long)
+    {
+        sun.nio.ch.KQueueArrayWrapper r0;
+        long l0, $l3;
+        int i1, $i2;
+
+        r0 := @this: sun.nio.ch.KQueueArrayWrapper;
+        l0 := @parameter0: long;
+        virtualinvoke r0.<sun.nio.ch.KQueueArrayWrapper: void updateRegistrations()>();
+        $i2 = r0.<sun.nio.ch.KQueueArrayWrapper: int kq>;
+        $l3 = r0.<sun.nio.ch.KQueueArrayWrapper: long keventArrayAddress>;
+        i1 = specialinvoke r0.<sun.nio.ch.KQueueArrayWrapper: int kevent0(int,long,int,long)>($i2, $l3, 128, l0);
+        return i1;
+    }
+
+    void interrupt()
+    {
+        sun.nio.ch.KQueueArrayWrapper r0;
+        int $i0;
+
+        r0 := @this: sun.nio.ch.KQueueArrayWrapper;
+        $i0 = r0.<sun.nio.ch.KQueueArrayWrapper: int outgoingInterruptFD>;
+        staticinvoke <sun.nio.ch.KQueueArrayWrapper: void interrupt(int)>($i0);
+        return;
+    }
+
+    private native int init();
+
+    private static native void initStructSizes();
+
+    private native void register0(int, int, int, int);
+
+    private native int kevent0(int, long, int, long);
+
+    private static native void interrupt(int);
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        java.lang.String r1;
+        boolean $z0, $z1, $z2;
+        sun.security.action.GetPropertyAction $r2;
+        java.lang.Object $r3;
+
+        $r0 = class "sun/nio/ch/KQueueArrayWrapper";
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        <sun.nio.ch.KQueueArrayWrapper: boolean $assertionsDisabled> = $z1;
+        <sun.nio.ch.KQueueArrayWrapper: boolean is64bit> = 0;
+        staticinvoke <sun.nio.ch.KQueueArrayWrapper: void initStructSizes()>();
+        $r2 = new sun.security.action.GetPropertyAction;
+        specialinvoke $r2.<sun.security.action.GetPropertyAction: void <init>(java.lang.String)>("sun.arch.data.model");
+        $r3 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r2);
+        r1 = (java.lang.String) $r3;
+        $z2 = virtualinvoke r1.<java.lang.String: boolean equals(java.lang.Object)>("64");
+        <sun.nio.ch.KQueueArrayWrapper: boolean is64bit> = $z2;
+        return;
+    }
+}

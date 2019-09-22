@@ -1,0 +1,1319 @@
+final class java.text.DigitList extends java.lang.Object implements java.lang.Cloneable
+{
+    public static final int MAX_COUNT;
+    public int decimalAt;
+    public int count;
+    public char[] digits;
+    private char[] data;
+    private java.math.RoundingMode roundingMode;
+    private boolean isNegative;
+    private static final char[] LONG_MIN_REP;
+    private java.lang.StringBuffer tempBuffer;
+    static final boolean $assertionsDisabled;
+
+    void <init>()
+    {
+        java.text.DigitList r0;
+        char[] $r1;
+        java.math.RoundingMode $r2;
+
+        r0 := @this: java.text.DigitList;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.text.DigitList: int decimalAt> = 0;
+        r0.<java.text.DigitList: int count> = 0;
+        $r1 = newarray (char)[19];
+        r0.<java.text.DigitList: char[] digits> = $r1;
+        $r2 = <java.math.RoundingMode: java.math.RoundingMode HALF_EVEN>;
+        r0.<java.text.DigitList: java.math.RoundingMode roundingMode> = $r2;
+        r0.<java.text.DigitList: boolean isNegative> = 0;
+        return;
+    }
+
+    boolean isZero()
+    {
+        java.text.DigitList r0;
+        int i0, $i1;
+        char[] $r1;
+        char $c2;
+
+        r0 := @this: java.text.DigitList;
+        i0 = 0;
+
+     label0:
+        $i1 = r0.<java.text.DigitList: int count>;
+        if i0 >= $i1 goto label2;
+
+        $r1 = r0.<java.text.DigitList: char[] digits>;
+        $c2 = $r1[i0];
+        if $c2 == 48 goto label1;
+
+        return 0;
+
+     label1:
+        i0 = i0 + 1;
+        goto label0;
+
+     label2:
+        return 1;
+    }
+
+    void setRoundingMode(java.math.RoundingMode)
+    {
+        java.text.DigitList r0;
+        java.math.RoundingMode r1;
+
+        r0 := @this: java.text.DigitList;
+        r1 := @parameter0: java.math.RoundingMode;
+        r0.<java.text.DigitList: java.math.RoundingMode roundingMode> = r1;
+        return;
+    }
+
+    public void clear()
+    {
+        java.text.DigitList r0;
+
+        r0 := @this: java.text.DigitList;
+        r0.<java.text.DigitList: int decimalAt> = 0;
+        r0.<java.text.DigitList: int count> = 0;
+        return;
+    }
+
+    public void append(char)
+    {
+        java.text.DigitList r0;
+        char c0;
+        char[] r1, $r2, $r3, $r4;
+        int $i1, $i2, $i3, $i4, $i5, $i6, $i7;
+
+        r0 := @this: java.text.DigitList;
+        c0 := @parameter0: char;
+        $i1 = r0.<java.text.DigitList: int count>;
+        $r2 = r0.<java.text.DigitList: char[] digits>;
+        $i2 = lengthof $r2;
+        if $i1 != $i2 goto label0;
+
+        $i3 = r0.<java.text.DigitList: int count>;
+        $i4 = $i3 + 100;
+        r1 = newarray (char)[$i4];
+        $r3 = r0.<java.text.DigitList: char[] digits>;
+        $i5 = r0.<java.text.DigitList: int count>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r3, 0, r1, 0, $i5);
+        r0.<java.text.DigitList: char[] digits> = r1;
+
+     label0:
+        $r4 = r0.<java.text.DigitList: char[] digits>;
+        $i6 = r0.<java.text.DigitList: int count>;
+        $i7 = $i6 + 1;
+        r0.<java.text.DigitList: int count> = $i7;
+        $r4[$i6] = c0;
+        return;
+    }
+
+    public final double getDouble()
+    {
+        java.text.DigitList r0;
+        java.lang.StringBuffer r1;
+        int $i0, $i1, $i2;
+        char[] $r3;
+        java.lang.String $r7;
+        double $d0;
+
+        r0 := @this: java.text.DigitList;
+        $i0 = r0.<java.text.DigitList: int count>;
+        if $i0 != 0 goto label0;
+
+        return 0.0;
+
+     label0:
+        r1 = specialinvoke r0.<java.text.DigitList: java.lang.StringBuffer getStringBuffer()>();
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(46);
+        $r3 = r0.<java.text.DigitList: char[] digits>;
+        $i1 = r0.<java.text.DigitList: int count>;
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char[],int,int)>($r3, 0, $i1);
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(69);
+        $i2 = r0.<java.text.DigitList: int decimalAt>;
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r7 = virtualinvoke r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        $d0 = staticinvoke <java.lang.Double: double parseDouble(java.lang.String)>($r7);
+        return $d0;
+    }
+
+    public final long getLong()
+    {
+        java.text.DigitList r0;
+        java.lang.StringBuffer r1;
+        int i0, $i1, $i2, $i3;
+        boolean $z0;
+        char[] $r2;
+        java.lang.String $r5;
+        long $l4;
+
+        r0 := @this: java.text.DigitList;
+        $i1 = r0.<java.text.DigitList: int count>;
+        if $i1 != 0 goto label0;
+
+        return 0L;
+
+     label0:
+        $z0 = specialinvoke r0.<java.text.DigitList: boolean isLongMIN_VALUE()>();
+        if $z0 == 0 goto label1;
+
+        return -9223372036854775808L;
+
+     label1:
+        r1 = specialinvoke r0.<java.text.DigitList: java.lang.StringBuffer getStringBuffer()>();
+        $r2 = r0.<java.text.DigitList: char[] digits>;
+        $i2 = r0.<java.text.DigitList: int count>;
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char[],int,int)>($r2, 0, $i2);
+        i0 = r0.<java.text.DigitList: int count>;
+
+     label2:
+        $i3 = r0.<java.text.DigitList: int decimalAt>;
+        if i0 >= $i3 goto label3;
+
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(48);
+        i0 = i0 + 1;
+        goto label2;
+
+     label3:
+        $r5 = virtualinvoke r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        $l4 = staticinvoke <java.lang.Long: long parseLong(java.lang.String)>($r5);
+        return $l4;
+    }
+
+    public final java.math.BigDecimal getBigDecimal()
+    {
+        java.text.DigitList r0;
+        java.lang.StringBuilder $r1, $r4, $r5;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9;
+        java.math.BigDecimal $r2, $r3, $r7, $r9, $r11;
+        java.lang.String $r6;
+        char[] $r8, $r10;
+
+        r0 := @this: java.text.DigitList;
+        $i0 = r0.<java.text.DigitList: int count>;
+        if $i0 != 0 goto label1;
+
+        $i1 = r0.<java.text.DigitList: int decimalAt>;
+        if $i1 != 0 goto label0;
+
+        $r2 = <java.math.BigDecimal: java.math.BigDecimal ZERO>;
+        return $r2;
+
+     label0:
+        $r3 = new java.math.BigDecimal;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>()>();
+        $r4 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("0E");
+        $i2 = r0.<java.text.DigitList: int decimalAt>;
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i2);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r3.<java.math.BigDecimal: void <init>(java.lang.String)>($r6);
+        return $r3;
+
+     label1:
+        $i3 = r0.<java.text.DigitList: int decimalAt>;
+        $i4 = r0.<java.text.DigitList: int count>;
+        if $i3 != $i4 goto label2;
+
+        $r7 = new java.math.BigDecimal;
+        $r8 = r0.<java.text.DigitList: char[] digits>;
+        $i5 = r0.<java.text.DigitList: int count>;
+        specialinvoke $r7.<java.math.BigDecimal: void <init>(char[],int,int)>($r8, 0, $i5);
+        return $r7;
+
+     label2:
+        $r9 = new java.math.BigDecimal;
+        $r10 = r0.<java.text.DigitList: char[] digits>;
+        $i6 = r0.<java.text.DigitList: int count>;
+        specialinvoke $r9.<java.math.BigDecimal: void <init>(char[],int,int)>($r10, 0, $i6);
+        $i7 = r0.<java.text.DigitList: int decimalAt>;
+        $i8 = r0.<java.text.DigitList: int count>;
+        $i9 = $i7 - $i8;
+        $r11 = virtualinvoke $r9.<java.math.BigDecimal: java.math.BigDecimal scaleByPowerOfTen(int)>($i9);
+        return $r11;
+    }
+
+    boolean fitsIntoLong(boolean, boolean)
+    {
+        java.text.DigitList r0;
+        boolean z0, z1, $z2, $z3;
+        int i0, $i3, $i4, $i5, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16;
+        char c1, c2, $c6;
+        char[] $r1, $r3, $r4;
+
+        r0 := @this: java.text.DigitList;
+        z0 := @parameter0: boolean;
+        z1 := @parameter1: boolean;
+
+     label0:
+        $i3 = r0.<java.text.DigitList: int count>;
+        if $i3 <= 0 goto label1;
+
+        $r1 = r0.<java.text.DigitList: char[] digits>;
+        $i4 = r0.<java.text.DigitList: int count>;
+        $i5 = $i4 - 1;
+        $c6 = $r1[$i5];
+        if $c6 != 48 goto label1;
+
+        $i7 = r0.<java.text.DigitList: int count>;
+        $i8 = $i7 - 1;
+        r0.<java.text.DigitList: int count> = $i8;
+        goto label0;
+
+     label1:
+        $i9 = r0.<java.text.DigitList: int count>;
+        if $i9 != 0 goto label5;
+
+        if z0 != 0 goto label2;
+
+        if z1 == 0 goto label3;
+
+     label2:
+        $z2 = 1;
+        goto label4;
+
+     label3:
+        $z2 = 0;
+
+     label4:
+        return $z2;
+
+     label5:
+        $i10 = r0.<java.text.DigitList: int decimalAt>;
+        $i11 = r0.<java.text.DigitList: int count>;
+        if $i10 < $i11 goto label6;
+
+        $i12 = r0.<java.text.DigitList: int decimalAt>;
+        if $i12 <= 19 goto label7;
+
+     label6:
+        return 0;
+
+     label7:
+        $i13 = r0.<java.text.DigitList: int decimalAt>;
+        if $i13 >= 19 goto label8;
+
+        return 1;
+
+     label8:
+        i0 = 0;
+
+     label9:
+        $i14 = r0.<java.text.DigitList: int count>;
+        if i0 >= $i14 goto label12;
+
+        $r3 = r0.<java.text.DigitList: char[] digits>;
+        c1 = $r3[i0];
+        $r4 = <java.text.DigitList: char[] LONG_MIN_REP>;
+        c2 = $r4[i0];
+        if c1 <= c2 goto label10;
+
+        return 0;
+
+     label10:
+        if c1 >= c2 goto label11;
+
+        return 1;
+
+     label11:
+        i0 = i0 + 1;
+        goto label9;
+
+     label12:
+        $i15 = r0.<java.text.DigitList: int count>;
+        $i16 = r0.<java.text.DigitList: int decimalAt>;
+        if $i15 >= $i16 goto label13;
+
+        return 1;
+
+     label13:
+        if z0 != 0 goto label14;
+
+        $z3 = 1;
+        goto label15;
+
+     label14:
+        $z3 = 0;
+
+     label15:
+        return $z3;
+    }
+
+    public final void set(boolean, double, int)
+    {
+        java.text.DigitList r0;
+        boolean z0;
+        double d0;
+        int i0;
+
+        r0 := @this: java.text.DigitList;
+        z0 := @parameter0: boolean;
+        d0 := @parameter1: double;
+        i0 := @parameter2: int;
+        virtualinvoke r0.<java.text.DigitList: void set(boolean,double,int,boolean)>(z0, d0, i0, 1);
+        return;
+    }
+
+    final void set(boolean, double, int, boolean)
+    {
+        java.text.DigitList r0;
+        boolean z0, z1;
+        double d0;
+        int i0;
+        java.lang.String $r1;
+
+        r0 := @this: java.text.DigitList;
+        z0 := @parameter0: boolean;
+        d0 := @parameter1: double;
+        i0 := @parameter2: int;
+        z1 := @parameter3: boolean;
+        $r1 = staticinvoke <java.lang.Double: java.lang.String toString(double)>(d0);
+        virtualinvoke r0.<java.text.DigitList: void set(boolean,java.lang.String,int,boolean)>(z0, $r1, i0, z1);
+        return;
+    }
+
+    final void set(boolean, java.lang.String, int, boolean)
+    {
+        java.text.DigitList r0;
+        boolean z0, z1, z2, $z3, $z4;
+        java.lang.String r1;
+        int i0, i1, i2, i3, i4, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i22, $i23, $i24, $i26, $i27, $i28, $i29;
+        char[] r2, $r3, $r7, $r8;
+        char c5, $c25;
+
+        r0 := @this: java.text.DigitList;
+        z0 := @parameter0: boolean;
+        r1 := @parameter1: java.lang.String;
+        i0 := @parameter2: int;
+        z1 := @parameter3: boolean;
+        r0.<java.text.DigitList: boolean isNegative> = z0;
+        i1 = virtualinvoke r1.<java.lang.String: int length()>();
+        r2 = specialinvoke r0.<java.text.DigitList: char[] getDataChars(int)>(i1);
+        virtualinvoke r1.<java.lang.String: void getChars(int,int,char[],int)>(0, i1, r2, 0);
+        r0.<java.text.DigitList: int decimalAt> = -1;
+        r0.<java.text.DigitList: int count> = 0;
+        i2 = 0;
+        i3 = 0;
+        z2 = 0;
+        i4 = 0;
+
+     label0:
+        if i4 >= i1 goto label8;
+
+        $i6 = i4;
+        i4 = i4 + 1;
+        c5 = r2[$i6];
+        if c5 != 46 goto label1;
+
+        $i7 = r0.<java.text.DigitList: int count>;
+        r0.<java.text.DigitList: int decimalAt> = $i7;
+        goto label7;
+
+     label1:
+        if c5 == 101 goto label2;
+
+        if c5 != 69 goto label3;
+
+     label2:
+        i2 = staticinvoke <java.text.DigitList: int parseInt(char[],int,int)>(r2, i4, i1);
+        goto label8;
+
+     label3:
+        if z2 != 0 goto label6;
+
+        if c5 == 48 goto label4;
+
+        $z3 = 1;
+        goto label5;
+
+     label4:
+        $z3 = 0;
+
+     label5:
+        z2 = $z3;
+        if z2 != 0 goto label6;
+
+        $i8 = r0.<java.text.DigitList: int decimalAt>;
+        if $i8 == -1 goto label6;
+
+        i3 = i3 + 1;
+
+     label6:
+        if z2 == 0 goto label7;
+
+        $r3 = r0.<java.text.DigitList: char[] digits>;
+        $i9 = r0.<java.text.DigitList: int count>;
+        $i10 = $i9 + 1;
+        r0.<java.text.DigitList: int count> = $i10;
+        $r3[$i9] = c5;
+
+     label7:
+        goto label0;
+
+     label8:
+        $i11 = r0.<java.text.DigitList: int decimalAt>;
+        if $i11 != -1 goto label9;
+
+        $i12 = r0.<java.text.DigitList: int count>;
+        r0.<java.text.DigitList: int decimalAt> = $i12;
+
+     label9:
+        if z2 == 0 goto label10;
+
+        $i13 = r0.<java.text.DigitList: int decimalAt>;
+        $i14 = i2 - i3;
+        $i15 = $i13 + $i14;
+        r0.<java.text.DigitList: int decimalAt> = $i15;
+
+     label10:
+        if z1 == 0 goto label14;
+
+        $i16 = r0.<java.text.DigitList: int decimalAt>;
+        $i17 = neg $i16;
+        if $i17 <= i0 goto label11;
+
+        r0.<java.text.DigitList: int count> = 0;
+        return;
+
+     label11:
+        $i18 = r0.<java.text.DigitList: int decimalAt>;
+        $i19 = neg $i18;
+        if $i19 != i0 goto label14;
+
+        $z4 = specialinvoke r0.<java.text.DigitList: boolean shouldRoundUp(int)>(0);
+        if $z4 == 0 goto label12;
+
+        r0.<java.text.DigitList: int count> = 1;
+        $i20 = r0.<java.text.DigitList: int decimalAt>;
+        $i21 = $i20 + 1;
+        r0.<java.text.DigitList: int decimalAt> = $i21;
+        $r7 = r0.<java.text.DigitList: char[] digits>;
+        $r7[0] = 49;
+        goto label13;
+
+     label12:
+        r0.<java.text.DigitList: int count> = 0;
+
+     label13:
+        return;
+
+     label14:
+        $i22 = r0.<java.text.DigitList: int count>;
+        if $i22 <= 1 goto label15;
+
+        $r8 = r0.<java.text.DigitList: char[] digits>;
+        $i23 = r0.<java.text.DigitList: int count>;
+        $i24 = $i23 - 1;
+        $c25 = $r8[$i24];
+        if $c25 != 48 goto label15;
+
+        $i26 = r0.<java.text.DigitList: int count>;
+        $i27 = $i26 - 1;
+        r0.<java.text.DigitList: int count> = $i27;
+        goto label14;
+
+     label15:
+        if z1 == 0 goto label16;
+
+        $i28 = r0.<java.text.DigitList: int decimalAt>;
+        $i29 = i0 + $i28;
+        goto label17;
+
+     label16:
+        $i29 = i0;
+
+     label17:
+        specialinvoke r0.<java.text.DigitList: void round(int)>($i29);
+        return;
+    }
+
+    private final void round(int)
+    {
+        java.text.DigitList r0;
+        int i0, $i1, $i2, $i3, $i6, $i9, $i10, $i11, $i13, $i14;
+        boolean $z0;
+        char[] $r1, $r3, $r4, $r5;
+        char $c5, $c7, $c8, $c12;
+
+        r0 := @this: java.text.DigitList;
+        i0 := @parameter0: int;
+        if i0 < 0 goto label5;
+
+        $i1 = r0.<java.text.DigitList: int count>;
+        if i0 >= $i1 goto label5;
+
+        $z0 = specialinvoke r0.<java.text.DigitList: boolean shouldRoundUp(int)>(i0);
+        if $z0 == 0 goto label3;
+
+     label0:
+        i0 = i0 + -1;
+        if i0 >= 0 goto label1;
+
+        $r1 = r0.<java.text.DigitList: char[] digits>;
+        $r1[0] = 49;
+        $i2 = r0.<java.text.DigitList: int decimalAt>;
+        $i3 = $i2 + 1;
+        r0.<java.text.DigitList: int decimalAt> = $i3;
+        i0 = 0;
+        goto label2;
+
+     label1:
+        $r3 = r0.<java.text.DigitList: char[] digits>;
+        $c5 = $r3[i0];
+        $i6 = $c5 + 1;
+        $c7 = (char) $i6;
+        $r3[i0] = $c7;
+        $r4 = r0.<java.text.DigitList: char[] digits>;
+        $c8 = $r4[i0];
+        if $c8 > 57 goto label0;
+
+        goto label2;
+
+     label2:
+        i0 = i0 + 1;
+
+     label3:
+        r0.<java.text.DigitList: int count> = i0;
+
+     label4:
+        $i9 = r0.<java.text.DigitList: int count>;
+        if $i9 <= 1 goto label5;
+
+        $r5 = r0.<java.text.DigitList: char[] digits>;
+        $i10 = r0.<java.text.DigitList: int count>;
+        $i11 = $i10 - 1;
+        $c12 = $r5[$i11];
+        if $c12 != 48 goto label5;
+
+        $i13 = r0.<java.text.DigitList: int count>;
+        $i14 = $i13 - 1;
+        r0.<java.text.DigitList: int count> = $i14;
+        goto label4;
+
+     label5:
+        return;
+    }
+
+    private boolean shouldRoundUp(int)
+    {
+        java.text.DigitList r0;
+        int i0, i1, $i2, $i3, $i4, $i5, i7, $i8, i10, $i11, i16, $i17, i21, $i22, $i24, $i26, i27, $i28;
+        int[] $r1;
+        java.math.RoundingMode $r2;
+        char[] $r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13, $r14;
+        char $c6, $c9, $c12, $c13, $c14, $c15, $c18, $c19, $c20, $c23, $c25, $c29;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        java.lang.ArithmeticException $r15;
+        java.lang.AssertionError $r16;
+
+        r0 := @this: java.text.DigitList;
+        i0 := @parameter0: int;
+        $i2 = r0.<java.text.DigitList: int count>;
+        if i0 >= $i2 goto label33;
+
+        $r1 = <java.text.DigitList$1: int[] $SwitchMap$java$math$RoundingMode>;
+        $r2 = r0.<java.text.DigitList: java.math.RoundingMode roundingMode>;
+        $i3 = virtualinvoke $r2.<java.math.RoundingMode: int ordinal()>();
+        $i4 = $r1[$i3];
+        tableswitch($i4)
+        {
+            case 1: goto label0;
+            case 2: goto label4;
+            case 3: goto label5;
+            case 4: goto label11;
+            case 5: goto label15;
+            case 6: goto label16;
+            case 7: goto label21;
+            case 8: goto label28;
+            default: goto label32;
+        };
+
+     label0:
+        i1 = i0;
+
+     label1:
+        $i5 = r0.<java.text.DigitList: int count>;
+        if i1 >= $i5 goto label3;
+
+        $r3 = r0.<java.text.DigitList: char[] digits>;
+        $c6 = $r3[i1];
+        if $c6 == 48 goto label2;
+
+        return 1;
+
+     label2:
+        i1 = i1 + 1;
+        goto label1;
+
+     label3:
+        goto label33;
+
+     label4:
+        goto label33;
+
+     label5:
+        i7 = i0;
+
+     label6:
+        $i8 = r0.<java.text.DigitList: int count>;
+        if i7 >= $i8 goto label10;
+
+        $r4 = r0.<java.text.DigitList: char[] digits>;
+        $c9 = $r4[i7];
+        if $c9 == 48 goto label9;
+
+        $z0 = r0.<java.text.DigitList: boolean isNegative>;
+        if $z0 != 0 goto label7;
+
+        $z1 = 1;
+        goto label8;
+
+     label7:
+        $z1 = 0;
+
+     label8:
+        return $z1;
+
+     label9:
+        i7 = i7 + 1;
+        goto label6;
+
+     label10:
+        goto label33;
+
+     label11:
+        i10 = i0;
+
+     label12:
+        $i11 = r0.<java.text.DigitList: int count>;
+        if i10 >= $i11 goto label14;
+
+        $r5 = r0.<java.text.DigitList: char[] digits>;
+        $c12 = $r5[i10];
+        if $c12 == 48 goto label13;
+
+        $z2 = r0.<java.text.DigitList: boolean isNegative>;
+        return $z2;
+
+     label13:
+        i10 = i10 + 1;
+        goto label12;
+
+     label14:
+        goto label33;
+
+     label15:
+        $r6 = r0.<java.text.DigitList: char[] digits>;
+        $c13 = $r6[i0];
+        if $c13 < 53 goto label33;
+
+        return 1;
+
+     label16:
+        $r7 = r0.<java.text.DigitList: char[] digits>;
+        $c14 = $r7[i0];
+        if $c14 <= 53 goto label17;
+
+        return 1;
+
+     label17:
+        $r8 = r0.<java.text.DigitList: char[] digits>;
+        $c15 = $r8[i0];
+        if $c15 != 53 goto label33;
+
+        i16 = i0 + 1;
+
+     label18:
+        $i17 = r0.<java.text.DigitList: int count>;
+        if i16 >= $i17 goto label20;
+
+        $r9 = r0.<java.text.DigitList: char[] digits>;
+        $c18 = $r9[i16];
+        if $c18 == 48 goto label19;
+
+        return 1;
+
+     label19:
+        i16 = i16 + 1;
+        goto label18;
+
+     label20:
+        goto label33;
+
+     label21:
+        $r10 = r0.<java.text.DigitList: char[] digits>;
+        $c19 = $r10[i0];
+        if $c19 <= 53 goto label22;
+
+        return 1;
+
+     label22:
+        $r11 = r0.<java.text.DigitList: char[] digits>;
+        $c20 = $r11[i0];
+        if $c20 != 53 goto label33;
+
+        i21 = i0 + 1;
+
+     label23:
+        $i22 = r0.<java.text.DigitList: int count>;
+        if i21 >= $i22 goto label25;
+
+        $r12 = r0.<java.text.DigitList: char[] digits>;
+        $c23 = $r12[i21];
+        if $c23 == 48 goto label24;
+
+        return 1;
+
+     label24:
+        i21 = i21 + 1;
+        goto label23;
+
+     label25:
+        if i0 <= 0 goto label26;
+
+        $r13 = r0.<java.text.DigitList: char[] digits>;
+        $i24 = i0 - 1;
+        $c25 = $r13[$i24];
+        $i26 = $c25 % 2;
+        if $i26 == 0 goto label26;
+
+        $z3 = 1;
+        goto label27;
+
+     label26:
+        $z3 = 0;
+
+     label27:
+        return $z3;
+
+     label28:
+        i27 = i0;
+
+     label29:
+        $i28 = r0.<java.text.DigitList: int count>;
+        if i27 >= $i28 goto label31;
+
+        $r14 = r0.<java.text.DigitList: char[] digits>;
+        $c29 = $r14[i27];
+        if $c29 == 48 goto label30;
+
+        $r15 = new java.lang.ArithmeticException;
+        specialinvoke $r15.<java.lang.ArithmeticException: void <init>(java.lang.String)>("Rounding needed with the rounding mode being set to RoundingMode.UNNECESSARY");
+        throw $r15;
+
+     label30:
+        i27 = i27 + 1;
+        goto label29;
+
+     label31:
+        goto label33;
+
+     label32:
+        $z4 = <java.text.DigitList: boolean $assertionsDisabled>;
+        if $z4 != 0 goto label33;
+
+        $r16 = new java.lang.AssertionError;
+        specialinvoke $r16.<java.lang.AssertionError: void <init>()>();
+        throw $r16;
+
+     label33:
+        return 0;
+    }
+
+    public final void set(boolean, long)
+    {
+        java.text.DigitList r0;
+        boolean z0;
+        long l0;
+
+        r0 := @this: java.text.DigitList;
+        z0 := @parameter0: boolean;
+        l0 := @parameter1: long;
+        virtualinvoke r0.<java.text.DigitList: void set(boolean,long,int)>(z0, l0, 0);
+        return;
+    }
+
+    public final void set(boolean, long, int)
+    {
+        java.text.DigitList r0;
+        boolean z0;
+        long l0, $l10, $l11;
+        int i1, i3, i4, $i7, $i12, $i14, $i16, $i17, $i18;
+        byte $b2, $b5, $b6, $b8, $b9;
+        char[] $r1, $r2, $r3, $r4, $r5, $r6;
+        char $c13, $c15;
+
+        r0 := @this: java.text.DigitList;
+        z0 := @parameter0: boolean;
+        l0 := @parameter1: long;
+        i1 := @parameter2: int;
+        r0.<java.text.DigitList: boolean isNegative> = z0;
+        $b5 = l0 cmp 0L;
+        if $b5 > 0 goto label1;
+
+        $b6 = l0 cmp -9223372036854775808L;
+        if $b6 != 0 goto label0;
+
+        $b2 = 19;
+        r0.<java.text.DigitList: int count> = $b2;
+        r0.<java.text.DigitList: int decimalAt> = $b2;
+        $r1 = <java.text.DigitList: char[] LONG_MIN_REP>;
+        $r2 = r0.<java.text.DigitList: char[] digits>;
+        $i7 = r0.<java.text.DigitList: int count>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r1, 0, $r2, 0, $i7);
+        goto label6;
+
+     label0:
+        $b8 = 0;
+        r0.<java.text.DigitList: int count> = $b8;
+        r0.<java.text.DigitList: int decimalAt> = $b8;
+        goto label6;
+
+     label1:
+        i3 = 19;
+
+     label2:
+        $b9 = l0 cmp 0L;
+        if $b9 <= 0 goto label3;
+
+        $r3 = r0.<java.text.DigitList: char[] digits>;
+        i3 = i3 + -1;
+        $l10 = l0 % 10L;
+        $l11 = 48L + $l10;
+        $i12 = (int) $l11;
+        $c13 = (char) $i12;
+        $r3[i3] = $c13;
+        l0 = l0 / 10L;
+        goto label2;
+
+     label3:
+        $i14 = 19 - i3;
+        r0.<java.text.DigitList: int decimalAt> = $i14;
+        i4 = 18;
+
+     label4:
+        $r4 = r0.<java.text.DigitList: char[] digits>;
+        $c15 = $r4[i4];
+        if $c15 != 48 goto label5;
+
+        i4 = i4 + -1;
+        goto label4;
+
+     label5:
+        $i16 = i4 - i3;
+        $i17 = $i16 + 1;
+        r0.<java.text.DigitList: int count> = $i17;
+        $r5 = r0.<java.text.DigitList: char[] digits>;
+        $r6 = r0.<java.text.DigitList: char[] digits>;
+        $i18 = r0.<java.text.DigitList: int count>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r5, i3, $r6, 0, $i18);
+
+     label6:
+        if i1 <= 0 goto label7;
+
+        specialinvoke r0.<java.text.DigitList: void round(int)>(i1);
+
+     label7:
+        return;
+    }
+
+    final void set(boolean, java.math.BigDecimal, int, boolean)
+    {
+        java.text.DigitList r0;
+        boolean z0, z1;
+        java.math.BigDecimal r1;
+        int i0, $i1;
+        java.lang.String r2;
+
+        r0 := @this: java.text.DigitList;
+        z0 := @parameter0: boolean;
+        r1 := @parameter1: java.math.BigDecimal;
+        i0 := @parameter2: int;
+        z1 := @parameter3: boolean;
+        r2 = virtualinvoke r1.<java.math.BigDecimal: java.lang.String toString()>();
+        $i1 = virtualinvoke r2.<java.lang.String: int length()>();
+        specialinvoke r0.<java.text.DigitList: void extendDigits(int)>($i1);
+        virtualinvoke r0.<java.text.DigitList: void set(boolean,java.lang.String,int,boolean)>(z0, r2, i0, z1);
+        return;
+    }
+
+    final void set(boolean, java.math.BigInteger, int)
+    {
+        java.text.DigitList r0;
+        boolean z0;
+        java.math.BigInteger r1;
+        int i0, i1, i2, $i4;
+        java.lang.String r2;
+        char[] $r3, $r4;
+        char $c3;
+
+        r0 := @this: java.text.DigitList;
+        z0 := @parameter0: boolean;
+        r1 := @parameter1: java.math.BigInteger;
+        i0 := @parameter2: int;
+        r0.<java.text.DigitList: boolean isNegative> = z0;
+        r2 = virtualinvoke r1.<java.math.BigInteger: java.lang.String toString()>();
+        i1 = virtualinvoke r2.<java.lang.String: int length()>();
+        specialinvoke r0.<java.text.DigitList: void extendDigits(int)>(i1);
+        $r3 = r0.<java.text.DigitList: char[] digits>;
+        virtualinvoke r2.<java.lang.String: void getChars(int,int,char[],int)>(0, i1, $r3, 0);
+        r0.<java.text.DigitList: int decimalAt> = i1;
+        i2 = i1 - 1;
+
+     label0:
+        if i2 < 0 goto label1;
+
+        $r4 = r0.<java.text.DigitList: char[] digits>;
+        $c3 = $r4[i2];
+        if $c3 != 48 goto label1;
+
+        i2 = i2 + -1;
+        goto label0;
+
+     label1:
+        $i4 = i2 + 1;
+        r0.<java.text.DigitList: int count> = $i4;
+        if i0 <= 0 goto label2;
+
+        specialinvoke r0.<java.text.DigitList: void round(int)>(i0);
+
+     label2:
+        return;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        java.text.DigitList r0, r2;
+        java.lang.Object r1;
+        int i0, $i1, $i2, $i3, $i4, $i5;
+        boolean $z0;
+        char[] $r3, $r4;
+        char $c6, $c7;
+
+        r0 := @this: java.text.DigitList;
+        r1 := @parameter0: java.lang.Object;
+        if r0 != r1 goto label0;
+
+        return 1;
+
+     label0:
+        $z0 = r1 instanceof java.text.DigitList;
+        if $z0 != 0 goto label1;
+
+        return 0;
+
+     label1:
+        r2 = (java.text.DigitList) r1;
+        $i1 = r0.<java.text.DigitList: int count>;
+        $i2 = r2.<java.text.DigitList: int count>;
+        if $i1 != $i2 goto label2;
+
+        $i3 = r0.<java.text.DigitList: int decimalAt>;
+        $i4 = r2.<java.text.DigitList: int decimalAt>;
+        if $i3 == $i4 goto label3;
+
+     label2:
+        return 0;
+
+     label3:
+        i0 = 0;
+
+     label4:
+        $i5 = r0.<java.text.DigitList: int count>;
+        if i0 >= $i5 goto label6;
+
+        $r3 = r0.<java.text.DigitList: char[] digits>;
+        $c6 = $r3[i0];
+        $r4 = r2.<java.text.DigitList: char[] digits>;
+        $c7 = $r4[i0];
+        if $c6 == $c7 goto label5;
+
+        return 0;
+
+     label5:
+        i0 = i0 + 1;
+        goto label4;
+
+     label6:
+        return 1;
+    }
+
+    public int hashCode()
+    {
+        java.text.DigitList r0;
+        int i0, i1, $i2, $i3;
+        char[] $r1;
+        char $c4;
+
+        r0 := @this: java.text.DigitList;
+        i0 = r0.<java.text.DigitList: int decimalAt>;
+        i1 = 0;
+
+     label0:
+        $i2 = r0.<java.text.DigitList: int count>;
+        if i1 >= $i2 goto label1;
+
+        $i3 = i0 * 37;
+        $r1 = r0.<java.text.DigitList: char[] digits>;
+        $c4 = $r1[i1];
+        i0 = $i3 + $c4;
+        i1 = i1 + 1;
+        goto label0;
+
+     label1:
+        return i0;
+    }
+
+    public java.lang.Object clone()
+    {
+        java.text.DigitList r0, r1;
+        char[] r2, $r4, $r5, $r6;
+        java.lang.Object $r3;
+        int $i0, $i1;
+        java.lang.CloneNotSupportedException $r8, r9;
+        java.lang.InternalError $r10;
+
+        r0 := @this: java.text.DigitList;
+
+     label0:
+        $r3 = specialinvoke r0.<java.lang.Object: java.lang.Object clone()>();
+        r1 = (java.text.DigitList) $r3;
+        $r4 = r0.<java.text.DigitList: char[] digits>;
+        $i0 = lengthof $r4;
+        r2 = newarray (char)[$i0];
+        $r5 = r0.<java.text.DigitList: char[] digits>;
+        $r6 = r0.<java.text.DigitList: char[] digits>;
+        $i1 = lengthof $r6;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r5, 0, r2, 0, $i1);
+        r1.<java.text.DigitList: char[] digits> = r2;
+        r1.<java.text.DigitList: java.lang.StringBuffer tempBuffer> = null;
+
+     label1:
+        return r1;
+
+     label2:
+        $r8 := @caughtexception;
+        r9 = $r8;
+        $r10 = new java.lang.InternalError;
+        specialinvoke $r10.<java.lang.InternalError: void <init>()>();
+        throw $r10;
+
+        catch java.lang.CloneNotSupportedException from label0 to label1 with label2;
+    }
+
+    private boolean isLongMIN_VALUE()
+    {
+        java.text.DigitList r0;
+        int i0, $i1, $i2, $i3, $i4;
+        char[] $r1, $r2;
+        char $c5, $c6;
+
+        r0 := @this: java.text.DigitList;
+        $i1 = r0.<java.text.DigitList: int decimalAt>;
+        $i2 = r0.<java.text.DigitList: int count>;
+        if $i1 != $i2 goto label0;
+
+        $i3 = r0.<java.text.DigitList: int count>;
+        if $i3 == 19 goto label1;
+
+     label0:
+        return 0;
+
+     label1:
+        i0 = 0;
+
+     label2:
+        $i4 = r0.<java.text.DigitList: int count>;
+        if i0 >= $i4 goto label4;
+
+        $r1 = r0.<java.text.DigitList: char[] digits>;
+        $c5 = $r1[i0];
+        $r2 = <java.text.DigitList: char[] LONG_MIN_REP>;
+        $c6 = $r2[i0];
+        if $c5 == $c6 goto label3;
+
+        return 0;
+
+     label3:
+        i0 = i0 + 1;
+        goto label2;
+
+     label4:
+        return 1;
+    }
+
+    private static final int parseInt(char[], int, int)
+    {
+        char[] r0;
+        int i0, i1, i3, $i5, $i7, $i8, $i9;
+        boolean z0;
+        char c2, $c4, c6;
+
+        r0 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        z0 = 1;
+        $c4 = r0[i0];
+        c2 = $c4;
+        if $c4 != 45 goto label0;
+
+        z0 = 0;
+        i0 = i0 + 1;
+        goto label1;
+
+     label0:
+        if c2 != 43 goto label1;
+
+        i0 = i0 + 1;
+
+     label1:
+        i3 = 0;
+
+     label2:
+        if i0 >= i1 goto label3;
+
+        $i5 = i0;
+        i0 = i0 + 1;
+        c6 = r0[$i5];
+        if c6 < 48 goto label3;
+
+        if c6 > 57 goto label3;
+
+        $i7 = i3 * 10;
+        $i8 = c6 - 48;
+        i3 = $i7 + $i8;
+        goto label2;
+
+     label3:
+        if z0 == 0 goto label4;
+
+        $i9 = i3;
+        goto label5;
+
+     label4:
+        $i9 = neg i3;
+
+     label5:
+        return $i9;
+    }
+
+    public java.lang.String toString()
+    {
+        java.text.DigitList r0;
+        java.lang.StringBuffer r1;
+        boolean $z0;
+        char[] $r3;
+        int $i0, $i1;
+        java.lang.String $r7;
+
+        r0 := @this: java.text.DigitList;
+        $z0 = virtualinvoke r0.<java.text.DigitList: boolean isZero()>();
+        if $z0 == 0 goto label0;
+
+        return "0";
+
+     label0:
+        r1 = specialinvoke r0.<java.text.DigitList: java.lang.StringBuffer getStringBuffer()>();
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("0.");
+        $r3 = r0.<java.text.DigitList: char[] digits>;
+        $i0 = r0.<java.text.DigitList: int count>;
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char[],int,int)>($r3, 0, $i0);
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("x10^");
+        $i1 = r0.<java.text.DigitList: int decimalAt>;
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r7 = virtualinvoke r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r7;
+    }
+
+    private java.lang.StringBuffer getStringBuffer()
+    {
+        java.text.DigitList r0;
+        java.lang.StringBuffer $r1, $r2, $r3, $r4;
+
+        r0 := @this: java.text.DigitList;
+        $r2 = r0.<java.text.DigitList: java.lang.StringBuffer tempBuffer>;
+        if $r2 != null goto label0;
+
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>(int)>(19);
+        r0.<java.text.DigitList: java.lang.StringBuffer tempBuffer> = $r1;
+        goto label1;
+
+     label0:
+        $r3 = r0.<java.text.DigitList: java.lang.StringBuffer tempBuffer>;
+        virtualinvoke $r3.<java.lang.StringBuffer: void setLength(int)>(0);
+
+     label1:
+        $r4 = r0.<java.text.DigitList: java.lang.StringBuffer tempBuffer>;
+        return $r4;
+    }
+
+    private void extendDigits(int)
+    {
+        java.text.DigitList r0;
+        int i0, $i1;
+        char[] $r1, $r2;
+
+        r0 := @this: java.text.DigitList;
+        i0 := @parameter0: int;
+        $r1 = r0.<java.text.DigitList: char[] digits>;
+        $i1 = lengthof $r1;
+        if i0 <= $i1 goto label0;
+
+        $r2 = newarray (char)[i0];
+        r0.<java.text.DigitList: char[] digits> = $r2;
+
+     label0:
+        return;
+    }
+
+    private final char[] getDataChars(int)
+    {
+        java.text.DigitList r0;
+        int i0, $i1;
+        char[] $r1, $r2, $r3, $r4;
+
+        r0 := @this: java.text.DigitList;
+        i0 := @parameter0: int;
+        $r1 = r0.<java.text.DigitList: char[] data>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<java.text.DigitList: char[] data>;
+        $i1 = lengthof $r2;
+        if $i1 >= i0 goto label1;
+
+     label0:
+        $r3 = newarray (char)[i0];
+        r0.<java.text.DigitList: char[] data> = $r3;
+
+     label1:
+        $r4 = r0.<java.text.DigitList: char[] data>;
+        return $r4;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        boolean $z0, $z1;
+        java.lang.String $r1;
+        char[] $r2;
+
+        $r0 = class "java/text/DigitList";
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        <java.text.DigitList: boolean $assertionsDisabled> = $z1;
+        $r1 = "9223372036854775808";
+        $r2 = virtualinvoke $r1.<java.lang.String: char[] toCharArray()>();
+        <java.text.DigitList: char[] LONG_MIN_REP> = $r2;
+        return;
+    }
+}

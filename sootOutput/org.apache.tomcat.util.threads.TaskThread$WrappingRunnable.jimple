@@ -1,0 +1,44 @@
+class org.apache.tomcat.util.threads.TaskThread$WrappingRunnable extends java.lang.Object implements java.lang.Runnable
+{
+    private java.lang.Runnable wrappedRunnable;
+
+    void <init>(java.lang.Runnable)
+    {
+        org.apache.tomcat.util.threads.TaskThread$WrappingRunnable r0;
+        java.lang.Runnable r1;
+
+        r0 := @this: org.apache.tomcat.util.threads.TaskThread$WrappingRunnable;
+        r1 := @parameter0: java.lang.Runnable;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<org.apache.tomcat.util.threads.TaskThread$WrappingRunnable: java.lang.Runnable wrappedRunnable> = r1;
+        return;
+    }
+
+    public void run()
+    {
+        org.apache.tomcat.util.threads.TaskThread$WrappingRunnable r0;
+        org.apache.tomcat.util.threads.StopPooledThreadException r1, $r3;
+        java.lang.Runnable $r2;
+        org.apache.juli.logging.Log $r4;
+
+        r0 := @this: org.apache.tomcat.util.threads.TaskThread$WrappingRunnable;
+
+     label0:
+        $r2 = r0.<org.apache.tomcat.util.threads.TaskThread$WrappingRunnable: java.lang.Runnable wrappedRunnable>;
+        interfaceinvoke $r2.<java.lang.Runnable: void run()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r3 := @caughtexception;
+        r1 = $r3;
+        $r4 = staticinvoke <org.apache.tomcat.util.threads.TaskThread: org.apache.juli.logging.Log access$0()>();
+        interfaceinvoke $r4.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>("Thread exiting on purpose", r1);
+
+     label3:
+        return;
+
+        catch org.apache.tomcat.util.threads.StopPooledThreadException from label0 to label1 with label2;
+    }
+}

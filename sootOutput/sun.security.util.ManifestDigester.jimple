@@ -1,0 +1,365 @@
+public class sun.security.util.ManifestDigester extends java.lang.Object
+{
+    public static final java.lang.String MF_MAIN_ATTRS;
+    private byte[] rawBytes;
+    private java.util.HashMap entries;
+
+    private boolean findSection(int, sun.security.util.ManifestDigester$Position)
+    {
+        sun.security.util.ManifestDigester r0;
+        int i0, i1, i2, i3, $i5, $i6, $i7, $i9, $i10, $i11, $i12, $i13;
+        sun.security.util.ManifestDigester$Position r1;
+        boolean z0;
+        byte b4, $b8;
+        byte[] $r2, $r3, $r4;
+
+        r0 := @this: sun.security.util.ManifestDigester;
+        i0 := @parameter0: int;
+        r1 := @parameter1: sun.security.util.ManifestDigester$Position;
+        i1 = i0;
+        $r2 = r0.<sun.security.util.ManifestDigester: byte[] rawBytes>;
+        i2 = lengthof $r2;
+        i3 = i0;
+        z0 = 1;
+        r1.<sun.security.util.ManifestDigester$Position: int endOfFirstLine> = -1;
+
+     label0:
+        if i1 >= i2 goto label11;
+
+        $r3 = r0.<sun.security.util.ManifestDigester: byte[] rawBytes>;
+        b4 = $r3[i1];
+        lookupswitch(b4)
+        {
+            case 10: goto label3;
+            case 13: goto label1;
+            default: goto label9;
+        };
+
+     label1:
+        $i5 = r1.<sun.security.util.ManifestDigester$Position: int endOfFirstLine>;
+        if $i5 != -1 goto label2;
+
+        $i6 = i1 - 1;
+        r1.<sun.security.util.ManifestDigester$Position: int endOfFirstLine> = $i6;
+
+     label2:
+        if i1 >= i2 goto label3;
+
+        $r4 = r0.<sun.security.util.ManifestDigester: byte[] rawBytes>;
+        $i7 = i1 + 1;
+        $b8 = $r4[$i7];
+        if $b8 != 10 goto label3;
+
+        i1 = i1 + 1;
+
+     label3:
+        $i9 = r1.<sun.security.util.ManifestDigester$Position: int endOfFirstLine>;
+        if $i9 != -1 goto label4;
+
+        $i10 = i1 - 1;
+        r1.<sun.security.util.ManifestDigester$Position: int endOfFirstLine> = $i10;
+
+     label4:
+        if z0 != 0 goto label5;
+
+        $i11 = i2 - 1;
+        if i1 != $i11 goto label8;
+
+     label5:
+        $i12 = i2 - 1;
+        if i1 != $i12 goto label6;
+
+        r1.<sun.security.util.ManifestDigester$Position: int endOfSection> = i1;
+        goto label7;
+
+     label6:
+        r1.<sun.security.util.ManifestDigester$Position: int endOfSection> = i3;
+
+     label7:
+        $i13 = i1 + 1;
+        r1.<sun.security.util.ManifestDigester$Position: int startOfNext> = $i13;
+        return 1;
+
+     label8:
+        i3 = i1;
+        z0 = 1;
+        goto label10;
+
+     label9:
+        z0 = 0;
+
+     label10:
+        i1 = i1 + 1;
+        goto label0;
+
+     label11:
+        return 0;
+    }
+
+    public void <init>(byte[])
+    {
+        sun.security.util.ManifestDigester r0;
+        byte[] r1, $r10, $r20;
+        java.io.ByteArrayOutputStream r2, $r6;
+        sun.security.util.ManifestDigester$Position r3, $r7;
+        int i0, i1, i2, i3, i4, i5, i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i19, $i20, $i22, $i23, $i25, $i27, $i29, $i30;
+        java.lang.StringBuilder r4, $r12;
+        java.util.HashMap $r5, $r8, $r17;
+        boolean $z0, $z1, $z2;
+        sun.security.util.ManifestDigester$Entry $r9, $r19;
+        java.lang.String $r13, $r15, $r18;
+        byte $b18, $b21, $b24, $b26, $b28;
+        java.io.UnsupportedEncodingException $r22, r23;
+        java.lang.IllegalStateException $r24;
+
+        r0 := @this: sun.security.util.ManifestDigester;
+        r1 := @parameter0: byte[];
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.security.util.ManifestDigester: byte[] rawBytes> = r1;
+        $r5 = new java.util.HashMap;
+        specialinvoke $r5.<java.util.HashMap: void <init>()>();
+        r0.<sun.security.util.ManifestDigester: java.util.HashMap entries> = $r5;
+        $r6 = new java.io.ByteArrayOutputStream;
+        specialinvoke $r6.<java.io.ByteArrayOutputStream: void <init>()>();
+        r2 = $r6;
+        $r7 = new sun.security.util.ManifestDigester$Position;
+        specialinvoke $r7.<sun.security.util.ManifestDigester$Position: void <init>()>();
+        r3 = $r7;
+        $z0 = specialinvoke r0.<sun.security.util.ManifestDigester: boolean findSection(int,sun.security.util.ManifestDigester$Position)>(0, r3);
+        if $z0 != 0 goto label0;
+
+        return;
+
+     label0:
+        $r8 = r0.<sun.security.util.ManifestDigester: java.util.HashMap entries>;
+        $r9 = new sun.security.util.ManifestDigester$Entry;
+        $i7 = r3.<sun.security.util.ManifestDigester$Position: int endOfSection>;
+        $i8 = $i7 + 1;
+        $i9 = r3.<sun.security.util.ManifestDigester$Position: int startOfNext>;
+        $r10 = r0.<sun.security.util.ManifestDigester: byte[] rawBytes>;
+        specialinvoke $r9.<sun.security.util.ManifestDigester$Entry: void <init>(int,int,int,byte[])>(0, $i8, $i9, $r10);
+        virtualinvoke $r8.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>("Manifest-Main-Attributes", $r9);
+        i0 = r3.<sun.security.util.ManifestDigester$Position: int startOfNext>;
+
+     label1:
+        $z1 = specialinvoke r0.<sun.security.util.ManifestDigester: boolean findSection(int,sun.security.util.ManifestDigester$Position)>(i0, r3);
+        if $z1 == 0 goto label15;
+
+        $i10 = r3.<sun.security.util.ManifestDigester$Position: int endOfFirstLine>;
+        $i11 = $i10 - i0;
+        i1 = $i11 + 1;
+        $i12 = r3.<sun.security.util.ManifestDigester$Position: int endOfSection>;
+        $i13 = $i12 - i0;
+        i2 = $i13 + 1;
+        $i14 = r3.<sun.security.util.ManifestDigester$Position: int startOfNext>;
+        i3 = $i14 - i0;
+        if i1 <= 6 goto label14;
+
+        $z2 = specialinvoke r0.<sun.security.util.ManifestDigester: boolean isNameAttr(byte[],int)>(r1, i0);
+        if $z2 == 0 goto label14;
+
+        $r12 = new java.lang.StringBuilder;
+        specialinvoke $r12.<java.lang.StringBuilder: void <init>(int)>(i2);
+        r4 = $r12;
+
+     label2:
+        $r13 = new java.lang.String;
+        $i15 = i0 + 6;
+        $i16 = i1 - 6;
+        specialinvoke $r13.<java.lang.String: void <init>(byte[],int,int,java.lang.String)>(r1, $i15, $i16, "UTF8");
+        virtualinvoke r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r13);
+        i4 = i0 + i1;
+        $i17 = i4 - i0;
+        if $i17 >= i2 goto label4;
+
+        $b18 = r1[i4];
+        if $b18 != 13 goto label3;
+
+        i4 = i4 + 2;
+        goto label4;
+
+     label3:
+        i4 = i4 + 1;
+
+     label4:
+        $i19 = i4 - i0;
+        if $i19 >= i2 goto label11;
+
+        $i20 = i4;
+        i4 = i4 + 1;
+        $b21 = r1[$i20];
+        if $b21 != 32 goto label11;
+
+        i5 = i4;
+
+     label5:
+        $i22 = i4 - i0;
+        if $i22 >= i2 goto label6;
+
+        $i23 = i4;
+        i4 = i4 + 1;
+        $b24 = r1[$i23];
+        if $b24 == 10 goto label6;
+
+        goto label5;
+
+     label6:
+        $i25 = i4 - 1;
+        $b26 = r1[$i25];
+        if $b26 == 10 goto label8;
+
+     label7:
+        return;
+
+     label8:
+        $i27 = i4 - 2;
+        $b28 = r1[$i27];
+        if $b28 != 13 goto label9;
+
+        $i29 = i4 - i5;
+        i6 = $i29 - 2;
+        goto label10;
+
+     label9:
+        $i30 = i4 - i5;
+        i6 = $i30 - 1;
+
+     label10:
+        $r15 = new java.lang.String;
+        specialinvoke $r15.<java.lang.String: void <init>(byte[],int,int,java.lang.String)>(r1, i5, i6, "UTF8");
+        virtualinvoke r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r15);
+        goto label4;
+
+     label11:
+        $r17 = r0.<sun.security.util.ManifestDigester: java.util.HashMap entries>;
+        $r18 = virtualinvoke r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r19 = new sun.security.util.ManifestDigester$Entry;
+        $r20 = r0.<sun.security.util.ManifestDigester: byte[] rawBytes>;
+        specialinvoke $r19.<sun.security.util.ManifestDigester$Entry: void <init>(int,int,int,byte[])>(i0, i2, i3, $r20);
+        virtualinvoke $r17.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>($r18, $r19);
+
+     label12:
+        goto label14;
+
+     label13:
+        $r22 := @caughtexception;
+        r23 = $r22;
+        $r24 = new java.lang.IllegalStateException;
+        specialinvoke $r24.<java.lang.IllegalStateException: void <init>(java.lang.String)>("UTF8 not available on platform");
+        throw $r24;
+
+     label14:
+        i0 = r3.<sun.security.util.ManifestDigester$Position: int startOfNext>;
+        goto label1;
+
+     label15:
+        return;
+
+        catch java.io.UnsupportedEncodingException from label2 to label7 with label13;
+        catch java.io.UnsupportedEncodingException from label8 to label12 with label13;
+    }
+
+    private boolean isNameAttr(byte[], int)
+    {
+        sun.security.util.ManifestDigester r0;
+        byte[] r1;
+        int i0, $i3, $i5, $i7, $i9, $i11, $i13, $i15, $i17;
+        byte $b1, $b2, $b4, $b6, $b8, $b10, $b12, $b14, $b16, $b18;
+        boolean $z0;
+
+        r0 := @this: sun.security.util.ManifestDigester;
+        r1 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        $b1 = r1[i0];
+        if $b1 == 78 goto label0;
+
+        $b2 = r1[i0];
+        if $b2 != 110 goto label4;
+
+     label0:
+        $i3 = i0 + 1;
+        $b4 = r1[$i3];
+        if $b4 == 97 goto label1;
+
+        $i5 = i0 + 1;
+        $b6 = r1[$i5];
+        if $b6 != 65 goto label4;
+
+     label1:
+        $i7 = i0 + 2;
+        $b8 = r1[$i7];
+        if $b8 == 109 goto label2;
+
+        $i9 = i0 + 2;
+        $b10 = r1[$i9];
+        if $b10 != 77 goto label4;
+
+     label2:
+        $i11 = i0 + 3;
+        $b12 = r1[$i11];
+        if $b12 == 101 goto label3;
+
+        $i13 = i0 + 3;
+        $b14 = r1[$i13];
+        if $b14 != 69 goto label4;
+
+     label3:
+        $i15 = i0 + 4;
+        $b16 = r1[$i15];
+        if $b16 != 58 goto label4;
+
+        $i17 = i0 + 5;
+        $b18 = r1[$i17];
+        if $b18 != 32 goto label4;
+
+        $z0 = 1;
+        goto label5;
+
+     label4:
+        $z0 = 0;
+
+     label5:
+        return $z0;
+    }
+
+    public sun.security.util.ManifestDigester$Entry get(java.lang.String, boolean)
+    {
+        sun.security.util.ManifestDigester r0;
+        java.lang.String r1;
+        boolean z0;
+        sun.security.util.ManifestDigester$Entry r2;
+        java.util.HashMap $r3;
+        java.lang.Object $r4;
+
+        r0 := @this: sun.security.util.ManifestDigester;
+        r1 := @parameter0: java.lang.String;
+        z0 := @parameter1: boolean;
+        $r3 = r0.<sun.security.util.ManifestDigester: java.util.HashMap entries>;
+        $r4 = virtualinvoke $r3.<java.util.HashMap: java.lang.Object get(java.lang.Object)>(r1);
+        r2 = (sun.security.util.ManifestDigester$Entry) $r4;
+        if r2 == null goto label0;
+
+        r2.<sun.security.util.ManifestDigester$Entry: boolean oldStyle> = z0;
+
+     label0:
+        return r2;
+    }
+
+    public byte[] manifestDigest(java.security.MessageDigest)
+    {
+        sun.security.util.ManifestDigester r0;
+        java.security.MessageDigest r1;
+        byte[] $r2, $r3, $r4;
+        int $i0;
+
+        r0 := @this: sun.security.util.ManifestDigester;
+        r1 := @parameter0: java.security.MessageDigest;
+        virtualinvoke r1.<java.security.MessageDigest: void reset()>();
+        $r2 = r0.<sun.security.util.ManifestDigester: byte[] rawBytes>;
+        $r3 = r0.<sun.security.util.ManifestDigester: byte[] rawBytes>;
+        $i0 = lengthof $r3;
+        virtualinvoke r1.<java.security.MessageDigest: void update(byte[],int,int)>($r2, 0, $i0);
+        $r4 = virtualinvoke r1.<java.security.MessageDigest: byte[] digest()>();
+        return $r4;
+    }
+}

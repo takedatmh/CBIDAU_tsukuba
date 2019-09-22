@@ -1,0 +1,1669 @@
+class javax.naming.NameImpl extends java.lang.Object
+{
+    private static final byte LEFT_TO_RIGHT;
+    private static final byte RIGHT_TO_LEFT;
+    private static final byte FLAT;
+    private java.util.Vector components;
+    private byte syntaxDirection;
+    private java.lang.String syntaxSeparator;
+    private java.lang.String syntaxSeparator2;
+    private boolean syntaxCaseInsensitive;
+    private boolean syntaxTrimBlanks;
+    private java.lang.String syntaxEscape;
+    private java.lang.String syntaxBeginQuote1;
+    private java.lang.String syntaxEndQuote1;
+    private java.lang.String syntaxBeginQuote2;
+    private java.lang.String syntaxEndQuote2;
+    private java.lang.String syntaxAvaSeparator;
+    private java.lang.String syntaxTypevalSeparator;
+    private static final int STYLE_NONE;
+    private static final int STYLE_QUOTE1;
+    private static final int STYLE_QUOTE2;
+    private static final int STYLE_ESCAPE;
+    private int escapingStyle;
+
+    private final boolean isA(java.lang.String, int, java.lang.String)
+    {
+        javax.naming.NameImpl r0;
+        java.lang.String r1, r2;
+        int i0;
+        boolean $z0, $z1;
+
+        r0 := @this: javax.naming.NameImpl;
+        r1 := @parameter0: java.lang.String;
+        i0 := @parameter1: int;
+        r2 := @parameter2: java.lang.String;
+        if r2 == null goto label0;
+
+        $z0 = virtualinvoke r1.<java.lang.String: boolean startsWith(java.lang.String,int)>(r2, i0);
+        if $z0 == 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        return $z1;
+    }
+
+    private final boolean isMeta(java.lang.String, int)
+    {
+        javax.naming.NameImpl r0;
+        java.lang.String r1, $r2, $r3, $r4;
+        int i0;
+        boolean $z0, $z1, $z2, $z3, $z4;
+
+        r0 := @this: javax.naming.NameImpl;
+        r1 := @parameter0: java.lang.String;
+        i0 := @parameter1: int;
+        $r2 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $z0 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, i0, $r2);
+        if $z0 != 0 goto label0;
+
+        $r3 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote1>;
+        $z1 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, i0, $r3);
+        if $z1 != 0 goto label0;
+
+        $r4 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote2>;
+        $z2 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, i0, $r4);
+        if $z2 != 0 goto label0;
+
+        $z3 = specialinvoke r0.<javax.naming.NameImpl: boolean isSeparator(java.lang.String,int)>(r1, i0);
+        if $z3 == 0 goto label1;
+
+     label0:
+        $z4 = 1;
+        goto label2;
+
+     label1:
+        $z4 = 0;
+
+     label2:
+        return $z4;
+    }
+
+    private final boolean isSeparator(java.lang.String, int)
+    {
+        javax.naming.NameImpl r0;
+        java.lang.String r1, $r2, $r3;
+        int i0;
+        boolean $z0, $z1, $z2;
+
+        r0 := @this: javax.naming.NameImpl;
+        r1 := @parameter0: java.lang.String;
+        i0 := @parameter1: int;
+        $r2 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator>;
+        $z0 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, i0, $r2);
+        if $z0 != 0 goto label0;
+
+        $r3 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator2>;
+        $z1 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, i0, $r3);
+        if $z1 == 0 goto label1;
+
+     label0:
+        $z2 = 1;
+        goto label2;
+
+     label1:
+        $z2 = 0;
+
+     label2:
+        return $z2;
+    }
+
+    private final int skipSeparator(java.lang.String, int)
+    {
+        javax.naming.NameImpl r0;
+        java.lang.String r1, $r2, $r3, $r4, $r5;
+        int i0, $i1, $i2;
+        boolean $z0, $z1;
+
+        r0 := @this: javax.naming.NameImpl;
+        r1 := @parameter0: java.lang.String;
+        i0 := @parameter1: int;
+        $r2 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator>;
+        $z0 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, i0, $r2);
+        if $z0 == 0 goto label0;
+
+        $r3 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator>;
+        $i1 = virtualinvoke $r3.<java.lang.String: int length()>();
+        i0 = i0 + $i1;
+        goto label1;
+
+     label0:
+        $r4 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator2>;
+        $z1 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, i0, $r4);
+        if $z1 == 0 goto label1;
+
+        $r5 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator2>;
+        $i2 = virtualinvoke $r5.<java.lang.String: int length()>();
+        i0 = i0 + $i2;
+
+     label1:
+        return i0;
+    }
+
+    private final int extractComp(java.lang.String, int, int, java.util.Vector) throws javax.naming.InvalidNameException
+    {
+        javax.naming.NameImpl r0;
+        java.lang.String r1, r4, r5, $r7, $r8, $r9, $r10, $r12, $r13, $r14, $r20, $r25, $r26, $r27, $r28, $r29, $r34, $r37, $r38, $r39, $r40, $r41, $r42, $r43, r44, $r45, r46, $r47, $r49, $r52, $r54, $r55, $r56, $r62, $r66, $r69, $r71, $r72;
+        int i0, i1, $i2, $i4, i5, $i6, $i7, $i8, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, i22, $i23, i24, $i25, $i26, $i27, $i29, $i30;
+        java.util.Vector r2;
+        boolean z0, z1, $z2, z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, z14, $z15, $z16, $z17, $z18, $z19;
+        java.lang.StringBuffer r3, $r6;
+        byte $b3, $b32;
+        char $c9, $c28, $c31;
+        javax.naming.InvalidNameException $r16, $r21, $r30, $r58, $r64;
+        java.lang.StringBuilder $r17, $r18, $r19, $r22, $r23, $r24, $r31, $r32, $r33, $r35, $r36, $r48, $r50, $r51, $r59, $r60, $r61, $r65, $r67, $r68;
+
+        r0 := @this: javax.naming.NameImpl;
+        r1 := @parameter0: java.lang.String;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        r2 := @parameter3: java.util.Vector;
+        z0 = 1;
+        z1 = 0;
+        $r6 = new java.lang.StringBuffer;
+        specialinvoke $r6.<java.lang.StringBuffer: void <init>(int)>(i1);
+        r3 = $r6;
+
+     label0:
+        if i0 >= i1 goto label29;
+
+        if z0 == 0 goto label14;
+
+        $r7 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote1>;
+        $z2 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, i0, $r7);
+        z3 = $z2;
+        if $z2 != 0 goto label1;
+
+        $r8 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote2>;
+        $z4 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, i0, $r8);
+        if $z4 == 0 goto label14;
+
+     label1:
+        if z3 == 0 goto label2;
+
+        $r9 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote1>;
+        goto label3;
+
+     label2:
+        $r9 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote2>;
+
+     label3:
+        r4 = $r9;
+        if z3 == 0 goto label4;
+
+        $r10 = r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote1>;
+        goto label5;
+
+     label4:
+        $r10 = r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote2>;
+
+     label5:
+        r5 = $r10;
+        $i2 = r0.<javax.naming.NameImpl: int escapingStyle>;
+        if $i2 != 0 goto label8;
+
+        if z3 == 0 goto label6;
+
+        $b3 = 1;
+        goto label7;
+
+     label6:
+        $b3 = 2;
+
+     label7:
+        r0.<javax.naming.NameImpl: int escapingStyle> = $b3;
+
+     label8:
+        $i4 = virtualinvoke r4.<java.lang.String: int length()>();
+        i5 = i0 + $i4;
+
+     label9:
+        if i5 >= i1 goto label11;
+
+        $z5 = virtualinvoke r1.<java.lang.String: boolean startsWith(java.lang.String,int)>(r5, i5);
+        if $z5 != 0 goto label11;
+
+        $r12 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $z6 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, i5, $r12);
+        if $z6 == 0 goto label10;
+
+        $r13 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $i6 = virtualinvoke $r13.<java.lang.String: int length()>();
+        $i7 = i5 + $i6;
+        $z7 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, $i7, r5);
+        if $z7 == 0 goto label10;
+
+        $r14 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $i8 = virtualinvoke $r14.<java.lang.String: int length()>();
+        i5 = i5 + $i8;
+
+     label10:
+        $c9 = virtualinvoke r1.<java.lang.String: char charAt(int)>(i5);
+        virtualinvoke r3.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c9);
+        i5 = i5 + 1;
+        goto label9;
+
+     label11:
+        if i5 < i1 goto label12;
+
+        $r16 = new javax.naming.InvalidNameException;
+        $r17 = new java.lang.StringBuilder;
+        specialinvoke $r17.<java.lang.StringBuilder: void <init>()>();
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(": no close quote");
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r16.<javax.naming.InvalidNameException: void <init>(java.lang.String)>($r20);
+        throw $r16;
+
+     label12:
+        $i10 = virtualinvoke r5.<java.lang.String: int length()>();
+        i0 = i5 + $i10;
+        if i0 == i1 goto label29;
+
+        $z8 = specialinvoke r0.<javax.naming.NameImpl: boolean isSeparator(java.lang.String,int)>(r1, i0);
+        if $z8 == 0 goto label13;
+
+        goto label29;
+
+     label13:
+        $r21 = new javax.naming.InvalidNameException;
+        $r22 = new java.lang.StringBuilder;
+        specialinvoke $r22.<java.lang.StringBuilder: void <init>()>();
+        $r23 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(": close quote appears before end of component");
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r21.<javax.naming.InvalidNameException: void <init>(java.lang.String)>($r25);
+        throw $r21;
+
+     label14:
+        $z9 = specialinvoke r0.<javax.naming.NameImpl: boolean isSeparator(java.lang.String,int)>(r1, i0);
+        if $z9 == 0 goto label15;
+
+        goto label29;
+
+     label15:
+        $r26 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $z10 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, i0, $r26);
+        if $z10 == 0 goto label17;
+
+        $r27 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $i11 = virtualinvoke $r27.<java.lang.String: int length()>();
+        $i12 = i0 + $i11;
+        $z11 = specialinvoke r0.<javax.naming.NameImpl: boolean isMeta(java.lang.String,int)>(r1, $i12);
+        if $z11 == 0 goto label16;
+
+        $r28 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $i13 = virtualinvoke $r28.<java.lang.String: int length()>();
+        i0 = i0 + $i13;
+        $i14 = r0.<javax.naming.NameImpl: int escapingStyle>;
+        if $i14 != 0 goto label28;
+
+        r0.<javax.naming.NameImpl: int escapingStyle> = 3;
+        goto label28;
+
+     label16:
+        $r29 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $i15 = virtualinvoke $r29.<java.lang.String: int length()>();
+        $i16 = i0 + $i15;
+        if $i16 < i1 goto label28;
+
+        $r30 = new javax.naming.InvalidNameException;
+        $r31 = new java.lang.StringBuilder;
+        specialinvoke $r31.<java.lang.StringBuilder: void <init>()>();
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r33 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(": unescaped ");
+        $r34 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $r35 = virtualinvoke $r33.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r34);
+        $r36 = virtualinvoke $r35.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" at end of component");
+        $r37 = virtualinvoke $r36.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r30.<javax.naming.InvalidNameException: void <init>(java.lang.String)>($r37);
+        throw $r30;
+
+     label17:
+        $r38 = r0.<javax.naming.NameImpl: java.lang.String syntaxTypevalSeparator>;
+        $z12 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, i0, $r38);
+        if $z12 == 0 goto label28;
+
+        $r39 = r0.<javax.naming.NameImpl: java.lang.String syntaxTypevalSeparator>;
+        $i17 = virtualinvoke $r39.<java.lang.String: int length()>();
+        $i18 = i0 + $i17;
+        $r40 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote1>;
+        $z13 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, $i18, $r40);
+        z14 = $z13;
+        if $z13 != 0 goto label18;
+
+        $r41 = r0.<javax.naming.NameImpl: java.lang.String syntaxTypevalSeparator>;
+        $i19 = virtualinvoke $r41.<java.lang.String: int length()>();
+        $i20 = i0 + $i19;
+        $r42 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote2>;
+        $z15 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, $i20, $r42);
+        if $z15 == 0 goto label28;
+
+     label18:
+        if z14 == 0 goto label19;
+
+        $r43 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote1>;
+        goto label20;
+
+     label19:
+        $r43 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote2>;
+
+     label20:
+        r44 = $r43;
+        if z14 == 0 goto label21;
+
+        $r45 = r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote1>;
+        goto label22;
+
+     label21:
+        $r45 = r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote2>;
+
+     label22:
+        r46 = $r45;
+        $r47 = r0.<javax.naming.NameImpl: java.lang.String syntaxTypevalSeparator>;
+        $i21 = virtualinvoke $r47.<java.lang.String: int length()>();
+        i22 = i0 + $i21;
+        $r48 = new java.lang.StringBuilder;
+        specialinvoke $r48.<java.lang.StringBuilder: void <init>()>();
+        $r49 = r0.<javax.naming.NameImpl: java.lang.String syntaxTypevalSeparator>;
+        $r50 = virtualinvoke $r48.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r49);
+        $r51 = virtualinvoke $r50.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r44);
+        $r52 = virtualinvoke $r51.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r52);
+        $i23 = virtualinvoke r44.<java.lang.String: int length()>();
+        i24 = i22 + $i23;
+
+     label23:
+        if i24 >= i1 goto label25;
+
+        $z16 = virtualinvoke r1.<java.lang.String: boolean startsWith(java.lang.String,int)>(r46, i24);
+        if $z16 != 0 goto label25;
+
+        $r54 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $z17 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, i24, $r54);
+        if $z17 == 0 goto label24;
+
+        $r55 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $i25 = virtualinvoke $r55.<java.lang.String: int length()>();
+        $i26 = i24 + $i25;
+        $z18 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, $i26, r46);
+        if $z18 == 0 goto label24;
+
+        $r56 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $i27 = virtualinvoke $r56.<java.lang.String: int length()>();
+        i24 = i24 + $i27;
+
+     label24:
+        $c28 = virtualinvoke r1.<java.lang.String: char charAt(int)>(i24);
+        virtualinvoke r3.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c28);
+        i24 = i24 + 1;
+        goto label23;
+
+     label25:
+        if i24 < i1 goto label26;
+
+        $r58 = new javax.naming.InvalidNameException;
+        $r59 = new java.lang.StringBuilder;
+        specialinvoke $r59.<java.lang.StringBuilder: void <init>()>();
+        $r60 = virtualinvoke $r59.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r61 = virtualinvoke $r60.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(": typeval no close quote");
+        $r62 = virtualinvoke $r61.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r58.<javax.naming.InvalidNameException: void <init>(java.lang.String)>($r62);
+        throw $r58;
+
+     label26:
+        $i29 = virtualinvoke r46.<java.lang.String: int length()>();
+        i0 = i24 + $i29;
+        virtualinvoke r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(r46);
+        if i0 == i1 goto label29;
+
+        $z19 = specialinvoke r0.<javax.naming.NameImpl: boolean isSeparator(java.lang.String,int)>(r1, i0);
+        if $z19 == 0 goto label27;
+
+        goto label29;
+
+     label27:
+        $r64 = new javax.naming.InvalidNameException;
+        $r65 = new java.lang.StringBuilder;
+        specialinvoke $r65.<java.lang.StringBuilder: void <init>()>();
+        $r66 = virtualinvoke r1.<java.lang.String: java.lang.String substring(int)>(i0);
+        $r67 = virtualinvoke $r65.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r66);
+        $r68 = virtualinvoke $r67.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(": typeval close quote appears before end of component");
+        $r69 = virtualinvoke $r68.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r64.<javax.naming.InvalidNameException: void <init>(java.lang.String)>($r69);
+        throw $r64;
+
+     label28:
+        $i30 = i0;
+        i0 = i0 + 1;
+        $c31 = virtualinvoke r1.<java.lang.String: char charAt(int)>($i30);
+        virtualinvoke r3.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c31);
+        z0 = 0;
+        goto label0;
+
+     label29:
+        $b32 = r0.<javax.naming.NameImpl: byte syntaxDirection>;
+        if $b32 != 2 goto label30;
+
+        $r71 = virtualinvoke r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke r2.<java.util.Vector: void insertElementAt(java.lang.Object,int)>($r71, 0);
+        goto label31;
+
+     label30:
+        $r72 = virtualinvoke r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke r2.<java.util.Vector: void addElement(java.lang.Object)>($r72);
+
+     label31:
+        return i0;
+    }
+
+    private static boolean getBoolean(java.util.Properties, java.lang.String)
+    {
+        java.util.Properties r0;
+        java.lang.String r1, $r2;
+        boolean $z0;
+
+        r0 := @parameter0: java.util.Properties;
+        r1 := @parameter1: java.lang.String;
+        $r2 = virtualinvoke r0.<java.util.Properties: java.lang.String getProperty(java.lang.String)>(r1);
+        $z0 = staticinvoke <javax.naming.NameImpl: boolean toBoolean(java.lang.String)>($r2);
+        return $z0;
+    }
+
+    private static boolean toBoolean(java.lang.String)
+    {
+        java.lang.String r0, $r1;
+        boolean $z0, $z1;
+
+        r0 := @parameter0: java.lang.String;
+        if r0 == null goto label0;
+
+        $r1 = virtualinvoke r0.<java.lang.String: java.lang.String toLowerCase()>();
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>("true");
+        if $z0 == 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        return $z1;
+    }
+
+    private final void recordNamingConvention(java.util.Properties)
+    {
+        javax.naming.NameImpl r0;
+        java.util.Properties r1;
+        java.lang.String r2, $r7, $r8, $r9, $r10, $r12, $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23, $r24, $r25, $r26, $r27, $r28, $r29, $r30;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        java.lang.IllegalArgumentException $r3, $r11;
+        java.lang.StringBuilder $r4, $r5, $r6;
+        byte $b0;
+
+        r0 := @this: javax.naming.NameImpl;
+        r1 := @parameter0: java.util.Properties;
+        r2 = virtualinvoke r1.<java.util.Properties: java.lang.String getProperty(java.lang.String,java.lang.String)>("jndi.syntax.direction", "flat");
+        $z0 = virtualinvoke r2.<java.lang.String: boolean equals(java.lang.Object)>("left_to_right");
+        if $z0 == 0 goto label0;
+
+        r0.<javax.naming.NameImpl: byte syntaxDirection> = 1;
+        goto label3;
+
+     label0:
+        $z1 = virtualinvoke r2.<java.lang.String: boolean equals(java.lang.Object)>("right_to_left");
+        if $z1 == 0 goto label1;
+
+        r0.<javax.naming.NameImpl: byte syntaxDirection> = 2;
+        goto label3;
+
+     label1:
+        $z2 = virtualinvoke r2.<java.lang.String: boolean equals(java.lang.Object)>("flat");
+        if $z2 == 0 goto label2;
+
+        r0.<javax.naming.NameImpl: byte syntaxDirection> = 0;
+        goto label3;
+
+     label2:
+        $r3 = new java.lang.IllegalArgumentException;
+        $r4 = new java.lang.StringBuilder;
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>()>();
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("is not a valid value for the jndi.syntax.direction property");
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r3.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r7);
+        throw $r3;
+
+     label3:
+        $b0 = r0.<javax.naming.NameImpl: byte syntaxDirection>;
+        if $b0 == 0 goto label4;
+
+        $r8 = virtualinvoke r1.<java.util.Properties: java.lang.String getProperty(java.lang.String)>("jndi.syntax.separator");
+        r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator> = $r8;
+        $r9 = virtualinvoke r1.<java.util.Properties: java.lang.String getProperty(java.lang.String)>("jndi.syntax.separator2");
+        r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator2> = $r9;
+        $r10 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator>;
+        if $r10 != null goto label5;
+
+        $r11 = new java.lang.IllegalArgumentException;
+        specialinvoke $r11.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("jndi.syntax.separator property required for non-flat syntax");
+        throw $r11;
+
+     label4:
+        r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator> = null;
+
+     label5:
+        $r12 = virtualinvoke r1.<java.util.Properties: java.lang.String getProperty(java.lang.String)>("jndi.syntax.escape");
+        r0.<javax.naming.NameImpl: java.lang.String syntaxEscape> = $r12;
+        $z3 = staticinvoke <javax.naming.NameImpl: boolean getBoolean(java.util.Properties,java.lang.String)>(r1, "jndi.syntax.ignorecase");
+        r0.<javax.naming.NameImpl: boolean syntaxCaseInsensitive> = $z3;
+        $z4 = staticinvoke <javax.naming.NameImpl: boolean getBoolean(java.util.Properties,java.lang.String)>(r1, "jndi.syntax.trimblanks");
+        r0.<javax.naming.NameImpl: boolean syntaxTrimBlanks> = $z4;
+        $r13 = virtualinvoke r1.<java.util.Properties: java.lang.String getProperty(java.lang.String)>("jndi.syntax.beginquote");
+        r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote1> = $r13;
+        $r14 = virtualinvoke r1.<java.util.Properties: java.lang.String getProperty(java.lang.String)>("jndi.syntax.endquote");
+        r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote1> = $r14;
+        $r15 = r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote1>;
+        if $r15 != null goto label6;
+
+        $r16 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote1>;
+        if $r16 == null goto label6;
+
+        $r17 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote1>;
+        r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote1> = $r17;
+        goto label7;
+
+     label6:
+        $r18 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote1>;
+        if $r18 != null goto label7;
+
+        $r19 = r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote1>;
+        if $r19 == null goto label7;
+
+        $r20 = r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote1>;
+        r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote1> = $r20;
+
+     label7:
+        $r21 = virtualinvoke r1.<java.util.Properties: java.lang.String getProperty(java.lang.String)>("jndi.syntax.beginquote2");
+        r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote2> = $r21;
+        $r22 = virtualinvoke r1.<java.util.Properties: java.lang.String getProperty(java.lang.String)>("jndi.syntax.endquote2");
+        r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote2> = $r22;
+        $r23 = r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote2>;
+        if $r23 != null goto label8;
+
+        $r24 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote2>;
+        if $r24 == null goto label8;
+
+        $r25 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote2>;
+        r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote2> = $r25;
+        goto label9;
+
+     label8:
+        $r26 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote2>;
+        if $r26 != null goto label9;
+
+        $r27 = r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote2>;
+        if $r27 == null goto label9;
+
+        $r28 = r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote2>;
+        r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote2> = $r28;
+
+     label9:
+        $r29 = virtualinvoke r1.<java.util.Properties: java.lang.String getProperty(java.lang.String)>("jndi.syntax.separator.ava");
+        r0.<javax.naming.NameImpl: java.lang.String syntaxAvaSeparator> = $r29;
+        $r30 = virtualinvoke r1.<java.util.Properties: java.lang.String getProperty(java.lang.String)>("jndi.syntax.separator.typeval");
+        r0.<javax.naming.NameImpl: java.lang.String syntaxTypevalSeparator> = $r30;
+        return;
+    }
+
+    void <init>(java.util.Properties)
+    {
+        javax.naming.NameImpl r0;
+        java.util.Properties r1;
+        java.util.Vector $r2;
+
+        r0 := @this: javax.naming.NameImpl;
+        r1 := @parameter0: java.util.Properties;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<javax.naming.NameImpl: byte syntaxDirection> = 1;
+        r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator> = "/";
+        r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator2> = null;
+        r0.<javax.naming.NameImpl: boolean syntaxCaseInsensitive> = 0;
+        r0.<javax.naming.NameImpl: boolean syntaxTrimBlanks> = 0;
+        r0.<javax.naming.NameImpl: java.lang.String syntaxEscape> = "\\";
+        r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote1> = "\"";
+        r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote1> = "\"";
+        r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote2> = "\'";
+        r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote2> = "\'";
+        r0.<javax.naming.NameImpl: java.lang.String syntaxAvaSeparator> = null;
+        r0.<javax.naming.NameImpl: java.lang.String syntaxTypevalSeparator> = null;
+        r0.<javax.naming.NameImpl: int escapingStyle> = 0;
+        if r1 == null goto label0;
+
+        specialinvoke r0.<javax.naming.NameImpl: void recordNamingConvention(java.util.Properties)>(r1);
+
+     label0:
+        $r2 = new java.util.Vector;
+        specialinvoke $r2.<java.util.Vector: void <init>()>();
+        r0.<javax.naming.NameImpl: java.util.Vector components> = $r2;
+        return;
+    }
+
+    void <init>(java.util.Properties, java.lang.String) throws javax.naming.InvalidNameException
+    {
+        javax.naming.NameImpl r0;
+        java.util.Properties r1;
+        java.lang.String r2, r3, $r7;
+        boolean z0, z1, $z2;
+        int i0, i1, $i3;
+        byte $b2;
+        java.util.Vector $r4, $r5, $r8, $r10, $r11;
+        java.lang.Object $r6, $r9;
+
+        r0 := @this: javax.naming.NameImpl;
+        r1 := @parameter0: java.util.Properties;
+        r2 := @parameter1: java.lang.String;
+        specialinvoke r0.<javax.naming.NameImpl: void <init>(java.util.Properties)>(r1);
+        $b2 = r0.<javax.naming.NameImpl: byte syntaxDirection>;
+        if $b2 != 2 goto label0;
+
+        $z2 = 1;
+        goto label1;
+
+     label0:
+        $z2 = 0;
+
+     label1:
+        z0 = $z2;
+        z1 = 1;
+        i0 = virtualinvoke r2.<java.lang.String: int length()>();
+        i1 = 0;
+
+     label2:
+        if i1 >= i0 goto label8;
+
+        $r4 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        i1 = specialinvoke r0.<javax.naming.NameImpl: int extractComp(java.lang.String,int,int,java.util.Vector)>(r2, i1, i0, $r4);
+        if z0 == 0 goto label3;
+
+        $r5 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        $r6 = virtualinvoke $r5.<java.util.Vector: java.lang.Object firstElement()>();
+        $r7 = (java.lang.String) $r6;
+        goto label4;
+
+     label3:
+        $r8 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        $r9 = virtualinvoke $r8.<java.util.Vector: java.lang.Object lastElement()>();
+        $r7 = (java.lang.String) $r9;
+
+     label4:
+        r3 = $r7;
+        $i3 = virtualinvoke r3.<java.lang.String: int length()>();
+        if $i3 < 1 goto label5;
+
+        z1 = 0;
+
+     label5:
+        if i1 >= i0 goto label7;
+
+        i1 = specialinvoke r0.<javax.naming.NameImpl: int skipSeparator(java.lang.String,int)>(r2, i1);
+        if i1 != i0 goto label7;
+
+        if z1 != 0 goto label7;
+
+        if z0 == 0 goto label6;
+
+        $r10 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        virtualinvoke $r10.<java.util.Vector: void insertElementAt(java.lang.Object,int)>("", 0);
+        goto label7;
+
+     label6:
+        $r11 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        virtualinvoke $r11.<java.util.Vector: void addElement(java.lang.Object)>("");
+
+     label7:
+        goto label2;
+
+     label8:
+        return;
+    }
+
+    void <init>(java.util.Properties, java.util.Enumeration)
+    {
+        javax.naming.NameImpl r0;
+        java.util.Properties r1;
+        java.util.Enumeration r2;
+        boolean $z0;
+        java.util.Vector $r3;
+        java.lang.Object $r4;
+
+        r0 := @this: javax.naming.NameImpl;
+        r1 := @parameter0: java.util.Properties;
+        r2 := @parameter1: java.util.Enumeration;
+        specialinvoke r0.<javax.naming.NameImpl: void <init>(java.util.Properties)>(r1);
+
+     label0:
+        $z0 = interfaceinvoke r2.<java.util.Enumeration: boolean hasMoreElements()>();
+        if $z0 == 0 goto label1;
+
+        $r3 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        $r4 = interfaceinvoke r2.<java.util.Enumeration: java.lang.Object nextElement()>();
+        virtualinvoke $r3.<java.util.Vector: void addElement(java.lang.Object)>($r4);
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    private final java.lang.String stringifyComp(java.lang.String)
+    {
+        javax.naming.NameImpl r0;
+        java.lang.String r1, r2, r3, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13, $r14, $r15, $r16, $r21, $r22, $r24, $r26, $r27, $r28, $r30, $r32, $r33, $r34, $r35, $r37, $r38, $r40, $r42, $r43, $r44, $r46, $r48, $r49, $r50, $r52, $r54, $r56;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17;
+        boolean z0, z1, $z2, z3, $z4, $z5, $z6, $z7, $z8, $z9;
+        java.lang.StringBuffer r4, $r5, $r17, $r23, $r29, $r45, $r51;
+        char $c7, $c18;
+
+        r0 := @this: javax.naming.NameImpl;
+        r1 := @parameter0: java.lang.String;
+        i0 = virtualinvoke r1.<java.lang.String: int length()>();
+        z0 = 0;
+        z1 = 0;
+        r2 = null;
+        r3 = null;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>(int)>(i0);
+        r4 = $r5;
+        $r6 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator>;
+        if $r6 == null goto label2;
+
+        $r7 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator>;
+        $i3 = virtualinvoke r1.<java.lang.String: int indexOf(java.lang.String)>($r7);
+        if $i3 < 0 goto label2;
+
+        $r8 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote1>;
+        if $r8 == null goto label0;
+
+        r2 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote1>;
+        r3 = r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote1>;
+        goto label2;
+
+     label0:
+        $r9 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote2>;
+        if $r9 == null goto label1;
+
+        r2 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote2>;
+        r3 = r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote2>;
+        goto label2;
+
+     label1:
+        $r10 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        if $r10 == null goto label2;
+
+        z0 = 1;
+
+     label2:
+        $r11 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator2>;
+        if $r11 == null goto label5;
+
+        $r12 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator2>;
+        $i4 = virtualinvoke r1.<java.lang.String: int indexOf(java.lang.String)>($r12);
+        if $i4 < 0 goto label5;
+
+        $r13 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote1>;
+        if $r13 == null goto label3;
+
+        if r2 != null goto label5;
+
+        r2 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote1>;
+        r3 = r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote1>;
+        goto label5;
+
+     label3:
+        $r14 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote2>;
+        if $r14 == null goto label4;
+
+        if r2 != null goto label5;
+
+        r2 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote2>;
+        r3 = r0.<javax.naming.NameImpl: java.lang.String syntaxEndQuote2>;
+        goto label5;
+
+     label4:
+        $r15 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        if $r15 == null goto label5;
+
+        z1 = 1;
+
+     label5:
+        if r2 == null goto label9;
+
+        r4 = virtualinvoke r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(r2);
+        i1 = 0;
+
+     label6:
+        if i1 >= i0 goto label8;
+
+        $z2 = virtualinvoke r1.<java.lang.String: boolean startsWith(java.lang.String,int)>(r3, i1);
+        if $z2 == 0 goto label7;
+
+        $r16 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $r17 = virtualinvoke r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r16);
+        virtualinvoke $r17.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(r3);
+        $i5 = virtualinvoke r3.<java.lang.String: int length()>();
+        i1 = i1 + $i5;
+        goto label6;
+
+     label7:
+        $i6 = i1;
+        i1 = i1 + 1;
+        $c7 = virtualinvoke r1.<java.lang.String: char charAt(int)>($i6);
+        virtualinvoke r4.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c7);
+        goto label6;
+
+     label8:
+        virtualinvoke r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(r3);
+        goto label19;
+
+     label9:
+        z3 = 1;
+        i2 = 0;
+
+     label10:
+        if i2 >= i0 goto label19;
+
+        if z3 == 0 goto label11;
+
+        $r21 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote1>;
+        $z4 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, i2, $r21);
+        if $z4 == 0 goto label11;
+
+        $r22 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $r23 = virtualinvoke r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r22);
+        $r24 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote1>;
+        virtualinvoke $r23.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r24);
+        $r26 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote1>;
+        $i8 = virtualinvoke $r26.<java.lang.String: int length()>();
+        i2 = i2 + $i8;
+        goto label18;
+
+     label11:
+        if z3 == 0 goto label12;
+
+        $r27 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote2>;
+        $z5 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, i2, $r27);
+        if $z5 == 0 goto label12;
+
+        $r28 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $r29 = virtualinvoke r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r28);
+        $r30 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote2>;
+        virtualinvoke $r29.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r30);
+        $r32 = r0.<javax.naming.NameImpl: java.lang.String syntaxBeginQuote2>;
+        $i9 = virtualinvoke $r32.<java.lang.String: int length()>();
+        i2 = i2 + $i9;
+        goto label18;
+
+     label12:
+        $r33 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $z6 = specialinvoke r0.<javax.naming.NameImpl: boolean isA(java.lang.String,int,java.lang.String)>(r1, i2, $r33);
+        if $z6 == 0 goto label15;
+
+        $r34 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $i10 = virtualinvoke $r34.<java.lang.String: int length()>();
+        $i11 = i2 + $i10;
+        if $i11 < i0 goto label13;
+
+        $r35 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        virtualinvoke r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r35);
+        goto label14;
+
+     label13:
+        $r37 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $i12 = virtualinvoke $r37.<java.lang.String: int length()>();
+        $i13 = i2 + $i12;
+        $z7 = specialinvoke r0.<javax.naming.NameImpl: boolean isMeta(java.lang.String,int)>(r1, $i13);
+        if $z7 == 0 goto label14;
+
+        $r38 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        virtualinvoke r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r38);
+
+     label14:
+        $r40 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        virtualinvoke r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r40);
+        $r42 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $i14 = virtualinvoke $r42.<java.lang.String: int length()>();
+        i2 = i2 + $i14;
+        goto label18;
+
+     label15:
+        if z0 == 0 goto label16;
+
+        $r43 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator>;
+        $z8 = virtualinvoke r1.<java.lang.String: boolean startsWith(java.lang.String,int)>($r43, i2);
+        if $z8 == 0 goto label16;
+
+        $r44 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $r45 = virtualinvoke r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r44);
+        $r46 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator>;
+        virtualinvoke $r45.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r46);
+        $r48 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator>;
+        $i15 = virtualinvoke $r48.<java.lang.String: int length()>();
+        i2 = i2 + $i15;
+        goto label18;
+
+     label16:
+        if z1 == 0 goto label17;
+
+        $r49 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator2>;
+        $z9 = virtualinvoke r1.<java.lang.String: boolean startsWith(java.lang.String,int)>($r49, i2);
+        if $z9 == 0 goto label17;
+
+        $r50 = r0.<javax.naming.NameImpl: java.lang.String syntaxEscape>;
+        $r51 = virtualinvoke r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r50);
+        $r52 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator2>;
+        virtualinvoke $r51.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r52);
+        $r54 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator2>;
+        $i16 = virtualinvoke $r54.<java.lang.String: int length()>();
+        i2 = i2 + $i16;
+        goto label18;
+
+     label17:
+        $i17 = i2;
+        i2 = i2 + 1;
+        $c18 = virtualinvoke r1.<java.lang.String: char charAt(int)>($i17);
+        virtualinvoke r4.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c18);
+
+     label18:
+        z3 = 0;
+        goto label10;
+
+     label19:
+        $r56 = virtualinvoke r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r56;
+    }
+
+    public java.lang.String toString()
+    {
+        javax.naming.NameImpl r0;
+        java.lang.StringBuffer $r1, r2;
+        boolean z0;
+        int i0, i1, $i3, $i4, $i5;
+        java.lang.String r3, $r7, $r10, $r11, $r12, $r14, $r15, $r16;
+        java.util.Vector $r4, $r5, $r8;
+        byte $b2;
+        java.lang.Object $r6, $r9;
+
+        r0 := @this: javax.naming.NameImpl;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        r2 = $r1;
+        z0 = 1;
+        $r4 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        i0 = virtualinvoke $r4.<java.util.Vector: int size()>();
+        i1 = 0;
+
+     label0:
+        if i1 >= i0 goto label5;
+
+        $b2 = r0.<javax.naming.NameImpl: byte syntaxDirection>;
+        if $b2 != 2 goto label1;
+
+        $r5 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        $i3 = i0 - 1;
+        $i4 = $i3 - i1;
+        $r6 = virtualinvoke $r5.<java.util.Vector: java.lang.Object elementAt(int)>($i4);
+        $r7 = (java.lang.String) $r6;
+        r3 = specialinvoke r0.<javax.naming.NameImpl: java.lang.String stringifyComp(java.lang.String)>($r7);
+        goto label2;
+
+     label1:
+        $r8 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        $r9 = virtualinvoke $r8.<java.util.Vector: java.lang.Object elementAt(int)>(i1);
+        $r10 = (java.lang.String) $r9;
+        r3 = specialinvoke r0.<javax.naming.NameImpl: java.lang.String stringifyComp(java.lang.String)>($r10);
+
+     label2:
+        if i1 == 0 goto label3;
+
+        $r11 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator>;
+        if $r11 == null goto label3;
+
+        $r12 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator>;
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r12);
+
+     label3:
+        $i5 = virtualinvoke r3.<java.lang.String: int length()>();
+        if $i5 < 1 goto label4;
+
+        z0 = 0;
+
+     label4:
+        r2 = virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(r3);
+        i1 = i1 + 1;
+        goto label0;
+
+     label5:
+        if z0 == 0 goto label6;
+
+        if i0 < 1 goto label6;
+
+        $r14 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator>;
+        if $r14 == null goto label6;
+
+        $r15 = r0.<javax.naming.NameImpl: java.lang.String syntaxSeparator>;
+        r2 = virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r15);
+
+     label6:
+        $r16 = virtualinvoke r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r16;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        javax.naming.NameImpl r0, r2;
+        java.lang.Object r1, $r7, $r8;
+        java.util.Enumeration r3, r4;
+        java.lang.String r5, r6;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5;
+        int $i0, $i1;
+
+        r0 := @this: javax.naming.NameImpl;
+        r1 := @parameter0: java.lang.Object;
+        if r1 == null goto label5;
+
+        $z0 = r1 instanceof javax.naming.NameImpl;
+        if $z0 == 0 goto label5;
+
+        r2 = (javax.naming.NameImpl) r1;
+        $i0 = virtualinvoke r2.<javax.naming.NameImpl: int size()>();
+        $i1 = virtualinvoke r0.<javax.naming.NameImpl: int size()>();
+        if $i0 != $i1 goto label5;
+
+        r3 = virtualinvoke r0.<javax.naming.NameImpl: java.util.Enumeration getAll()>();
+        r4 = virtualinvoke r2.<javax.naming.NameImpl: java.util.Enumeration getAll()>();
+
+     label0:
+        $z1 = interfaceinvoke r3.<java.util.Enumeration: boolean hasMoreElements()>();
+        if $z1 == 0 goto label4;
+
+        $r7 = interfaceinvoke r3.<java.util.Enumeration: java.lang.Object nextElement()>();
+        r5 = (java.lang.String) $r7;
+        $r8 = interfaceinvoke r4.<java.util.Enumeration: java.lang.Object nextElement()>();
+        r6 = (java.lang.String) $r8;
+        $z2 = r0.<javax.naming.NameImpl: boolean syntaxTrimBlanks>;
+        if $z2 == 0 goto label1;
+
+        r5 = virtualinvoke r5.<java.lang.String: java.lang.String trim()>();
+        r6 = virtualinvoke r6.<java.lang.String: java.lang.String trim()>();
+
+     label1:
+        $z3 = r0.<javax.naming.NameImpl: boolean syntaxCaseInsensitive>;
+        if $z3 == 0 goto label2;
+
+        $z4 = virtualinvoke r5.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>(r6);
+        if $z4 != 0 goto label3;
+
+        return 0;
+
+     label2:
+        $z5 = virtualinvoke r5.<java.lang.String: boolean equals(java.lang.Object)>(r6);
+        if $z5 != 0 goto label3;
+
+        return 0;
+
+     label3:
+        goto label0;
+
+     label4:
+        return 1;
+
+     label5:
+        return 0;
+    }
+
+    public int compareTo(javax.naming.NameImpl)
+    {
+        javax.naming.NameImpl r0, r1;
+        int i0, i1, i2, i3, i4, i5, $i6, $i7, $i8, $i9;
+        java.lang.String r2, r3;
+        boolean $z0, $z1;
+
+        r0 := @this: javax.naming.NameImpl;
+        r1 := @parameter0: javax.naming.NameImpl;
+        if r0 != r1 goto label0;
+
+        return 0;
+
+     label0:
+        i0 = virtualinvoke r0.<javax.naming.NameImpl: int size()>();
+        i1 = virtualinvoke r1.<javax.naming.NameImpl: int size()>();
+        i2 = staticinvoke <java.lang.Math: int min(int,int)>(i0, i1);
+        i3 = 0;
+        i4 = 0;
+
+     label1:
+        $i6 = i2;
+        i2 = i2 + -1;
+        if $i6 == 0 goto label5;
+
+        $i7 = i3;
+        i3 = i3 + 1;
+        r2 = virtualinvoke r0.<javax.naming.NameImpl: java.lang.String get(int)>($i7);
+        $i8 = i4;
+        i4 = i4 + 1;
+        r3 = virtualinvoke r1.<javax.naming.NameImpl: java.lang.String get(int)>($i8);
+        $z0 = r0.<javax.naming.NameImpl: boolean syntaxTrimBlanks>;
+        if $z0 == 0 goto label2;
+
+        r2 = virtualinvoke r2.<java.lang.String: java.lang.String trim()>();
+        r3 = virtualinvoke r3.<java.lang.String: java.lang.String trim()>();
+
+     label2:
+        $z1 = r0.<javax.naming.NameImpl: boolean syntaxCaseInsensitive>;
+        if $z1 == 0 goto label3;
+
+        r2 = virtualinvoke r2.<java.lang.String: java.lang.String toLowerCase()>();
+        r3 = virtualinvoke r3.<java.lang.String: java.lang.String toLowerCase()>();
+
+     label3:
+        i5 = virtualinvoke r2.<java.lang.String: int compareTo(java.lang.String)>(r3);
+        if i5 == 0 goto label4;
+
+        return i5;
+
+     label4:
+        goto label1;
+
+     label5:
+        $i9 = i0 - i1;
+        return $i9;
+    }
+
+    public int size()
+    {
+        javax.naming.NameImpl r0;
+        java.util.Vector $r1;
+        int $i0;
+
+        r0 := @this: javax.naming.NameImpl;
+        $r1 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        $i0 = virtualinvoke $r1.<java.util.Vector: int size()>();
+        return $i0;
+    }
+
+    public java.util.Enumeration getAll()
+    {
+        javax.naming.NameImpl r0;
+        java.util.Vector $r1;
+        java.util.Enumeration $r2;
+
+        r0 := @this: javax.naming.NameImpl;
+        $r1 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        $r2 = virtualinvoke $r1.<java.util.Vector: java.util.Enumeration elements()>();
+        return $r2;
+    }
+
+    public java.lang.String get(int)
+    {
+        javax.naming.NameImpl r0;
+        int i0;
+        java.util.Vector $r1;
+        java.lang.Object $r2;
+        java.lang.String $r3;
+
+        r0 := @this: javax.naming.NameImpl;
+        i0 := @parameter0: int;
+        $r1 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        $r2 = virtualinvoke $r1.<java.util.Vector: java.lang.Object elementAt(int)>(i0);
+        $r3 = (java.lang.String) $r2;
+        return $r3;
+    }
+
+    public java.util.Enumeration getPrefix(int)
+    {
+        javax.naming.NameImpl r0;
+        int i0, $i1;
+        java.lang.ArrayIndexOutOfBoundsException $r1;
+        javax.naming.NameImplEnumerator $r2;
+        java.util.Vector $r3;
+
+        r0 := @this: javax.naming.NameImpl;
+        i0 := @parameter0: int;
+        if i0 < 0 goto label0;
+
+        $i1 = virtualinvoke r0.<javax.naming.NameImpl: int size()>();
+        if i0 <= $i1 goto label1;
+
+     label0:
+        $r1 = new java.lang.ArrayIndexOutOfBoundsException;
+        specialinvoke $r1.<java.lang.ArrayIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r1;
+
+     label1:
+        $r2 = new javax.naming.NameImplEnumerator;
+        $r3 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        specialinvoke $r2.<javax.naming.NameImplEnumerator: void <init>(java.util.Vector,int,int)>($r3, 0, i0);
+        return $r2;
+    }
+
+    public java.util.Enumeration getSuffix(int)
+    {
+        javax.naming.NameImpl r0;
+        int i0, i1;
+        java.lang.ArrayIndexOutOfBoundsException $r1;
+        javax.naming.NameImplEnumerator $r2;
+        java.util.Vector $r3;
+
+        r0 := @this: javax.naming.NameImpl;
+        i0 := @parameter0: int;
+        i1 = virtualinvoke r0.<javax.naming.NameImpl: int size()>();
+        if i0 < 0 goto label0;
+
+        if i0 <= i1 goto label1;
+
+     label0:
+        $r1 = new java.lang.ArrayIndexOutOfBoundsException;
+        specialinvoke $r1.<java.lang.ArrayIndexOutOfBoundsException: void <init>(int)>(i0);
+        throw $r1;
+
+     label1:
+        $r2 = new javax.naming.NameImplEnumerator;
+        $r3 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        specialinvoke $r2.<javax.naming.NameImplEnumerator: void <init>(java.util.Vector,int,int)>($r3, i0, i1);
+        return $r2;
+    }
+
+    public boolean isEmpty()
+    {
+        javax.naming.NameImpl r0;
+        java.util.Vector $r1;
+        boolean $z0;
+
+        r0 := @this: javax.naming.NameImpl;
+        $r1 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        $z0 = virtualinvoke $r1.<java.util.Vector: boolean isEmpty()>();
+        return $z0;
+    }
+
+    public boolean startsWith(int, java.util.Enumeration)
+    {
+        javax.naming.NameImpl r0;
+        int i0, $i1;
+        java.util.Enumeration r1, r2;
+        java.lang.String r3, r4;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6;
+        java.lang.Object $r5, $r6;
+        java.util.NoSuchElementException $r7, r8;
+
+        r0 := @this: javax.naming.NameImpl;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.util.Enumeration;
+        if i0 < 0 goto label0;
+
+        $i1 = virtualinvoke r0.<javax.naming.NameImpl: int size()>();
+        if i0 <= $i1 goto label1;
+
+     label0:
+        return 0;
+
+     label1:
+        r2 = virtualinvoke r0.<javax.naming.NameImpl: java.util.Enumeration getPrefix(int)>(i0);
+
+     label2:
+        $z0 = interfaceinvoke r2.<java.util.Enumeration: boolean hasMoreElements()>();
+        if $z0 == 0 goto label8;
+
+        $r5 = interfaceinvoke r2.<java.util.Enumeration: java.lang.Object nextElement()>();
+        r3 = (java.lang.String) $r5;
+        $r6 = interfaceinvoke r1.<java.util.Enumeration: java.lang.Object nextElement()>();
+        r4 = (java.lang.String) $r6;
+        $z1 = r0.<javax.naming.NameImpl: boolean syntaxTrimBlanks>;
+        if $z1 == 0 goto label3;
+
+        r3 = virtualinvoke r3.<java.lang.String: java.lang.String trim()>();
+        r4 = virtualinvoke r4.<java.lang.String: java.lang.String trim()>();
+
+     label3:
+        $z2 = r0.<javax.naming.NameImpl: boolean syntaxCaseInsensitive>;
+        if $z2 == 0 goto label5;
+
+        $z3 = virtualinvoke r3.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>(r4);
+        if $z3 != 0 goto label7;
+
+        $z4 = 0;
+
+     label4:
+        return $z4;
+
+     label5:
+        $z5 = virtualinvoke r3.<java.lang.String: boolean equals(java.lang.Object)>(r4);
+        if $z5 != 0 goto label7;
+
+        $z6 = 0;
+
+     label6:
+        return $z6;
+
+     label7:
+        goto label2;
+
+     label8:
+        goto label10;
+
+     label9:
+        $r7 := @caughtexception;
+        r8 = $r7;
+        return 0;
+
+     label10:
+        return 1;
+
+        catch java.util.NoSuchElementException from label1 to label4 with label9;
+        catch java.util.NoSuchElementException from label5 to label6 with label9;
+        catch java.util.NoSuchElementException from label7 to label8 with label9;
+    }
+
+    public boolean endsWith(int, java.util.Enumeration)
+    {
+        javax.naming.NameImpl r0;
+        int i0, i1, $i2, $i3;
+        java.util.Enumeration r1, r2;
+        java.lang.String r3, r4;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6;
+        java.lang.Object $r5, $r6;
+        java.util.NoSuchElementException $r7, r8;
+
+        r0 := @this: javax.naming.NameImpl;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.util.Enumeration;
+        $i2 = virtualinvoke r0.<javax.naming.NameImpl: int size()>();
+        i1 = $i2 - i0;
+        if i1 < 0 goto label0;
+
+        $i3 = virtualinvoke r0.<javax.naming.NameImpl: int size()>();
+        if i1 <= $i3 goto label1;
+
+     label0:
+        return 0;
+
+     label1:
+        r2 = virtualinvoke r0.<javax.naming.NameImpl: java.util.Enumeration getSuffix(int)>(i1);
+
+     label2:
+        $z0 = interfaceinvoke r2.<java.util.Enumeration: boolean hasMoreElements()>();
+        if $z0 == 0 goto label8;
+
+        $r5 = interfaceinvoke r2.<java.util.Enumeration: java.lang.Object nextElement()>();
+        r3 = (java.lang.String) $r5;
+        $r6 = interfaceinvoke r1.<java.util.Enumeration: java.lang.Object nextElement()>();
+        r4 = (java.lang.String) $r6;
+        $z1 = r0.<javax.naming.NameImpl: boolean syntaxTrimBlanks>;
+        if $z1 == 0 goto label3;
+
+        r3 = virtualinvoke r3.<java.lang.String: java.lang.String trim()>();
+        r4 = virtualinvoke r4.<java.lang.String: java.lang.String trim()>();
+
+     label3:
+        $z2 = r0.<javax.naming.NameImpl: boolean syntaxCaseInsensitive>;
+        if $z2 == 0 goto label5;
+
+        $z3 = virtualinvoke r3.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>(r4);
+        if $z3 != 0 goto label7;
+
+        $z4 = 0;
+
+     label4:
+        return $z4;
+
+     label5:
+        $z5 = virtualinvoke r3.<java.lang.String: boolean equals(java.lang.Object)>(r4);
+        if $z5 != 0 goto label7;
+
+        $z6 = 0;
+
+     label6:
+        return $z6;
+
+     label7:
+        goto label2;
+
+     label8:
+        goto label10;
+
+     label9:
+        $r7 := @caughtexception;
+        r8 = $r7;
+        return 0;
+
+     label10:
+        return 1;
+
+        catch java.util.NoSuchElementException from label1 to label4 with label9;
+        catch java.util.NoSuchElementException from label5 to label6 with label9;
+        catch java.util.NoSuchElementException from label7 to label8 with label9;
+    }
+
+    public boolean addAll(java.util.Enumeration) throws javax.naming.InvalidNameException
+    {
+        javax.naming.NameImpl r0;
+        java.util.Enumeration r1;
+        boolean z0, $z1;
+        java.lang.Object r2;
+        int $i0;
+        byte $b1;
+        javax.naming.InvalidNameException $r3;
+        java.util.Vector $r4;
+        java.util.NoSuchElementException $r5, r6;
+
+        r0 := @this: javax.naming.NameImpl;
+        r1 := @parameter0: java.util.Enumeration;
+        z0 = 0;
+
+     label0:
+        $z1 = interfaceinvoke r1.<java.util.Enumeration: boolean hasMoreElements()>();
+        if $z1 == 0 goto label5;
+
+     label1:
+        r2 = interfaceinvoke r1.<java.util.Enumeration: java.lang.Object nextElement()>();
+        $i0 = virtualinvoke r0.<javax.naming.NameImpl: int size()>();
+        if $i0 <= 0 goto label2;
+
+        $b1 = r0.<javax.naming.NameImpl: byte syntaxDirection>;
+        if $b1 != 0 goto label2;
+
+        $r3 = new javax.naming.InvalidNameException;
+        specialinvoke $r3.<javax.naming.InvalidNameException: void <init>(java.lang.String)>("A flat name can only have a single component");
+        throw $r3;
+
+     label2:
+        $r4 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        virtualinvoke $r4.<java.util.Vector: void addElement(java.lang.Object)>(r2);
+        z0 = 1;
+
+     label3:
+        goto label0;
+
+     label4:
+        $r5 := @caughtexception;
+        r6 = $r5;
+        goto label5;
+
+     label5:
+        return z0;
+
+        catch java.util.NoSuchElementException from label1 to label3 with label4;
+    }
+
+    public boolean addAll(int, java.util.Enumeration) throws javax.naming.InvalidNameException
+    {
+        javax.naming.NameImpl r0;
+        int i0, i1, $i2;
+        java.util.Enumeration r1;
+        boolean z0, $z1;
+        java.lang.Object r2;
+        byte $b3;
+        javax.naming.InvalidNameException $r3;
+        java.util.Vector $r4;
+        java.util.NoSuchElementException $r5, r6;
+
+        r0 := @this: javax.naming.NameImpl;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.util.Enumeration;
+        z0 = 0;
+        i1 = i0;
+
+     label0:
+        $z1 = interfaceinvoke r1.<java.util.Enumeration: boolean hasMoreElements()>();
+        if $z1 == 0 goto label6;
+
+     label1:
+        r2 = interfaceinvoke r1.<java.util.Enumeration: java.lang.Object nextElement()>();
+        $i2 = virtualinvoke r0.<javax.naming.NameImpl: int size()>();
+        if $i2 <= 0 goto label2;
+
+        $b3 = r0.<javax.naming.NameImpl: byte syntaxDirection>;
+        if $b3 != 0 goto label2;
+
+        $r3 = new javax.naming.InvalidNameException;
+        specialinvoke $r3.<javax.naming.InvalidNameException: void <init>(java.lang.String)>("A flat name can only have a single component");
+        throw $r3;
+
+     label2:
+        $r4 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        virtualinvoke $r4.<java.util.Vector: void insertElementAt(java.lang.Object,int)>(r2, i1);
+        z0 = 1;
+
+     label3:
+        goto label5;
+
+     label4:
+        $r5 := @caughtexception;
+        r6 = $r5;
+        goto label6;
+
+     label5:
+        i1 = i1 + 1;
+        goto label0;
+
+     label6:
+        return z0;
+
+        catch java.util.NoSuchElementException from label1 to label3 with label4;
+    }
+
+    public void add(java.lang.String) throws javax.naming.InvalidNameException
+    {
+        javax.naming.NameImpl r0;
+        java.lang.String r1;
+        int $i0;
+        byte $b1;
+        javax.naming.InvalidNameException $r2;
+        java.util.Vector $r3;
+
+        r0 := @this: javax.naming.NameImpl;
+        r1 := @parameter0: java.lang.String;
+        $i0 = virtualinvoke r0.<javax.naming.NameImpl: int size()>();
+        if $i0 <= 0 goto label0;
+
+        $b1 = r0.<javax.naming.NameImpl: byte syntaxDirection>;
+        if $b1 != 0 goto label0;
+
+        $r2 = new javax.naming.InvalidNameException;
+        specialinvoke $r2.<javax.naming.InvalidNameException: void <init>(java.lang.String)>("A flat name can only have a single component");
+        throw $r2;
+
+     label0:
+        $r3 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        virtualinvoke $r3.<java.util.Vector: void addElement(java.lang.Object)>(r1);
+        return;
+    }
+
+    public void add(int, java.lang.String) throws javax.naming.InvalidNameException
+    {
+        javax.naming.NameImpl r0;
+        int i0, $i1;
+        java.lang.String r1;
+        byte $b2;
+        javax.naming.InvalidNameException $r2;
+        java.util.Vector $r3;
+
+        r0 := @this: javax.naming.NameImpl;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.lang.String;
+        $i1 = virtualinvoke r0.<javax.naming.NameImpl: int size()>();
+        if $i1 <= 0 goto label0;
+
+        $b2 = r0.<javax.naming.NameImpl: byte syntaxDirection>;
+        if $b2 != 0 goto label0;
+
+        $r2 = new javax.naming.InvalidNameException;
+        specialinvoke $r2.<javax.naming.InvalidNameException: void <init>(java.lang.String)>("A flat name can only zero or one component");
+        throw $r2;
+
+     label0:
+        $r3 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        virtualinvoke $r3.<java.util.Vector: void insertElementAt(java.lang.Object,int)>(r1, i0);
+        return;
+    }
+
+    public java.lang.Object remove(int)
+    {
+        javax.naming.NameImpl r0;
+        int i0;
+        java.lang.Object r1;
+        java.util.Vector $r2, $r3;
+
+        r0 := @this: javax.naming.NameImpl;
+        i0 := @parameter0: int;
+        $r2 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        r1 = virtualinvoke $r2.<java.util.Vector: java.lang.Object elementAt(int)>(i0);
+        $r3 = r0.<javax.naming.NameImpl: java.util.Vector components>;
+        virtualinvoke $r3.<java.util.Vector: void removeElementAt(int)>(i0);
+        return r1;
+    }
+
+    public int hashCode()
+    {
+        javax.naming.NameImpl r0;
+        int i0, $i1;
+        java.util.Enumeration r1;
+        java.lang.String r2;
+        boolean $z0, $z1, $z2;
+        java.lang.Object $r3;
+
+        r0 := @this: javax.naming.NameImpl;
+        i0 = 0;
+        r1 = virtualinvoke r0.<javax.naming.NameImpl: java.util.Enumeration getAll()>();
+
+     label0:
+        $z0 = interfaceinvoke r1.<java.util.Enumeration: boolean hasMoreElements()>();
+        if $z0 == 0 goto label3;
+
+        $r3 = interfaceinvoke r1.<java.util.Enumeration: java.lang.Object nextElement()>();
+        r2 = (java.lang.String) $r3;
+        $z1 = r0.<javax.naming.NameImpl: boolean syntaxTrimBlanks>;
+        if $z1 == 0 goto label1;
+
+        r2 = virtualinvoke r2.<java.lang.String: java.lang.String trim()>();
+
+     label1:
+        $z2 = r0.<javax.naming.NameImpl: boolean syntaxCaseInsensitive>;
+        if $z2 == 0 goto label2;
+
+        r2 = virtualinvoke r2.<java.lang.String: java.lang.String toLowerCase()>();
+
+     label2:
+        $i1 = virtualinvoke r2.<java.lang.String: int hashCode()>();
+        i0 = i0 + $i1;
+        goto label0;
+
+     label3:
+        return i0;
+    }
+}

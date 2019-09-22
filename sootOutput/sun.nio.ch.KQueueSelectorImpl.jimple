@@ -1,0 +1,475 @@
+class sun.nio.ch.KQueueSelectorImpl extends sun.nio.ch.SelectorImpl
+{
+    protected int fd0;
+    protected int fd1;
+    sun.nio.ch.KQueueArrayWrapper kqueueWrapper;
+    private int totalChannels;
+    private java.util.HashMap fdMap;
+    private boolean closed;
+    private java.lang.Object interruptLock;
+    private boolean interruptTriggered;
+    private long updateCount;
+
+    void <init>(java.nio.channels.spi.SelectorProvider)
+    {
+        sun.nio.ch.KQueueSelectorImpl r0;
+        java.nio.channels.spi.SelectorProvider r1;
+        long l0, $l1;
+        java.lang.Object $r2;
+        int $i2, $i3, $i4, $i5;
+        sun.nio.ch.KQueueArrayWrapper $r3, $r4;
+        java.util.HashMap $r5;
+
+        r0 := @this: sun.nio.ch.KQueueSelectorImpl;
+        r1 := @parameter0: java.nio.channels.spi.SelectorProvider;
+        specialinvoke r0.<sun.nio.ch.SelectorImpl: void <init>(java.nio.channels.spi.SelectorProvider)>(r1);
+        r0.<sun.nio.ch.KQueueSelectorImpl: boolean closed> = 0;
+        $r2 = new java.lang.Object;
+        specialinvoke $r2.<java.lang.Object: void <init>()>();
+        r0.<sun.nio.ch.KQueueSelectorImpl: java.lang.Object interruptLock> = $r2;
+        r0.<sun.nio.ch.KQueueSelectorImpl: boolean interruptTriggered> = 0;
+        l0 = staticinvoke <sun.nio.ch.IOUtil: long makePipe(boolean)>(0);
+        $l1 = l0 >>> 32;
+        $i2 = (int) $l1;
+        r0.<sun.nio.ch.KQueueSelectorImpl: int fd0> = $i2;
+        $i3 = (int) l0;
+        r0.<sun.nio.ch.KQueueSelectorImpl: int fd1> = $i3;
+        $r3 = new sun.nio.ch.KQueueArrayWrapper;
+        specialinvoke $r3.<sun.nio.ch.KQueueArrayWrapper: void <init>()>();
+        r0.<sun.nio.ch.KQueueSelectorImpl: sun.nio.ch.KQueueArrayWrapper kqueueWrapper> = $r3;
+        $r4 = r0.<sun.nio.ch.KQueueSelectorImpl: sun.nio.ch.KQueueArrayWrapper kqueueWrapper>;
+        $i4 = r0.<sun.nio.ch.KQueueSelectorImpl: int fd0>;
+        $i5 = r0.<sun.nio.ch.KQueueSelectorImpl: int fd1>;
+        virtualinvoke $r4.<sun.nio.ch.KQueueArrayWrapper: void initInterrupt(int,int)>($i4, $i5);
+        $r5 = new java.util.HashMap;
+        specialinvoke $r5.<java.util.HashMap: void <init>()>();
+        r0.<sun.nio.ch.KQueueSelectorImpl: java.util.HashMap fdMap> = $r5;
+        r0.<sun.nio.ch.KQueueSelectorImpl: int totalChannels> = 1;
+        return;
+    }
+
+    protected int doSelect(long) throws java.io.IOException
+    {
+        sun.nio.ch.KQueueSelectorImpl r0;
+        long l0;
+        boolean z0, $z1;
+        java.lang.Throwable r1, $r4;
+        java.nio.channels.ClosedSelectorException $r2;
+        sun.nio.ch.KQueueArrayWrapper $r3;
+        int i1, $i2;
+
+        r0 := @this: sun.nio.ch.KQueueSelectorImpl;
+        l0 := @parameter0: long;
+        z0 = 0;
+        $z1 = r0.<sun.nio.ch.KQueueSelectorImpl: boolean closed>;
+        if $z1 == 0 goto label0;
+
+        $r2 = new java.nio.channels.ClosedSelectorException;
+        specialinvoke $r2.<java.nio.channels.ClosedSelectorException: void <init>()>();
+        throw $r2;
+
+     label0:
+        virtualinvoke r0.<sun.nio.ch.KQueueSelectorImpl: void processDeregisterQueue()>();
+
+     label1:
+        virtualinvoke r0.<sun.nio.ch.KQueueSelectorImpl: void begin()>();
+        $r3 = r0.<sun.nio.ch.KQueueSelectorImpl: sun.nio.ch.KQueueArrayWrapper kqueueWrapper>;
+        i1 = virtualinvoke $r3.<sun.nio.ch.KQueueArrayWrapper: int poll(long)>(l0);
+
+     label2:
+        virtualinvoke r0.<sun.nio.ch.KQueueSelectorImpl: void end()>();
+        goto label6;
+
+     label3:
+        $r4 := @caughtexception;
+
+     label4:
+        r1 = $r4;
+
+     label5:
+        virtualinvoke r0.<sun.nio.ch.KQueueSelectorImpl: void end()>();
+        throw r1;
+
+     label6:
+        virtualinvoke r0.<sun.nio.ch.KQueueSelectorImpl: void processDeregisterQueue()>();
+        $i2 = specialinvoke r0.<sun.nio.ch.KQueueSelectorImpl: int updateSelectedKeys(int)>(i1);
+        return $i2;
+
+        catch java.lang.Throwable from label1 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    private int updateSelectedKeys(int) throws java.io.IOException
+    {
+        sun.nio.ch.KQueueSelectorImpl r0;
+        int i0, i1, i2, i3, i4, $i7, $i12, $i13, $i14, $i16;
+        boolean z0, $z1, $z2;
+        sun.nio.ch.KQueueSelectorImpl$MapEntry r1;
+        sun.nio.ch.SelectionKeyImpl r2;
+        java.lang.Throwable r3, $r17;
+        long $l5, $l6, $l8, $l9, $l11, $l15;
+        sun.nio.ch.KQueueArrayWrapper $r5, $r9;
+        java.util.HashMap $r6;
+        java.lang.Integer $r7;
+        java.lang.Object $r8, $r15, r16;
+        java.util.Set $r10, $r14;
+        byte $b10;
+        sun.nio.ch.SelChImpl $r11, $r12, $r13;
+
+        r0 := @this: sun.nio.ch.KQueueSelectorImpl;
+        i0 := @parameter0: int;
+        i1 = 0;
+        z0 = 0;
+        $l5 = r0.<sun.nio.ch.KQueueSelectorImpl: long updateCount>;
+        $l6 = $l5 + 1L;
+        r0.<sun.nio.ch.KQueueSelectorImpl: long updateCount> = $l6;
+        i2 = 0;
+
+     label0:
+        if i2 >= i0 goto label5;
+
+        $r5 = r0.<sun.nio.ch.KQueueSelectorImpl: sun.nio.ch.KQueueArrayWrapper kqueueWrapper>;
+        i3 = virtualinvoke $r5.<sun.nio.ch.KQueueArrayWrapper: int getDescriptor(int)>(i2);
+        $i7 = r0.<sun.nio.ch.KQueueSelectorImpl: int fd0>;
+        if i3 != $i7 goto label1;
+
+        z0 = 1;
+        goto label4;
+
+     label1:
+        $r6 = r0.<sun.nio.ch.KQueueSelectorImpl: java.util.HashMap fdMap>;
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i3);
+        $r8 = virtualinvoke $r6.<java.util.HashMap: java.lang.Object get(java.lang.Object)>($r7);
+        r1 = (sun.nio.ch.KQueueSelectorImpl$MapEntry) $r8;
+        if r1 == null goto label4;
+
+        $r9 = r0.<sun.nio.ch.KQueueSelectorImpl: sun.nio.ch.KQueueArrayWrapper kqueueWrapper>;
+        i4 = virtualinvoke $r9.<sun.nio.ch.KQueueArrayWrapper: int getReventOps(int)>(i2);
+        r2 = r1.<sun.nio.ch.KQueueSelectorImpl$MapEntry: sun.nio.ch.SelectionKeyImpl ski>;
+        $r10 = r0.<sun.nio.ch.KQueueSelectorImpl: java.util.Set selectedKeys>;
+        $z1 = interfaceinvoke $r10.<java.util.Set: boolean contains(java.lang.Object)>(r2);
+        if $z1 == 0 goto label3;
+
+        $l8 = r1.<sun.nio.ch.KQueueSelectorImpl$MapEntry: long updateCount>;
+        $l9 = r0.<sun.nio.ch.KQueueSelectorImpl: long updateCount>;
+        $b10 = $l8 cmp $l9;
+        if $b10 == 0 goto label2;
+
+        $r11 = r2.<sun.nio.ch.SelectionKeyImpl: sun.nio.ch.SelChImpl channel>;
+        $z2 = interfaceinvoke $r11.<sun.nio.ch.SelChImpl: boolean translateAndSetReadyOps(int,sun.nio.ch.SelectionKeyImpl)>(i4, r2);
+        if $z2 == 0 goto label4;
+
+        i1 = i1 + 1;
+        $l11 = r0.<sun.nio.ch.KQueueSelectorImpl: long updateCount>;
+        r1.<sun.nio.ch.KQueueSelectorImpl$MapEntry: long updateCount> = $l11;
+        goto label4;
+
+     label2:
+        $r12 = r2.<sun.nio.ch.SelectionKeyImpl: sun.nio.ch.SelChImpl channel>;
+        interfaceinvoke $r12.<sun.nio.ch.SelChImpl: boolean translateAndUpdateReadyOps(int,sun.nio.ch.SelectionKeyImpl)>(i4, r2);
+        goto label4;
+
+     label3:
+        $r13 = r2.<sun.nio.ch.SelectionKeyImpl: sun.nio.ch.SelChImpl channel>;
+        interfaceinvoke $r13.<sun.nio.ch.SelChImpl: boolean translateAndSetReadyOps(int,sun.nio.ch.SelectionKeyImpl)>(i4, r2);
+        $i12 = virtualinvoke r2.<sun.nio.ch.SelectionKeyImpl: int nioReadyOps()>();
+        $i13 = virtualinvoke r2.<sun.nio.ch.SelectionKeyImpl: int nioInterestOps()>();
+        $i14 = $i12 & $i13;
+        if $i14 == 0 goto label4;
+
+        $r14 = r0.<sun.nio.ch.KQueueSelectorImpl: java.util.Set selectedKeys>;
+        interfaceinvoke $r14.<java.util.Set: boolean add(java.lang.Object)>(r2);
+        i1 = i1 + 1;
+        $l15 = r0.<sun.nio.ch.KQueueSelectorImpl: long updateCount>;
+        r1.<sun.nio.ch.KQueueSelectorImpl$MapEntry: long updateCount> = $l15;
+
+     label4:
+        i2 = i2 + 1;
+        goto label0;
+
+     label5:
+        if z0 == 0 goto label11;
+
+        $r15 = r0.<sun.nio.ch.KQueueSelectorImpl: java.lang.Object interruptLock>;
+        r16 = $r15;
+        entermonitor $r15;
+
+     label6:
+        $i16 = r0.<sun.nio.ch.KQueueSelectorImpl: int fd0>;
+        staticinvoke <sun.nio.ch.IOUtil: boolean drain(int)>($i16);
+        r0.<sun.nio.ch.KQueueSelectorImpl: boolean interruptTriggered> = 0;
+        exitmonitor r16;
+
+     label7:
+        goto label11;
+
+     label8:
+        $r17 := @caughtexception;
+
+     label9:
+        r3 = $r17;
+        exitmonitor r16;
+
+     label10:
+        throw r3;
+
+     label11:
+        return i1;
+
+        catch java.lang.Throwable from label6 to label7 with label8;
+        catch java.lang.Throwable from label9 to label10 with label8;
+    }
+
+    protected void implClose() throws java.io.IOException
+    {
+        sun.nio.ch.KQueueSelectorImpl r0;
+        java.lang.Object r1, $r4, $r10;
+        java.lang.Throwable r2, $r5;
+        java.nio.channels.SelectableChannel r3;
+        boolean $z0, $z1, $z2, $z3;
+        int $i0, $i1;
+        sun.nio.ch.KQueueArrayWrapper $r6, $r7;
+        java.util.HashSet $r8;
+        java.util.Iterator r9;
+        sun.nio.ch.SelectionKeyImpl r11;
+        sun.nio.ch.SelChImpl $r12;
+
+        r0 := @this: sun.nio.ch.KQueueSelectorImpl;
+        $z0 = r0.<sun.nio.ch.KQueueSelectorImpl: boolean closed>;
+        if $z0 != 0 goto label10;
+
+        r0.<sun.nio.ch.KQueueSelectorImpl: boolean closed> = 1;
+        $r4 = r0.<sun.nio.ch.KQueueSelectorImpl: java.lang.Object interruptLock>;
+        r1 = $r4;
+        entermonitor $r4;
+
+     label0:
+        r0.<sun.nio.ch.KQueueSelectorImpl: boolean interruptTriggered> = 1;
+        exitmonitor r1;
+
+     label1:
+        goto label5;
+
+     label2:
+        $r5 := @caughtexception;
+
+     label3:
+        r2 = $r5;
+        exitmonitor r1;
+
+     label4:
+        throw r2;
+
+     label5:
+        $i0 = r0.<sun.nio.ch.KQueueSelectorImpl: int fd0>;
+        staticinvoke <sun.nio.ch.FileDispatcherImpl: void closeIntFD(int)>($i0);
+        $i1 = r0.<sun.nio.ch.KQueueSelectorImpl: int fd1>;
+        staticinvoke <sun.nio.ch.FileDispatcherImpl: void closeIntFD(int)>($i1);
+        $r6 = r0.<sun.nio.ch.KQueueSelectorImpl: sun.nio.ch.KQueueArrayWrapper kqueueWrapper>;
+        if $r6 == null goto label9;
+
+        $r7 = r0.<sun.nio.ch.KQueueSelectorImpl: sun.nio.ch.KQueueArrayWrapper kqueueWrapper>;
+        virtualinvoke $r7.<sun.nio.ch.KQueueArrayWrapper: void close()>();
+        r0.<sun.nio.ch.KQueueSelectorImpl: sun.nio.ch.KQueueArrayWrapper kqueueWrapper> = null;
+        r0.<sun.nio.ch.KQueueSelectorImpl: java.util.Set selectedKeys> = null;
+        $r8 = r0.<sun.nio.ch.KQueueSelectorImpl: java.util.HashSet keys>;
+        r9 = virtualinvoke $r8.<java.util.HashSet: java.util.Iterator iterator()>();
+
+     label6:
+        $z1 = interfaceinvoke r9.<java.util.Iterator: boolean hasNext()>();
+        if $z1 == 0 goto label8;
+
+        $r10 = interfaceinvoke r9.<java.util.Iterator: java.lang.Object next()>();
+        r11 = (sun.nio.ch.SelectionKeyImpl) $r10;
+        virtualinvoke r0.<sun.nio.ch.KQueueSelectorImpl: void deregister(java.nio.channels.spi.AbstractSelectionKey)>(r11);
+        r3 = virtualinvoke r11.<sun.nio.ch.SelectionKeyImpl: java.nio.channels.SelectableChannel channel()>();
+        $z2 = virtualinvoke r3.<java.nio.channels.SelectableChannel: boolean isOpen()>();
+        if $z2 != 0 goto label7;
+
+        $z3 = virtualinvoke r3.<java.nio.channels.SelectableChannel: boolean isRegistered()>();
+        if $z3 != 0 goto label7;
+
+        $r12 = (sun.nio.ch.SelChImpl) r3;
+        interfaceinvoke $r12.<sun.nio.ch.SelChImpl: void kill()>();
+
+     label7:
+        interfaceinvoke r9.<java.util.Iterator: void remove()>();
+        goto label6;
+
+     label8:
+        r0.<sun.nio.ch.KQueueSelectorImpl: int totalChannels> = 0;
+
+     label9:
+        r0.<sun.nio.ch.KQueueSelectorImpl: int fd0> = -1;
+        r0.<sun.nio.ch.KQueueSelectorImpl: int fd1> = -1;
+
+     label10:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    protected void implRegister(sun.nio.ch.SelectionKeyImpl)
+    {
+        sun.nio.ch.KQueueSelectorImpl r0;
+        sun.nio.ch.SelectionKeyImpl r1;
+        int i0, $i1, $i2;
+        sun.nio.ch.KQueueSelectorImpl$MapEntry $r2;
+        boolean $z0;
+        java.nio.channels.ClosedSelectorException $r3;
+        sun.nio.ch.SelChImpl $r4;
+        java.io.FileDescriptor $r5;
+        java.util.HashMap $r6;
+        java.lang.Integer $r7;
+        java.util.HashSet $r10;
+
+        r0 := @this: sun.nio.ch.KQueueSelectorImpl;
+        r1 := @parameter0: sun.nio.ch.SelectionKeyImpl;
+        $z0 = r0.<sun.nio.ch.KQueueSelectorImpl: boolean closed>;
+        if $z0 == 0 goto label0;
+
+        $r3 = new java.nio.channels.ClosedSelectorException;
+        specialinvoke $r3.<java.nio.channels.ClosedSelectorException: void <init>()>();
+        throw $r3;
+
+     label0:
+        $r4 = r1.<sun.nio.ch.SelectionKeyImpl: sun.nio.ch.SelChImpl channel>;
+        $r5 = interfaceinvoke $r4.<sun.nio.ch.SelChImpl: java.io.FileDescriptor getFD()>();
+        i0 = staticinvoke <sun.nio.ch.IOUtil: int fdVal(java.io.FileDescriptor)>($r5);
+        $r6 = r0.<sun.nio.ch.KQueueSelectorImpl: java.util.HashMap fdMap>;
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+        $r2 = new sun.nio.ch.KQueueSelectorImpl$MapEntry;
+        specialinvoke $r2.<sun.nio.ch.KQueueSelectorImpl$MapEntry: void <init>(sun.nio.ch.SelectionKeyImpl)>(r1);
+        virtualinvoke $r6.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>($r7, $r2);
+        $i1 = r0.<sun.nio.ch.KQueueSelectorImpl: int totalChannels>;
+        $i2 = $i1 + 1;
+        r0.<sun.nio.ch.KQueueSelectorImpl: int totalChannels> = $i2;
+        $r10 = r0.<sun.nio.ch.KQueueSelectorImpl: java.util.HashSet keys>;
+        virtualinvoke $r10.<java.util.HashSet: boolean add(java.lang.Object)>(r1);
+        return;
+    }
+
+    protected void implDereg(sun.nio.ch.SelectionKeyImpl) throws java.io.IOException
+    {
+        sun.nio.ch.KQueueSelectorImpl r0;
+        sun.nio.ch.SelectionKeyImpl r1;
+        int i0, $i1, $i2;
+        java.nio.channels.SelectableChannel r2;
+        sun.nio.ch.SelChImpl $r3, $r8, $r12;
+        java.util.HashMap $r4;
+        java.lang.Integer $r5;
+        sun.nio.ch.KQueueArrayWrapper $r7;
+        java.util.HashSet $r10;
+        java.util.Set $r11;
+        boolean $z2, $z3;
+
+        r0 := @this: sun.nio.ch.KQueueSelectorImpl;
+        r1 := @parameter0: sun.nio.ch.SelectionKeyImpl;
+        $r3 = r1.<sun.nio.ch.SelectionKeyImpl: sun.nio.ch.SelChImpl channel>;
+        i0 = interfaceinvoke $r3.<sun.nio.ch.SelChImpl: int getFDVal()>();
+        $r4 = r0.<sun.nio.ch.KQueueSelectorImpl: java.util.HashMap fdMap>;
+        $r5 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(i0);
+        virtualinvoke $r4.<java.util.HashMap: java.lang.Object remove(java.lang.Object)>($r5);
+        $r7 = r0.<sun.nio.ch.KQueueSelectorImpl: sun.nio.ch.KQueueArrayWrapper kqueueWrapper>;
+        $r8 = r1.<sun.nio.ch.SelectionKeyImpl: sun.nio.ch.SelChImpl channel>;
+        virtualinvoke $r7.<sun.nio.ch.KQueueArrayWrapper: void release(sun.nio.ch.SelChImpl)>($r8);
+        $i1 = r0.<sun.nio.ch.KQueueSelectorImpl: int totalChannels>;
+        $i2 = $i1 - 1;
+        r0.<sun.nio.ch.KQueueSelectorImpl: int totalChannels> = $i2;
+        $r10 = r0.<sun.nio.ch.KQueueSelectorImpl: java.util.HashSet keys>;
+        virtualinvoke $r10.<java.util.HashSet: boolean remove(java.lang.Object)>(r1);
+        $r11 = r0.<sun.nio.ch.KQueueSelectorImpl: java.util.Set selectedKeys>;
+        interfaceinvoke $r11.<java.util.Set: boolean remove(java.lang.Object)>(r1);
+        virtualinvoke r0.<sun.nio.ch.KQueueSelectorImpl: void deregister(java.nio.channels.spi.AbstractSelectionKey)>(r1);
+        r2 = virtualinvoke r1.<sun.nio.ch.SelectionKeyImpl: java.nio.channels.SelectableChannel channel()>();
+        $z2 = virtualinvoke r2.<java.nio.channels.SelectableChannel: boolean isOpen()>();
+        if $z2 != 0 goto label0;
+
+        $z3 = virtualinvoke r2.<java.nio.channels.SelectableChannel: boolean isRegistered()>();
+        if $z3 != 0 goto label0;
+
+        $r12 = (sun.nio.ch.SelChImpl) r2;
+        interfaceinvoke $r12.<sun.nio.ch.SelChImpl: void kill()>();
+
+     label0:
+        return;
+    }
+
+    public void putEventOps(sun.nio.ch.SelectionKeyImpl, int)
+    {
+        sun.nio.ch.KQueueSelectorImpl r0;
+        sun.nio.ch.SelectionKeyImpl r1;
+        int i0;
+        boolean $z0;
+        java.nio.channels.ClosedSelectorException $r2;
+        sun.nio.ch.KQueueArrayWrapper $r3;
+        sun.nio.ch.SelChImpl $r4;
+
+        r0 := @this: sun.nio.ch.KQueueSelectorImpl;
+        r1 := @parameter0: sun.nio.ch.SelectionKeyImpl;
+        i0 := @parameter1: int;
+        $z0 = r0.<sun.nio.ch.KQueueSelectorImpl: boolean closed>;
+        if $z0 == 0 goto label0;
+
+        $r2 = new java.nio.channels.ClosedSelectorException;
+        specialinvoke $r2.<java.nio.channels.ClosedSelectorException: void <init>()>();
+        throw $r2;
+
+     label0:
+        $r3 = r0.<sun.nio.ch.KQueueSelectorImpl: sun.nio.ch.KQueueArrayWrapper kqueueWrapper>;
+        $r4 = r1.<sun.nio.ch.SelectionKeyImpl: sun.nio.ch.SelChImpl channel>;
+        virtualinvoke $r3.<sun.nio.ch.KQueueArrayWrapper: void setInterest(sun.nio.ch.SelChImpl,int)>($r4, i0);
+        return;
+    }
+
+    public java.nio.channels.Selector wakeup()
+    {
+        sun.nio.ch.KQueueSelectorImpl r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r5;
+        boolean $z0;
+        sun.nio.ch.KQueueArrayWrapper $r4;
+
+        r0 := @this: sun.nio.ch.KQueueSelectorImpl;
+        $r3 = r0.<sun.nio.ch.KQueueSelectorImpl: java.lang.Object interruptLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $z0 = r0.<sun.nio.ch.KQueueSelectorImpl: boolean interruptTriggered>;
+        if $z0 != 0 goto label1;
+
+        $r4 = r0.<sun.nio.ch.KQueueSelectorImpl: sun.nio.ch.KQueueArrayWrapper kqueueWrapper>;
+        virtualinvoke $r4.<sun.nio.ch.KQueueArrayWrapper: void interrupt()>();
+        r0.<sun.nio.ch.KQueueSelectorImpl: boolean interruptTriggered> = 1;
+
+     label1:
+        exitmonitor r1;
+
+     label2:
+        goto label6;
+
+     label3:
+        $r5 := @caughtexception;
+
+     label4:
+        r2 = $r5;
+        exitmonitor r1;
+
+     label5:
+        throw r2;
+
+     label6:
+        return r0;
+
+        catch java.lang.Throwable from label0 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    static void <clinit>()
+    {
+        staticinvoke <sun.nio.ch.Util: void load()>();
+        return;
+    }
+}

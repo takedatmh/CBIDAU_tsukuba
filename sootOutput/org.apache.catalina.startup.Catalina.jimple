@@ -1,0 +1,1668 @@
+public class org.apache.catalina.startup.Catalina extends java.lang.Object
+{
+    protected static final org.apache.tomcat.util.res.StringManager sm;
+    protected boolean await;
+    protected java.lang.String configFile;
+    protected java.lang.ClassLoader parentClassLoader;
+    protected org.apache.catalina.Server server;
+    protected boolean starting;
+    protected boolean stopping;
+    protected boolean useShutdownHook;
+    protected java.lang.Thread shutdownHook;
+    protected boolean useNaming;
+    protected boolean loaded;
+    private static final org.apache.juli.logging.Log log;
+
+    static void <clinit>()
+    {
+        org.apache.tomcat.util.res.StringManager $r0;
+        org.apache.juli.logging.Log $r1;
+
+        $r0 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String)>("org.apache.catalina.startup");
+        <org.apache.catalina.startup.Catalina: org.apache.tomcat.util.res.StringManager sm> = $r0;
+        $r1 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/catalina/startup/Catalina");
+        <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log> = $r1;
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.catalina.startup.Catalina r0;
+        java.lang.Class $r1;
+        java.lang.ClassLoader $r2;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<org.apache.catalina.startup.Catalina: boolean await> = 0;
+        r0.<org.apache.catalina.startup.Catalina: java.lang.String configFile> = "conf/server.xml";
+        $r1 = class "org/apache/catalina/startup/Catalina";
+        $r2 = virtualinvoke $r1.<java.lang.Class: java.lang.ClassLoader getClassLoader()>();
+        r0.<org.apache.catalina.startup.Catalina: java.lang.ClassLoader parentClassLoader> = $r2;
+        r0.<org.apache.catalina.startup.Catalina: org.apache.catalina.Server server> = null;
+        r0.<org.apache.catalina.startup.Catalina: boolean starting> = 0;
+        r0.<org.apache.catalina.startup.Catalina: boolean stopping> = 0;
+        r0.<org.apache.catalina.startup.Catalina: boolean useShutdownHook> = 1;
+        r0.<org.apache.catalina.startup.Catalina: java.lang.Thread shutdownHook> = null;
+        r0.<org.apache.catalina.startup.Catalina: boolean useNaming> = 1;
+        r0.<org.apache.catalina.startup.Catalina: boolean loaded> = 0;
+        virtualinvoke r0.<org.apache.catalina.startup.Catalina: void setSecurityProtection()>();
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void preload()>();
+        return;
+    }
+
+    public void setConfig(java.lang.String)
+    {
+        org.apache.catalina.startup.Catalina r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.catalina.startup.Catalina: java.lang.String configFile> = r1;
+        return;
+    }
+
+    public void setConfigFile(java.lang.String)
+    {
+        org.apache.catalina.startup.Catalina r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.catalina.startup.Catalina: java.lang.String configFile> = r1;
+        return;
+    }
+
+    public java.lang.String getConfigFile()
+    {
+        org.apache.catalina.startup.Catalina r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        $r1 = r0.<org.apache.catalina.startup.Catalina: java.lang.String configFile>;
+        return $r1;
+    }
+
+    public void setUseShutdownHook(boolean)
+    {
+        org.apache.catalina.startup.Catalina r0;
+        boolean z0;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.catalina.startup.Catalina: boolean useShutdownHook> = z0;
+        return;
+    }
+
+    public boolean getUseShutdownHook()
+    {
+        org.apache.catalina.startup.Catalina r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        $z0 = r0.<org.apache.catalina.startup.Catalina: boolean useShutdownHook>;
+        return $z0;
+    }
+
+    public void setParentClassLoader(java.lang.ClassLoader)
+    {
+        org.apache.catalina.startup.Catalina r0;
+        java.lang.ClassLoader r1;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        r1 := @parameter0: java.lang.ClassLoader;
+        r0.<org.apache.catalina.startup.Catalina: java.lang.ClassLoader parentClassLoader> = r1;
+        return;
+    }
+
+    public java.lang.ClassLoader getParentClassLoader()
+    {
+        org.apache.catalina.startup.Catalina r0;
+        java.lang.ClassLoader $r1, $r2, $r3;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        $r1 = r0.<org.apache.catalina.startup.Catalina: java.lang.ClassLoader parentClassLoader>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<org.apache.catalina.startup.Catalina: java.lang.ClassLoader parentClassLoader>;
+        return $r2;
+
+     label0:
+        $r3 = staticinvoke <java.lang.ClassLoader: java.lang.ClassLoader getSystemClassLoader()>();
+        return $r3;
+    }
+
+    public void setServer(org.apache.catalina.Server)
+    {
+        org.apache.catalina.startup.Catalina r0;
+        org.apache.catalina.Server r1;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        r1 := @parameter0: org.apache.catalina.Server;
+        r0.<org.apache.catalina.startup.Catalina: org.apache.catalina.Server server> = r1;
+        return;
+    }
+
+    public org.apache.catalina.Server getServer()
+    {
+        org.apache.catalina.startup.Catalina r0;
+        org.apache.catalina.Server $r1;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        $r1 = r0.<org.apache.catalina.startup.Catalina: org.apache.catalina.Server server>;
+        return $r1;
+    }
+
+    public boolean isUseNaming()
+    {
+        org.apache.catalina.startup.Catalina r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        $z0 = r0.<org.apache.catalina.startup.Catalina: boolean useNaming>;
+        return $z0;
+    }
+
+    public void setUseNaming(boolean)
+    {
+        org.apache.catalina.startup.Catalina r0;
+        boolean z0;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.catalina.startup.Catalina: boolean useNaming> = z0;
+        return;
+    }
+
+    public void setAwait(boolean)
+    {
+        org.apache.catalina.startup.Catalina r0;
+        boolean z0;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        z0 := @parameter0: boolean;
+        r0.<org.apache.catalina.startup.Catalina: boolean await> = z0;
+        return;
+    }
+
+    public boolean isAwait()
+    {
+        org.apache.catalina.startup.Catalina r0;
+        boolean $z0;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        $z0 = r0.<org.apache.catalina.startup.Catalina: boolean await>;
+        return $z0;
+    }
+
+    protected boolean arguments(java.lang.String[])
+    {
+        org.apache.catalina.startup.Catalina r0;
+        java.lang.String[] r1;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6;
+        int i0, $i1, $i2;
+        java.lang.String $r2, $r3, $r4, $r5, $r6, $r7, $r8;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        r1 := @parameter0: java.lang.String[];
+        z0 = 0;
+        $i1 = lengthof r1;
+        if $i1 >= 1 goto label0;
+
+        virtualinvoke r0.<org.apache.catalina.startup.Catalina: void usage()>();
+        return 0;
+
+     label0:
+        i0 = 0;
+        goto label10;
+
+     label1:
+        if z0 == 0 goto label2;
+
+        $r2 = r1[i0];
+        r0.<org.apache.catalina.startup.Catalina: java.lang.String configFile> = $r2;
+        z0 = 0;
+        goto label9;
+
+     label2:
+        $r3 = r1[i0];
+        $z1 = virtualinvoke $r3.<java.lang.String: boolean equals(java.lang.Object)>("-config");
+        if $z1 == 0 goto label3;
+
+        z0 = 1;
+        goto label9;
+
+     label3:
+        $r4 = r1[i0];
+        $z2 = virtualinvoke $r4.<java.lang.String: boolean equals(java.lang.Object)>("-nonaming");
+        if $z2 == 0 goto label4;
+
+        virtualinvoke r0.<org.apache.catalina.startup.Catalina: void setUseNaming(boolean)>(0);
+        goto label9;
+
+     label4:
+        $r5 = r1[i0];
+        $z3 = virtualinvoke $r5.<java.lang.String: boolean equals(java.lang.Object)>("-help");
+        if $z3 == 0 goto label5;
+
+        virtualinvoke r0.<org.apache.catalina.startup.Catalina: void usage()>();
+        return 0;
+
+     label5:
+        $r6 = r1[i0];
+        $z4 = virtualinvoke $r6.<java.lang.String: boolean equals(java.lang.Object)>("start");
+        if $z4 == 0 goto label6;
+
+        r0.<org.apache.catalina.startup.Catalina: boolean starting> = 1;
+        r0.<org.apache.catalina.startup.Catalina: boolean stopping> = 0;
+        goto label9;
+
+     label6:
+        $r7 = r1[i0];
+        $z5 = virtualinvoke $r7.<java.lang.String: boolean equals(java.lang.Object)>("configtest");
+        if $z5 == 0 goto label7;
+
+        r0.<org.apache.catalina.startup.Catalina: boolean starting> = 1;
+        r0.<org.apache.catalina.startup.Catalina: boolean stopping> = 0;
+        goto label9;
+
+     label7:
+        $r8 = r1[i0];
+        $z6 = virtualinvoke $r8.<java.lang.String: boolean equals(java.lang.Object)>("stop");
+        if $z6 == 0 goto label8;
+
+        r0.<org.apache.catalina.startup.Catalina: boolean starting> = 0;
+        r0.<org.apache.catalina.startup.Catalina: boolean stopping> = 1;
+        goto label9;
+
+     label8:
+        virtualinvoke r0.<org.apache.catalina.startup.Catalina: void usage()>();
+        return 0;
+
+     label9:
+        i0 = i0 + 1;
+
+     label10:
+        $i2 = lengthof r1;
+        if i0 < $i2 goto label1;
+
+        return 1;
+    }
+
+    protected java.io.File configFile()
+    {
+        org.apache.catalina.startup.Catalina r0;
+        java.io.File $r1, r2, $r4;
+        java.lang.String $r3, $r5, $r6;
+        boolean $z0;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        $r1 = new java.io.File;
+        $r3 = r0.<org.apache.catalina.startup.Catalina: java.lang.String configFile>;
+        specialinvoke $r1.<java.io.File: void <init>(java.lang.String)>($r3);
+        r2 = $r1;
+        $z0 = virtualinvoke r2.<java.io.File: boolean isAbsolute()>();
+        if $z0 != 0 goto label0;
+
+        $r4 = new java.io.File;
+        $r5 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("catalina.base");
+        $r6 = r0.<org.apache.catalina.startup.Catalina: java.lang.String configFile>;
+        specialinvoke $r4.<java.io.File: void <init>(java.lang.String,java.lang.String)>($r5, $r6);
+        r2 = $r4;
+
+     label0:
+        return r2;
+    }
+
+    protected org.apache.tomcat.util.digester.Digester createStartDigester()
+    {
+        org.apache.catalina.startup.Catalina r0;
+        long l0, l1, $l2;
+        org.apache.tomcat.util.digester.Digester r1, $r4;
+        java.util.HashMap r2, $r5;
+        java.util.ArrayList r3, $r6;
+        org.apache.catalina.startup.ConnectorCreateRule $r8;
+        org.apache.catalina.startup.SetAllPropertiesRule $r9;
+        java.lang.String[] $r10;
+        org.apache.catalina.startup.NamingRuleSet $r11, $r15;
+        org.apache.catalina.startup.EngineRuleSet $r12;
+        org.apache.catalina.startup.HostRuleSet $r13;
+        org.apache.catalina.startup.ContextRuleSet $r14;
+        org.apache.catalina.startup.SetParentClassLoaderRule $r16;
+        java.lang.ClassLoader $r17;
+        org.apache.juli.logging.Log $r18, $r19;
+        boolean $z1;
+        java.lang.StringBuilder $r20, $r21;
+        java.lang.String $r22;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        l0 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        $r4 = new org.apache.tomcat.util.digester.Digester;
+        specialinvoke $r4.<org.apache.tomcat.util.digester.Digester: void <init>()>();
+        r1 = $r4;
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void setValidating(boolean)>(0);
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void setRulesValidation(boolean)>(1);
+        $r5 = new java.util.HashMap;
+        specialinvoke $r5.<java.util.HashMap: void <init>()>();
+        r2 = $r5;
+        $r6 = new java.util.ArrayList;
+        specialinvoke $r6.<java.util.ArrayList: void <init>()>();
+        r3 = $r6;
+        virtualinvoke r3.<java.util.ArrayList: boolean add(java.lang.Object)>("className");
+        virtualinvoke r2.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(class "java/lang/Object", r3);
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void setFakeAttributes(java.util.Map)>(r2);
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void setUseContextClassLoader(boolean)>(1);
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addObjectCreate(java.lang.String,java.lang.String,java.lang.String)>("Server", "org.apache.catalina.core.StandardServer", "className");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addSetProperties(java.lang.String)>("Server");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addSetNext(java.lang.String,java.lang.String,java.lang.String)>("Server", "setServer", "org.apache.catalina.Server");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addObjectCreate(java.lang.String,java.lang.String)>("Server/GlobalNamingResources", "org.apache.catalina.deploy.NamingResources");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addSetProperties(java.lang.String)>("Server/GlobalNamingResources");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addSetNext(java.lang.String,java.lang.String,java.lang.String)>("Server/GlobalNamingResources", "setGlobalNamingResources", "org.apache.catalina.deploy.NamingResources");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addObjectCreate(java.lang.String,java.lang.String,java.lang.String)>("Server/Listener", null, "className");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addSetProperties(java.lang.String)>("Server/Listener");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addSetNext(java.lang.String,java.lang.String,java.lang.String)>("Server/Listener", "addLifecycleListener", "org.apache.catalina.LifecycleListener");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addObjectCreate(java.lang.String,java.lang.String,java.lang.String)>("Server/Service", "org.apache.catalina.core.StandardService", "className");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addSetProperties(java.lang.String)>("Server/Service");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addSetNext(java.lang.String,java.lang.String,java.lang.String)>("Server/Service", "addService", "org.apache.catalina.Service");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addObjectCreate(java.lang.String,java.lang.String,java.lang.String)>("Server/Service/Listener", null, "className");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addSetProperties(java.lang.String)>("Server/Service/Listener");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addSetNext(java.lang.String,java.lang.String,java.lang.String)>("Server/Service/Listener", "addLifecycleListener", "org.apache.catalina.LifecycleListener");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addObjectCreate(java.lang.String,java.lang.String,java.lang.String)>("Server/Service/Executor", "org.apache.catalina.core.StandardThreadExecutor", "className");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addSetProperties(java.lang.String)>("Server/Service/Executor");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addSetNext(java.lang.String,java.lang.String,java.lang.String)>("Server/Service/Executor", "addExecutor", "org.apache.catalina.Executor");
+        $r8 = new org.apache.catalina.startup.ConnectorCreateRule;
+        specialinvoke $r8.<org.apache.catalina.startup.ConnectorCreateRule: void <init>()>();
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addRule(java.lang.String,org.apache.tomcat.util.digester.Rule)>("Server/Service/Connector", $r8);
+        $r9 = new org.apache.catalina.startup.SetAllPropertiesRule;
+        $r10 = newarray (java.lang.String)[1];
+        $r10[0] = "executor";
+        specialinvoke $r9.<org.apache.catalina.startup.SetAllPropertiesRule: void <init>(java.lang.String[])>($r10);
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addRule(java.lang.String,org.apache.tomcat.util.digester.Rule)>("Server/Service/Connector", $r9);
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addSetNext(java.lang.String,java.lang.String,java.lang.String)>("Server/Service/Connector", "addConnector", "org.apache.catalina.connector.Connector");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addObjectCreate(java.lang.String,java.lang.String,java.lang.String)>("Server/Service/Connector/Listener", null, "className");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addSetProperties(java.lang.String)>("Server/Service/Connector/Listener");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addSetNext(java.lang.String,java.lang.String,java.lang.String)>("Server/Service/Connector/Listener", "addLifecycleListener", "org.apache.catalina.LifecycleListener");
+        $r11 = new org.apache.catalina.startup.NamingRuleSet;
+        specialinvoke $r11.<org.apache.catalina.startup.NamingRuleSet: void <init>(java.lang.String)>("Server/GlobalNamingResources/");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addRuleSet(org.apache.tomcat.util.digester.RuleSet)>($r11);
+        $r12 = new org.apache.catalina.startup.EngineRuleSet;
+        specialinvoke $r12.<org.apache.catalina.startup.EngineRuleSet: void <init>(java.lang.String)>("Server/Service/");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addRuleSet(org.apache.tomcat.util.digester.RuleSet)>($r12);
+        $r13 = new org.apache.catalina.startup.HostRuleSet;
+        specialinvoke $r13.<org.apache.catalina.startup.HostRuleSet: void <init>(java.lang.String)>("Server/Service/Engine/");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addRuleSet(org.apache.tomcat.util.digester.RuleSet)>($r13);
+        $r14 = new org.apache.catalina.startup.ContextRuleSet;
+        specialinvoke $r14.<org.apache.catalina.startup.ContextRuleSet: void <init>(java.lang.String)>("Server/Service/Engine/Host/");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addRuleSet(org.apache.tomcat.util.digester.RuleSet)>($r14);
+        specialinvoke r0.<org.apache.catalina.startup.Catalina: void addClusterRuleSet(org.apache.tomcat.util.digester.Digester,java.lang.String)>(r1, "Server/Service/Engine/Host/Cluster/");
+        $r15 = new org.apache.catalina.startup.NamingRuleSet;
+        specialinvoke $r15.<org.apache.catalina.startup.NamingRuleSet: void <init>(java.lang.String)>("Server/Service/Engine/Host/Context/");
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addRuleSet(org.apache.tomcat.util.digester.RuleSet)>($r15);
+        $r16 = new org.apache.catalina.startup.SetParentClassLoaderRule;
+        $r17 = r0.<org.apache.catalina.startup.Catalina: java.lang.ClassLoader parentClassLoader>;
+        specialinvoke $r16.<org.apache.catalina.startup.SetParentClassLoaderRule: void <init>(java.lang.ClassLoader)>($r17);
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addRule(java.lang.String,org.apache.tomcat.util.digester.Rule)>("Server/Service/Engine", $r16);
+        specialinvoke r0.<org.apache.catalina.startup.Catalina: void addClusterRuleSet(org.apache.tomcat.util.digester.Digester,java.lang.String)>(r1, "Server/Service/Engine/Cluster/");
+        l1 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        $r18 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $z1 = interfaceinvoke $r18.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z1 == 0 goto label0;
+
+        $r19 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $r20 = new java.lang.StringBuilder;
+        specialinvoke $r20.<java.lang.StringBuilder: void <init>(java.lang.String)>("Digester for server.xml created ");
+        $l2 = l1 - l0;
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.StringBuilder append(long)>($l2);
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r19.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r22);
+
+     label0:
+        return r1;
+    }
+
+    private void addClusterRuleSet(org.apache.tomcat.util.digester.Digester, java.lang.String)
+    {
+        org.apache.catalina.startup.Catalina r0;
+        org.apache.tomcat.util.digester.Digester r1;
+        java.lang.String r2, $r17, $r18, $r20, $r22, $r23, $r30, $r31, $r33, $r35, $r36;
+        null_type n0, n1;
+        org.apache.tomcat.util.digester.RuleSet r3;
+        java.lang.StringBuilder $r4, $r19, $r21, $r28, $r32, $r34;
+        java.lang.Class r5, $r16, $r29;
+        java.lang.Class[] $r6;
+        java.lang.reflect.Constructor r7;
+        java.lang.Object[] $r8, $r15, $r27;
+        java.lang.Object $r9;
+        java.lang.Exception $r10, r11;
+        org.apache.juli.logging.Log $r12, $r13, $r24, $r25;
+        boolean $z0, $z1;
+        org.apache.tomcat.util.res.StringManager $r14, $r26;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        r1 := @parameter0: org.apache.tomcat.util.digester.Digester;
+        r2 := @parameter1: java.lang.String;
+        n0 = null;
+        n1 = null;
+
+     label0:
+        r5 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>("org.apache.catalina.ha.ClusterRuleSet");
+        $r6 = newarray (java.lang.Class)[1];
+        $r6[0] = class "java/lang/String";
+        r7 = virtualinvoke r5.<java.lang.Class: java.lang.reflect.Constructor getConstructor(java.lang.Class[])>($r6);
+        $r8 = newarray (java.lang.Object)[1];
+        $r8[0] = r2;
+        $r9 = virtualinvoke r7.<java.lang.reflect.Constructor: java.lang.Object newInstance(java.lang.Object[])>($r8);
+        r3 = (org.apache.tomcat.util.digester.RuleSet) $r9;
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void addRuleSet(org.apache.tomcat.util.digester.RuleSet)>(r3);
+
+     label1:
+        goto label4;
+
+     label2:
+        $r10 := @caughtexception;
+        r11 = $r10;
+        $r12 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $z0 = interfaceinvoke $r12.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label3;
+
+        $r13 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $r14 = <org.apache.catalina.startup.Catalina: org.apache.tomcat.util.res.StringManager sm>;
+        $r15 = newarray (java.lang.Object)[1];
+        $r4 = new java.lang.StringBuilder;
+        $r16 = virtualinvoke r11.<java.lang.Object: java.lang.Class getClass()>();
+        $r17 = virtualinvoke $r16.<java.lang.Class: java.lang.String getName()>();
+        $r18 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r17);
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>($r18);
+        $r19 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(": ");
+        $r20 = virtualinvoke r11.<java.lang.Exception: java.lang.String getMessage()>();
+        $r21 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r20);
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r15[0] = $r22;
+        $r23 = virtualinvoke $r14.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("catalina.noCluster", $r15);
+        interfaceinvoke $r13.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r23, r11);
+        goto label4;
+
+     label3:
+        $r24 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $z1 = interfaceinvoke $r24.<org.apache.juli.logging.Log: boolean isInfoEnabled()>();
+        if $z1 == 0 goto label4;
+
+        $r25 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $r26 = <org.apache.catalina.startup.Catalina: org.apache.tomcat.util.res.StringManager sm>;
+        $r27 = newarray (java.lang.Object)[1];
+        $r28 = new java.lang.StringBuilder;
+        $r29 = virtualinvoke r11.<java.lang.Object: java.lang.Class getClass()>();
+        $r30 = virtualinvoke $r29.<java.lang.Class: java.lang.String getName()>();
+        $r31 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r30);
+        specialinvoke $r28.<java.lang.StringBuilder: void <init>(java.lang.String)>($r31);
+        $r32 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(": ");
+        $r33 = virtualinvoke r11.<java.lang.Exception: java.lang.String getMessage()>();
+        $r34 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r33);
+        $r35 = virtualinvoke $r34.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r27[0] = $r35;
+        $r36 = virtualinvoke $r26.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("catalina.noCluster", $r27);
+        interfaceinvoke $r25.<org.apache.juli.logging.Log: void info(java.lang.Object)>($r36);
+
+     label4:
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    protected org.apache.tomcat.util.digester.Digester createStopDigester()
+    {
+        org.apache.catalina.startup.Catalina r0;
+        org.apache.tomcat.util.digester.Digester $r1, r2;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        $r1 = new org.apache.tomcat.util.digester.Digester;
+        specialinvoke $r1.<org.apache.tomcat.util.digester.Digester: void <init>()>();
+        r2 = $r1;
+        virtualinvoke r2.<org.apache.tomcat.util.digester.Digester: void setUseContextClassLoader(boolean)>(1);
+        virtualinvoke r2.<org.apache.tomcat.util.digester.Digester: void addObjectCreate(java.lang.String,java.lang.String,java.lang.String)>("Server", "org.apache.catalina.core.StandardServer", "className");
+        virtualinvoke r2.<org.apache.tomcat.util.digester.Digester: void addSetProperties(java.lang.String)>("Server");
+        virtualinvoke r2.<org.apache.tomcat.util.digester.Digester: void addSetNext(java.lang.String,java.lang.String,java.lang.String)>("Server", "setServer", "org.apache.catalina.Server");
+        return r2;
+    }
+
+    public void stopServer()
+    {
+        org.apache.catalina.startup.Catalina r0;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        virtualinvoke r0.<org.apache.catalina.startup.Catalina: void stopServer(java.lang.String[])>(null);
+        return;
+    }
+
+    public void stopServer(java.lang.String[])
+    {
+        org.apache.catalina.startup.Catalina r0;
+        java.lang.String[] r1;
+        org.apache.catalina.Server r2, r27;
+        org.apache.tomcat.util.digester.Digester r3;
+        java.io.File r4;
+        java.io.FileInputStream r5, $r13;
+        org.xml.sax.InputSource r6, $r9;
+        java.io.IOException r7, $r18, $r20, r21, $r22, r23, $r42, r43, $r44, r45, $r46, r47, $r49, r50, $r51, r52, $r55, r56, $r57, r58, $r59, r60, $r61, r62;
+        java.lang.Throwable r8, $r19, $r53, r54;
+        java.net.URI $r10;
+        java.net.URL $r11;
+        java.lang.String $r12, $r31, r32, $r38, $r39, $r40, $r65;
+        java.lang.Exception $r15, r16;
+        org.apache.juli.logging.Log $r17, $r26, $r35, $r41, $r48, $r63;
+        org.apache.catalina.LifecycleException $r24, r25;
+        int $i0, $i1, i2, $i4, $i5;
+        java.net.Socket r28, $r30;
+        java.io.OutputStream r29;
+        char $c3;
+        java.net.ConnectException $r33, r34;
+        org.apache.tomcat.util.res.StringManager $r36, $r64;
+        java.lang.Object[] $r37;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        r1 := @parameter0: java.lang.String[];
+        if r1 == null goto label0;
+
+        virtualinvoke r0.<org.apache.catalina.startup.Catalina: boolean arguments(java.lang.String[])>(r1);
+
+     label0:
+        r2 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: org.apache.catalina.Server getServer()>();
+        if r2 != null goto label17;
+
+        r3 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: org.apache.tomcat.util.digester.Digester createStopDigester()>();
+        r4 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: java.io.File configFile()>();
+        r5 = null;
+
+     label1:
+        $r9 = new org.xml.sax.InputSource;
+        $r10 = virtualinvoke r4.<java.io.File: java.net.URI toURI()>();
+        $r11 = virtualinvoke $r10.<java.net.URI: java.net.URL toURL()>();
+        $r12 = virtualinvoke $r11.<java.net.URL: java.lang.String toString()>();
+        specialinvoke $r9.<org.xml.sax.InputSource: void <init>(java.lang.String)>($r12);
+        r6 = $r9;
+        $r13 = new java.io.FileInputStream;
+        specialinvoke $r13.<java.io.FileInputStream: void <init>(java.io.File)>(r4);
+        r5 = $r13;
+        virtualinvoke r6.<org.xml.sax.InputSource: void setByteStream(java.io.InputStream)>(r5);
+        virtualinvoke r3.<org.apache.tomcat.util.digester.Digester: void push(java.lang.Object)>(r0);
+        virtualinvoke r3.<org.apache.tomcat.util.digester.Digester: java.lang.Object parse(org.xml.sax.InputSource)>(r6);
+
+     label2:
+        goto label13;
+
+     label3:
+        $r15 := @caughtexception;
+        r16 = $r15;
+        $r17 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r17.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Catalina.stop: ", r16);
+        staticinvoke <java.lang.System: void exit(int)>(1);
+
+     label4:
+        if r5 == null goto label21;
+
+     label5:
+        virtualinvoke r5.<java.io.FileInputStream: void close()>();
+
+     label6:
+        goto label21;
+
+     label7:
+        $r18 := @caughtexception;
+        r7 = $r18;
+        goto label21;
+
+     label8:
+        $r19 := @caughtexception;
+        r8 = $r19;
+        if r5 == null goto label12;
+
+     label9:
+        virtualinvoke r5.<java.io.FileInputStream: void close()>();
+
+     label10:
+        goto label12;
+
+     label11:
+        $r20 := @caughtexception;
+        r21 = $r20;
+
+     label12:
+        throw r8;
+
+     label13:
+        if r5 == null goto label21;
+
+     label14:
+        virtualinvoke r5.<java.io.FileInputStream: void close()>();
+
+     label15:
+        goto label21;
+
+     label16:
+        $r22 := @caughtexception;
+        r23 = $r22;
+        goto label21;
+
+     label17:
+        interfaceinvoke r2.<org.apache.catalina.Server: void stop()>();
+
+     label18:
+        goto label20;
+
+     label19:
+        $r24 := @caughtexception;
+        r25 = $r24;
+        $r26 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r26.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Catalina.stop: ", r25);
+
+     label20:
+        return;
+
+     label21:
+        r27 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: org.apache.catalina.Server getServer()>();
+        $i0 = interfaceinvoke r27.<org.apache.catalina.Server: int getPort()>();
+        if $i0 <= 0 goto label62;
+
+        r28 = null;
+        r29 = null;
+
+     label22:
+        $r30 = new java.net.Socket;
+        $r31 = interfaceinvoke r27.<org.apache.catalina.Server: java.lang.String getAddress()>();
+        $i1 = interfaceinvoke r27.<org.apache.catalina.Server: int getPort()>();
+        specialinvoke $r30.<java.net.Socket: void <init>(java.lang.String,int)>($r31, $i1);
+        r28 = $r30;
+        r29 = virtualinvoke r28.<java.net.Socket: java.io.OutputStream getOutputStream()>();
+        r32 = interfaceinvoke r27.<org.apache.catalina.Server: java.lang.String getShutdown()>();
+        i2 = 0;
+        goto label24;
+
+     label23:
+        $c3 = virtualinvoke r32.<java.lang.String: char charAt(int)>(i2);
+        virtualinvoke r29.<java.io.OutputStream: void write(int)>($c3);
+        i2 = i2 + 1;
+
+     label24:
+        $i4 = virtualinvoke r32.<java.lang.String: int length()>();
+        if i2 < $i4 goto label23;
+
+        virtualinvoke r29.<java.io.OutputStream: void flush()>();
+
+     label25:
+        goto label54;
+
+     label26:
+        $r33 := @caughtexception;
+        r34 = $r33;
+        $r35 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $r36 = <org.apache.catalina.startup.Catalina: org.apache.tomcat.util.res.StringManager sm>;
+        $r37 = newarray (java.lang.Object)[2];
+        $r38 = interfaceinvoke r27.<org.apache.catalina.Server: java.lang.String getAddress()>();
+        $r37[0] = $r38;
+        $i5 = interfaceinvoke r27.<org.apache.catalina.Server: int getPort()>();
+        $r39 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($i5);
+        $r37[1] = $r39;
+        $r40 = virtualinvoke $r36.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("catalina.stopServer.connectException", $r37);
+        interfaceinvoke $r35.<org.apache.juli.logging.Log: void error(java.lang.Object)>($r40);
+        $r41 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r41.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Catalina.stop: ", r34);
+        staticinvoke <java.lang.System: void exit(int)>(1);
+
+     label27:
+        if r29 == null goto label31;
+
+     label28:
+        virtualinvoke r29.<java.io.OutputStream: void close()>();
+
+     label29:
+        goto label31;
+
+     label30:
+        $r42 := @caughtexception;
+        r43 = $r42;
+
+     label31:
+        if r28 == null goto label63;
+
+     label32:
+        virtualinvoke r28.<java.net.Socket: void close()>();
+
+     label33:
+        goto label63;
+
+     label34:
+        $r44 := @caughtexception;
+        r45 = $r44;
+        goto label63;
+
+     label35:
+        $r46 := @caughtexception;
+
+     label36:
+        r47 = $r46;
+        $r48 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r48.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Catalina.stop: ", r47);
+        staticinvoke <java.lang.System: void exit(int)>(1);
+
+     label37:
+        if r29 == null goto label41;
+
+     label38:
+        virtualinvoke r29.<java.io.OutputStream: void close()>();
+
+     label39:
+        goto label41;
+
+     label40:
+        $r49 := @caughtexception;
+        r50 = $r49;
+
+     label41:
+        if r28 == null goto label63;
+
+     label42:
+        virtualinvoke r28.<java.net.Socket: void close()>();
+
+     label43:
+        goto label63;
+
+     label44:
+        $r51 := @caughtexception;
+        r52 = $r51;
+        goto label63;
+
+     label45:
+        $r53 := @caughtexception;
+        r54 = $r53;
+        if r29 == null goto label49;
+
+     label46:
+        virtualinvoke r29.<java.io.OutputStream: void close()>();
+
+     label47:
+        goto label49;
+
+     label48:
+        $r55 := @caughtexception;
+        r56 = $r55;
+
+     label49:
+        if r28 == null goto label53;
+
+     label50:
+        virtualinvoke r28.<java.net.Socket: void close()>();
+
+     label51:
+        goto label53;
+
+     label52:
+        $r57 := @caughtexception;
+        r58 = $r57;
+
+     label53:
+        throw r54;
+
+     label54:
+        if r29 == null goto label58;
+
+     label55:
+        virtualinvoke r29.<java.io.OutputStream: void close()>();
+
+     label56:
+        goto label58;
+
+     label57:
+        $r59 := @caughtexception;
+        r60 = $r59;
+
+     label58:
+        if r28 == null goto label63;
+
+     label59:
+        virtualinvoke r28.<java.net.Socket: void close()>();
+
+     label60:
+        goto label63;
+
+     label61:
+        $r61 := @caughtexception;
+        r62 = $r61;
+        goto label63;
+
+     label62:
+        $r63 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $r64 = <org.apache.catalina.startup.Catalina: org.apache.tomcat.util.res.StringManager sm>;
+        $r65 = virtualinvoke $r64.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("catalina.stopServer");
+        interfaceinvoke $r63.<org.apache.juli.logging.Log: void error(java.lang.Object)>($r65);
+        staticinvoke <java.lang.System: void exit(int)>(1);
+
+     label63:
+        return;
+
+        catch java.lang.Exception from label1 to label2 with label3;
+        catch java.io.IOException from label5 to label6 with label7;
+        catch java.lang.Throwable from label1 to label4 with label8;
+        catch java.io.IOException from label9 to label10 with label11;
+        catch java.io.IOException from label14 to label15 with label16;
+        catch org.apache.catalina.LifecycleException from label17 to label18 with label19;
+        catch java.net.ConnectException from label22 to label25 with label26;
+        catch java.io.IOException from label28 to label29 with label30;
+        catch java.io.IOException from label32 to label33 with label34;
+        catch java.io.IOException from label22 to label25 with label35;
+        catch java.io.IOException from label38 to label39 with label40;
+        catch java.io.IOException from label42 to label43 with label44;
+        catch java.lang.Throwable from label22 to label27 with label45;
+        catch java.lang.Throwable from label36 to label37 with label45;
+        catch java.io.IOException from label46 to label47 with label48;
+        catch java.io.IOException from label50 to label51 with label52;
+        catch java.io.IOException from label55 to label56 with label57;
+        catch java.io.IOException from label59 to label60 with label61;
+    }
+
+    public void load()
+    {
+        org.apache.catalina.startup.Catalina r0;
+        long l0, l1, $l2, $l3;
+        org.apache.tomcat.util.digester.Digester r1;
+        org.xml.sax.InputSource r2, $r9, $r22, $r38;
+        java.io.InputStream r3;
+        java.io.File r4;
+        java.lang.Exception r5, $r13, $r28, r29, $r43, r44, $r79, r80;
+        java.io.IOException r6, $r65, $r77, r78, $r87, r88, $r90, r91, $r92, r93;
+        java.lang.Throwable r7, $r89;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+        java.io.FileInputStream $r8;
+        java.net.URI $r10;
+        java.net.URL $r11, $r26, $r41;
+        java.lang.String $r12, $r18, $r21, $r25, $r27, $r34, $r35, $r42, $r49, $r54, $r55, $r57, $r58, $r62, $r63, $r71, $r74, $r76, $r83, $r86, $r105;
+        org.apache.juli.logging.Log $r14, $r15, $r30, $r31, $r45, $r46, $r50, $r59, $r64, $r69, $r81, $r99, $r100, $r101;
+        org.apache.tomcat.util.res.StringManager $r16, $r32, $r47, $r51, $r60;
+        java.lang.Object[] $r17, $r33, $r48, $r52, $r61;
+        java.lang.Class $r19, $r23, $r36, $r39;
+        java.lang.ClassLoader $r20, $r24, $r37, $r40;
+        java.lang.StringBuilder $r53, $r56, $r70, $r72, $r73, $r75, $r82, $r84, $r85, $r102, $r103, $r104;
+        org.xml.sax.SAXParseException $r67, r68;
+        org.apache.catalina.Server $r94, $r95;
+        org.apache.catalina.LifecycleException $r96, r97;
+        java.lang.Error $r98;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        $z0 = r0.<org.apache.catalina.startup.Catalina: boolean loaded>;
+        if $z0 == 0 goto label0;
+
+        return;
+
+     label0:
+        r0.<org.apache.catalina.startup.Catalina: boolean loaded> = 1;
+        l0 = staticinvoke <java.lang.System: long nanoTime()>();
+        virtualinvoke r0.<org.apache.catalina.startup.Catalina: void initDirs()>();
+        virtualinvoke r0.<org.apache.catalina.startup.Catalina: void initNaming()>();
+        r1 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: org.apache.tomcat.util.digester.Digester createStartDigester()>();
+        r2 = null;
+        r3 = null;
+        r4 = null;
+
+     label1:
+        r4 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: java.io.File configFile()>();
+        $r8 = new java.io.FileInputStream;
+        specialinvoke $r8.<java.io.FileInputStream: void <init>(java.io.File)>(r4);
+        r3 = $r8;
+        $r9 = new org.xml.sax.InputSource;
+        $r10 = virtualinvoke r4.<java.io.File: java.net.URI toURI()>();
+        $r11 = virtualinvoke $r10.<java.net.URI: java.net.URL toURL()>();
+        $r12 = virtualinvoke $r11.<java.net.URL: java.lang.String toString()>();
+        specialinvoke $r9.<org.xml.sax.InputSource: void <init>(java.lang.String)>($r12);
+        r2 = $r9;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r13 := @caughtexception;
+        r5 = $r13;
+        $r14 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $z1 = interfaceinvoke $r14.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z1 == 0 goto label4;
+
+        $r15 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $r16 = <org.apache.catalina.startup.Catalina: org.apache.tomcat.util.res.StringManager sm>;
+        $r17 = newarray (java.lang.Object)[1];
+        $r17[0] = r4;
+        $r18 = virtualinvoke $r16.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("catalina.configFail", $r17);
+        interfaceinvoke $r15.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r18, r5);
+
+     label4:
+        if r3 != null goto label8;
+
+     label5:
+        $r19 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+        $r20 = virtualinvoke $r19.<java.lang.Class: java.lang.ClassLoader getClassLoader()>();
+        $r21 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: java.lang.String getConfigFile()>();
+        r3 = virtualinvoke $r20.<java.lang.ClassLoader: java.io.InputStream getResourceAsStream(java.lang.String)>($r21);
+        $r22 = new org.xml.sax.InputSource;
+        $r23 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+        $r24 = virtualinvoke $r23.<java.lang.Class: java.lang.ClassLoader getClassLoader()>();
+        $r25 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: java.lang.String getConfigFile()>();
+        $r26 = virtualinvoke $r24.<java.lang.ClassLoader: java.net.URL getResource(java.lang.String)>($r25);
+        $r27 = virtualinvoke $r26.<java.net.URL: java.lang.String toString()>();
+        specialinvoke $r22.<org.xml.sax.InputSource: void <init>(java.lang.String)>($r27);
+        r2 = $r22;
+
+     label6:
+        goto label8;
+
+     label7:
+        $r28 := @caughtexception;
+        r29 = $r28;
+        $r30 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $z2 = interfaceinvoke $r30.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z2 == 0 goto label8;
+
+        $r31 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $r32 = <org.apache.catalina.startup.Catalina: org.apache.tomcat.util.res.StringManager sm>;
+        $r33 = newarray (java.lang.Object)[1];
+        $r34 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: java.lang.String getConfigFile()>();
+        $r33[0] = $r34;
+        $r35 = virtualinvoke $r32.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("catalina.configFail", $r33);
+        interfaceinvoke $r31.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r35, r29);
+
+     label8:
+        if r3 != null goto label12;
+
+     label9:
+        $r36 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+        $r37 = virtualinvoke $r36.<java.lang.Class: java.lang.ClassLoader getClassLoader()>();
+        r3 = virtualinvoke $r37.<java.lang.ClassLoader: java.io.InputStream getResourceAsStream(java.lang.String)>("server-embed.xml");
+        $r38 = new org.xml.sax.InputSource;
+        $r39 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+        $r40 = virtualinvoke $r39.<java.lang.Class: java.lang.ClassLoader getClassLoader()>();
+        $r41 = virtualinvoke $r40.<java.lang.ClassLoader: java.net.URL getResource(java.lang.String)>("server-embed.xml");
+        $r42 = virtualinvoke $r41.<java.net.URL: java.lang.String toString()>();
+        specialinvoke $r38.<org.xml.sax.InputSource: void <init>(java.lang.String)>($r42);
+        r2 = $r38;
+
+     label10:
+        goto label12;
+
+     label11:
+        $r43 := @caughtexception;
+        r44 = $r43;
+        $r45 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $z3 = interfaceinvoke $r45.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z3 == 0 goto label12;
+
+        $r46 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $r47 = <org.apache.catalina.startup.Catalina: org.apache.tomcat.util.res.StringManager sm>;
+        $r48 = newarray (java.lang.Object)[1];
+        $r48[0] = "server-embed.xml";
+        $r49 = virtualinvoke $r47.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("catalina.configFail", $r48);
+        interfaceinvoke $r46.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r49, r44);
+
+     label12:
+        if r3 == null goto label13;
+
+        if r2 != null goto label20;
+
+     label13:
+        if r4 != null goto label14;
+
+        $r50 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $r51 = <org.apache.catalina.startup.Catalina: org.apache.tomcat.util.res.StringManager sm>;
+        $r52 = newarray (java.lang.Object)[1];
+        $r53 = new java.lang.StringBuilder;
+        $r54 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: java.lang.String getConfigFile()>();
+        $r55 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r54);
+        specialinvoke $r53.<java.lang.StringBuilder: void <init>(java.lang.String)>($r55);
+        $r56 = virtualinvoke $r53.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("] or [server-embed.xml]");
+        $r57 = virtualinvoke $r56.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r52[0] = $r57;
+        $r58 = virtualinvoke $r51.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("catalina.configFail", $r52);
+        interfaceinvoke $r50.<org.apache.juli.logging.Log: void warn(java.lang.Object)>($r58);
+        goto label15;
+
+     label14:
+        $r59 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $r60 = <org.apache.catalina.startup.Catalina: org.apache.tomcat.util.res.StringManager sm>;
+        $r61 = newarray (java.lang.Object)[1];
+        $r62 = virtualinvoke r4.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r61[0] = $r62;
+        $r63 = virtualinvoke $r60.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("catalina.configFail", $r61);
+        interfaceinvoke $r59.<org.apache.juli.logging.Log: void warn(java.lang.Object)>($r63);
+        $z4 = virtualinvoke r4.<java.io.File: boolean exists()>();
+        if $z4 == 0 goto label15;
+
+        $z5 = virtualinvoke r4.<java.io.File: boolean canRead()>();
+        if $z5 != 0 goto label15;
+
+        $r64 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r64.<org.apache.juli.logging.Log: void warn(java.lang.Object)>("Permissions incorrect, read permission is not allowed on the file.");
+
+     label15:
+        if r3 == null goto label19;
+
+     label16:
+        virtualinvoke r3.<java.io.InputStream: void close()>();
+
+     label17:
+        goto label19;
+
+     label18:
+        $r65 := @caughtexception;
+        r6 = $r65;
+
+     label19:
+        return;
+
+     label20:
+        virtualinvoke r2.<org.xml.sax.InputSource: void setByteStream(java.io.InputStream)>(r3);
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: void push(java.lang.Object)>(r0);
+        virtualinvoke r1.<org.apache.tomcat.util.digester.Digester: java.lang.Object parse(org.xml.sax.InputSource)>(r2);
+
+     label21:
+        goto label40;
+
+     label22:
+        $r67 := @caughtexception;
+        r68 = $r67;
+        $r69 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $r70 = new java.lang.StringBuilder;
+        specialinvoke $r70.<java.lang.StringBuilder: void <init>(java.lang.String)>("Catalina.start using ");
+        $r71 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: java.lang.String getConfigFile()>();
+        $r72 = virtualinvoke $r70.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r71);
+        $r73 = virtualinvoke $r72.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(": ");
+        $r74 = virtualinvoke r68.<org.xml.sax.SAXParseException: java.lang.String getMessage()>();
+        $r75 = virtualinvoke $r73.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r74);
+        $r76 = virtualinvoke $r75.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r69.<org.apache.juli.logging.Log: void warn(java.lang.Object)>($r76);
+
+     label23:
+        if r3 == null goto label27;
+
+     label24:
+        virtualinvoke r3.<java.io.InputStream: void close()>();
+
+     label25:
+        goto label27;
+
+     label26:
+        $r77 := @caughtexception;
+        r78 = $r77;
+
+     label27:
+        return;
+
+     label28:
+        $r79 := @caughtexception;
+
+     label29:
+        r80 = $r79;
+        $r81 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $r82 = new java.lang.StringBuilder;
+        specialinvoke $r82.<java.lang.StringBuilder: void <init>(java.lang.String)>("Catalina.start using ");
+        $r83 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: java.lang.String getConfigFile()>();
+        $r84 = virtualinvoke $r82.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r83);
+        $r85 = virtualinvoke $r84.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(": ");
+        $r86 = virtualinvoke $r85.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r81.<org.apache.juli.logging.Log: void warn(java.lang.Object,java.lang.Throwable)>($r86, r80);
+
+     label30:
+        if r3 == null goto label34;
+
+     label31:
+        virtualinvoke r3.<java.io.InputStream: void close()>();
+
+     label32:
+        goto label34;
+
+     label33:
+        $r87 := @caughtexception;
+        r88 = $r87;
+
+     label34:
+        return;
+
+     label35:
+        $r89 := @caughtexception;
+        r7 = $r89;
+        if r3 == null goto label39;
+
+     label36:
+        virtualinvoke r3.<java.io.InputStream: void close()>();
+
+     label37:
+        goto label39;
+
+     label38:
+        $r90 := @caughtexception;
+        r91 = $r90;
+
+     label39:
+        throw r7;
+
+     label40:
+        if r3 == null goto label44;
+
+     label41:
+        virtualinvoke r3.<java.io.InputStream: void close()>();
+
+     label42:
+        goto label44;
+
+     label43:
+        $r92 := @caughtexception;
+        r93 = $r92;
+
+     label44:
+        $r94 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: org.apache.catalina.Server getServer()>();
+        interfaceinvoke $r94.<org.apache.catalina.Server: void setCatalina(org.apache.catalina.startup.Catalina)>(r0);
+        virtualinvoke r0.<org.apache.catalina.startup.Catalina: void initStreams()>();
+
+     label45:
+        $r95 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: org.apache.catalina.Server getServer()>();
+        interfaceinvoke $r95.<org.apache.catalina.Server: void init()>();
+
+     label46:
+        goto label49;
+
+     label47:
+        $r96 := @caughtexception;
+        r97 = $r96;
+        $z6 = staticinvoke <java.lang.Boolean: boolean getBoolean(java.lang.String)>("org.apache.catalina.startup.EXIT_ON_INIT_FAILURE");
+        if $z6 == 0 goto label48;
+
+        $r98 = new java.lang.Error;
+        specialinvoke $r98.<java.lang.Error: void <init>(java.lang.Throwable)>(r97);
+        throw $r98;
+
+     label48:
+        $r99 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r99.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Catalina.start", r97);
+
+     label49:
+        l1 = staticinvoke <java.lang.System: long nanoTime()>();
+        $r100 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $z7 = interfaceinvoke $r100.<org.apache.juli.logging.Log: boolean isInfoEnabled()>();
+        if $z7 == 0 goto label50;
+
+        $r101 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $r102 = new java.lang.StringBuilder;
+        specialinvoke $r102.<java.lang.StringBuilder: void <init>(java.lang.String)>("Initialization processed in ");
+        $l2 = l1 - l0;
+        $l3 = $l2 / 1000000L;
+        $r103 = virtualinvoke $r102.<java.lang.StringBuilder: java.lang.StringBuilder append(long)>($l3);
+        $r104 = virtualinvoke $r103.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" ms");
+        $r105 = virtualinvoke $r104.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r101.<org.apache.juli.logging.Log: void info(java.lang.Object)>($r105);
+
+     label50:
+        return;
+
+        catch java.lang.Exception from label1 to label2 with label3;
+        catch java.lang.Exception from label5 to label6 with label7;
+        catch java.lang.Exception from label9 to label10 with label11;
+        catch java.io.IOException from label16 to label17 with label18;
+        catch org.xml.sax.SAXParseException from label20 to label21 with label22;
+        catch java.io.IOException from label24 to label25 with label26;
+        catch java.lang.Exception from label20 to label21 with label28;
+        catch java.io.IOException from label31 to label32 with label33;
+        catch java.lang.Throwable from label1 to label15 with label35;
+        catch java.lang.Throwable from label20 to label23 with label35;
+        catch java.lang.Throwable from label29 to label30 with label35;
+        catch java.io.IOException from label36 to label37 with label38;
+        catch java.io.IOException from label41 to label42 with label43;
+        catch org.apache.catalina.LifecycleException from label45 to label46 with label47;
+    }
+
+    public void load(java.lang.String[])
+    {
+        org.apache.catalina.startup.Catalina r0;
+        java.lang.String[] r1;
+        java.lang.Exception r2, $r3;
+        boolean $z0;
+        java.io.PrintStream $r4;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        r1 := @parameter0: java.lang.String[];
+
+     label0:
+        $z0 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: boolean arguments(java.lang.String[])>(r1);
+        if $z0 == 0 goto label3;
+
+        virtualinvoke r0.<org.apache.catalina.startup.Catalina: void load()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r3 := @caughtexception;
+        r2 = $r3;
+        $r4 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke r2.<java.lang.Exception: void printStackTrace(java.io.PrintStream)>($r4);
+
+     label3:
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    public void start()
+    {
+        org.apache.catalina.startup.Catalina r0;
+        long l0, l1, $l2, $l3;
+        org.apache.catalina.LifecycleException r1, r2, $r8, $r13;
+        java.util.logging.LogManager r3;
+        org.apache.catalina.Server $r4, $r5, $r7, $r12;
+        org.apache.juli.logging.Log $r6, $r9, $r14, $r15, $r16;
+        org.apache.tomcat.util.res.StringManager $r10;
+        java.lang.String $r11, $r20;
+        boolean $z0, $z1, $z2, $z3;
+        java.lang.StringBuilder $r17, $r18, $r19;
+        java.lang.Thread $r21, $r24;
+        org.apache.catalina.startup.Catalina$CatalinaShutdownHook $r22;
+        java.lang.Runtime $r23;
+        org.apache.juli.ClassLoaderLogManager $r25;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        $r4 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: org.apache.catalina.Server getServer()>();
+        if $r4 != null goto label0;
+
+        virtualinvoke r0.<org.apache.catalina.startup.Catalina: void load()>();
+
+     label0:
+        $r5 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: org.apache.catalina.Server getServer()>();
+        if $r5 != null goto label1;
+
+        $r6 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r6.<org.apache.juli.logging.Log: void fatal(java.lang.Object)>("Cannot start server. Server instance is not configured.");
+        return;
+
+     label1:
+        l0 = staticinvoke <java.lang.System: long nanoTime()>();
+
+     label2:
+        $r7 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: org.apache.catalina.Server getServer()>();
+        interfaceinvoke $r7.<org.apache.catalina.Server: void start()>();
+
+     label3:
+        goto label9;
+
+     label4:
+        $r8 := @caughtexception;
+        r1 = $r8;
+        $r9 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $r10 = <org.apache.catalina.startup.Catalina: org.apache.tomcat.util.res.StringManager sm>;
+        $r11 = virtualinvoke $r10.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("catalina.serverStartFail");
+        interfaceinvoke $r9.<org.apache.juli.logging.Log: void fatal(java.lang.Object,java.lang.Throwable)>($r11, r1);
+
+     label5:
+        $r12 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: org.apache.catalina.Server getServer()>();
+        interfaceinvoke $r12.<org.apache.catalina.Server: void destroy()>();
+
+     label6:
+        goto label8;
+
+     label7:
+        $r13 := @caughtexception;
+        r2 = $r13;
+        $r14 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r14.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>("destroy() failed for failed Server ", r2);
+
+     label8:
+        return;
+
+     label9:
+        l1 = staticinvoke <java.lang.System: long nanoTime()>();
+        $r15 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $z0 = interfaceinvoke $r15.<org.apache.juli.logging.Log: boolean isInfoEnabled()>();
+        if $z0 == 0 goto label10;
+
+        $r16 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $r17 = new java.lang.StringBuilder;
+        specialinvoke $r17.<java.lang.StringBuilder: void <init>(java.lang.String)>("Server startup in ");
+        $l2 = l1 - l0;
+        $l3 = $l2 / 1000000L;
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(long)>($l3);
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" ms");
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r16.<org.apache.juli.logging.Log: void info(java.lang.Object)>($r20);
+
+     label10:
+        $z1 = r0.<org.apache.catalina.startup.Catalina: boolean useShutdownHook>;
+        if $z1 == 0 goto label12;
+
+        $r21 = r0.<org.apache.catalina.startup.Catalina: java.lang.Thread shutdownHook>;
+        if $r21 != null goto label11;
+
+        $r22 = new org.apache.catalina.startup.Catalina$CatalinaShutdownHook;
+        specialinvoke $r22.<org.apache.catalina.startup.Catalina$CatalinaShutdownHook: void <init>(org.apache.catalina.startup.Catalina)>(r0);
+        r0.<org.apache.catalina.startup.Catalina: java.lang.Thread shutdownHook> = $r22;
+
+     label11:
+        $r23 = staticinvoke <java.lang.Runtime: java.lang.Runtime getRuntime()>();
+        $r24 = r0.<org.apache.catalina.startup.Catalina: java.lang.Thread shutdownHook>;
+        virtualinvoke $r23.<java.lang.Runtime: void addShutdownHook(java.lang.Thread)>($r24);
+        r3 = staticinvoke <java.util.logging.LogManager: java.util.logging.LogManager getLogManager()>();
+        $z2 = r3 instanceof org.apache.juli.ClassLoaderLogManager;
+        if $z2 == 0 goto label12;
+
+        $r25 = (org.apache.juli.ClassLoaderLogManager) r3;
+        virtualinvoke $r25.<org.apache.juli.ClassLoaderLogManager: void setUseShutdownHook(boolean)>(0);
+
+     label12:
+        $z3 = r0.<org.apache.catalina.startup.Catalina: boolean await>;
+        if $z3 == 0 goto label13;
+
+        virtualinvoke r0.<org.apache.catalina.startup.Catalina: void await()>();
+        virtualinvoke r0.<org.apache.catalina.startup.Catalina: void stop()>();
+
+     label13:
+        return;
+
+        catch org.apache.catalina.LifecycleException from label2 to label3 with label4;
+        catch org.apache.catalina.LifecycleException from label5 to label6 with label7;
+    }
+
+    public void stop()
+    {
+        org.apache.catalina.startup.Catalina r0;
+        java.util.logging.LogManager r1;
+        org.apache.catalina.LifecycleState r2, $r9, $r10;
+        boolean $z0, $z2;
+        java.lang.Runtime $r3;
+        java.lang.Thread $r4;
+        org.apache.juli.ClassLoaderLogManager $r5;
+        java.lang.Throwable $r6, r7;
+        org.apache.catalina.Server r8;
+        int $i0, $i1;
+        org.apache.catalina.LifecycleException $r11, r12;
+        org.apache.juli.logging.Log $r13;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+
+     label0:
+        $z0 = r0.<org.apache.catalina.startup.Catalina: boolean useShutdownHook>;
+        if $z0 == 0 goto label3;
+
+        $r3 = staticinvoke <java.lang.Runtime: java.lang.Runtime getRuntime()>();
+        $r4 = r0.<org.apache.catalina.startup.Catalina: java.lang.Thread shutdownHook>;
+        virtualinvoke $r3.<java.lang.Runtime: boolean removeShutdownHook(java.lang.Thread)>($r4);
+        r1 = staticinvoke <java.util.logging.LogManager: java.util.logging.LogManager getLogManager()>();
+        $z2 = r1 instanceof org.apache.juli.ClassLoaderLogManager;
+        if $z2 == 0 goto label3;
+
+        $r5 = (org.apache.juli.ClassLoaderLogManager) r1;
+        virtualinvoke $r5.<org.apache.juli.ClassLoaderLogManager: void setUseShutdownHook(boolean)>(1);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r6 := @caughtexception;
+        r7 = $r6;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r7);
+
+     label3:
+        r8 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: org.apache.catalina.Server getServer()>();
+        r2 = interfaceinvoke r8.<org.apache.catalina.Server: org.apache.catalina.LifecycleState getState()>();
+        $r9 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STOPPING_PREP>;
+        $i0 = virtualinvoke $r9.<org.apache.catalina.LifecycleState: int compareTo(java.lang.Enum)>(r2);
+        if $i0 > 0 goto label4;
+
+        $r10 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState DESTROYED>;
+        $i1 = virtualinvoke $r10.<org.apache.catalina.LifecycleState: int compareTo(java.lang.Enum)>(r2);
+        if $i1 >= 0 goto label7;
+
+     label4:
+        interfaceinvoke r8.<org.apache.catalina.Server: void stop()>();
+        interfaceinvoke r8.<org.apache.catalina.Server: void destroy()>();
+
+     label5:
+        goto label7;
+
+     label6:
+        $r11 := @caughtexception;
+        r12 = $r11;
+        $r13 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r13.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Catalina.stop", r12);
+
+     label7:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch org.apache.catalina.LifecycleException from label3 to label5 with label6;
+    }
+
+    public void await()
+    {
+        org.apache.catalina.startup.Catalina r0;
+        org.apache.catalina.Server $r1;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        $r1 = virtualinvoke r0.<org.apache.catalina.startup.Catalina: org.apache.catalina.Server getServer()>();
+        interfaceinvoke $r1.<org.apache.catalina.Server: void await()>();
+        return;
+    }
+
+    protected void usage()
+    {
+        org.apache.catalina.startup.Catalina r0;
+        java.io.PrintStream $r1;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        $r1 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r1.<java.io.PrintStream: void println(java.lang.String)>("usage: java org.apache.catalina.startup.Catalina [ -config {pathname} ] [ -nonaming ]  { -help | start | stop }");
+        return;
+    }
+
+    protected void initDirs()
+    {
+        org.apache.catalina.startup.Catalina r0;
+        java.lang.String r1, r2, $r5, $r10, r12, r17, $r23;
+        java.io.IOException r3, r4, $r8, $r15;
+        java.io.File $r6, r7, $r13, r14, $r18, $r19;
+        boolean $z0, $z1, $z2, $z3;
+        org.apache.juli.logging.Log $r20;
+        org.apache.tomcat.util.res.StringManager $r21;
+        java.lang.Object[] $r22;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        r1 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("catalina.home");
+        if r1 != null goto label1;
+
+        r2 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("com.sun.enterprise.home");
+        if r2 == null goto label0;
+
+        r1 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("com.sun.enterprise.home");
+        goto label1;
+
+     label0:
+        $r5 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("catalina.base");
+        if $r5 == null goto label1;
+
+        r1 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("catalina.base");
+
+     label1:
+        if r1 != null goto label2;
+
+        r1 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("user.dir");
+
+     label2:
+        if r1 == null goto label7;
+
+        $r6 = new java.io.File;
+        specialinvoke $r6.<java.io.File: void <init>(java.lang.String)>(r1);
+        r7 = $r6;
+        $z0 = virtualinvoke r7.<java.io.File: boolean isAbsolute()>();
+        if $z0 != 0 goto label6;
+
+     label3:
+        r1 = virtualinvoke r7.<java.io.File: java.lang.String getCanonicalPath()>();
+
+     label4:
+        goto label6;
+
+     label5:
+        $r8 := @caughtexception;
+        r3 = $r8;
+        r1 = virtualinvoke r7.<java.io.File: java.lang.String getAbsolutePath()>();
+
+     label6:
+        staticinvoke <java.lang.System: java.lang.String setProperty(java.lang.String,java.lang.String)>("catalina.home", r1);
+
+     label7:
+        $r10 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("catalina.base");
+        if $r10 != null goto label8;
+
+        staticinvoke <java.lang.System: java.lang.String setProperty(java.lang.String,java.lang.String)>("catalina.base", r1);
+        goto label13;
+
+     label8:
+        r12 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("catalina.base");
+        $r13 = new java.io.File;
+        specialinvoke $r13.<java.io.File: void <init>(java.lang.String)>(r12);
+        r14 = $r13;
+        $z1 = virtualinvoke r14.<java.io.File: boolean isAbsolute()>();
+        if $z1 != 0 goto label12;
+
+     label9:
+        r12 = virtualinvoke r14.<java.io.File: java.lang.String getCanonicalPath()>();
+
+     label10:
+        goto label12;
+
+     label11:
+        $r15 := @caughtexception;
+        r4 = $r15;
+        r12 = virtualinvoke r14.<java.io.File: java.lang.String getAbsolutePath()>();
+
+     label12:
+        staticinvoke <java.lang.System: java.lang.String setProperty(java.lang.String,java.lang.String)>("catalina.base", r12);
+
+     label13:
+        r17 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("java.io.tmpdir");
+        if r17 == null goto label14;
+
+        $r18 = new java.io.File;
+        specialinvoke $r18.<java.io.File: void <init>(java.lang.String)>(r17);
+        $z2 = virtualinvoke $r18.<java.io.File: boolean exists()>();
+        if $z2 == 0 goto label14;
+
+        $r19 = new java.io.File;
+        specialinvoke $r19.<java.io.File: void <init>(java.lang.String)>(r17);
+        $z3 = virtualinvoke $r19.<java.io.File: boolean isDirectory()>();
+        if $z3 != 0 goto label15;
+
+     label14:
+        $r20 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $r21 = <org.apache.catalina.startup.Catalina: org.apache.tomcat.util.res.StringManager sm>;
+        $r22 = newarray (java.lang.Object)[1];
+        $r22[0] = r17;
+        $r23 = virtualinvoke $r21.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("embedded.notmp", $r22);
+        interfaceinvoke $r20.<org.apache.juli.logging.Log: void error(java.lang.Object)>($r23);
+
+     label15:
+        return;
+
+        catch java.io.IOException from label3 to label4 with label5;
+        catch java.io.IOException from label9 to label10 with label11;
+    }
+
+    protected void initStreams()
+    {
+        org.apache.catalina.startup.Catalina r0;
+        org.apache.tomcat.util.log.SystemLogHandler $r1, $r3;
+        java.io.PrintStream $r2, $r4;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        $r1 = new org.apache.tomcat.util.log.SystemLogHandler;
+        $r2 = <java.lang.System: java.io.PrintStream out>;
+        specialinvoke $r1.<org.apache.tomcat.util.log.SystemLogHandler: void <init>(java.io.PrintStream)>($r2);
+        staticinvoke <java.lang.System: void setOut(java.io.PrintStream)>($r1);
+        $r3 = new org.apache.tomcat.util.log.SystemLogHandler;
+        $r4 = <java.lang.System: java.io.PrintStream err>;
+        specialinvoke $r3.<org.apache.tomcat.util.log.SystemLogHandler: void <init>(java.io.PrintStream)>($r4);
+        staticinvoke <java.lang.System: void setErr(java.io.PrintStream)>($r3);
+        return;
+    }
+
+    protected void initNaming()
+    {
+        org.apache.catalina.startup.Catalina r0;
+        java.lang.String r1, r2, $r7, $r15, r16, $r21;
+        boolean $z0, $z1;
+        org.apache.juli.logging.Log $r3, $r11, $r12, $r18;
+        java.lang.StringBuilder $r6, $r8, $r9, $r13, $r14, $r19, $r20;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        $z0 = r0.<org.apache.catalina.startup.Catalina: boolean useNaming>;
+        if $z0 != 0 goto label0;
+
+        $r3 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r3.<org.apache.juli.logging.Log: void info(java.lang.Object)>("Catalina naming disabled");
+        staticinvoke <java.lang.System: java.lang.String setProperty(java.lang.String,java.lang.String)>("catalina.useNaming", "false");
+        goto label4;
+
+     label0:
+        staticinvoke <java.lang.System: java.lang.String setProperty(java.lang.String,java.lang.String)>("catalina.useNaming", "true");
+        r1 = "org.apache.naming";
+        r2 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("java.naming.factory.url.pkgs");
+        if r2 == null goto label1;
+
+        $r6 = new java.lang.StringBuilder;
+        $r7 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(r1);
+        specialinvoke $r6.<java.lang.StringBuilder: void <init>(java.lang.String)>($r7);
+        $r8 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(":");
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        r1 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+
+     label1:
+        staticinvoke <java.lang.System: java.lang.String setProperty(java.lang.String,java.lang.String)>("java.naming.factory.url.pkgs", r1);
+        $r11 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $z1 = interfaceinvoke $r11.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z1 == 0 goto label2;
+
+        $r12 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $r13 = new java.lang.StringBuilder;
+        specialinvoke $r13.<java.lang.StringBuilder: void <init>(java.lang.String)>("Setting naming prefix=");
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r12.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r15);
+
+     label2:
+        r16 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("java.naming.factory.initial");
+        if r16 != null goto label3;
+
+        staticinvoke <java.lang.System: java.lang.String setProperty(java.lang.String,java.lang.String)>("java.naming.factory.initial", "org.apache.naming.java.javaURLContextFactory");
+        goto label4;
+
+     label3:
+        $r18 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        $r19 = new java.lang.StringBuilder;
+        specialinvoke $r19.<java.lang.StringBuilder: void <init>(java.lang.String)>("INITIAL_CONTEXT_FACTORY already set ");
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r16);
+        $r21 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r18.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r21);
+
+     label4:
+        return;
+    }
+
+    protected void setSecurityProtection()
+    {
+        org.apache.catalina.startup.Catalina r0;
+        org.apache.catalina.security.SecurityConfig r1;
+
+        r0 := @this: org.apache.catalina.startup.Catalina;
+        r1 = staticinvoke <org.apache.catalina.security.SecurityConfig: org.apache.catalina.security.SecurityConfig newInstance()>();
+        virtualinvoke r1.<org.apache.catalina.security.SecurityConfig: void setPackageDefinition()>();
+        virtualinvoke r1.<org.apache.catalina.security.SecurityConfig: void setPackageAccess()>();
+        return;
+    }
+
+    static org.apache.juli.logging.Log access$0()
+    {
+        org.apache.juli.logging.Log $r0;
+
+        $r0 = <org.apache.catalina.startup.Catalina: org.apache.juli.logging.Log log>;
+        return $r0;
+    }
+}

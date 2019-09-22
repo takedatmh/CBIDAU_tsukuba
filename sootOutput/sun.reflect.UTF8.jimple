@@ -1,0 +1,149 @@
+class sun.reflect.UTF8 extends java.lang.Object
+{
+
+    void <init>()
+    {
+        sun.reflect.UTF8 r0;
+
+        r0 := @this: sun.reflect.UTF8;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    static byte[] encode(java.lang.String)
+    {
+        java.lang.String r0;
+        int i0, i1, i2, $i4, $i6, i8, $i10, $i13, i15, $i17, i19, $i22, $i25;
+        byte[] r1;
+        char c3, $c5, $c9, $c12, $c16, $c20, $c21, $c24;
+        byte $b7, $b11, $b14, $b18, $b23, $b26;
+        java.lang.ArrayIndexOutOfBoundsException $r2, r3;
+        java.lang.InternalError $r4;
+
+        r0 := @parameter0: java.lang.String;
+        i0 = virtualinvoke r0.<java.lang.String: int length()>();
+        $i4 = staticinvoke <sun.reflect.UTF8: int utf8Length(java.lang.String)>(r0);
+        r1 = newarray (byte)[$i4];
+        i1 = 0;
+
+     label0:
+        i2 = 0;
+
+     label1:
+        if i2 >= i0 goto label6;
+
+        $c5 = virtualinvoke r0.<java.lang.String: char charAt(int)>(i2);
+        c3 = $c5 & 65535;
+        if c3 < 1 goto label2;
+
+        if c3 > 127 goto label2;
+
+        $i6 = i1;
+        i1 = i1 + 1;
+        $b7 = (byte) c3;
+        r1[$i6] = $b7;
+        goto label5;
+
+     label2:
+        if c3 == 0 goto label3;
+
+        if c3 < 128 goto label4;
+
+        if c3 > 2047 goto label4;
+
+     label3:
+        i8 = i1 + 1;
+        $c9 = c3 >> 6;
+        $i10 = 192 + $c9;
+        $b11 = (byte) $i10;
+        r1[i1] = $b11;
+        i1 = i8 + 1;
+        $c12 = c3 & 63;
+        $i13 = 128 + $c12;
+        $b14 = (byte) $i13;
+        r1[i8] = $b14;
+        goto label5;
+
+     label4:
+        i15 = i1 + 1;
+        $c16 = c3 >> 12;
+        $i17 = 224 + $c16;
+        $b18 = (byte) $i17;
+        r1[i1] = $b18;
+        i19 = i15 + 1;
+        $c20 = c3 >> 6;
+        $c21 = $c20 & 63;
+        $i22 = 128 + $c21;
+        $b23 = (byte) $i22;
+        r1[i15] = $b23;
+        i1 = i19 + 1;
+        $c24 = c3 & 63;
+        $i25 = 128 + $c24;
+        $b26 = (byte) $i25;
+        r1[i19] = $b26;
+
+     label5:
+        i2 = i2 + 1;
+        goto label1;
+
+     label6:
+        goto label8;
+
+     label7:
+        $r2 := @caughtexception;
+        r3 = $r2;
+        $r4 = new java.lang.InternalError;
+        specialinvoke $r4.<java.lang.InternalError: void <init>(java.lang.String)>("Bug in sun.reflect bootstrap UTF-8 encoder");
+        throw $r4;
+
+     label8:
+        return r1;
+
+        catch java.lang.ArrayIndexOutOfBoundsException from label0 to label6 with label7;
+    }
+
+    private static int utf8Length(java.lang.String)
+    {
+        java.lang.String r0;
+        int i0, i1, i2;
+        char c3, $c4;
+
+        r0 := @parameter0: java.lang.String;
+        i0 = virtualinvoke r0.<java.lang.String: int length()>();
+        i1 = 0;
+        i2 = 0;
+
+     label0:
+        if i2 >= i0 goto label5;
+
+        $c4 = virtualinvoke r0.<java.lang.String: char charAt(int)>(i2);
+        c3 = $c4 & 65535;
+        if c3 < 1 goto label1;
+
+        if c3 > 127 goto label1;
+
+        i1 = i1 + 1;
+        goto label4;
+
+     label1:
+        if c3 == 0 goto label2;
+
+        if c3 < 128 goto label3;
+
+        if c3 > 2047 goto label3;
+
+     label2:
+        i1 = i1 + 2;
+        goto label4;
+
+     label3:
+        i1 = i1 + 3;
+
+     label4:
+        i2 = i2 + 1;
+        goto label0;
+
+     label5:
+        return i1;
+    }
+}

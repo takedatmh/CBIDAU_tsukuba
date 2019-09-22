@@ -1,0 +1,180 @@
+public class java.security.KeyRep extends java.lang.Object implements java.io.Serializable
+{
+    private static final long serialVersionUID;
+    private static final java.lang.String PKCS8;
+    private static final java.lang.String X509;
+    private static final java.lang.String RAW;
+    private java.security.KeyRep$Type type;
+    private java.lang.String algorithm;
+    private java.lang.String format;
+    private byte[] encoded;
+
+    public void <init>(java.security.KeyRep$Type, java.lang.String, java.lang.String, byte[])
+    {
+        java.security.KeyRep r0;
+        java.security.KeyRep$Type r1;
+        java.lang.String r2, r3, $r6;
+        byte[] r4, $r8;
+        java.lang.NullPointerException $r5;
+        java.lang.Object $r7;
+
+        r0 := @this: java.security.KeyRep;
+        r1 := @parameter0: java.security.KeyRep$Type;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: java.lang.String;
+        r4 := @parameter3: byte[];
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        if r1 == null goto label0;
+
+        if r2 == null goto label0;
+
+        if r3 == null goto label0;
+
+        if r4 != null goto label1;
+
+     label0:
+        $r5 = new java.lang.NullPointerException;
+        specialinvoke $r5.<java.lang.NullPointerException: void <init>(java.lang.String)>("invalid null input(s)");
+        throw $r5;
+
+     label1:
+        r0.<java.security.KeyRep: java.security.KeyRep$Type type> = r1;
+        r0.<java.security.KeyRep: java.lang.String algorithm> = r2;
+        $r6 = virtualinvoke r3.<java.lang.String: java.lang.String toUpperCase()>();
+        r0.<java.security.KeyRep: java.lang.String format> = $r6;
+        $r7 = virtualinvoke r4.<java.lang.Object: java.lang.Object clone()>();
+        $r8 = (byte[]) $r7;
+        r0.<java.security.KeyRep: byte[] encoded> = $r8;
+        return;
+    }
+
+    protected java.lang.Object readResolve() throws java.io.ObjectStreamException
+    {
+        java.security.KeyRep r0;
+        java.security.KeyRep$Type $r1, $r4, $r10, $r11, $r18, $r19, $r30, $r43;
+        java.security.KeyFactory r2, r23;
+        java.io.NotSerializableException r3, $r27, $r36, r37, $r40;
+        java.lang.String $r5, $r6, $r9, $r12, $r13, $r14, $r20, $r21, $r22, $r33, $r35, $r47, $r51, $r54;
+        boolean $z0, $z1, $z2;
+        javax.crypto.spec.SecretKeySpec $r7;
+        byte[] $r8, $r16, $r25;
+        java.security.spec.X509EncodedKeySpec $r15;
+        java.security.PublicKey $r17;
+        java.security.spec.PKCS8EncodedKeySpec $r24;
+        java.security.PrivateKey $r26;
+        java.lang.StringBuilder $r28, $r29, $r31, $r32, $r34, $r41, $r42, $r44, $r45, $r46, $r48, $r49, $r50, $r52, $r53;
+        java.lang.Exception $r38, r39;
+
+        r0 := @this: java.security.KeyRep;
+
+     label0:
+        $r4 = r0.<java.security.KeyRep: java.security.KeyRep$Type type>;
+        $r1 = <java.security.KeyRep$Type: java.security.KeyRep$Type SECRET>;
+        if $r4 != $r1 goto label2;
+
+        $r5 = "RAW";
+        $r6 = r0.<java.security.KeyRep: java.lang.String format>;
+        $z0 = virtualinvoke $r5.<java.lang.String: boolean equals(java.lang.Object)>($r6);
+        if $z0 == 0 goto label2;
+
+        $r7 = new javax.crypto.spec.SecretKeySpec;
+        $r8 = r0.<java.security.KeyRep: byte[] encoded>;
+        $r9 = r0.<java.security.KeyRep: java.lang.String algorithm>;
+        specialinvoke $r7.<javax.crypto.spec.SecretKeySpec: void <init>(byte[],java.lang.String)>($r8, $r9);
+
+     label1:
+        return $r7;
+
+     label2:
+        $r10 = r0.<java.security.KeyRep: java.security.KeyRep$Type type>;
+        $r11 = <java.security.KeyRep$Type: java.security.KeyRep$Type PUBLIC>;
+        if $r10 != $r11 goto label4;
+
+        $r12 = "X.509";
+        $r13 = r0.<java.security.KeyRep: java.lang.String format>;
+        $z1 = virtualinvoke $r12.<java.lang.String: boolean equals(java.lang.Object)>($r13);
+        if $z1 == 0 goto label4;
+
+        $r14 = r0.<java.security.KeyRep: java.lang.String algorithm>;
+        r2 = staticinvoke <java.security.KeyFactory: java.security.KeyFactory getInstance(java.lang.String)>($r14);
+        $r15 = new java.security.spec.X509EncodedKeySpec;
+        $r16 = r0.<java.security.KeyRep: byte[] encoded>;
+        specialinvoke $r15.<java.security.spec.X509EncodedKeySpec: void <init>(byte[])>($r16);
+        $r17 = virtualinvoke r2.<java.security.KeyFactory: java.security.PublicKey generatePublic(java.security.spec.KeySpec)>($r15);
+
+     label3:
+        return $r17;
+
+     label4:
+        $r18 = r0.<java.security.KeyRep: java.security.KeyRep$Type type>;
+        $r19 = <java.security.KeyRep$Type: java.security.KeyRep$Type PRIVATE>;
+        if $r18 != $r19 goto label6;
+
+        $r20 = "PKCS#8";
+        $r21 = r0.<java.security.KeyRep: java.lang.String format>;
+        $z2 = virtualinvoke $r20.<java.lang.String: boolean equals(java.lang.Object)>($r21);
+        if $z2 == 0 goto label6;
+
+        $r22 = r0.<java.security.KeyRep: java.lang.String algorithm>;
+        r23 = staticinvoke <java.security.KeyFactory: java.security.KeyFactory getInstance(java.lang.String)>($r22);
+        $r24 = new java.security.spec.PKCS8EncodedKeySpec;
+        $r25 = r0.<java.security.KeyRep: byte[] encoded>;
+        specialinvoke $r24.<java.security.spec.PKCS8EncodedKeySpec: void <init>(byte[])>($r25);
+        $r26 = virtualinvoke r23.<java.security.KeyFactory: java.security.PrivateKey generatePrivate(java.security.spec.KeySpec)>($r24);
+
+     label5:
+        return $r26;
+
+     label6:
+        $r27 = new java.io.NotSerializableException;
+        $r28 = new java.lang.StringBuilder;
+        specialinvoke $r28.<java.lang.StringBuilder: void <init>()>();
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("unrecognized type/format combination: ");
+        $r30 = r0.<java.security.KeyRep: java.security.KeyRep$Type type>;
+        $r31 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r30);
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("/");
+        $r33 = r0.<java.security.KeyRep: java.lang.String format>;
+        $r34 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r33);
+        $r35 = virtualinvoke $r34.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r27.<java.io.NotSerializableException: void <init>(java.lang.String)>($r35);
+        throw $r27;
+
+     label7:
+        $r36 := @caughtexception;
+        r37 = $r36;
+        throw r37;
+
+     label8:
+        $r38 := @caughtexception;
+        r39 = $r38;
+        $r40 = new java.io.NotSerializableException;
+        $r41 = new java.lang.StringBuilder;
+        specialinvoke $r41.<java.lang.StringBuilder: void <init>()>();
+        $r42 = virtualinvoke $r41.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("java.security.Key: [");
+        $r43 = r0.<java.security.KeyRep: java.security.KeyRep$Type type>;
+        $r44 = virtualinvoke $r42.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r43);
+        $r45 = virtualinvoke $r44.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("] ");
+        $r46 = virtualinvoke $r45.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("[");
+        $r47 = r0.<java.security.KeyRep: java.lang.String algorithm>;
+        $r48 = virtualinvoke $r46.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r47);
+        $r49 = virtualinvoke $r48.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("] ");
+        $r50 = virtualinvoke $r49.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("[");
+        $r51 = r0.<java.security.KeyRep: java.lang.String format>;
+        $r52 = virtualinvoke $r50.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r51);
+        $r53 = virtualinvoke $r52.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+        $r54 = virtualinvoke $r53.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r40.<java.io.NotSerializableException: void <init>(java.lang.String)>($r54);
+        r3 = $r40;
+        virtualinvoke r3.<java.io.NotSerializableException: java.lang.Throwable initCause(java.lang.Throwable)>(r39);
+        throw r3;
+
+        catch java.io.NotSerializableException from label0 to label1 with label7;
+        catch java.io.NotSerializableException from label2 to label3 with label7;
+        catch java.io.NotSerializableException from label4 to label5 with label7;
+        catch java.io.NotSerializableException from label6 to label7 with label7;
+        catch java.lang.Exception from label0 to label1 with label8;
+        catch java.lang.Exception from label2 to label3 with label8;
+        catch java.lang.Exception from label4 to label5 with label8;
+        catch java.lang.Exception from label6 to label7 with label8;
+    }
+}

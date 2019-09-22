@@ -1,0 +1,65 @@
+class org.apache.tomcat.util.threads.LimitLatch$Sync extends java.util.concurrent.locks.AbstractQueuedSynchronizer
+{
+    private static final long serialVersionUID;
+    final org.apache.tomcat.util.threads.LimitLatch this$0;
+
+    public void <init>(org.apache.tomcat.util.threads.LimitLatch)
+    {
+        org.apache.tomcat.util.threads.LimitLatch$Sync r0;
+        org.apache.tomcat.util.threads.LimitLatch r1;
+
+        r0 := @this: org.apache.tomcat.util.threads.LimitLatch$Sync;
+        r1 := @parameter0: org.apache.tomcat.util.threads.LimitLatch;
+        r0.<org.apache.tomcat.util.threads.LimitLatch$Sync: org.apache.tomcat.util.threads.LimitLatch this$0> = r1;
+        specialinvoke r0.<java.util.concurrent.locks.AbstractQueuedSynchronizer: void <init>()>();
+        return;
+    }
+
+    protected int tryAcquireShared(int)
+    {
+        org.apache.tomcat.util.threads.LimitLatch$Sync r0;
+        int i0;
+        long l1, $l2;
+        org.apache.tomcat.util.threads.LimitLatch $r1, $r3, $r4, $r5;
+        java.util.concurrent.atomic.AtomicLong $r2, $r6;
+        boolean $z0;
+        byte $b3;
+
+        r0 := @this: org.apache.tomcat.util.threads.LimitLatch$Sync;
+        i0 := @parameter0: int;
+        $r1 = r0.<org.apache.tomcat.util.threads.LimitLatch$Sync: org.apache.tomcat.util.threads.LimitLatch this$0>;
+        $r2 = staticinvoke <org.apache.tomcat.util.threads.LimitLatch: java.util.concurrent.atomic.AtomicLong access$0(org.apache.tomcat.util.threads.LimitLatch)>($r1);
+        l1 = virtualinvoke $r2.<java.util.concurrent.atomic.AtomicLong: long incrementAndGet()>();
+        $r3 = r0.<org.apache.tomcat.util.threads.LimitLatch$Sync: org.apache.tomcat.util.threads.LimitLatch this$0>;
+        $z0 = staticinvoke <org.apache.tomcat.util.threads.LimitLatch: boolean access$1(org.apache.tomcat.util.threads.LimitLatch)>($r3);
+        if $z0 != 0 goto label0;
+
+        $r4 = r0.<org.apache.tomcat.util.threads.LimitLatch$Sync: org.apache.tomcat.util.threads.LimitLatch this$0>;
+        $l2 = staticinvoke <org.apache.tomcat.util.threads.LimitLatch: long access$2(org.apache.tomcat.util.threads.LimitLatch)>($r4);
+        $b3 = l1 cmp $l2;
+        if $b3 <= 0 goto label0;
+
+        $r5 = r0.<org.apache.tomcat.util.threads.LimitLatch$Sync: org.apache.tomcat.util.threads.LimitLatch this$0>;
+        $r6 = staticinvoke <org.apache.tomcat.util.threads.LimitLatch: java.util.concurrent.atomic.AtomicLong access$0(org.apache.tomcat.util.threads.LimitLatch)>($r5);
+        virtualinvoke $r6.<java.util.concurrent.atomic.AtomicLong: long decrementAndGet()>();
+        return -1;
+
+     label0:
+        return 1;
+    }
+
+    protected boolean tryReleaseShared(int)
+    {
+        org.apache.tomcat.util.threads.LimitLatch$Sync r0;
+        int i0;
+        org.apache.tomcat.util.threads.LimitLatch $r1;
+        java.util.concurrent.atomic.AtomicLong $r2;
+
+        r0 := @this: org.apache.tomcat.util.threads.LimitLatch$Sync;
+        i0 := @parameter0: int;
+        $r1 = r0.<org.apache.tomcat.util.threads.LimitLatch$Sync: org.apache.tomcat.util.threads.LimitLatch this$0>;
+        $r2 = staticinvoke <org.apache.tomcat.util.threads.LimitLatch: java.util.concurrent.atomic.AtomicLong access$0(org.apache.tomcat.util.threads.LimitLatch)>($r1);
+        virtualinvoke $r2.<java.util.concurrent.atomic.AtomicLong: long decrementAndGet()>();
+        return 1;
+    }
+}

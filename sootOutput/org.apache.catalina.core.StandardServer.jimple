@@ -1,0 +1,1448 @@
+public final class org.apache.catalina.core.StandardServer extends org.apache.catalina.util.LifecycleMBeanBase implements org.apache.catalina.Server
+{
+    private static final org.apache.juli.logging.Log log;
+    private javax.naming.Context globalNamingContext;
+    private org.apache.catalina.deploy.NamingResources globalNamingResources;
+    private static final java.lang.String info;
+    private org.apache.catalina.core.NamingContextListener namingContextListener;
+    private int port;
+    private java.lang.String address;
+    private java.util.Random random;
+    private org.apache.catalina.Service[] services;
+    private final java.lang.Object servicesLock;
+    private java.lang.String shutdown;
+    private static final org.apache.tomcat.util.res.StringManager sm;
+    java.beans.PropertyChangeSupport support;
+    private volatile boolean stopAwait;
+    private org.apache.catalina.startup.Catalina catalina;
+    private java.lang.ClassLoader parentClassLoader;
+    private volatile java.lang.Thread awaitThread;
+    private volatile java.net.ServerSocket awaitSocket;
+    private javax.management.ObjectName onameStringCache;
+    private javax.management.ObjectName onameMBeanFactory;
+
+    static void <clinit>()
+    {
+        org.apache.juli.logging.Log $r0;
+        org.apache.tomcat.util.res.StringManager $r1;
+
+        $r0 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/catalina/core/StandardServer");
+        <org.apache.catalina.core.StandardServer: org.apache.juli.logging.Log log> = $r0;
+        $r1 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String)>("org.apache.catalina.core");
+        <org.apache.catalina.core.StandardServer: org.apache.tomcat.util.res.StringManager sm> = $r1;
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.catalina.core.StandardServer r0;
+        org.apache.catalina.Service[] $r1;
+        java.lang.Object $r2;
+        java.beans.PropertyChangeSupport $r3;
+        org.apache.catalina.deploy.NamingResources $r4, $r5;
+        boolean $z0;
+        org.apache.catalina.core.NamingContextListener $r6, $r7;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        specialinvoke r0.<org.apache.catalina.util.LifecycleMBeanBase: void <init>()>();
+        r0.<org.apache.catalina.core.StandardServer: javax.naming.Context globalNamingContext> = null;
+        r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.deploy.NamingResources globalNamingResources> = null;
+        r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.core.NamingContextListener namingContextListener> = null;
+        r0.<org.apache.catalina.core.StandardServer: int port> = 8005;
+        r0.<org.apache.catalina.core.StandardServer: java.lang.String address> = "localhost";
+        r0.<org.apache.catalina.core.StandardServer: java.util.Random random> = null;
+        $r1 = newarray (org.apache.catalina.Service)[0];
+        r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services> = $r1;
+        $r2 = new java.lang.Object;
+        specialinvoke $r2.<java.lang.Object: void <init>()>();
+        r0.<org.apache.catalina.core.StandardServer: java.lang.Object servicesLock> = $r2;
+        r0.<org.apache.catalina.core.StandardServer: java.lang.String shutdown> = "SHUTDOWN";
+        $r3 = new java.beans.PropertyChangeSupport;
+        specialinvoke $r3.<java.beans.PropertyChangeSupport: void <init>(java.lang.Object)>(r0);
+        r0.<org.apache.catalina.core.StandardServer: java.beans.PropertyChangeSupport support> = $r3;
+        r0.<org.apache.catalina.core.StandardServer: boolean stopAwait> = 0;
+        r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.startup.Catalina catalina> = null;
+        r0.<org.apache.catalina.core.StandardServer: java.lang.ClassLoader parentClassLoader> = null;
+        r0.<org.apache.catalina.core.StandardServer: java.lang.Thread awaitThread> = null;
+        r0.<org.apache.catalina.core.StandardServer: java.net.ServerSocket awaitSocket> = null;
+        $r4 = new org.apache.catalina.deploy.NamingResources;
+        specialinvoke $r4.<org.apache.catalina.deploy.NamingResources: void <init>()>();
+        r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.deploy.NamingResources globalNamingResources> = $r4;
+        $r5 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.deploy.NamingResources globalNamingResources>;
+        virtualinvoke $r5.<org.apache.catalina.deploy.NamingResources: void setContainer(java.lang.Object)>(r0);
+        $z0 = specialinvoke r0.<org.apache.catalina.core.StandardServer: boolean isUseNaming()>();
+        if $z0 == 0 goto label0;
+
+        $r6 = new org.apache.catalina.core.NamingContextListener;
+        specialinvoke $r6.<org.apache.catalina.core.NamingContextListener: void <init>()>();
+        r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.core.NamingContextListener namingContextListener> = $r6;
+        $r7 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.core.NamingContextListener namingContextListener>;
+        virtualinvoke r0.<org.apache.catalina.core.StandardServer: void addLifecycleListener(org.apache.catalina.LifecycleListener)>($r7);
+
+     label0:
+        return;
+    }
+
+    public javax.naming.Context getGlobalNamingContext()
+    {
+        org.apache.catalina.core.StandardServer r0;
+        javax.naming.Context $r1;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        $r1 = r0.<org.apache.catalina.core.StandardServer: javax.naming.Context globalNamingContext>;
+        return $r1;
+    }
+
+    public void setGlobalNamingContext(javax.naming.Context)
+    {
+        org.apache.catalina.core.StandardServer r0;
+        javax.naming.Context r1;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        r1 := @parameter0: javax.naming.Context;
+        r0.<org.apache.catalina.core.StandardServer: javax.naming.Context globalNamingContext> = r1;
+        return;
+    }
+
+    public org.apache.catalina.deploy.NamingResources getGlobalNamingResources()
+    {
+        org.apache.catalina.core.StandardServer r0;
+        org.apache.catalina.deploy.NamingResources $r1;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        $r1 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.deploy.NamingResources globalNamingResources>;
+        return $r1;
+    }
+
+    public void setGlobalNamingResources(org.apache.catalina.deploy.NamingResources)
+    {
+        org.apache.catalina.core.StandardServer r0;
+        org.apache.catalina.deploy.NamingResources r1, r2, $r3, $r5;
+        java.beans.PropertyChangeSupport $r4;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        r1 := @parameter0: org.apache.catalina.deploy.NamingResources;
+        r2 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.deploy.NamingResources globalNamingResources>;
+        r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.deploy.NamingResources globalNamingResources> = r1;
+        $r3 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.deploy.NamingResources globalNamingResources>;
+        virtualinvoke $r3.<org.apache.catalina.deploy.NamingResources: void setContainer(java.lang.Object)>(r0);
+        $r4 = r0.<org.apache.catalina.core.StandardServer: java.beans.PropertyChangeSupport support>;
+        $r5 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.deploy.NamingResources globalNamingResources>;
+        virtualinvoke $r4.<java.beans.PropertyChangeSupport: void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)>("globalNamingResources", r2, $r5);
+        return;
+    }
+
+    public java.lang.String getInfo()
+    {
+        org.apache.catalina.core.StandardServer r0;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        return "org.apache.catalina.core.StandardServer/1.0";
+    }
+
+    public java.lang.String getServerInfo()
+    {
+        org.apache.catalina.core.StandardServer r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        $r1 = staticinvoke <org.apache.catalina.util.ServerInfo: java.lang.String getServerInfo()>();
+        return $r1;
+    }
+
+    public java.lang.String getServerBuilt()
+    {
+        org.apache.catalina.core.StandardServer r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        $r1 = staticinvoke <org.apache.catalina.util.ServerInfo: java.lang.String getServerBuilt()>();
+        return $r1;
+    }
+
+    public java.lang.String getServerNumber()
+    {
+        org.apache.catalina.core.StandardServer r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        $r1 = staticinvoke <org.apache.catalina.util.ServerInfo: java.lang.String getServerNumber()>();
+        return $r1;
+    }
+
+    public int getPort()
+    {
+        org.apache.catalina.core.StandardServer r0;
+        int $i0;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        $i0 = r0.<org.apache.catalina.core.StandardServer: int port>;
+        return $i0;
+    }
+
+    public void setPort(int)
+    {
+        org.apache.catalina.core.StandardServer r0;
+        int i0;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        i0 := @parameter0: int;
+        r0.<org.apache.catalina.core.StandardServer: int port> = i0;
+        return;
+    }
+
+    public java.lang.String getAddress()
+    {
+        org.apache.catalina.core.StandardServer r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        $r1 = r0.<org.apache.catalina.core.StandardServer: java.lang.String address>;
+        return $r1;
+    }
+
+    public void setAddress(java.lang.String)
+    {
+        org.apache.catalina.core.StandardServer r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.catalina.core.StandardServer: java.lang.String address> = r1;
+        return;
+    }
+
+    public java.lang.String getShutdown()
+    {
+        org.apache.catalina.core.StandardServer r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        $r1 = r0.<org.apache.catalina.core.StandardServer: java.lang.String shutdown>;
+        return $r1;
+    }
+
+    public void setShutdown(java.lang.String)
+    {
+        org.apache.catalina.core.StandardServer r0;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        r1 := @parameter0: java.lang.String;
+        r0.<org.apache.catalina.core.StandardServer: java.lang.String shutdown> = r1;
+        return;
+    }
+
+    public org.apache.catalina.startup.Catalina getCatalina()
+    {
+        org.apache.catalina.core.StandardServer r0;
+        org.apache.catalina.startup.Catalina $r1;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        $r1 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.startup.Catalina catalina>;
+        return $r1;
+    }
+
+    public void setCatalina(org.apache.catalina.startup.Catalina)
+    {
+        org.apache.catalina.core.StandardServer r0;
+        org.apache.catalina.startup.Catalina r1;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        r1 := @parameter0: org.apache.catalina.startup.Catalina;
+        r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.startup.Catalina catalina> = r1;
+        return;
+    }
+
+    public void addService(org.apache.catalina.Service)
+    {
+        org.apache.catalina.core.StandardServer r0;
+        org.apache.catalina.Service r1;
+        java.lang.Object r2, $r5;
+        org.apache.catalina.Service[] r3, $r6, $r7, $r8, $r9;
+        org.apache.catalina.LifecycleException r4, $r11;
+        int $i0, $i1, $i2, $i3;
+        org.apache.catalina.LifecycleState $r10;
+        boolean $z0;
+        java.beans.PropertyChangeSupport $r12;
+        java.lang.Throwable $r13;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        r1 := @parameter0: org.apache.catalina.Service;
+        interfaceinvoke r1.<org.apache.catalina.Service: void setServer(org.apache.catalina.Server)>(r0);
+        $r5 = r0.<org.apache.catalina.core.StandardServer: java.lang.Object servicesLock>;
+        r2 = $r5;
+        entermonitor $r5;
+
+     label0:
+        $r6 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $i0 = lengthof $r6;
+        $i1 = $i0 + 1;
+        r3 = newarray (org.apache.catalina.Service)[$i1];
+        $r7 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $r8 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $i2 = lengthof $r8;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r7, 0, r3, 0, $i2);
+        $r9 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $i3 = lengthof $r9;
+        r3[$i3] = r1;
+        r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services> = r3;
+        $r10 = virtualinvoke r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.LifecycleState getState()>();
+        $z0 = virtualinvoke $r10.<org.apache.catalina.LifecycleState: boolean isAvailable()>();
+        if $z0 == 0 goto label4;
+
+     label1:
+        interfaceinvoke r1.<org.apache.catalina.Service: void start()>();
+
+     label2:
+        goto label4;
+
+     label3:
+        $r11 := @caughtexception;
+        r4 = $r11;
+
+     label4:
+        $r12 = r0.<org.apache.catalina.core.StandardServer: java.beans.PropertyChangeSupport support>;
+        virtualinvoke $r12.<java.beans.PropertyChangeSupport: void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)>("service", null, r1);
+        exitmonitor r2;
+
+     label5:
+        goto label9;
+
+     label6:
+        $r13 := @caughtexception;
+
+     label7:
+        exitmonitor r2;
+
+     label8:
+        throw $r13;
+
+     label9:
+        return;
+
+        catch org.apache.catalina.LifecycleException from label1 to label2 with label3;
+        catch java.lang.Throwable from label0 to label5 with label6;
+        catch java.lang.Throwable from label7 to label8 with label6;
+    }
+
+    public void stopAwait()
+    {
+        org.apache.catalina.core.StandardServer r0;
+        java.lang.Thread r1;
+        java.net.ServerSocket r2;
+        java.io.IOException r3, $r4;
+        java.lang.InterruptedException $r5, r6;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        r0.<org.apache.catalina.core.StandardServer: boolean stopAwait> = 1;
+        r1 = r0.<org.apache.catalina.core.StandardServer: java.lang.Thread awaitThread>;
+        if r1 == null goto label7;
+
+        r2 = r0.<org.apache.catalina.core.StandardServer: java.net.ServerSocket awaitSocket>;
+        if r2 == null goto label3;
+
+        r0.<org.apache.catalina.core.StandardServer: java.net.ServerSocket awaitSocket> = null;
+
+     label0:
+        virtualinvoke r2.<java.net.ServerSocket: void close()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r4 := @caughtexception;
+        r3 = $r4;
+
+     label3:
+        virtualinvoke r1.<java.lang.Thread: void interrupt()>();
+
+     label4:
+        virtualinvoke r1.<java.lang.Thread: void join(long)>(1000L);
+
+     label5:
+        goto label7;
+
+     label6:
+        $r5 := @caughtexception;
+        r6 = $r5;
+
+     label7:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+        catch java.lang.InterruptedException from label4 to label5 with label6;
+    }
+
+    public void await()
+    {
+        org.apache.catalina.core.StandardServer r0;
+        java.lang.InterruptedException r1, $r13;
+        java.lang.Throwable r2, r8, r9, $r14, $r62, $r78;
+        java.lang.StringBuilder r3, $r21, $r23, $r24, $r25, $r26, $r31, $r42, $r44, $r73, $r75, $r76;
+        long l0, $l1, $l7;
+        java.io.InputStream r4;
+        java.net.SocketTimeoutException r5, $r32;
+        java.io.IOException r6, r7, r11, $r18, r19, $r38, $r46, r47, $r48, r49, $r50, r51, $r53, r54, $r59, $r63, r64, $r65, r66, $r79, $r81, r82;
+        byte b2;
+        java.net.ServerSocket r10, $r15, r29, r80;
+        int $i3, $i4, $i5, $i6, i8, $i9, $i10, $i11, i12;
+        java.lang.Thread $r12, $r28;
+        boolean $z0, $z1, z2, $z3;
+        java.lang.String $r16, $r22, $r27, $r37, $r43, $r45, $r58, $r67, $r68, $r71, $r74, $r77;
+        java.net.InetAddress $r17;
+        org.apache.juli.logging.Log $r20, $r33, $r41, $r52, $r60, $r69, $r72;
+        java.net.Socket r30;
+        org.apache.tomcat.util.res.StringManager $r34, $r70;
+        java.lang.Object[] $r35;
+        java.lang.Long $r36;
+        java.security.AccessControlException $r39, r40;
+        java.util.Random $r55, $r56, $r57;
+        char $c13;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        $i3 = r0.<org.apache.catalina.core.StandardServer: int port>;
+        if $i3 != -2 goto label0;
+
+        return;
+
+     label0:
+        $i4 = r0.<org.apache.catalina.core.StandardServer: int port>;
+        if $i4 != -1 goto label8;
+
+     label1:
+        $r12 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        r0.<org.apache.catalina.core.StandardServer: java.lang.Thread awaitThread> = $r12;
+        goto label5;
+
+     label2:
+        staticinvoke <java.lang.Thread: void sleep(long)>(10000L);
+
+     label3:
+        goto label5;
+
+     label4:
+        $r13 := @caughtexception;
+        r1 = $r13;
+
+     label5:
+        $z0 = r0.<org.apache.catalina.core.StandardServer: boolean stopAwait>;
+        if $z0 == 0 goto label2;
+
+        goto label7;
+
+     label6:
+        $r14 := @caughtexception;
+        r2 = $r14;
+        r0.<org.apache.catalina.core.StandardServer: java.lang.Thread awaitThread> = null;
+        throw r2;
+
+     label7:
+        r0.<org.apache.catalina.core.StandardServer: java.lang.Thread awaitThread> = null;
+        return;
+
+     label8:
+        $r15 = new java.net.ServerSocket;
+        $i5 = r0.<org.apache.catalina.core.StandardServer: int port>;
+        $r16 = r0.<org.apache.catalina.core.StandardServer: java.lang.String address>;
+        $r17 = staticinvoke <java.net.InetAddress: java.net.InetAddress getByName(java.lang.String)>($r16);
+        specialinvoke $r15.<java.net.ServerSocket: void <init>(int,int,java.net.InetAddress)>($i5, 1, $r17);
+        r0.<org.apache.catalina.core.StandardServer: java.net.ServerSocket awaitSocket> = $r15;
+
+     label9:
+        goto label11;
+
+     label10:
+        $r18 := @caughtexception;
+        r19 = $r18;
+        $r20 = <org.apache.catalina.core.StandardServer: org.apache.juli.logging.Log log>;
+        $r21 = new java.lang.StringBuilder;
+        specialinvoke $r21.<java.lang.StringBuilder: void <init>(java.lang.String)>("StandardServer.await: create[");
+        $r22 = r0.<org.apache.catalina.core.StandardServer: java.lang.String address>;
+        $r23 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r22);
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(":");
+        $i6 = r0.<org.apache.catalina.core.StandardServer: int port>;
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i6);
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]: ");
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r20.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r27, r19);
+        return;
+
+     label11:
+        $r28 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        r0.<org.apache.catalina.core.StandardServer: java.lang.Thread awaitThread> = $r28;
+        goto label56;
+
+     label12:
+        r29 = r0.<org.apache.catalina.core.StandardServer: java.net.ServerSocket awaitSocket>;
+        if r29 != null goto label13;
+
+        goto label62;
+
+     label13:
+        r30 = null;
+        $r31 = new java.lang.StringBuilder;
+        specialinvoke $r31.<java.lang.StringBuilder: void <init>()>();
+        r3 = $r31;
+
+     label14:
+        l0 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+
+     label15:
+        r30 = virtualinvoke r29.<java.net.ServerSocket: java.net.Socket accept()>();
+        virtualinvoke r30.<java.net.Socket: void setSoTimeout(int)>(10000);
+        r4 = virtualinvoke r30.<java.net.Socket: java.io.InputStream getInputStream()>();
+
+     label16:
+        goto label35;
+
+     label17:
+        $r32 := @caughtexception;
+        r5 = $r32;
+        $r33 = <org.apache.catalina.core.StandardServer: org.apache.juli.logging.Log log>;
+        $r34 = <org.apache.catalina.core.StandardServer: org.apache.tomcat.util.res.StringManager sm>;
+        $r35 = newarray (java.lang.Object)[1];
+        $l1 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        $l7 = $l1 - l0;
+        $r36 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>($l7);
+        $r35[0] = $r36;
+        $r37 = virtualinvoke $r34.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("standardServer.accept.timeout", $r35);
+        interfaceinvoke $r33.<org.apache.juli.logging.Log: void warn(java.lang.Object,java.lang.Throwable)>($r37, r5);
+
+     label18:
+        if r30 == null goto label56;
+
+        virtualinvoke r30.<java.net.Socket: void close()>();
+
+     label19:
+        goto label56;
+
+     label20:
+        $r38 := @caughtexception;
+        r6 = $r38;
+        goto label56;
+
+     label21:
+        $r39 := @caughtexception;
+
+     label22:
+        r40 = $r39;
+        $r41 = <org.apache.catalina.core.StandardServer: org.apache.juli.logging.Log log>;
+        $r42 = new java.lang.StringBuilder;
+        specialinvoke $r42.<java.lang.StringBuilder: void <init>(java.lang.String)>("StandardServer.accept security exception: ");
+        $r43 = virtualinvoke r40.<java.security.AccessControlException: java.lang.String getMessage()>();
+        $r44 = virtualinvoke $r42.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r43);
+        $r45 = virtualinvoke $r44.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r41.<org.apache.juli.logging.Log: void warn(java.lang.Object,java.lang.Throwable)>($r45, r40);
+
+     label23:
+        if r30 == null goto label56;
+
+        virtualinvoke r30.<java.net.Socket: void close()>();
+
+     label24:
+        goto label56;
+
+     label25:
+        $r46 := @caughtexception;
+        r47 = $r46;
+        goto label56;
+
+     label26:
+        $r48 := @caughtexception;
+
+     label27:
+        r49 = $r48;
+        $z1 = r0.<org.apache.catalina.core.StandardServer: boolean stopAwait>;
+        if $z1 == 0 goto label31;
+
+     label28:
+        if r30 == null goto label62;
+
+        virtualinvoke r30.<java.net.Socket: void close()>();
+
+     label29:
+        goto label62;
+
+     label30:
+        $r50 := @caughtexception;
+        r51 = $r50;
+        goto label62;
+
+     label31:
+        $r52 = <org.apache.catalina.core.StandardServer: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r52.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("StandardServer.await: accept: ", r49);
+
+     label32:
+        if r30 == null goto label62;
+
+        virtualinvoke r30.<java.net.Socket: void close()>();
+
+     label33:
+        goto label62;
+
+     label34:
+        $r53 := @caughtexception;
+        r54 = $r53;
+        goto label62;
+
+     label35:
+        i8 = 1024;
+        goto label38;
+
+     label36:
+        $r55 = r0.<org.apache.catalina.core.StandardServer: java.util.Random random>;
+        if $r55 != null goto label37;
+
+        $r56 = new java.util.Random;
+        specialinvoke $r56.<java.util.Random: void <init>()>();
+        r0.<org.apache.catalina.core.StandardServer: java.util.Random random> = $r56;
+
+     label37:
+        $r57 = r0.<org.apache.catalina.core.StandardServer: java.util.Random random>;
+        $i9 = virtualinvoke $r57.<java.util.Random: int nextInt()>();
+        $i10 = $i9 % 1024;
+        i8 = i8 + $i10;
+
+     label38:
+        $r58 = r0.<org.apache.catalina.core.StandardServer: java.lang.String shutdown>;
+        $i11 = virtualinvoke $r58.<java.lang.String: int length()>();
+        if i8 < $i11 goto label36;
+
+        goto label45;
+
+     label39:
+        b2 = -1;
+
+     label40:
+        i12 = virtualinvoke r4.<java.io.InputStream: int read()>();
+
+     label41:
+        goto label43;
+
+     label42:
+        $r59 := @caughtexception;
+        r7 = $r59;
+        $r60 = <org.apache.catalina.core.StandardServer: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r60.<org.apache.juli.logging.Log: void warn(java.lang.Object,java.lang.Throwable)>("StandardServer.await: read: ", r7);
+        i12 = -1;
+
+     label43:
+        if i12 < 32 goto label51;
+
+        if i12 != 127 goto label44;
+
+        goto label51;
+
+     label44:
+        $c13 = (char) i12;
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>($c13);
+        i8 = i8 + -1;
+
+     label45:
+        if i8 > 0 goto label39;
+
+        goto label51;
+
+     label46:
+        $r62 := @caughtexception;
+        r8 = $r62;
+
+     label47:
+        if r30 == null goto label50;
+
+        virtualinvoke r30.<java.net.Socket: void close()>();
+
+     label48:
+        goto label50;
+
+     label49:
+        $r63 := @caughtexception;
+        r64 = $r63;
+
+     label50:
+        throw r8;
+
+     label51:
+        if r30 == null goto label54;
+
+        virtualinvoke r30.<java.net.Socket: void close()>();
+
+     label52:
+        goto label54;
+
+     label53:
+        $r65 := @caughtexception;
+        r66 = $r65;
+
+     label54:
+        $r67 = virtualinvoke r3.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r68 = r0.<org.apache.catalina.core.StandardServer: java.lang.String shutdown>;
+        z2 = virtualinvoke $r67.<java.lang.String: boolean equals(java.lang.Object)>($r68);
+        if z2 == 0 goto label55;
+
+        $r69 = <org.apache.catalina.core.StandardServer: org.apache.juli.logging.Log log>;
+        $r70 = <org.apache.catalina.core.StandardServer: org.apache.tomcat.util.res.StringManager sm>;
+        $r71 = virtualinvoke $r70.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("standardServer.shutdownViaPort");
+        interfaceinvoke $r69.<org.apache.juli.logging.Log: void info(java.lang.Object)>($r71);
+        goto label62;
+
+     label55:
+        $r72 = <org.apache.catalina.core.StandardServer: org.apache.juli.logging.Log log>;
+        $r73 = new java.lang.StringBuilder;
+        specialinvoke $r73.<java.lang.StringBuilder: void <init>(java.lang.String)>("StandardServer.await: Invalid command \'");
+        $r74 = virtualinvoke r3.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r75 = virtualinvoke $r73.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r74);
+        $r76 = virtualinvoke $r75.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\' received");
+        $r77 = virtualinvoke $r76.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r72.<org.apache.juli.logging.Log: void warn(java.lang.Object)>($r77);
+
+     label56:
+        $z3 = r0.<org.apache.catalina.core.StandardServer: boolean stopAwait>;
+        if $z3 == 0 goto label12;
+
+        goto label62;
+
+     label57:
+        $r78 := @caughtexception;
+        r9 = $r78;
+        r10 = r0.<org.apache.catalina.core.StandardServer: java.net.ServerSocket awaitSocket>;
+        r0.<org.apache.catalina.core.StandardServer: java.lang.Thread awaitThread> = null;
+        r0.<org.apache.catalina.core.StandardServer: java.net.ServerSocket awaitSocket> = null;
+        if r10 == null goto label61;
+
+     label58:
+        virtualinvoke r10.<java.net.ServerSocket: void close()>();
+
+     label59:
+        goto label61;
+
+     label60:
+        $r79 := @caughtexception;
+        r11 = $r79;
+
+     label61:
+        throw r9;
+
+     label62:
+        r80 = r0.<org.apache.catalina.core.StandardServer: java.net.ServerSocket awaitSocket>;
+        r0.<org.apache.catalina.core.StandardServer: java.lang.Thread awaitThread> = null;
+        r0.<org.apache.catalina.core.StandardServer: java.net.ServerSocket awaitSocket> = null;
+        if r80 == null goto label66;
+
+     label63:
+        virtualinvoke r80.<java.net.ServerSocket: void close()>();
+
+     label64:
+        goto label66;
+
+     label65:
+        $r81 := @caughtexception;
+        r82 = $r81;
+
+     label66:
+        return;
+
+        catch java.lang.InterruptedException from label2 to label3 with label4;
+        catch java.lang.Throwable from label1 to label6 with label6;
+        catch java.io.IOException from label8 to label9 with label10;
+        catch java.net.SocketTimeoutException from label15 to label16 with label17;
+        catch java.io.IOException from label18 to label19 with label20;
+        catch java.security.AccessControlException from label15 to label16 with label21;
+        catch java.io.IOException from label23 to label24 with label25;
+        catch java.io.IOException from label15 to label16 with label26;
+        catch java.io.IOException from label28 to label29 with label30;
+        catch java.io.IOException from label32 to label33 with label34;
+        catch java.io.IOException from label40 to label41 with label42;
+        catch java.lang.Throwable from label14 to label18 with label46;
+        catch java.lang.Throwable from label22 to label23 with label46;
+        catch java.lang.Throwable from label27 to label28 with label46;
+        catch java.lang.Throwable from label31 to label32 with label46;
+        catch java.lang.Throwable from label35 to label46 with label46;
+        catch java.io.IOException from label47 to label48 with label49;
+        catch java.io.IOException from label51 to label52 with label53;
+        catch java.lang.Throwable from label11 to label57 with label57;
+        catch java.io.IOException from label58 to label59 with label60;
+        catch java.io.IOException from label63 to label64 with label65;
+    }
+
+    public org.apache.catalina.Service findService(java.lang.String)
+    {
+        org.apache.catalina.core.StandardServer r0;
+        java.lang.String r1, $r6;
+        java.lang.Object r2, $r3;
+        int i0, $i1;
+        org.apache.catalina.Service[] $r4, $r7, $r9;
+        org.apache.catalina.Service $r5, $r8;
+        boolean $z0;
+        java.lang.Throwable $r10;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        r1 := @parameter0: java.lang.String;
+        if r1 != null goto label0;
+
+        return null;
+
+     label0:
+        $r3 = r0.<org.apache.catalina.core.StandardServer: java.lang.Object servicesLock>;
+        r2 = $r3;
+        entermonitor $r3;
+
+     label1:
+        i0 = 0;
+        goto label5;
+
+     label2:
+        $r4 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $r5 = $r4[i0];
+        $r6 = interfaceinvoke $r5.<org.apache.catalina.Service: java.lang.String getName()>();
+        $z0 = virtualinvoke r1.<java.lang.String: boolean equals(java.lang.Object)>($r6);
+        if $z0 == 0 goto label4;
+
+        $r7 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $r8 = $r7[i0];
+        exitmonitor r2;
+
+     label3:
+        return $r8;
+
+     label4:
+        i0 = i0 + 1;
+
+     label5:
+        $r9 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $i1 = lengthof $r9;
+        if i0 < $i1 goto label2;
+
+        exitmonitor r2;
+
+     label6:
+        goto label10;
+
+     label7:
+        $r10 := @caughtexception;
+
+     label8:
+        exitmonitor r2;
+
+     label9:
+        throw $r10;
+
+     label10:
+        return null;
+
+        catch java.lang.Throwable from label1 to label3 with label7;
+        catch java.lang.Throwable from label4 to label6 with label7;
+        catch java.lang.Throwable from label8 to label9 with label7;
+    }
+
+    public org.apache.catalina.Service[] findServices()
+    {
+        org.apache.catalina.core.StandardServer r0;
+        org.apache.catalina.Service[] $r1;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        $r1 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        return $r1;
+    }
+
+    public javax.management.ObjectName[] getServiceNames()
+    {
+        org.apache.catalina.core.StandardServer r0;
+        javax.management.ObjectName[] r1;
+        int i0, $i1, $i2;
+        org.apache.catalina.Service[] $r2, $r3, $r7;
+        org.apache.catalina.Service $r4;
+        org.apache.catalina.core.StandardService $r5;
+        javax.management.ObjectName $r6;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        $r2 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $i1 = lengthof $r2;
+        r1 = newarray (javax.management.ObjectName)[$i1];
+        i0 = 0;
+        goto label1;
+
+     label0:
+        $r3 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $r4 = $r3[i0];
+        $r5 = (org.apache.catalina.core.StandardService) $r4;
+        $r6 = virtualinvoke $r5.<org.apache.catalina.core.StandardService: javax.management.ObjectName getObjectName()>();
+        r1[i0] = $r6;
+        i0 = i0 + 1;
+
+     label1:
+        $r7 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $i2 = lengthof $r7;
+        if i0 < $i2 goto label0;
+
+        return r1;
+    }
+
+    public void removeService(org.apache.catalina.Service)
+    {
+        org.apache.catalina.core.StandardServer r0;
+        org.apache.catalina.Service r1, $r6, $r9, $r14;
+        java.lang.Object r2, $r4;
+        int i0, i1, i2, $i3, i4, $i5, $i6, $i7, $i8;
+        org.apache.catalina.Service[] r3, $r5, $r7, $r8, $r12, $r13, $r15;
+        org.apache.catalina.LifecycleException $r10, r11;
+        java.beans.PropertyChangeSupport $r16;
+        java.lang.Throwable $r17;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        r1 := @parameter0: org.apache.catalina.Service;
+        $r4 = r0.<org.apache.catalina.core.StandardServer: java.lang.Object servicesLock>;
+        r2 = $r4;
+        entermonitor $r4;
+
+     label0:
+        i0 = -1;
+        i1 = 0;
+        goto label3;
+
+     label1:
+        $r5 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $r6 = $r5[i1];
+        if r1 != $r6 goto label2;
+
+        i0 = i1;
+        goto label4;
+
+     label2:
+        i1 = i1 + 1;
+
+     label3:
+        $r7 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $i3 = lengthof $r7;
+        if i1 < $i3 goto label1;
+
+     label4:
+        if i0 >= 0 goto label6;
+
+        exitmonitor r2;
+
+     label5:
+        return;
+
+     label6:
+        $r8 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $r9 = $r8[i0];
+        interfaceinvoke $r9.<org.apache.catalina.Service: void stop()>();
+
+     label7:
+        goto label9;
+
+     label8:
+        $r10 := @caughtexception;
+        r11 = $r10;
+
+     label9:
+        i4 = 0;
+        $r12 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $i5 = lengthof $r12;
+        $i6 = $i5 - 1;
+        r3 = newarray (org.apache.catalina.Service)[$i6];
+        i2 = 0;
+        goto label12;
+
+     label10:
+        if i2 == i0 goto label11;
+
+        $i7 = i4;
+        i4 = i4 + 1;
+        $r13 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $r14 = $r13[i2];
+        r3[$i7] = $r14;
+
+     label11:
+        i2 = i2 + 1;
+
+     label12:
+        $r15 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $i8 = lengthof $r15;
+        if i2 < $i8 goto label10;
+
+        r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services> = r3;
+        $r16 = r0.<org.apache.catalina.core.StandardServer: java.beans.PropertyChangeSupport support>;
+        virtualinvoke $r16.<java.beans.PropertyChangeSupport: void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)>("service", r1, null);
+        exitmonitor r2;
+
+     label13:
+        goto label17;
+
+     label14:
+        $r17 := @caughtexception;
+
+     label15:
+        exitmonitor r2;
+
+     label16:
+        throw $r17;
+
+     label17:
+        return;
+
+        catch org.apache.catalina.LifecycleException from label6 to label7 with label8;
+        catch java.lang.Throwable from label0 to label5 with label14;
+        catch java.lang.Throwable from label6 to label13 with label14;
+        catch java.lang.Throwable from label15 to label16 with label14;
+    }
+
+    public void addPropertyChangeListener(java.beans.PropertyChangeListener)
+    {
+        org.apache.catalina.core.StandardServer r0;
+        java.beans.PropertyChangeListener r1;
+        java.beans.PropertyChangeSupport $r2;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        r1 := @parameter0: java.beans.PropertyChangeListener;
+        $r2 = r0.<org.apache.catalina.core.StandardServer: java.beans.PropertyChangeSupport support>;
+        virtualinvoke $r2.<java.beans.PropertyChangeSupport: void addPropertyChangeListener(java.beans.PropertyChangeListener)>(r1);
+        return;
+    }
+
+    public void removePropertyChangeListener(java.beans.PropertyChangeListener)
+    {
+        org.apache.catalina.core.StandardServer r0;
+        java.beans.PropertyChangeListener r1;
+        java.beans.PropertyChangeSupport $r2;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        r1 := @parameter0: java.beans.PropertyChangeListener;
+        $r2 = r0.<org.apache.catalina.core.StandardServer: java.beans.PropertyChangeSupport support>;
+        virtualinvoke $r2.<java.beans.PropertyChangeSupport: void removePropertyChangeListener(java.beans.PropertyChangeListener)>(r1);
+        return;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.catalina.core.StandardServer r0;
+        java.lang.StringBuilder $r1, r2;
+        int $i0;
+        java.lang.String $r5;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        $r1 = new java.lang.StringBuilder;
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>(java.lang.String)>("StandardServer[");
+        r2 = $r1;
+        $i0 = virtualinvoke r0.<org.apache.catalina.core.StandardServer: int getPort()>();
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i0);
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+        $r5 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r5;
+    }
+
+    public synchronized void storeConfig() throws java.lang.Exception
+    {
+        org.apache.catalina.core.StandardServer r0;
+        javax.management.ObjectName $r1, r2;
+        javax.management.MBeanServer $r3;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        $r1 = new javax.management.ObjectName;
+        specialinvoke $r1.<javax.management.ObjectName: void <init>(java.lang.String)>("Catalina:type=StoreConfig");
+        r2 = $r1;
+        $r3 = r0.<org.apache.catalina.core.StandardServer: javax.management.MBeanServer mserver>;
+        interfaceinvoke $r3.<javax.management.MBeanServer: java.lang.Object invoke(javax.management.ObjectName,java.lang.String,java.lang.Object[],java.lang.String[])>(r2, "storeConfig", null, null);
+        return;
+    }
+
+    public synchronized void storeContext(org.apache.catalina.Context) throws java.lang.Exception
+    {
+        org.apache.catalina.core.StandardServer r0;
+        org.apache.catalina.Context r1;
+        null_type n0;
+        java.lang.Throwable r2, $r14;
+        javax.management.ObjectName $r3, r4;
+        javax.management.MBeanServer $r5, $r6;
+        boolean $z0;
+        java.lang.Object[] $r7;
+        java.lang.String[] $r8;
+        org.apache.juli.logging.Log $r10, $r15;
+        java.lang.StringBuilder $r11, $r12;
+        java.lang.String $r13;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        r1 := @parameter0: org.apache.catalina.Context;
+        n0 = null;
+
+     label0:
+        $r3 = new javax.management.ObjectName;
+        specialinvoke $r3.<javax.management.ObjectName: void <init>(java.lang.String)>("Catalina:type=StoreConfig");
+        r4 = $r3;
+        $r5 = r0.<org.apache.catalina.core.StandardServer: javax.management.MBeanServer mserver>;
+        $z0 = interfaceinvoke $r5.<javax.management.MBeanServer: boolean isRegistered(javax.management.ObjectName)>(r4);
+        if $z0 == 0 goto label1;
+
+        $r6 = r0.<org.apache.catalina.core.StandardServer: javax.management.MBeanServer mserver>;
+        $r7 = newarray (java.lang.Object)[1];
+        $r7[0] = r1;
+        $r8 = newarray (java.lang.String)[1];
+        $r8[0] = "java.lang.String";
+        interfaceinvoke $r6.<javax.management.MBeanServer: java.lang.Object invoke(javax.management.ObjectName,java.lang.String,java.lang.Object[],java.lang.String[])>(r4, "store", $r7, $r8);
+        goto label4;
+
+     label1:
+        $r10 = <org.apache.catalina.core.StandardServer: org.apache.juli.logging.Log log>;
+        $r11 = new java.lang.StringBuilder;
+        specialinvoke $r11.<java.lang.StringBuilder: void <init>(java.lang.String)>("StoreConfig mbean not registered");
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r4);
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r10.<org.apache.juli.logging.Log: void error(java.lang.Object)>($r13);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r14 := @caughtexception;
+        r2 = $r14;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r2);
+        $r15 = <org.apache.catalina.core.StandardServer: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r15.<org.apache.juli.logging.Log: void error(java.lang.Object)>(r2);
+
+     label4:
+        return;
+
+        catch java.lang.Throwable from label0 to label2 with label3;
+    }
+
+    private boolean isUseNaming()
+    {
+        org.apache.catalina.core.StandardServer r0;
+        boolean z0, $z1;
+        java.lang.String r1;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        z0 = 1;
+        r1 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("catalina.useNaming");
+        if r1 == null goto label0;
+
+        $z1 = virtualinvoke r1.<java.lang.String: boolean equals(java.lang.Object)>("false");
+        if $z1 == 0 goto label0;
+
+        z0 = 0;
+
+     label0:
+        return z0;
+    }
+
+    protected void startInternal() throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.core.StandardServer r0;
+        java.lang.Object r1, $r4;
+        int i0, $i1;
+        org.apache.catalina.LifecycleState $r2;
+        org.apache.catalina.deploy.NamingResources $r3;
+        org.apache.catalina.Service[] $r5, $r7;
+        org.apache.catalina.Service $r6;
+        java.lang.Throwable $r8;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        virtualinvoke r0.<org.apache.catalina.core.StandardServer: void fireLifecycleEvent(java.lang.String,java.lang.Object)>("configure_start", null);
+        $r2 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STARTING>;
+        virtualinvoke r0.<org.apache.catalina.core.StandardServer: void setState(org.apache.catalina.LifecycleState)>($r2);
+        $r3 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.deploy.NamingResources globalNamingResources>;
+        virtualinvoke $r3.<org.apache.catalina.deploy.NamingResources: void start()>();
+        $r4 = r0.<org.apache.catalina.core.StandardServer: java.lang.Object servicesLock>;
+        r1 = $r4;
+        entermonitor $r4;
+
+     label0:
+        i0 = 0;
+        goto label2;
+
+     label1:
+        $r5 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $r6 = $r5[i0];
+        interfaceinvoke $r6.<org.apache.catalina.Service: void start()>();
+        i0 = i0 + 1;
+
+     label2:
+        $r7 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $i1 = lengthof $r7;
+        if i0 < $i1 goto label1;
+
+        exitmonitor r1;
+
+     label3:
+        goto label7;
+
+     label4:
+        $r8 := @caughtexception;
+
+     label5:
+        exitmonitor r1;
+
+     label6:
+        throw $r8;
+
+     label7:
+        return;
+
+        catch java.lang.Throwable from label0 to label3 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+    }
+
+    protected void stopInternal() throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.core.StandardServer r0;
+        org.apache.catalina.LifecycleState $r1;
+        int i0, $i1;
+        org.apache.catalina.Service[] $r2, $r4;
+        org.apache.catalina.Service $r3;
+        org.apache.catalina.deploy.NamingResources $r5;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        $r1 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STOPPING>;
+        virtualinvoke r0.<org.apache.catalina.core.StandardServer: void setState(org.apache.catalina.LifecycleState)>($r1);
+        virtualinvoke r0.<org.apache.catalina.core.StandardServer: void fireLifecycleEvent(java.lang.String,java.lang.Object)>("configure_stop", null);
+        i0 = 0;
+        goto label1;
+
+     label0:
+        $r2 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $r3 = $r2[i0];
+        interfaceinvoke $r3.<org.apache.catalina.Service: void stop()>();
+        i0 = i0 + 1;
+
+     label1:
+        $r4 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $i1 = lengthof $r4;
+        if i0 < $i1 goto label0;
+
+        $r5 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.deploy.NamingResources globalNamingResources>;
+        virtualinvoke $r5.<org.apache.catalina.deploy.NamingResources: void stop()>();
+        virtualinvoke r0.<org.apache.catalina.core.StandardServer: void stopAwait()>();
+        return;
+    }
+
+    protected void initInternal() throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.core.StandardServer r0;
+        org.apache.tomcat.util.buf.StringCache $r1;
+        org.apache.catalina.mbeans.MBeanFactory r2, $r9;
+        java.lang.ClassLoader r3, $r24;
+        java.net.URL[] r4, r5;
+        int i0, i1, i2, $i3;
+        java.net.URL r6;
+        java.io.File r7, $r17;
+        javax.management.ObjectName $r8, $r10;
+        org.apache.catalina.deploy.NamingResources $r11;
+        org.apache.catalina.startup.Catalina $r12, $r13;
+        boolean $z0, $z1, $z2, $z3;
+        java.net.URLClassLoader $r14;
+        java.lang.String $r16, $r19;
+        java.net.URI $r18;
+        java.net.URISyntaxException $r20, r21;
+        java.io.IOException $r22, r23;
+        org.apache.catalina.Service[] $r25, $r27;
+        org.apache.catalina.Service $r26;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        specialinvoke r0.<org.apache.catalina.util.LifecycleMBeanBase: void initInternal()>();
+        $r1 = new org.apache.tomcat.util.buf.StringCache;
+        specialinvoke $r1.<org.apache.tomcat.util.buf.StringCache: void <init>()>();
+        $r8 = virtualinvoke r0.<org.apache.catalina.core.StandardServer: javax.management.ObjectName register(java.lang.Object,java.lang.String)>($r1, "type=StringCache");
+        r0.<org.apache.catalina.core.StandardServer: javax.management.ObjectName onameStringCache> = $r8;
+        $r9 = new org.apache.catalina.mbeans.MBeanFactory;
+        specialinvoke $r9.<org.apache.catalina.mbeans.MBeanFactory: void <init>()>();
+        r2 = $r9;
+        virtualinvoke r2.<org.apache.catalina.mbeans.MBeanFactory: void setContainer(java.lang.Object)>(r0);
+        $r10 = virtualinvoke r0.<org.apache.catalina.core.StandardServer: javax.management.ObjectName register(java.lang.Object,java.lang.String)>(r2, "type=MBeanFactory");
+        r0.<org.apache.catalina.core.StandardServer: javax.management.ObjectName onameMBeanFactory> = $r10;
+        $r11 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.deploy.NamingResources globalNamingResources>;
+        virtualinvoke $r11.<org.apache.catalina.deploy.NamingResources: void init()>();
+        $r12 = virtualinvoke r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.startup.Catalina getCatalina()>();
+        if $r12 == null goto label10;
+
+        $r13 = virtualinvoke r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.startup.Catalina getCatalina()>();
+        r3 = virtualinvoke $r13.<org.apache.catalina.startup.Catalina: java.lang.ClassLoader getParentClassLoader()>();
+        goto label9;
+
+     label0:
+        $z0 = r3 instanceof java.net.URLClassLoader;
+        if $z0 == 0 goto label8;
+
+        $r14 = (java.net.URLClassLoader) r3;
+        r4 = virtualinvoke $r14.<java.net.URLClassLoader: java.net.URL[] getURLs()>();
+        r5 = r4;
+        i0 = lengthof r4;
+        i1 = 0;
+        goto label7;
+
+     label1:
+        r6 = r5[i1];
+        $r16 = virtualinvoke r6.<java.net.URL: java.lang.String getProtocol()>();
+        $z1 = virtualinvoke $r16.<java.lang.String: boolean equals(java.lang.Object)>("file");
+        if $z1 == 0 goto label6;
+
+     label2:
+        $r17 = new java.io.File;
+        $r18 = virtualinvoke r6.<java.net.URL: java.net.URI toURI()>();
+        specialinvoke $r17.<java.io.File: void <init>(java.net.URI)>($r18);
+        r7 = $r17;
+        $z2 = virtualinvoke r7.<java.io.File: boolean isFile()>();
+        if $z2 == 0 goto label6;
+
+        $r19 = virtualinvoke r7.<java.io.File: java.lang.String getName()>();
+        $z3 = virtualinvoke $r19.<java.lang.String: boolean endsWith(java.lang.String)>(".jar");
+        if $z3 == 0 goto label6;
+
+        staticinvoke <org.apache.catalina.util.ExtensionValidator: void addSystemResource(java.io.File)>(r7);
+
+     label3:
+        goto label6;
+
+     label4:
+        $r20 := @caughtexception;
+        r21 = $r20;
+        goto label6;
+
+     label5:
+        $r22 := @caughtexception;
+        r23 = $r22;
+
+     label6:
+        i1 = i1 + 1;
+
+     label7:
+        if i1 < i0 goto label1;
+
+     label8:
+        r3 = virtualinvoke r3.<java.lang.ClassLoader: java.lang.ClassLoader getParent()>();
+
+     label9:
+        if r3 == null goto label10;
+
+        $r24 = staticinvoke <java.lang.ClassLoader: java.lang.ClassLoader getSystemClassLoader()>();
+        if r3 != $r24 goto label0;
+
+     label10:
+        i2 = 0;
+        goto label12;
+
+     label11:
+        $r25 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $r26 = $r25[i2];
+        interfaceinvoke $r26.<org.apache.catalina.Service: void init()>();
+        i2 = i2 + 1;
+
+     label12:
+        $r27 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $i3 = lengthof $r27;
+        if i2 < $i3 goto label11;
+
+        return;
+
+        catch java.net.URISyntaxException from label2 to label3 with label4;
+        catch java.io.IOException from label2 to label3 with label5;
+    }
+
+    protected void destroyInternal() throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.core.StandardServer r0;
+        int i0, $i1;
+        org.apache.catalina.Service[] $r1, $r3;
+        org.apache.catalina.Service $r2;
+        org.apache.catalina.deploy.NamingResources $r4;
+        javax.management.ObjectName $r5, $r6;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        i0 = 0;
+        goto label1;
+
+     label0:
+        $r1 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $r2 = $r1[i0];
+        interfaceinvoke $r2.<org.apache.catalina.Service: void destroy()>();
+        i0 = i0 + 1;
+
+     label1:
+        $r3 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] services>;
+        $i1 = lengthof $r3;
+        if i0 < $i1 goto label0;
+
+        $r4 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.deploy.NamingResources globalNamingResources>;
+        virtualinvoke $r4.<org.apache.catalina.deploy.NamingResources: void destroy()>();
+        $r5 = r0.<org.apache.catalina.core.StandardServer: javax.management.ObjectName onameMBeanFactory>;
+        virtualinvoke r0.<org.apache.catalina.core.StandardServer: void unregister(javax.management.ObjectName)>($r5);
+        $r6 = r0.<org.apache.catalina.core.StandardServer: javax.management.ObjectName onameStringCache>;
+        virtualinvoke r0.<org.apache.catalina.core.StandardServer: void unregister(javax.management.ObjectName)>($r6);
+        specialinvoke r0.<org.apache.catalina.util.LifecycleMBeanBase: void destroyInternal()>();
+        return;
+    }
+
+    public java.lang.ClassLoader getParentClassLoader()
+    {
+        org.apache.catalina.core.StandardServer r0;
+        java.lang.ClassLoader $r1, $r2, $r5, $r6;
+        org.apache.catalina.startup.Catalina $r3, $r4;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        $r1 = r0.<org.apache.catalina.core.StandardServer: java.lang.ClassLoader parentClassLoader>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<org.apache.catalina.core.StandardServer: java.lang.ClassLoader parentClassLoader>;
+        return $r2;
+
+     label0:
+        $r3 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.startup.Catalina catalina>;
+        if $r3 == null goto label1;
+
+        $r4 = r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.startup.Catalina catalina>;
+        $r5 = virtualinvoke $r4.<org.apache.catalina.startup.Catalina: java.lang.ClassLoader getParentClassLoader()>();
+        return $r5;
+
+     label1:
+        $r6 = staticinvoke <java.lang.ClassLoader: java.lang.ClassLoader getSystemClassLoader()>();
+        return $r6;
+    }
+
+    public void setParentClassLoader(java.lang.ClassLoader)
+    {
+        org.apache.catalina.core.StandardServer r0;
+        java.lang.ClassLoader r1, r2, $r4;
+        java.beans.PropertyChangeSupport $r3;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        r1 := @parameter0: java.lang.ClassLoader;
+        r2 = r0.<org.apache.catalina.core.StandardServer: java.lang.ClassLoader parentClassLoader>;
+        r0.<org.apache.catalina.core.StandardServer: java.lang.ClassLoader parentClassLoader> = r1;
+        $r3 = r0.<org.apache.catalina.core.StandardServer: java.beans.PropertyChangeSupport support>;
+        $r4 = r0.<org.apache.catalina.core.StandardServer: java.lang.ClassLoader parentClassLoader>;
+        virtualinvoke $r3.<java.beans.PropertyChangeSupport: void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)>("parentClassLoader", r2, $r4);
+        return;
+    }
+
+    protected java.lang.String getDomainInternal()
+    {
+        org.apache.catalina.core.StandardServer r0;
+        java.lang.String r1;
+        org.apache.catalina.Service[] r2;
+        org.apache.catalina.Service r3;
+        int $i0;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        r1 = null;
+        r2 = virtualinvoke r0.<org.apache.catalina.core.StandardServer: org.apache.catalina.Service[] findServices()>();
+        $i0 = lengthof r2;
+        if $i0 <= 0 goto label0;
+
+        r3 = r2[0];
+        if r3 == null goto label0;
+
+        r1 = staticinvoke <org.apache.catalina.mbeans.MBeanUtils: java.lang.String getDomain(org.apache.catalina.Service)>(r3);
+
+     label0:
+        return r1;
+    }
+
+    protected final java.lang.String getObjectNameKeyProperties()
+    {
+        org.apache.catalina.core.StandardServer r0;
+
+        r0 := @this: org.apache.catalina.core.StandardServer;
+        return "type=Server";
+    }
+}

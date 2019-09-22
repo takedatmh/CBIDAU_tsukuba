@@ -1,0 +1,431 @@
+class sun.nio.fs.UnixFileAttributeViews$Posix extends sun.nio.fs.UnixFileAttributeViews$Basic implements java.nio.file.attribute.PosixFileAttributeView
+{
+    private static final java.lang.String PERMISSIONS_NAME;
+    private static final java.lang.String OWNER_NAME;
+    private static final java.lang.String GROUP_NAME;
+    static final java.util.Set posixAttributeNames;
+
+    void <init>(sun.nio.fs.UnixPath, boolean)
+    {
+        sun.nio.fs.UnixFileAttributeViews$Posix r0;
+        sun.nio.fs.UnixPath r1;
+        boolean z0;
+
+        r0 := @this: sun.nio.fs.UnixFileAttributeViews$Posix;
+        r1 := @parameter0: sun.nio.fs.UnixPath;
+        z0 := @parameter1: boolean;
+        specialinvoke r0.<sun.nio.fs.UnixFileAttributeViews$Basic: void <init>(sun.nio.fs.UnixPath,boolean)>(r1, z0);
+        return;
+    }
+
+    final void checkReadExtended()
+    {
+        sun.nio.fs.UnixFileAttributeViews$Posix r0;
+        java.lang.SecurityManager r1;
+        java.lang.RuntimePermission $r2;
+        sun.nio.fs.UnixPath $r3;
+
+        r0 := @this: sun.nio.fs.UnixFileAttributeViews$Posix;
+        r1 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r1 == null goto label0;
+
+        $r3 = r0.<sun.nio.fs.UnixFileAttributeViews$Posix: sun.nio.fs.UnixPath file>;
+        virtualinvoke $r3.<sun.nio.fs.UnixPath: void checkRead()>();
+        $r2 = new java.lang.RuntimePermission;
+        specialinvoke $r2.<java.lang.RuntimePermission: void <init>(java.lang.String)>("accessUserInformation");
+        virtualinvoke r1.<java.lang.SecurityManager: void checkPermission(java.security.Permission)>($r2);
+
+     label0:
+        return;
+    }
+
+    final void checkWriteExtended()
+    {
+        sun.nio.fs.UnixFileAttributeViews$Posix r0;
+        java.lang.SecurityManager r1;
+        java.lang.RuntimePermission $r2;
+        sun.nio.fs.UnixPath $r3;
+
+        r0 := @this: sun.nio.fs.UnixFileAttributeViews$Posix;
+        r1 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r1 == null goto label0;
+
+        $r3 = r0.<sun.nio.fs.UnixFileAttributeViews$Posix: sun.nio.fs.UnixPath file>;
+        virtualinvoke $r3.<sun.nio.fs.UnixPath: void checkWrite()>();
+        $r2 = new java.lang.RuntimePermission;
+        specialinvoke $r2.<java.lang.RuntimePermission: void <init>(java.lang.String)>("accessUserInformation");
+        virtualinvoke r1.<java.lang.SecurityManager: void checkPermission(java.security.Permission)>($r2);
+
+     label0:
+        return;
+    }
+
+    public java.lang.String name()
+    {
+        sun.nio.fs.UnixFileAttributeViews$Posix r0;
+
+        r0 := @this: sun.nio.fs.UnixFileAttributeViews$Posix;
+        return "posix";
+    }
+
+    public void setAttribute(java.lang.String, java.lang.Object) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileAttributeViews$Posix r0;
+        java.lang.String r1;
+        java.lang.Object r2;
+        boolean $z0, $z1, $z2;
+        java.util.Set $r3;
+        java.nio.file.attribute.UserPrincipal $r4;
+        java.nio.file.attribute.GroupPrincipal $r5;
+
+        r0 := @this: sun.nio.fs.UnixFileAttributeViews$Posix;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.Object;
+        $z0 = virtualinvoke r1.<java.lang.String: boolean equals(java.lang.Object)>("permissions");
+        if $z0 == 0 goto label0;
+
+        $r3 = (java.util.Set) r2;
+        virtualinvoke r0.<sun.nio.fs.UnixFileAttributeViews$Posix: void setPermissions(java.util.Set)>($r3);
+        return;
+
+     label0:
+        $z1 = virtualinvoke r1.<java.lang.String: boolean equals(java.lang.Object)>("owner");
+        if $z1 == 0 goto label1;
+
+        $r4 = (java.nio.file.attribute.UserPrincipal) r2;
+        virtualinvoke r0.<sun.nio.fs.UnixFileAttributeViews$Posix: void setOwner(java.nio.file.attribute.UserPrincipal)>($r4);
+        return;
+
+     label1:
+        $z2 = virtualinvoke r1.<java.lang.String: boolean equals(java.lang.Object)>("group");
+        if $z2 == 0 goto label2;
+
+        $r5 = (java.nio.file.attribute.GroupPrincipal) r2;
+        virtualinvoke r0.<sun.nio.fs.UnixFileAttributeViews$Posix: void setGroup(java.nio.file.attribute.GroupPrincipal)>($r5);
+        return;
+
+     label2:
+        specialinvoke r0.<sun.nio.fs.UnixFileAttributeViews$Basic: void setAttribute(java.lang.String,java.lang.Object)>(r1, r2);
+        return;
+    }
+
+    final void addRequestedPosixAttributes(java.nio.file.attribute.PosixFileAttributes, sun.nio.fs.AbstractBasicFileAttributeView$AttributesBuilder)
+    {
+        sun.nio.fs.UnixFileAttributeViews$Posix r0;
+        java.nio.file.attribute.PosixFileAttributes r1;
+        sun.nio.fs.AbstractBasicFileAttributeView$AttributesBuilder r2;
+        boolean $z0, $z1, $z2;
+        java.util.Set $r3;
+        java.nio.file.attribute.UserPrincipal $r4;
+        java.nio.file.attribute.GroupPrincipal $r5;
+
+        r0 := @this: sun.nio.fs.UnixFileAttributeViews$Posix;
+        r1 := @parameter0: java.nio.file.attribute.PosixFileAttributes;
+        r2 := @parameter1: sun.nio.fs.AbstractBasicFileAttributeView$AttributesBuilder;
+        virtualinvoke r0.<sun.nio.fs.UnixFileAttributeViews$Posix: void addRequestedBasicAttributes(java.nio.file.attribute.BasicFileAttributes,sun.nio.fs.AbstractBasicFileAttributeView$AttributesBuilder)>(r1, r2);
+        $z0 = virtualinvoke r2.<sun.nio.fs.AbstractBasicFileAttributeView$AttributesBuilder: boolean match(java.lang.String)>("permissions");
+        if $z0 == 0 goto label0;
+
+        $r3 = interfaceinvoke r1.<java.nio.file.attribute.PosixFileAttributes: java.util.Set permissions()>();
+        virtualinvoke r2.<sun.nio.fs.AbstractBasicFileAttributeView$AttributesBuilder: void add(java.lang.String,java.lang.Object)>("permissions", $r3);
+
+     label0:
+        $z1 = virtualinvoke r2.<sun.nio.fs.AbstractBasicFileAttributeView$AttributesBuilder: boolean match(java.lang.String)>("owner");
+        if $z1 == 0 goto label1;
+
+        $r4 = interfaceinvoke r1.<java.nio.file.attribute.PosixFileAttributes: java.nio.file.attribute.UserPrincipal owner()>();
+        virtualinvoke r2.<sun.nio.fs.AbstractBasicFileAttributeView$AttributesBuilder: void add(java.lang.String,java.lang.Object)>("owner", $r4);
+
+     label1:
+        $z2 = virtualinvoke r2.<sun.nio.fs.AbstractBasicFileAttributeView$AttributesBuilder: boolean match(java.lang.String)>("group");
+        if $z2 == 0 goto label2;
+
+        $r5 = interfaceinvoke r1.<java.nio.file.attribute.PosixFileAttributes: java.nio.file.attribute.GroupPrincipal group()>();
+        virtualinvoke r2.<sun.nio.fs.AbstractBasicFileAttributeView$AttributesBuilder: void add(java.lang.String,java.lang.Object)>("group", $r5);
+
+     label2:
+        return;
+    }
+
+    public java.util.Map readAttributes(java.lang.String[]) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileAttributeViews$Posix r0;
+        java.lang.String[] r1;
+        java.util.Set $r2;
+        sun.nio.fs.AbstractBasicFileAttributeView$AttributesBuilder r3;
+        sun.nio.fs.UnixFileAttributes r4;
+        java.util.Map $r5;
+
+        r0 := @this: sun.nio.fs.UnixFileAttributeViews$Posix;
+        r1 := @parameter0: java.lang.String[];
+        $r2 = <sun.nio.fs.UnixFileAttributeViews$Posix: java.util.Set posixAttributeNames>;
+        r3 = staticinvoke <sun.nio.fs.AbstractBasicFileAttributeView$AttributesBuilder: sun.nio.fs.AbstractBasicFileAttributeView$AttributesBuilder create(java.util.Set,java.lang.String[])>($r2, r1);
+        r4 = virtualinvoke r0.<sun.nio.fs.UnixFileAttributeViews$Posix: sun.nio.fs.UnixFileAttributes readAttributes()>();
+        virtualinvoke r0.<sun.nio.fs.UnixFileAttributeViews$Posix: void addRequestedPosixAttributes(java.nio.file.attribute.PosixFileAttributes,sun.nio.fs.AbstractBasicFileAttributeView$AttributesBuilder)>(r4, r3);
+        $r5 = virtualinvoke r3.<sun.nio.fs.AbstractBasicFileAttributeView$AttributesBuilder: java.util.Map unmodifiableMap()>();
+        return $r5;
+    }
+
+    public sun.nio.fs.UnixFileAttributes readAttributes() throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileAttributeViews$Posix r0;
+        sun.nio.fs.UnixException r1, $r4;
+        sun.nio.fs.UnixPath $r2, $r5;
+        boolean $z0;
+        sun.nio.fs.UnixFileAttributes $r3;
+
+        r0 := @this: sun.nio.fs.UnixFileAttributeViews$Posix;
+        virtualinvoke r0.<sun.nio.fs.UnixFileAttributeViews$Posix: void checkReadExtended()>();
+
+     label0:
+        $r2 = r0.<sun.nio.fs.UnixFileAttributeViews$Posix: sun.nio.fs.UnixPath file>;
+        $z0 = r0.<sun.nio.fs.UnixFileAttributeViews$Posix: boolean followLinks>;
+        $r3 = staticinvoke <sun.nio.fs.UnixFileAttributes: sun.nio.fs.UnixFileAttributes get(sun.nio.fs.UnixPath,boolean)>($r2, $z0);
+
+     label1:
+        return $r3;
+
+     label2:
+        $r4 := @caughtexception;
+        r1 = $r4;
+        $r5 = r0.<sun.nio.fs.UnixFileAttributeViews$Posix: sun.nio.fs.UnixPath file>;
+        virtualinvoke r1.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>($r5);
+        return null;
+
+        catch sun.nio.fs.UnixException from label0 to label1 with label2;
+    }
+
+    final void setMode(int) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileAttributeViews$Posix r0;
+        int i0, i1;
+        java.lang.Throwable r1, $r4;
+        boolean $z0;
+        sun.nio.fs.UnixPath $r2, $r3, $r7;
+        sun.nio.fs.UnixException $r5, r6;
+
+        r0 := @this: sun.nio.fs.UnixFileAttributeViews$Posix;
+        i0 := @parameter0: int;
+        virtualinvoke r0.<sun.nio.fs.UnixFileAttributeViews$Posix: void checkWriteExtended()>();
+
+     label0:
+        $z0 = r0.<sun.nio.fs.UnixFileAttributeViews$Posix: boolean followLinks>;
+        if $z0 == 0 goto label1;
+
+        $r2 = r0.<sun.nio.fs.UnixFileAttributeViews$Posix: sun.nio.fs.UnixPath file>;
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void chmod(sun.nio.fs.UnixPath,int)>($r2, i0);
+        goto label7;
+
+     label1:
+        $r3 = r0.<sun.nio.fs.UnixFileAttributeViews$Posix: sun.nio.fs.UnixPath file>;
+        i1 = virtualinvoke $r3.<sun.nio.fs.UnixPath: int openForAttributeAccess(boolean)>(0);
+
+     label2:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void fchmod(int,int)>(i1, i0);
+
+     label3:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void close(int)>(i1);
+        goto label7;
+
+     label4:
+        $r4 := @caughtexception;
+
+     label5:
+        r1 = $r4;
+
+     label6:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void close(int)>(i1);
+        throw r1;
+
+     label7:
+        goto label9;
+
+     label8:
+        $r5 := @caughtexception;
+        r6 = $r5;
+        $r7 = r0.<sun.nio.fs.UnixFileAttributeViews$Posix: sun.nio.fs.UnixPath file>;
+        virtualinvoke r6.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>($r7);
+
+     label9:
+        return;
+
+        catch java.lang.Throwable from label2 to label3 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+        catch sun.nio.fs.UnixException from label0 to label7 with label8;
+    }
+
+    final void setOwners(int, int) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileAttributeViews$Posix r0;
+        int i0, i1;
+        sun.nio.fs.UnixException r1, $r4;
+        boolean $z0;
+        sun.nio.fs.UnixPath $r2, $r3, $r5;
+
+        r0 := @this: sun.nio.fs.UnixFileAttributeViews$Posix;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        virtualinvoke r0.<sun.nio.fs.UnixFileAttributeViews$Posix: void checkWriteExtended()>();
+
+     label0:
+        $z0 = r0.<sun.nio.fs.UnixFileAttributeViews$Posix: boolean followLinks>;
+        if $z0 == 0 goto label1;
+
+        $r2 = r0.<sun.nio.fs.UnixFileAttributeViews$Posix: sun.nio.fs.UnixPath file>;
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void chown(sun.nio.fs.UnixPath,int,int)>($r2, i0, i1);
+        goto label2;
+
+     label1:
+        $r3 = r0.<sun.nio.fs.UnixFileAttributeViews$Posix: sun.nio.fs.UnixPath file>;
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void lchown(sun.nio.fs.UnixPath,int,int)>($r3, i0, i1);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r4 := @caughtexception;
+        r1 = $r4;
+        $r5 = r0.<sun.nio.fs.UnixFileAttributeViews$Posix: sun.nio.fs.UnixPath file>;
+        virtualinvoke r1.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>($r5);
+
+     label4:
+        return;
+
+        catch sun.nio.fs.UnixException from label0 to label2 with label3;
+    }
+
+    public void setPermissions(java.util.Set) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileAttributeViews$Posix r0;
+        java.util.Set r1;
+        int $i0;
+
+        r0 := @this: sun.nio.fs.UnixFileAttributeViews$Posix;
+        r1 := @parameter0: java.util.Set;
+        $i0 = staticinvoke <sun.nio.fs.UnixFileModeAttribute: int toUnixMode(java.util.Set)>(r1);
+        virtualinvoke r0.<sun.nio.fs.UnixFileAttributeViews$Posix: void setMode(int)>($i0);
+        return;
+    }
+
+    public void setOwner(java.nio.file.attribute.UserPrincipal) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileAttributeViews$Posix r0;
+        java.nio.file.attribute.UserPrincipal r1;
+        int i0;
+        java.lang.NullPointerException $r2;
+        boolean $z0, $z1;
+        java.nio.file.ProviderMismatchException $r3;
+        java.io.IOException $r4;
+        sun.nio.fs.UnixUserPrincipals$User $r5;
+
+        r0 := @this: sun.nio.fs.UnixFileAttributeViews$Posix;
+        r1 := @parameter0: java.nio.file.attribute.UserPrincipal;
+        if r1 != null goto label0;
+
+        $r2 = new java.lang.NullPointerException;
+        specialinvoke $r2.<java.lang.NullPointerException: void <init>(java.lang.String)>("\'owner\' is null");
+        throw $r2;
+
+     label0:
+        $z0 = r1 instanceof sun.nio.fs.UnixUserPrincipals$User;
+        if $z0 != 0 goto label1;
+
+        $r3 = new java.nio.file.ProviderMismatchException;
+        specialinvoke $r3.<java.nio.file.ProviderMismatchException: void <init>()>();
+        throw $r3;
+
+     label1:
+        $z1 = r1 instanceof sun.nio.fs.UnixUserPrincipals$Group;
+        if $z1 == 0 goto label2;
+
+        $r4 = new java.io.IOException;
+        specialinvoke $r4.<java.io.IOException: void <init>(java.lang.String)>("\'owner\' parameter can\'t be a group");
+        throw $r4;
+
+     label2:
+        $r5 = (sun.nio.fs.UnixUserPrincipals$User) r1;
+        i0 = virtualinvoke $r5.<sun.nio.fs.UnixUserPrincipals$User: int uid()>();
+        virtualinvoke r0.<sun.nio.fs.UnixFileAttributeViews$Posix: void setOwners(int,int)>(i0, -1);
+        return;
+    }
+
+    public java.nio.file.attribute.UserPrincipal getOwner() throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileAttributeViews$Posix r0;
+        sun.nio.fs.UnixFileAttributes $r1;
+        java.nio.file.attribute.UserPrincipal $r2;
+
+        r0 := @this: sun.nio.fs.UnixFileAttributeViews$Posix;
+        $r1 = virtualinvoke r0.<sun.nio.fs.UnixFileAttributeViews$Posix: sun.nio.fs.UnixFileAttributes readAttributes()>();
+        $r2 = virtualinvoke $r1.<sun.nio.fs.UnixFileAttributes: java.nio.file.attribute.UserPrincipal owner()>();
+        return $r2;
+    }
+
+    public void setGroup(java.nio.file.attribute.GroupPrincipal) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileAttributeViews$Posix r0;
+        java.nio.file.attribute.GroupPrincipal r1;
+        int i0;
+        java.lang.NullPointerException $r2;
+        boolean $z0;
+        java.nio.file.ProviderMismatchException $r3;
+        sun.nio.fs.UnixUserPrincipals$Group $r4;
+
+        r0 := @this: sun.nio.fs.UnixFileAttributeViews$Posix;
+        r1 := @parameter0: java.nio.file.attribute.GroupPrincipal;
+        if r1 != null goto label0;
+
+        $r2 = new java.lang.NullPointerException;
+        specialinvoke $r2.<java.lang.NullPointerException: void <init>(java.lang.String)>("\'owner\' is null");
+        throw $r2;
+
+     label0:
+        $z0 = r1 instanceof sun.nio.fs.UnixUserPrincipals$Group;
+        if $z0 != 0 goto label1;
+
+        $r3 = new java.nio.file.ProviderMismatchException;
+        specialinvoke $r3.<java.nio.file.ProviderMismatchException: void <init>()>();
+        throw $r3;
+
+     label1:
+        $r4 = (sun.nio.fs.UnixUserPrincipals$Group) r1;
+        i0 = virtualinvoke $r4.<sun.nio.fs.UnixUserPrincipals$Group: int gid()>();
+        virtualinvoke r0.<sun.nio.fs.UnixFileAttributeViews$Posix: void setOwners(int,int)>(-1, i0);
+        return;
+    }
+
+    public volatile java.nio.file.attribute.BasicFileAttributes readAttributes() throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileAttributeViews$Posix r0;
+        sun.nio.fs.UnixFileAttributes $r1;
+
+        r0 := @this: sun.nio.fs.UnixFileAttributeViews$Posix;
+        $r1 = virtualinvoke r0.<sun.nio.fs.UnixFileAttributeViews$Posix: sun.nio.fs.UnixFileAttributes readAttributes()>();
+        return $r1;
+    }
+
+    public volatile java.nio.file.attribute.PosixFileAttributes readAttributes() throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileAttributeViews$Posix r0;
+        sun.nio.fs.UnixFileAttributes $r1;
+
+        r0 := @this: sun.nio.fs.UnixFileAttributeViews$Posix;
+        $r1 = virtualinvoke r0.<sun.nio.fs.UnixFileAttributeViews$Posix: sun.nio.fs.UnixFileAttributes readAttributes()>();
+        return $r1;
+    }
+
+    static void <clinit>()
+    {
+        java.util.Set $r0, $r2;
+        java.lang.String[] $r1;
+
+        $r0 = <sun.nio.fs.UnixFileAttributeViews$Posix: java.util.Set basicAttributeNames>;
+        $r1 = newarray (java.lang.String)[3];
+        $r1[0] = "permissions";
+        $r1[1] = "owner";
+        $r1[2] = "group";
+        $r2 = staticinvoke <sun.nio.fs.Util: java.util.Set newSet(java.util.Set,java.lang.Object[])>($r0, $r1);
+        <sun.nio.fs.UnixFileAttributeViews$Posix: java.util.Set posixAttributeNames> = $r2;
+        return;
+    }
+}

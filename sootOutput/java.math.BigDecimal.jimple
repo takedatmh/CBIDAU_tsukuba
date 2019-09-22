@@ -1,0 +1,4960 @@
+public class java.math.BigDecimal extends java.lang.Number implements java.lang.Comparable
+{
+    private volatile java.math.BigInteger intVal;
+    private int scale;
+    private transient int precision;
+    private transient java.lang.String stringCache;
+    static final long INFLATED;
+    private transient long intCompact;
+    private static final int MAX_COMPACT_DIGITS;
+    private static final int MAX_BIGINT_BITS;
+    private static final long serialVersionUID;
+    private static final java.lang.ThreadLocal threadLocalStringBuilderHelper;
+    private static final java.math.BigDecimal[] zeroThroughTen;
+    private static final java.math.BigDecimal[] ZERO_SCALED_BY;
+    private static final long HALF_LONG_MAX_VALUE;
+    private static final long HALF_LONG_MIN_VALUE;
+    public static final java.math.BigDecimal ZERO;
+    public static final java.math.BigDecimal ONE;
+    public static final java.math.BigDecimal TEN;
+    public static final int ROUND_UP;
+    public static final int ROUND_DOWN;
+    public static final int ROUND_CEILING;
+    public static final int ROUND_FLOOR;
+    public static final int ROUND_HALF_UP;
+    public static final int ROUND_HALF_DOWN;
+    public static final int ROUND_HALF_EVEN;
+    public static final int ROUND_UNNECESSARY;
+    private static final long[] LONG_TEN_POWERS_TABLE;
+    private static volatile java.math.BigInteger[] BIG_TEN_POWERS_TABLE;
+    private static final int BIG_TEN_POWERS_TABLE_INITLEN;
+    private static final int BIG_TEN_POWERS_TABLE_MAX;
+    private static final long[] THRESHOLDS_TABLE;
+    static final boolean $assertionsDisabled;
+
+    void <init>(java.math.BigInteger, long, int, int)
+    {
+        java.math.BigDecimal r0;
+        java.math.BigInteger r1;
+        long l0;
+        int i1, i2;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigInteger;
+        l0 := @parameter1: long;
+        i1 := @parameter2: int;
+        i2 := @parameter3: int;
+        specialinvoke r0.<java.lang.Number: void <init>()>();
+        r0.<java.math.BigDecimal: int scale> = i1;
+        r0.<java.math.BigDecimal: int precision> = i2;
+        r0.<java.math.BigDecimal: long intCompact> = l0;
+        r0.<java.math.BigDecimal: java.math.BigInteger intVal> = r1;
+        return;
+    }
+
+    public void <init>(char[], int, int)
+    {
+        java.math.BigDecimal r0;
+        char[] r1, r3, $r5, $r14, r15;
+        int i0, i1, i2, i3, i5, i7, i9, i10, $i11, $i12, $i19, $i20, $i21, i22, i24, $i25, $i28, $i38, $i39;
+        long l4, l6, $l17, $l18, $l26, $l27, $l29, $l32, l33, $l36, l37;
+        java.math.BigInteger r2, $r16, $r24;
+        boolean z0, z1, z2, $z3, $z4, $z5, z6;
+        char c8, $c13, $c14, c23;
+        java.lang.NumberFormatException $r4, $r6, $r7, $r8, $r9, $r10, $r11, $r12, $r13, $r19, $r22;
+        byte $b15, $b16, $b30, $b31, $b34, $b35, $b40;
+        java.lang.ArrayIndexOutOfBoundsException $r17, r18;
+        java.lang.NegativeArraySizeException $r20, r21;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        specialinvoke r0.<java.lang.Number: void <init>()>();
+        $i11 = i0 + i1;
+        $i12 = lengthof r1;
+        if $i11 > $i12 goto label0;
+
+        if i0 >= 0 goto label1;
+
+     label0:
+        $r4 = new java.lang.NumberFormatException;
+        specialinvoke $r4.<java.lang.NumberFormatException: void <init>()>();
+        throw $r4;
+
+     label1:
+        i2 = 0;
+        i3 = 0;
+        l4 = 0L;
+        r2 = null;
+
+     label2:
+        z0 = 0;
+        $c13 = r1[i0];
+        if $c13 != 45 goto label3;
+
+        z0 = 1;
+        i0 = i0 + 1;
+        i1 = i1 + -1;
+        goto label4;
+
+     label3:
+        $c14 = r1[i0];
+        if $c14 != 43 goto label4;
+
+        i0 = i0 + 1;
+        i1 = i1 + -1;
+
+     label4:
+        z1 = 0;
+        i5 = i0;
+        l6 = 0L;
+        if i1 > 18 goto label5;
+
+        $z3 = 1;
+        goto label6;
+
+     label5:
+        $z3 = 0;
+
+     label6:
+        z2 = $z3;
+        if z2 == 0 goto label7;
+
+        $r5 = null;
+        goto label8;
+
+     label7:
+        $r5 = newarray (char)[i1];
+
+     label8:
+        r3 = $r5;
+        i7 = 0;
+
+     label9:
+        if i1 <= 0 goto label41;
+
+        c8 = r1[i0];
+        if c8 < 48 goto label10;
+
+        if c8 <= 57 goto label11;
+
+     label10:
+        $z4 = staticinvoke <java.lang.Character: boolean isDigit(char)>(c8);
+        if $z4 == 0 goto label24;
+
+     label11:
+        if z2 == 0 goto label17;
+
+        i9 = staticinvoke <java.lang.Character: int digit(char,int)>(c8, 10);
+        if i9 != 0 goto label13;
+
+        if i2 != 0 goto label12;
+
+        i2 = 1;
+        goto label16;
+
+     label12:
+        $b15 = l4 cmp 0L;
+        if $b15 == 0 goto label16;
+
+        l4 = l4 * 10L;
+        i2 = i2 + 1;
+        goto label16;
+
+     label13:
+        if i2 != 1 goto label14;
+
+        $b16 = l4 cmp 0L;
+        if $b16 == 0 goto label15;
+
+     label14:
+        i2 = i2 + 1;
+
+     label15:
+        $l17 = l4 * 10L;
+        $l18 = (long) i9;
+        l4 = $l17 + $l18;
+
+     label16:
+        goto label23;
+
+     label17:
+        if c8 == 48 goto label18;
+
+        $i19 = staticinvoke <java.lang.Character: int digit(char,int)>(c8, 10);
+        if $i19 != 0 goto label20;
+
+     label18:
+        if i2 != 0 goto label19;
+
+        r3[i7] = c8;
+        i2 = 1;
+        goto label23;
+
+     label19:
+        if i7 == 0 goto label23;
+
+        $i20 = i7;
+        i7 = i7 + 1;
+        r3[$i20] = c8;
+        i2 = i2 + 1;
+        goto label23;
+
+     label20:
+        if i2 != 1 goto label21;
+
+        if i7 == 0 goto label22;
+
+     label21:
+        i2 = i2 + 1;
+
+     label22:
+        $i21 = i7;
+        i7 = i7 + 1;
+        r3[$i21] = c8;
+
+     label23:
+        if z1 == 0 goto label40;
+
+        i3 = i3 + 1;
+        goto label40;
+
+     label24:
+        if c8 != 46 goto label26;
+
+        if z1 == 0 goto label25;
+
+        $r6 = new java.lang.NumberFormatException;
+        specialinvoke $r6.<java.lang.NumberFormatException: void <init>()>();
+        throw $r6;
+
+     label25:
+        z1 = 1;
+        goto label40;
+
+     label26:
+        if c8 == 101 goto label27;
+
+        if c8 == 69 goto label27;
+
+        $r7 = new java.lang.NumberFormatException;
+        specialinvoke $r7.<java.lang.NumberFormatException: void <init>()>();
+        throw $r7;
+
+     label27:
+        i22 = i0 + 1;
+        c23 = r1[i22];
+        i24 = i1 + -1;
+        if c23 != 45 goto label28;
+
+        $z5 = 1;
+        goto label29;
+
+     label28:
+        $z5 = 0;
+
+     label29:
+        z6 = $z5;
+        if z6 != 0 goto label30;
+
+        if c23 != 43 goto label31;
+
+     label30:
+        i22 = i22 + 1;
+        c23 = r1[i22];
+        i24 = i24 + -1;
+
+     label31:
+        if i24 > 0 goto label32;
+
+        $r8 = new java.lang.NumberFormatException;
+        specialinvoke $r8.<java.lang.NumberFormatException: void <init>()>();
+        throw $r8;
+
+     label32:
+        if i24 <= 10 goto label33;
+
+        $i25 = staticinvoke <java.lang.Character: int digit(char,int)>(c23, 10);
+        if $i25 != 0 goto label33;
+
+        i22 = i22 + 1;
+        c23 = r1[i22];
+        i24 = i24 + -1;
+        goto label32;
+
+     label33:
+        if i24 <= 10 goto label34;
+
+        $r9 = new java.lang.NumberFormatException;
+        specialinvoke $r9.<java.lang.NumberFormatException: void <init>()>();
+        throw $r9;
+
+     label34:
+        if c23 < 48 goto label35;
+
+        if c23 > 57 goto label35;
+
+        i10 = c23 - 48;
+        goto label36;
+
+     label35:
+        i10 = staticinvoke <java.lang.Character: int digit(char,int)>(c23, 10);
+        if i10 >= 0 goto label36;
+
+        $r10 = new java.lang.NumberFormatException;
+        specialinvoke $r10.<java.lang.NumberFormatException: void <init>()>();
+        throw $r10;
+
+     label36:
+        $l26 = l6 * 10L;
+        $l27 = (long) i10;
+        l6 = $l26 + $l27;
+        if i24 != 1 goto label37;
+
+        goto label38;
+
+     label37:
+        i22 = i22 + 1;
+        c23 = r1[i22];
+        i24 = i24 + -1;
+        goto label34;
+
+     label38:
+        if z6 == 0 goto label39;
+
+        l6 = neg l6;
+
+     label39:
+        $i28 = (int) l6;
+        $l29 = (long) $i28;
+        $b30 = $l29 cmp l6;
+        if $b30 == 0 goto label41;
+
+        $r11 = new java.lang.NumberFormatException;
+        specialinvoke $r11.<java.lang.NumberFormatException: void <init>()>();
+        throw $r11;
+
+     label40:
+        i0 = i0 + 1;
+        i1 = i1 + -1;
+        goto label9;
+
+     label41:
+        if i2 != 0 goto label42;
+
+        $r12 = new java.lang.NumberFormatException;
+        specialinvoke $r12.<java.lang.NumberFormatException: void <init>()>();
+        throw $r12;
+
+     label42:
+        $b31 = l6 cmp 0L;
+        if $b31 == 0 goto label45;
+
+        $l32 = (long) i3;
+        l33 = $l32 - l6;
+        $b34 = l33 cmp 2147483647L;
+        if $b34 > 0 goto label43;
+
+        $b35 = l33 cmp -2147483648L;
+        if $b35 >= 0 goto label44;
+
+     label43:
+        $r13 = new java.lang.NumberFormatException;
+        specialinvoke $r13.<java.lang.NumberFormatException: void <init>(java.lang.String)>("Scale out of range.");
+        throw $r13;
+
+     label44:
+        i3 = (int) l33;
+
+     label45:
+        if z2 == 0 goto label48;
+
+        if z0 == 0 goto label46;
+
+        $l36 = neg l4;
+        goto label47;
+
+     label46:
+        $l36 = l4;
+
+     label47:
+        l37 = $l36;
+        goto label53;
+
+     label48:
+        if z0 != 0 goto label51;
+
+        $i38 = lengthof r3;
+        if $i38 == i2 goto label49;
+
+        $r14 = staticinvoke <java.util.Arrays: char[] copyOf(char[],int)>(r3, i2);
+        goto label50;
+
+     label49:
+        $r14 = r3;
+
+     label50:
+        r15 = $r14;
+        goto label52;
+
+     label51:
+        $i39 = i2 + 1;
+        r15 = newarray (char)[$i39];
+        r15[0] = 45;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r3, 0, r15, 1, i2);
+
+     label52:
+        $r16 = new java.math.BigInteger;
+        specialinvoke $r16.<java.math.BigInteger: void <init>(char[])>(r15);
+        r2 = $r16;
+        l37 = staticinvoke <java.math.BigDecimal: long compactValFor(java.math.BigInteger)>(r2);
+
+     label53:
+        goto label56;
+
+     label54:
+        $r17 := @caughtexception;
+        r18 = $r17;
+        $r19 = new java.lang.NumberFormatException;
+        specialinvoke $r19.<java.lang.NumberFormatException: void <init>()>();
+        throw $r19;
+
+     label55:
+        $r20 := @caughtexception;
+        r21 = $r20;
+        $r22 = new java.lang.NumberFormatException;
+        specialinvoke $r22.<java.lang.NumberFormatException: void <init>()>();
+        throw $r22;
+
+     label56:
+        r0.<java.math.BigDecimal: int scale> = i3;
+        r0.<java.math.BigDecimal: int precision> = i2;
+        r0.<java.math.BigDecimal: long intCompact> = l37;
+        $b40 = l37 cmp -9223372036854775808L;
+        if $b40 == 0 goto label57;
+
+        $r24 = null;
+        goto label58;
+
+     label57:
+        $r24 = r2;
+
+     label58:
+        r0.<java.math.BigDecimal: java.math.BigInteger intVal> = $r24;
+        return;
+
+        catch java.lang.ArrayIndexOutOfBoundsException from label2 to label53 with label54;
+        catch java.lang.NegativeArraySizeException from label2 to label53 with label55;
+    }
+
+    public void <init>(char[], int, int, java.math.MathContext)
+    {
+        java.math.BigDecimal r0;
+        char[] r1;
+        int i0, i1, $i2;
+        java.math.MathContext r2;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        r2 := @parameter3: java.math.MathContext;
+        specialinvoke r0.<java.math.BigDecimal: void <init>(char[],int,int)>(r1, i0, i1);
+        $i2 = r2.<java.math.MathContext: int precision>;
+        if $i2 <= 0 goto label0;
+
+        specialinvoke r0.<java.math.BigDecimal: void roundThis(java.math.MathContext)>(r2);
+
+     label0:
+        return;
+    }
+
+    public void <init>(char[])
+    {
+        java.math.BigDecimal r0;
+        char[] r1;
+        int $i0;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: char[];
+        $i0 = lengthof r1;
+        specialinvoke r0.<java.math.BigDecimal: void <init>(char[],int,int)>(r1, 0, $i0);
+        return;
+    }
+
+    public void <init>(char[], java.math.MathContext)
+    {
+        java.math.BigDecimal r0;
+        char[] r1;
+        java.math.MathContext r2;
+        int $i0;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: char[];
+        r2 := @parameter1: java.math.MathContext;
+        $i0 = lengthof r1;
+        specialinvoke r0.<java.math.BigDecimal: void <init>(char[],int,int,java.math.MathContext)>(r1, 0, $i0, r2);
+        return;
+    }
+
+    public void <init>(java.lang.String)
+    {
+        java.math.BigDecimal r0;
+        java.lang.String r1;
+        char[] $r2;
+        int $i0;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.lang.String;
+        $r2 = virtualinvoke r1.<java.lang.String: char[] toCharArray()>();
+        $i0 = virtualinvoke r1.<java.lang.String: int length()>();
+        specialinvoke r0.<java.math.BigDecimal: void <init>(char[],int,int)>($r2, 0, $i0);
+        return;
+    }
+
+    public void <init>(java.lang.String, java.math.MathContext)
+    {
+        java.math.BigDecimal r0;
+        java.lang.String r1;
+        java.math.MathContext r2;
+        char[] $r3;
+        int $i0, $i1;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.math.MathContext;
+        $r3 = virtualinvoke r1.<java.lang.String: char[] toCharArray()>();
+        $i0 = virtualinvoke r1.<java.lang.String: int length()>();
+        specialinvoke r0.<java.math.BigDecimal: void <init>(char[],int,int)>($r3, 0, $i0);
+        $i1 = r2.<java.math.MathContext: int precision>;
+        if $i1 <= 0 goto label0;
+
+        specialinvoke r0.<java.math.BigDecimal: void roundThis(java.math.MathContext)>(r2);
+
+     label0:
+        return;
+    }
+
+    public void <init>(double)
+    {
+        java.math.BigDecimal r0;
+        double d0;
+        long l0, l3, l4, $l5, $l8, $l9, $l10, $l11, $l12, $l15, $l17, $l20, $l21;
+        byte b1, $b6, $b7, $b14, $b16, $b22;
+        int i2, i13, $i18, $i19;
+        java.math.BigInteger r1, $r3, $r4, $r5, $r6, $r7, $r9;
+        boolean $z0, $z1;
+        java.lang.NumberFormatException $r2;
+
+        r0 := @this: java.math.BigDecimal;
+        d0 := @parameter0: double;
+        specialinvoke r0.<java.lang.Number: void <init>()>();
+        $z0 = staticinvoke <java.lang.Double: boolean isInfinite(double)>(d0);
+        if $z0 != 0 goto label0;
+
+        $z1 = staticinvoke <java.lang.Double: boolean isNaN(double)>(d0);
+        if $z1 == 0 goto label1;
+
+     label0:
+        $r2 = new java.lang.NumberFormatException;
+        specialinvoke $r2.<java.lang.NumberFormatException: void <init>(java.lang.String)>("Infinite or NaN");
+        throw $r2;
+
+     label1:
+        l0 = staticinvoke <java.lang.Double: long doubleToLongBits(double)>(d0);
+        $l5 = l0 >> 63;
+        $b6 = $l5 cmp 0L;
+        if $b6 != 0 goto label2;
+
+        $b7 = 1;
+        goto label3;
+
+     label2:
+        $b7 = -1;
+
+     label3:
+        b1 = $b7;
+        $l8 = l0 >> 52;
+        $l9 = $l8 & 2047L;
+        i2 = (int) $l9;
+        if i2 != 0 goto label4;
+
+        $l10 = l0 & 4503599627370495L;
+        $l11 = $l10 << 1;
+        goto label5;
+
+     label4:
+        $l12 = l0 & 4503599627370495L;
+        $l11 = $l12 | 4503599627370496L;
+
+     label5:
+        l3 = $l11;
+        i13 = i2 + -1075;
+        $b14 = l3 cmp 0L;
+        if $b14 != 0 goto label6;
+
+        $r3 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        r0.<java.math.BigDecimal: java.math.BigInteger intVal> = $r3;
+        r0.<java.math.BigDecimal: long intCompact> = 0L;
+        r0.<java.math.BigDecimal: int precision> = 1;
+        return;
+
+     label6:
+        $l15 = l3 & 1L;
+        $b16 = $l15 cmp 0L;
+        if $b16 != 0 goto label7;
+
+        l3 = l3 >> 1;
+        i13 = i13 + 1;
+        goto label6;
+
+     label7:
+        $l17 = (long) b1;
+        l4 = $l17 * l3;
+        if i13 >= 0 goto label8;
+
+        $r4 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(5L);
+        $i18 = neg i13;
+        $r5 = virtualinvoke $r4.<java.math.BigInteger: java.math.BigInteger pow(int)>($i18);
+        r1 = virtualinvoke $r5.<java.math.BigInteger: java.math.BigInteger multiply(long)>(l4);
+        $i19 = neg i13;
+        r0.<java.math.BigDecimal: int scale> = $i19;
+        goto label10;
+
+     label8:
+        if i13 <= 0 goto label9;
+
+        $r6 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(2L);
+        $r7 = virtualinvoke $r6.<java.math.BigInteger: java.math.BigInteger pow(int)>(i13);
+        r1 = virtualinvoke $r7.<java.math.BigInteger: java.math.BigInteger multiply(long)>(l4);
+        goto label10;
+
+     label9:
+        r1 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(l4);
+
+     label10:
+        $l20 = staticinvoke <java.math.BigDecimal: long compactValFor(java.math.BigInteger)>(r1);
+        r0.<java.math.BigDecimal: long intCompact> = $l20;
+        $l21 = r0.<java.math.BigDecimal: long intCompact>;
+        $b22 = $l21 cmp -9223372036854775808L;
+        if $b22 == 0 goto label11;
+
+        $r9 = null;
+        goto label12;
+
+     label11:
+        $r9 = r1;
+
+     label12:
+        r0.<java.math.BigDecimal: java.math.BigInteger intVal> = $r9;
+        return;
+    }
+
+    public void <init>(double, java.math.MathContext)
+    {
+        java.math.BigDecimal r0;
+        double d0;
+        java.math.MathContext r1;
+        int $i0;
+
+        r0 := @this: java.math.BigDecimal;
+        d0 := @parameter0: double;
+        r1 := @parameter1: java.math.MathContext;
+        specialinvoke r0.<java.math.BigDecimal: void <init>(double)>(d0);
+        $i0 = r1.<java.math.MathContext: int precision>;
+        if $i0 <= 0 goto label0;
+
+        specialinvoke r0.<java.math.BigDecimal: void roundThis(java.math.MathContext)>(r1);
+
+     label0:
+        return;
+    }
+
+    public void <init>(java.math.BigInteger)
+    {
+        java.math.BigDecimal r0;
+        java.math.BigInteger r1, $r3;
+        long $l0, $l1;
+        byte $b2;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigInteger;
+        specialinvoke r0.<java.lang.Number: void <init>()>();
+        $l0 = staticinvoke <java.math.BigDecimal: long compactValFor(java.math.BigInteger)>(r1);
+        r0.<java.math.BigDecimal: long intCompact> = $l0;
+        $l1 = r0.<java.math.BigDecimal: long intCompact>;
+        $b2 = $l1 cmp -9223372036854775808L;
+        if $b2 == 0 goto label0;
+
+        $r3 = null;
+        goto label1;
+
+     label0:
+        $r3 = r1;
+
+     label1:
+        r0.<java.math.BigDecimal: java.math.BigInteger intVal> = $r3;
+        return;
+    }
+
+    public void <init>(java.math.BigInteger, java.math.MathContext)
+    {
+        java.math.BigDecimal r0;
+        java.math.BigInteger r1;
+        java.math.MathContext r2;
+        int $i0;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigInteger;
+        r2 := @parameter1: java.math.MathContext;
+        specialinvoke r0.<java.math.BigDecimal: void <init>(java.math.BigInteger)>(r1);
+        $i0 = r2.<java.math.MathContext: int precision>;
+        if $i0 <= 0 goto label0;
+
+        specialinvoke r0.<java.math.BigDecimal: void roundThis(java.math.MathContext)>(r2);
+
+     label0:
+        return;
+    }
+
+    public void <init>(java.math.BigInteger, int)
+    {
+        java.math.BigDecimal r0;
+        java.math.BigInteger r1;
+        int i0;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigInteger;
+        i0 := @parameter1: int;
+        specialinvoke r0.<java.math.BigDecimal: void <init>(java.math.BigInteger)>(r1);
+        r0.<java.math.BigDecimal: int scale> = i0;
+        return;
+    }
+
+    public void <init>(java.math.BigInteger, int, java.math.MathContext)
+    {
+        java.math.BigDecimal r0;
+        java.math.BigInteger r1;
+        int i0, $i1;
+        java.math.MathContext r2;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigInteger;
+        i0 := @parameter1: int;
+        r2 := @parameter2: java.math.MathContext;
+        specialinvoke r0.<java.math.BigDecimal: void <init>(java.math.BigInteger)>(r1);
+        r0.<java.math.BigDecimal: int scale> = i0;
+        $i1 = r2.<java.math.MathContext: int precision>;
+        if $i1 <= 0 goto label0;
+
+        specialinvoke r0.<java.math.BigDecimal: void roundThis(java.math.MathContext)>(r2);
+
+     label0:
+        return;
+    }
+
+    public void <init>(int)
+    {
+        java.math.BigDecimal r0;
+        int i0;
+        long $l1;
+
+        r0 := @this: java.math.BigDecimal;
+        i0 := @parameter0: int;
+        specialinvoke r0.<java.lang.Number: void <init>()>();
+        $l1 = (long) i0;
+        r0.<java.math.BigDecimal: long intCompact> = $l1;
+        return;
+    }
+
+    public void <init>(int, java.math.MathContext)
+    {
+        java.math.BigDecimal r0;
+        int i0, $i2;
+        java.math.MathContext r1;
+        long $l1;
+
+        r0 := @this: java.math.BigDecimal;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.math.MathContext;
+        specialinvoke r0.<java.lang.Number: void <init>()>();
+        $l1 = (long) i0;
+        r0.<java.math.BigDecimal: long intCompact> = $l1;
+        $i2 = r1.<java.math.MathContext: int precision>;
+        if $i2 <= 0 goto label0;
+
+        specialinvoke r0.<java.math.BigDecimal: void roundThis(java.math.MathContext)>(r1);
+
+     label0:
+        return;
+    }
+
+    public void <init>(long)
+    {
+        java.math.BigDecimal r0;
+        long l0;
+        byte $b1;
+        java.math.BigInteger $r2;
+
+        r0 := @this: java.math.BigDecimal;
+        l0 := @parameter0: long;
+        specialinvoke r0.<java.lang.Number: void <init>()>();
+        r0.<java.math.BigDecimal: long intCompact> = l0;
+        $b1 = l0 cmp -9223372036854775808L;
+        if $b1 != 0 goto label0;
+
+        $r2 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(l0);
+        goto label1;
+
+     label0:
+        $r2 = null;
+
+     label1:
+        r0.<java.math.BigDecimal: java.math.BigInteger intVal> = $r2;
+        return;
+    }
+
+    public void <init>(long, java.math.MathContext)
+    {
+        java.math.BigDecimal r0;
+        long l0;
+        java.math.MathContext r1;
+        int $i1;
+
+        r0 := @this: java.math.BigDecimal;
+        l0 := @parameter0: long;
+        r1 := @parameter1: java.math.MathContext;
+        specialinvoke r0.<java.math.BigDecimal: void <init>(long)>(l0);
+        $i1 = r1.<java.math.MathContext: int precision>;
+        if $i1 <= 0 goto label0;
+
+        specialinvoke r0.<java.math.BigDecimal: void roundThis(java.math.MathContext)>(r1);
+
+     label0:
+        return;
+    }
+
+    public static java.math.BigDecimal valueOf(long, int)
+    {
+        long l0;
+        int i1, $i3;
+        java.math.BigDecimal[] $r0, $r2;
+        java.math.BigDecimal $r1, $r3, $r4, $r6;
+        byte $b2, $b4;
+        java.math.BigInteger $r5, $r8;
+
+        l0 := @parameter0: long;
+        i1 := @parameter1: int;
+        if i1 != 0 goto label0;
+
+        $r1 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal valueOf(long)>(l0);
+        return $r1;
+
+     label0:
+        $b2 = l0 cmp 0L;
+        if $b2 != 0 goto label2;
+
+        if i1 <= 0 goto label1;
+
+        $r0 = <java.math.BigDecimal: java.math.BigDecimal[] ZERO_SCALED_BY>;
+        $i3 = lengthof $r0;
+        if i1 >= $i3 goto label1;
+
+        $r2 = <java.math.BigDecimal: java.math.BigDecimal[] ZERO_SCALED_BY>;
+        $r3 = $r2[i1];
+        return $r3;
+
+     label1:
+        $r4 = new java.math.BigDecimal;
+        $r5 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        specialinvoke $r4.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r5, 0L, i1, 1);
+        return $r4;
+
+     label2:
+        $r6 = new java.math.BigDecimal;
+        $b4 = l0 cmp -9223372036854775808L;
+        if $b4 != 0 goto label3;
+
+        $r8 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(l0);
+        goto label4;
+
+     label3:
+        $r8 = null;
+
+     label4:
+        specialinvoke $r6.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r8, l0, i1, 0);
+        return $r6;
+    }
+
+    public static java.math.BigDecimal valueOf(long)
+    {
+        long l0, $l3;
+        byte $b1, $b4, $b6;
+        java.math.BigDecimal[] $r0, $r1;
+        int $i2, $i5;
+        java.math.BigDecimal $r2, $r3, $r4;
+        java.math.BigInteger $r5;
+
+        l0 := @parameter0: long;
+        $b1 = l0 cmp 0L;
+        if $b1 < 0 goto label0;
+
+        $r0 = <java.math.BigDecimal: java.math.BigDecimal[] zeroThroughTen>;
+        $i2 = lengthof $r0;
+        $l3 = (long) $i2;
+        $b4 = l0 cmp $l3;
+        if $b4 >= 0 goto label0;
+
+        $r1 = <java.math.BigDecimal: java.math.BigDecimal[] zeroThroughTen>;
+        $i5 = (int) l0;
+        $r2 = $r1[$i5];
+        return $r2;
+
+     label0:
+        $b6 = l0 cmp -9223372036854775808L;
+        if $b6 == 0 goto label1;
+
+        $r3 = new java.math.BigDecimal;
+        specialinvoke $r3.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>(null, l0, 0, 0);
+        return $r3;
+
+     label1:
+        $r4 = new java.math.BigDecimal;
+        $r5 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(l0);
+        specialinvoke $r4.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r5, l0, 0, 0);
+        return $r4;
+    }
+
+    public static java.math.BigDecimal valueOf(double)
+    {
+        double d0;
+        java.math.BigDecimal $r0;
+        java.lang.String $r1;
+
+        d0 := @parameter0: double;
+        $r0 = new java.math.BigDecimal;
+        $r1 = staticinvoke <java.lang.Double: java.lang.String toString(double)>(d0);
+        specialinvoke $r0.<java.math.BigDecimal: void <init>(java.lang.String)>($r1);
+        return $r0;
+    }
+
+    public java.math.BigDecimal add(java.math.BigDecimal)
+    {
+        java.math.BigDecimal r0, r1, $r6, $r8;
+        long l0, l1, l3, $l7, $l9, $l12, $l14, $l18, l22, $l23, $l24, $l25;
+        java.math.BigInteger r2, r3, $r4, $r5, r7;
+        int i2, i4, $i8, i16, $i27, $i28;
+        byte $b5, $b6, $b10, $b11, $b13, $b15, $b17, $b19, $b20, $b21, $b26;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        l0 = r0.<java.math.BigDecimal: long intCompact>;
+        l1 = r1.<java.math.BigDecimal: long intCompact>;
+        $b5 = l0 cmp -9223372036854775808L;
+        if $b5 == 0 goto label0;
+
+        $r4 = null;
+        goto label1;
+
+     label0:
+        $r4 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+
+     label1:
+        r2 = $r4;
+        $b6 = l1 cmp -9223372036854775808L;
+        if $b6 == 0 goto label2;
+
+        $r5 = null;
+        goto label3;
+
+     label2:
+        $r5 = r1.<java.math.BigDecimal: java.math.BigInteger intVal>;
+
+     label3:
+        r3 = $r5;
+        i2 = r0.<java.math.BigDecimal: int scale>;
+        $l7 = (long) i2;
+        $i8 = r1.<java.math.BigDecimal: int scale>;
+        $l9 = (long) $i8;
+        l3 = $l7 - $l9;
+        $b10 = l3 cmp 0L;
+        if $b10 == 0 goto label8;
+
+        $b11 = l3 cmp 0L;
+        if $b11 >= 0 goto label6;
+
+        $l12 = neg l3;
+        i4 = specialinvoke r0.<java.math.BigDecimal: int checkScale(long)>($l12);
+        i2 = r1.<java.math.BigDecimal: int scale>;
+        $b13 = l0 cmp -9223372036854775808L;
+        if $b13 == 0 goto label4;
+
+        $l14 = staticinvoke <java.math.BigDecimal: long longMultiplyPowerTen(long,int)>(l0, i4);
+        l0 = $l14;
+        $b15 = $l14 cmp -9223372036854775808L;
+        if $b15 != 0 goto label5;
+
+     label4:
+        r2 = specialinvoke r0.<java.math.BigDecimal: java.math.BigInteger bigMultiplyPowerTen(int)>(i4);
+
+     label5:
+        goto label8;
+
+     label6:
+        i16 = specialinvoke r1.<java.math.BigDecimal: int checkScale(long)>(l3);
+        $b17 = l1 cmp -9223372036854775808L;
+        if $b17 == 0 goto label7;
+
+        $l18 = staticinvoke <java.math.BigDecimal: long longMultiplyPowerTen(long,int)>(l1, i16);
+        l1 = $l18;
+        $b19 = $l18 cmp -9223372036854775808L;
+        if $b19 != 0 goto label8;
+
+     label7:
+        r3 = specialinvoke r1.<java.math.BigDecimal: java.math.BigInteger bigMultiplyPowerTen(int)>(i16);
+
+     label8:
+        $b20 = l0 cmp -9223372036854775808L;
+        if $b20 == 0 goto label9;
+
+        $b21 = l1 cmp -9223372036854775808L;
+        if $b21 == 0 goto label9;
+
+        l22 = l0 + l1;
+        $l23 = l22 ^ l0;
+        $l24 = l22 ^ l1;
+        $l25 = $l23 & $l24;
+        $b26 = $l25 cmp 0L;
+        if $b26 < 0 goto label9;
+
+        $r6 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal valueOf(long,int)>(l22, i2);
+        return $r6;
+
+     label9:
+        if r2 != null goto label10;
+
+        r2 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(l0);
+
+     label10:
+        if r3 != null goto label11;
+
+        r3 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(l1);
+
+     label11:
+        r7 = virtualinvoke r2.<java.math.BigInteger: java.math.BigInteger add(java.math.BigInteger)>(r3);
+        $i27 = r2.<java.math.BigInteger: int signum>;
+        $i28 = r3.<java.math.BigInteger: int signum>;
+        if $i27 != $i28 goto label12;
+
+        $r8 = new java.math.BigDecimal;
+        specialinvoke $r8.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>(r7, -9223372036854775808L, i2, 0);
+        goto label13;
+
+     label12:
+        $r8 = new java.math.BigDecimal;
+        specialinvoke $r8.<java.math.BigDecimal: void <init>(java.math.BigInteger,int)>(r7, i2);
+
+     label13:
+        return $r8;
+    }
+
+    public java.math.BigDecimal add(java.math.BigDecimal, java.math.MathContext)
+    {
+        java.math.BigDecimal r0, r1, r3, r5, r6, $r7, $r10, $r11, $r12, $r15, $r16, $r18, r22, $r23;
+        java.math.MathContext r2;
+        boolean z0, z1, $z2, $z3;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i10, $i12, $i13, i14, $i15, $i16, $i17, $i18, $i20, $i24;
+        java.math.BigInteger $r4, $r13, $r19, $r20, $r21;
+        long $l9, $l11, $l19, $l21, l22;
+        byte $b23;
+        java.math.BigDecimal[] r17;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        r2 := @parameter1: java.math.MathContext;
+        $i2 = r2.<java.math.MathContext: int precision>;
+        if $i2 != 0 goto label0;
+
+        $r7 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal add(java.math.BigDecimal)>(r1);
+        return $r7;
+
+     label0:
+        r3 = r0;
+        specialinvoke r0.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        specialinvoke r1.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        $i3 = virtualinvoke r3.<java.math.BigDecimal: int signum()>();
+        if $i3 != 0 goto label1;
+
+        $z2 = 1;
+        goto label2;
+
+     label1:
+        $z2 = 0;
+
+     label2:
+        z0 = $z2;
+        $i4 = virtualinvoke r1.<java.math.BigDecimal: int signum()>();
+        if $i4 != 0 goto label3;
+
+        $z3 = 1;
+        goto label4;
+
+     label3:
+        $z3 = 0;
+
+     label4:
+        z1 = $z3;
+        if z0 != 0 goto label5;
+
+        if z1 == 0 goto label12;
+
+     label5:
+        $i5 = virtualinvoke r3.<java.math.BigDecimal: int scale()>();
+        $i6 = virtualinvoke r1.<java.math.BigDecimal: int scale()>();
+        i0 = staticinvoke <java.lang.Math: int max(int,int)>($i5, $i6);
+        if z0 == 0 goto label6;
+
+        if z1 == 0 goto label6;
+
+        $r10 = new java.math.BigDecimal;
+        $r4 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        specialinvoke $r10.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r4, 0L, i0, 0);
+        return $r10;
+
+     label6:
+        if z0 == 0 goto label7;
+
+        $r11 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal doRound(java.math.BigDecimal,java.math.MathContext)>(r1, r2);
+        goto label8;
+
+     label7:
+        $r11 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal doRound(java.math.BigDecimal,java.math.MathContext)>(r3, r2);
+
+     label8:
+        r5 = $r11;
+        $i7 = virtualinvoke r5.<java.math.BigDecimal: int scale()>();
+        if $i7 != i0 goto label9;
+
+        return r5;
+
+     label9:
+        $i8 = virtualinvoke r5.<java.math.BigDecimal: int scale()>();
+        if $i8 <= i0 goto label10;
+
+        $r12 = new java.math.BigDecimal;
+        $r13 = r5.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $l9 = r5.<java.math.BigDecimal: long intCompact>;
+        $i10 = r5.<java.math.BigDecimal: int scale>;
+        specialinvoke $r12.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r13, $l9, $i10, 0);
+        r6 = $r12;
+        $l11 = (long) i0;
+        specialinvoke r6.<java.math.BigDecimal: java.math.BigDecimal stripZerosToMatchScale(long)>($l11);
+        return r6;
+
+     label10:
+        $i12 = r2.<java.math.MathContext: int precision>;
+        $i13 = virtualinvoke r5.<java.math.BigDecimal: int precision()>();
+        i14 = $i12 - $i13;
+        $i15 = virtualinvoke r5.<java.math.BigDecimal: int scale()>();
+        i1 = i0 - $i15;
+        if i14 < i1 goto label11;
+
+        $r15 = virtualinvoke r5.<java.math.BigDecimal: java.math.BigDecimal setScale(int)>(i0);
+        return $r15;
+
+     label11:
+        $i16 = virtualinvoke r5.<java.math.BigDecimal: int scale()>();
+        $i17 = $i16 + i14;
+        $r16 = virtualinvoke r5.<java.math.BigDecimal: java.math.BigDecimal setScale(int)>($i17);
+        return $r16;
+
+     label12:
+        $i18 = r3.<java.math.BigDecimal: int scale>;
+        $l19 = (long) $i18;
+        $i20 = r1.<java.math.BigDecimal: int scale>;
+        $l21 = (long) $i20;
+        l22 = $l19 - $l21;
+        $b23 = l22 cmp 0L;
+        if $b23 == 0 goto label13;
+
+        r17 = specialinvoke r0.<java.math.BigDecimal: java.math.BigDecimal[] preAlign(java.math.BigDecimal,java.math.BigDecimal,long,java.math.MathContext)>(r3, r1, l22, r2);
+        staticinvoke <java.math.BigDecimal: void matchScale(java.math.BigDecimal[])>(r17);
+        r3 = r17[0];
+        r1 = r17[1];
+
+     label13:
+        $r18 = new java.math.BigDecimal;
+        $r19 = specialinvoke r3.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        $r20 = specialinvoke r1.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        $r21 = virtualinvoke $r19.<java.math.BigInteger: java.math.BigInteger add(java.math.BigInteger)>($r20);
+        $i24 = r3.<java.math.BigDecimal: int scale>;
+        specialinvoke $r18.<java.math.BigDecimal: void <init>(java.math.BigInteger,int)>($r21, $i24);
+        r22 = $r18;
+        $r23 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal doRound(java.math.BigDecimal,java.math.MathContext)>(r22, r2);
+        return $r23;
+    }
+
+    private java.math.BigDecimal[] preAlign(java.math.BigDecimal, java.math.BigDecimal, long, java.math.MathContext)
+    {
+        java.math.BigDecimal r0, r1, r2, r4, r5;
+        long l0, l1, l2, $l6, $l8, $l9, $l11, $l13, $l15, $l16, $l19, $l21, $l24, $l26, $l27, $l28;
+        java.math.MathContext r3;
+        boolean $z0;
+        java.math.BigDecimal[] r6, $r8;
+        byte $b3, $b4, $b20, $b22;
+        java.lang.AssertionError $r7;
+        int $i5, $i7, $i10, $i12, $i14, $i17, $i18, $i23, $i25, $i29;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        r2 := @parameter1: java.math.BigDecimal;
+        l0 := @parameter2: long;
+        r3 := @parameter3: java.math.MathContext;
+        $z0 = <java.math.BigDecimal: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label0;
+
+        $b3 = l0 cmp 0L;
+        if $b3 != 0 goto label0;
+
+        $r7 = new java.lang.AssertionError;
+        specialinvoke $r7.<java.lang.AssertionError: void <init>()>();
+        throw $r7;
+
+     label0:
+        $b4 = l0 cmp 0L;
+        if $b4 >= 0 goto label1;
+
+        r4 = r1;
+        r5 = r2;
+        goto label2;
+
+     label1:
+        r4 = r2;
+        r5 = r1;
+
+     label2:
+        $i5 = r4.<java.math.BigDecimal: int scale>;
+        $l6 = (long) $i5;
+        $i7 = virtualinvoke r4.<java.math.BigDecimal: int precision()>();
+        $l8 = (long) $i7;
+        $l9 = $l6 - $l8;
+        $i10 = r3.<java.math.MathContext: int precision>;
+        $l11 = (long) $i10;
+        l1 = $l9 + $l11;
+        $i12 = r5.<java.math.BigDecimal: int scale>;
+        $l13 = (long) $i12;
+        $i14 = virtualinvoke r5.<java.math.BigDecimal: int precision()>();
+        $l15 = (long) $i14;
+        $l16 = $l13 - $l15;
+        l2 = $l16 + 1L;
+        $i17 = r4.<java.math.BigDecimal: int scale>;
+        $i18 = $i17 + 2;
+        $l19 = (long) $i18;
+        $b20 = l2 cmp $l19;
+        if $b20 <= 0 goto label3;
+
+        $l21 = l1 + 2L;
+        $b22 = l2 cmp $l21;
+        if $b22 <= 0 goto label3;
+
+        $i23 = virtualinvoke r5.<java.math.BigDecimal: int signum()>();
+        $l24 = (long) $i23;
+        $i25 = r4.<java.math.BigDecimal: int scale>;
+        $l26 = (long) $i25;
+        $l27 = staticinvoke <java.lang.Math: long max(long,long)>($l26, l1);
+        $l28 = $l27 + 3L;
+        $i29 = specialinvoke r0.<java.math.BigDecimal: int checkScale(long)>($l28);
+        r5 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal valueOf(long,int)>($l24, $i29);
+
+     label3:
+        $r8 = newarray (java.math.BigDecimal)[2];
+        $r8[0] = r4;
+        $r8[1] = r5;
+        r6 = $r8;
+        return r6;
+    }
+
+    public java.math.BigDecimal subtract(java.math.BigDecimal)
+    {
+        java.math.BigDecimal r0, r1, $r2, $r3;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        $r2 = virtualinvoke r1.<java.math.BigDecimal: java.math.BigDecimal negate()>();
+        $r3 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal add(java.math.BigDecimal)>($r2);
+        return $r3;
+    }
+
+    public java.math.BigDecimal subtract(java.math.BigDecimal, java.math.MathContext)
+    {
+        java.math.BigDecimal r0, r1, r3, $r4, $r5;
+        java.math.MathContext r2;
+        int $i0;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        r2 := @parameter1: java.math.MathContext;
+        r3 = virtualinvoke r1.<java.math.BigDecimal: java.math.BigDecimal negate()>();
+        $i0 = r2.<java.math.MathContext: int precision>;
+        if $i0 != 0 goto label0;
+
+        $r4 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal add(java.math.BigDecimal)>(r3);
+        return $r4;
+
+     label0:
+        $r5 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal add(java.math.BigDecimal,java.math.MathContext)>(r3, r2);
+        return $r5;
+    }
+
+    public java.math.BigDecimal multiply(java.math.BigDecimal)
+    {
+        java.math.BigDecimal r0, r1, $r2, $r3, $r11;
+        long l0, l1, l3, l4, $l6, $l8, $l9, $l18;
+        int i2, $i5, $i7, $i12, $i13, $i14;
+        byte $b10, $b11, $b15, $b16, $b17, $b19, $b20, $b21, $b22;
+        java.math.BigInteger $r4, $r5, $r6, $r7, r8, $r9, $r10;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        l0 = r0.<java.math.BigDecimal: long intCompact>;
+        l1 = r1.<java.math.BigDecimal: long intCompact>;
+        $i5 = r0.<java.math.BigDecimal: int scale>;
+        $l6 = (long) $i5;
+        $i7 = r1.<java.math.BigDecimal: int scale>;
+        $l8 = (long) $i7;
+        $l9 = $l6 + $l8;
+        i2 = specialinvoke r0.<java.math.BigDecimal: int checkScale(long)>($l9);
+        $b10 = l0 cmp -9223372036854775808L;
+        if $b10 == 0 goto label2;
+
+        $b11 = l1 cmp -9223372036854775808L;
+        if $b11 == 0 goto label2;
+
+        l3 = l0 * l1;
+        $i12 = virtualinvoke r0.<java.math.BigDecimal: int precision()>();
+        $i13 = virtualinvoke r1.<java.math.BigDecimal: int precision()>();
+        $i14 = $i12 + $i13;
+        l4 = (long) $i14;
+        $b15 = l4 cmp 19L;
+        if $b15 < 0 goto label0;
+
+        $b16 = l4 cmp 21L;
+        if $b16 >= 0 goto label1;
+
+        $b17 = l1 cmp 0L;
+        if $b17 == 0 goto label0;
+
+        $l18 = l3 / l1;
+        $b19 = $l18 cmp l0;
+        if $b19 != 0 goto label1;
+
+     label0:
+        $r2 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal valueOf(long,int)>(l3, i2);
+        return $r2;
+
+     label1:
+        $r3 = new java.math.BigDecimal;
+        $r4 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(l0);
+        $r5 = virtualinvoke $r4.<java.math.BigInteger: java.math.BigInteger multiply(long)>(l1);
+        specialinvoke $r3.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r5, -9223372036854775808L, i2, 0);
+        return $r3;
+
+     label2:
+        $b20 = l0 cmp -9223372036854775808L;
+        if $b20 != 0 goto label3;
+
+        $b21 = l1 cmp -9223372036854775808L;
+        if $b21 != 0 goto label3;
+
+        $r6 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $r7 = r1.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        r8 = virtualinvoke $r6.<java.math.BigInteger: java.math.BigInteger multiply(java.math.BigInteger)>($r7);
+        goto label5;
+
+     label3:
+        $b22 = l0 cmp -9223372036854775808L;
+        if $b22 == 0 goto label4;
+
+        $r9 = r1.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        r8 = virtualinvoke $r9.<java.math.BigInteger: java.math.BigInteger multiply(long)>(l0);
+        goto label5;
+
+     label4:
+        $r10 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        r8 = virtualinvoke $r10.<java.math.BigInteger: java.math.BigInteger multiply(long)>(l1);
+
+     label5:
+        $r11 = new java.math.BigDecimal;
+        specialinvoke $r11.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>(r8, -9223372036854775808L, i2, 0);
+        return $r11;
+    }
+
+    public java.math.BigDecimal multiply(java.math.BigDecimal, java.math.MathContext)
+    {
+        java.math.BigDecimal r0, r1, $r3, $r4, $r5;
+        java.math.MathContext r2;
+        int $i0;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        r2 := @parameter1: java.math.MathContext;
+        $i0 = r2.<java.math.MathContext: int precision>;
+        if $i0 != 0 goto label0;
+
+        $r3 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal multiply(java.math.BigDecimal)>(r1);
+        return $r3;
+
+     label0:
+        $r4 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal multiply(java.math.BigDecimal)>(r1);
+        $r5 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal doRound(java.math.BigDecimal,java.math.MathContext)>($r4, r2);
+        return $r5;
+    }
+
+    public java.math.BigDecimal divide(java.math.BigDecimal, int, int)
+    {
+        java.math.BigDecimal r0, r1, r2, $r6;
+        int i0, i1, $i3, $i6, $i7, $i8, $i9, $i10, $i14;
+        java.lang.IllegalArgumentException $r3;
+        long $l2, $l4, $l5, $l11, $l12, $l13, $l15, $l16;
+        java.math.BigInteger $r4, $r5;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        if i1 < 0 goto label0;
+
+        if i1 <= 7 goto label1;
+
+     label0:
+        $r3 = new java.lang.IllegalArgumentException;
+        specialinvoke $r3.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Invalid rounding mode");
+        throw $r3;
+
+     label1:
+        r2 = r0;
+        $l2 = (long) i0;
+        $i3 = r1.<java.math.BigDecimal: int scale>;
+        $l4 = (long) $i3;
+        $l5 = $l2 + $l4;
+        $i6 = specialinvoke r0.<java.math.BigDecimal: int checkScale(long)>($l5);
+        $i7 = r0.<java.math.BigDecimal: int scale>;
+        if $i6 <= $i7 goto label2;
+
+        $i8 = r1.<java.math.BigDecimal: int scale>;
+        $i9 = i0 + $i8;
+        r2 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal setScale(int,int)>($i9, 7);
+        goto label3;
+
+     label2:
+        $i10 = r0.<java.math.BigDecimal: int scale>;
+        $l11 = (long) $i10;
+        $l12 = (long) i0;
+        $l13 = $l11 - $l12;
+        $i14 = specialinvoke r0.<java.math.BigDecimal: int checkScale(long)>($l13);
+        r1 = virtualinvoke r1.<java.math.BigDecimal: java.math.BigDecimal setScale(int,int)>($i14, 7);
+
+     label3:
+        $l15 = r2.<java.math.BigDecimal: long intCompact>;
+        $r4 = r2.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $l16 = r1.<java.math.BigDecimal: long intCompact>;
+        $r5 = r1.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $r6 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal divideAndRound(long,java.math.BigInteger,long,java.math.BigInteger,int,int,int)>($l15, $r4, $l16, $r5, i0, i1, i0);
+        return $r6;
+    }
+
+    private static java.math.BigDecimal divideAndRound(long, java.math.BigInteger, long, java.math.BigInteger, int, int, int)
+    {
+        long l0, l1, l5, l6, $l26, $l27, $l29, $l30, $l31;
+        java.math.BigInteger r0, r1;
+        int i2, i3, i4, i7, i8, $i18, $i19, $i20, $i21;
+        java.math.MutableBigInteger r2, r3, r4, r5, $r7, $r9, $r10, $r16;
+        boolean z0, z1, $z2, $z3, $z4, $z5, $z6, z7, $z8, $z9, $z10;
+        byte $b9, $b10, $b11, $b12, $b13, $b14, $b15, $b16, $b17, $b22, $b23, $b24, $b25, $b28;
+        java.math.BigDecimal $r6, $r13, r15;
+        int[] $r8, $r11;
+        java.lang.ArithmeticException $r12;
+        null_type $n0;
+
+        l0 := @parameter0: long;
+        r0 := @parameter1: java.math.BigInteger;
+        l1 := @parameter2: long;
+        r1 := @parameter3: java.math.BigInteger;
+        i2 := @parameter4: int;
+        i3 := @parameter5: int;
+        i4 := @parameter6: int;
+        l5 = 0L;
+        l6 = 0L;
+        r2 = null;
+        r3 = null;
+        r4 = null;
+        $b9 = l0 cmp -9223372036854775808L;
+        if $b9 == 0 goto label0;
+
+        $b10 = l1 cmp -9223372036854775808L;
+        if $b10 == 0 goto label0;
+
+        $z2 = 1;
+        goto label1;
+
+     label0:
+        $z2 = 0;
+
+     label1:
+        z0 = $z2;
+        if z0 == 0 goto label11;
+
+        l5 = l0 / l1;
+        if i3 != 1 goto label2;
+
+        if i2 != i4 goto label2;
+
+        $r6 = new java.math.BigDecimal;
+        specialinvoke $r6.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>(null, l5, i2, 0);
+        return $r6;
+
+     label2:
+        l6 = l0 % l1;
+        $b11 = l6 cmp 0L;
+        if $b11 != 0 goto label3;
+
+        $z3 = 1;
+        goto label4;
+
+     label3:
+        $z3 = 0;
+
+     label4:
+        z1 = $z3;
+        $b12 = l0 cmp 0L;
+        if $b12 >= 0 goto label5;
+
+        $z4 = 1;
+        goto label6;
+
+     label5:
+        $z4 = 0;
+
+     label6:
+        $b13 = l1 cmp 0L;
+        if $b13 >= 0 goto label7;
+
+        $z5 = 1;
+        goto label8;
+
+     label7:
+        $z5 = 0;
+
+     label8:
+        if $z4 != $z5 goto label9;
+
+        $b14 = 1;
+        goto label10;
+
+     label9:
+        $b14 = -1;
+
+     label10:
+        i7 = $b14;
+        goto label20;
+
+     label11:
+        if r0 != null goto label12;
+
+        r0 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(l0);
+
+     label12:
+        $r7 = new java.math.MutableBigInteger;
+        $r8 = r0.<java.math.BigInteger: int[] mag>;
+        specialinvoke $r7.<java.math.MutableBigInteger: void <init>(int[])>($r8);
+        r5 = $r7;
+        $r9 = new java.math.MutableBigInteger;
+        specialinvoke $r9.<java.math.MutableBigInteger: void <init>()>();
+        r2 = $r9;
+        $b15 = l1 cmp -9223372036854775808L;
+        if $b15 == 0 goto label17;
+
+        l6 = virtualinvoke r5.<java.math.MutableBigInteger: long divide(long,java.math.MutableBigInteger)>(l1, r2);
+        $b16 = l6 cmp 0L;
+        if $b16 != 0 goto label13;
+
+        $z6 = 1;
+        goto label14;
+
+     label13:
+        $z6 = 0;
+
+     label14:
+        z1 = $z6;
+        $b17 = l1 cmp 0L;
+        if $b17 >= 0 goto label15;
+
+        $i18 = r0.<java.math.BigInteger: int signum>;
+        $i19 = neg $i18;
+        goto label16;
+
+     label15:
+        $i19 = r0.<java.math.BigInteger: int signum>;
+
+     label16:
+        i7 = $i19;
+        goto label20;
+
+     label17:
+        $r10 = new java.math.MutableBigInteger;
+        $r11 = r1.<java.math.BigInteger: int[] mag>;
+        specialinvoke $r10.<java.math.MutableBigInteger: void <init>(int[])>($r11);
+        r4 = $r10;
+        r3 = virtualinvoke r5.<java.math.MutableBigInteger: java.math.MutableBigInteger divide(java.math.MutableBigInteger,java.math.MutableBigInteger)>(r4, r2);
+        z1 = virtualinvoke r3.<java.math.MutableBigInteger: boolean isZero()>();
+        $i20 = r0.<java.math.BigInteger: int signum>;
+        $i21 = r1.<java.math.BigInteger: int signum>;
+        if $i20 == $i21 goto label18;
+
+        $b22 = -1;
+        goto label19;
+
+     label18:
+        $b22 = 1;
+
+     label19:
+        i7 = $b22;
+
+     label20:
+        z7 = 0;
+        if z1 != 0 goto label42;
+
+        if i3 != 7 goto label21;
+
+        $r12 = new java.lang.ArithmeticException;
+        specialinvoke $r12.<java.lang.ArithmeticException: void <init>(java.lang.String)>("Rounding necessary");
+        throw $r12;
+
+     label21:
+        if i3 != 0 goto label22;
+
+        z7 = 1;
+        goto label42;
+
+     label22:
+        if i3 != 1 goto label23;
+
+        z7 = 0;
+        goto label42;
+
+     label23:
+        if i3 != 2 goto label26;
+
+        if i7 <= 0 goto label24;
+
+        $z8 = 1;
+        goto label25;
+
+     label24:
+        $z8 = 0;
+
+     label25:
+        z7 = $z8;
+        goto label42;
+
+     label26:
+        if i3 != 3 goto label29;
+
+        if i7 >= 0 goto label27;
+
+        $z9 = 1;
+        goto label28;
+
+     label27:
+        $z9 = 0;
+
+     label28:
+        z7 = $z9;
+        goto label42;
+
+     label29:
+        if z0 != 0 goto label30;
+
+        $b23 = l1 cmp -9223372036854775808L;
+        if $b23 == 0 goto label33;
+
+     label30:
+        $b24 = l6 cmp -4611686018427387904L;
+        if $b24 <= 0 goto label31;
+
+        $b25 = l6 cmp 4611686018427387903L;
+        if $b25 <= 0 goto label32;
+
+     label31:
+        i8 = 1;
+        goto label34;
+
+     label32:
+        $l26 = 2L * l6;
+        i8 = staticinvoke <java.math.BigDecimal: int longCompareMagnitude(long,long)>($l26, l1);
+        goto label34;
+
+     label33:
+        i8 = virtualinvoke r3.<java.math.MutableBigInteger: int compareHalf(java.math.MutableBigInteger)>(r4);
+
+     label34:
+        if i8 >= 0 goto label35;
+
+        z7 = 0;
+        goto label42;
+
+     label35:
+        if i8 <= 0 goto label36;
+
+        z7 = 1;
+        goto label42;
+
+     label36:
+        if i3 != 4 goto label37;
+
+        z7 = 1;
+        goto label42;
+
+     label37:
+        if i3 != 5 goto label38;
+
+        z7 = 0;
+        goto label42;
+
+     label38:
+        if z0 == 0 goto label40;
+
+        $l27 = l5 & 1L;
+        $b28 = $l27 cmp 0L;
+        if $b28 == 0 goto label39;
+
+        $z10 = 1;
+        goto label41;
+
+     label39:
+        $z10 = 0;
+        goto label41;
+
+     label40:
+        $z10 = virtualinvoke r2.<java.math.MutableBigInteger: boolean isOdd()>();
+
+     label41:
+        z7 = $z10;
+
+     label42:
+        if z0 == 0 goto label45;
+
+        $r13 = new java.math.BigDecimal;
+        $n0 = null;
+        if z7 == 0 goto label43;
+
+        $l29 = (long) i7;
+        $l30 = l5 + $l29;
+        goto label44;
+
+     label43:
+        $l30 = l5;
+
+     label44:
+        specialinvoke $r13.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($n0, $l30, i2, 0);
+        r15 = $r13;
+        goto label47;
+
+     label45:
+        if z7 == 0 goto label46;
+
+        $r16 = <java.math.MutableBigInteger: java.math.MutableBigInteger ONE>;
+        virtualinvoke r2.<java.math.MutableBigInteger: void add(java.math.MutableBigInteger)>($r16);
+
+     label46:
+        r15 = virtualinvoke r2.<java.math.MutableBigInteger: java.math.BigDecimal toBigDecimal(int,int)>(i7, i2);
+
+     label47:
+        if z1 == 0 goto label48;
+
+        if i4 == i2 goto label48;
+
+        $l31 = (long) i4;
+        specialinvoke r15.<java.math.BigDecimal: java.math.BigDecimal stripZerosToMatchScale(long)>($l31);
+
+     label48:
+        return r15;
+    }
+
+    public java.math.BigDecimal divide(java.math.BigDecimal, int, java.math.RoundingMode)
+    {
+        java.math.BigDecimal r0, r1, $r3;
+        int i0, $i1;
+        java.math.RoundingMode r2;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        i0 := @parameter1: int;
+        r2 := @parameter2: java.math.RoundingMode;
+        $i1 = r2.<java.math.RoundingMode: int oldMode>;
+        $r3 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal divide(java.math.BigDecimal,int,int)>(r1, i0, $i1);
+        return $r3;
+    }
+
+    public java.math.BigDecimal divide(java.math.BigDecimal, int)
+    {
+        java.math.BigDecimal r0, r1, $r2;
+        int i0, $i1;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        i0 := @parameter1: int;
+        $i1 = r0.<java.math.BigDecimal: int scale>;
+        $r2 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal divide(java.math.BigDecimal,int,int)>(r1, $i1, i0);
+        return $r2;
+    }
+
+    public java.math.BigDecimal divide(java.math.BigDecimal, java.math.RoundingMode)
+    {
+        java.math.BigDecimal r0, r1, $r3;
+        java.math.RoundingMode r2;
+        int $i0, $i1;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        r2 := @parameter1: java.math.RoundingMode;
+        $i0 = r0.<java.math.BigDecimal: int scale>;
+        $i1 = r2.<java.math.RoundingMode: int oldMode>;
+        $r3 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal divide(java.math.BigDecimal,int,int)>(r1, $i0, $i1);
+        return $r3;
+    }
+
+    public java.math.BigDecimal divide(java.math.BigDecimal)
+    {
+        java.math.BigDecimal r0, r1, r4, $r10, $r16;
+        int i0, $i1, $i2, $i3, $i5, $i8, $i9, $i10, $i12, $i16, i17;
+        java.math.RoundingMode $r2;
+        java.math.MathContext r3, $r13;
+        java.lang.ArithmeticException r5, $r6, $r7, $r14, $r15;
+        long $l4, $l6, $l7, $l11, $l13, $l14, $l15;
+        java.math.BigDecimal[] $r8, $r9;
+        double $d0, $d1, $d2, $d3;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        $i1 = virtualinvoke r1.<java.math.BigDecimal: int signum()>();
+        if $i1 != 0 goto label1;
+
+        $i2 = virtualinvoke r0.<java.math.BigDecimal: int signum()>();
+        if $i2 != 0 goto label0;
+
+        $r6 = new java.lang.ArithmeticException;
+        specialinvoke $r6.<java.lang.ArithmeticException: void <init>(java.lang.String)>("Division undefined");
+        throw $r6;
+
+     label0:
+        $r7 = new java.lang.ArithmeticException;
+        specialinvoke $r7.<java.lang.ArithmeticException: void <init>(java.lang.String)>("Division by zero");
+        throw $r7;
+
+     label1:
+        $i3 = r0.<java.math.BigDecimal: int scale>;
+        $l4 = (long) $i3;
+        $i5 = r1.<java.math.BigDecimal: int scale>;
+        $l6 = (long) $i5;
+        $l7 = $l4 - $l6;
+        i0 = staticinvoke <java.math.BigDecimal: int saturateLong(long)>($l7);
+        $i8 = virtualinvoke r0.<java.math.BigDecimal: int signum()>();
+        if $i8 != 0 goto label4;
+
+        if i0 < 0 goto label2;
+
+        $r8 = <java.math.BigDecimal: java.math.BigDecimal[] ZERO_SCALED_BY>;
+        $i9 = lengthof $r8;
+        if i0 >= $i9 goto label2;
+
+        $r9 = <java.math.BigDecimal: java.math.BigDecimal[] ZERO_SCALED_BY>;
+        $r10 = $r9[i0];
+        goto label3;
+
+     label2:
+        $r10 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal valueOf(long,int)>(0L, i0);
+
+     label3:
+        return $r10;
+
+     label4:
+        specialinvoke r0.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        specialinvoke r1.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        $r13 = new java.math.MathContext;
+        $i10 = virtualinvoke r0.<java.math.BigDecimal: int precision()>();
+        $l11 = (long) $i10;
+        $i12 = virtualinvoke r1.<java.math.BigDecimal: int precision()>();
+        $d0 = (double) $i12;
+        $d1 = 10.0 * $d0;
+        $d2 = $d1 / 3.0;
+        $d3 = staticinvoke <java.lang.Math: double ceil(double)>($d2);
+        $l13 = (long) $d3;
+        $l14 = $l11 + $l13;
+        $l15 = staticinvoke <java.lang.Math: long min(long,long)>($l14, 2147483647L);
+        $i16 = (int) $l15;
+        $r2 = <java.math.RoundingMode: java.math.RoundingMode UNNECESSARY>;
+        specialinvoke $r13.<java.math.MathContext: void <init>(int,java.math.RoundingMode)>($i16, $r2);
+        r3 = $r13;
+
+     label5:
+        r4 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal divide(java.math.BigDecimal,java.math.MathContext)>(r1, r3);
+
+     label6:
+        goto label8;
+
+     label7:
+        $r14 := @caughtexception;
+        r5 = $r14;
+        $r15 = new java.lang.ArithmeticException;
+        specialinvoke $r15.<java.lang.ArithmeticException: void <init>(java.lang.String)>("Non-terminating decimal expansion; no exact representable decimal result.");
+        throw $r15;
+
+     label8:
+        i17 = virtualinvoke r4.<java.math.BigDecimal: int scale()>();
+        if i0 <= i17 goto label9;
+
+        $r16 = virtualinvoke r4.<java.math.BigDecimal: java.math.BigDecimal setScale(int,int)>(i0, 7);
+        return $r16;
+
+     label9:
+        return r4;
+
+        catch java.lang.ArithmeticException from label5 to label6 with label7;
+    }
+
+    public java.math.BigDecimal divide(java.math.BigDecimal, java.math.MathContext)
+    {
+        java.math.BigDecimal r0, r1, r3, r4, $r5, $r8, $r10, r12, $r13, r15, r20;
+        java.math.MathContext r2;
+        int i0, i2, i3, i4, $i5, $i7, $i9, $i10, $i11, $i12, $i15, $i16, $i17, $i27, $i28, $i32, $i35, $i36;
+        long l1, $l6, $l8, $l13, $l14, $l18, $l19, $l20, $l21, $l22, $l23, $l24, $l25, $l26, $l29, $l30, $l31, $l33, $l34;
+        java.lang.ArithmeticException $r6, $r7;
+        java.math.BigInteger $r9, $r11, $r14, $r17, $r18;
+        java.math.RoundingMode $r19;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        r2 := @parameter1: java.math.MathContext;
+        i0 = r2.<java.math.MathContext: int precision>;
+        if i0 != 0 goto label0;
+
+        $r5 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal divide(java.math.BigDecimal)>(r1);
+        return $r5;
+
+     label0:
+        r3 = r0;
+        $i5 = r3.<java.math.BigDecimal: int scale>;
+        $l6 = (long) $i5;
+        $i7 = r1.<java.math.BigDecimal: int scale>;
+        $l8 = (long) $i7;
+        l1 = $l6 - $l8;
+        $i9 = virtualinvoke r1.<java.math.BigDecimal: int signum()>();
+        if $i9 != 0 goto label2;
+
+        $i10 = virtualinvoke r3.<java.math.BigDecimal: int signum()>();
+        if $i10 != 0 goto label1;
+
+        $r6 = new java.lang.ArithmeticException;
+        specialinvoke $r6.<java.lang.ArithmeticException: void <init>(java.lang.String)>("Division undefined");
+        throw $r6;
+
+     label1:
+        $r7 = new java.lang.ArithmeticException;
+        specialinvoke $r7.<java.lang.ArithmeticException: void <init>(java.lang.String)>("Division by zero");
+        throw $r7;
+
+     label2:
+        $i11 = virtualinvoke r3.<java.math.BigDecimal: int signum()>();
+        if $i11 != 0 goto label3;
+
+        $r8 = new java.math.BigDecimal;
+        $r9 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        $i12 = staticinvoke <java.math.BigDecimal: int saturateLong(long)>(l1);
+        specialinvoke $r8.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r9, 0L, $i12, 1);
+        return $r8;
+
+     label3:
+        i2 = virtualinvoke r3.<java.math.BigDecimal: int precision()>();
+        i3 = virtualinvoke r1.<java.math.BigDecimal: int precision()>();
+        $r10 = new java.math.BigDecimal;
+        $r11 = r3.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $l13 = r3.<java.math.BigDecimal: long intCompact>;
+        specialinvoke $r10.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r11, $l13, i2, i2);
+        r12 = $r10;
+        $r13 = new java.math.BigDecimal;
+        $r14 = r1.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $l14 = r1.<java.math.BigDecimal: long intCompact>;
+        specialinvoke $r13.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r14, $l14, i3, i3);
+        r15 = $r13;
+        $i15 = specialinvoke r12.<java.math.BigDecimal: int compareMagnitude(java.math.BigDecimal)>(r15);
+        if $i15 <= 0 goto label4;
+
+        $i16 = r15.<java.math.BigDecimal: int scale>;
+        $i17 = $i16 - 1;
+        r15.<java.math.BigDecimal: int scale> = $i17;
+        i3 = $i17;
+
+     label4:
+        $l18 = (long) i3;
+        $l19 = l1 + $l18;
+        $l20 = (long) i2;
+        $l21 = $l19 - $l20;
+        $l22 = (long) i0;
+        $l23 = $l21 + $l22;
+        i4 = specialinvoke r0.<java.math.BigDecimal: int checkScale(long)>($l23);
+        $l24 = (long) i0;
+        $l25 = (long) i3;
+        $l26 = $l24 + $l25;
+        $i27 = specialinvoke r0.<java.math.BigDecimal: int checkScale(long)>($l26);
+        if $i27 <= i2 goto label5;
+
+        $i28 = i0 + i3;
+        r12 = virtualinvoke r12.<java.math.BigDecimal: java.math.BigDecimal setScale(int,int)>($i28, 7);
+        goto label6;
+
+     label5:
+        $l29 = (long) i2;
+        $l30 = (long) i0;
+        $l31 = $l29 - $l30;
+        $i32 = specialinvoke r0.<java.math.BigDecimal: int checkScale(long)>($l31);
+        r15 = virtualinvoke r15.<java.math.BigDecimal: java.math.BigDecimal setScale(int,int)>($i32, 7);
+
+     label6:
+        $l33 = r12.<java.math.BigDecimal: long intCompact>;
+        $r17 = r12.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $l34 = r15.<java.math.BigDecimal: long intCompact>;
+        $r18 = r15.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $r19 = r2.<java.math.MathContext: java.math.RoundingMode roundingMode>;
+        $i35 = $r19.<java.math.RoundingMode: int oldMode>;
+        $i36 = specialinvoke r0.<java.math.BigDecimal: int checkScale(long)>(l1);
+        r4 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal divideAndRound(long,java.math.BigInteger,long,java.math.BigInteger,int,int,int)>($l33, $r17, $l34, $r18, i4, $i35, $i36);
+        r20 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal doRound(java.math.BigDecimal,java.math.MathContext)>(r4, r2);
+        return r20;
+    }
+
+    public java.math.BigDecimal divideToIntegralValue(java.math.BigDecimal)
+    {
+        java.math.BigDecimal r0, r1, r3, $r4, $r5;
+        int i0, i1, $i2, $i4, $i7, $i8, $i9, $i10, $i12, $i15, $i17, $i24, $i26;
+        java.math.RoundingMode $r2, $r7;
+        long $l3, $l5, $l6, $l11, $l13, $l14, $l16, $l18, $l19, $l20, $l21, $l22, $l23, $l25;
+        double $d0, $d1, $d2, $d3;
+        java.math.MathContext $r6;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        $i2 = r0.<java.math.BigDecimal: int scale>;
+        $l3 = (long) $i2;
+        $i4 = r1.<java.math.BigDecimal: int scale>;
+        $l5 = (long) $i4;
+        $l6 = $l3 - $l5;
+        i0 = staticinvoke <java.math.BigDecimal: int saturateLong(long)>($l6);
+        $i7 = specialinvoke r0.<java.math.BigDecimal: int compareMagnitude(java.math.BigDecimal)>(r1);
+        if $i7 >= 0 goto label0;
+
+        $r4 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal valueOf(long,int)>(0L, i0);
+        return $r4;
+
+     label0:
+        $i8 = virtualinvoke r0.<java.math.BigDecimal: int signum()>();
+        if $i8 != 0 goto label1;
+
+        $i9 = virtualinvoke r1.<java.math.BigDecimal: int signum()>();
+        if $i9 == 0 goto label1;
+
+        $r5 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal setScale(int,int)>(i0, 7);
+        return $r5;
+
+     label1:
+        $i10 = virtualinvoke r0.<java.math.BigDecimal: int precision()>();
+        $l11 = (long) $i10;
+        $i12 = virtualinvoke r1.<java.math.BigDecimal: int precision()>();
+        $d0 = (double) $i12;
+        $d1 = 10.0 * $d0;
+        $d2 = $d1 / 3.0;
+        $d3 = staticinvoke <java.lang.Math: double ceil(double)>($d2);
+        $l13 = (long) $d3;
+        $l14 = $l11 + $l13;
+        $i15 = virtualinvoke r0.<java.math.BigDecimal: int scale()>();
+        $l16 = (long) $i15;
+        $i17 = virtualinvoke r1.<java.math.BigDecimal: int scale()>();
+        $l18 = (long) $i17;
+        $l19 = $l16 - $l18;
+        $l20 = staticinvoke <java.lang.Math: long abs(long)>($l19);
+        $l21 = $l14 + $l20;
+        $l22 = $l21 + 2L;
+        $l23 = staticinvoke <java.lang.Math: long min(long,long)>($l22, 2147483647L);
+        i1 = (int) $l23;
+        $r6 = new java.math.MathContext;
+        $r2 = <java.math.RoundingMode: java.math.RoundingMode DOWN>;
+        specialinvoke $r6.<java.math.MathContext: void <init>(int,java.math.RoundingMode)>(i1, $r2);
+        r3 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal divide(java.math.BigDecimal,java.math.MathContext)>(r1, $r6);
+        $i24 = r3.<java.math.BigDecimal: int scale>;
+        if $i24 <= 0 goto label2;
+
+        $r7 = <java.math.RoundingMode: java.math.RoundingMode DOWN>;
+        r3 = virtualinvoke r3.<java.math.BigDecimal: java.math.BigDecimal setScale(int,java.math.RoundingMode)>(0, $r7);
+        $l25 = (long) i0;
+        specialinvoke r3.<java.math.BigDecimal: java.math.BigDecimal stripZerosToMatchScale(long)>($l25);
+
+     label2:
+        $i26 = r3.<java.math.BigDecimal: int scale>;
+        if $i26 >= i0 goto label3;
+
+        r3 = virtualinvoke r3.<java.math.BigDecimal: java.math.BigDecimal setScale(int,int)>(i0, 7);
+
+     label3:
+        return r3;
+    }
+
+    public java.math.BigDecimal divideToIntegralValue(java.math.BigDecimal, java.math.MathContext)
+    {
+        java.math.BigDecimal r0, r1, r4, r5, $r6, $r8, $r11;
+        java.math.MathContext r2, $r7;
+        int i0, $i1, $i2, $i3, $i5, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, i16, $i17, $i18, $i19, $i20, $i21;
+        java.math.RoundingMode $r3, $r10;
+        long $l4, $l6, $l7, $l22;
+        java.lang.ArithmeticException $r9;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        r2 := @parameter1: java.math.MathContext;
+        $i1 = r2.<java.math.MathContext: int precision>;
+        if $i1 == 0 goto label0;
+
+        $i2 = specialinvoke r0.<java.math.BigDecimal: int compareMagnitude(java.math.BigDecimal)>(r1);
+        if $i2 >= 0 goto label1;
+
+     label0:
+        $r6 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal divideToIntegralValue(java.math.BigDecimal)>(r1);
+        return $r6;
+
+     label1:
+        $i3 = r0.<java.math.BigDecimal: int scale>;
+        $l4 = (long) $i3;
+        $i5 = r1.<java.math.BigDecimal: int scale>;
+        $l6 = (long) $i5;
+        $l7 = $l4 - $l6;
+        i0 = staticinvoke <java.math.BigDecimal: int saturateLong(long)>($l7);
+        $r7 = new java.math.MathContext;
+        $i8 = r2.<java.math.MathContext: int precision>;
+        $r3 = <java.math.RoundingMode: java.math.RoundingMode DOWN>;
+        specialinvoke $r7.<java.math.MathContext: void <init>(int,java.math.RoundingMode)>($i8, $r3);
+        r4 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal divide(java.math.BigDecimal,java.math.MathContext)>(r1, $r7);
+        $i9 = virtualinvoke r4.<java.math.BigDecimal: int scale()>();
+        if $i9 >= 0 goto label3;
+
+        r5 = virtualinvoke r4.<java.math.BigDecimal: java.math.BigDecimal multiply(java.math.BigDecimal)>(r1);
+        $r8 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal subtract(java.math.BigDecimal)>(r5);
+        $i10 = specialinvoke $r8.<java.math.BigDecimal: int compareMagnitude(java.math.BigDecimal)>(r1);
+        if $i10 < 0 goto label2;
+
+        $r9 = new java.lang.ArithmeticException;
+        specialinvoke $r9.<java.lang.ArithmeticException: void <init>(java.lang.String)>("Division impossible");
+        throw $r9;
+
+     label2:
+        goto label4;
+
+     label3:
+        $i11 = virtualinvoke r4.<java.math.BigDecimal: int scale()>();
+        if $i11 <= 0 goto label4;
+
+        $r10 = <java.math.RoundingMode: java.math.RoundingMode DOWN>;
+        r4 = virtualinvoke r4.<java.math.BigDecimal: java.math.BigDecimal setScale(int,java.math.RoundingMode)>(0, $r10);
+
+     label4:
+        $i12 = virtualinvoke r4.<java.math.BigDecimal: int scale()>();
+        if i0 <= $i12 goto label5;
+
+        $i13 = r2.<java.math.MathContext: int precision>;
+        $i14 = virtualinvoke r4.<java.math.BigDecimal: int precision()>();
+        $i15 = $i13 - $i14;
+        i16 = $i15;
+        if $i15 <= 0 goto label5;
+
+        $i17 = virtualinvoke r4.<java.math.BigDecimal: int scale()>();
+        $i18 = r4.<java.math.BigDecimal: int scale>;
+        $i19 = i0 - $i18;
+        $i20 = staticinvoke <java.lang.Math: int min(int,int)>(i16, $i19);
+        $i21 = $i17 + $i20;
+        $r11 = virtualinvoke r4.<java.math.BigDecimal: java.math.BigDecimal setScale(int)>($i21);
+        return $r11;
+
+     label5:
+        $l22 = (long) i0;
+        specialinvoke r4.<java.math.BigDecimal: java.math.BigDecimal stripZerosToMatchScale(long)>($l22);
+        return r4;
+    }
+
+    public java.math.BigDecimal remainder(java.math.BigDecimal)
+    {
+        java.math.BigDecimal r0, r1, $r3;
+        java.math.BigDecimal[] r2;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        r2 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal[] divideAndRemainder(java.math.BigDecimal)>(r1);
+        $r3 = r2[1];
+        return $r3;
+    }
+
+    public java.math.BigDecimal remainder(java.math.BigDecimal, java.math.MathContext)
+    {
+        java.math.BigDecimal r0, r1, $r4;
+        java.math.MathContext r2;
+        java.math.BigDecimal[] r3;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        r2 := @parameter1: java.math.MathContext;
+        r3 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal[] divideAndRemainder(java.math.BigDecimal,java.math.MathContext)>(r1, r2);
+        $r4 = r3[1];
+        return $r4;
+    }
+
+    public java.math.BigDecimal[] divideAndRemainder(java.math.BigDecimal)
+    {
+        java.math.BigDecimal r0, r1, $r3, $r4, $r5, $r6;
+        java.math.BigDecimal[] r2;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        r2 = newarray (java.math.BigDecimal)[2];
+        $r3 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal divideToIntegralValue(java.math.BigDecimal)>(r1);
+        r2[0] = $r3;
+        $r4 = r2[0];
+        $r5 = virtualinvoke $r4.<java.math.BigDecimal: java.math.BigDecimal multiply(java.math.BigDecimal)>(r1);
+        $r6 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal subtract(java.math.BigDecimal)>($r5);
+        r2[1] = $r6;
+        return r2;
+    }
+
+    public java.math.BigDecimal[] divideAndRemainder(java.math.BigDecimal, java.math.MathContext)
+    {
+        java.math.BigDecimal r0, r1, r4, $r6, $r7, $r8, $r9;
+        java.math.MathContext r2;
+        java.math.BigDecimal[] r3, $r5;
+        int $i0;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        r2 := @parameter1: java.math.MathContext;
+        $i0 = r2.<java.math.MathContext: int precision>;
+        if $i0 != 0 goto label0;
+
+        $r5 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal[] divideAndRemainder(java.math.BigDecimal)>(r1);
+        return $r5;
+
+     label0:
+        r3 = newarray (java.math.BigDecimal)[2];
+        r4 = r0;
+        $r6 = virtualinvoke r4.<java.math.BigDecimal: java.math.BigDecimal divideToIntegralValue(java.math.BigDecimal,java.math.MathContext)>(r1, r2);
+        r3[0] = $r6;
+        $r7 = r3[0];
+        $r8 = virtualinvoke $r7.<java.math.BigDecimal: java.math.BigDecimal multiply(java.math.BigDecimal)>(r1);
+        $r9 = virtualinvoke r4.<java.math.BigDecimal: java.math.BigDecimal subtract(java.math.BigDecimal)>($r8);
+        r3[1] = $r9;
+        return r3;
+    }
+
+    public java.math.BigDecimal pow(int)
+    {
+        java.math.BigDecimal r0, $r3;
+        int i0, i1, $i2;
+        java.lang.ArithmeticException $r1;
+        long $l3, $l4, $l5;
+        java.math.BigInteger $r4, $r5;
+
+        r0 := @this: java.math.BigDecimal;
+        i0 := @parameter0: int;
+        if i0 < 0 goto label0;
+
+        if i0 <= 999999999 goto label1;
+
+     label0:
+        $r1 = new java.lang.ArithmeticException;
+        specialinvoke $r1.<java.lang.ArithmeticException: void <init>(java.lang.String)>("Invalid operation");
+        throw $r1;
+
+     label1:
+        $i2 = r0.<java.math.BigDecimal: int scale>;
+        $l3 = (long) $i2;
+        $l4 = (long) i0;
+        $l5 = $l3 * $l4;
+        i1 = specialinvoke r0.<java.math.BigDecimal: int checkScale(long)>($l5);
+        specialinvoke r0.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        $r3 = new java.math.BigDecimal;
+        $r4 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $r5 = virtualinvoke $r4.<java.math.BigInteger: java.math.BigInteger pow(int)>(i0);
+        specialinvoke $r3.<java.math.BigDecimal: void <init>(java.math.BigInteger,int)>($r5, i1);
+        return $r3;
+    }
+
+    public java.math.BigDecimal pow(int, java.math.MathContext)
+    {
+        java.math.BigDecimal r0, r2, $r4, $r6, r11, $r12, $r13;
+        int i0, i1, i2, i3, $i4, $i5, $i7, $i8, $i9, $i10;
+        java.math.MathContext r1, r3, $r9;
+        boolean z0;
+        java.lang.ArithmeticException $r5, $r8;
+        long $l6;
+        java.math.RoundingMode $r10;
+
+        r0 := @this: java.math.BigDecimal;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.math.MathContext;
+        $i4 = r1.<java.math.MathContext: int precision>;
+        if $i4 != 0 goto label0;
+
+        $r4 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal pow(int)>(i0);
+        return $r4;
+
+     label0:
+        if i0 < -999999999 goto label1;
+
+        if i0 <= 999999999 goto label2;
+
+     label1:
+        $r5 = new java.lang.ArithmeticException;
+        specialinvoke $r5.<java.lang.ArithmeticException: void <init>(java.lang.String)>("Invalid operation");
+        throw $r5;
+
+     label2:
+        if i0 != 0 goto label3;
+
+        $r6 = <java.math.BigDecimal: java.math.BigDecimal ONE>;
+        return $r6;
+
+     label3:
+        specialinvoke r0.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        r2 = r0;
+        r3 = r1;
+        i1 = staticinvoke <java.lang.Math: int abs(int)>(i0);
+        $i5 = r1.<java.math.MathContext: int precision>;
+        if $i5 <= 0 goto label5;
+
+        $l6 = (long) i1;
+        i2 = staticinvoke <java.math.BigDecimal: int longDigitLength(long)>($l6);
+        $i7 = r1.<java.math.MathContext: int precision>;
+        if i2 <= $i7 goto label4;
+
+        $r8 = new java.lang.ArithmeticException;
+        specialinvoke $r8.<java.lang.ArithmeticException: void <init>(java.lang.String)>("Invalid operation");
+        throw $r8;
+
+     label4:
+        $r9 = new java.math.MathContext;
+        $i8 = r1.<java.math.MathContext: int precision>;
+        $i9 = $i8 + i2;
+        $i10 = $i9 + 1;
+        $r10 = r1.<java.math.MathContext: java.math.RoundingMode roundingMode>;
+        specialinvoke $r9.<java.math.MathContext: void <init>(int,java.math.RoundingMode)>($i10, $r10);
+        r3 = $r9;
+
+     label5:
+        r11 = <java.math.BigDecimal: java.math.BigDecimal ONE>;
+        z0 = 0;
+        i3 = 1;
+
+     label6:
+        i1 = i1 + i1;
+        if i1 >= 0 goto label7;
+
+        z0 = 1;
+        r11 = virtualinvoke r11.<java.math.BigDecimal: java.math.BigDecimal multiply(java.math.BigDecimal,java.math.MathContext)>(r2, r3);
+
+     label7:
+        if i3 != 31 goto label8;
+
+        goto label10;
+
+     label8:
+        if z0 == 0 goto label9;
+
+        r11 = virtualinvoke r11.<java.math.BigDecimal: java.math.BigDecimal multiply(java.math.BigDecimal,java.math.MathContext)>(r11, r3);
+
+     label9:
+        i3 = i3 + 1;
+        goto label6;
+
+     label10:
+        if i0 >= 0 goto label11;
+
+        $r12 = <java.math.BigDecimal: java.math.BigDecimal ONE>;
+        r11 = virtualinvoke $r12.<java.math.BigDecimal: java.math.BigDecimal divide(java.math.BigDecimal,java.math.MathContext)>(r11, r3);
+
+     label11:
+        $r13 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal doRound(java.math.BigDecimal,java.math.MathContext)>(r11, r1);
+        return $r13;
+    }
+
+    public java.math.BigDecimal abs()
+    {
+        java.math.BigDecimal r0, $r1;
+        int $i0;
+
+        r0 := @this: java.math.BigDecimal;
+        $i0 = virtualinvoke r0.<java.math.BigDecimal: int signum()>();
+        if $i0 >= 0 goto label0;
+
+        $r1 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal negate()>();
+        goto label1;
+
+     label0:
+        $r1 = r0;
+
+     label1:
+        return $r1;
+    }
+
+    public java.math.BigDecimal abs(java.math.MathContext)
+    {
+        java.math.BigDecimal r0, $r2;
+        java.math.MathContext r1;
+        int $i0;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.MathContext;
+        $i0 = virtualinvoke r0.<java.math.BigDecimal: int signum()>();
+        if $i0 >= 0 goto label0;
+
+        $r2 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal negate(java.math.MathContext)>(r1);
+        goto label1;
+
+     label0:
+        $r2 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal plus(java.math.MathContext)>(r1);
+
+     label1:
+        return $r2;
+    }
+
+    public java.math.BigDecimal negate()
+    {
+        java.math.BigDecimal r0, r1, $r2;
+        long $l0, $l2, $l3;
+        byte $b1;
+        int $i4, $i5, $i6;
+        java.math.BigInteger $r3, $r4;
+
+        r0 := @this: java.math.BigDecimal;
+        $l0 = r0.<java.math.BigDecimal: long intCompact>;
+        $b1 = $l0 cmp -9223372036854775808L;
+        if $b1 == 0 goto label0;
+
+        $l2 = r0.<java.math.BigDecimal: long intCompact>;
+        $l3 = neg $l2;
+        $i4 = r0.<java.math.BigDecimal: int scale>;
+        r1 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal valueOf(long,int)>($l3, $i4);
+        goto label1;
+
+     label0:
+        $r2 = new java.math.BigDecimal;
+        $r3 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $r4 = virtualinvoke $r3.<java.math.BigInteger: java.math.BigInteger negate()>();
+        $i5 = r0.<java.math.BigDecimal: int scale>;
+        specialinvoke $r2.<java.math.BigDecimal: void <init>(java.math.BigInteger,int)>($r4, $i5);
+        r1 = $r2;
+        $i6 = r0.<java.math.BigDecimal: int precision>;
+        r1.<java.math.BigDecimal: int precision> = $i6;
+
+     label1:
+        return r1;
+    }
+
+    public java.math.BigDecimal negate(java.math.MathContext)
+    {
+        java.math.BigDecimal r0, $r2, $r3;
+        java.math.MathContext r1;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.MathContext;
+        $r2 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal negate()>();
+        $r3 = virtualinvoke $r2.<java.math.BigDecimal: java.math.BigDecimal plus(java.math.MathContext)>(r1);
+        return $r3;
+    }
+
+    public java.math.BigDecimal plus()
+    {
+        java.math.BigDecimal r0;
+
+        r0 := @this: java.math.BigDecimal;
+        return r0;
+    }
+
+    public java.math.BigDecimal plus(java.math.MathContext)
+    {
+        java.math.BigDecimal r0, $r2;
+        java.math.MathContext r1;
+        int $i0;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.MathContext;
+        $i0 = r1.<java.math.MathContext: int precision>;
+        if $i0 != 0 goto label0;
+
+        return r0;
+
+     label0:
+        $r2 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal doRound(java.math.BigDecimal,java.math.MathContext)>(r0, r1);
+        return $r2;
+    }
+
+    public int signum()
+    {
+        java.math.BigDecimal r0;
+        long $l0, $l2;
+        byte $b1;
+        int $i3;
+        java.math.BigInteger $r1;
+
+        r0 := @this: java.math.BigDecimal;
+        $l0 = r0.<java.math.BigDecimal: long intCompact>;
+        $b1 = $l0 cmp -9223372036854775808L;
+        if $b1 == 0 goto label0;
+
+        $l2 = r0.<java.math.BigDecimal: long intCompact>;
+        $i3 = staticinvoke <java.lang.Long: int signum(long)>($l2);
+        goto label1;
+
+     label0:
+        $r1 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $i3 = virtualinvoke $r1.<java.math.BigInteger: int signum()>();
+
+     label1:
+        return $i3;
+    }
+
+    public int scale()
+    {
+        java.math.BigDecimal r0;
+        int $i0;
+
+        r0 := @this: java.math.BigDecimal;
+        $i0 = r0.<java.math.BigDecimal: int scale>;
+        return $i0;
+    }
+
+    public int precision()
+    {
+        java.math.BigDecimal r0;
+        int i0;
+        long l1;
+        byte $b2;
+        java.math.BigInteger $r1;
+
+        r0 := @this: java.math.BigDecimal;
+        i0 = r0.<java.math.BigDecimal: int precision>;
+        if i0 != 0 goto label2;
+
+        l1 = r0.<java.math.BigDecimal: long intCompact>;
+        $b2 = l1 cmp -9223372036854775808L;
+        if $b2 == 0 goto label0;
+
+        i0 = staticinvoke <java.math.BigDecimal: int longDigitLength(long)>(l1);
+        goto label1;
+
+     label0:
+        $r1 = specialinvoke r0.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        i0 = staticinvoke <java.math.BigDecimal: int bigDigitLength(java.math.BigInteger)>($r1);
+
+     label1:
+        r0.<java.math.BigDecimal: int precision> = i0;
+
+     label2:
+        return i0;
+    }
+
+    public java.math.BigInteger unscaledValue()
+    {
+        java.math.BigDecimal r0;
+        java.math.BigInteger $r1;
+
+        r0 := @this: java.math.BigDecimal;
+        $r1 = specialinvoke r0.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        return $r1;
+    }
+
+    public java.math.BigDecimal round(java.math.MathContext)
+    {
+        java.math.BigDecimal r0, $r2;
+        java.math.MathContext r1;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.MathContext;
+        $r2 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal plus(java.math.MathContext)>(r1);
+        return $r2;
+    }
+
+    public java.math.BigDecimal setScale(int, java.math.RoundingMode)
+    {
+        java.math.BigDecimal r0, $r2;
+        int i0, $i1;
+        java.math.RoundingMode r1;
+
+        r0 := @this: java.math.BigDecimal;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.math.RoundingMode;
+        $i1 = r1.<java.math.RoundingMode: int oldMode>;
+        $r2 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal setScale(int,int)>(i0, $i1);
+        return $r2;
+    }
+
+    public java.math.BigDecimal setScale(int, int)
+    {
+        java.math.BigDecimal r0, $r3, $r4, $r10, $r13;
+        int i0, i1, i2, i4, $i6, $i14, $i15, $i16, i20, $i21;
+        long l3, $l7, $l8, $l9, $l11, $l13, $l17, $l18, $l19, $l22;
+        java.math.BigInteger r1, $r6, $r8, $r11, $r12;
+        java.lang.IllegalArgumentException $r2;
+        byte $b10, $b12;
+        long[] $r7, $r9;
+
+        r0 := @this: java.math.BigDecimal;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        if i1 < 0 goto label0;
+
+        if i1 <= 7 goto label1;
+
+     label0:
+        $r2 = new java.lang.IllegalArgumentException;
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Invalid rounding mode");
+        throw $r2;
+
+     label1:
+        i2 = r0.<java.math.BigDecimal: int scale>;
+        if i0 != i2 goto label2;
+
+        return r0;
+
+     label2:
+        $i6 = virtualinvoke r0.<java.math.BigDecimal: int signum()>();
+        if $i6 != 0 goto label3;
+
+        $r3 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal valueOf(long,int)>(0L, i0);
+        return $r3;
+
+     label3:
+        l3 = r0.<java.math.BigDecimal: long intCompact>;
+        if i0 <= i2 goto label8;
+
+        $l7 = (long) i0;
+        $l8 = (long) i2;
+        $l9 = $l7 - $l8;
+        i4 = specialinvoke r0.<java.math.BigDecimal: int checkScale(long)>($l9);
+        r1 = null;
+        $b10 = l3 cmp -9223372036854775808L;
+        if $b10 == 0 goto label4;
+
+        $l11 = staticinvoke <java.math.BigDecimal: long longMultiplyPowerTen(long,int)>(l3, i4);
+        l3 = $l11;
+        $b12 = $l11 cmp -9223372036854775808L;
+        if $b12 != 0 goto label5;
+
+     label4:
+        r1 = specialinvoke r0.<java.math.BigDecimal: java.math.BigInteger bigMultiplyPowerTen(int)>(i4);
+
+     label5:
+        $r4 = new java.math.BigDecimal;
+        $r6 = r1;
+        $l13 = l3;
+        $i14 = r0.<java.math.BigDecimal: int precision>;
+        if $i14 <= 0 goto label6;
+
+        $i15 = r0.<java.math.BigDecimal: int precision>;
+        $i16 = $i15 + i4;
+        goto label7;
+
+     label6:
+        $i16 = 0;
+
+     label7:
+        specialinvoke $r4.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r6, $l13, i0, $i16);
+        return $r4;
+
+     label8:
+        $l17 = (long) i2;
+        $l18 = (long) i0;
+        $l19 = $l17 - $l18;
+        i20 = specialinvoke r0.<java.math.BigDecimal: int checkScale(long)>($l19);
+        $r7 = <java.math.BigDecimal: long[] LONG_TEN_POWERS_TABLE>;
+        $i21 = lengthof $r7;
+        if i20 >= $i21 goto label9;
+
+        $r8 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $r9 = <java.math.BigDecimal: long[] LONG_TEN_POWERS_TABLE>;
+        $l22 = $r9[i20];
+        $r10 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal divideAndRound(long,java.math.BigInteger,long,java.math.BigInteger,int,int,int)>(l3, $r8, $l22, null, i0, i1, i0);
+        return $r10;
+
+     label9:
+        $r11 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $r12 = staticinvoke <java.math.BigDecimal: java.math.BigInteger bigTenToThe(int)>(i20);
+        $r13 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal divideAndRound(long,java.math.BigInteger,long,java.math.BigInteger,int,int,int)>(l3, $r11, -9223372036854775808L, $r12, i0, i1, i0);
+        return $r13;
+    }
+
+    public java.math.BigDecimal setScale(int)
+    {
+        java.math.BigDecimal r0, $r1;
+        int i0;
+
+        r0 := @this: java.math.BigDecimal;
+        i0 := @parameter0: int;
+        $r1 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal setScale(int,int)>(i0, 7);
+        return $r1;
+    }
+
+    public java.math.BigDecimal movePointLeft(int)
+    {
+        java.math.BigDecimal r0, r1, $r2, $r4;
+        int i0, i1, $i2, $i7;
+        long $l3, $l4, $l5, $l6;
+        java.math.BigInteger $r3;
+
+        r0 := @this: java.math.BigDecimal;
+        i0 := @parameter0: int;
+        $i2 = r0.<java.math.BigDecimal: int scale>;
+        $l3 = (long) $i2;
+        $l4 = (long) i0;
+        $l5 = $l3 + $l4;
+        i1 = specialinvoke r0.<java.math.BigDecimal: int checkScale(long)>($l5);
+        $r2 = new java.math.BigDecimal;
+        $r3 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $l6 = r0.<java.math.BigDecimal: long intCompact>;
+        specialinvoke $r2.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r3, $l6, i1, 0);
+        r1 = $r2;
+        $i7 = r1.<java.math.BigDecimal: int scale>;
+        if $i7 >= 0 goto label0;
+
+        $r4 = virtualinvoke r1.<java.math.BigDecimal: java.math.BigDecimal setScale(int,int)>(0, 7);
+        goto label1;
+
+     label0:
+        $r4 = r1;
+
+     label1:
+        return $r4;
+    }
+
+    public java.math.BigDecimal movePointRight(int)
+    {
+        java.math.BigDecimal r0, r1, $r2, $r4;
+        int i0, i1, $i2, $i7;
+        long $l3, $l4, $l5, $l6;
+        java.math.BigInteger $r3;
+
+        r0 := @this: java.math.BigDecimal;
+        i0 := @parameter0: int;
+        $i2 = r0.<java.math.BigDecimal: int scale>;
+        $l3 = (long) $i2;
+        $l4 = (long) i0;
+        $l5 = $l3 - $l4;
+        i1 = specialinvoke r0.<java.math.BigDecimal: int checkScale(long)>($l5);
+        $r2 = new java.math.BigDecimal;
+        $r3 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $l6 = r0.<java.math.BigDecimal: long intCompact>;
+        specialinvoke $r2.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r3, $l6, i1, 0);
+        r1 = $r2;
+        $i7 = r1.<java.math.BigDecimal: int scale>;
+        if $i7 >= 0 goto label0;
+
+        $r4 = virtualinvoke r1.<java.math.BigDecimal: java.math.BigDecimal setScale(int,int)>(0, 7);
+        goto label1;
+
+     label0:
+        $r4 = r1;
+
+     label1:
+        return $r4;
+    }
+
+    public java.math.BigDecimal scaleByPowerOfTen(int)
+    {
+        java.math.BigDecimal r0, $r1;
+        int i0, $i2, $i6, $i7;
+        java.math.BigInteger $r2;
+        long $l1, $l3, $l4, $l5;
+
+        r0 := @this: java.math.BigDecimal;
+        i0 := @parameter0: int;
+        $r1 = new java.math.BigDecimal;
+        $r2 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $l1 = r0.<java.math.BigDecimal: long intCompact>;
+        $i2 = r0.<java.math.BigDecimal: int scale>;
+        $l3 = (long) $i2;
+        $l4 = (long) i0;
+        $l5 = $l3 - $l4;
+        $i6 = specialinvoke r0.<java.math.BigDecimal: int checkScale(long)>($l5);
+        $i7 = r0.<java.math.BigDecimal: int precision>;
+        specialinvoke $r1.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r2, $l1, $i6, $i7);
+        return $r1;
+    }
+
+    public java.math.BigDecimal stripTrailingZeros()
+    {
+        java.math.BigDecimal r0, r1, $r3;
+        java.math.BigInteger $r4;
+        int $i0;
+
+        r0 := @this: java.math.BigDecimal;
+        specialinvoke r0.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        $r3 = new java.math.BigDecimal;
+        $r4 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $i0 = r0.<java.math.BigDecimal: int scale>;
+        specialinvoke $r3.<java.math.BigDecimal: void <init>(java.math.BigInteger,int)>($r4, $i0);
+        r1 = $r3;
+        specialinvoke r1.<java.math.BigDecimal: java.math.BigDecimal stripZerosToMatchScale(long)>(-9223372036854775808L);
+        return r1;
+    }
+
+    public int compareTo(java.math.BigDecimal)
+    {
+        java.math.BigDecimal r0, r1;
+        long l0, l1;
+        int i2, $i3, $i4, i10, i12, $i13;
+        byte $b5, $b6, $b7, $b8, $b9, $b11;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        $i3 = r0.<java.math.BigDecimal: int scale>;
+        $i4 = r1.<java.math.BigDecimal: int scale>;
+        if $i3 != $i4 goto label3;
+
+        l0 = r0.<java.math.BigDecimal: long intCompact>;
+        l1 = r1.<java.math.BigDecimal: long intCompact>;
+        $b5 = l0 cmp -9223372036854775808L;
+        if $b5 == 0 goto label3;
+
+        $b6 = l1 cmp -9223372036854775808L;
+        if $b6 == 0 goto label3;
+
+        $b7 = l0 cmp l1;
+        if $b7 == 0 goto label1;
+
+        $b8 = l0 cmp l1;
+        if $b8 <= 0 goto label0;
+
+        $b9 = 1;
+        goto label2;
+
+     label0:
+        $b9 = -1;
+        goto label2;
+
+     label1:
+        $b9 = 0;
+
+     label2:
+        return $b9;
+
+     label3:
+        i10 = virtualinvoke r0.<java.math.BigDecimal: int signum()>();
+        i2 = virtualinvoke r1.<java.math.BigDecimal: int signum()>();
+        if i10 == i2 goto label6;
+
+        if i10 <= i2 goto label4;
+
+        $b11 = 1;
+        goto label5;
+
+     label4:
+        $b11 = -1;
+
+     label5:
+        return $b11;
+
+     label6:
+        if i10 != 0 goto label7;
+
+        return 0;
+
+     label7:
+        i12 = specialinvoke r0.<java.math.BigDecimal: int compareMagnitude(java.math.BigDecimal)>(r1);
+        if i10 <= 0 goto label8;
+
+        $i13 = i12;
+        goto label9;
+
+     label8:
+        $i13 = neg i12;
+
+     label9:
+        return $i13;
+    }
+
+    private int compareMagnitude(java.math.BigDecimal)
+    {
+        java.math.BigDecimal r0, r1;
+        long l0, l1, $l17, $l23;
+        int i2, i3, i4, $i9, $i10, $i11, $i12, $i13, $i14, $i16, $i20, $i21, $i26, $i29, $i31;
+        null_type n0;
+        byte $b5, $b6, $b7, $b8, $b15, $b18, $b19, $b22, $b24, $b25, $b27, $b28, $b30;
+        java.math.BigInteger r2, $r3, r4, $r5, $r6, $r7;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        l0 = r1.<java.math.BigDecimal: long intCompact>;
+        l1 = r0.<java.math.BigDecimal: long intCompact>;
+        $b5 = l1 cmp 0L;
+        if $b5 != 0 goto label2;
+
+        $b6 = l0 cmp 0L;
+        if $b6 != 0 goto label0;
+
+        $b7 = 0;
+        goto label1;
+
+     label0:
+        $b7 = -1;
+
+     label1:
+        return $b7;
+
+     label2:
+        $b8 = l0 cmp 0L;
+        if $b8 != 0 goto label3;
+
+        return 1;
+
+     label3:
+        $i9 = r0.<java.math.BigDecimal: int scale>;
+        $i10 = r1.<java.math.BigDecimal: int scale>;
+        i2 = $i9 - $i10;
+        if i2 == 0 goto label9;
+
+        $i11 = virtualinvoke r0.<java.math.BigDecimal: int precision()>();
+        $i12 = r0.<java.math.BigDecimal: int scale>;
+        i3 = $i11 - $i12;
+        $i13 = virtualinvoke r1.<java.math.BigDecimal: int precision()>();
+        $i14 = r1.<java.math.BigDecimal: int scale>;
+        i4 = $i13 - $i14;
+        if i3 >= i4 goto label4;
+
+        return -1;
+
+     label4:
+        if i3 <= i4 goto label5;
+
+        return 1;
+
+     label5:
+        n0 = null;
+        if i2 >= 0 goto label7;
+
+        $b15 = l1 cmp -9223372036854775808L;
+        if $b15 == 0 goto label6;
+
+        $i16 = neg i2;
+        $l17 = staticinvoke <java.math.BigDecimal: long longMultiplyPowerTen(long,int)>(l1, $i16);
+        l1 = $l17;
+        $b18 = $l17 cmp -9223372036854775808L;
+        if $b18 != 0 goto label9;
+
+     label6:
+        $b19 = l0 cmp -9223372036854775808L;
+        if $b19 != 0 goto label9;
+
+        $i20 = neg i2;
+        r2 = specialinvoke r0.<java.math.BigDecimal: java.math.BigInteger bigMultiplyPowerTen(int)>($i20);
+        $r3 = r1.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $i21 = virtualinvoke r2.<java.math.BigInteger: int compareMagnitude(java.math.BigInteger)>($r3);
+        return $i21;
+
+     label7:
+        $b22 = l0 cmp -9223372036854775808L;
+        if $b22 == 0 goto label8;
+
+        $l23 = staticinvoke <java.math.BigDecimal: long longMultiplyPowerTen(long,int)>(l0, i2);
+        l0 = $l23;
+        $b24 = $l23 cmp -9223372036854775808L;
+        if $b24 != 0 goto label9;
+
+     label8:
+        $b25 = l1 cmp -9223372036854775808L;
+        if $b25 != 0 goto label9;
+
+        r4 = specialinvoke r1.<java.math.BigDecimal: java.math.BigInteger bigMultiplyPowerTen(int)>(i2);
+        $r5 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $i26 = virtualinvoke $r5.<java.math.BigInteger: int compareMagnitude(java.math.BigInteger)>(r4);
+        return $i26;
+
+     label9:
+        $b27 = l1 cmp -9223372036854775808L;
+        if $b27 == 0 goto label12;
+
+        $b28 = l0 cmp -9223372036854775808L;
+        if $b28 == 0 goto label10;
+
+        $i29 = staticinvoke <java.math.BigDecimal: int longCompareMagnitude(long,long)>(l1, l0);
+        goto label11;
+
+     label10:
+        $i29 = -1;
+
+     label11:
+        return $i29;
+
+     label12:
+        $b30 = l0 cmp -9223372036854775808L;
+        if $b30 == 0 goto label13;
+
+        return 1;
+
+     label13:
+        $r6 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $r7 = r1.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $i31 = virtualinvoke $r6.<java.math.BigInteger: int compareMagnitude(java.math.BigInteger)>($r7);
+        return $i31;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        java.math.BigDecimal r0, r2;
+        java.lang.Object r1;
+        long l0, l1, $l8;
+        boolean $z0, $z1, $z2, $z3;
+        int $i2, $i3;
+        byte $b4, $b5, $b6, $b7, $b9;
+        java.math.BigInteger $r3, $r4, $r5, $r6;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.lang.Object;
+        $z0 = r1 instanceof java.math.BigDecimal;
+        if $z0 != 0 goto label0;
+
+        return 0;
+
+     label0:
+        r2 = (java.math.BigDecimal) r1;
+        if r1 != r0 goto label1;
+
+        return 1;
+
+     label1:
+        $i2 = r0.<java.math.BigDecimal: int scale>;
+        $i3 = r2.<java.math.BigDecimal: int scale>;
+        if $i2 == $i3 goto label2;
+
+        return 0;
+
+     label2:
+        l0 = r0.<java.math.BigDecimal: long intCompact>;
+        l1 = r2.<java.math.BigDecimal: long intCompact>;
+        $b4 = l0 cmp -9223372036854775808L;
+        if $b4 == 0 goto label6;
+
+        $b5 = l1 cmp -9223372036854775808L;
+        if $b5 != 0 goto label3;
+
+        $r3 = r2.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        l1 = staticinvoke <java.math.BigDecimal: long compactValFor(java.math.BigInteger)>($r3);
+
+     label3:
+        $b6 = l1 cmp l0;
+        if $b6 != 0 goto label4;
+
+        $z1 = 1;
+        goto label5;
+
+     label4:
+        $z1 = 0;
+
+     label5:
+        return $z1;
+
+     label6:
+        $b7 = l1 cmp -9223372036854775808L;
+        if $b7 == 0 goto label9;
+
+        $r4 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $l8 = staticinvoke <java.math.BigDecimal: long compactValFor(java.math.BigInteger)>($r4);
+        $b9 = l1 cmp $l8;
+        if $b9 != 0 goto label7;
+
+        $z2 = 1;
+        goto label8;
+
+     label7:
+        $z2 = 0;
+
+     label8:
+        return $z2;
+
+     label9:
+        $r5 = specialinvoke r0.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        $r6 = specialinvoke r2.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        $z3 = virtualinvoke $r5.<java.math.BigInteger: boolean equals(java.lang.Object)>($r6);
+        return $z3;
+    }
+
+    public java.math.BigDecimal min(java.math.BigDecimal)
+    {
+        java.math.BigDecimal r0, r1, $r2;
+        int $i0;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        $i0 = virtualinvoke r0.<java.math.BigDecimal: int compareTo(java.math.BigDecimal)>(r1);
+        if $i0 > 0 goto label0;
+
+        $r2 = r0;
+        goto label1;
+
+     label0:
+        $r2 = r1;
+
+     label1:
+        return $r2;
+    }
+
+    public java.math.BigDecimal max(java.math.BigDecimal)
+    {
+        java.math.BigDecimal r0, r1, $r2;
+        int $i0;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.BigDecimal;
+        $i0 = virtualinvoke r0.<java.math.BigDecimal: int compareTo(java.math.BigDecimal)>(r1);
+        if $i0 < 0 goto label0;
+
+        $r2 = r0;
+        goto label1;
+
+     label0:
+        $r2 = r1;
+
+     label1:
+        return $r2;
+    }
+
+    public int hashCode()
+    {
+        java.math.BigDecimal r0;
+        long l0, $l2, $l4, $l6, $l7, $l8, $l11, $l12, $l13, $l15;
+        int i1, $i9, $i10, $i17, $i18, $i19, $i20, $i21, $i22, $i23, $i24;
+        byte $b3, $b5, $b14, $b16;
+        java.math.BigInteger $r1;
+
+        r0 := @this: java.math.BigDecimal;
+        $l2 = r0.<java.math.BigDecimal: long intCompact>;
+        $b3 = $l2 cmp -9223372036854775808L;
+        if $b3 == 0 goto label4;
+
+        $l4 = r0.<java.math.BigDecimal: long intCompact>;
+        $b5 = $l4 cmp 0L;
+        if $b5 >= 0 goto label0;
+
+        $l6 = r0.<java.math.BigDecimal: long intCompact>;
+        $l7 = neg $l6;
+        goto label1;
+
+     label0:
+        $l7 = r0.<java.math.BigDecimal: long intCompact>;
+
+     label1:
+        l0 = $l7;
+        $l8 = l0 >>> 32;
+        $i9 = (int) $l8;
+        $i10 = $i9 * 31;
+        $l11 = (long) $i10;
+        $l12 = l0 & 4294967295L;
+        $l13 = $l11 + $l12;
+        i1 = (int) $l13;
+        $b14 = 31;
+        $l15 = r0.<java.math.BigDecimal: long intCompact>;
+        $b16 = $l15 cmp 0L;
+        if $b16 >= 0 goto label2;
+
+        $i17 = neg i1;
+        goto label3;
+
+     label2:
+        $i17 = i1;
+
+     label3:
+        $i18 = $b14 * $i17;
+        $i19 = r0.<java.math.BigDecimal: int scale>;
+        $i20 = $i18 + $i19;
+        return $i20;
+
+     label4:
+        $r1 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $i21 = virtualinvoke $r1.<java.math.BigInteger: int hashCode()>();
+        $i22 = 31 * $i21;
+        $i23 = r0.<java.math.BigDecimal: int scale>;
+        $i24 = $i22 + $i23;
+        return $i24;
+    }
+
+    public java.lang.String toString()
+    {
+        java.math.BigDecimal r0;
+        java.lang.String r1, $r2;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 = r0.<java.math.BigDecimal: java.lang.String stringCache>;
+        if r1 != null goto label0;
+
+        $r2 = specialinvoke r0.<java.math.BigDecimal: java.lang.String layoutChars(boolean)>(1);
+        r1 = $r2;
+        r0.<java.math.BigDecimal: java.lang.String stringCache> = $r2;
+
+     label0:
+        return r1;
+    }
+
+    public java.lang.String toEngineeringString()
+    {
+        java.math.BigDecimal r0;
+        java.lang.String $r1;
+
+        r0 := @this: java.math.BigDecimal;
+        $r1 = specialinvoke r0.<java.math.BigDecimal: java.lang.String layoutChars(boolean)>(0);
+        return $r1;
+    }
+
+    public java.lang.String toPlainString()
+    {
+        java.math.BigDecimal r0, r1;
+        int $i0, $i1, $i2, $i3;
+        java.math.BigInteger $r3, $r5, $r6;
+        java.lang.String $r4, $r7, $r8;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 = r0;
+        $i0 = r1.<java.math.BigDecimal: int scale>;
+        if $i0 >= 0 goto label0;
+
+        r1 = virtualinvoke r1.<java.math.BigDecimal: java.math.BigDecimal setScale(int)>(0);
+
+     label0:
+        specialinvoke r1.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        $i1 = r1.<java.math.BigDecimal: int scale>;
+        if $i1 != 0 goto label1;
+
+        $r3 = r1.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $r4 = virtualinvoke $r3.<java.math.BigInteger: java.lang.String toString()>();
+        return $r4;
+
+     label1:
+        $i2 = virtualinvoke r1.<java.math.BigDecimal: int signum()>();
+        $r5 = r1.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $r6 = virtualinvoke $r5.<java.math.BigInteger: java.math.BigInteger abs()>();
+        $r7 = virtualinvoke $r6.<java.math.BigInteger: java.lang.String toString()>();
+        $i3 = r1.<java.math.BigDecimal: int scale>;
+        $r8 = specialinvoke r1.<java.math.BigDecimal: java.lang.String getValueString(int,java.lang.String,int)>($i2, $r7, $i3);
+        return $r8;
+    }
+
+    private java.lang.String getValueString(int, java.lang.String, int)
+    {
+        java.math.BigDecimal r0;
+        int i0, i1, i2, i3, $i4, $i5, $i6, $i7, $i8;
+        java.lang.String r1, $r4, $r7, $r13, $r17;
+        java.lang.StringBuilder r2, $r3, $r5, $r6, $r8, $r11, $r12;
+
+        r0 := @this: java.math.BigDecimal;
+        i0 := @parameter0: int;
+        r1 := @parameter1: java.lang.String;
+        i1 := @parameter2: int;
+        $i4 = virtualinvoke r1.<java.lang.String: int length()>();
+        i2 = $i4 - i1;
+        if i2 != 0 goto label2;
+
+        $r3 = new java.lang.StringBuilder;
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>()>();
+        if i0 >= 0 goto label0;
+
+        $r4 = "-0.";
+        goto label1;
+
+     label0:
+        $r4 = "0.";
+
+     label1:
+        $r5 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r4);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r7;
+
+     label2:
+        if i2 <= 0 goto label3;
+
+        $r8 = new java.lang.StringBuilder;
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>(java.lang.String)>(r1);
+        r2 = $r8;
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder insert(int,char)>(i2, 46);
+        if i0 >= 0 goto label8;
+
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder insert(int,char)>(0, 45);
+        goto label8;
+
+     label3:
+        $r11 = new java.lang.StringBuilder;
+        $i5 = 3 - i2;
+        $i6 = virtualinvoke r1.<java.lang.String: int length()>();
+        $i7 = $i5 + $i6;
+        specialinvoke $r11.<java.lang.StringBuilder: void <init>(int)>($i7);
+        r2 = $r11;
+        $r12 = r2;
+        if i0 >= 0 goto label4;
+
+        $r13 = "-0.";
+        goto label5;
+
+     label4:
+        $r13 = "0.";
+
+     label5:
+        virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r13);
+        i3 = 0;
+
+     label6:
+        $i8 = neg i2;
+        if i3 >= $i8 goto label7;
+
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(48);
+        i3 = i3 + 1;
+        goto label6;
+
+     label7:
+        virtualinvoke r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+
+     label8:
+        $r17 = virtualinvoke r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r17;
+    }
+
+    public java.math.BigInteger toBigInteger()
+    {
+        java.math.BigDecimal r0, $r1;
+        java.math.BigInteger $r2;
+
+        r0 := @this: java.math.BigDecimal;
+        $r1 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal setScale(int,int)>(0, 1);
+        $r2 = specialinvoke $r1.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        return $r2;
+    }
+
+    public java.math.BigInteger toBigIntegerExact()
+    {
+        java.math.BigDecimal r0, $r1;
+        java.math.BigInteger $r2;
+
+        r0 := @this: java.math.BigDecimal;
+        $r1 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal setScale(int,int)>(0, 7);
+        $r2 = specialinvoke $r1.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        return $r2;
+    }
+
+    public long longValue()
+    {
+        java.math.BigDecimal r0;
+        long $l0, $l3;
+        byte $b1;
+        int $i2;
+        java.math.BigInteger $r1;
+
+        r0 := @this: java.math.BigDecimal;
+        $l0 = r0.<java.math.BigDecimal: long intCompact>;
+        $b1 = $l0 cmp -9223372036854775808L;
+        if $b1 == 0 goto label0;
+
+        $i2 = r0.<java.math.BigDecimal: int scale>;
+        if $i2 != 0 goto label0;
+
+        $l3 = r0.<java.math.BigDecimal: long intCompact>;
+        goto label1;
+
+     label0:
+        $r1 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigInteger toBigInteger()>();
+        $l3 = virtualinvoke $r1.<java.math.BigInteger: long longValue()>();
+
+     label1:
+        return $l3;
+    }
+
+    public long longValueExact()
+    {
+        java.math.BigDecimal r0, r1;
+        long $l0, $l3, $l12;
+        byte $b1;
+        int $i2, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11;
+        java.lang.ArithmeticException $r2, $r3;
+        java.math.BigInteger $r4;
+
+        r0 := @this: java.math.BigDecimal;
+        $l0 = r0.<java.math.BigDecimal: long intCompact>;
+        $b1 = $l0 cmp -9223372036854775808L;
+        if $b1 == 0 goto label0;
+
+        $i2 = r0.<java.math.BigDecimal: int scale>;
+        if $i2 != 0 goto label0;
+
+        $l3 = r0.<java.math.BigDecimal: long intCompact>;
+        return $l3;
+
+     label0:
+        $i4 = virtualinvoke r0.<java.math.BigDecimal: int precision()>();
+        $i5 = r0.<java.math.BigDecimal: int scale>;
+        $i6 = $i4 - $i5;
+        if $i6 <= 19 goto label1;
+
+        $r2 = new java.lang.ArithmeticException;
+        specialinvoke $r2.<java.lang.ArithmeticException: void <init>(java.lang.String)>("Overflow");
+        throw $r2;
+
+     label1:
+        $i7 = virtualinvoke r0.<java.math.BigDecimal: int signum()>();
+        if $i7 != 0 goto label2;
+
+        return 0L;
+
+     label2:
+        $i8 = virtualinvoke r0.<java.math.BigDecimal: int precision()>();
+        $i9 = r0.<java.math.BigDecimal: int scale>;
+        $i10 = $i8 - $i9;
+        if $i10 > 0 goto label3;
+
+        $r3 = new java.lang.ArithmeticException;
+        specialinvoke $r3.<java.lang.ArithmeticException: void <init>(java.lang.String)>("Rounding necessary");
+        throw $r3;
+
+     label3:
+        r1 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigDecimal setScale(int,int)>(0, 7);
+        $i11 = virtualinvoke r1.<java.math.BigDecimal: int precision()>();
+        if $i11 < 19 goto label4;
+
+        staticinvoke <java.math.BigDecimal$LongOverflow: void check(java.math.BigDecimal)>(r1);
+
+     label4:
+        $r4 = specialinvoke r1.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        $l12 = virtualinvoke $r4.<java.math.BigInteger: long longValue()>();
+        return $l12;
+    }
+
+    public int intValue()
+    {
+        java.math.BigDecimal r0;
+        long $l0, $l3;
+        byte $b1;
+        int $i2, $i4;
+        java.math.BigInteger $r1;
+
+        r0 := @this: java.math.BigDecimal;
+        $l0 = r0.<java.math.BigDecimal: long intCompact>;
+        $b1 = $l0 cmp -9223372036854775808L;
+        if $b1 == 0 goto label0;
+
+        $i2 = r0.<java.math.BigDecimal: int scale>;
+        if $i2 != 0 goto label0;
+
+        $l3 = r0.<java.math.BigDecimal: long intCompact>;
+        $i4 = (int) $l3;
+        goto label1;
+
+     label0:
+        $r1 = virtualinvoke r0.<java.math.BigDecimal: java.math.BigInteger toBigInteger()>();
+        $i4 = virtualinvoke $r1.<java.math.BigInteger: int intValue()>();
+
+     label1:
+        return $i4;
+    }
+
+    public int intValueExact()
+    {
+        java.math.BigDecimal r0;
+        long l0, $l2;
+        int $i1, $i4;
+        byte $b3;
+        java.lang.ArithmeticException $r1;
+
+        r0 := @this: java.math.BigDecimal;
+        l0 = virtualinvoke r0.<java.math.BigDecimal: long longValueExact()>();
+        $i1 = (int) l0;
+        $l2 = (long) $i1;
+        $b3 = $l2 cmp l0;
+        if $b3 == 0 goto label0;
+
+        $r1 = new java.lang.ArithmeticException;
+        specialinvoke $r1.<java.lang.ArithmeticException: void <init>(java.lang.String)>("Overflow");
+        throw $r1;
+
+     label0:
+        $i4 = (int) l0;
+        return $i4;
+    }
+
+    public short shortValueExact()
+    {
+        java.math.BigDecimal r0;
+        long l0, $l3;
+        int $i1, $i5;
+        short $s2, $s6;
+        byte $b4;
+        java.lang.ArithmeticException $r1;
+
+        r0 := @this: java.math.BigDecimal;
+        l0 = virtualinvoke r0.<java.math.BigDecimal: long longValueExact()>();
+        $i1 = (int) l0;
+        $s2 = (short) $i1;
+        $l3 = (long) $s2;
+        $b4 = $l3 cmp l0;
+        if $b4 == 0 goto label0;
+
+        $r1 = new java.lang.ArithmeticException;
+        specialinvoke $r1.<java.lang.ArithmeticException: void <init>(java.lang.String)>("Overflow");
+        throw $r1;
+
+     label0:
+        $i5 = (int) l0;
+        $s6 = (short) $i5;
+        return $s6;
+    }
+
+    public byte byteValueExact()
+    {
+        java.math.BigDecimal r0;
+        long l0, $l3;
+        int $i1, $i5;
+        byte $b2, $b4, $b6;
+        java.lang.ArithmeticException $r1;
+
+        r0 := @this: java.math.BigDecimal;
+        l0 = virtualinvoke r0.<java.math.BigDecimal: long longValueExact()>();
+        $i1 = (int) l0;
+        $b2 = (byte) $i1;
+        $l3 = (long) $b2;
+        $b4 = $l3 cmp l0;
+        if $b4 == 0 goto label0;
+
+        $r1 = new java.lang.ArithmeticException;
+        specialinvoke $r1.<java.lang.ArithmeticException: void <init>(java.lang.String)>("Overflow");
+        throw $r1;
+
+     label0:
+        $i5 = (int) l0;
+        $b6 = (byte) $i5;
+        return $b6;
+    }
+
+    public float floatValue()
+    {
+        java.math.BigDecimal r0;
+        int $i0;
+        long $l1, $l3;
+        byte $b2;
+        float $f0, $f1;
+        java.lang.String $r1;
+
+        r0 := @this: java.math.BigDecimal;
+        $i0 = r0.<java.math.BigDecimal: int scale>;
+        if $i0 != 0 goto label0;
+
+        $l1 = r0.<java.math.BigDecimal: long intCompact>;
+        $b2 = $l1 cmp -9223372036854775808L;
+        if $b2 == 0 goto label0;
+
+        $l3 = r0.<java.math.BigDecimal: long intCompact>;
+        $f0 = (float) $l3;
+        return $f0;
+
+     label0:
+        $r1 = virtualinvoke r0.<java.math.BigDecimal: java.lang.String toString()>();
+        $f1 = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>($r1);
+        return $f1;
+    }
+
+    public double doubleValue()
+    {
+        java.math.BigDecimal r0;
+        int $i0;
+        long $l1, $l3;
+        byte $b2;
+        double $d0, $d1;
+        java.lang.String $r1;
+
+        r0 := @this: java.math.BigDecimal;
+        $i0 = r0.<java.math.BigDecimal: int scale>;
+        if $i0 != 0 goto label0;
+
+        $l1 = r0.<java.math.BigDecimal: long intCompact>;
+        $b2 = $l1 cmp -9223372036854775808L;
+        if $b2 == 0 goto label0;
+
+        $l3 = r0.<java.math.BigDecimal: long intCompact>;
+        $d0 = (double) $l3;
+        return $d0;
+
+     label0:
+        $r1 = virtualinvoke r0.<java.math.BigDecimal: java.lang.String toString()>();
+        $d1 = staticinvoke <java.lang.Double: double parseDouble(java.lang.String)>($r1);
+        return $d1;
+    }
+
+    public java.math.BigDecimal ulp()
+    {
+        java.math.BigDecimal r0, $r1;
+        int $i0;
+
+        r0 := @this: java.math.BigDecimal;
+        $i0 = virtualinvoke r0.<java.math.BigDecimal: int scale()>();
+        $r1 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal valueOf(long,int)>(1L, $i0);
+        return $r1;
+    }
+
+    private java.lang.String layoutChars(boolean)
+    {
+        java.math.BigDecimal r0;
+        boolean z0;
+        java.math.BigDecimal$StringBuilderHelper r1;
+        int i0, i1, i3, i4, $i5, $i13, $i14, $i15, $i18, $i20, $i22, $i23, $i24, $i25, $i26, $i28, $i29, i31, i33, $i34, $i35, $i36;
+        char[] r2;
+        java.lang.StringBuilder r3, $r26, $r27, $r28;
+        long l2, $l6, $l8, $l9, $l11, $l12, $l16, $l17, $l19, $l30, $l32;
+        byte $b7, $b10, $b21, $b37, $b38;
+        java.lang.String $r4, $r10, $r29, $r38;
+        java.math.BigInteger $r5, $r8, $r9;
+        java.lang.ThreadLocal $r6;
+        java.lang.Object $r7;
+        char $c27;
+        java.lang.AssertionError $r25;
+
+        r0 := @this: java.math.BigDecimal;
+        z0 := @parameter0: boolean;
+        $i5 = r0.<java.math.BigDecimal: int scale>;
+        if $i5 != 0 goto label2;
+
+        $l6 = r0.<java.math.BigDecimal: long intCompact>;
+        $b7 = $l6 cmp -9223372036854775808L;
+        if $b7 == 0 goto label0;
+
+        $l8 = r0.<java.math.BigDecimal: long intCompact>;
+        $r4 = staticinvoke <java.lang.Long: java.lang.String toString(long)>($l8);
+        goto label1;
+
+     label0:
+        $r5 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $r4 = virtualinvoke $r5.<java.math.BigInteger: java.lang.String toString()>();
+
+     label1:
+        return $r4;
+
+     label2:
+        $r6 = <java.math.BigDecimal: java.lang.ThreadLocal threadLocalStringBuilderHelper>;
+        $r7 = virtualinvoke $r6.<java.lang.ThreadLocal: java.lang.Object get()>();
+        r1 = (java.math.BigDecimal$StringBuilderHelper) $r7;
+        $l9 = r0.<java.math.BigDecimal: long intCompact>;
+        $b10 = $l9 cmp -9223372036854775808L;
+        if $b10 == 0 goto label3;
+
+        $l11 = r0.<java.math.BigDecimal: long intCompact>;
+        $l12 = staticinvoke <java.lang.Math: long abs(long)>($l11);
+        i0 = virtualinvoke r1.<java.math.BigDecimal$StringBuilderHelper: int putIntCompact(long)>($l12);
+        r2 = virtualinvoke r1.<java.math.BigDecimal$StringBuilderHelper: char[] getCompactCharArray()>();
+        goto label4;
+
+     label3:
+        i0 = 0;
+        $r8 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $r9 = virtualinvoke $r8.<java.math.BigInteger: java.math.BigInteger abs()>();
+        $r10 = virtualinvoke $r9.<java.math.BigInteger: java.lang.String toString()>();
+        r2 = virtualinvoke $r10.<java.lang.String: char[] toCharArray()>();
+
+     label4:
+        r3 = virtualinvoke r1.<java.math.BigDecimal$StringBuilderHelper: java.lang.StringBuilder getStringBuilder()>();
+        $i13 = virtualinvoke r0.<java.math.BigDecimal: int signum()>();
+        if $i13 >= 0 goto label5;
+
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(45);
+
+     label5:
+        $i14 = lengthof r2;
+        i1 = $i14 - i0;
+        $i15 = r0.<java.math.BigDecimal: int scale>;
+        $l16 = (long) $i15;
+        $l17 = neg $l16;
+        $i18 = i1 - 1;
+        $l19 = (long) $i18;
+        l2 = $l17 + $l19;
+        $i20 = r0.<java.math.BigDecimal: int scale>;
+        if $i20 < 0 goto label10;
+
+        $b21 = l2 cmp -6L;
+        if $b21 < 0 goto label10;
+
+        $i22 = r0.<java.math.BigDecimal: int scale>;
+        i3 = $i22 - i1;
+        if i3 < 0 goto label8;
+
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(48);
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(46);
+
+     label6:
+        if i3 <= 0 goto label7;
+
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(48);
+        i3 = i3 + -1;
+        goto label6;
+
+     label7:
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char[],int,int)>(r2, i0, i1);
+        goto label9;
+
+     label8:
+        $i23 = neg i3;
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char[],int,int)>(r2, i0, $i23);
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(46);
+        $i24 = neg i3;
+        $i25 = $i24 + i0;
+        $i26 = r0.<java.math.BigDecimal: int scale>;
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char[],int,int)>(r2, $i25, $i26);
+
+     label9:
+        goto label23;
+
+     label10:
+        if z0 == 0 goto label11;
+
+        $c27 = r2[i0];
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>($c27);
+        if i1 <= 1 goto label21;
+
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(46);
+        $i28 = i0 + 1;
+        $i29 = i1 - 1;
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char[],int,int)>(r2, $i28, $i29);
+        goto label21;
+
+     label11:
+        $l30 = l2 % 3L;
+        i31 = (int) $l30;
+        if i31 >= 0 goto label12;
+
+        i31 = i31 + 3;
+
+     label12:
+        $l32 = (long) i31;
+        l2 = l2 - $l32;
+        i33 = i31 + 1;
+        $i34 = virtualinvoke r0.<java.math.BigDecimal: int signum()>();
+        if $i34 != 0 goto label17;
+
+        tableswitch(i33)
+        {
+            case 1: goto label13;
+            case 2: goto label14;
+            case 3: goto label15;
+            default: goto label16;
+        };
+
+     label13:
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(48);
+        goto label21;
+
+     label14:
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("0.00");
+        l2 = l2 + 3L;
+        goto label21;
+
+     label15:
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("0.0");
+        l2 = l2 + 3L;
+        goto label21;
+
+     label16:
+        $r25 = new java.lang.AssertionError;
+        $r26 = new java.lang.StringBuilder;
+        specialinvoke $r26.<java.lang.StringBuilder: void <init>()>();
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Unexpected sig value ");
+        $r28 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i33);
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r25.<java.lang.AssertionError: void <init>(java.lang.Object)>($r29);
+        throw $r25;
+
+     label17:
+        if i33 < i1 goto label20;
+
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char[],int,int)>(r2, i0, i1);
+        i4 = i33 - i1;
+
+     label18:
+        if i4 <= 0 goto label19;
+
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(48);
+        i4 = i4 + -1;
+        goto label18;
+
+     label19:
+        goto label21;
+
+     label20:
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char[],int,int)>(r2, i0, i33);
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(46);
+        $i35 = i0 + i33;
+        $i36 = i1 - i33;
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char[],int,int)>(r2, $i35, $i36);
+
+     label21:
+        $b37 = l2 cmp 0L;
+        if $b37 == 0 goto label23;
+
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(69);
+        $b38 = l2 cmp 0L;
+        if $b38 <= 0 goto label22;
+
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(char)>(43);
+
+     label22:
+        virtualinvoke r3.<java.lang.StringBuilder: java.lang.StringBuilder append(long)>(l2);
+
+     label23:
+        $r38 = virtualinvoke r3.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r38;
+    }
+
+    private static java.math.BigInteger bigTenToThe(int)
+    {
+        int i0, $i1, i2, $i3, $i4;
+        java.math.BigInteger[] r0;
+        java.math.BigInteger $r1, $r2, $r3, $r5;
+        char[] r4;
+
+        i0 := @parameter0: int;
+        if i0 >= 0 goto label0;
+
+        $r1 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        return $r1;
+
+     label0:
+        $i1 = <java.math.BigDecimal: int BIG_TEN_POWERS_TABLE_MAX>;
+        if i0 >= $i1 goto label2;
+
+        r0 = <java.math.BigDecimal: java.math.BigInteger[] BIG_TEN_POWERS_TABLE>;
+        $i3 = lengthof r0;
+        if i0 >= $i3 goto label1;
+
+        $r2 = r0[i0];
+        return $r2;
+
+     label1:
+        $r3 = staticinvoke <java.math.BigDecimal: java.math.BigInteger expandBigIntegerTenPowers(int)>(i0);
+        return $r3;
+
+     label2:
+        $i4 = i0 + 1;
+        r4 = newarray (char)[$i4];
+        r4[0] = 49;
+        i2 = 1;
+
+     label3:
+        if i2 > i0 goto label4;
+
+        r4[i2] = 48;
+        i2 = i2 + 1;
+        goto label3;
+
+     label4:
+        $r5 = new java.math.BigInteger;
+        specialinvoke $r5.<java.math.BigInteger: void <init>(char[])>(r4);
+        return $r5;
+    }
+
+    private static java.math.BigInteger expandBigIntegerTenPowers(int)
+    {
+        int i0, i1, i2, i3, $i4;
+        java.lang.Class $r0, r1;
+        java.math.BigInteger[] r2;
+        java.lang.Throwable r3, $r9;
+        java.lang.Object[] $r4;
+        java.math.BigInteger $r5, $r6, $r7, $r8;
+
+        i0 := @parameter0: int;
+        $r0 = class "java/math/BigDecimal";
+        r1 = $r0;
+        entermonitor $r0;
+
+     label0:
+        r2 = <java.math.BigDecimal: java.math.BigInteger[] BIG_TEN_POWERS_TABLE>;
+        i1 = lengthof r2;
+        if i1 > i0 goto label5;
+
+        i2 = i1 << 1;
+
+     label1:
+        if i2 > i0 goto label2;
+
+        i2 = i2 << 1;
+        goto label1;
+
+     label2:
+        $r4 = staticinvoke <java.util.Arrays: java.lang.Object[] copyOf(java.lang.Object[],int)>(r2, i2);
+        r2 = (java.math.BigInteger[]) $r4;
+        i3 = i1;
+
+     label3:
+        if i3 >= i2 goto label4;
+
+        $i4 = i3 - 1;
+        $r5 = r2[$i4];
+        $r6 = <java.math.BigInteger: java.math.BigInteger TEN>;
+        $r7 = virtualinvoke $r5.<java.math.BigInteger: java.math.BigInteger multiply(java.math.BigInteger)>($r6);
+        r2[i3] = $r7;
+        i3 = i3 + 1;
+        goto label3;
+
+     label4:
+        <java.math.BigDecimal: java.math.BigInteger[] BIG_TEN_POWERS_TABLE> = r2;
+
+     label5:
+        $r8 = r2[i0];
+        exitmonitor r1;
+
+     label6:
+        return $r8;
+
+     label7:
+        $r9 := @caughtexception;
+
+     label8:
+        r3 = $r9;
+        exitmonitor r1;
+
+     label9:
+        throw r3;
+
+        catch java.lang.Throwable from label0 to label6 with label7;
+        catch java.lang.Throwable from label8 to label9 with label7;
+    }
+
+    private static long longMultiplyPowerTen(long, int)
+    {
+        long l0, l2, $l7, $l8, $l10;
+        int i1, $i4, $i5;
+        long[] r0, r1;
+        byte $b3, $b6, $b9;
+
+        l0 := @parameter0: long;
+        i1 := @parameter1: int;
+        $b3 = l0 cmp 0L;
+        if $b3 == 0 goto label0;
+
+        if i1 > 0 goto label1;
+
+     label0:
+        return l0;
+
+     label1:
+        r0 = <java.math.BigDecimal: long[] LONG_TEN_POWERS_TABLE>;
+        r1 = <java.math.BigDecimal: long[] THRESHOLDS_TABLE>;
+        $i4 = lengthof r0;
+        if i1 >= $i4 goto label3;
+
+        $i5 = lengthof r1;
+        if i1 >= $i5 goto label3;
+
+        l2 = r0[i1];
+        $b6 = l0 cmp 1L;
+        if $b6 != 0 goto label2;
+
+        return l2;
+
+     label2:
+        $l7 = staticinvoke <java.lang.Math: long abs(long)>(l0);
+        $l8 = r1[i1];
+        $b9 = $l7 cmp $l8;
+        if $b9 > 0 goto label3;
+
+        $l10 = l0 * l2;
+        return $l10;
+
+     label3:
+        return -9223372036854775808L;
+    }
+
+    private java.math.BigInteger bigMultiplyPowerTen(int)
+    {
+        java.math.BigDecimal r0;
+        int i0;
+        java.math.BigInteger $r1, $r2, $r3, $r4, $r5, $r6;
+        long $l1, $l3;
+        byte $b2;
+
+        r0 := @this: java.math.BigDecimal;
+        i0 := @parameter0: int;
+        if i0 > 0 goto label0;
+
+        $r1 = specialinvoke r0.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        return $r1;
+
+     label0:
+        $l1 = r0.<java.math.BigDecimal: long intCompact>;
+        $b2 = $l1 cmp -9223372036854775808L;
+        if $b2 == 0 goto label1;
+
+        $r2 = staticinvoke <java.math.BigDecimal: java.math.BigInteger bigTenToThe(int)>(i0);
+        $l3 = r0.<java.math.BigDecimal: long intCompact>;
+        $r3 = virtualinvoke $r2.<java.math.BigInteger: java.math.BigInteger multiply(long)>($l3);
+        return $r3;
+
+     label1:
+        $r4 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $r5 = staticinvoke <java.math.BigDecimal: java.math.BigInteger bigTenToThe(int)>(i0);
+        $r6 = virtualinvoke $r4.<java.math.BigInteger: java.math.BigInteger multiply(java.math.BigInteger)>($r5);
+        return $r6;
+    }
+
+    private java.math.BigInteger inflate()
+    {
+        java.math.BigDecimal r0;
+        java.math.BigInteger $r1, $r2, $r3;
+        long $l0;
+
+        r0 := @this: java.math.BigDecimal;
+        $r1 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        if $r1 != null goto label0;
+
+        $l0 = r0.<java.math.BigDecimal: long intCompact>;
+        $r2 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>($l0);
+        r0.<java.math.BigDecimal: java.math.BigInteger intVal> = $r2;
+
+     label0:
+        $r3 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        return $r3;
+    }
+
+    private static void matchScale(java.math.BigDecimal[])
+    {
+        java.math.BigDecimal[] r0;
+        java.math.BigDecimal $r1, $r2, $r3, $r4, $r5, $r6, $r7, $r8, $r9, $r10, $r11, $r12;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7;
+
+        r0 := @parameter0: java.math.BigDecimal[];
+        $r1 = r0[0];
+        $i0 = $r1.<java.math.BigDecimal: int scale>;
+        $r2 = r0[1];
+        $i1 = $r2.<java.math.BigDecimal: int scale>;
+        if $i0 != $i1 goto label0;
+
+        return;
+
+     label0:
+        $r3 = r0[0];
+        $i2 = $r3.<java.math.BigDecimal: int scale>;
+        $r4 = r0[1];
+        $i3 = $r4.<java.math.BigDecimal: int scale>;
+        if $i2 >= $i3 goto label1;
+
+        $r5 = r0[0];
+        $r6 = r0[1];
+        $i4 = $r6.<java.math.BigDecimal: int scale>;
+        $r7 = virtualinvoke $r5.<java.math.BigDecimal: java.math.BigDecimal setScale(int,int)>($i4, 7);
+        r0[0] = $r7;
+        goto label2;
+
+     label1:
+        $r8 = r0[1];
+        $i5 = $r8.<java.math.BigDecimal: int scale>;
+        $r9 = r0[0];
+        $i6 = $r9.<java.math.BigDecimal: int scale>;
+        if $i5 >= $i6 goto label2;
+
+        $r10 = r0[1];
+        $r11 = r0[0];
+        $i7 = $r11.<java.math.BigDecimal: int scale>;
+        $r12 = virtualinvoke $r10.<java.math.BigDecimal: java.math.BigDecimal setScale(int,int)>($i7, 7);
+        r0[1] = $r12;
+
+     label2:
+        return;
+    }
+
+    private void readObject(java.io.ObjectInputStream) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        java.math.BigDecimal r0;
+        java.io.ObjectInputStream r1;
+        java.lang.String r2;
+        java.math.BigInteger $r3, $r5;
+        java.io.StreamCorruptedException $r4;
+        long $l0;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.io.ObjectInputStream;
+        virtualinvoke r1.<java.io.ObjectInputStream: void defaultReadObject()>();
+        $r3 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        if $r3 != null goto label0;
+
+        r2 = "BigDecimal: null intVal in stream";
+        $r4 = new java.io.StreamCorruptedException;
+        specialinvoke $r4.<java.io.StreamCorruptedException: void <init>(java.lang.String)>(r2);
+        throw $r4;
+
+     label0:
+        $r5 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $l0 = staticinvoke <java.math.BigDecimal: long compactValFor(java.math.BigInteger)>($r5);
+        r0.<java.math.BigDecimal: long intCompact> = $l0;
+        return;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream) throws java.io.IOException
+    {
+        java.math.BigDecimal r0;
+        java.io.ObjectOutputStream r1;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.io.ObjectOutputStream;
+        specialinvoke r0.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        virtualinvoke r1.<java.io.ObjectOutputStream: void defaultWriteObject()>();
+        return;
+    }
+
+    private static int longDigitLength(long)
+    {
+        long l0, $l7, $l16;
+        boolean $z0;
+        int i1, i2, i3, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i18;
+        long[] r0;
+        byte $b4, $b5, $b6, $b17;
+        java.lang.AssertionError $r1;
+
+        l0 := @parameter0: long;
+        $z0 = <java.math.BigDecimal: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label0;
+
+        $b4 = l0 cmp -9223372036854775808L;
+        if $b4 != 0 goto label0;
+
+        $r1 = new java.lang.AssertionError;
+        specialinvoke $r1.<java.lang.AssertionError: void <init>()>();
+        throw $r1;
+
+     label0:
+        $b5 = l0 cmp 0L;
+        if $b5 >= 0 goto label1;
+
+        l0 = neg l0;
+
+     label1:
+        $b6 = l0 cmp 10L;
+        if $b6 >= 0 goto label2;
+
+        return 1;
+
+     label2:
+        i1 = 64;
+        $l7 = l0 >>> 32;
+        i2 = (int) $l7;
+        if i2 != 0 goto label3;
+
+        i1 = i1 + -32;
+        i2 = (int) l0;
+
+     label3:
+        $i8 = i2 >>> 16;
+        if $i8 != 0 goto label4;
+
+        i1 = i1 + -16;
+        i2 = i2 << 16;
+
+     label4:
+        $i9 = i2 >>> 24;
+        if $i9 != 0 goto label5;
+
+        i1 = i1 + -8;
+        i2 = i2 << 8;
+
+     label5:
+        $i10 = i2 >>> 28;
+        if $i10 != 0 goto label6;
+
+        i1 = i1 + -4;
+        i2 = i2 << 4;
+
+     label6:
+        $i11 = i2 >>> 30;
+        if $i11 != 0 goto label7;
+
+        i1 = i1 + -2;
+        i2 = i2 << 2;
+
+     label7:
+        $i12 = i2 >>> 31;
+        $i13 = $i12 + i1;
+        $i14 = $i13 * 1233;
+        i3 = $i14 >>> 12;
+        r0 = <java.math.BigDecimal: long[] LONG_TEN_POWERS_TABLE>;
+        $i15 = lengthof r0;
+        if i3 >= $i15 goto label8;
+
+        $l16 = r0[i3];
+        $b17 = l0 cmp $l16;
+        if $b17 >= 0 goto label9;
+
+     label8:
+        $i18 = i3;
+        goto label10;
+
+     label9:
+        $i18 = i3 + 1;
+
+     label10:
+        return $i18;
+    }
+
+    private static int bigDigitLength(java.math.BigInteger)
+    {
+        java.math.BigInteger r0, $r1;
+        int i0, $i1, $i2, $i7, $i8;
+        long $l3, $l4, $l5, $l6;
+
+        r0 := @parameter0: java.math.BigInteger;
+        $i1 = r0.<java.math.BigInteger: int signum>;
+        if $i1 != 0 goto label0;
+
+        return 1;
+
+     label0:
+        $i2 = virtualinvoke r0.<java.math.BigInteger: int bitLength()>();
+        $l3 = (long) $i2;
+        $l4 = $l3 + 1L;
+        $l5 = $l4 * 646456993L;
+        $l6 = $l5 >>> 31;
+        i0 = (int) $l6;
+        $r1 = staticinvoke <java.math.BigDecimal: java.math.BigInteger bigTenToThe(int)>(i0);
+        $i7 = virtualinvoke r0.<java.math.BigInteger: int compareMagnitude(java.math.BigInteger)>($r1);
+        if $i7 >= 0 goto label1;
+
+        $i8 = i0;
+        goto label2;
+
+     label1:
+        $i8 = i0 + 1;
+
+     label2:
+        return $i8;
+    }
+
+    private java.math.BigDecimal stripZerosToMatchScale(long)
+    {
+        java.math.BigDecimal r0;
+        long l0, $l3, $l7, $l8, $l13;
+        java.math.BigInteger $r1, $r4, $r5, $r6, $r7, $r8, $r9, $r11, $r12;
+        java.math.BigInteger[] r2;
+        int $i1, $i2, $i5, $i6, $i9, $i10, $i11, $i12;
+        byte $b4;
+        boolean $z0;
+
+        r0 := @this: java.math.BigDecimal;
+        l0 := @parameter0: long;
+        specialinvoke r0.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+
+     label0:
+        $r4 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $r1 = <java.math.BigInteger: java.math.BigInteger TEN>;
+        $i1 = virtualinvoke $r4.<java.math.BigInteger: int compareMagnitude(java.math.BigInteger)>($r1);
+        if $i1 < 0 goto label3;
+
+        $i2 = r0.<java.math.BigDecimal: int scale>;
+        $l3 = (long) $i2;
+        $b4 = $l3 cmp l0;
+        if $b4 <= 0 goto label3;
+
+        $r5 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $z0 = virtualinvoke $r5.<java.math.BigInteger: boolean testBit(int)>(0);
+        if $z0 == 0 goto label1;
+
+        goto label3;
+
+     label1:
+        $r6 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $r7 = <java.math.BigInteger: java.math.BigInteger TEN>;
+        r2 = virtualinvoke $r6.<java.math.BigInteger: java.math.BigInteger[] divideAndRemainder(java.math.BigInteger)>($r7);
+        $r8 = r2[1];
+        $i5 = virtualinvoke $r8.<java.math.BigInteger: int signum()>();
+        if $i5 == 0 goto label2;
+
+        goto label3;
+
+     label2:
+        $r9 = r2[0];
+        r0.<java.math.BigDecimal: java.math.BigInteger intVal> = $r9;
+        $i6 = r0.<java.math.BigDecimal: int scale>;
+        $l7 = (long) $i6;
+        $l8 = $l7 - 1L;
+        $i9 = specialinvoke r0.<java.math.BigDecimal: int checkScale(long)>($l8);
+        r0.<java.math.BigDecimal: int scale> = $i9;
+        $i10 = r0.<java.math.BigDecimal: int precision>;
+        if $i10 <= 0 goto label0;
+
+        $i11 = r0.<java.math.BigDecimal: int precision>;
+        $i12 = $i11 - 1;
+        r0.<java.math.BigDecimal: int precision> = $i12;
+        goto label0;
+
+     label3:
+        $r11 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        if $r11 == null goto label4;
+
+        $r12 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $l13 = staticinvoke <java.math.BigDecimal: long compactValFor(java.math.BigInteger)>($r12);
+        r0.<java.math.BigDecimal: long intCompact> = $l13;
+
+     label4:
+        return r0;
+    }
+
+    private int checkScale(long)
+    {
+        java.math.BigDecimal r0;
+        long l0, $l2, $l6;
+        int i1, $i5, $i8;
+        java.math.BigInteger r1, $r2;
+        byte $b3, $b4, $b7;
+        java.lang.ArithmeticException $r3;
+        java.lang.String $r5;
+
+        r0 := @this: java.math.BigDecimal;
+        l0 := @parameter0: long;
+        i1 = (int) l0;
+        $l2 = (long) i1;
+        $b3 = $l2 cmp l0;
+        if $b3 == 0 goto label5;
+
+        $b4 = l0 cmp 2147483647L;
+        if $b4 <= 0 goto label0;
+
+        $i5 = 2147483647;
+        goto label1;
+
+     label0:
+        $i5 = -2147483648;
+
+     label1:
+        i1 = $i5;
+        $l6 = r0.<java.math.BigDecimal: long intCompact>;
+        $b7 = $l6 cmp 0L;
+        if $b7 == 0 goto label5;
+
+        $r2 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        r1 = $r2;
+        if $r2 == null goto label2;
+
+        $i8 = virtualinvoke r1.<java.math.BigInteger: int signum()>();
+        if $i8 == 0 goto label5;
+
+     label2:
+        $r3 = new java.lang.ArithmeticException;
+        if i1 <= 0 goto label3;
+
+        $r5 = "Underflow";
+        goto label4;
+
+     label3:
+        $r5 = "Overflow";
+
+     label4:
+        specialinvoke $r3.<java.lang.ArithmeticException: void <init>(java.lang.String)>($r5);
+        throw $r3;
+
+     label5:
+        return i1;
+    }
+
+    private java.math.BigDecimal roundOp(java.math.MathContext)
+    {
+        java.math.BigDecimal r0, r2;
+        java.math.MathContext r1;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.MathContext;
+        r2 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal doRound(java.math.BigDecimal,java.math.MathContext)>(r0, r1);
+        return r2;
+    }
+
+    private void roundThis(java.math.MathContext)
+    {
+        java.math.BigDecimal r0, r2;
+        java.math.MathContext r1;
+        java.math.BigInteger $r3;
+        long $l0;
+        int $i1, $i2;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.math.MathContext;
+        r2 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal doRound(java.math.BigDecimal,java.math.MathContext)>(r0, r1);
+        if r2 != r0 goto label0;
+
+        return;
+
+     label0:
+        $r3 = r2.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        r0.<java.math.BigDecimal: java.math.BigInteger intVal> = $r3;
+        $l0 = r2.<java.math.BigDecimal: long intCompact>;
+        r0.<java.math.BigDecimal: long intCompact> = $l0;
+        $i1 = r2.<java.math.BigDecimal: int scale>;
+        r0.<java.math.BigDecimal: int scale> = $i1;
+        $i2 = r2.<java.math.BigDecimal: int precision>;
+        r0.<java.math.BigDecimal: int precision> = $i2;
+        return;
+    }
+
+    private static java.math.BigDecimal doRound(java.math.BigDecimal, java.math.MathContext)
+    {
+        java.math.BigDecimal r0;
+        java.math.MathContext r1;
+        int i0, i1, i2, i3, $i4, $i5, $i6, $i10;
+        long $l7, $l8, $l9, $l11, $l12, $l13;
+        java.math.RoundingMode $r2;
+        long[] $r3, $r5;
+        java.math.BigInteger $r4, $r6, $r7;
+
+        r0 := @parameter0: java.math.BigDecimal;
+        r1 := @parameter1: java.math.MathContext;
+        i0 = r1.<java.math.MathContext: int precision>;
+
+     label0:
+        $i4 = virtualinvoke r0.<java.math.BigDecimal: int precision()>();
+        $i5 = $i4 - i0;
+        i1 = $i5;
+        if $i5 <= 0 goto label3;
+
+        $i6 = r0.<java.math.BigDecimal: int scale>;
+        $l7 = (long) $i6;
+        $l8 = (long) i1;
+        $l9 = $l7 - $l8;
+        i2 = specialinvoke r0.<java.math.BigDecimal: int checkScale(long)>($l9);
+        $r2 = r1.<java.math.MathContext: java.math.RoundingMode roundingMode>;
+        i3 = $r2.<java.math.RoundingMode: int oldMode>;
+        $r3 = <java.math.BigDecimal: long[] LONG_TEN_POWERS_TABLE>;
+        $i10 = lengthof $r3;
+        if i1 >= $i10 goto label1;
+
+        $l11 = r0.<java.math.BigDecimal: long intCompact>;
+        $r4 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $r5 = <java.math.BigDecimal: long[] LONG_TEN_POWERS_TABLE>;
+        $l12 = $r5[i1];
+        r0 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal divideAndRound(long,java.math.BigInteger,long,java.math.BigInteger,int,int,int)>($l11, $r4, $l12, null, i2, i3, i2);
+        goto label2;
+
+     label1:
+        $l13 = r0.<java.math.BigDecimal: long intCompact>;
+        $r6 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $r7 = staticinvoke <java.math.BigDecimal: java.math.BigInteger bigTenToThe(int)>(i1);
+        r0 = staticinvoke <java.math.BigDecimal: java.math.BigDecimal divideAndRound(long,java.math.BigInteger,long,java.math.BigInteger,int,int,int)>($l13, $r6, -9223372036854775808L, $r7, i2, i3, i2);
+
+     label2:
+        goto label0;
+
+     label3:
+        return r0;
+    }
+
+    private static long compactValFor(java.math.BigInteger)
+    {
+        java.math.BigInteger r0;
+        int[] r1;
+        int i0, i1, $i3, $i10;
+        long l2, $l4, $l5, $l6, $l7, $l8, $l9, $l11;
+
+        r0 := @parameter0: java.math.BigInteger;
+        r1 = r0.<java.math.BigInteger: int[] mag>;
+        i0 = lengthof r1;
+        if i0 != 0 goto label0;
+
+        return 0L;
+
+     label0:
+        i1 = r1[0];
+        if i0 > 2 goto label1;
+
+        if i0 != 2 goto label2;
+
+        if i1 >= 0 goto label2;
+
+     label1:
+        return -9223372036854775808L;
+
+     label2:
+        if i0 != 2 goto label3;
+
+        $i3 = r1[1];
+        $l4 = (long) $i3;
+        $l5 = $l4 & 4294967295L;
+        $l6 = (long) i1;
+        $l7 = $l6 << 32;
+        $l8 = $l5 + $l7;
+        goto label4;
+
+     label3:
+        $l9 = (long) i1;
+        $l8 = $l9 & 4294967295L;
+
+     label4:
+        l2 = $l8;
+        $i10 = r0.<java.math.BigInteger: int signum>;
+        if $i10 >= 0 goto label5;
+
+        $l11 = neg l2;
+        goto label6;
+
+     label5:
+        $l11 = l2;
+
+     label6:
+        return $l11;
+    }
+
+    private static int longCompareMagnitude(long, long)
+    {
+        long l0, l1;
+        byte $b2, $b3, $b4, $b5, $b6;
+
+        l0 := @parameter0: long;
+        l1 := @parameter1: long;
+        $b2 = l0 cmp 0L;
+        if $b2 >= 0 goto label0;
+
+        l0 = neg l0;
+
+     label0:
+        $b3 = l1 cmp 0L;
+        if $b3 >= 0 goto label1;
+
+        l1 = neg l1;
+
+     label1:
+        $b4 = l0 cmp l1;
+        if $b4 >= 0 goto label2;
+
+        $b5 = -1;
+        goto label4;
+
+     label2:
+        $b6 = l0 cmp l1;
+        if $b6 != 0 goto label3;
+
+        $b5 = 0;
+        goto label4;
+
+     label3:
+        $b5 = 1;
+
+     label4:
+        return $b5;
+    }
+
+    private static int saturateLong(long)
+    {
+        long l0, $l2;
+        int i1, $i4;
+        byte $b3, $b5;
+
+        l0 := @parameter0: long;
+        i1 = (int) l0;
+        $l2 = (long) i1;
+        $b3 = l0 cmp $l2;
+        if $b3 != 0 goto label0;
+
+        $i4 = i1;
+        goto label2;
+
+     label0:
+        $b5 = l0 cmp 0L;
+        if $b5 >= 0 goto label1;
+
+        $i4 = -2147483648;
+        goto label2;
+
+     label1:
+        $i4 = 2147483647;
+
+     label2:
+        return $i4;
+    }
+
+    private static void print(java.lang.String, java.math.BigDecimal)
+    {
+        java.lang.String r0;
+        java.math.BigDecimal r1;
+        java.io.PrintStream $r2;
+        java.lang.Object[] $r3;
+        long $l0;
+        java.lang.Long $r4;
+        java.math.BigInteger $r5;
+        int $i1, $i2;
+        java.lang.Integer $r6, $r7;
+
+        r0 := @parameter0: java.lang.String;
+        r1 := @parameter1: java.math.BigDecimal;
+        $r2 = <java.lang.System: java.io.PrintStream err>;
+        $r3 = newarray (java.lang.Object)[5];
+        $r3[0] = r0;
+        $l0 = r1.<java.math.BigDecimal: long intCompact>;
+        $r4 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>($l0);
+        $r3[1] = $r4;
+        $r5 = r1.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $r3[2] = $r5;
+        $i1 = r1.<java.math.BigDecimal: int scale>;
+        $r6 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i1);
+        $r3[3] = $r6;
+        $i2 = r1.<java.math.BigDecimal: int precision>;
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i2);
+        $r3[4] = $r7;
+        virtualinvoke $r2.<java.io.PrintStream: java.io.PrintStream format(java.lang.String,java.lang.Object[])>("%s:\tintCompact %d\tintVal %d\tscale %d\tprecision %d%n", $r3);
+        return;
+    }
+
+    private java.math.BigDecimal audit()
+    {
+        java.math.BigDecimal r0;
+        long l0, $l1, $l6, $l8, $l11;
+        byte $b2, $b7;
+        java.math.BigInteger $r1, $r3, $r5, $r6;
+        java.lang.AssertionError $r2, $r4, $r7, $r14;
+        int $i3, $i4, $i5, $i9, $i10, $i12;
+        java.lang.StringBuilder $r8, $r9, $r10, $r11, $r12;
+        java.lang.String $r13;
+
+        r0 := @this: java.math.BigDecimal;
+        $l1 = r0.<java.math.BigDecimal: long intCompact>;
+        $b2 = $l1 cmp -9223372036854775808L;
+        if $b2 != 0 goto label1;
+
+        $r1 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        if $r1 != null goto label0;
+
+        staticinvoke <java.math.BigDecimal: void print(java.lang.String,java.math.BigDecimal)>("audit", r0);
+        $r2 = new java.lang.AssertionError;
+        specialinvoke $r2.<java.lang.AssertionError: void <init>(java.lang.Object)>("null intVal");
+        throw $r2;
+
+     label0:
+        $i3 = r0.<java.math.BigDecimal: int precision>;
+        if $i3 <= 0 goto label3;
+
+        $i4 = r0.<java.math.BigDecimal: int precision>;
+        $r3 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        $i5 = staticinvoke <java.math.BigDecimal: int bigDigitLength(java.math.BigInteger)>($r3);
+        if $i4 == $i5 goto label3;
+
+        staticinvoke <java.math.BigDecimal: void print(java.lang.String,java.math.BigDecimal)>("audit", r0);
+        $r4 = new java.lang.AssertionError;
+        specialinvoke $r4.<java.lang.AssertionError: void <init>(java.lang.Object)>("precision mismatch");
+        throw $r4;
+
+     label1:
+        $r5 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        if $r5 == null goto label2;
+
+        $r6 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        l0 = virtualinvoke $r6.<java.math.BigInteger: long longValue()>();
+        $l6 = r0.<java.math.BigDecimal: long intCompact>;
+        $b7 = l0 cmp $l6;
+        if $b7 == 0 goto label2;
+
+        staticinvoke <java.math.BigDecimal: void print(java.lang.String,java.math.BigDecimal)>("audit", r0);
+        $r7 = new java.lang.AssertionError;
+        $r8 = new java.lang.StringBuilder;
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>()>();
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Inconsistent state, intCompact=");
+        $l8 = r0.<java.math.BigDecimal: long intCompact>;
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(long)>($l8);
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\t intVal=");
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(long)>(l0);
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r7.<java.lang.AssertionError: void <init>(java.lang.Object)>($r13);
+        throw $r7;
+
+     label2:
+        $i9 = r0.<java.math.BigDecimal: int precision>;
+        if $i9 <= 0 goto label3;
+
+        $i10 = r0.<java.math.BigDecimal: int precision>;
+        $l11 = r0.<java.math.BigDecimal: long intCompact>;
+        $i12 = staticinvoke <java.math.BigDecimal: int longDigitLength(long)>($l11);
+        if $i10 == $i12 goto label3;
+
+        staticinvoke <java.math.BigDecimal: void print(java.lang.String,java.math.BigDecimal)>("audit", r0);
+        $r14 = new java.lang.AssertionError;
+        specialinvoke $r14.<java.lang.AssertionError: void <init>(java.lang.Object)>("precision mismatch");
+        throw $r14;
+
+     label3:
+        return r0;
+    }
+
+    public volatile int compareTo(java.lang.Object)
+    {
+        java.math.BigDecimal r0, $r2;
+        java.lang.Object r1;
+        int $i0;
+
+        r0 := @this: java.math.BigDecimal;
+        r1 := @parameter0: java.lang.Object;
+        $r2 = (java.math.BigDecimal) r1;
+        $i0 = virtualinvoke r0.<java.math.BigDecimal: int compareTo(java.math.BigDecimal)>($r2);
+        return $i0;
+    }
+
+    static java.math.BigInteger access$000(java.math.BigDecimal)
+    {
+        java.math.BigDecimal r0;
+        java.math.BigInteger $r1;
+
+        r0 := @parameter0: java.math.BigDecimal;
+        $r1 = specialinvoke r0.<java.math.BigDecimal: java.math.BigInteger inflate()>();
+        return $r1;
+    }
+
+    static java.math.BigInteger access$100(java.math.BigDecimal)
+    {
+        java.math.BigDecimal r0;
+        java.math.BigInteger $r1;
+
+        r0 := @parameter0: java.math.BigDecimal;
+        $r1 = r0.<java.math.BigDecimal: java.math.BigInteger intVal>;
+        return $r1;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        java.math.BigDecimal $r1, $r5, $r7, $r9, $r11, $r13, $r15, $r17, $r19, $r21, $r23, $r27, $r28, $r30, $r32, $r34, $r36, $r38, $r40, $r42, $r44, $r46, $r48, $r50, $r52, $r54, $r56, $r59, $r61, $r63;
+        java.math.BigInteger $r2, $r6, $r8, $r10, $r12, $r14, $r16, $r18, $r20, $r22, $r24, $r29, $r31, $r33, $r35, $r37, $r39, $r41, $r43, $r45, $r47, $r49, $r51, $r53, $r55, $r57, $r66, $r67, $r68, $r69, $r70, $r71, $r72, $r73, $r74, $r75, $r76, $r77, $r78, $r79, $r80, $r81, $r82, $r83, $r84;
+        boolean $z0, $z1;
+        java.math.BigDecimal$1 $r3;
+        java.math.BigDecimal[] $r4, $r25, $r26, $r58, $r60, $r62;
+        long[] $r64, $r86;
+        java.math.BigInteger[] $r65, $r85;
+        int $i0, $i1, $i2;
+
+        $r0 = class "java/math/BigDecimal";
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        <java.math.BigDecimal: boolean $assertionsDisabled> = $z1;
+        $r3 = new java.math.BigDecimal$1;
+        specialinvoke $r3.<java.math.BigDecimal$1: void <init>()>();
+        <java.math.BigDecimal: java.lang.ThreadLocal threadLocalStringBuilderHelper> = $r3;
+        $r4 = newarray (java.math.BigDecimal)[11];
+        $r1 = new java.math.BigDecimal;
+        $r2 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        specialinvoke $r1.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r2, 0L, 0, 1);
+        $r4[0] = $r1;
+        $r5 = new java.math.BigDecimal;
+        $r6 = <java.math.BigInteger: java.math.BigInteger ONE>;
+        specialinvoke $r5.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r6, 1L, 0, 1);
+        $r4[1] = $r5;
+        $r7 = new java.math.BigDecimal;
+        $r8 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(2L);
+        specialinvoke $r7.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r8, 2L, 0, 1);
+        $r4[2] = $r7;
+        $r9 = new java.math.BigDecimal;
+        $r10 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(3L);
+        specialinvoke $r9.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r10, 3L, 0, 1);
+        $r4[3] = $r9;
+        $r11 = new java.math.BigDecimal;
+        $r12 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(4L);
+        specialinvoke $r11.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r12, 4L, 0, 1);
+        $r4[4] = $r11;
+        $r13 = new java.math.BigDecimal;
+        $r14 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(5L);
+        specialinvoke $r13.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r14, 5L, 0, 1);
+        $r4[5] = $r13;
+        $r15 = new java.math.BigDecimal;
+        $r16 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(6L);
+        specialinvoke $r15.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r16, 6L, 0, 1);
+        $r4[6] = $r15;
+        $r17 = new java.math.BigDecimal;
+        $r18 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(7L);
+        specialinvoke $r17.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r18, 7L, 0, 1);
+        $r4[7] = $r17;
+        $r19 = new java.math.BigDecimal;
+        $r20 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(8L);
+        specialinvoke $r19.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r20, 8L, 0, 1);
+        $r4[8] = $r19;
+        $r21 = new java.math.BigDecimal;
+        $r22 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(9L);
+        specialinvoke $r21.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r22, 9L, 0, 1);
+        $r4[9] = $r21;
+        $r23 = new java.math.BigDecimal;
+        $r24 = <java.math.BigInteger: java.math.BigInteger TEN>;
+        specialinvoke $r23.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r24, 10L, 0, 2);
+        $r4[10] = $r23;
+        <java.math.BigDecimal: java.math.BigDecimal[] zeroThroughTen> = $r4;
+        $r25 = newarray (java.math.BigDecimal)[16];
+        $r26 = <java.math.BigDecimal: java.math.BigDecimal[] zeroThroughTen>;
+        $r27 = $r26[0];
+        $r25[0] = $r27;
+        $r28 = new java.math.BigDecimal;
+        $r29 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        specialinvoke $r28.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r29, 0L, 1, 1);
+        $r25[1] = $r28;
+        $r30 = new java.math.BigDecimal;
+        $r31 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        specialinvoke $r30.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r31, 0L, 2, 1);
+        $r25[2] = $r30;
+        $r32 = new java.math.BigDecimal;
+        $r33 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        specialinvoke $r32.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r33, 0L, 3, 1);
+        $r25[3] = $r32;
+        $r34 = new java.math.BigDecimal;
+        $r35 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        specialinvoke $r34.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r35, 0L, 4, 1);
+        $r25[4] = $r34;
+        $r36 = new java.math.BigDecimal;
+        $r37 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        specialinvoke $r36.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r37, 0L, 5, 1);
+        $r25[5] = $r36;
+        $r38 = new java.math.BigDecimal;
+        $r39 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        specialinvoke $r38.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r39, 0L, 6, 1);
+        $r25[6] = $r38;
+        $r40 = new java.math.BigDecimal;
+        $r41 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        specialinvoke $r40.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r41, 0L, 7, 1);
+        $r25[7] = $r40;
+        $r42 = new java.math.BigDecimal;
+        $r43 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        specialinvoke $r42.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r43, 0L, 8, 1);
+        $r25[8] = $r42;
+        $r44 = new java.math.BigDecimal;
+        $r45 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        specialinvoke $r44.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r45, 0L, 9, 1);
+        $r25[9] = $r44;
+        $r46 = new java.math.BigDecimal;
+        $r47 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        specialinvoke $r46.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r47, 0L, 10, 1);
+        $r25[10] = $r46;
+        $r48 = new java.math.BigDecimal;
+        $r49 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        specialinvoke $r48.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r49, 0L, 11, 1);
+        $r25[11] = $r48;
+        $r50 = new java.math.BigDecimal;
+        $r51 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        specialinvoke $r50.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r51, 0L, 12, 1);
+        $r25[12] = $r50;
+        $r52 = new java.math.BigDecimal;
+        $r53 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        specialinvoke $r52.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r53, 0L, 13, 1);
+        $r25[13] = $r52;
+        $r54 = new java.math.BigDecimal;
+        $r55 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        specialinvoke $r54.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r55, 0L, 14, 1);
+        $r25[14] = $r54;
+        $r56 = new java.math.BigDecimal;
+        $r57 = <java.math.BigInteger: java.math.BigInteger ZERO>;
+        specialinvoke $r56.<java.math.BigDecimal: void <init>(java.math.BigInteger,long,int,int)>($r57, 0L, 15, 1);
+        $r25[15] = $r56;
+        <java.math.BigDecimal: java.math.BigDecimal[] ZERO_SCALED_BY> = $r25;
+        $r58 = <java.math.BigDecimal: java.math.BigDecimal[] zeroThroughTen>;
+        $r59 = $r58[0];
+        <java.math.BigDecimal: java.math.BigDecimal ZERO> = $r59;
+        $r60 = <java.math.BigDecimal: java.math.BigDecimal[] zeroThroughTen>;
+        $r61 = $r60[1];
+        <java.math.BigDecimal: java.math.BigDecimal ONE> = $r61;
+        $r62 = <java.math.BigDecimal: java.math.BigDecimal[] zeroThroughTen>;
+        $r63 = $r62[10];
+        <java.math.BigDecimal: java.math.BigDecimal TEN> = $r63;
+        $r64 = newarray (long)[19];
+        $r64[0] = 1L;
+        $r64[1] = 10L;
+        $r64[2] = 100L;
+        $r64[3] = 1000L;
+        $r64[4] = 10000L;
+        $r64[5] = 100000L;
+        $r64[6] = 1000000L;
+        $r64[7] = 10000000L;
+        $r64[8] = 100000000L;
+        $r64[9] = 1000000000L;
+        $r64[10] = 10000000000L;
+        $r64[11] = 100000000000L;
+        $r64[12] = 1000000000000L;
+        $r64[13] = 10000000000000L;
+        $r64[14] = 100000000000000L;
+        $r64[15] = 1000000000000000L;
+        $r64[16] = 10000000000000000L;
+        $r64[17] = 100000000000000000L;
+        $r64[18] = 1000000000000000000L;
+        <java.math.BigDecimal: long[] LONG_TEN_POWERS_TABLE> = $r64;
+        $r65 = newarray (java.math.BigInteger)[19];
+        $r66 = <java.math.BigInteger: java.math.BigInteger ONE>;
+        $r65[0] = $r66;
+        $r67 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(10L);
+        $r65[1] = $r67;
+        $r68 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(100L);
+        $r65[2] = $r68;
+        $r69 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(1000L);
+        $r65[3] = $r69;
+        $r70 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(10000L);
+        $r65[4] = $r70;
+        $r71 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(100000L);
+        $r65[5] = $r71;
+        $r72 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(1000000L);
+        $r65[6] = $r72;
+        $r73 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(10000000L);
+        $r65[7] = $r73;
+        $r74 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(100000000L);
+        $r65[8] = $r74;
+        $r75 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(1000000000L);
+        $r65[9] = $r75;
+        $r76 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(10000000000L);
+        $r65[10] = $r76;
+        $r77 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(100000000000L);
+        $r65[11] = $r77;
+        $r78 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(1000000000000L);
+        $r65[12] = $r78;
+        $r79 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(10000000000000L);
+        $r65[13] = $r79;
+        $r80 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(100000000000000L);
+        $r65[14] = $r80;
+        $r81 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(1000000000000000L);
+        $r65[15] = $r81;
+        $r82 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(10000000000000000L);
+        $r65[16] = $r82;
+        $r83 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(100000000000000000L);
+        $r65[17] = $r83;
+        $r84 = staticinvoke <java.math.BigInteger: java.math.BigInteger valueOf(long)>(1000000000000000000L);
+        $r65[18] = $r84;
+        <java.math.BigDecimal: java.math.BigInteger[] BIG_TEN_POWERS_TABLE> = $r65;
+        $r85 = <java.math.BigDecimal: java.math.BigInteger[] BIG_TEN_POWERS_TABLE>;
+        $i0 = lengthof $r85;
+        <java.math.BigDecimal: int BIG_TEN_POWERS_TABLE_INITLEN> = $i0;
+        $i1 = <java.math.BigDecimal: int BIG_TEN_POWERS_TABLE_INITLEN>;
+        $i2 = 16 * $i1;
+        <java.math.BigDecimal: int BIG_TEN_POWERS_TABLE_MAX> = $i2;
+        $r86 = newarray (long)[19];
+        $r86[0] = 9223372036854775807L;
+        $r86[1] = 922337203685477580L;
+        $r86[2] = 92233720368547758L;
+        $r86[3] = 9223372036854775L;
+        $r86[4] = 922337203685477L;
+        $r86[5] = 92233720368547L;
+        $r86[6] = 9223372036854L;
+        $r86[7] = 922337203685L;
+        $r86[8] = 92233720368L;
+        $r86[9] = 9223372036L;
+        $r86[10] = 922337203L;
+        $r86[11] = 92233720L;
+        $r86[12] = 9223372L;
+        $r86[13] = 922337L;
+        $r86[14] = 92233L;
+        $r86[15] = 9223L;
+        $r86[16] = 922L;
+        $r86[17] = 92L;
+        $r86[18] = 9L;
+        <java.math.BigDecimal: long[] THRESHOLDS_TABLE> = $r86;
+        return;
+    }
+}

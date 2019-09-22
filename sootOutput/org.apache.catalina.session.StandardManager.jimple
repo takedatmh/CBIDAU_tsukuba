@@ -1,0 +1,1047 @@
+public class org.apache.catalina.session.StandardManager extends org.apache.catalina.session.ManagerBase
+{
+    private final org.apache.juli.logging.Log log;
+    protected static final java.lang.String info;
+    protected static final java.lang.String name;
+    protected java.lang.String pathname;
+
+    public void <init>()
+    {
+        org.apache.catalina.session.StandardManager r0;
+        org.apache.juli.logging.Log $r1;
+
+        r0 := @this: org.apache.catalina.session.StandardManager;
+        specialinvoke r0.<org.apache.catalina.session.ManagerBase: void <init>()>();
+        $r1 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/catalina/session/StandardManager");
+        r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log> = $r1;
+        r0.<org.apache.catalina.session.StandardManager: java.lang.String pathname> = "SESSIONS.ser";
+        return;
+    }
+
+    public java.lang.String getInfo()
+    {
+        org.apache.catalina.session.StandardManager r0;
+
+        r0 := @this: org.apache.catalina.session.StandardManager;
+        return "StandardManager/1.0";
+    }
+
+    public java.lang.String getName()
+    {
+        org.apache.catalina.session.StandardManager r0;
+
+        r0 := @this: org.apache.catalina.session.StandardManager;
+        return "StandardManager";
+    }
+
+    public java.lang.String getPathname()
+    {
+        org.apache.catalina.session.StandardManager r0;
+        java.lang.String $r1;
+
+        r0 := @this: org.apache.catalina.session.StandardManager;
+        $r1 = r0.<org.apache.catalina.session.StandardManager: java.lang.String pathname>;
+        return $r1;
+    }
+
+    public void setPathname(java.lang.String)
+    {
+        org.apache.catalina.session.StandardManager r0;
+        java.lang.String r1, r2, $r4;
+        java.beans.PropertyChangeSupport $r3;
+
+        r0 := @this: org.apache.catalina.session.StandardManager;
+        r1 := @parameter0: java.lang.String;
+        r2 = r0.<org.apache.catalina.session.StandardManager: java.lang.String pathname>;
+        r0.<org.apache.catalina.session.StandardManager: java.lang.String pathname> = r1;
+        $r3 = r0.<org.apache.catalina.session.StandardManager: java.beans.PropertyChangeSupport support>;
+        $r4 = r0.<org.apache.catalina.session.StandardManager: java.lang.String pathname>;
+        virtualinvoke $r3.<java.beans.PropertyChangeSupport: void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)>("pathname", r2, $r4);
+        return;
+    }
+
+    public void load() throws java.lang.ClassNotFoundException, java.io.IOException
+    {
+        org.apache.catalina.session.StandardManager r0;
+        boolean $z0, $z1, $z2, $z3;
+        java.security.PrivilegedActionException r1, $r5;
+        java.lang.Exception r2;
+        org.apache.catalina.session.StandardManager$PrivilegedDoLoad $r3;
+        java.lang.ClassNotFoundException $r6;
+        java.io.IOException $r7;
+        org.apache.juli.logging.Log $r8, $r9;
+
+        r0 := @this: org.apache.catalina.session.StandardManager;
+        $z0 = staticinvoke <org.apache.catalina.security.SecurityUtil: boolean isPackageProtectionEnabled()>();
+        if $z0 == 0 goto label5;
+
+     label0:
+        $r3 = new org.apache.catalina.session.StandardManager$PrivilegedDoLoad;
+        specialinvoke $r3.<org.apache.catalina.session.StandardManager$PrivilegedDoLoad: void <init>(org.apache.catalina.session.StandardManager)>(r0);
+        staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedExceptionAction)>($r3);
+
+     label1:
+        goto label6;
+
+     label2:
+        $r5 := @caughtexception;
+        r1 = $r5;
+        r2 = virtualinvoke r1.<java.security.PrivilegedActionException: java.lang.Exception getException()>();
+        $z1 = r2 instanceof java.lang.ClassNotFoundException;
+        if $z1 == 0 goto label3;
+
+        $r6 = (java.lang.ClassNotFoundException) r2;
+        throw $r6;
+
+     label3:
+        $z2 = r2 instanceof java.io.IOException;
+        if $z2 == 0 goto label4;
+
+        $r7 = (java.io.IOException) r2;
+        throw $r7;
+
+     label4:
+        $r8 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $z3 = interfaceinvoke $r8.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z3 == 0 goto label6;
+
+        $r9 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r9.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>("Unreported exception in load() ", r2);
+        goto label6;
+
+     label5:
+        virtualinvoke r0.<org.apache.catalina.session.StandardManager: void doLoad()>();
+
+     label6:
+        return;
+
+        catch java.security.PrivilegedActionException from label0 to label1 with label2;
+    }
+
+    protected void doLoad() throws java.lang.ClassNotFoundException, java.io.IOException
+    {
+        org.apache.catalina.session.StandardManager r0;
+        java.io.File r1;
+        java.io.FileInputStream r2, $r19;
+        java.io.BufferedInputStream r3, $r21;
+        null_type n0, n1, n2;
+        java.lang.ClassLoader r4;
+        java.io.FileNotFoundException r5, $r30;
+        java.io.IOException r6, r9, $r33, r34, $r39, $r40, r41, $r62, r63, $r64, r65, $r70, r71, $r73, $r74, r75;
+        int i0, i1;
+        org.apache.catalina.session.StandardSession r7;
+        java.lang.Throwable r8, $r72, $r76;
+        org.apache.juli.logging.Log $r10, $r11, $r13, $r14, r25, $r31, $r32, $r35, $r46, $r47, $r58, $r66, $r77, $r78;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z8, $z10;
+        java.util.Map $r12, $r42, r43, $r52;
+        org.apache.tomcat.util.res.StringManager $r15, $r36, $r59, $r67;
+        java.lang.Object[] $r16, $r37, $r60, $r68;
+        java.lang.String $r17, $r18, $r20, $r38, $r51, $r53, $r61, $r69;
+        org.apache.catalina.Container $r22, $r24;
+        org.apache.catalina.Loader r23;
+        java.lang.Class $r26;
+        org.apache.catalina.util.CustomObjectInputStream $r27, r29;
+        java.util.regex.Pattern $r28;
+        java.lang.Object $r44;
+        java.lang.Integer r45;
+        java.lang.StringBuilder $r48, $r49, $r50;
+        long $l2, $l3;
+        java.lang.ClassNotFoundException $r56, r57;
+
+        r0 := @this: org.apache.catalina.session.StandardManager;
+        $r10 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $z0 = interfaceinvoke $r10.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r11 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r11.<org.apache.juli.logging.Log: void debug(java.lang.Object)>("Start: Loading persisted sessions");
+
+     label0:
+        $r12 = r0.<org.apache.catalina.session.StandardManager: java.util.Map sessions>;
+        interfaceinvoke $r12.<java.util.Map: void clear()>();
+        r1 = virtualinvoke r0.<org.apache.catalina.session.StandardManager: java.io.File file()>();
+        if r1 != null goto label1;
+
+        return;
+
+     label1:
+        $r13 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $z1 = interfaceinvoke $r13.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z1 == 0 goto label2;
+
+        $r14 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $r15 = <org.apache.catalina.session.StandardManager: org.apache.tomcat.util.res.StringManager sm>;
+        $r16 = newarray (java.lang.Object)[1];
+        $r17 = r0.<org.apache.catalina.session.StandardManager: java.lang.String pathname>;
+        $r16[0] = $r17;
+        $r18 = virtualinvoke $r15.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("standardManager.loading", $r16);
+        interfaceinvoke $r14.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r18);
+
+     label2:
+        r2 = null;
+        r3 = null;
+        n0 = null;
+        n1 = null;
+        r4 = null;
+        n2 = null;
+
+     label3:
+        $r19 = new java.io.FileInputStream;
+        $r20 = virtualinvoke r1.<java.io.File: java.lang.String getAbsolutePath()>();
+        specialinvoke $r19.<java.io.FileInputStream: void <init>(java.lang.String)>($r20);
+        r2 = $r19;
+        $r21 = new java.io.BufferedInputStream;
+        specialinvoke $r21.<java.io.BufferedInputStream: void <init>(java.io.InputStream)>(r2);
+        r3 = $r21;
+        $r22 = r0.<org.apache.catalina.session.StandardManager: org.apache.catalina.Container container>;
+        r23 = interfaceinvoke $r22.<org.apache.catalina.Container: org.apache.catalina.Loader getLoader()>();
+        $r24 = r0.<org.apache.catalina.session.StandardManager: org.apache.catalina.Container container>;
+        r25 = interfaceinvoke $r24.<org.apache.catalina.Container: org.apache.juli.logging.Log getLogger()>();
+        if r23 == null goto label4;
+
+        r4 = interfaceinvoke r23.<org.apache.catalina.Loader: java.lang.ClassLoader getClassLoader()>();
+
+     label4:
+        if r4 != null goto label5;
+
+        $r26 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+        r4 = virtualinvoke $r26.<java.lang.Class: java.lang.ClassLoader getClassLoader()>();
+
+     label5:
+        $r27 = new org.apache.catalina.util.CustomObjectInputStream;
+        $r28 = virtualinvoke r0.<org.apache.catalina.session.StandardManager: java.util.regex.Pattern getSessionAttributeValueClassNamePattern()>();
+        $z2 = virtualinvoke r0.<org.apache.catalina.session.StandardManager: boolean getWarnOnSessionAttributeFilterFailure()>();
+        specialinvoke $r27.<org.apache.catalina.util.CustomObjectInputStream: void <init>(java.io.InputStream,java.lang.ClassLoader,org.apache.juli.logging.Log,java.util.regex.Pattern,boolean)>(r3, r4, r25, $r28, $z2);
+        r29 = $r27;
+
+     label6:
+        goto label18;
+
+     label7:
+        $r30 := @caughtexception;
+        r5 = $r30;
+        $r31 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $z3 = interfaceinvoke $r31.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z3 == 0 goto label8;
+
+        $r32 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r32.<org.apache.juli.logging.Log: void debug(java.lang.Object)>("No persisted data file found");
+
+     label8:
+        return;
+
+     label9:
+        $r33 := @caughtexception;
+        r34 = $r33;
+        $r35 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $r36 = <org.apache.catalina.session.StandardManager: org.apache.tomcat.util.res.StringManager sm>;
+        $r37 = newarray (java.lang.Object)[1];
+        $r37[0] = r34;
+        $r38 = virtualinvoke $r36.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("standardManager.loading.ioe", $r37);
+        interfaceinvoke $r35.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r38, r34);
+        if r2 == null goto label13;
+
+     label10:
+        virtualinvoke r2.<java.io.FileInputStream: void close()>();
+
+     label11:
+        goto label13;
+
+     label12:
+        $r39 := @caughtexception;
+        r6 = $r39;
+
+     label13:
+        if r3 == null goto label17;
+
+     label14:
+        virtualinvoke r3.<java.io.BufferedInputStream: void close()>();
+
+     label15:
+        goto label17;
+
+     label16:
+        $r40 := @caughtexception;
+        r41 = $r40;
+
+     label17:
+        throw r34;
+
+     label18:
+        $r42 = r0.<org.apache.catalina.session.StandardManager: java.util.Map sessions>;
+        r43 = $r42;
+        entermonitor $r42;
+
+     label19:
+        $r44 = virtualinvoke r29.<java.io.ObjectInputStream: java.lang.Object readObject()>();
+        r45 = (java.lang.Integer) $r44;
+        i0 = virtualinvoke r45.<java.lang.Integer: int intValue()>();
+        $r46 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $z4 = interfaceinvoke $r46.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z4 == 0 goto label20;
+
+        $r47 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $r48 = new java.lang.StringBuilder;
+        specialinvoke $r48.<java.lang.StringBuilder: void <init>(java.lang.String)>("Loading ");
+        $r49 = virtualinvoke $r48.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r50 = virtualinvoke $r49.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" persisted sessions");
+        $r51 = virtualinvoke $r50.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r47.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r51);
+
+     label20:
+        i1 = 0;
+        goto label23;
+
+     label21:
+        r7 = virtualinvoke r0.<org.apache.catalina.session.StandardManager: org.apache.catalina.session.StandardSession getNewSession()>();
+        virtualinvoke r7.<org.apache.catalina.session.StandardSession: void readObjectData(java.io.ObjectInputStream)>(r29);
+        virtualinvoke r7.<org.apache.catalina.session.StandardSession: void setManager(org.apache.catalina.Manager)>(r0);
+        $r52 = r0.<org.apache.catalina.session.StandardManager: java.util.Map sessions>;
+        $r53 = virtualinvoke r7.<org.apache.catalina.session.StandardSession: java.lang.String getIdInternal()>();
+        interfaceinvoke $r52.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r53, r7);
+        virtualinvoke r7.<org.apache.catalina.session.StandardSession: void activate()>();
+        $z5 = virtualinvoke r7.<org.apache.catalina.session.StandardSession: boolean isValidInternal()>();
+        if $z5 != 0 goto label22;
+
+        virtualinvoke r7.<org.apache.catalina.session.StandardSession: void setValid(boolean)>(1);
+        virtualinvoke r7.<org.apache.catalina.session.StandardSession: void expire()>();
+
+     label22:
+        $l2 = r0.<org.apache.catalina.session.StandardManager: long sessionCounter>;
+        $l3 = $l2 + 1L;
+        r0.<org.apache.catalina.session.StandardManager: long sessionCounter> = $l3;
+        i1 = i1 + 1;
+
+     label23:
+        if i1 < i0 goto label21;
+
+     label24:
+        goto label41;
+
+     label25:
+        $r56 := @caughtexception;
+        r57 = $r56;
+        $r58 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $r59 = <org.apache.catalina.session.StandardManager: org.apache.tomcat.util.res.StringManager sm>;
+        $r60 = newarray (java.lang.Object)[1];
+        $r60[0] = r57;
+        $r61 = virtualinvoke $r59.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("standardManager.loading.cnfe", $r60);
+        interfaceinvoke $r58.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r61, r57);
+
+     label26:
+        virtualinvoke r29.<java.io.ObjectInputStream: void close()>();
+
+     label27:
+        goto label29;
+
+     label28:
+        $r62 := @caughtexception;
+        r63 = $r62;
+
+     label29:
+        throw r57;
+
+     label30:
+        $r64 := @caughtexception;
+        r65 = $r64;
+        $r66 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $r67 = <org.apache.catalina.session.StandardManager: org.apache.tomcat.util.res.StringManager sm>;
+        $r68 = newarray (java.lang.Object)[1];
+        $r68[0] = r65;
+        $r69 = virtualinvoke $r67.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("standardManager.loading.ioe", $r68);
+        interfaceinvoke $r66.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r69, r65);
+
+     label31:
+        virtualinvoke r29.<java.io.ObjectInputStream: void close()>();
+
+     label32:
+        goto label34;
+
+     label33:
+        $r70 := @caughtexception;
+        r71 = $r70;
+
+     label34:
+        throw r65;
+
+     label35:
+        $r72 := @caughtexception;
+        r8 = $r72;
+
+     label36:
+        virtualinvoke r29.<java.io.ObjectInputStream: void close()>();
+
+     label37:
+        goto label39;
+
+     label38:
+        $r73 := @caughtexception;
+        r9 = $r73;
+
+     label39:
+        $z6 = virtualinvoke r1.<java.io.File: boolean exists()>();
+        if $z6 == 0 goto label40;
+
+        virtualinvoke r1.<java.io.File: boolean delete()>();
+
+     label40:
+        throw r8;
+
+     label41:
+        virtualinvoke r29.<java.io.ObjectInputStream: void close()>();
+
+     label42:
+        goto label44;
+
+     label43:
+        $r74 := @caughtexception;
+        r75 = $r74;
+
+     label44:
+        $z8 = virtualinvoke r1.<java.io.File: boolean exists()>();
+        if $z8 == 0 goto label45;
+
+        virtualinvoke r1.<java.io.File: boolean delete()>();
+
+     label45:
+        exitmonitor r43;
+
+     label46:
+        goto label50;
+
+     label47:
+        $r76 := @caughtexception;
+
+     label48:
+        exitmonitor r43;
+
+     label49:
+        throw $r76;
+
+     label50:
+        $r77 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $z10 = interfaceinvoke $r77.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z10 == 0 goto label51;
+
+        $r78 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r78.<org.apache.juli.logging.Log: void debug(java.lang.Object)>("Finish: Loading persisted sessions");
+
+     label51:
+        return;
+
+        catch java.io.FileNotFoundException from label3 to label6 with label7;
+        catch java.io.IOException from label3 to label6 with label9;
+        catch java.io.IOException from label10 to label11 with label12;
+        catch java.io.IOException from label14 to label15 with label16;
+        catch java.lang.ClassNotFoundException from label19 to label24 with label25;
+        catch java.io.IOException from label26 to label27 with label28;
+        catch java.io.IOException from label19 to label24 with label30;
+        catch java.io.IOException from label31 to label32 with label33;
+        catch java.lang.Throwable from label19 to label35 with label35;
+        catch java.io.IOException from label36 to label37 with label38;
+        catch java.io.IOException from label41 to label42 with label43;
+        catch java.lang.Throwable from label19 to label46 with label47;
+        catch java.lang.Throwable from label48 to label49 with label47;
+    }
+
+    public void unload() throws java.io.IOException
+    {
+        org.apache.catalina.session.StandardManager r0;
+        boolean $z0, $z1, $z2;
+        java.security.PrivilegedActionException r1, $r5;
+        java.lang.Exception r2;
+        org.apache.catalina.session.StandardManager$PrivilegedDoUnload $r3;
+        java.io.IOException $r6;
+        org.apache.juli.logging.Log $r7, $r8;
+
+        r0 := @this: org.apache.catalina.session.StandardManager;
+        $z0 = staticinvoke <org.apache.catalina.security.SecurityUtil: boolean isPackageProtectionEnabled()>();
+        if $z0 == 0 goto label4;
+
+     label0:
+        $r3 = new org.apache.catalina.session.StandardManager$PrivilegedDoUnload;
+        specialinvoke $r3.<org.apache.catalina.session.StandardManager$PrivilegedDoUnload: void <init>(org.apache.catalina.session.StandardManager)>(r0);
+        staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedExceptionAction)>($r3);
+
+     label1:
+        goto label5;
+
+     label2:
+        $r5 := @caughtexception;
+        r1 = $r5;
+        r2 = virtualinvoke r1.<java.security.PrivilegedActionException: java.lang.Exception getException()>();
+        $z1 = r2 instanceof java.io.IOException;
+        if $z1 == 0 goto label3;
+
+        $r6 = (java.io.IOException) r2;
+        throw $r6;
+
+     label3:
+        $r7 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $z2 = interfaceinvoke $r7.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z2 == 0 goto label5;
+
+        $r8 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r8.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>("Unreported exception in unLoad()", r2);
+        goto label5;
+
+     label4:
+        virtualinvoke r0.<org.apache.catalina.session.StandardManager: void doUnload()>();
+
+     label5:
+        return;
+
+        catch java.security.PrivilegedActionException from label0 to label1 with label2;
+    }
+
+    protected void doUnload() throws java.io.IOException
+    {
+        org.apache.catalina.session.StandardManager r0;
+        org.apache.tomcat.util.res.StringManager $r1, $r16, $r20, $r30, $r65;
+        java.io.File r2;
+        java.io.FileOutputStream r3, $r24;
+        java.io.BufferedOutputStream r4, $r26;
+        java.io.ObjectOutputStream r5, $r27;
+        boolean z0, $z1, $z2, $z3, $z4, $z6, $z7, $z8, $z9;
+        java.io.IOException r6, r8, $r28, $r34, $r35, r36, $r37, r38, $r39, r40, $r41, r42, $r43, r44, $r62, r63, $r68, r69, $r73, r74, $r75, r76;
+        java.lang.Throwable r7, r10, $r33, $r70, $r71, r72, $r86, r87, $r88;
+        org.apache.catalina.session.StandardSession r9, r85;
+        org.apache.juli.logging.Log $r11, $r12, $r15, $r18, $r19, $r29, $r49, $r50, $r64, $r77, $r78, $r89, $r90;
+        java.lang.String $r13, $r17, $r22, $r23, $r25, $r32, $r55, $r67, $r82;
+        java.util.Map $r14, $r47, r48, $r52, $r56, $r58;
+        java.lang.Object[] $r21, $r31, $r66;
+        java.util.ArrayList $r45, r46;
+        java.lang.StringBuilder $r51, $r53, $r54, $r79, $r80, $r81;
+        int $i0, $i1, $i2;
+        java.lang.Integer $r57;
+        java.util.Collection $r59;
+        java.util.Iterator r60, r83;
+        java.lang.Object $r61, $r84;
+
+        r0 := @this: org.apache.catalina.session.StandardManager;
+        $r11 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $z1 = interfaceinvoke $r11.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z1 == 0 goto label0;
+
+        $r12 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $r1 = <org.apache.catalina.session.StandardManager: org.apache.tomcat.util.res.StringManager sm>;
+        $r13 = virtualinvoke $r1.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("standardManager.unloading.debug");
+        interfaceinvoke $r12.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r13);
+
+     label0:
+        $r14 = r0.<org.apache.catalina.session.StandardManager: java.util.Map sessions>;
+        $z2 = interfaceinvoke $r14.<java.util.Map: boolean isEmpty()>();
+        if $z2 == 0 goto label1;
+
+        $r15 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $r16 = <org.apache.catalina.session.StandardManager: org.apache.tomcat.util.res.StringManager sm>;
+        $r17 = virtualinvoke $r16.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("standardManager.unloading.nosessions");
+        interfaceinvoke $r15.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r17);
+        return;
+
+     label1:
+        r2 = virtualinvoke r0.<org.apache.catalina.session.StandardManager: java.io.File file()>();
+        if r2 != null goto label2;
+
+        return;
+
+     label2:
+        $r18 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $z3 = interfaceinvoke $r18.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z3 == 0 goto label3;
+
+        $r19 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $r20 = <org.apache.catalina.session.StandardManager: org.apache.tomcat.util.res.StringManager sm>;
+        $r21 = newarray (java.lang.Object)[1];
+        $r22 = r0.<org.apache.catalina.session.StandardManager: java.lang.String pathname>;
+        $r21[0] = $r22;
+        $r23 = virtualinvoke $r20.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("standardManager.unloading", $r21);
+        interfaceinvoke $r19.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r23);
+
+     label3:
+        r3 = null;
+        r4 = null;
+        r5 = null;
+        z0 = 0;
+
+     label4:
+        $r24 = new java.io.FileOutputStream;
+        $r25 = virtualinvoke r2.<java.io.File: java.lang.String getAbsolutePath()>();
+        specialinvoke $r24.<java.io.FileOutputStream: void <init>(java.lang.String)>($r25);
+        r3 = $r24;
+        $r26 = new java.io.BufferedOutputStream;
+        specialinvoke $r26.<java.io.BufferedOutputStream: void <init>(java.io.OutputStream)>(r3);
+        r4 = $r26;
+        $r27 = new java.io.ObjectOutputStream;
+        specialinvoke $r27.<java.io.ObjectOutputStream: void <init>(java.io.OutputStream)>(r4);
+        r5 = $r27;
+
+     label5:
+        goto label20;
+
+     label6:
+        $r28 := @caughtexception;
+        r6 = $r28;
+        z0 = 1;
+        $r29 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $r30 = <org.apache.catalina.session.StandardManager: org.apache.tomcat.util.res.StringManager sm>;
+        $r31 = newarray (java.lang.Object)[1];
+        $r31[0] = r6;
+        $r32 = virtualinvoke $r30.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("standardManager.unloading.ioe", $r31);
+        interfaceinvoke $r29.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r32, r6);
+        throw r6;
+
+     label7:
+        $r33 := @caughtexception;
+        r7 = $r33;
+        if z0 == 0 goto label19;
+
+        if r5 == null goto label11;
+
+     label8:
+        virtualinvoke r5.<java.io.ObjectOutputStream: void close()>();
+
+     label9:
+        goto label11;
+
+     label10:
+        $r34 := @caughtexception;
+        r8 = $r34;
+
+     label11:
+        if r4 == null goto label15;
+
+     label12:
+        virtualinvoke r4.<java.io.BufferedOutputStream: void close()>();
+
+     label13:
+        goto label15;
+
+     label14:
+        $r35 := @caughtexception;
+        r36 = $r35;
+
+     label15:
+        if r3 == null goto label19;
+
+     label16:
+        virtualinvoke r3.<java.io.FileOutputStream: void close()>();
+
+     label17:
+        goto label19;
+
+     label18:
+        $r37 := @caughtexception;
+        r38 = $r37;
+
+     label19:
+        throw r7;
+
+     label20:
+        if z0 == 0 goto label32;
+
+        if r5 == null goto label24;
+
+     label21:
+        virtualinvoke r5.<java.io.ObjectOutputStream: void close()>();
+
+     label22:
+        goto label24;
+
+     label23:
+        $r39 := @caughtexception;
+        r40 = $r39;
+
+     label24:
+        if r4 == null goto label28;
+
+     label25:
+        virtualinvoke r4.<java.io.BufferedOutputStream: void close()>();
+
+     label26:
+        goto label28;
+
+     label27:
+        $r41 := @caughtexception;
+        r42 = $r41;
+
+     label28:
+        if r3 == null goto label32;
+
+     label29:
+        virtualinvoke r3.<java.io.FileOutputStream: void close()>();
+
+     label30:
+        goto label32;
+
+     label31:
+        $r43 := @caughtexception;
+        r44 = $r43;
+
+     label32:
+        $r45 = new java.util.ArrayList;
+        specialinvoke $r45.<java.util.ArrayList: void <init>()>();
+        r46 = $r45;
+        $r47 = r0.<org.apache.catalina.session.StandardManager: java.util.Map sessions>;
+        r48 = $r47;
+        entermonitor $r47;
+
+     label33:
+        $r49 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $z4 = interfaceinvoke $r49.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z4 == 0 goto label34;
+
+        $r50 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $r51 = new java.lang.StringBuilder;
+        specialinvoke $r51.<java.lang.StringBuilder: void <init>(java.lang.String)>("Unloading ");
+        $r52 = r0.<org.apache.catalina.session.StandardManager: java.util.Map sessions>;
+        $i0 = interfaceinvoke $r52.<java.util.Map: int size()>();
+        $r53 = virtualinvoke $r51.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i0);
+        $r54 = virtualinvoke $r53.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" sessions");
+        $r55 = virtualinvoke $r54.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r50.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r55);
+
+     label34:
+        $r56 = r0.<org.apache.catalina.session.StandardManager: java.util.Map sessions>;
+        $i1 = interfaceinvoke $r56.<java.util.Map: int size()>();
+        $r57 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i1);
+        virtualinvoke r5.<java.io.ObjectOutputStream: void writeObject(java.lang.Object)>($r57);
+        $r58 = r0.<org.apache.catalina.session.StandardManager: java.util.Map sessions>;
+        $r59 = interfaceinvoke $r58.<java.util.Map: java.util.Collection values()>();
+        r60 = interfaceinvoke $r59.<java.util.Collection: java.util.Iterator iterator()>();
+        goto label36;
+
+     label35:
+        $r61 = interfaceinvoke r60.<java.util.Iterator: java.lang.Object next()>();
+        r9 = (org.apache.catalina.session.StandardSession) $r61;
+        virtualinvoke r46.<java.util.ArrayList: boolean add(java.lang.Object)>(r9);
+        virtualinvoke r9.<org.apache.catalina.session.StandardSession: void passivate()>();
+        virtualinvoke r9.<org.apache.catalina.session.StandardSession: void writeObjectData(java.io.ObjectOutputStream)>(r5);
+
+     label36:
+        $z6 = interfaceinvoke r60.<java.util.Iterator: boolean hasNext()>();
+        if $z6 != 0 goto label35;
+
+     label37:
+        goto label43;
+
+     label38:
+        $r62 := @caughtexception;
+        r63 = $r62;
+        $r64 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $r65 = <org.apache.catalina.session.StandardManager: org.apache.tomcat.util.res.StringManager sm>;
+        $r66 = newarray (java.lang.Object)[1];
+        $r66[0] = r63;
+        $r67 = virtualinvoke $r65.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("standardManager.unloading.ioe", $r66);
+        interfaceinvoke $r64.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r67, r63);
+
+     label39:
+        virtualinvoke r5.<java.io.ObjectOutputStream: void close()>();
+
+     label40:
+        goto label42;
+
+     label41:
+        $r68 := @caughtexception;
+        r69 = $r68;
+
+     label42:
+        throw r63;
+
+     label43:
+        exitmonitor r48;
+
+     label44:
+        goto label48;
+
+     label45:
+        $r70 := @caughtexception;
+
+     label46:
+        exitmonitor r48;
+
+     label47:
+        throw $r70;
+
+     label48:
+        virtualinvoke r5.<java.io.ObjectOutputStream: void flush()>();
+        goto label54;
+
+     label49:
+        $r71 := @caughtexception;
+        r72 = $r71;
+
+     label50:
+        virtualinvoke r5.<java.io.ObjectOutputStream: void close()>();
+
+     label51:
+        goto label53;
+
+     label52:
+        $r73 := @caughtexception;
+        r74 = $r73;
+
+     label53:
+        throw r72;
+
+     label54:
+        virtualinvoke r5.<java.io.ObjectOutputStream: void close()>();
+
+     label55:
+        goto label57;
+
+     label56:
+        $r75 := @caughtexception;
+        r76 = $r75;
+
+     label57:
+        $r77 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $z7 = interfaceinvoke $r77.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z7 == 0 goto label58;
+
+        $r78 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $r79 = new java.lang.StringBuilder;
+        specialinvoke $r79.<java.lang.StringBuilder: void <init>(java.lang.String)>("Expiring ");
+        $i2 = virtualinvoke r46.<java.util.ArrayList: int size()>();
+        $r80 = virtualinvoke $r79.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i2);
+        $r81 = virtualinvoke $r80.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" persisted sessions");
+        $r82 = virtualinvoke $r81.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r78.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r82);
+
+     label58:
+        r83 = virtualinvoke r46.<java.util.ArrayList: java.util.Iterator iterator()>();
+        goto label66;
+
+     label59:
+        $r84 = interfaceinvoke r83.<java.util.Iterator: java.lang.Object next()>();
+        r85 = (org.apache.catalina.session.StandardSession) $r84;
+
+     label60:
+        virtualinvoke r85.<org.apache.catalina.session.StandardSession: void expire(boolean)>(0);
+
+     label61:
+        goto label65;
+
+     label62:
+        $r86 := @caughtexception;
+        r87 = $r86;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r87);
+
+     label63:
+        virtualinvoke r85.<org.apache.catalina.session.StandardSession: void recycle()>();
+        goto label66;
+
+     label64:
+        $r88 := @caughtexception;
+        r10 = $r88;
+        virtualinvoke r85.<org.apache.catalina.session.StandardSession: void recycle()>();
+        throw r10;
+
+     label65:
+        virtualinvoke r85.<org.apache.catalina.session.StandardSession: void recycle()>();
+
+     label66:
+        $z8 = interfaceinvoke r83.<java.util.Iterator: boolean hasNext()>();
+        if $z8 != 0 goto label59;
+
+        $r89 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $z9 = interfaceinvoke $r89.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z9 == 0 goto label67;
+
+        $r90 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r90.<org.apache.juli.logging.Log: void debug(java.lang.Object)>("Unloading complete");
+
+     label67:
+        return;
+
+        catch java.io.IOException from label4 to label5 with label6;
+        catch java.lang.Throwable from label4 to label7 with label7;
+        catch java.io.IOException from label8 to label9 with label10;
+        catch java.io.IOException from label12 to label13 with label14;
+        catch java.io.IOException from label16 to label17 with label18;
+        catch java.io.IOException from label21 to label22 with label23;
+        catch java.io.IOException from label25 to label26 with label27;
+        catch java.io.IOException from label29 to label30 with label31;
+        catch java.io.IOException from label34 to label37 with label38;
+        catch java.io.IOException from label39 to label40 with label41;
+        catch java.lang.Throwable from label33 to label44 with label45;
+        catch java.lang.Throwable from label46 to label47 with label45;
+        catch java.lang.Throwable from label48 to label49 with label49;
+        catch java.io.IOException from label50 to label51 with label52;
+        catch java.io.IOException from label54 to label55 with label56;
+        catch java.lang.Throwable from label60 to label61 with label62;
+        catch java.lang.Throwable from label60 to label63 with label64;
+    }
+
+    protected synchronized void startInternal() throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.session.StandardManager r0;
+        java.lang.Throwable r1, $r3;
+        org.apache.tomcat.util.res.StringManager $r2;
+        org.apache.juli.logging.Log $r4;
+        java.lang.String $r5;
+        org.apache.catalina.LifecycleState $r6;
+
+        r0 := @this: org.apache.catalina.session.StandardManager;
+        specialinvoke r0.<org.apache.catalina.session.ManagerBase: void startInternal()>();
+
+     label0:
+        virtualinvoke r0.<org.apache.catalina.session.StandardManager: void load()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r3 := @caughtexception;
+        r1 = $r3;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r1);
+        $r4 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $r2 = <org.apache.catalina.session.StandardManager: org.apache.tomcat.util.res.StringManager sm>;
+        $r5 = virtualinvoke $r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("standardManager.managerLoad");
+        interfaceinvoke $r4.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r5, r1);
+
+     label3:
+        $r6 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STARTING>;
+        virtualinvoke r0.<org.apache.catalina.session.StandardManager: void setState(org.apache.catalina.LifecycleState)>($r6);
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+    }
+
+    protected synchronized void stopInternal() throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.session.StandardManager r0;
+        java.lang.Throwable r1, r3, r4, $r8, $r13, $r14;
+        int i0, $i1;
+        org.apache.catalina.Session r2;
+        org.apache.juli.logging.Log $r5, $r6, $r9;
+        boolean $z0, $z1;
+        org.apache.catalina.LifecycleState $r7;
+        org.apache.tomcat.util.res.StringManager $r10;
+        java.lang.String $r11;
+        org.apache.catalina.Session[] r12;
+
+        r0 := @this: org.apache.catalina.session.StandardManager;
+        $r5 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $z0 = interfaceinvoke $r5.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r6 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r6.<org.apache.juli.logging.Log: void debug(java.lang.Object)>("Stopping");
+
+     label0:
+        $r7 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STOPPING>;
+        virtualinvoke r0.<org.apache.catalina.session.StandardManager: void setState(org.apache.catalina.LifecycleState)>($r7);
+
+     label1:
+        virtualinvoke r0.<org.apache.catalina.session.StandardManager: void unload()>();
+
+     label2:
+        goto label4;
+
+     label3:
+        $r8 := @caughtexception;
+        r1 = $r8;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r1);
+        $r9 = r0.<org.apache.catalina.session.StandardManager: org.apache.juli.logging.Log log>;
+        $r10 = <org.apache.catalina.session.StandardManager: org.apache.tomcat.util.res.StringManager sm>;
+        $r11 = virtualinvoke $r10.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("standardManager.managerUnload");
+        interfaceinvoke $r9.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r11, r1);
+
+     label4:
+        r12 = virtualinvoke r0.<org.apache.catalina.session.StandardManager: org.apache.catalina.Session[] findSessions()>();
+        i0 = 0;
+        goto label13;
+
+     label5:
+        r2 = r12[i0];
+
+     label6:
+        $z1 = interfaceinvoke r2.<org.apache.catalina.Session: boolean isValid()>();
+        if $z1 == 0 goto label11;
+
+        interfaceinvoke r2.<org.apache.catalina.Session: void expire()>();
+
+     label7:
+        goto label11;
+
+     label8:
+        $r13 := @caughtexception;
+        r3 = $r13;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r3);
+
+     label9:
+        interfaceinvoke r2.<org.apache.catalina.Session: void recycle()>();
+        goto label12;
+
+     label10:
+        $r14 := @caughtexception;
+        r4 = $r14;
+        interfaceinvoke r2.<org.apache.catalina.Session: void recycle()>();
+        throw r4;
+
+     label11:
+        interfaceinvoke r2.<org.apache.catalina.Session: void recycle()>();
+
+     label12:
+        i0 = i0 + 1;
+
+     label13:
+        $i1 = lengthof r12;
+        if i0 < $i1 goto label5;
+
+        specialinvoke r0.<org.apache.catalina.session.ManagerBase: void stopInternal()>();
+        return;
+
+        catch java.lang.Throwable from label1 to label2 with label3;
+        catch java.lang.Throwable from label6 to label7 with label8;
+        catch java.lang.Throwable from label6 to label9 with label10;
+    }
+
+    protected java.io.File file()
+    {
+        org.apache.catalina.session.StandardManager r0;
+        java.io.File r1, r3, $r6, $r11;
+        javax.servlet.ServletContext r2;
+        java.lang.String $r4, $r5, $r7, $r12;
+        int $i0;
+        boolean $z0;
+        org.apache.catalina.Container $r8;
+        org.apache.catalina.Context $r9;
+        java.lang.Object $r10;
+
+        r0 := @this: org.apache.catalina.session.StandardManager;
+        $r4 = r0.<org.apache.catalina.session.StandardManager: java.lang.String pathname>;
+        if $r4 == null goto label0;
+
+        $r5 = r0.<org.apache.catalina.session.StandardManager: java.lang.String pathname>;
+        $i0 = virtualinvoke $r5.<java.lang.String: int length()>();
+        if $i0 != 0 goto label1;
+
+     label0:
+        return null;
+
+     label1:
+        $r6 = new java.io.File;
+        $r7 = r0.<org.apache.catalina.session.StandardManager: java.lang.String pathname>;
+        specialinvoke $r6.<java.io.File: void <init>(java.lang.String)>($r7);
+        r1 = $r6;
+        $z0 = virtualinvoke r1.<java.io.File: boolean isAbsolute()>();
+        if $z0 != 0 goto label2;
+
+        $r8 = r0.<org.apache.catalina.session.StandardManager: org.apache.catalina.Container container>;
+        $r9 = (org.apache.catalina.Context) $r8;
+        r2 = interfaceinvoke $r9.<org.apache.catalina.Context: javax.servlet.ServletContext getServletContext()>();
+        $r10 = interfaceinvoke r2.<javax.servlet.ServletContext: java.lang.Object getAttribute(java.lang.String)>("javax.servlet.context.tempdir");
+        r3 = (java.io.File) $r10;
+        if r3 == null goto label2;
+
+        $r11 = new java.io.File;
+        $r12 = r0.<org.apache.catalina.session.StandardManager: java.lang.String pathname>;
+        specialinvoke $r11.<java.io.File: void <init>(java.io.File,java.lang.String)>(r3, $r12);
+        r1 = $r11;
+
+     label2:
+        return r1;
+    }
+}

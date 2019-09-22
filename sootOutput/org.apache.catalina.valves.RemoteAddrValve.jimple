@@ -1,0 +1,80 @@
+public final class org.apache.catalina.valves.RemoteAddrValve extends org.apache.catalina.valves.RequestFilterValve
+{
+    private static final org.apache.juli.logging.Log log;
+    private static final java.lang.String info;
+
+    static void <clinit>()
+    {
+        org.apache.juli.logging.Log $r0;
+
+        $r0 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/catalina/valves/RemoteAddrValve");
+        <org.apache.catalina.valves.RemoteAddrValve: org.apache.juli.logging.Log log> = $r0;
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.catalina.valves.RemoteAddrValve r0;
+
+        r0 := @this: org.apache.catalina.valves.RemoteAddrValve;
+        specialinvoke r0.<org.apache.catalina.valves.RequestFilterValve: void <init>()>();
+        return;
+    }
+
+    public java.lang.String getInfo()
+    {
+        org.apache.catalina.valves.RemoteAddrValve r0;
+
+        r0 := @this: org.apache.catalina.valves.RemoteAddrValve;
+        return "org.apache.catalina.valves.RemoteAddrValve/1.0";
+    }
+
+    public void invoke(org.apache.catalina.connector.Request, org.apache.catalina.connector.Response) throws java.io.IOException, javax.servlet.ServletException
+    {
+        org.apache.catalina.valves.RemoteAddrValve r0;
+        org.apache.catalina.connector.Request r1;
+        org.apache.catalina.connector.Response r2;
+        java.lang.String r3, $r6, $r7;
+        boolean $z0;
+        java.lang.StringBuilder $r4, $r8, $r10;
+        javax.servlet.http.HttpServletRequest $r5, $r11;
+        org.apache.catalina.connector.Connector $r9;
+        int $i0;
+
+        r0 := @this: org.apache.catalina.valves.RemoteAddrValve;
+        r1 := @parameter0: org.apache.catalina.connector.Request;
+        r2 := @parameter1: org.apache.catalina.connector.Response;
+        $z0 = virtualinvoke r0.<org.apache.catalina.valves.RemoteAddrValve: boolean getAddConnectorPort()>();
+        if $z0 == 0 goto label0;
+
+        $r4 = new java.lang.StringBuilder;
+        $r5 = virtualinvoke r1.<org.apache.catalina.connector.Request: javax.servlet.http.HttpServletRequest getRequest()>();
+        $r6 = interfaceinvoke $r5.<javax.servlet.http.HttpServletRequest: java.lang.String getRemoteAddr()>();
+        $r7 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r6);
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>($r7);
+        $r8 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(";");
+        $r9 = virtualinvoke r1.<org.apache.catalina.connector.Request: org.apache.catalina.connector.Connector getConnector()>();
+        $i0 = virtualinvoke $r9.<org.apache.catalina.connector.Connector: int getPort()>();
+        $r10 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i0);
+        r3 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.String toString()>();
+        goto label1;
+
+     label0:
+        $r11 = virtualinvoke r1.<org.apache.catalina.connector.Request: javax.servlet.http.HttpServletRequest getRequest()>();
+        r3 = interfaceinvoke $r11.<javax.servlet.http.HttpServletRequest: java.lang.String getRemoteAddr()>();
+
+     label1:
+        virtualinvoke r0.<org.apache.catalina.valves.RemoteAddrValve: void process(java.lang.String,org.apache.catalina.connector.Request,org.apache.catalina.connector.Response)>(r3, r1, r2);
+        return;
+    }
+
+    protected org.apache.juli.logging.Log getLog()
+    {
+        org.apache.catalina.valves.RemoteAddrValve r0;
+        org.apache.juli.logging.Log $r1;
+
+        r0 := @this: org.apache.catalina.valves.RemoteAddrValve;
+        $r1 = <org.apache.catalina.valves.RemoteAddrValve: org.apache.juli.logging.Log log>;
+        return $r1;
+    }
+}

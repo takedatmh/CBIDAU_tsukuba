@@ -1,0 +1,99 @@
+final class javax.crypto.CryptoPermissionCollection extends java.security.PermissionCollection implements java.io.Serializable
+{
+    private static final long serialVersionUID;
+    private java.util.Vector permissions;
+
+    void <init>()
+    {
+        javax.crypto.CryptoPermissionCollection r0;
+        java.util.Vector $r1;
+
+        r0 := @this: javax.crypto.CryptoPermissionCollection;
+        specialinvoke r0.<java.security.PermissionCollection: void <init>()>();
+        $r1 = new java.util.Vector;
+        specialinvoke $r1.<java.util.Vector: void <init>(int)>(3);
+        r0.<javax.crypto.CryptoPermissionCollection: java.util.Vector permissions> = $r1;
+        return;
+    }
+
+    public void add(java.security.Permission)
+    {
+        javax.crypto.CryptoPermissionCollection r0;
+        java.security.Permission r1;
+        boolean $z0, $z1;
+        java.lang.SecurityException $r2;
+        java.util.Vector $r3;
+
+        r0 := @this: javax.crypto.CryptoPermissionCollection;
+        r1 := @parameter0: java.security.Permission;
+        $z0 = virtualinvoke r0.<javax.crypto.CryptoPermissionCollection: boolean isReadOnly()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = new java.lang.SecurityException;
+        specialinvoke $r2.<java.lang.SecurityException: void <init>(java.lang.String)>("attempt to add a Permission to a readonly PermissionCollection");
+        throw $r2;
+
+     label0:
+        $z1 = r1 instanceof javax.crypto.CryptoPermission;
+        if $z1 != 0 goto label1;
+
+        return;
+
+     label1:
+        $r3 = r0.<javax.crypto.CryptoPermissionCollection: java.util.Vector permissions>;
+        virtualinvoke $r3.<java.util.Vector: void addElement(java.lang.Object)>(r1);
+        return;
+    }
+
+    public boolean implies(java.security.Permission)
+    {
+        javax.crypto.CryptoPermissionCollection r0;
+        java.security.Permission r1;
+        javax.crypto.CryptoPermission r2, r4;
+        java.util.Enumeration r3;
+        boolean $z0, $z1, $z2;
+        java.util.Vector $r5;
+        java.lang.Object $r6;
+
+        r0 := @this: javax.crypto.CryptoPermissionCollection;
+        r1 := @parameter0: java.security.Permission;
+        $z0 = r1 instanceof javax.crypto.CryptoPermission;
+        if $z0 != 0 goto label0;
+
+        return 0;
+
+     label0:
+        r2 = (javax.crypto.CryptoPermission) r1;
+        $r5 = r0.<javax.crypto.CryptoPermissionCollection: java.util.Vector permissions>;
+        r3 = virtualinvoke $r5.<java.util.Vector: java.util.Enumeration elements()>();
+
+     label1:
+        $z1 = interfaceinvoke r3.<java.util.Enumeration: boolean hasMoreElements()>();
+        if $z1 == 0 goto label3;
+
+        $r6 = interfaceinvoke r3.<java.util.Enumeration: java.lang.Object nextElement()>();
+        r4 = (javax.crypto.CryptoPermission) $r6;
+        $z2 = virtualinvoke r4.<javax.crypto.CryptoPermission: boolean implies(java.security.Permission)>(r2);
+        if $z2 == 0 goto label2;
+
+        return 1;
+
+     label2:
+        goto label1;
+
+     label3:
+        return 0;
+    }
+
+    public java.util.Enumeration elements()
+    {
+        javax.crypto.CryptoPermissionCollection r0;
+        java.util.Vector $r1;
+        java.util.Enumeration $r2;
+
+        r0 := @this: javax.crypto.CryptoPermissionCollection;
+        $r1 = r0.<javax.crypto.CryptoPermissionCollection: java.util.Vector permissions>;
+        $r2 = virtualinvoke $r1.<java.util.Vector: java.util.Enumeration elements()>();
+        return $r2;
+    }
+}

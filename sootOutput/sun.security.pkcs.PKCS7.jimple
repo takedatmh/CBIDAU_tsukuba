@@ -1,0 +1,1504 @@
+public class sun.security.pkcs.PKCS7 extends java.lang.Object
+{
+    private sun.security.util.ObjectIdentifier contentType;
+    private java.math.BigInteger version;
+    private sun.security.x509.AlgorithmId[] digestAlgorithmIds;
+    private sun.security.pkcs.ContentInfo contentInfo;
+    private java.security.cert.X509Certificate[] certificates;
+    private java.security.cert.X509CRL[] crls;
+    private sun.security.pkcs.SignerInfo[] signerInfos;
+    private boolean oldStyle;
+    private java.security.Principal[] certIssuerNames;
+
+    public void <init>(java.io.InputStream) throws sun.security.pkcs.ParsingException, java.io.IOException
+    {
+        sun.security.pkcs.PKCS7 r0;
+        java.io.InputStream r1;
+        java.io.DataInputStream r2, $r4;
+        byte[] r3;
+        int $i0;
+        sun.security.util.DerInputStream $r5;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        r1 := @parameter0: java.io.InputStream;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.security.pkcs.PKCS7: java.math.BigInteger version> = null;
+        r0.<sun.security.pkcs.PKCS7: sun.security.x509.AlgorithmId[] digestAlgorithmIds> = null;
+        r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.ContentInfo contentInfo> = null;
+        r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates> = null;
+        r0.<sun.security.pkcs.PKCS7: java.security.cert.X509CRL[] crls> = null;
+        r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.SignerInfo[] signerInfos> = null;
+        r0.<sun.security.pkcs.PKCS7: boolean oldStyle> = 0;
+        $r4 = new java.io.DataInputStream;
+        specialinvoke $r4.<java.io.DataInputStream: void <init>(java.io.InputStream)>(r1);
+        r2 = $r4;
+        $i0 = virtualinvoke r2.<java.io.DataInputStream: int available()>();
+        r3 = newarray (byte)[$i0];
+        virtualinvoke r2.<java.io.DataInputStream: void readFully(byte[])>(r3);
+        $r5 = new sun.security.util.DerInputStream;
+        specialinvoke $r5.<sun.security.util.DerInputStream: void <init>(byte[])>(r3);
+        specialinvoke r0.<sun.security.pkcs.PKCS7: void parse(sun.security.util.DerInputStream)>($r5);
+        return;
+    }
+
+    public void <init>(sun.security.util.DerInputStream) throws sun.security.pkcs.ParsingException
+    {
+        sun.security.pkcs.PKCS7 r0;
+        sun.security.util.DerInputStream r1;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        r1 := @parameter0: sun.security.util.DerInputStream;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.security.pkcs.PKCS7: java.math.BigInteger version> = null;
+        r0.<sun.security.pkcs.PKCS7: sun.security.x509.AlgorithmId[] digestAlgorithmIds> = null;
+        r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.ContentInfo contentInfo> = null;
+        r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates> = null;
+        r0.<sun.security.pkcs.PKCS7: java.security.cert.X509CRL[] crls> = null;
+        r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.SignerInfo[] signerInfos> = null;
+        r0.<sun.security.pkcs.PKCS7: boolean oldStyle> = 0;
+        specialinvoke r0.<sun.security.pkcs.PKCS7: void parse(sun.security.util.DerInputStream)>(r1);
+        return;
+    }
+
+    public void <init>(byte[]) throws sun.security.pkcs.ParsingException
+    {
+        sun.security.pkcs.PKCS7 r0;
+        byte[] r1;
+        sun.security.util.DerInputStream r2, $r4;
+        sun.security.pkcs.ParsingException r3, $r7;
+        java.io.IOException $r5, r6;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        r1 := @parameter0: byte[];
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.security.pkcs.PKCS7: java.math.BigInteger version> = null;
+        r0.<sun.security.pkcs.PKCS7: sun.security.x509.AlgorithmId[] digestAlgorithmIds> = null;
+        r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.ContentInfo contentInfo> = null;
+        r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates> = null;
+        r0.<sun.security.pkcs.PKCS7: java.security.cert.X509CRL[] crls> = null;
+        r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.SignerInfo[] signerInfos> = null;
+        r0.<sun.security.pkcs.PKCS7: boolean oldStyle> = 0;
+
+     label0:
+        $r4 = new sun.security.util.DerInputStream;
+        specialinvoke $r4.<sun.security.util.DerInputStream: void <init>(byte[])>(r1);
+        r2 = $r4;
+        specialinvoke r0.<sun.security.pkcs.PKCS7: void parse(sun.security.util.DerInputStream)>(r2);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r5 := @caughtexception;
+        r6 = $r5;
+        $r7 = new sun.security.pkcs.ParsingException;
+        specialinvoke $r7.<sun.security.pkcs.ParsingException: void <init>(java.lang.String)>("Unable to parse the encoded bytes");
+        r3 = $r7;
+        virtualinvoke r3.<sun.security.pkcs.ParsingException: java.lang.Throwable initCause(java.lang.Throwable)>(r6);
+        throw r3;
+
+     label3:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    private void parse(sun.security.util.DerInputStream) throws sun.security.pkcs.ParsingException
+    {
+        sun.security.pkcs.PKCS7 r0;
+        sun.security.util.DerInputStream r1;
+        java.io.IOException r2, r3, $r5, $r6;
+        sun.security.pkcs.ParsingException r4, $r7;
+        int $i0;
+        java.lang.String $r8;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        r1 := @parameter0: sun.security.util.DerInputStream;
+
+     label0:
+        $i0 = virtualinvoke r1.<sun.security.util.DerInputStream: int available()>();
+        virtualinvoke r1.<sun.security.util.DerInputStream: void mark(int)>($i0);
+        specialinvoke r0.<sun.security.pkcs.PKCS7: void parse(sun.security.util.DerInputStream,boolean)>(r1, 0);
+
+     label1:
+        goto label6;
+
+     label2:
+        $r5 := @caughtexception;
+        r2 = $r5;
+
+     label3:
+        virtualinvoke r1.<sun.security.util.DerInputStream: void reset()>();
+        specialinvoke r0.<sun.security.pkcs.PKCS7: void parse(sun.security.util.DerInputStream,boolean)>(r1, 1);
+        r0.<sun.security.pkcs.PKCS7: boolean oldStyle> = 1;
+
+     label4:
+        goto label6;
+
+     label5:
+        $r6 := @caughtexception;
+        r3 = $r6;
+        $r7 = new sun.security.pkcs.ParsingException;
+        $r8 = virtualinvoke r3.<java.io.IOException: java.lang.String getMessage()>();
+        specialinvoke $r7.<sun.security.pkcs.ParsingException: void <init>(java.lang.String)>($r8);
+        r4 = $r7;
+        virtualinvoke r4.<sun.security.pkcs.ParsingException: java.lang.Throwable initCause(java.lang.Throwable)>(r2);
+        virtualinvoke r4.<sun.security.pkcs.ParsingException: void addSuppressed(java.lang.Throwable)>(r3);
+        throw r4;
+
+     label6:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+        catch java.io.IOException from label3 to label4 with label5;
+    }
+
+    private void parse(sun.security.util.DerInputStream, boolean) throws java.io.IOException
+    {
+        sun.security.pkcs.PKCS7 r0;
+        sun.security.util.DerInputStream r1;
+        boolean z0, $z1, $z2, $z3;
+        sun.security.pkcs.ContentInfo $r2, $r4, $r6;
+        sun.security.util.DerValue r3;
+        sun.security.util.ObjectIdentifier $r5, $r7, $r8, $r9, $r10, $r11, $r12, $r16;
+        sun.security.pkcs.ParsingException $r13;
+        java.lang.StringBuilder $r14, $r15, $r17, $r18;
+        java.lang.String $r19;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        r1 := @parameter0: sun.security.util.DerInputStream;
+        z0 := @parameter1: boolean;
+        $r2 = new sun.security.pkcs.ContentInfo;
+        specialinvoke $r2.<sun.security.pkcs.ContentInfo: void <init>(sun.security.util.DerInputStream,boolean)>(r1, z0);
+        r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.ContentInfo contentInfo> = $r2;
+        $r4 = r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.ContentInfo contentInfo>;
+        $r5 = $r4.<sun.security.pkcs.ContentInfo: sun.security.util.ObjectIdentifier contentType>;
+        r0.<sun.security.pkcs.PKCS7: sun.security.util.ObjectIdentifier contentType> = $r5;
+        $r6 = r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.ContentInfo contentInfo>;
+        r3 = virtualinvoke $r6.<sun.security.pkcs.ContentInfo: sun.security.util.DerValue getContent()>();
+        $r7 = r0.<sun.security.pkcs.PKCS7: sun.security.util.ObjectIdentifier contentType>;
+        $r8 = <sun.security.pkcs.ContentInfo: sun.security.util.ObjectIdentifier SIGNED_DATA_OID>;
+        $z1 = virtualinvoke $r7.<sun.security.util.ObjectIdentifier: boolean equals(sun.security.util.ObjectIdentifier)>($r8);
+        if $z1 == 0 goto label0;
+
+        specialinvoke r0.<sun.security.pkcs.PKCS7: void parseSignedData(sun.security.util.DerValue)>(r3);
+        goto label3;
+
+     label0:
+        $r9 = r0.<sun.security.pkcs.PKCS7: sun.security.util.ObjectIdentifier contentType>;
+        $r10 = <sun.security.pkcs.ContentInfo: sun.security.util.ObjectIdentifier OLD_SIGNED_DATA_OID>;
+        $z2 = virtualinvoke $r9.<sun.security.util.ObjectIdentifier: boolean equals(sun.security.util.ObjectIdentifier)>($r10);
+        if $z2 == 0 goto label1;
+
+        specialinvoke r0.<sun.security.pkcs.PKCS7: void parseOldSignedData(sun.security.util.DerValue)>(r3);
+        goto label3;
+
+     label1:
+        $r11 = r0.<sun.security.pkcs.PKCS7: sun.security.util.ObjectIdentifier contentType>;
+        $r12 = <sun.security.pkcs.ContentInfo: sun.security.util.ObjectIdentifier NETSCAPE_CERT_SEQUENCE_OID>;
+        $z3 = virtualinvoke $r11.<sun.security.util.ObjectIdentifier: boolean equals(sun.security.util.ObjectIdentifier)>($r12);
+        if $z3 == 0 goto label2;
+
+        specialinvoke r0.<sun.security.pkcs.PKCS7: void parseNetscapeCertChain(sun.security.util.DerValue)>(r3);
+        goto label3;
+
+     label2:
+        $r13 = new sun.security.pkcs.ParsingException;
+        $r14 = new java.lang.StringBuilder;
+        specialinvoke $r14.<java.lang.StringBuilder: void <init>()>();
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("content type ");
+        $r16 = r0.<sun.security.pkcs.PKCS7: sun.security.util.ObjectIdentifier contentType>;
+        $r17 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r16);
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" not supported.");
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r13.<sun.security.pkcs.ParsingException: void <init>(java.lang.String)>($r19);
+        throw $r13;
+
+     label3:
+        return;
+    }
+
+    public void <init>(sun.security.x509.AlgorithmId[], sun.security.pkcs.ContentInfo, java.security.cert.X509Certificate[], java.security.cert.X509CRL[], sun.security.pkcs.SignerInfo[])
+    {
+        sun.security.pkcs.PKCS7 r0;
+        sun.security.x509.AlgorithmId[] r1;
+        sun.security.pkcs.ContentInfo r2;
+        java.security.cert.X509Certificate[] r3;
+        java.security.cert.X509CRL[] r4;
+        sun.security.pkcs.SignerInfo[] r5;
+        java.math.BigInteger $r6;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        r1 := @parameter0: sun.security.x509.AlgorithmId[];
+        r2 := @parameter1: sun.security.pkcs.ContentInfo;
+        r3 := @parameter2: java.security.cert.X509Certificate[];
+        r4 := @parameter3: java.security.cert.X509CRL[];
+        r5 := @parameter4: sun.security.pkcs.SignerInfo[];
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.security.pkcs.PKCS7: java.math.BigInteger version> = null;
+        r0.<sun.security.pkcs.PKCS7: sun.security.x509.AlgorithmId[] digestAlgorithmIds> = null;
+        r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.ContentInfo contentInfo> = null;
+        r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates> = null;
+        r0.<sun.security.pkcs.PKCS7: java.security.cert.X509CRL[] crls> = null;
+        r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.SignerInfo[] signerInfos> = null;
+        r0.<sun.security.pkcs.PKCS7: boolean oldStyle> = 0;
+        $r6 = <java.math.BigInteger: java.math.BigInteger ONE>;
+        r0.<sun.security.pkcs.PKCS7: java.math.BigInteger version> = $r6;
+        r0.<sun.security.pkcs.PKCS7: sun.security.x509.AlgorithmId[] digestAlgorithmIds> = r1;
+        r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.ContentInfo contentInfo> = r2;
+        r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates> = r3;
+        r0.<sun.security.pkcs.PKCS7: java.security.cert.X509CRL[] crls> = r4;
+        r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.SignerInfo[] signerInfos> = r5;
+        return;
+    }
+
+    public void <init>(sun.security.x509.AlgorithmId[], sun.security.pkcs.ContentInfo, java.security.cert.X509Certificate[], sun.security.pkcs.SignerInfo[])
+    {
+        sun.security.pkcs.PKCS7 r0;
+        sun.security.x509.AlgorithmId[] r1;
+        sun.security.pkcs.ContentInfo r2;
+        java.security.cert.X509Certificate[] r3;
+        sun.security.pkcs.SignerInfo[] r4;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        r1 := @parameter0: sun.security.x509.AlgorithmId[];
+        r2 := @parameter1: sun.security.pkcs.ContentInfo;
+        r3 := @parameter2: java.security.cert.X509Certificate[];
+        r4 := @parameter3: sun.security.pkcs.SignerInfo[];
+        specialinvoke r0.<sun.security.pkcs.PKCS7: void <init>(sun.security.x509.AlgorithmId[],sun.security.pkcs.ContentInfo,java.security.cert.X509Certificate[],java.security.cert.X509CRL[],sun.security.pkcs.SignerInfo[])>(r1, r2, r3, null, r4);
+        return;
+    }
+
+    private void parseNetscapeCertChain(sun.security.util.DerValue) throws sun.security.pkcs.ParsingException, java.io.IOException
+    {
+        sun.security.pkcs.PKCS7 r0;
+        sun.security.util.DerValue r1, $r16, $r17;
+        sun.security.util.DerInputStream $r2, r3;
+        sun.security.util.DerValue[] r4;
+        java.security.cert.CertificateFactory r5;
+        java.security.cert.CertificateException r6, $r13, $r22, r23;
+        java.io.ByteArrayInputStream r7, $r18;
+        byte[] r8, $r11;
+        sun.security.pkcs.ParsingException r9, $r24, $r29, r31;
+        java.lang.Throwable r10, $r33;
+        int $i0, i1, $i2;
+        java.security.cert.X509Certificate[] $r12, $r14, $r19;
+        sun.security.x509.X509CertImpl $r15;
+        java.security.cert.Certificate $r20;
+        java.security.cert.X509Certificate $r21;
+        java.lang.String $r25, $r30;
+        java.io.IOException $r27, r28;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        r1 := @parameter0: sun.security.util.DerValue;
+        $r2 = new sun.security.util.DerInputStream;
+        $r11 = virtualinvoke r1.<sun.security.util.DerValue: byte[] toByteArray()>();
+        specialinvoke $r2.<sun.security.util.DerInputStream: void <init>(byte[])>($r11);
+        r3 = $r2;
+        r4 = virtualinvoke r3.<sun.security.util.DerInputStream: sun.security.util.DerValue[] getSequence(int)>(2);
+        $i0 = lengthof r4;
+        $r12 = newarray (java.security.cert.X509Certificate)[$i0];
+        r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates> = $r12;
+        r5 = null;
+
+     label0:
+        r5 = staticinvoke <java.security.cert.CertificateFactory: java.security.cert.CertificateFactory getInstance(java.lang.String)>("X.509");
+
+     label1:
+        goto label3;
+
+     label2:
+        $r13 := @caughtexception;
+        r6 = $r13;
+
+     label3:
+        i1 = 0;
+
+     label4:
+        $i2 = lengthof r4;
+        if i1 >= $i2 goto label15;
+
+        r7 = null;
+
+     label5:
+        if r5 != null goto label6;
+
+        $r14 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        $r15 = new sun.security.x509.X509CertImpl;
+        $r16 = r4[i1];
+        specialinvoke $r15.<sun.security.x509.X509CertImpl: void <init>(sun.security.util.DerValue)>($r16);
+        $r14[i1] = $r15;
+        goto label7;
+
+     label6:
+        $r17 = r4[i1];
+        r8 = virtualinvoke $r17.<sun.security.util.DerValue: byte[] toByteArray()>();
+        $r18 = new java.io.ByteArrayInputStream;
+        specialinvoke $r18.<java.io.ByteArrayInputStream: void <init>(byte[])>(r8);
+        r7 = $r18;
+        $r19 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        $r20 = virtualinvoke r5.<java.security.cert.CertificateFactory: java.security.cert.Certificate generateCertificate(java.io.InputStream)>(r7);
+        $r21 = (java.security.cert.X509Certificate) $r20;
+        $r19[i1] = $r21;
+        virtualinvoke r7.<java.io.ByteArrayInputStream: void close()>();
+        r7 = null;
+
+     label7:
+        if r7 == null goto label14;
+
+        virtualinvoke r7.<java.io.ByteArrayInputStream: void close()>();
+        goto label14;
+
+     label8:
+        $r22 := @caughtexception;
+
+     label9:
+        r23 = $r22;
+        $r24 = new sun.security.pkcs.ParsingException;
+        $r25 = virtualinvoke r23.<java.security.cert.CertificateException: java.lang.String getMessage()>();
+        specialinvoke $r24.<sun.security.pkcs.ParsingException: void <init>(java.lang.String)>($r25);
+        r9 = $r24;
+        virtualinvoke r9.<sun.security.pkcs.ParsingException: java.lang.Throwable initCause(java.lang.Throwable)>(r23);
+        throw r9;
+
+     label10:
+        $r27 := @caughtexception;
+        r28 = $r27;
+        $r29 = new sun.security.pkcs.ParsingException;
+        $r30 = virtualinvoke r28.<java.io.IOException: java.lang.String getMessage()>();
+        specialinvoke $r29.<sun.security.pkcs.ParsingException: void <init>(java.lang.String)>($r30);
+        r31 = $r29;
+        virtualinvoke r31.<sun.security.pkcs.ParsingException: java.lang.Throwable initCause(java.lang.Throwable)>(r28);
+        throw r31;
+
+     label11:
+        $r33 := @caughtexception;
+        r10 = $r33;
+
+     label12:
+        if r7 == null goto label13;
+
+        virtualinvoke r7.<java.io.ByteArrayInputStream: void close()>();
+
+     label13:
+        throw r10;
+
+     label14:
+        i1 = i1 + 1;
+        goto label4;
+
+     label15:
+        return;
+
+        catch java.security.cert.CertificateException from label0 to label1 with label2;
+        catch java.security.cert.CertificateException from label5 to label7 with label8;
+        catch java.io.IOException from label5 to label7 with label10;
+        catch java.lang.Throwable from label5 to label7 with label11;
+        catch java.lang.Throwable from label9 to label12 with label11;
+    }
+
+    private void parseSignedData(sun.security.util.DerValue) throws sun.security.pkcs.ParsingException, java.io.IOException
+    {
+        sun.security.pkcs.PKCS7 r0;
+        sun.security.util.DerValue r1, r4, $r29, $r32, $r33, $r59, $r60, $r75;
+        sun.security.util.DerInputStream r2, r76;
+        sun.security.util.DerValue[] r3, r27, r54, r73;
+        int i0, i1, i2, i3, $i5, i7, $i8, i10, i11, i12, i13;
+        java.io.ByteArrayInputStream r5, $r34, r56, $r62;
+        byte b4, $b6, $b9;
+        byte[] r6, r61;
+        java.lang.Throwable r7, r8, $r50, $r72;
+        java.math.BigInteger $r9;
+        sun.security.x509.AlgorithmId[] $r10, $r11;
+        sun.security.x509.AlgorithmId $r12;
+        java.io.IOException $r13, r14, $r44, r45;
+        sun.security.pkcs.ParsingException $r15, r21, $r40, r42, $r46, r48, $r68, r70;
+        java.lang.StringBuilder $r16, $r17, $r19;
+        java.lang.String $r18, $r20, $r41, $r47, $r69;
+        sun.security.pkcs.ContentInfo $r23;
+        java.security.cert.CertificateFactory r24;
+        java.security.cert.CertificateException $r25, r26, $r38, r39;
+        java.security.cert.X509Certificate[] $r28, $r30, $r35, $r51, $r53;
+        sun.security.x509.X509CertImpl $r31;
+        java.security.cert.Certificate $r36;
+        java.security.cert.X509Certificate $r37;
+        java.lang.Object[] $r52;
+        java.security.cert.X509CRL[] $r55, $r57, $r63;
+        sun.security.x509.X509CRLImpl $r58;
+        java.security.cert.CRL $r64;
+        java.security.cert.X509CRL $r65;
+        java.security.cert.CRLException $r66, r67;
+        sun.security.pkcs.SignerInfo[] $r74, $r77;
+        sun.security.pkcs.SignerInfo $r78;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        r1 := @parameter0: sun.security.util.DerValue;
+        r2 = virtualinvoke r1.<sun.security.util.DerValue: sun.security.util.DerInputStream toDerInputStream()>();
+        $r9 = virtualinvoke r2.<sun.security.util.DerInputStream: java.math.BigInteger getBigInteger()>();
+        r0.<sun.security.pkcs.PKCS7: java.math.BigInteger version> = $r9;
+        r3 = virtualinvoke r2.<sun.security.util.DerInputStream: sun.security.util.DerValue[] getSet(int)>(1);
+        i0 = lengthof r3;
+        $r10 = newarray (sun.security.x509.AlgorithmId)[i0];
+        r0.<sun.security.pkcs.PKCS7: sun.security.x509.AlgorithmId[] digestAlgorithmIds> = $r10;
+
+     label0:
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        r4 = r3[i1];
+        $r11 = r0.<sun.security.pkcs.PKCS7: sun.security.x509.AlgorithmId[] digestAlgorithmIds>;
+        $r12 = staticinvoke <sun.security.x509.AlgorithmId: sun.security.x509.AlgorithmId parse(sun.security.util.DerValue)>(r4);
+        $r11[i1] = $r12;
+        i1 = i1 + 1;
+        goto label1;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r13 := @caughtexception;
+        r14 = $r13;
+        $r15 = new sun.security.pkcs.ParsingException;
+        $r16 = new java.lang.StringBuilder;
+        specialinvoke $r16.<java.lang.StringBuilder: void <init>()>();
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Error parsing digest AlgorithmId IDs: ");
+        $r18 = virtualinvoke r14.<java.io.IOException: java.lang.String getMessage()>();
+        $r19 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r18);
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r15.<sun.security.pkcs.ParsingException: void <init>(java.lang.String)>($r20);
+        r21 = $r15;
+        virtualinvoke r21.<sun.security.pkcs.ParsingException: java.lang.Throwable initCause(java.lang.Throwable)>(r14);
+        throw r21;
+
+     label4:
+        $r23 = new sun.security.pkcs.ContentInfo;
+        specialinvoke $r23.<sun.security.pkcs.ContentInfo: void <init>(sun.security.util.DerInputStream)>(r2);
+        r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.ContentInfo contentInfo> = $r23;
+        r24 = null;
+
+     label5:
+        r24 = staticinvoke <java.security.cert.CertificateFactory: java.security.cert.CertificateFactory getInstance(java.lang.String)>("X.509");
+
+     label6:
+        goto label8;
+
+     label7:
+        $r25 := @caughtexception;
+        r26 = $r25;
+
+     label8:
+        $i5 = virtualinvoke r2.<sun.security.util.DerInputStream: int peekByte()>();
+        $b6 = (byte) $i5;
+        if $b6 != -96 goto label22;
+
+        r27 = virtualinvoke r2.<sun.security.util.DerInputStream: sun.security.util.DerValue[] getSet(int,boolean)>(2, 1);
+        i7 = lengthof r27;
+        $r28 = newarray (java.security.cert.X509Certificate)[i7];
+        r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates> = $r28;
+        i2 = 0;
+        i3 = 0;
+
+     label9:
+        if i3 >= i7 goto label21;
+
+        r5 = null;
+
+     label10:
+        $r29 = r27[i3];
+        b4 = virtualinvoke $r29.<sun.security.util.DerValue: byte getTag()>();
+        if b4 != 48 goto label13;
+
+        if r24 != null goto label11;
+
+        $r30 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        $r31 = new sun.security.x509.X509CertImpl;
+        $r32 = r27[i3];
+        specialinvoke $r31.<sun.security.x509.X509CertImpl: void <init>(sun.security.util.DerValue)>($r32);
+        $r30[i2] = $r31;
+        goto label12;
+
+     label11:
+        $r33 = r27[i3];
+        r6 = virtualinvoke $r33.<sun.security.util.DerValue: byte[] toByteArray()>();
+        $r34 = new java.io.ByteArrayInputStream;
+        specialinvoke $r34.<java.io.ByteArrayInputStream: void <init>(byte[])>(r6);
+        r5 = $r34;
+        $r35 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        $r36 = virtualinvoke r24.<java.security.cert.CertificateFactory: java.security.cert.Certificate generateCertificate(java.io.InputStream)>(r5);
+        $r37 = (java.security.cert.X509Certificate) $r36;
+        $r35[i2] = $r37;
+        virtualinvoke r5.<java.io.ByteArrayInputStream: void close()>();
+        r5 = null;
+
+     label12:
+        i2 = i2 + 1;
+
+     label13:
+        if r5 == null goto label20;
+
+        virtualinvoke r5.<java.io.ByteArrayInputStream: void close()>();
+        goto label20;
+
+     label14:
+        $r38 := @caughtexception;
+
+     label15:
+        r39 = $r38;
+        $r40 = new sun.security.pkcs.ParsingException;
+        $r41 = virtualinvoke r39.<java.security.cert.CertificateException: java.lang.String getMessage()>();
+        specialinvoke $r40.<sun.security.pkcs.ParsingException: void <init>(java.lang.String)>($r41);
+        r42 = $r40;
+        virtualinvoke r42.<sun.security.pkcs.ParsingException: java.lang.Throwable initCause(java.lang.Throwable)>(r39);
+        throw r42;
+
+     label16:
+        $r44 := @caughtexception;
+        r45 = $r44;
+        $r46 = new sun.security.pkcs.ParsingException;
+        $r47 = virtualinvoke r45.<java.io.IOException: java.lang.String getMessage()>();
+        specialinvoke $r46.<sun.security.pkcs.ParsingException: void <init>(java.lang.String)>($r47);
+        r48 = $r46;
+        virtualinvoke r48.<sun.security.pkcs.ParsingException: java.lang.Throwable initCause(java.lang.Throwable)>(r45);
+        throw r48;
+
+     label17:
+        $r50 := @caughtexception;
+        r7 = $r50;
+
+     label18:
+        if r5 == null goto label19;
+
+        virtualinvoke r5.<java.io.ByteArrayInputStream: void close()>();
+
+     label19:
+        throw r7;
+
+     label20:
+        i3 = i3 + 1;
+        goto label9;
+
+     label21:
+        if i2 == i7 goto label22;
+
+        $r51 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        $r52 = staticinvoke <java.util.Arrays: java.lang.Object[] copyOf(java.lang.Object[],int)>($r51, i2);
+        $r53 = (java.security.cert.X509Certificate[]) $r52;
+        r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates> = $r53;
+
+     label22:
+        $i8 = virtualinvoke r2.<sun.security.util.DerInputStream: int peekByte()>();
+        $b9 = (byte) $i8;
+        if $b9 != -95 goto label33;
+
+        r54 = virtualinvoke r2.<sun.security.util.DerInputStream: sun.security.util.DerValue[] getSet(int,boolean)>(1, 1);
+        i10 = lengthof r54;
+        $r55 = newarray (java.security.cert.X509CRL)[i10];
+        r0.<sun.security.pkcs.PKCS7: java.security.cert.X509CRL[] crls> = $r55;
+        i11 = 0;
+
+     label23:
+        if i11 >= i10 goto label33;
+
+        r56 = null;
+
+     label24:
+        if r24 != null goto label25;
+
+        $r57 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509CRL[] crls>;
+        $r58 = new sun.security.x509.X509CRLImpl;
+        $r59 = r54[i11];
+        specialinvoke $r58.<sun.security.x509.X509CRLImpl: void <init>(sun.security.util.DerValue)>($r59);
+        $r57[i11] = $r58;
+        goto label26;
+
+     label25:
+        $r60 = r54[i11];
+        r61 = virtualinvoke $r60.<sun.security.util.DerValue: byte[] toByteArray()>();
+        $r62 = new java.io.ByteArrayInputStream;
+        specialinvoke $r62.<java.io.ByteArrayInputStream: void <init>(byte[])>(r61);
+        r56 = $r62;
+        $r63 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509CRL[] crls>;
+        $r64 = virtualinvoke r24.<java.security.cert.CertificateFactory: java.security.cert.CRL generateCRL(java.io.InputStream)>(r56);
+        $r65 = (java.security.cert.X509CRL) $r64;
+        $r63[i11] = $r65;
+        virtualinvoke r56.<java.io.ByteArrayInputStream: void close()>();
+        r56 = null;
+
+     label26:
+        if r56 == null goto label32;
+
+        virtualinvoke r56.<java.io.ByteArrayInputStream: void close()>();
+        goto label32;
+
+     label27:
+        $r66 := @caughtexception;
+
+     label28:
+        r67 = $r66;
+        $r68 = new sun.security.pkcs.ParsingException;
+        $r69 = virtualinvoke r67.<java.security.cert.CRLException: java.lang.String getMessage()>();
+        specialinvoke $r68.<sun.security.pkcs.ParsingException: void <init>(java.lang.String)>($r69);
+        r70 = $r68;
+        virtualinvoke r70.<sun.security.pkcs.ParsingException: java.lang.Throwable initCause(java.lang.Throwable)>(r67);
+        throw r70;
+
+     label29:
+        $r72 := @caughtexception;
+        r8 = $r72;
+
+     label30:
+        if r56 == null goto label31;
+
+        virtualinvoke r56.<java.io.ByteArrayInputStream: void close()>();
+
+     label31:
+        throw r8;
+
+     label32:
+        i11 = i11 + 1;
+        goto label23;
+
+     label33:
+        r73 = virtualinvoke r2.<sun.security.util.DerInputStream: sun.security.util.DerValue[] getSet(int)>(1);
+        i12 = lengthof r73;
+        $r74 = newarray (sun.security.pkcs.SignerInfo)[i12];
+        r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.SignerInfo[] signerInfos> = $r74;
+        i13 = 0;
+
+     label34:
+        if i13 >= i12 goto label35;
+
+        $r75 = r73[i13];
+        r76 = virtualinvoke $r75.<sun.security.util.DerValue: sun.security.util.DerInputStream toDerInputStream()>();
+        $r77 = r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.SignerInfo[] signerInfos>;
+        $r78 = new sun.security.pkcs.SignerInfo;
+        specialinvoke $r78.<sun.security.pkcs.SignerInfo: void <init>(sun.security.util.DerInputStream)>(r76);
+        $r77[i13] = $r78;
+        i13 = i13 + 1;
+        goto label34;
+
+     label35:
+        return;
+
+        catch java.io.IOException from label0 to label2 with label3;
+        catch java.security.cert.CertificateException from label5 to label6 with label7;
+        catch java.security.cert.CertificateException from label10 to label13 with label14;
+        catch java.io.IOException from label10 to label13 with label16;
+        catch java.lang.Throwable from label10 to label13 with label17;
+        catch java.lang.Throwable from label15 to label18 with label17;
+        catch java.security.cert.CRLException from label24 to label26 with label27;
+        catch java.lang.Throwable from label24 to label26 with label29;
+        catch java.lang.Throwable from label28 to label30 with label29;
+    }
+
+    private void parseOldSignedData(sun.security.util.DerValue) throws sun.security.pkcs.ParsingException, java.io.IOException
+    {
+        sun.security.pkcs.PKCS7 r0;
+        sun.security.util.DerValue r1, r4, $r24, $r25, $r45;
+        sun.security.util.DerInputStream r2, r46;
+        sun.security.util.DerValue[] r3, r20, r43;
+        int i0, i1, i2, i3, i4, i5;
+        java.io.ByteArrayInputStream r5, $r26;
+        byte[] r6;
+        sun.security.pkcs.ParsingException r7, $r15, $r32, $r37, r39;
+        java.lang.Throwable r8, $r41;
+        java.math.BigInteger $r9;
+        sun.security.x509.AlgorithmId[] $r10, $r11;
+        sun.security.x509.AlgorithmId $r12;
+        java.io.IOException $r13, r14, $r35, r36;
+        sun.security.pkcs.ContentInfo $r16;
+        java.security.cert.CertificateFactory r17;
+        java.security.cert.CertificateException $r18, r19, $r30, r31;
+        java.security.cert.X509Certificate[] $r21, $r22, $r27;
+        sun.security.x509.X509CertImpl $r23;
+        java.security.cert.Certificate $r28;
+        java.security.cert.X509Certificate $r29;
+        java.lang.String $r33, $r38;
+        sun.security.pkcs.SignerInfo[] $r44, $r47;
+        sun.security.pkcs.SignerInfo $r48;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        r1 := @parameter0: sun.security.util.DerValue;
+        r2 = virtualinvoke r1.<sun.security.util.DerValue: sun.security.util.DerInputStream toDerInputStream()>();
+        $r9 = virtualinvoke r2.<sun.security.util.DerInputStream: java.math.BigInteger getBigInteger()>();
+        r0.<sun.security.pkcs.PKCS7: java.math.BigInteger version> = $r9;
+        r3 = virtualinvoke r2.<sun.security.util.DerInputStream: sun.security.util.DerValue[] getSet(int)>(1);
+        i0 = lengthof r3;
+        $r10 = newarray (sun.security.x509.AlgorithmId)[i0];
+        r0.<sun.security.pkcs.PKCS7: sun.security.x509.AlgorithmId[] digestAlgorithmIds> = $r10;
+
+     label0:
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label2;
+
+        r4 = r3[i1];
+        $r11 = r0.<sun.security.pkcs.PKCS7: sun.security.x509.AlgorithmId[] digestAlgorithmIds>;
+        $r12 = staticinvoke <sun.security.x509.AlgorithmId: sun.security.x509.AlgorithmId parse(sun.security.util.DerValue)>(r4);
+        $r11[i1] = $r12;
+        i1 = i1 + 1;
+        goto label1;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r13 := @caughtexception;
+        r14 = $r13;
+        $r15 = new sun.security.pkcs.ParsingException;
+        specialinvoke $r15.<sun.security.pkcs.ParsingException: void <init>(java.lang.String)>("Error parsing digest AlgorithmId IDs");
+        throw $r15;
+
+     label4:
+        $r16 = new sun.security.pkcs.ContentInfo;
+        specialinvoke $r16.<sun.security.pkcs.ContentInfo: void <init>(sun.security.util.DerInputStream,boolean)>(r2, 1);
+        r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.ContentInfo contentInfo> = $r16;
+        r17 = null;
+
+     label5:
+        r17 = staticinvoke <java.security.cert.CertificateFactory: java.security.cert.CertificateFactory getInstance(java.lang.String)>("X.509");
+
+     label6:
+        goto label8;
+
+     label7:
+        $r18 := @caughtexception;
+        r19 = $r18;
+
+     label8:
+        r20 = virtualinvoke r2.<sun.security.util.DerInputStream: sun.security.util.DerValue[] getSet(int)>(2);
+        i3 = lengthof r20;
+        $r21 = newarray (java.security.cert.X509Certificate)[i3];
+        r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates> = $r21;
+        i2 = 0;
+
+     label9:
+        if i2 >= i3 goto label20;
+
+        r5 = null;
+
+     label10:
+        if r17 != null goto label11;
+
+        $r22 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        $r23 = new sun.security.x509.X509CertImpl;
+        $r24 = r20[i2];
+        specialinvoke $r23.<sun.security.x509.X509CertImpl: void <init>(sun.security.util.DerValue)>($r24);
+        $r22[i2] = $r23;
+        goto label12;
+
+     label11:
+        $r25 = r20[i2];
+        r6 = virtualinvoke $r25.<sun.security.util.DerValue: byte[] toByteArray()>();
+        $r26 = new java.io.ByteArrayInputStream;
+        specialinvoke $r26.<java.io.ByteArrayInputStream: void <init>(byte[])>(r6);
+        r5 = $r26;
+        $r27 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        $r28 = virtualinvoke r17.<java.security.cert.CertificateFactory: java.security.cert.Certificate generateCertificate(java.io.InputStream)>(r5);
+        $r29 = (java.security.cert.X509Certificate) $r28;
+        $r27[i2] = $r29;
+        virtualinvoke r5.<java.io.ByteArrayInputStream: void close()>();
+        r5 = null;
+
+     label12:
+        if r5 == null goto label19;
+
+        virtualinvoke r5.<java.io.ByteArrayInputStream: void close()>();
+        goto label19;
+
+     label13:
+        $r30 := @caughtexception;
+
+     label14:
+        r31 = $r30;
+        $r32 = new sun.security.pkcs.ParsingException;
+        $r33 = virtualinvoke r31.<java.security.cert.CertificateException: java.lang.String getMessage()>();
+        specialinvoke $r32.<sun.security.pkcs.ParsingException: void <init>(java.lang.String)>($r33);
+        r7 = $r32;
+        virtualinvoke r7.<sun.security.pkcs.ParsingException: java.lang.Throwable initCause(java.lang.Throwable)>(r31);
+        throw r7;
+
+     label15:
+        $r35 := @caughtexception;
+        r36 = $r35;
+        $r37 = new sun.security.pkcs.ParsingException;
+        $r38 = virtualinvoke r36.<java.io.IOException: java.lang.String getMessage()>();
+        specialinvoke $r37.<sun.security.pkcs.ParsingException: void <init>(java.lang.String)>($r38);
+        r39 = $r37;
+        virtualinvoke r39.<sun.security.pkcs.ParsingException: java.lang.Throwable initCause(java.lang.Throwable)>(r36);
+        throw r39;
+
+     label16:
+        $r41 := @caughtexception;
+        r8 = $r41;
+
+     label17:
+        if r5 == null goto label18;
+
+        virtualinvoke r5.<java.io.ByteArrayInputStream: void close()>();
+
+     label18:
+        throw r8;
+
+     label19:
+        i2 = i2 + 1;
+        goto label9;
+
+     label20:
+        virtualinvoke r2.<sun.security.util.DerInputStream: sun.security.util.DerValue[] getSet(int)>(0);
+        r43 = virtualinvoke r2.<sun.security.util.DerInputStream: sun.security.util.DerValue[] getSet(int)>(1);
+        i4 = lengthof r43;
+        $r44 = newarray (sun.security.pkcs.SignerInfo)[i4];
+        r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.SignerInfo[] signerInfos> = $r44;
+        i5 = 0;
+
+     label21:
+        if i5 >= i4 goto label22;
+
+        $r45 = r43[i5];
+        r46 = virtualinvoke $r45.<sun.security.util.DerValue: sun.security.util.DerInputStream toDerInputStream()>();
+        $r47 = r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.SignerInfo[] signerInfos>;
+        $r48 = new sun.security.pkcs.SignerInfo;
+        specialinvoke $r48.<sun.security.pkcs.SignerInfo: void <init>(sun.security.util.DerInputStream,boolean)>(r46, 1);
+        $r47[i5] = $r48;
+        i5 = i5 + 1;
+        goto label21;
+
+     label22:
+        return;
+
+        catch java.io.IOException from label0 to label2 with label3;
+        catch java.security.cert.CertificateException from label5 to label6 with label7;
+        catch java.security.cert.CertificateException from label10 to label12 with label13;
+        catch java.io.IOException from label10 to label12 with label15;
+        catch java.lang.Throwable from label10 to label12 with label16;
+        catch java.lang.Throwable from label14 to label17 with label16;
+    }
+
+    public void encodeSignedData(java.io.OutputStream) throws java.io.IOException
+    {
+        sun.security.pkcs.PKCS7 r0;
+        java.io.OutputStream r1;
+        sun.security.util.DerOutputStream $r2, r3;
+        byte[] $r4;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        r1 := @parameter0: java.io.OutputStream;
+        $r2 = new sun.security.util.DerOutputStream;
+        specialinvoke $r2.<sun.security.util.DerOutputStream: void <init>()>();
+        r3 = $r2;
+        virtualinvoke r0.<sun.security.pkcs.PKCS7: void encodeSignedData(sun.security.util.DerOutputStream)>(r3);
+        $r4 = virtualinvoke r3.<sun.security.util.DerOutputStream: byte[] toByteArray()>();
+        virtualinvoke r1.<java.io.OutputStream: void write(byte[])>($r4);
+        return;
+    }
+
+    public void encodeSignedData(sun.security.util.DerOutputStream) throws java.io.IOException
+    {
+        sun.security.pkcs.PKCS7 r0;
+        sun.security.util.DerOutputStream r1, $r2, r3;
+        sun.security.x509.X509CertImpl[] r4;
+        int i0, $i1, $i2, $i3, $i4, $i5, i6, i7, $i8;
+        byte[] r5, r8, $r48;
+        java.io.IOException r6, r9, $r27, $r40;
+        java.security.cert.X509CRL r7;
+        java.math.BigInteger $r10;
+        sun.security.x509.AlgorithmId[] $r11;
+        sun.security.pkcs.ContentInfo $r12, $r50, r52;
+        java.security.cert.X509Certificate[] $r13, $r14, $r15, $r16, $r17, $r19, $r22;
+        java.security.cert.X509Certificate $r18, $r20, $r23;
+        boolean $z0, $z1;
+        sun.security.x509.X509CertImpl $r21, $r24;
+        java.security.cert.CertificateException $r25, r26;
+        java.lang.String $r28, $r41;
+        java.security.cert.X509CRL[] $r30, $r31, $r33, r35;
+        java.util.HashSet $r32, r34;
+        sun.security.x509.X509CRLImpl $r36, $r37;
+        java.security.cert.CRLException $r38, r39;
+        sun.security.x509.X509CRLImpl[] $r43;
+        java.lang.Object[] $r44;
+        sun.security.util.DerEncoder[] $r45;
+        sun.security.pkcs.SignerInfo[] $r46;
+        sun.security.util.DerValue $r47, r49;
+        sun.security.util.ObjectIdentifier $r51;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        r1 := @parameter0: sun.security.util.DerOutputStream;
+        $r2 = new sun.security.util.DerOutputStream;
+        specialinvoke $r2.<sun.security.util.DerOutputStream: void <init>()>();
+        r3 = $r2;
+        $r10 = r0.<sun.security.pkcs.PKCS7: java.math.BigInteger version>;
+        virtualinvoke r3.<sun.security.util.DerOutputStream: void putInteger(java.math.BigInteger)>($r10);
+        $r11 = r0.<sun.security.pkcs.PKCS7: sun.security.x509.AlgorithmId[] digestAlgorithmIds>;
+        virtualinvoke r3.<sun.security.util.DerOutputStream: void putOrderedSetOf(byte,sun.security.util.DerEncoder[])>(49, $r11);
+        $r12 = r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.ContentInfo contentInfo>;
+        virtualinvoke $r12.<sun.security.pkcs.ContentInfo: void encode(sun.security.util.DerOutputStream)>(r3);
+        $r13 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        if $r13 == null goto label6;
+
+        $r14 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        $i1 = lengthof $r14;
+        if $i1 == 0 goto label6;
+
+        $r15 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        $i2 = lengthof $r15;
+        r4 = newarray (sun.security.x509.X509CertImpl)[$i2];
+        i0 = 0;
+
+     label0:
+        $r16 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        $i3 = lengthof $r16;
+        if i0 >= $i3 goto label5;
+
+        $r17 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        $r18 = $r17[i0];
+        $z0 = $r18 instanceof sun.security.x509.X509CertImpl;
+        if $z0 == 0 goto label1;
+
+        $r19 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        $r20 = $r19[i0];
+        $r21 = (sun.security.x509.X509CertImpl) $r20;
+        r4[i0] = $r21;
+        goto label4;
+
+     label1:
+        $r22 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        $r23 = $r22[i0];
+        r5 = virtualinvoke $r23.<java.security.cert.X509Certificate: byte[] getEncoded()>();
+        $r24 = new sun.security.x509.X509CertImpl;
+        specialinvoke $r24.<sun.security.x509.X509CertImpl: void <init>(byte[])>(r5);
+        r4[i0] = $r24;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r25 := @caughtexception;
+        r26 = $r25;
+        $r27 = new java.io.IOException;
+        $r28 = virtualinvoke r26.<java.security.cert.CertificateException: java.lang.String getMessage()>();
+        specialinvoke $r27.<java.io.IOException: void <init>(java.lang.String)>($r28);
+        r6 = $r27;
+        virtualinvoke r6.<java.io.IOException: java.lang.Throwable initCause(java.lang.Throwable)>(r26);
+        throw r6;
+
+     label4:
+        i0 = i0 + 1;
+        goto label0;
+
+     label5:
+        virtualinvoke r3.<sun.security.util.DerOutputStream: void putOrderedSetOf(byte,sun.security.util.DerEncoder[])>(-96, r4);
+
+     label6:
+        $r30 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509CRL[] crls>;
+        if $r30 == null goto label13;
+
+        $r31 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509CRL[] crls>;
+        $i4 = lengthof $r31;
+        if $i4 == 0 goto label13;
+
+        $r32 = new java.util.HashSet;
+        $r33 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509CRL[] crls>;
+        $i5 = lengthof $r33;
+        specialinvoke $r32.<java.util.HashSet: void <init>(int)>($i5);
+        r34 = $r32;
+        r35 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509CRL[] crls>;
+        i6 = lengthof r35;
+        i7 = 0;
+
+     label7:
+        if i7 >= i6 goto label12;
+
+        r7 = r35[i7];
+        $z1 = r7 instanceof sun.security.x509.X509CRLImpl;
+        if $z1 == 0 goto label8;
+
+        $r36 = (sun.security.x509.X509CRLImpl) r7;
+        interfaceinvoke r34.<java.util.Set: boolean add(java.lang.Object)>($r36);
+        goto label11;
+
+     label8:
+        r8 = virtualinvoke r7.<java.security.cert.X509CRL: byte[] getEncoded()>();
+        $r37 = new sun.security.x509.X509CRLImpl;
+        specialinvoke $r37.<sun.security.x509.X509CRLImpl: void <init>(byte[])>(r8);
+        interfaceinvoke r34.<java.util.Set: boolean add(java.lang.Object)>($r37);
+
+     label9:
+        goto label11;
+
+     label10:
+        $r38 := @caughtexception;
+        r39 = $r38;
+        $r40 = new java.io.IOException;
+        $r41 = virtualinvoke r39.<java.security.cert.CRLException: java.lang.String getMessage()>();
+        specialinvoke $r40.<java.io.IOException: void <init>(java.lang.String)>($r41);
+        r9 = $r40;
+        virtualinvoke r9.<java.io.IOException: java.lang.Throwable initCause(java.lang.Throwable)>(r39);
+        throw r9;
+
+     label11:
+        i7 = i7 + 1;
+        goto label7;
+
+     label12:
+        $i8 = interfaceinvoke r34.<java.util.Set: int size()>();
+        $r43 = newarray (sun.security.x509.X509CRLImpl)[$i8];
+        $r44 = interfaceinvoke r34.<java.util.Set: java.lang.Object[] toArray(java.lang.Object[])>($r43);
+        $r45 = (sun.security.util.DerEncoder[]) $r44;
+        virtualinvoke r3.<sun.security.util.DerOutputStream: void putOrderedSetOf(byte,sun.security.util.DerEncoder[])>(-95, $r45);
+
+     label13:
+        $r46 = r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.SignerInfo[] signerInfos>;
+        virtualinvoke r3.<sun.security.util.DerOutputStream: void putOrderedSetOf(byte,sun.security.util.DerEncoder[])>(49, $r46);
+        $r47 = new sun.security.util.DerValue;
+        $r48 = virtualinvoke r3.<sun.security.util.DerOutputStream: byte[] toByteArray()>();
+        specialinvoke $r47.<sun.security.util.DerValue: void <init>(byte,byte[])>(48, $r48);
+        r49 = $r47;
+        $r50 = new sun.security.pkcs.ContentInfo;
+        $r51 = <sun.security.pkcs.ContentInfo: sun.security.util.ObjectIdentifier SIGNED_DATA_OID>;
+        specialinvoke $r50.<sun.security.pkcs.ContentInfo: void <init>(sun.security.util.ObjectIdentifier,sun.security.util.DerValue)>($r51, r49);
+        r52 = $r50;
+        virtualinvoke r52.<sun.security.pkcs.ContentInfo: void encode(sun.security.util.DerOutputStream)>(r1);
+        return;
+
+        catch java.security.cert.CertificateException from label1 to label2 with label3;
+        catch java.security.cert.CRLException from label8 to label9 with label10;
+    }
+
+    public sun.security.pkcs.SignerInfo verify(sun.security.pkcs.SignerInfo, byte[]) throws java.security.NoSuchAlgorithmException, java.security.SignatureException
+    {
+        sun.security.pkcs.PKCS7 r0;
+        sun.security.pkcs.SignerInfo r1, $r3;
+        byte[] r2;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        r1 := @parameter0: sun.security.pkcs.SignerInfo;
+        r2 := @parameter1: byte[];
+        $r3 = virtualinvoke r1.<sun.security.pkcs.SignerInfo: sun.security.pkcs.SignerInfo verify(sun.security.pkcs.PKCS7,byte[])>(r0, r2);
+        return $r3;
+    }
+
+    public sun.security.pkcs.SignerInfo[] verify(byte[]) throws java.security.NoSuchAlgorithmException, java.security.SignatureException
+    {
+        sun.security.pkcs.PKCS7 r0;
+        byte[] r1;
+        java.util.Vector $r2, r3;
+        int i0, $i1, $i2, $i3;
+        sun.security.pkcs.SignerInfo r4, $r7;
+        sun.security.pkcs.SignerInfo[] $r5, $r6, r8;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        r1 := @parameter0: byte[];
+        $r2 = new java.util.Vector;
+        specialinvoke $r2.<java.util.Vector: void <init>()>();
+        r3 = $r2;
+        i0 = 0;
+
+     label0:
+        $r5 = r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.SignerInfo[] signerInfos>;
+        $i1 = lengthof $r5;
+        if i0 >= $i1 goto label2;
+
+        $r6 = r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.SignerInfo[] signerInfos>;
+        $r7 = $r6[i0];
+        r4 = virtualinvoke r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.SignerInfo verify(sun.security.pkcs.SignerInfo,byte[])>($r7, r1);
+        if r4 == null goto label1;
+
+        virtualinvoke r3.<java.util.Vector: void addElement(java.lang.Object)>(r4);
+
+     label1:
+        i0 = i0 + 1;
+        goto label0;
+
+     label2:
+        $i2 = virtualinvoke r3.<java.util.Vector: int size()>();
+        if $i2 == 0 goto label3;
+
+        $i3 = virtualinvoke r3.<java.util.Vector: int size()>();
+        r8 = newarray (sun.security.pkcs.SignerInfo)[$i3];
+        virtualinvoke r3.<java.util.Vector: void copyInto(java.lang.Object[])>(r8);
+        return r8;
+
+     label3:
+        return null;
+    }
+
+    public sun.security.pkcs.SignerInfo[] verify() throws java.security.NoSuchAlgorithmException, java.security.SignatureException
+    {
+        sun.security.pkcs.PKCS7 r0;
+        sun.security.pkcs.SignerInfo[] $r1;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        $r1 = virtualinvoke r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.SignerInfo[] verify(byte[])>(null);
+        return $r1;
+    }
+
+    public java.math.BigInteger getVersion()
+    {
+        sun.security.pkcs.PKCS7 r0;
+        java.math.BigInteger $r1;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        $r1 = r0.<sun.security.pkcs.PKCS7: java.math.BigInteger version>;
+        return $r1;
+    }
+
+    public sun.security.x509.AlgorithmId[] getDigestAlgorithmIds()
+    {
+        sun.security.pkcs.PKCS7 r0;
+        sun.security.x509.AlgorithmId[] $r1;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        $r1 = r0.<sun.security.pkcs.PKCS7: sun.security.x509.AlgorithmId[] digestAlgorithmIds>;
+        return $r1;
+    }
+
+    public sun.security.pkcs.ContentInfo getContentInfo()
+    {
+        sun.security.pkcs.PKCS7 r0;
+        sun.security.pkcs.ContentInfo $r1;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        $r1 = r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.ContentInfo contentInfo>;
+        return $r1;
+    }
+
+    public java.security.cert.X509Certificate[] getCertificates()
+    {
+        sun.security.pkcs.PKCS7 r0;
+        java.security.cert.X509Certificate[] $r1, $r2, $r4;
+        java.lang.Object $r3;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        $r1 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        $r3 = virtualinvoke $r2.<java.lang.Object: java.lang.Object clone()>();
+        $r4 = (java.security.cert.X509Certificate[]) $r3;
+        return $r4;
+
+     label0:
+        return null;
+    }
+
+    public java.security.cert.X509CRL[] getCRLs()
+    {
+        sun.security.pkcs.PKCS7 r0;
+        java.security.cert.X509CRL[] $r1, $r2, $r4;
+        java.lang.Object $r3;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        $r1 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509CRL[] crls>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509CRL[] crls>;
+        $r3 = virtualinvoke $r2.<java.lang.Object: java.lang.Object clone()>();
+        $r4 = (java.security.cert.X509CRL[]) $r3;
+        return $r4;
+
+     label0:
+        return null;
+    }
+
+    public sun.security.pkcs.SignerInfo[] getSignerInfos()
+    {
+        sun.security.pkcs.PKCS7 r0;
+        sun.security.pkcs.SignerInfo[] $r1;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        $r1 = r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.SignerInfo[] signerInfos>;
+        return $r1;
+    }
+
+    public java.security.cert.X509Certificate getCertificate(java.math.BigInteger, sun.security.x509.X500Name)
+    {
+        sun.security.pkcs.PKCS7 r0;
+        java.math.BigInteger r1, r4;
+        sun.security.x509.X500Name r2;
+        int i0, $i1;
+        java.security.cert.X509Certificate r3;
+        java.security.cert.X509Certificate[] $r5, $r7, $r8;
+        java.security.Principal[] $r6, $r9;
+        boolean $z0, $z1;
+        java.security.Principal $r10;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        r1 := @parameter0: java.math.BigInteger;
+        r2 := @parameter1: sun.security.x509.X500Name;
+        $r5 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        if $r5 == null goto label3;
+
+        $r6 = r0.<sun.security.pkcs.PKCS7: java.security.Principal[] certIssuerNames>;
+        if $r6 != null goto label0;
+
+        specialinvoke r0.<sun.security.pkcs.PKCS7: void populateCertIssuerNames()>();
+
+     label0:
+        i0 = 0;
+
+     label1:
+        $r7 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        $i1 = lengthof $r7;
+        if i0 >= $i1 goto label3;
+
+        $r8 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        r3 = $r8[i0];
+        r4 = virtualinvoke r3.<java.security.cert.X509Certificate: java.math.BigInteger getSerialNumber()>();
+        $z0 = virtualinvoke r1.<java.math.BigInteger: boolean equals(java.lang.Object)>(r4);
+        if $z0 == 0 goto label2;
+
+        $r9 = r0.<sun.security.pkcs.PKCS7: java.security.Principal[] certIssuerNames>;
+        $r10 = $r9[i0];
+        $z1 = virtualinvoke r2.<sun.security.x509.X500Name: boolean equals(java.lang.Object)>($r10);
+        if $z1 == 0 goto label2;
+
+        return r3;
+
+     label2:
+        i0 = i0 + 1;
+        goto label1;
+
+     label3:
+        return null;
+    }
+
+    private void populateCertIssuerNames()
+    {
+        sun.security.pkcs.PKCS7 r0;
+        int i0, $i1, $i2;
+        java.security.cert.X509Certificate r1;
+        java.security.Principal r2;
+        sun.security.x509.X509CertInfo r3, $r9;
+        java.security.cert.X509Certificate[] $r4, $r5, $r7, $r8;
+        java.security.Principal[] $r6, $r14;
+        boolean $z0;
+        byte[] $r10;
+        java.lang.Object $r11;
+        java.lang.Exception $r12, r13;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        $r4 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        if $r4 != null goto label0;
+
+        return;
+
+     label0:
+        $r5 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        $i1 = lengthof $r5;
+        $r6 = newarray (java.security.Principal)[$i1];
+        r0.<sun.security.pkcs.PKCS7: java.security.Principal[] certIssuerNames> = $r6;
+        i0 = 0;
+
+     label1:
+        $r7 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        $i2 = lengthof $r7;
+        if i0 >= $i2 goto label6;
+
+        $r8 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        r1 = $r8[i0];
+        r2 = virtualinvoke r1.<java.security.cert.X509Certificate: java.security.Principal getIssuerDN()>();
+        $z0 = r2 instanceof sun.security.x509.X500Name;
+        if $z0 != 0 goto label5;
+
+     label2:
+        $r9 = new sun.security.x509.X509CertInfo;
+        $r10 = virtualinvoke r1.<java.security.cert.X509Certificate: byte[] getTBSCertificate()>();
+        specialinvoke $r9.<sun.security.x509.X509CertInfo: void <init>(byte[])>($r10);
+        r3 = $r9;
+        $r11 = virtualinvoke r3.<sun.security.x509.X509CertInfo: java.lang.Object get(java.lang.String)>("issuer.dname");
+        r2 = (java.security.Principal) $r11;
+
+     label3:
+        goto label5;
+
+     label4:
+        $r12 := @caughtexception;
+        r13 = $r12;
+
+     label5:
+        $r14 = r0.<sun.security.pkcs.PKCS7: java.security.Principal[] certIssuerNames>;
+        $r14[i0] = r2;
+        i0 = i0 + 1;
+        goto label1;
+
+     label6:
+        return;
+
+        catch java.lang.Exception from label2 to label3 with label4;
+    }
+
+    public java.lang.String toString()
+    {
+        sun.security.pkcs.PKCS7 r0;
+        java.lang.String r1, r7, $r13;
+        int i0, $i1, i2, $i3, i4, $i5, i6, $i7;
+        java.lang.StringBuilder $r2, $r3, $r5, $r6, $r9, $r10, $r11, $r14, $r15, $r17, $r18, $r19, $r21, $r22, $r23, $r26, $r27, $r29, $r30, $r31, $r33, $r34, $r35, $r36, $r37, $r40, $r41, $r43, $r44, $r45, $r47, $r48, $r49, $r50, $r51, $r54, $r55, $r57, $r58, $r59, $r61, $r62, $r63, $r64, $r65, $r68, $r69;
+        sun.security.pkcs.ContentInfo $r4;
+        java.math.BigInteger $r8, $r12;
+        sun.security.x509.AlgorithmId[] $r16, $r20, $r24;
+        sun.security.x509.AlgorithmId $r25;
+        java.security.cert.X509Certificate[] $r28, $r32, $r38;
+        java.security.cert.X509Certificate $r39;
+        java.security.cert.X509CRL[] $r42, $r46, $r52;
+        java.security.cert.X509CRL $r53;
+        sun.security.pkcs.SignerInfo[] $r56, $r60, $r66;
+        sun.security.pkcs.SignerInfo $r67;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        r1 = "";
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r1);
+        $r4 = r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.ContentInfo contentInfo>;
+        $r5 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r4);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\n");
+        r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r8 = r0.<sun.security.pkcs.PKCS7: java.math.BigInteger version>;
+        if $r8 == null goto label0;
+
+        $r9 = new java.lang.StringBuilder;
+        specialinvoke $r9.<java.lang.StringBuilder: void <init>()>();
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r7);
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("PKCS7 :: version: ");
+        $r12 = r0.<sun.security.pkcs.PKCS7: java.math.BigInteger version>;
+        $r13 = staticinvoke <sun.security.util.Debug: java.lang.String toHexString(java.math.BigInteger)>($r12);
+        $r14 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r13);
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\n");
+        r7 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+
+     label0:
+        $r16 = r0.<sun.security.pkcs.PKCS7: sun.security.x509.AlgorithmId[] digestAlgorithmIds>;
+        if $r16 == null goto label2;
+
+        $r17 = new java.lang.StringBuilder;
+        specialinvoke $r17.<java.lang.StringBuilder: void <init>()>();
+        $r18 = virtualinvoke $r17.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r7);
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("PKCS7 :: digest AlgorithmIds: \n");
+        r7 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.String toString()>();
+        i0 = 0;
+
+     label1:
+        $r20 = r0.<sun.security.pkcs.PKCS7: sun.security.x509.AlgorithmId[] digestAlgorithmIds>;
+        $i1 = lengthof $r20;
+        if i0 >= $i1 goto label2;
+
+        $r21 = new java.lang.StringBuilder;
+        specialinvoke $r21.<java.lang.StringBuilder: void <init>()>();
+        $r22 = virtualinvoke $r21.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r7);
+        $r23 = virtualinvoke $r22.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\t");
+        $r24 = r0.<sun.security.pkcs.PKCS7: sun.security.x509.AlgorithmId[] digestAlgorithmIds>;
+        $r25 = $r24[i0];
+        $r26 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r25);
+        $r27 = virtualinvoke $r26.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\n");
+        r7 = virtualinvoke $r27.<java.lang.StringBuilder: java.lang.String toString()>();
+        i0 = i0 + 1;
+        goto label1;
+
+     label2:
+        $r28 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        if $r28 == null goto label4;
+
+        $r29 = new java.lang.StringBuilder;
+        specialinvoke $r29.<java.lang.StringBuilder: void <init>()>();
+        $r30 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r7);
+        $r31 = virtualinvoke $r30.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("PKCS7 :: certificates: \n");
+        r7 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.String toString()>();
+        i2 = 0;
+
+     label3:
+        $r32 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        $i3 = lengthof $r32;
+        if i2 >= $i3 goto label4;
+
+        $r33 = new java.lang.StringBuilder;
+        specialinvoke $r33.<java.lang.StringBuilder: void <init>()>();
+        $r34 = virtualinvoke $r33.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r7);
+        $r35 = virtualinvoke $r34.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\t");
+        $r36 = virtualinvoke $r35.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i2);
+        $r37 = virtualinvoke $r36.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".   ");
+        $r38 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509Certificate[] certificates>;
+        $r39 = $r38[i2];
+        $r40 = virtualinvoke $r37.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r39);
+        $r41 = virtualinvoke $r40.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\n");
+        r7 = virtualinvoke $r41.<java.lang.StringBuilder: java.lang.String toString()>();
+        i2 = i2 + 1;
+        goto label3;
+
+     label4:
+        $r42 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509CRL[] crls>;
+        if $r42 == null goto label6;
+
+        $r43 = new java.lang.StringBuilder;
+        specialinvoke $r43.<java.lang.StringBuilder: void <init>()>();
+        $r44 = virtualinvoke $r43.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r7);
+        $r45 = virtualinvoke $r44.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("PKCS7 :: crls: \n");
+        r7 = virtualinvoke $r45.<java.lang.StringBuilder: java.lang.String toString()>();
+        i4 = 0;
+
+     label5:
+        $r46 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509CRL[] crls>;
+        $i5 = lengthof $r46;
+        if i4 >= $i5 goto label6;
+
+        $r47 = new java.lang.StringBuilder;
+        specialinvoke $r47.<java.lang.StringBuilder: void <init>()>();
+        $r48 = virtualinvoke $r47.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r7);
+        $r49 = virtualinvoke $r48.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\t");
+        $r50 = virtualinvoke $r49.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i4);
+        $r51 = virtualinvoke $r50.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".   ");
+        $r52 = r0.<sun.security.pkcs.PKCS7: java.security.cert.X509CRL[] crls>;
+        $r53 = $r52[i4];
+        $r54 = virtualinvoke $r51.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r53);
+        $r55 = virtualinvoke $r54.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\n");
+        r7 = virtualinvoke $r55.<java.lang.StringBuilder: java.lang.String toString()>();
+        i4 = i4 + 1;
+        goto label5;
+
+     label6:
+        $r56 = r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.SignerInfo[] signerInfos>;
+        if $r56 == null goto label8;
+
+        $r57 = new java.lang.StringBuilder;
+        specialinvoke $r57.<java.lang.StringBuilder: void <init>()>();
+        $r58 = virtualinvoke $r57.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r7);
+        $r59 = virtualinvoke $r58.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("PKCS7 :: signer infos: \n");
+        r7 = virtualinvoke $r59.<java.lang.StringBuilder: java.lang.String toString()>();
+        i6 = 0;
+
+     label7:
+        $r60 = r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.SignerInfo[] signerInfos>;
+        $i7 = lengthof $r60;
+        if i6 >= $i7 goto label8;
+
+        $r61 = new java.lang.StringBuilder;
+        specialinvoke $r61.<java.lang.StringBuilder: void <init>()>();
+        $r62 = virtualinvoke $r61.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r7);
+        $r63 = virtualinvoke $r62.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\t");
+        $r64 = virtualinvoke $r63.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i6);
+        $r65 = virtualinvoke $r64.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".  ");
+        $r66 = r0.<sun.security.pkcs.PKCS7: sun.security.pkcs.SignerInfo[] signerInfos>;
+        $r67 = $r66[i6];
+        $r68 = virtualinvoke $r65.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r67);
+        $r69 = virtualinvoke $r68.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\n");
+        r7 = virtualinvoke $r69.<java.lang.StringBuilder: java.lang.String toString()>();
+        i6 = i6 + 1;
+        goto label7;
+
+     label8:
+        return r7;
+    }
+
+    public boolean isOldStyle()
+    {
+        sun.security.pkcs.PKCS7 r0;
+        boolean $z0;
+
+        r0 := @this: sun.security.pkcs.PKCS7;
+        $z0 = r0.<sun.security.pkcs.PKCS7: boolean oldStyle>;
+        return $z0;
+    }
+}

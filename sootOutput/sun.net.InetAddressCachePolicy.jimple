@@ -1,0 +1,222 @@
+public final class sun.net.InetAddressCachePolicy extends java.lang.Object
+{
+    private static final java.lang.String cachePolicyProp;
+    private static final java.lang.String cachePolicyPropFallback;
+    private static final java.lang.String negativeCachePolicyProp;
+    private static final java.lang.String negativeCachePolicyPropFallback;
+    public static final int FOREVER;
+    public static final int NEVER;
+    public static final int DEFAULT_POSITIVE;
+    private static int cachePolicy;
+    private static int negativeCachePolicy;
+    private static boolean propertySet;
+    private static boolean propertyNegativeSet;
+
+    public void <init>()
+    {
+        sun.net.InetAddressCachePolicy r0;
+
+        r0 := @this: sun.net.InetAddressCachePolicy;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static synchronized int get()
+    {
+        int $i0;
+
+        $i0 = <sun.net.InetAddressCachePolicy: int cachePolicy>;
+        return $i0;
+    }
+
+    public static synchronized int getNegative()
+    {
+        int $i0;
+
+        $i0 = <sun.net.InetAddressCachePolicy: int negativeCachePolicy>;
+        return $i0;
+    }
+
+    public static synchronized void setIfNotSet(int)
+    {
+        int i0, $i1;
+        boolean $z0;
+
+        i0 := @parameter0: int;
+        $z0 = <sun.net.InetAddressCachePolicy: boolean propertySet>;
+        if $z0 != 0 goto label0;
+
+        $i1 = <sun.net.InetAddressCachePolicy: int cachePolicy>;
+        staticinvoke <sun.net.InetAddressCachePolicy: void checkValue(int,int)>(i0, $i1);
+        <sun.net.InetAddressCachePolicy: int cachePolicy> = i0;
+
+     label0:
+        return;
+    }
+
+    public static synchronized void setNegativeIfNotSet(int)
+    {
+        int i0;
+        boolean $z0;
+
+        i0 := @parameter0: int;
+        $z0 = <sun.net.InetAddressCachePolicy: boolean propertyNegativeSet>;
+        if $z0 != 0 goto label0;
+
+        <sun.net.InetAddressCachePolicy: int negativeCachePolicy> = i0;
+
+     label0:
+        return;
+    }
+
+    private static void checkValue(int, int)
+    {
+        int i0, i1;
+        java.lang.SecurityException $r0;
+
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        if i0 != -1 goto label0;
+
+        return;
+
+     label0:
+        if i1 == -1 goto label1;
+
+        if i0 < i1 goto label1;
+
+        if i0 >= -1 goto label2;
+
+     label1:
+        $r0 = new java.lang.SecurityException;
+        specialinvoke $r0.<java.lang.SecurityException: void <init>(java.lang.String)>("can\'t make InetAddress cache more lax");
+        throw $r0;
+
+     label2:
+        return;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Integer r0, $r3, $r10, r18;
+        sun.net.InetAddressCachePolicy$1 $r1;
+        java.lang.NumberFormatException r2, $r6, $r14, r15;
+        java.lang.Object $r4, $r8, $r12, $r17;
+        java.lang.String $r5, $r13;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7;
+        sun.security.action.GetIntegerAction $r7, $r16;
+        java.lang.SecurityManager $r9;
+        sun.net.InetAddressCachePolicy$2 $r11;
+
+        <sun.net.InetAddressCachePolicy: int cachePolicy> = -1;
+        <sun.net.InetAddressCachePolicy: int negativeCachePolicy> = 0;
+        r0 = null;
+
+     label0:
+        $r3 = new java.lang.Integer;
+        $r1 = new sun.net.InetAddressCachePolicy$1;
+        specialinvoke $r1.<sun.net.InetAddressCachePolicy$1: void <init>()>();
+        $r4 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r1);
+        $r5 = (java.lang.String) $r4;
+        specialinvoke $r3.<java.lang.Integer: void <init>(java.lang.String)>($r5);
+        r0 = $r3;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r6 := @caughtexception;
+        r2 = $r6;
+
+     label3:
+        if r0 == null goto label5;
+
+        $i0 = virtualinvoke r0.<java.lang.Integer: int intValue()>();
+        <sun.net.InetAddressCachePolicy: int cachePolicy> = $i0;
+        $i1 = <sun.net.InetAddressCachePolicy: int cachePolicy>;
+        if $i1 >= 0 goto label4;
+
+        <sun.net.InetAddressCachePolicy: int cachePolicy> = -1;
+
+     label4:
+        <sun.net.InetAddressCachePolicy: boolean propertySet> = 1;
+        goto label8;
+
+     label5:
+        $r7 = new sun.security.action.GetIntegerAction;
+        specialinvoke $r7.<sun.security.action.GetIntegerAction: void <init>(java.lang.String)>("sun.net.inetaddr.ttl");
+        $r8 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r7);
+        r0 = (java.lang.Integer) $r8;
+        if r0 == null goto label7;
+
+        $i2 = virtualinvoke r0.<java.lang.Integer: int intValue()>();
+        <sun.net.InetAddressCachePolicy: int cachePolicy> = $i2;
+        $i3 = <sun.net.InetAddressCachePolicy: int cachePolicy>;
+        if $i3 >= 0 goto label6;
+
+        <sun.net.InetAddressCachePolicy: int cachePolicy> = -1;
+
+     label6:
+        <sun.net.InetAddressCachePolicy: boolean propertySet> = 1;
+        goto label8;
+
+     label7:
+        $r9 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if $r9 != null goto label8;
+
+        <sun.net.InetAddressCachePolicy: int cachePolicy> = 30;
+
+     label8:
+        $r10 = new java.lang.Integer;
+        $r11 = new sun.net.InetAddressCachePolicy$2;
+        specialinvoke $r11.<sun.net.InetAddressCachePolicy$2: void <init>()>();
+        $r12 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r11);
+        $r13 = (java.lang.String) $r12;
+        specialinvoke $r10.<java.lang.Integer: void <init>(java.lang.String)>($r13);
+        r0 = $r10;
+
+     label9:
+        goto label11;
+
+     label10:
+        $r14 := @caughtexception;
+        r15 = $r14;
+
+     label11:
+        if r0 == null goto label13;
+
+        $i4 = virtualinvoke r0.<java.lang.Integer: int intValue()>();
+        <sun.net.InetAddressCachePolicy: int negativeCachePolicy> = $i4;
+        $i5 = <sun.net.InetAddressCachePolicy: int negativeCachePolicy>;
+        if $i5 >= 0 goto label12;
+
+        <sun.net.InetAddressCachePolicy: int negativeCachePolicy> = -1;
+
+     label12:
+        <sun.net.InetAddressCachePolicy: boolean propertyNegativeSet> = 1;
+        goto label15;
+
+     label13:
+        $r16 = new sun.security.action.GetIntegerAction;
+        specialinvoke $r16.<sun.security.action.GetIntegerAction: void <init>(java.lang.String)>("sun.net.inetaddr.negative.ttl");
+        $r17 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r16);
+        r18 = (java.lang.Integer) $r17;
+        if r18 == null goto label15;
+
+        $i6 = virtualinvoke r18.<java.lang.Integer: int intValue()>();
+        <sun.net.InetAddressCachePolicy: int negativeCachePolicy> = $i6;
+        $i7 = <sun.net.InetAddressCachePolicy: int negativeCachePolicy>;
+        if $i7 >= 0 goto label14;
+
+        <sun.net.InetAddressCachePolicy: int negativeCachePolicy> = -1;
+
+     label14:
+        <sun.net.InetAddressCachePolicy: boolean propertyNegativeSet> = 1;
+
+     label15:
+        return;
+
+        catch java.lang.NumberFormatException from label0 to label1 with label2;
+        catch java.lang.NumberFormatException from label8 to label9 with label10;
+    }
+}

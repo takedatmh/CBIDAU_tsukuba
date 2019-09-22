@@ -1,0 +1,412 @@
+public class org.apache.tomcat.util.threads.ThreadPoolExecutor extends java.util.concurrent.ThreadPoolExecutor
+{
+    protected static final org.apache.tomcat.util.res.StringManager sm;
+    private final java.util.concurrent.atomic.AtomicInteger submittedCount;
+    private final java.util.concurrent.atomic.AtomicLong lastContextStoppedTime;
+    private final java.util.concurrent.atomic.AtomicLong lastTimeThreadKilledItself;
+    private long threadRenewalDelay;
+
+    static void <clinit>()
+    {
+        org.apache.tomcat.util.res.StringManager $r0;
+
+        $r0 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String)>("org.apache.tomcat.util.threads.res");
+        <org.apache.tomcat.util.threads.ThreadPoolExecutor: org.apache.tomcat.util.res.StringManager sm> = $r0;
+        return;
+    }
+
+    public void <init>(int, int, long, java.util.concurrent.TimeUnit, java.util.concurrent.BlockingQueue, java.util.concurrent.RejectedExecutionHandler)
+    {
+        org.apache.tomcat.util.threads.ThreadPoolExecutor r0;
+        int i0, i1;
+        long l2;
+        java.util.concurrent.TimeUnit r1;
+        java.util.concurrent.BlockingQueue r2;
+        java.util.concurrent.RejectedExecutionHandler r3;
+        java.util.concurrent.atomic.AtomicInteger $r4;
+        java.util.concurrent.atomic.AtomicLong $r5, $r6;
+
+        r0 := @this: org.apache.tomcat.util.threads.ThreadPoolExecutor;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        l2 := @parameter2: long;
+        r1 := @parameter3: java.util.concurrent.TimeUnit;
+        r2 := @parameter4: java.util.concurrent.BlockingQueue;
+        r3 := @parameter5: java.util.concurrent.RejectedExecutionHandler;
+        specialinvoke r0.<java.util.concurrent.ThreadPoolExecutor: void <init>(int,int,long,java.util.concurrent.TimeUnit,java.util.concurrent.BlockingQueue,java.util.concurrent.RejectedExecutionHandler)>(i0, i1, l2, r1, r2, r3);
+        $r4 = new java.util.concurrent.atomic.AtomicInteger;
+        specialinvoke $r4.<java.util.concurrent.atomic.AtomicInteger: void <init>(int)>(0);
+        r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicInteger submittedCount> = $r4;
+        $r5 = new java.util.concurrent.atomic.AtomicLong;
+        specialinvoke $r5.<java.util.concurrent.atomic.AtomicLong: void <init>(long)>(0L);
+        r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicLong lastContextStoppedTime> = $r5;
+        $r6 = new java.util.concurrent.atomic.AtomicLong;
+        specialinvoke $r6.<java.util.concurrent.atomic.AtomicLong: void <init>(long)>(0L);
+        r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicLong lastTimeThreadKilledItself> = $r6;
+        r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: long threadRenewalDelay> = 1000L;
+        virtualinvoke r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: int prestartAllCoreThreads()>();
+        return;
+    }
+
+    public void <init>(int, int, long, java.util.concurrent.TimeUnit, java.util.concurrent.BlockingQueue, java.util.concurrent.ThreadFactory, java.util.concurrent.RejectedExecutionHandler)
+    {
+        org.apache.tomcat.util.threads.ThreadPoolExecutor r0;
+        int i0, i1;
+        long l2;
+        java.util.concurrent.TimeUnit r1;
+        java.util.concurrent.BlockingQueue r2;
+        java.util.concurrent.ThreadFactory r3;
+        java.util.concurrent.RejectedExecutionHandler r4;
+        java.util.concurrent.atomic.AtomicInteger $r5;
+        java.util.concurrent.atomic.AtomicLong $r6, $r7;
+
+        r0 := @this: org.apache.tomcat.util.threads.ThreadPoolExecutor;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        l2 := @parameter2: long;
+        r1 := @parameter3: java.util.concurrent.TimeUnit;
+        r2 := @parameter4: java.util.concurrent.BlockingQueue;
+        r3 := @parameter5: java.util.concurrent.ThreadFactory;
+        r4 := @parameter6: java.util.concurrent.RejectedExecutionHandler;
+        specialinvoke r0.<java.util.concurrent.ThreadPoolExecutor: void <init>(int,int,long,java.util.concurrent.TimeUnit,java.util.concurrent.BlockingQueue,java.util.concurrent.ThreadFactory,java.util.concurrent.RejectedExecutionHandler)>(i0, i1, l2, r1, r2, r3, r4);
+        $r5 = new java.util.concurrent.atomic.AtomicInteger;
+        specialinvoke $r5.<java.util.concurrent.atomic.AtomicInteger: void <init>(int)>(0);
+        r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicInteger submittedCount> = $r5;
+        $r6 = new java.util.concurrent.atomic.AtomicLong;
+        specialinvoke $r6.<java.util.concurrent.atomic.AtomicLong: void <init>(long)>(0L);
+        r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicLong lastContextStoppedTime> = $r6;
+        $r7 = new java.util.concurrent.atomic.AtomicLong;
+        specialinvoke $r7.<java.util.concurrent.atomic.AtomicLong: void <init>(long)>(0L);
+        r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicLong lastTimeThreadKilledItself> = $r7;
+        r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: long threadRenewalDelay> = 1000L;
+        virtualinvoke r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: int prestartAllCoreThreads()>();
+        return;
+    }
+
+    public void <init>(int, int, long, java.util.concurrent.TimeUnit, java.util.concurrent.BlockingQueue, java.util.concurrent.ThreadFactory)
+    {
+        org.apache.tomcat.util.threads.ThreadPoolExecutor r0;
+        int i0, i1;
+        long l2;
+        java.util.concurrent.TimeUnit r1;
+        java.util.concurrent.BlockingQueue r2;
+        java.util.concurrent.ThreadFactory r3;
+        org.apache.tomcat.util.threads.ThreadPoolExecutor$RejectHandler $r4;
+        java.util.concurrent.atomic.AtomicInteger $r5;
+        java.util.concurrent.atomic.AtomicLong $r6, $r7;
+
+        r0 := @this: org.apache.tomcat.util.threads.ThreadPoolExecutor;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        l2 := @parameter2: long;
+        r1 := @parameter3: java.util.concurrent.TimeUnit;
+        r2 := @parameter4: java.util.concurrent.BlockingQueue;
+        r3 := @parameter5: java.util.concurrent.ThreadFactory;
+        $r4 = new org.apache.tomcat.util.threads.ThreadPoolExecutor$RejectHandler;
+        specialinvoke $r4.<org.apache.tomcat.util.threads.ThreadPoolExecutor$RejectHandler: void <init>(org.apache.tomcat.util.threads.ThreadPoolExecutor$RejectHandler)>(null);
+        specialinvoke r0.<java.util.concurrent.ThreadPoolExecutor: void <init>(int,int,long,java.util.concurrent.TimeUnit,java.util.concurrent.BlockingQueue,java.util.concurrent.ThreadFactory,java.util.concurrent.RejectedExecutionHandler)>(i0, i1, l2, r1, r2, r3, $r4);
+        $r5 = new java.util.concurrent.atomic.AtomicInteger;
+        specialinvoke $r5.<java.util.concurrent.atomic.AtomicInteger: void <init>(int)>(0);
+        r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicInteger submittedCount> = $r5;
+        $r6 = new java.util.concurrent.atomic.AtomicLong;
+        specialinvoke $r6.<java.util.concurrent.atomic.AtomicLong: void <init>(long)>(0L);
+        r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicLong lastContextStoppedTime> = $r6;
+        $r7 = new java.util.concurrent.atomic.AtomicLong;
+        specialinvoke $r7.<java.util.concurrent.atomic.AtomicLong: void <init>(long)>(0L);
+        r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicLong lastTimeThreadKilledItself> = $r7;
+        r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: long threadRenewalDelay> = 1000L;
+        virtualinvoke r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: int prestartAllCoreThreads()>();
+        return;
+    }
+
+    public void <init>(int, int, long, java.util.concurrent.TimeUnit, java.util.concurrent.BlockingQueue)
+    {
+        org.apache.tomcat.util.threads.ThreadPoolExecutor r0;
+        int i0, i1;
+        long l2;
+        java.util.concurrent.TimeUnit r1;
+        java.util.concurrent.BlockingQueue r2;
+        org.apache.tomcat.util.threads.ThreadPoolExecutor$RejectHandler $r3;
+        java.util.concurrent.atomic.AtomicInteger $r4;
+        java.util.concurrent.atomic.AtomicLong $r5, $r6;
+
+        r0 := @this: org.apache.tomcat.util.threads.ThreadPoolExecutor;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        l2 := @parameter2: long;
+        r1 := @parameter3: java.util.concurrent.TimeUnit;
+        r2 := @parameter4: java.util.concurrent.BlockingQueue;
+        $r3 = new org.apache.tomcat.util.threads.ThreadPoolExecutor$RejectHandler;
+        specialinvoke $r3.<org.apache.tomcat.util.threads.ThreadPoolExecutor$RejectHandler: void <init>(org.apache.tomcat.util.threads.ThreadPoolExecutor$RejectHandler)>(null);
+        specialinvoke r0.<java.util.concurrent.ThreadPoolExecutor: void <init>(int,int,long,java.util.concurrent.TimeUnit,java.util.concurrent.BlockingQueue,java.util.concurrent.RejectedExecutionHandler)>(i0, i1, l2, r1, r2, $r3);
+        $r4 = new java.util.concurrent.atomic.AtomicInteger;
+        specialinvoke $r4.<java.util.concurrent.atomic.AtomicInteger: void <init>(int)>(0);
+        r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicInteger submittedCount> = $r4;
+        $r5 = new java.util.concurrent.atomic.AtomicLong;
+        specialinvoke $r5.<java.util.concurrent.atomic.AtomicLong: void <init>(long)>(0L);
+        r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicLong lastContextStoppedTime> = $r5;
+        $r6 = new java.util.concurrent.atomic.AtomicLong;
+        specialinvoke $r6.<java.util.concurrent.atomic.AtomicLong: void <init>(long)>(0L);
+        r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicLong lastTimeThreadKilledItself> = $r6;
+        r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: long threadRenewalDelay> = 1000L;
+        virtualinvoke r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: int prestartAllCoreThreads()>();
+        return;
+    }
+
+    public long getThreadRenewalDelay()
+    {
+        org.apache.tomcat.util.threads.ThreadPoolExecutor r0;
+        long $l0;
+
+        r0 := @this: org.apache.tomcat.util.threads.ThreadPoolExecutor;
+        $l0 = r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: long threadRenewalDelay>;
+        return $l0;
+    }
+
+    public void setThreadRenewalDelay(long)
+    {
+        org.apache.tomcat.util.threads.ThreadPoolExecutor r0;
+        long l0;
+
+        r0 := @this: org.apache.tomcat.util.threads.ThreadPoolExecutor;
+        l0 := @parameter0: long;
+        r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: long threadRenewalDelay> = l0;
+        return;
+    }
+
+    protected void afterExecute(java.lang.Runnable, java.lang.Throwable)
+    {
+        org.apache.tomcat.util.threads.ThreadPoolExecutor r0;
+        java.lang.Runnable r1;
+        java.lang.Throwable r2;
+        java.util.concurrent.atomic.AtomicInteger $r3;
+
+        r0 := @this: org.apache.tomcat.util.threads.ThreadPoolExecutor;
+        r1 := @parameter0: java.lang.Runnable;
+        r2 := @parameter1: java.lang.Throwable;
+        $r3 = r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicInteger submittedCount>;
+        virtualinvoke $r3.<java.util.concurrent.atomic.AtomicInteger: int decrementAndGet()>();
+        if r2 != null goto label0;
+
+        virtualinvoke r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: void stopCurrentThreadIfNeeded()>();
+
+     label0:
+        return;
+    }
+
+    protected void stopCurrentThreadIfNeeded()
+    {
+        org.apache.tomcat.util.threads.ThreadPoolExecutor r0;
+        long l0, $l1, $l2, $l3, $l4, $l6;
+        java.lang.String r1, $r7;
+        boolean $z0, $z1;
+        java.util.concurrent.atomic.AtomicLong $r2, $r3;
+        byte $b5;
+        org.apache.tomcat.util.res.StringManager $r4;
+        java.lang.Object[] $r5;
+        java.lang.Thread $r6;
+        org.apache.tomcat.util.threads.StopPooledThreadException $r8;
+
+        r0 := @this: org.apache.tomcat.util.threads.ThreadPoolExecutor;
+        $z0 = virtualinvoke r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: boolean currentThreadShouldBeStopped()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicLong lastTimeThreadKilledItself>;
+        l0 = virtualinvoke $r2.<java.util.concurrent.atomic.AtomicLong: long longValue()>();
+        $l2 = r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: long threadRenewalDelay>;
+        $l3 = l0 + $l2;
+        $l4 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        $b5 = $l3 cmp $l4;
+        if $b5 >= 0 goto label0;
+
+        $r3 = r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicLong lastTimeThreadKilledItself>;
+        $l1 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        $l6 = $l1 + 1L;
+        $z1 = virtualinvoke $r3.<java.util.concurrent.atomic.AtomicLong: boolean compareAndSet(long,long)>(l0, $l6);
+        if $z1 == 0 goto label0;
+
+        $r4 = <org.apache.tomcat.util.threads.ThreadPoolExecutor: org.apache.tomcat.util.res.StringManager sm>;
+        $r5 = newarray (java.lang.Object)[1];
+        $r6 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        $r7 = virtualinvoke $r6.<java.lang.Thread: java.lang.String getName()>();
+        $r5[0] = $r7;
+        r1 = virtualinvoke $r4.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("threadPoolExecutor.threadStoppedToAvoidPotentialLeak", $r5);
+        $r8 = new org.apache.tomcat.util.threads.StopPooledThreadException;
+        specialinvoke $r8.<org.apache.tomcat.util.threads.StopPooledThreadException: void <init>(java.lang.String)>(r1);
+        throw $r8;
+
+     label0:
+        return;
+    }
+
+    protected boolean currentThreadShouldBeStopped()
+    {
+        org.apache.tomcat.util.threads.ThreadPoolExecutor r0;
+        org.apache.tomcat.util.threads.TaskThread r1;
+        long $l0, $l2, $l3;
+        byte $b1, $b4;
+        java.lang.Thread $r2, $r3;
+        boolean $z0;
+        java.util.concurrent.atomic.AtomicLong $r4;
+
+        r0 := @this: org.apache.tomcat.util.threads.ThreadPoolExecutor;
+        $l0 = r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: long threadRenewalDelay>;
+        $b1 = $l0 cmp 0L;
+        if $b1 < 0 goto label0;
+
+        $r2 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        $z0 = $r2 instanceof org.apache.tomcat.util.threads.TaskThread;
+        if $z0 == 0 goto label0;
+
+        $r3 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        r1 = (org.apache.tomcat.util.threads.TaskThread) $r3;
+        $l2 = virtualinvoke r1.<org.apache.tomcat.util.threads.TaskThread: long getCreationTime()>();
+        $r4 = r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicLong lastContextStoppedTime>;
+        $l3 = virtualinvoke $r4.<java.util.concurrent.atomic.AtomicLong: long longValue()>();
+        $b4 = $l2 cmp $l3;
+        if $b4 >= 0 goto label0;
+
+        return 1;
+
+     label0:
+        return 0;
+    }
+
+    public int getSubmittedCount()
+    {
+        org.apache.tomcat.util.threads.ThreadPoolExecutor r0;
+        java.util.concurrent.atomic.AtomicInteger $r1;
+        int $i0;
+
+        r0 := @this: org.apache.tomcat.util.threads.ThreadPoolExecutor;
+        $r1 = r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicInteger submittedCount>;
+        $i0 = virtualinvoke $r1.<java.util.concurrent.atomic.AtomicInteger: int get()>();
+        return $i0;
+    }
+
+    public void execute(java.lang.Runnable)
+    {
+        org.apache.tomcat.util.threads.ThreadPoolExecutor r0;
+        java.lang.Runnable r1;
+        java.util.concurrent.TimeUnit $r2;
+
+        r0 := @this: org.apache.tomcat.util.threads.ThreadPoolExecutor;
+        r1 := @parameter0: java.lang.Runnable;
+        $r2 = <java.util.concurrent.TimeUnit: java.util.concurrent.TimeUnit MILLISECONDS>;
+        virtualinvoke r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: void execute(java.lang.Runnable,long,java.util.concurrent.TimeUnit)>(r1, 0L, $r2);
+        return;
+    }
+
+    public void execute(java.lang.Runnable, long, java.util.concurrent.TimeUnit)
+    {
+        org.apache.tomcat.util.threads.ThreadPoolExecutor r0;
+        java.lang.Runnable r1;
+        long l0;
+        java.util.concurrent.TimeUnit r2;
+        java.util.concurrent.RejectedExecutionException r3, $r7, $r11, $r14;
+        org.apache.tomcat.util.threads.TaskQueue r4;
+        java.lang.InterruptedException r5, $r12;
+        java.util.concurrent.atomic.AtomicInteger $r6, $r10, $r13, $r15;
+        java.util.concurrent.BlockingQueue $r8, $r9;
+        boolean $z0, $z1;
+
+        r0 := @this: org.apache.tomcat.util.threads.ThreadPoolExecutor;
+        r1 := @parameter0: java.lang.Runnable;
+        l0 := @parameter1: long;
+        r2 := @parameter2: java.util.concurrent.TimeUnit;
+        $r6 = r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicInteger submittedCount>;
+        virtualinvoke $r6.<java.util.concurrent.atomic.AtomicInteger: int incrementAndGet()>();
+
+     label0:
+        specialinvoke r0.<java.util.concurrent.ThreadPoolExecutor: void execute(java.lang.Runnable)>(r1);
+
+     label1:
+        goto label6;
+
+     label2:
+        $r7 := @caughtexception;
+        r3 = $r7;
+        $r8 = specialinvoke r0.<java.util.concurrent.ThreadPoolExecutor: java.util.concurrent.BlockingQueue getQueue()>();
+        $z0 = $r8 instanceof org.apache.tomcat.util.threads.TaskQueue;
+        if $z0 == 0 goto label5;
+
+        $r9 = specialinvoke r0.<java.util.concurrent.ThreadPoolExecutor: java.util.concurrent.BlockingQueue getQueue()>();
+        r4 = (org.apache.tomcat.util.threads.TaskQueue) $r9;
+
+     label3:
+        $z1 = virtualinvoke r4.<org.apache.tomcat.util.threads.TaskQueue: boolean force(java.lang.Runnable,long,java.util.concurrent.TimeUnit)>(r1, l0, r2);
+        if $z1 != 0 goto label6;
+
+        $r10 = r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicInteger submittedCount>;
+        virtualinvoke $r10.<java.util.concurrent.atomic.AtomicInteger: int decrementAndGet()>();
+        $r11 = new java.util.concurrent.RejectedExecutionException;
+        specialinvoke $r11.<java.util.concurrent.RejectedExecutionException: void <init>(java.lang.String)>("Queue capacity is full.");
+        throw $r11;
+
+     label4:
+        $r12 := @caughtexception;
+        r5 = $r12;
+        $r13 = r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicInteger submittedCount>;
+        virtualinvoke $r13.<java.util.concurrent.atomic.AtomicInteger: int decrementAndGet()>();
+        staticinvoke <java.lang.Thread: boolean interrupted()>();
+        $r14 = new java.util.concurrent.RejectedExecutionException;
+        specialinvoke $r14.<java.util.concurrent.RejectedExecutionException: void <init>(java.lang.Throwable)>(r5);
+        throw $r14;
+
+     label5:
+        $r15 = r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicInteger submittedCount>;
+        virtualinvoke $r15.<java.util.concurrent.atomic.AtomicInteger: int decrementAndGet()>();
+        throw r3;
+
+     label6:
+        return;
+
+        catch java.util.concurrent.RejectedExecutionException from label0 to label1 with label2;
+        catch java.lang.InterruptedException from label3 to label4 with label4;
+    }
+
+    public void contextStopping()
+    {
+        org.apache.tomcat.util.threads.ThreadPoolExecutor r0;
+        long $l0;
+        int i1;
+        org.apache.tomcat.util.threads.TaskQueue r1, $r5;
+        java.util.concurrent.atomic.AtomicLong $r2;
+        java.util.concurrent.BlockingQueue $r3, $r4;
+        boolean $z0;
+        java.lang.Integer $r6;
+
+        r0 := @this: org.apache.tomcat.util.threads.ThreadPoolExecutor;
+        $r2 = r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.atomic.AtomicLong lastContextStoppedTime>;
+        $l0 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        virtualinvoke $r2.<java.util.concurrent.atomic.AtomicLong: void set(long)>($l0);
+        i1 = virtualinvoke r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: int getCorePoolSize()>();
+        $r3 = virtualinvoke r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.BlockingQueue getQueue()>();
+        $z0 = $r3 instanceof org.apache.tomcat.util.threads.TaskQueue;
+        if $z0 == 0 goto label0;
+
+        $r4 = virtualinvoke r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: java.util.concurrent.BlockingQueue getQueue()>();
+        $r5 = (org.apache.tomcat.util.threads.TaskQueue) $r4;
+        goto label1;
+
+     label0:
+        $r5 = null;
+
+     label1:
+        r1 = $r5;
+        if r1 == null goto label2;
+
+        $r6 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(0);
+        virtualinvoke r1.<org.apache.tomcat.util.threads.TaskQueue: void setForcedRemainingCapacity(java.lang.Integer)>($r6);
+
+     label2:
+        virtualinvoke r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: void setCorePoolSize(int)>(0);
+        if r1 == null goto label3;
+
+        virtualinvoke r1.<org.apache.tomcat.util.threads.TaskQueue: void setForcedRemainingCapacity(java.lang.Integer)>(null);
+
+     label3:
+        virtualinvoke r0.<org.apache.tomcat.util.threads.ThreadPoolExecutor: void setCorePoolSize(int)>(i1);
+        return;
+    }
+}

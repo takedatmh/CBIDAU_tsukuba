@@ -1,0 +1,167 @@
+public abstract class sun.util.resources.OpenListResourceBundle extends java.util.ResourceBundle
+{
+    private java.util.Map lookup;
+
+    protected void <init>()
+    {
+        sun.util.resources.OpenListResourceBundle r0;
+
+        r0 := @this: sun.util.resources.OpenListResourceBundle;
+        specialinvoke r0.<java.util.ResourceBundle: void <init>()>();
+        r0.<sun.util.resources.OpenListResourceBundle: java.util.Map lookup> = null;
+        return;
+    }
+
+    public java.lang.Object handleGetObject(java.lang.String)
+    {
+        sun.util.resources.OpenListResourceBundle r0;
+        java.lang.String r1;
+        java.lang.NullPointerException $r2;
+        java.util.Map $r3;
+        java.lang.Object $r4;
+
+        r0 := @this: sun.util.resources.OpenListResourceBundle;
+        r1 := @parameter0: java.lang.String;
+        if r1 != null goto label0;
+
+        $r2 = new java.lang.NullPointerException;
+        specialinvoke $r2.<java.lang.NullPointerException: void <init>()>();
+        throw $r2;
+
+     label0:
+        virtualinvoke r0.<sun.util.resources.OpenListResourceBundle: void loadLookupTablesIfNecessary()>();
+        $r3 = r0.<sun.util.resources.OpenListResourceBundle: java.util.Map lookup>;
+        $r4 = interfaceinvoke $r3.<java.util.Map: java.lang.Object get(java.lang.Object)>(r1);
+        return $r4;
+    }
+
+    public java.util.Enumeration getKeys()
+    {
+        sun.util.resources.OpenListResourceBundle r0;
+        java.util.ResourceBundle r1;
+        sun.util.ResourceBundleEnumeration $r3;
+        java.util.Set $r4;
+        java.util.Enumeration $r5;
+
+        r0 := @this: sun.util.resources.OpenListResourceBundle;
+        r1 = r0.<sun.util.resources.OpenListResourceBundle: java.util.ResourceBundle parent>;
+        $r3 = new sun.util.ResourceBundleEnumeration;
+        $r4 = virtualinvoke r0.<sun.util.resources.OpenListResourceBundle: java.util.Set handleGetKeys()>();
+        if r1 == null goto label0;
+
+        $r5 = virtualinvoke r1.<java.util.ResourceBundle: java.util.Enumeration getKeys()>();
+        goto label1;
+
+     label0:
+        $r5 = null;
+
+     label1:
+        specialinvoke $r3.<sun.util.ResourceBundleEnumeration: void <init>(java.util.Set,java.util.Enumeration)>($r4, $r5);
+        return $r3;
+    }
+
+    public java.util.Set handleGetKeys()
+    {
+        sun.util.resources.OpenListResourceBundle r0;
+        java.util.Map $r1;
+        java.util.Set $r2;
+
+        r0 := @this: sun.util.resources.OpenListResourceBundle;
+        virtualinvoke r0.<sun.util.resources.OpenListResourceBundle: void loadLookupTablesIfNecessary()>();
+        $r1 = r0.<sun.util.resources.OpenListResourceBundle: java.util.Map lookup>;
+        $r2 = interfaceinvoke $r1.<java.util.Map: java.util.Set keySet()>();
+        return $r2;
+    }
+
+    public sun.util.resources.OpenListResourceBundle getParent()
+    {
+        sun.util.resources.OpenListResourceBundle r0, $r2;
+        java.util.ResourceBundle $r1;
+
+        r0 := @this: sun.util.resources.OpenListResourceBundle;
+        $r1 = r0.<sun.util.resources.OpenListResourceBundle: java.util.ResourceBundle parent>;
+        $r2 = (sun.util.resources.OpenListResourceBundle) $r1;
+        return $r2;
+    }
+
+    protected abstract java.lang.Object[][] getContents();
+
+    void loadLookupTablesIfNecessary()
+    {
+        sun.util.resources.OpenListResourceBundle r0;
+        java.util.Map $r1;
+
+        r0 := @this: sun.util.resources.OpenListResourceBundle;
+        $r1 = r0.<sun.util.resources.OpenListResourceBundle: java.util.Map lookup>;
+        if $r1 != null goto label0;
+
+        specialinvoke r0.<sun.util.resources.OpenListResourceBundle: void loadLookup()>();
+
+     label0:
+        return;
+    }
+
+    private synchronized void loadLookup()
+    {
+        sun.util.resources.OpenListResourceBundle r0;
+        java.lang.Object[][] r1;
+        java.util.Map r2, $r5;
+        int i0, $i1, $i2;
+        java.lang.String r3;
+        java.lang.Object r4, $r7;
+        java.lang.Object[] $r6, $r8;
+        java.lang.NullPointerException $r9;
+
+        r0 := @this: sun.util.resources.OpenListResourceBundle;
+        $r5 = r0.<sun.util.resources.OpenListResourceBundle: java.util.Map lookup>;
+        if $r5 == null goto label0;
+
+        return;
+
+     label0:
+        r1 = virtualinvoke r0.<sun.util.resources.OpenListResourceBundle: java.lang.Object[][] getContents()>();
+        $i1 = lengthof r1;
+        r2 = virtualinvoke r0.<sun.util.resources.OpenListResourceBundle: java.util.Map createMap(int)>($i1);
+        i0 = 0;
+
+     label1:
+        $i2 = lengthof r1;
+        if i0 >= $i2 goto label4;
+
+        $r6 = r1[i0];
+        $r7 = $r6[0];
+        r3 = (java.lang.String) $r7;
+        $r8 = r1[i0];
+        r4 = $r8[1];
+        if r3 == null goto label2;
+
+        if r4 != null goto label3;
+
+     label2:
+        $r9 = new java.lang.NullPointerException;
+        specialinvoke $r9.<java.lang.NullPointerException: void <init>()>();
+        throw $r9;
+
+     label3:
+        interfaceinvoke r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(r3, r4);
+        i0 = i0 + 1;
+        goto label1;
+
+     label4:
+        r0.<sun.util.resources.OpenListResourceBundle: java.util.Map lookup> = r2;
+        return;
+    }
+
+    protected java.util.Map createMap(int)
+    {
+        sun.util.resources.OpenListResourceBundle r0;
+        int i0;
+        java.util.HashMap $r1;
+
+        r0 := @this: sun.util.resources.OpenListResourceBundle;
+        i0 := @parameter0: int;
+        $r1 = new java.util.HashMap;
+        specialinvoke $r1.<java.util.HashMap: void <init>(int)>(i0);
+        return $r1;
+    }
+}

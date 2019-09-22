@@ -1,0 +1,202 @@
+public abstract class java.nio.channels.spi.AbstractInterruptibleChannel extends java.lang.Object implements java.nio.channels.Channel, java.nio.channels.InterruptibleChannel
+{
+    private final java.lang.Object closeLock;
+    private volatile boolean open;
+    private sun.nio.ch.Interruptible interruptor;
+    private volatile java.lang.Thread interrupted;
+
+    protected void <init>()
+    {
+        java.nio.channels.spi.AbstractInterruptibleChannel r0;
+        java.lang.Object $r1;
+
+        r0 := @this: java.nio.channels.spi.AbstractInterruptibleChannel;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r1 = new java.lang.Object;
+        specialinvoke $r1.<java.lang.Object: void <init>()>();
+        r0.<java.nio.channels.spi.AbstractInterruptibleChannel: java.lang.Object closeLock> = $r1;
+        r0.<java.nio.channels.spi.AbstractInterruptibleChannel: boolean open> = 1;
+        return;
+    }
+
+    public final void close() throws java.io.IOException
+    {
+        java.nio.channels.spi.AbstractInterruptibleChannel r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r4;
+        boolean $z0;
+
+        r0 := @this: java.nio.channels.spi.AbstractInterruptibleChannel;
+        $r3 = r0.<java.nio.channels.spi.AbstractInterruptibleChannel: java.lang.Object closeLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $z0 = r0.<java.nio.channels.spi.AbstractInterruptibleChannel: boolean open>;
+        if $z0 != 0 goto label2;
+
+        exitmonitor r1;
+
+     label1:
+        return;
+
+     label2:
+        r0.<java.nio.channels.spi.AbstractInterruptibleChannel: boolean open> = 0;
+        virtualinvoke r0.<java.nio.channels.spi.AbstractInterruptibleChannel: void implCloseChannel()>();
+        exitmonitor r1;
+
+     label3:
+        goto label7;
+
+     label4:
+        $r4 := @caughtexception;
+
+     label5:
+        r2 = $r4;
+        exitmonitor r1;
+
+     label6:
+        throw r2;
+
+     label7:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label4;
+        catch java.lang.Throwable from label2 to label3 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+    }
+
+    protected abstract void implCloseChannel() throws java.io.IOException;
+
+    public final boolean isOpen()
+    {
+        java.nio.channels.spi.AbstractInterruptibleChannel r0;
+        boolean $z0;
+
+        r0 := @this: java.nio.channels.spi.AbstractInterruptibleChannel;
+        $z0 = r0.<java.nio.channels.spi.AbstractInterruptibleChannel: boolean open>;
+        return $z0;
+    }
+
+    protected final void begin()
+    {
+        java.nio.channels.spi.AbstractInterruptibleChannel r0;
+        java.nio.channels.spi.AbstractInterruptibleChannel$1 $r1;
+        java.lang.Thread r2;
+        sun.nio.ch.Interruptible $r3, $r4, $r5;
+        boolean $z0;
+
+        r0 := @this: java.nio.channels.spi.AbstractInterruptibleChannel;
+        $r3 = r0.<java.nio.channels.spi.AbstractInterruptibleChannel: sun.nio.ch.Interruptible interruptor>;
+        if $r3 != null goto label0;
+
+        $r1 = new java.nio.channels.spi.AbstractInterruptibleChannel$1;
+        specialinvoke $r1.<java.nio.channels.spi.AbstractInterruptibleChannel$1: void <init>(java.nio.channels.spi.AbstractInterruptibleChannel)>(r0);
+        r0.<java.nio.channels.spi.AbstractInterruptibleChannel: sun.nio.ch.Interruptible interruptor> = $r1;
+
+     label0:
+        $r4 = r0.<java.nio.channels.spi.AbstractInterruptibleChannel: sun.nio.ch.Interruptible interruptor>;
+        staticinvoke <java.nio.channels.spi.AbstractInterruptibleChannel: void blockedOn(sun.nio.ch.Interruptible)>($r4);
+        r2 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        $z0 = virtualinvoke r2.<java.lang.Thread: boolean isInterrupted()>();
+        if $z0 == 0 goto label1;
+
+        $r5 = r0.<java.nio.channels.spi.AbstractInterruptibleChannel: sun.nio.ch.Interruptible interruptor>;
+        interfaceinvoke $r5.<sun.nio.ch.Interruptible: void interrupt(java.lang.Thread)>(r2);
+
+     label1:
+        return;
+    }
+
+    protected final void end(boolean) throws java.nio.channels.AsynchronousCloseException
+    {
+        java.nio.channels.spi.AbstractInterruptibleChannel r0;
+        boolean z0, $z1;
+        java.lang.Thread r1, $r2;
+        null_type n0;
+        java.nio.channels.ClosedByInterruptException $r3;
+        java.nio.channels.AsynchronousCloseException $r4;
+
+        r0 := @this: java.nio.channels.spi.AbstractInterruptibleChannel;
+        z0 := @parameter0: boolean;
+        staticinvoke <java.nio.channels.spi.AbstractInterruptibleChannel: void blockedOn(sun.nio.ch.Interruptible)>(null);
+        r1 = r0.<java.nio.channels.spi.AbstractInterruptibleChannel: java.lang.Thread interrupted>;
+        if r1 == null goto label0;
+
+        $r2 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        if r1 != $r2 goto label0;
+
+        n0 = null;
+        $r3 = new java.nio.channels.ClosedByInterruptException;
+        specialinvoke $r3.<java.nio.channels.ClosedByInterruptException: void <init>()>();
+        throw $r3;
+
+     label0:
+        if z0 != 0 goto label1;
+
+        $z1 = r0.<java.nio.channels.spi.AbstractInterruptibleChannel: boolean open>;
+        if $z1 != 0 goto label1;
+
+        $r4 = new java.nio.channels.AsynchronousCloseException;
+        specialinvoke $r4.<java.nio.channels.AsynchronousCloseException: void <init>()>();
+        throw $r4;
+
+     label1:
+        return;
+    }
+
+    static void blockedOn(sun.nio.ch.Interruptible)
+    {
+        sun.nio.ch.Interruptible r0;
+        sun.misc.JavaLangAccess $r1;
+        java.lang.Thread $r2;
+
+        r0 := @parameter0: sun.nio.ch.Interruptible;
+        $r1 = staticinvoke <sun.misc.SharedSecrets: sun.misc.JavaLangAccess getJavaLangAccess()>();
+        $r2 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        interfaceinvoke $r1.<sun.misc.JavaLangAccess: void blockedOn(java.lang.Thread,sun.nio.ch.Interruptible)>($r2, r0);
+        return;
+    }
+
+    static java.lang.Object access$000(java.nio.channels.spi.AbstractInterruptibleChannel)
+    {
+        java.nio.channels.spi.AbstractInterruptibleChannel r0;
+        java.lang.Object $r1;
+
+        r0 := @parameter0: java.nio.channels.spi.AbstractInterruptibleChannel;
+        $r1 = r0.<java.nio.channels.spi.AbstractInterruptibleChannel: java.lang.Object closeLock>;
+        return $r1;
+    }
+
+    static boolean access$100(java.nio.channels.spi.AbstractInterruptibleChannel)
+    {
+        java.nio.channels.spi.AbstractInterruptibleChannel r0;
+        boolean $z0;
+
+        r0 := @parameter0: java.nio.channels.spi.AbstractInterruptibleChannel;
+        $z0 = r0.<java.nio.channels.spi.AbstractInterruptibleChannel: boolean open>;
+        return $z0;
+    }
+
+    static boolean access$102(java.nio.channels.spi.AbstractInterruptibleChannel, boolean)
+    {
+        java.nio.channels.spi.AbstractInterruptibleChannel r0;
+        boolean z0;
+
+        r0 := @parameter0: java.nio.channels.spi.AbstractInterruptibleChannel;
+        z0 := @parameter1: boolean;
+        r0.<java.nio.channels.spi.AbstractInterruptibleChannel: boolean open> = z0;
+        return z0;
+    }
+
+    static java.lang.Thread access$202(java.nio.channels.spi.AbstractInterruptibleChannel, java.lang.Thread)
+    {
+        java.nio.channels.spi.AbstractInterruptibleChannel r0;
+        java.lang.Thread r1;
+
+        r0 := @parameter0: java.nio.channels.spi.AbstractInterruptibleChannel;
+        r1 := @parameter1: java.lang.Thread;
+        r0.<java.nio.channels.spi.AbstractInterruptibleChannel: java.lang.Thread interrupted> = r1;
+        return r1;
+    }
+}

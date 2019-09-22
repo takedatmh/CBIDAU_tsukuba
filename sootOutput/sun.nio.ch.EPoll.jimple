@@ -1,0 +1,119 @@
+class sun.nio.ch.EPoll extends java.lang.Object
+{
+    private static final sun.misc.Unsafe unsafe;
+    private static final int SIZEOF_EPOLLEVENT;
+    private static final int OFFSETOF_EVENTS;
+    private static final int OFFSETOF_FD;
+    static final int EPOLL_CTL_ADD;
+    static final int EPOLL_CTL_DEL;
+    static final int EPOLL_CTL_MOD;
+    static final int EPOLLONESHOT;
+
+    private void <init>()
+    {
+        sun.nio.ch.EPoll r0;
+
+        r0 := @this: sun.nio.ch.EPoll;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    static long allocatePollArray(int)
+    {
+        int i0, $i1, $i2;
+        sun.misc.Unsafe $r0;
+        long $l3, $l4;
+
+        i0 := @parameter0: int;
+        $r0 = <sun.nio.ch.EPoll: sun.misc.Unsafe unsafe>;
+        $i1 = <sun.nio.ch.EPoll: int SIZEOF_EPOLLEVENT>;
+        $i2 = i0 * $i1;
+        $l3 = (long) $i2;
+        $l4 = virtualinvoke $r0.<sun.misc.Unsafe: long allocateMemory(long)>($l3);
+        return $l4;
+    }
+
+    static void freePollArray(long)
+    {
+        long l0;
+        sun.misc.Unsafe $r0;
+
+        l0 := @parameter0: long;
+        $r0 = <sun.nio.ch.EPoll: sun.misc.Unsafe unsafe>;
+        virtualinvoke $r0.<sun.misc.Unsafe: void freeMemory(long)>(l0);
+        return;
+    }
+
+    static long getEvent(long, int)
+    {
+        long l0, $l4, $l5;
+        int i1, $i2, $i3;
+
+        l0 := @parameter0: long;
+        i1 := @parameter1: int;
+        $i2 = <sun.nio.ch.EPoll: int SIZEOF_EPOLLEVENT>;
+        $i3 = $i2 * i1;
+        $l4 = (long) $i3;
+        $l5 = l0 + $l4;
+        return $l5;
+    }
+
+    static int getDescriptor(long)
+    {
+        long l0, $l2, $l3;
+        sun.misc.Unsafe $r0;
+        int $i1, $i4;
+
+        l0 := @parameter0: long;
+        $r0 = <sun.nio.ch.EPoll: sun.misc.Unsafe unsafe>;
+        $i1 = <sun.nio.ch.EPoll: int OFFSETOF_FD>;
+        $l2 = (long) $i1;
+        $l3 = l0 + $l2;
+        $i4 = virtualinvoke $r0.<sun.misc.Unsafe: int getInt(long)>($l3);
+        return $i4;
+    }
+
+    static int getEvents(long)
+    {
+        long l0, $l2, $l3;
+        sun.misc.Unsafe $r0;
+        int $i1, $i4;
+
+        l0 := @parameter0: long;
+        $r0 = <sun.nio.ch.EPoll: sun.misc.Unsafe unsafe>;
+        $i1 = <sun.nio.ch.EPoll: int OFFSETOF_EVENTS>;
+        $l2 = (long) $i1;
+        $l3 = l0 + $l2;
+        $i4 = virtualinvoke $r0.<sun.misc.Unsafe: int getInt(long)>($l3);
+        return $i4;
+    }
+
+    private static native int eventSize();
+
+    private static native int eventsOffset();
+
+    private static native int dataOffset();
+
+    static native int epollCreate() throws java.io.IOException;
+
+    static native int epollCtl(int, int, int, int);
+
+    static native int epollWait(int, long, int) throws java.io.IOException;
+
+    static void <clinit>()
+    {
+        sun.misc.Unsafe $r0;
+        int $i0, $i1, $i2;
+
+        $r0 = staticinvoke <sun.misc.Unsafe: sun.misc.Unsafe getUnsafe()>();
+        <sun.nio.ch.EPoll: sun.misc.Unsafe unsafe> = $r0;
+        $i0 = staticinvoke <sun.nio.ch.EPoll: int eventSize()>();
+        <sun.nio.ch.EPoll: int SIZEOF_EPOLLEVENT> = $i0;
+        $i1 = staticinvoke <sun.nio.ch.EPoll: int eventsOffset()>();
+        <sun.nio.ch.EPoll: int OFFSETOF_EVENTS> = $i1;
+        $i2 = staticinvoke <sun.nio.ch.EPoll: int dataOffset()>();
+        <sun.nio.ch.EPoll: int OFFSETOF_FD> = $i2;
+        staticinvoke <sun.nio.ch.Util: void load()>();
+        return;
+    }
+}

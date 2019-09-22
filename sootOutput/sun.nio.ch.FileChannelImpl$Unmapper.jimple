@@ -1,0 +1,206 @@
+class sun.nio.ch.FileChannelImpl$Unmapper extends java.lang.Object implements java.lang.Runnable
+{
+    private static final sun.nio.ch.NativeDispatcher nd;
+    static volatile int count;
+    static volatile long totalSize;
+    static volatile long totalCapacity;
+    private volatile long address;
+    private final long size;
+    private final int cap;
+    private final java.io.FileDescriptor fd;
+    static final boolean $assertionsDisabled;
+
+    private void <init>(long, long, int, java.io.FileDescriptor)
+    {
+        sun.nio.ch.FileChannelImpl$Unmapper r0;
+        long l0, l1, $l6, $l7, $l8, $l9, $l10;
+        int i2, $i4, $i5;
+        java.io.FileDescriptor r1;
+        java.lang.Class r2, $r5;
+        java.lang.Throwable r3, $r6;
+        boolean $z0;
+        byte $b3;
+        java.lang.AssertionError $r4;
+
+        r0 := @this: sun.nio.ch.FileChannelImpl$Unmapper;
+        l0 := @parameter0: long;
+        l1 := @parameter1: long;
+        i2 := @parameter2: int;
+        r1 := @parameter3: java.io.FileDescriptor;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $z0 = <sun.nio.ch.FileChannelImpl$Unmapper: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label0;
+
+        $b3 = l0 cmp 0L;
+        if $b3 != 0 goto label0;
+
+        $r4 = new java.lang.AssertionError;
+        specialinvoke $r4.<java.lang.AssertionError: void <init>()>();
+        throw $r4;
+
+     label0:
+        r0.<sun.nio.ch.FileChannelImpl$Unmapper: long address> = l0;
+        r0.<sun.nio.ch.FileChannelImpl$Unmapper: long size> = l1;
+        r0.<sun.nio.ch.FileChannelImpl$Unmapper: int cap> = i2;
+        r0.<sun.nio.ch.FileChannelImpl$Unmapper: java.io.FileDescriptor fd> = r1;
+        $r5 = class "sun/nio/ch/FileChannelImpl$Unmapper";
+        r2 = $r5;
+        entermonitor $r5;
+
+     label1:
+        $i4 = <sun.nio.ch.FileChannelImpl$Unmapper: int count>;
+        $i5 = $i4 + 1;
+        <sun.nio.ch.FileChannelImpl$Unmapper: int count> = $i5;
+        $l6 = <sun.nio.ch.FileChannelImpl$Unmapper: long totalSize>;
+        $l7 = $l6 + l1;
+        <sun.nio.ch.FileChannelImpl$Unmapper: long totalSize> = $l7;
+        $l8 = <sun.nio.ch.FileChannelImpl$Unmapper: long totalCapacity>;
+        $l9 = (long) i2;
+        $l10 = $l8 + $l9;
+        <sun.nio.ch.FileChannelImpl$Unmapper: long totalCapacity> = $l10;
+        exitmonitor r2;
+
+     label2:
+        goto label6;
+
+     label3:
+        $r6 := @caughtexception;
+
+     label4:
+        r3 = $r6;
+        exitmonitor r2;
+
+     label5:
+        throw r3;
+
+     label6:
+        return;
+
+        catch java.lang.Throwable from label1 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    public void run()
+    {
+        sun.nio.ch.FileChannelImpl$Unmapper r0;
+        java.io.IOException r1, $r6;
+        java.lang.Throwable r2, $r9;
+        long $l0, $l2, $l3, $l7, $l8, $l9, $l10, $l12, $l13;
+        byte $b1;
+        java.io.FileDescriptor $r3, $r5;
+        boolean $z0;
+        sun.nio.ch.NativeDispatcher $r4;
+        java.lang.Class $r7, r8;
+        int $i5, $i6, $i11;
+
+        r0 := @this: sun.nio.ch.FileChannelImpl$Unmapper;
+        $l0 = r0.<sun.nio.ch.FileChannelImpl$Unmapper: long address>;
+        $b1 = $l0 cmp 0L;
+        if $b1 != 0 goto label0;
+
+        return;
+
+     label0:
+        $l2 = r0.<sun.nio.ch.FileChannelImpl$Unmapper: long address>;
+        $l3 = r0.<sun.nio.ch.FileChannelImpl$Unmapper: long size>;
+        staticinvoke <sun.nio.ch.FileChannelImpl: int access$000(long,long)>($l2, $l3);
+        r0.<sun.nio.ch.FileChannelImpl$Unmapper: long address> = 0L;
+        $r3 = r0.<sun.nio.ch.FileChannelImpl$Unmapper: java.io.FileDescriptor fd>;
+        $z0 = virtualinvoke $r3.<java.io.FileDescriptor: boolean valid()>();
+        if $z0 == 0 goto label4;
+
+     label1:
+        $r4 = <sun.nio.ch.FileChannelImpl$Unmapper: sun.nio.ch.NativeDispatcher nd>;
+        $r5 = r0.<sun.nio.ch.FileChannelImpl$Unmapper: java.io.FileDescriptor fd>;
+        virtualinvoke $r4.<sun.nio.ch.NativeDispatcher: void close(java.io.FileDescriptor)>($r5);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r6 := @caughtexception;
+        r1 = $r6;
+
+     label4:
+        $r7 = class "sun/nio/ch/FileChannelImpl$Unmapper";
+        r8 = $r7;
+        entermonitor $r7;
+
+     label5:
+        $i5 = <sun.nio.ch.FileChannelImpl$Unmapper: int count>;
+        $i6 = $i5 - 1;
+        <sun.nio.ch.FileChannelImpl$Unmapper: int count> = $i6;
+        $l7 = <sun.nio.ch.FileChannelImpl$Unmapper: long totalSize>;
+        $l8 = r0.<sun.nio.ch.FileChannelImpl$Unmapper: long size>;
+        $l9 = $l7 - $l8;
+        <sun.nio.ch.FileChannelImpl$Unmapper: long totalSize> = $l9;
+        $l10 = <sun.nio.ch.FileChannelImpl$Unmapper: long totalCapacity>;
+        $i11 = r0.<sun.nio.ch.FileChannelImpl$Unmapper: int cap>;
+        $l12 = (long) $i11;
+        $l13 = $l10 - $l12;
+        <sun.nio.ch.FileChannelImpl$Unmapper: long totalCapacity> = $l13;
+        exitmonitor r8;
+
+     label6:
+        goto label10;
+
+     label7:
+        $r9 := @caughtexception;
+
+     label8:
+        r2 = $r9;
+        exitmonitor r8;
+
+     label9:
+        throw r2;
+
+     label10:
+        return;
+
+        catch java.io.IOException from label1 to label2 with label3;
+        catch java.lang.Throwable from label5 to label6 with label7;
+        catch java.lang.Throwable from label8 to label9 with label7;
+    }
+
+    void <init>(long, long, int, java.io.FileDescriptor, sun.nio.ch.FileChannelImpl$1)
+    {
+        sun.nio.ch.FileChannelImpl$Unmapper r0;
+        long l0, l1;
+        int i2;
+        java.io.FileDescriptor r1;
+        sun.nio.ch.FileChannelImpl$1 r2;
+
+        r0 := @this: sun.nio.ch.FileChannelImpl$Unmapper;
+        l0 := @parameter0: long;
+        l1 := @parameter1: long;
+        i2 := @parameter2: int;
+        r1 := @parameter3: java.io.FileDescriptor;
+        r2 := @parameter4: sun.nio.ch.FileChannelImpl$1;
+        specialinvoke r0.<sun.nio.ch.FileChannelImpl$Unmapper: void <init>(long,long,int,java.io.FileDescriptor)>(l0, l1, i2, r1);
+        return;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        boolean $z0, $z1;
+        sun.nio.ch.FileDispatcherImpl $r1;
+
+        $r0 = class "sun/nio/ch/FileChannelImpl";
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        <sun.nio.ch.FileChannelImpl$Unmapper: boolean $assertionsDisabled> = $z1;
+        $r1 = new sun.nio.ch.FileDispatcherImpl;
+        specialinvoke $r1.<sun.nio.ch.FileDispatcherImpl: void <init>()>();
+        <sun.nio.ch.FileChannelImpl$Unmapper: sun.nio.ch.NativeDispatcher nd> = $r1;
+        return;
+    }
+}

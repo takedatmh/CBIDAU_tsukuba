@@ -1,0 +1,4383 @@
+class sun.nio.ch.SocketChannelImpl extends java.nio.channels.SocketChannel implements sun.nio.ch.SelChImpl
+{
+    private static sun.nio.ch.NativeDispatcher nd;
+    private final java.io.FileDescriptor fd;
+    private final int fdVal;
+    private volatile long readerThread;
+    private volatile long writerThread;
+    private final java.lang.Object readLock;
+    private final java.lang.Object writeLock;
+    private final java.lang.Object stateLock;
+    private boolean isReuseAddress;
+    private static final int ST_UNINITIALIZED;
+    private static final int ST_UNCONNECTED;
+    private static final int ST_PENDING;
+    private static final int ST_CONNECTED;
+    private static final int ST_KILLPENDING;
+    private static final int ST_KILLED;
+    private int state;
+    private java.net.InetSocketAddress localAddress;
+    private java.net.InetSocketAddress remoteAddress;
+    private boolean isInputOpen;
+    private boolean isOutputOpen;
+    private boolean readyToConnect;
+    private java.net.Socket socket;
+    static final boolean $assertionsDisabled;
+
+    void <init>(java.nio.channels.spi.SelectorProvider) throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.nio.channels.spi.SelectorProvider r1;
+        java.lang.Object $r2, $r3, $r4;
+        java.io.FileDescriptor $r5, $r6;
+        int $i0;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        r1 := @parameter0: java.nio.channels.spi.SelectorProvider;
+        specialinvoke r0.<java.nio.channels.SocketChannel: void <init>(java.nio.channels.spi.SelectorProvider)>(r1);
+        r0.<sun.nio.ch.SocketChannelImpl: long readerThread> = 0L;
+        r0.<sun.nio.ch.SocketChannelImpl: long writerThread> = 0L;
+        $r2 = new java.lang.Object;
+        specialinvoke $r2.<java.lang.Object: void <init>()>();
+        r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object readLock> = $r2;
+        $r3 = new java.lang.Object;
+        specialinvoke $r3.<java.lang.Object: void <init>()>();
+        r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object writeLock> = $r3;
+        $r4 = new java.lang.Object;
+        specialinvoke $r4.<java.lang.Object: void <init>()>();
+        r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock> = $r4;
+        r0.<sun.nio.ch.SocketChannelImpl: int state> = -1;
+        r0.<sun.nio.ch.SocketChannelImpl: boolean isInputOpen> = 1;
+        r0.<sun.nio.ch.SocketChannelImpl: boolean isOutputOpen> = 1;
+        r0.<sun.nio.ch.SocketChannelImpl: boolean readyToConnect> = 0;
+        $r5 = staticinvoke <sun.nio.ch.Net: java.io.FileDescriptor socket(boolean)>(1);
+        r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd> = $r5;
+        $r6 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        $i0 = staticinvoke <sun.nio.ch.IOUtil: int fdVal(java.io.FileDescriptor)>($r6);
+        r0.<sun.nio.ch.SocketChannelImpl: int fdVal> = $i0;
+        r0.<sun.nio.ch.SocketChannelImpl: int state> = 0;
+        return;
+    }
+
+    void <init>(java.nio.channels.spi.SelectorProvider, java.io.FileDescriptor, boolean) throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.nio.channels.spi.SelectorProvider r1;
+        java.io.FileDescriptor r2;
+        boolean z0;
+        java.lang.Object $r3, $r4, $r5;
+        int $i0;
+        java.net.InetSocketAddress $r6;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        r1 := @parameter0: java.nio.channels.spi.SelectorProvider;
+        r2 := @parameter1: java.io.FileDescriptor;
+        z0 := @parameter2: boolean;
+        specialinvoke r0.<java.nio.channels.SocketChannel: void <init>(java.nio.channels.spi.SelectorProvider)>(r1);
+        r0.<sun.nio.ch.SocketChannelImpl: long readerThread> = 0L;
+        r0.<sun.nio.ch.SocketChannelImpl: long writerThread> = 0L;
+        $r3 = new java.lang.Object;
+        specialinvoke $r3.<java.lang.Object: void <init>()>();
+        r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object readLock> = $r3;
+        $r4 = new java.lang.Object;
+        specialinvoke $r4.<java.lang.Object: void <init>()>();
+        r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object writeLock> = $r4;
+        $r5 = new java.lang.Object;
+        specialinvoke $r5.<java.lang.Object: void <init>()>();
+        r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock> = $r5;
+        r0.<sun.nio.ch.SocketChannelImpl: int state> = -1;
+        r0.<sun.nio.ch.SocketChannelImpl: boolean isInputOpen> = 1;
+        r0.<sun.nio.ch.SocketChannelImpl: boolean isOutputOpen> = 1;
+        r0.<sun.nio.ch.SocketChannelImpl: boolean readyToConnect> = 0;
+        r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd> = r2;
+        $i0 = staticinvoke <sun.nio.ch.IOUtil: int fdVal(java.io.FileDescriptor)>(r2);
+        r0.<sun.nio.ch.SocketChannelImpl: int fdVal> = $i0;
+        r0.<sun.nio.ch.SocketChannelImpl: int state> = 0;
+        if z0 == 0 goto label0;
+
+        $r6 = staticinvoke <sun.nio.ch.Net: java.net.InetSocketAddress localAddress(java.io.FileDescriptor)>(r2);
+        r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress localAddress> = $r6;
+
+     label0:
+        return;
+    }
+
+    void <init>(java.nio.channels.spi.SelectorProvider, java.io.FileDescriptor, java.net.InetSocketAddress) throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.nio.channels.spi.SelectorProvider r1;
+        java.io.FileDescriptor r2;
+        java.net.InetSocketAddress r3, $r7;
+        java.lang.Object $r4, $r5, $r6;
+        int $i0;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        r1 := @parameter0: java.nio.channels.spi.SelectorProvider;
+        r2 := @parameter1: java.io.FileDescriptor;
+        r3 := @parameter2: java.net.InetSocketAddress;
+        specialinvoke r0.<java.nio.channels.SocketChannel: void <init>(java.nio.channels.spi.SelectorProvider)>(r1);
+        r0.<sun.nio.ch.SocketChannelImpl: long readerThread> = 0L;
+        r0.<sun.nio.ch.SocketChannelImpl: long writerThread> = 0L;
+        $r4 = new java.lang.Object;
+        specialinvoke $r4.<java.lang.Object: void <init>()>();
+        r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object readLock> = $r4;
+        $r5 = new java.lang.Object;
+        specialinvoke $r5.<java.lang.Object: void <init>()>();
+        r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object writeLock> = $r5;
+        $r6 = new java.lang.Object;
+        specialinvoke $r6.<java.lang.Object: void <init>()>();
+        r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock> = $r6;
+        r0.<sun.nio.ch.SocketChannelImpl: int state> = -1;
+        r0.<sun.nio.ch.SocketChannelImpl: boolean isInputOpen> = 1;
+        r0.<sun.nio.ch.SocketChannelImpl: boolean isOutputOpen> = 1;
+        r0.<sun.nio.ch.SocketChannelImpl: boolean readyToConnect> = 0;
+        r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd> = r2;
+        $i0 = staticinvoke <sun.nio.ch.IOUtil: int fdVal(java.io.FileDescriptor)>(r2);
+        r0.<sun.nio.ch.SocketChannelImpl: int fdVal> = $i0;
+        r0.<sun.nio.ch.SocketChannelImpl: int state> = 2;
+        $r7 = staticinvoke <sun.nio.ch.Net: java.net.InetSocketAddress localAddress(java.io.FileDescriptor)>(r2);
+        r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress localAddress> = $r7;
+        r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress> = r3;
+        return;
+    }
+
+    public java.net.Socket socket()
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r7;
+        java.net.Socket $r4, $r5, $r6;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r3 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $r4 = r0.<sun.nio.ch.SocketChannelImpl: java.net.Socket socket>;
+        if $r4 != null goto label1;
+
+        $r5 = staticinvoke <sun.nio.ch.SocketAdaptor: java.net.Socket create(sun.nio.ch.SocketChannelImpl)>(r0);
+        r0.<sun.nio.ch.SocketChannelImpl: java.net.Socket socket> = $r5;
+
+     label1:
+        $r6 = r0.<sun.nio.ch.SocketChannelImpl: java.net.Socket socket>;
+        exitmonitor r1;
+
+     label2:
+        return $r6;
+
+     label3:
+        $r7 := @caughtexception;
+
+     label4:
+        r2 = $r7;
+        exitmonitor r1;
+
+     label5:
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    public java.net.SocketAddress getLocalAddress() throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r7;
+        boolean $z0;
+        java.nio.channels.ClosedChannelException $r4;
+        java.net.InetSocketAddress $r5, $r6;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r3 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $z0 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z0 != 0 goto label1;
+
+        $r4 = new java.nio.channels.ClosedChannelException;
+        specialinvoke $r4.<java.nio.channels.ClosedChannelException: void <init>()>();
+        throw $r4;
+
+     label1:
+        $r5 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress localAddress>;
+        $r6 = staticinvoke <sun.nio.ch.Net: java.net.InetSocketAddress getRevealedLocalAddress(java.net.InetSocketAddress)>($r5);
+        exitmonitor r1;
+
+     label2:
+        return $r6;
+
+     label3:
+        $r7 := @caughtexception;
+
+     label4:
+        r2 = $r7;
+        exitmonitor r1;
+
+     label5:
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    public java.net.SocketAddress getRemoteAddress() throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r6;
+        boolean $z0;
+        java.nio.channels.ClosedChannelException $r4;
+        java.net.InetSocketAddress $r5;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r3 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $z0 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z0 != 0 goto label1;
+
+        $r4 = new java.nio.channels.ClosedChannelException;
+        specialinvoke $r4.<java.nio.channels.ClosedChannelException: void <init>()>();
+        throw $r4;
+
+     label1:
+        $r5 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        exitmonitor r1;
+
+     label2:
+        return $r5;
+
+     label3:
+        $r6 := @caughtexception;
+
+     label4:
+        r2 = $r6;
+        exitmonitor r1;
+
+     label5:
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    public java.nio.channels.SocketChannel setOption(java.net.SocketOption, java.lang.Object) throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.net.SocketOption r1, $r15, $r19;
+        java.lang.Object r2, r4, $r13;
+        java.lang.StringBuilder $r3, $r9, $r10, $r11;
+        java.lang.Throwable r5, $r25;
+        java.lang.NullPointerException $r6;
+        java.util.Set $r7;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        java.lang.UnsupportedOperationException $r8;
+        java.lang.String $r12;
+        java.nio.channels.ClosedChannelException $r14;
+        java.io.FileDescriptor $r16, $r22;
+        java.net.StandardProtocolFamily $r17;
+        java.lang.Boolean $r20;
+        java.net.ProtocolFamily $r23;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        r1 := @parameter0: java.net.SocketOption;
+        r2 := @parameter1: java.lang.Object;
+        if r1 != null goto label0;
+
+        $r6 = new java.lang.NullPointerException;
+        specialinvoke $r6.<java.lang.NullPointerException: void <init>()>();
+        throw $r6;
+
+     label0:
+        $r7 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: java.util.Set supportedOptions()>();
+        $z0 = interfaceinvoke $r7.<java.util.Set: boolean contains(java.lang.Object)>(r1);
+        if $z0 != 0 goto label1;
+
+        $r8 = new java.lang.UnsupportedOperationException;
+        $r3 = new java.lang.StringBuilder;
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>()>();
+        $r9 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r1);
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\' not supported");
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r8.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>($r12);
+        throw $r8;
+
+     label1:
+        $r13 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r4 = $r13;
+        entermonitor $r13;
+
+     label2:
+        $z1 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z1 != 0 goto label3;
+
+        $r14 = new java.nio.channels.ClosedChannelException;
+        specialinvoke $r14.<java.nio.channels.ClosedChannelException: void <init>()>();
+        throw $r14;
+
+     label3:
+        $r15 = <java.net.StandardSocketOptions: java.net.SocketOption IP_TOS>;
+        if r1 != $r15 goto label6;
+
+        $z2 = staticinvoke <sun.nio.ch.Net: boolean isIPv6Available()>();
+        if $z2 != 0 goto label4;
+
+        $r16 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        $r17 = <java.net.StandardProtocolFamily: java.net.StandardProtocolFamily INET>;
+        staticinvoke <sun.nio.ch.Net: void setSocketOption(java.io.FileDescriptor,java.net.ProtocolFamily,java.net.SocketOption,java.lang.Object)>($r16, $r17, r1, r2);
+
+     label4:
+        exitmonitor r4;
+
+     label5:
+        return r0;
+
+     label6:
+        $r19 = <java.net.StandardSocketOptions: java.net.SocketOption SO_REUSEADDR>;
+        if r1 != $r19 goto label8;
+
+        $z3 = staticinvoke <sun.nio.ch.Net: boolean useExclusiveBind()>();
+        if $z3 == 0 goto label8;
+
+        $r20 = (java.lang.Boolean) r2;
+        $z4 = virtualinvoke $r20.<java.lang.Boolean: boolean booleanValue()>();
+        r0.<sun.nio.ch.SocketChannelImpl: boolean isReuseAddress> = $z4;
+        exitmonitor r4;
+
+     label7:
+        return r0;
+
+     label8:
+        $r22 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        $r23 = <sun.nio.ch.Net: java.net.ProtocolFamily UNSPEC>;
+        staticinvoke <sun.nio.ch.Net: void setSocketOption(java.io.FileDescriptor,java.net.ProtocolFamily,java.net.SocketOption,java.lang.Object)>($r22, $r23, r1, r2);
+        exitmonitor r4;
+
+     label9:
+        return r0;
+
+     label10:
+        $r25 := @caughtexception;
+
+     label11:
+        r5 = $r25;
+        exitmonitor r4;
+
+     label12:
+        throw r5;
+
+        catch java.lang.Throwable from label2 to label5 with label10;
+        catch java.lang.Throwable from label6 to label7 with label10;
+        catch java.lang.Throwable from label8 to label9 with label10;
+        catch java.lang.Throwable from label11 to label12 with label10;
+    }
+
+    public java.lang.Object getOption(java.net.SocketOption) throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.net.SocketOption r1, $r14, $r16;
+        java.lang.StringBuilder $r2, $r8, $r9, $r10;
+        java.lang.Object r3, $r12, $r17, $r22;
+        java.lang.Throwable r4, $r23;
+        java.lang.NullPointerException $r5;
+        java.util.Set $r6;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        java.lang.UnsupportedOperationException $r7;
+        java.lang.String $r11;
+        java.nio.channels.ClosedChannelException $r13;
+        java.lang.Boolean $r15;
+        java.io.FileDescriptor $r18, $r20;
+        java.net.StandardProtocolFamily $r19;
+        java.net.ProtocolFamily $r21;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        r1 := @parameter0: java.net.SocketOption;
+        if r1 != null goto label0;
+
+        $r5 = new java.lang.NullPointerException;
+        specialinvoke $r5.<java.lang.NullPointerException: void <init>()>();
+        throw $r5;
+
+     label0:
+        $r6 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: java.util.Set supportedOptions()>();
+        $z0 = interfaceinvoke $r6.<java.util.Set: boolean contains(java.lang.Object)>(r1);
+        if $z0 != 0 goto label1;
+
+        $r7 = new java.lang.UnsupportedOperationException;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+        $r8 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r1);
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\' not supported");
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r7.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>($r11);
+        throw $r7;
+
+     label1:
+        $r12 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r3 = $r12;
+        entermonitor $r12;
+
+     label2:
+        $z1 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z1 != 0 goto label3;
+
+        $r13 = new java.nio.channels.ClosedChannelException;
+        specialinvoke $r13.<java.nio.channels.ClosedChannelException: void <init>()>();
+        throw $r13;
+
+     label3:
+        $r14 = <java.net.StandardSocketOptions: java.net.SocketOption SO_REUSEADDR>;
+        if r1 != $r14 goto label5;
+
+        $z2 = staticinvoke <sun.nio.ch.Net: boolean useExclusiveBind()>();
+        if $z2 == 0 goto label5;
+
+        $z3 = r0.<sun.nio.ch.SocketChannelImpl: boolean isReuseAddress>;
+        $r15 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(boolean)>($z3);
+        exitmonitor r3;
+
+     label4:
+        return $r15;
+
+     label5:
+        $r16 = <java.net.StandardSocketOptions: java.net.SocketOption IP_TOS>;
+        if r1 != $r16 goto label9;
+
+        $z4 = staticinvoke <sun.nio.ch.Net: boolean isIPv6Available()>();
+        if $z4 == 0 goto label6;
+
+        $r17 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>(0);
+        goto label7;
+
+     label6:
+        $r18 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        $r19 = <java.net.StandardProtocolFamily: java.net.StandardProtocolFamily INET>;
+        $r17 = staticinvoke <sun.nio.ch.Net: java.lang.Object getSocketOption(java.io.FileDescriptor,java.net.ProtocolFamily,java.net.SocketOption)>($r18, $r19, r1);
+
+     label7:
+        exitmonitor r3;
+
+     label8:
+        return $r17;
+
+     label9:
+        $r20 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        $r21 = <sun.nio.ch.Net: java.net.ProtocolFamily UNSPEC>;
+        $r22 = staticinvoke <sun.nio.ch.Net: java.lang.Object getSocketOption(java.io.FileDescriptor,java.net.ProtocolFamily,java.net.SocketOption)>($r20, $r21, r1);
+        exitmonitor r3;
+
+     label10:
+        return $r22;
+
+     label11:
+        $r23 := @caughtexception;
+
+     label12:
+        r4 = $r23;
+        exitmonitor r3;
+
+     label13:
+        throw r4;
+
+        catch java.lang.Throwable from label2 to label4 with label11;
+        catch java.lang.Throwable from label5 to label8 with label11;
+        catch java.lang.Throwable from label9 to label10 with label11;
+        catch java.lang.Throwable from label12 to label13 with label11;
+    }
+
+    public final java.util.Set supportedOptions()
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.util.Set $r1;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r1 = <sun.nio.ch.SocketChannelImpl$DefaultOptionsHolder: java.util.Set defaultOptions>;
+        return $r1;
+    }
+
+    private boolean ensureReadOpen() throws java.nio.channels.ClosedChannelException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r6;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        java.nio.channels.ClosedChannelException $r4;
+        java.nio.channels.NotYetConnectedException $r5;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r3 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $z0 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z0 != 0 goto label1;
+
+        $r4 = new java.nio.channels.ClosedChannelException;
+        specialinvoke $r4.<java.nio.channels.ClosedChannelException: void <init>()>();
+        throw $r4;
+
+     label1:
+        $z1 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isConnected()>();
+        if $z1 != 0 goto label2;
+
+        $r5 = new java.nio.channels.NotYetConnectedException;
+        specialinvoke $r5.<java.nio.channels.NotYetConnectedException: void <init>()>();
+        throw $r5;
+
+     label2:
+        $z2 = r0.<sun.nio.ch.SocketChannelImpl: boolean isInputOpen>;
+        if $z2 != 0 goto label4;
+
+        $z3 = 0;
+        exitmonitor r1;
+
+     label3:
+        return $z3;
+
+     label4:
+        $z4 = 1;
+        exitmonitor r1;
+
+     label5:
+        return $z4;
+
+     label6:
+        $r6 := @caughtexception;
+
+     label7:
+        r2 = $r6;
+        exitmonitor r1;
+
+     label8:
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label3 with label6;
+        catch java.lang.Throwable from label4 to label5 with label6;
+        catch java.lang.Throwable from label7 to label8 with label6;
+    }
+
+    private void ensureWriteOpen() throws java.nio.channels.ClosedChannelException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r7;
+        boolean $z0, $z1, $z2;
+        java.nio.channels.ClosedChannelException $r4, $r5;
+        java.nio.channels.NotYetConnectedException $r6;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r3 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $z0 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z0 != 0 goto label1;
+
+        $r4 = new java.nio.channels.ClosedChannelException;
+        specialinvoke $r4.<java.nio.channels.ClosedChannelException: void <init>()>();
+        throw $r4;
+
+     label1:
+        $z1 = r0.<sun.nio.ch.SocketChannelImpl: boolean isOutputOpen>;
+        if $z1 != 0 goto label2;
+
+        $r5 = new java.nio.channels.ClosedChannelException;
+        specialinvoke $r5.<java.nio.channels.ClosedChannelException: void <init>()>();
+        throw $r5;
+
+     label2:
+        $z2 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isConnected()>();
+        if $z2 != 0 goto label3;
+
+        $r6 = new java.nio.channels.NotYetConnectedException;
+        specialinvoke $r6.<java.nio.channels.NotYetConnectedException: void <init>()>();
+        throw $r6;
+
+     label3:
+        exitmonitor r1;
+
+     label4:
+        goto label8;
+
+     label5:
+        $r7 := @caughtexception;
+
+     label6:
+        r2 = $r7;
+        exitmonitor r1;
+
+     label7:
+        throw r2;
+
+     label8:
+        return;
+
+        catch java.lang.Throwable from label0 to label4 with label5;
+        catch java.lang.Throwable from label6 to label7 with label5;
+    }
+
+    private void readerCleanup() throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r4;
+        int $i0;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r3 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        r0.<sun.nio.ch.SocketChannelImpl: long readerThread> = 0L;
+        $i0 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        if $i0 != 3 goto label1;
+
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void kill()>();
+
+     label1:
+        exitmonitor r1;
+
+     label2:
+        goto label6;
+
+     label3:
+        $r4 := @caughtexception;
+
+     label4:
+        r2 = $r4;
+        exitmonitor r1;
+
+     label5:
+        throw r2;
+
+     label6:
+        return;
+
+        catch java.lang.Throwable from label0 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    private void writerCleanup() throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r4;
+        int $i0;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r3 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        r0.<sun.nio.ch.SocketChannelImpl: long writerThread> = 0L;
+        $i0 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        if $i0 != 3 goto label1;
+
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void kill()>();
+
+     label1:
+        exitmonitor r1;
+
+     label2:
+        goto label6;
+
+     label3:
+        $r4 := @caughtexception;
+
+     label4:
+        r2 = $r4;
+        exitmonitor r1;
+
+     label5:
+        throw r2;
+
+     label6:
+        return;
+
+        catch java.lang.Throwable from label0 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    public int read(java.nio.ByteBuffer) throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.nio.ByteBuffer r1;
+        java.lang.Object r2, r3, r4, r5, r10, $r14, $r15, $r16, $r21, $r27, $r32, r33, $r37, $r42;
+        int i0, $i4, i8, $i9, $i13;
+        byte b1, $b2, $b3, $b6, $b10, $b12, $b14, $b16;
+        java.lang.Throwable r6, r7, r8, r9, r11, r12, $r22, $r24, $r34, $r36, $r43, $r45;
+        java.lang.NullPointerException $r13;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14, $z15, $z16, $z17, $z18;
+        java.net.InetSocketAddress $r17, $r19, $r28, $r30, $r38, $r40;
+        java.net.InetAddress $r18, $r29, $r39;
+        long $l5, $l7, $l11, $l15;
+        java.lang.AssertionError $r23, $r35, $r44;
+        java.io.FileDescriptor $r25;
+        sun.nio.ch.NativeDispatcher $r26;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        r1 := @parameter0: java.nio.ByteBuffer;
+        if r1 != null goto label0;
+
+        $r13 = new java.lang.NullPointerException;
+        specialinvoke $r13.<java.lang.NullPointerException: void <init>()>();
+        throw $r13;
+
+     label0:
+        $r14 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object readLock>;
+        r2 = $r14;
+        entermonitor $r14;
+
+     label1:
+        $z0 = specialinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean ensureReadOpen()>();
+        if $z0 != 0 goto label3;
+
+        $b3 = -1;
+        exitmonitor r2;
+
+     label2:
+        return $b3;
+
+     label3:
+        r3 = null;
+        $z1 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isBlocking()>();
+        if $z1 == 0 goto label4;
+
+        r3 = staticinvoke <sun.misc.IoTrace: java.lang.Object socketReadBegin()>();
+
+     label4:
+        i0 = 0;
+
+     label5:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void begin()>();
+        $r15 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r4 = $r15;
+        entermonitor $r15;
+
+     label6:
+        $z2 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z2 != 0 goto label25;
+
+        b1 = 0;
+        exitmonitor r4;
+
+     label7:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void readerCleanup()>();
+        $z3 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isBlocking()>();
+        if $z3 == 0 goto label10;
+
+        $r16 = r3;
+        $r17 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $r18 = virtualinvoke $r17.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        $r19 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $i4 = virtualinvoke $r19.<java.net.InetSocketAddress: int getPort()>();
+        $b2 = 0;
+        if i0 <= 0 goto label8;
+
+        $l5 = (long) i0;
+        goto label9;
+
+     label8:
+        $l5 = 0L;
+
+     label9:
+        staticinvoke <sun.misc.IoTrace: void socketReadEnd(java.lang.Object,java.net.InetAddress,int,int,long)>($r16, $r18, $i4, $b2, $l5);
+
+     label10:
+        if i0 > 0 goto label11;
+
+        if i0 != -2 goto label12;
+
+     label11:
+        $z4 = 1;
+        goto label13;
+
+     label12:
+        $z4 = 0;
+
+     label13:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z4);
+        $r21 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r5 = $r21;
+        entermonitor $r21;
+
+     label14:
+        if i0 > 0 goto label17;
+
+        $z5 = r0.<sun.nio.ch.SocketChannelImpl: boolean isInputOpen>;
+        if $z5 != 0 goto label17;
+
+        $b6 = -1;
+        exitmonitor r5;
+
+     label15:
+        exitmonitor r2;
+
+     label16:
+        return $b6;
+
+     label17:
+        exitmonitor r5;
+
+     label18:
+        goto label22;
+
+     label19:
+        $r22 := @caughtexception;
+
+     label20:
+        r6 = $r22;
+        exitmonitor r5;
+
+     label21:
+        throw r6;
+
+     label22:
+        $z6 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z6 != 0 goto label23;
+
+        $z7 = staticinvoke <sun.nio.ch.IOStatus: boolean check(int)>(i0);
+        if $z7 != 0 goto label23;
+
+        $r23 = new java.lang.AssertionError;
+        specialinvoke $r23.<java.lang.AssertionError: void <init>()>();
+        throw $r23;
+
+     label23:
+        exitmonitor r2;
+
+     label24:
+        return b1;
+
+     label25:
+        $l7 = staticinvoke <sun.nio.ch.NativeThread: long current()>();
+        r0.<sun.nio.ch.SocketChannelImpl: long readerThread> = $l7;
+        exitmonitor r4;
+
+     label26:
+        goto label30;
+
+     label27:
+        $r24 := @caughtexception;
+
+     label28:
+        r7 = $r24;
+        exitmonitor r4;
+
+     label29:
+        throw r7;
+
+     label30:
+        $r25 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        $r26 = <sun.nio.ch.SocketChannelImpl: sun.nio.ch.NativeDispatcher nd>;
+        i0 = staticinvoke <sun.nio.ch.IOUtil: int read(java.io.FileDescriptor,java.nio.ByteBuffer,long,sun.nio.ch.NativeDispatcher)>($r25, r1, -1L, $r26);
+        if i0 != -3 goto label31;
+
+        $z8 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z8 == 0 goto label31;
+
+        goto label30;
+
+     label31:
+        i8 = staticinvoke <sun.nio.ch.IOStatus: int normalize(int)>(i0);
+
+     label32:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void readerCleanup()>();
+        $z9 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isBlocking()>();
+        if $z9 == 0 goto label35;
+
+        $r27 = r3;
+        $r28 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $r29 = virtualinvoke $r28.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        $r30 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $i9 = virtualinvoke $r30.<java.net.InetSocketAddress: int getPort()>();
+        $b10 = 0;
+        if i0 <= 0 goto label33;
+
+        $l11 = (long) i0;
+        goto label34;
+
+     label33:
+        $l11 = 0L;
+
+     label34:
+        staticinvoke <sun.misc.IoTrace: void socketReadEnd(java.lang.Object,java.net.InetAddress,int,int,long)>($r27, $r29, $i9, $b10, $l11);
+
+     label35:
+        if i0 > 0 goto label36;
+
+        if i0 != -2 goto label37;
+
+     label36:
+        $z10 = 1;
+        goto label38;
+
+     label37:
+        $z10 = 0;
+
+     label38:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z10);
+        $r32 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r33 = $r32;
+        entermonitor $r32;
+
+     label39:
+        if i0 > 0 goto label42;
+
+        $z11 = r0.<sun.nio.ch.SocketChannelImpl: boolean isInputOpen>;
+        if $z11 != 0 goto label42;
+
+        $b12 = -1;
+        exitmonitor r33;
+
+     label40:
+        exitmonitor r2;
+
+     label41:
+        return $b12;
+
+     label42:
+        exitmonitor r33;
+
+     label43:
+        goto label47;
+
+     label44:
+        $r34 := @caughtexception;
+
+     label45:
+        r8 = $r34;
+        exitmonitor r33;
+
+     label46:
+        throw r8;
+
+     label47:
+        $z12 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z12 != 0 goto label48;
+
+        $z13 = staticinvoke <sun.nio.ch.IOStatus: boolean check(int)>(i0);
+        if $z13 != 0 goto label48;
+
+        $r35 = new java.lang.AssertionError;
+        specialinvoke $r35.<java.lang.AssertionError: void <init>()>();
+        throw $r35;
+
+     label48:
+        exitmonitor r2;
+
+     label49:
+        return i8;
+
+     label50:
+        $r36 := @caughtexception;
+
+     label51:
+        r9 = $r36;
+
+     label52:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void readerCleanup()>();
+        $z14 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isBlocking()>();
+        if $z14 == 0 goto label55;
+
+        $r37 = r3;
+        $r38 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $r39 = virtualinvoke $r38.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        $r40 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $i13 = virtualinvoke $r40.<java.net.InetSocketAddress: int getPort()>();
+        $b14 = 0;
+        if i0 <= 0 goto label53;
+
+        $l15 = (long) i0;
+        goto label54;
+
+     label53:
+        $l15 = 0L;
+
+     label54:
+        staticinvoke <sun.misc.IoTrace: void socketReadEnd(java.lang.Object,java.net.InetAddress,int,int,long)>($r37, $r39, $i13, $b14, $l15);
+
+     label55:
+        if i0 > 0 goto label56;
+
+        if i0 != -2 goto label57;
+
+     label56:
+        $z15 = 1;
+        goto label58;
+
+     label57:
+        $z15 = 0;
+
+     label58:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z15);
+        $r42 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r10 = $r42;
+        entermonitor $r42;
+
+     label59:
+        if i0 > 0 goto label62;
+
+        $z16 = r0.<sun.nio.ch.SocketChannelImpl: boolean isInputOpen>;
+        if $z16 != 0 goto label62;
+
+        $b16 = -1;
+        exitmonitor r10;
+
+     label60:
+        exitmonitor r2;
+
+     label61:
+        return $b16;
+
+     label62:
+        exitmonitor r10;
+
+     label63:
+        goto label67;
+
+     label64:
+        $r43 := @caughtexception;
+
+     label65:
+        r11 = $r43;
+        exitmonitor r10;
+
+     label66:
+        throw r11;
+
+     label67:
+        $z17 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z17 != 0 goto label68;
+
+        $z18 = staticinvoke <sun.nio.ch.IOStatus: boolean check(int)>(i0);
+        if $z18 != 0 goto label68;
+
+        $r44 = new java.lang.AssertionError;
+        specialinvoke $r44.<java.lang.AssertionError: void <init>()>();
+        throw $r44;
+
+     label68:
+        throw r9;
+
+     label69:
+        $r45 := @caughtexception;
+        r12 = $r45;
+        exitmonitor r2;
+
+     label70:
+        throw r12;
+
+        catch java.lang.Throwable from label14 to label15 with label19;
+        catch java.lang.Throwable from label17 to label18 with label19;
+        catch java.lang.Throwable from label20 to label21 with label19;
+        catch java.lang.Throwable from label6 to label7 with label27;
+        catch java.lang.Throwable from label25 to label26 with label27;
+        catch java.lang.Throwable from label28 to label29 with label27;
+        catch java.lang.Throwable from label39 to label40 with label44;
+        catch java.lang.Throwable from label42 to label43 with label44;
+        catch java.lang.Throwable from label45 to label46 with label44;
+        catch java.lang.Throwable from label5 to label7 with label50;
+        catch java.lang.Throwable from label25 to label32 with label50;
+        catch java.lang.Throwable from label59 to label60 with label64;
+        catch java.lang.Throwable from label62 to label63 with label64;
+        catch java.lang.Throwable from label65 to label66 with label64;
+        catch java.lang.Throwable from label51 to label52 with label50;
+        catch java.lang.Throwable from label1 to label2 with label69;
+        catch java.lang.Throwable from label3 to label16 with label69;
+        catch java.lang.Throwable from label17 to label24 with label69;
+        catch java.lang.Throwable from label25 to label41 with label69;
+        catch java.lang.Throwable from label42 to label49 with label69;
+        catch java.lang.Throwable from label51 to label61 with label69;
+        catch java.lang.Throwable from label62 to label70 with label69;
+    }
+
+    public long read(java.nio.ByteBuffer[], int, int) throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.nio.ByteBuffer[] r1;
+        int i0, i1, $i5, $i6, $i8, $i18, $i26;
+        java.lang.Object r2, r3, r4, r5, r8, r11, $r15, $r16, $r17, $r22, $r28, $r33, $r37, $r42;
+        long l2, l3, $l7, $l10, $l14, $l15, l17, $l21, $l25, $l29, $l33;
+        byte $b4, $b9, $b11, $b12, $b13, $b16, $b19, $b20, $b22, $b23, $b24, $b27, $b28, $b30, $b31, $b32;
+        java.lang.Throwable r6, r7, r9, r10, r12, r13, $r23, $r25, $r34, $r36, $r43, $r45;
+        java.lang.IndexOutOfBoundsException $r14;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14, $z15, $z16, $z17, $z18;
+        java.net.InetSocketAddress $r18, $r20, $r29, $r31, $r38, $r40;
+        java.net.InetAddress $r19, $r30, $r39;
+        java.lang.AssertionError $r24, $r35, $r44;
+        java.io.FileDescriptor $r26;
+        sun.nio.ch.NativeDispatcher $r27;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        r1 := @parameter0: java.nio.ByteBuffer[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        if i0 < 0 goto label0;
+
+        if i1 < 0 goto label0;
+
+        $i5 = lengthof r1;
+        $i6 = $i5 - i1;
+        if i0 <= $i6 goto label1;
+
+     label0:
+        $r14 = new java.lang.IndexOutOfBoundsException;
+        specialinvoke $r14.<java.lang.IndexOutOfBoundsException: void <init>()>();
+        throw $r14;
+
+     label1:
+        $r15 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object readLock>;
+        r2 = $r15;
+        entermonitor $r15;
+
+     label2:
+        $z0 = specialinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean ensureReadOpen()>();
+        if $z0 != 0 goto label4;
+
+        $l7 = -1L;
+        exitmonitor r2;
+
+     label3:
+        return $l7;
+
+     label4:
+        l2 = 0L;
+        r3 = null;
+        $z1 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isBlocking()>();
+        if $z1 == 0 goto label5;
+
+        r3 = staticinvoke <sun.misc.IoTrace: java.lang.Object socketReadBegin()>();
+
+     label5:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void begin()>();
+        $r16 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r4 = $r16;
+        entermonitor $r16;
+
+     label6:
+        $z2 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z2 != 0 goto label25;
+
+        l3 = 0L;
+        exitmonitor r4;
+
+     label7:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void readerCleanup()>();
+        $z3 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isBlocking()>();
+        if $z3 == 0 goto label10;
+
+        $r17 = r3;
+        $r18 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $r19 = virtualinvoke $r18.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        $r20 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $i8 = virtualinvoke $r20.<java.net.InetSocketAddress: int getPort()>();
+        $b4 = 0;
+        $b9 = l2 cmp 0L;
+        if $b9 <= 0 goto label8;
+
+        $l10 = l2;
+        goto label9;
+
+     label8:
+        $l10 = 0L;
+
+     label9:
+        staticinvoke <sun.misc.IoTrace: void socketReadEnd(java.lang.Object,java.net.InetAddress,int,int,long)>($r17, $r19, $i8, $b4, $l10);
+
+     label10:
+        $b11 = l2 cmp 0L;
+        if $b11 > 0 goto label11;
+
+        $b12 = l2 cmp -2L;
+        if $b12 != 0 goto label12;
+
+     label11:
+        $z4 = 1;
+        goto label13;
+
+     label12:
+        $z4 = 0;
+
+     label13:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z4);
+        $r22 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r5 = $r22;
+        entermonitor $r22;
+
+     label14:
+        $b13 = l2 cmp 0L;
+        if $b13 > 0 goto label17;
+
+        $z5 = r0.<sun.nio.ch.SocketChannelImpl: boolean isInputOpen>;
+        if $z5 != 0 goto label17;
+
+        $l14 = -1L;
+        exitmonitor r5;
+
+     label15:
+        exitmonitor r2;
+
+     label16:
+        return $l14;
+
+     label17:
+        exitmonitor r5;
+
+     label18:
+        goto label22;
+
+     label19:
+        $r23 := @caughtexception;
+
+     label20:
+        r6 = $r23;
+        exitmonitor r5;
+
+     label21:
+        throw r6;
+
+     label22:
+        $z6 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z6 != 0 goto label23;
+
+        $z7 = staticinvoke <sun.nio.ch.IOStatus: boolean check(long)>(l2);
+        if $z7 != 0 goto label23;
+
+        $r24 = new java.lang.AssertionError;
+        specialinvoke $r24.<java.lang.AssertionError: void <init>()>();
+        throw $r24;
+
+     label23:
+        exitmonitor r2;
+
+     label24:
+        return l3;
+
+     label25:
+        $l15 = staticinvoke <sun.nio.ch.NativeThread: long current()>();
+        r0.<sun.nio.ch.SocketChannelImpl: long readerThread> = $l15;
+        exitmonitor r4;
+
+     label26:
+        goto label30;
+
+     label27:
+        $r25 := @caughtexception;
+
+     label28:
+        r7 = $r25;
+        exitmonitor r4;
+
+     label29:
+        throw r7;
+
+     label30:
+        $r26 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        $r27 = <sun.nio.ch.SocketChannelImpl: sun.nio.ch.NativeDispatcher nd>;
+        l2 = staticinvoke <sun.nio.ch.IOUtil: long read(java.io.FileDescriptor,java.nio.ByteBuffer[],int,int,sun.nio.ch.NativeDispatcher)>($r26, r1, i0, i1, $r27);
+        $b16 = l2 cmp -3L;
+        if $b16 != 0 goto label31;
+
+        $z8 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z8 == 0 goto label31;
+
+        goto label30;
+
+     label31:
+        l17 = staticinvoke <sun.nio.ch.IOStatus: long normalize(long)>(l2);
+
+     label32:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void readerCleanup()>();
+        $z9 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isBlocking()>();
+        if $z9 == 0 goto label35;
+
+        $r28 = r3;
+        $r29 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $r30 = virtualinvoke $r29.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        $r31 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $i18 = virtualinvoke $r31.<java.net.InetSocketAddress: int getPort()>();
+        $b19 = 0;
+        $b20 = l2 cmp 0L;
+        if $b20 <= 0 goto label33;
+
+        $l21 = l2;
+        goto label34;
+
+     label33:
+        $l21 = 0L;
+
+     label34:
+        staticinvoke <sun.misc.IoTrace: void socketReadEnd(java.lang.Object,java.net.InetAddress,int,int,long)>($r28, $r30, $i18, $b19, $l21);
+
+     label35:
+        $b22 = l2 cmp 0L;
+        if $b22 > 0 goto label36;
+
+        $b23 = l2 cmp -2L;
+        if $b23 != 0 goto label37;
+
+     label36:
+        $z10 = 1;
+        goto label38;
+
+     label37:
+        $z10 = 0;
+
+     label38:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z10);
+        $r33 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r8 = $r33;
+        entermonitor $r33;
+
+     label39:
+        $b24 = l2 cmp 0L;
+        if $b24 > 0 goto label42;
+
+        $z11 = r0.<sun.nio.ch.SocketChannelImpl: boolean isInputOpen>;
+        if $z11 != 0 goto label42;
+
+        $l25 = -1L;
+        exitmonitor r8;
+
+     label40:
+        exitmonitor r2;
+
+     label41:
+        return $l25;
+
+     label42:
+        exitmonitor r8;
+
+     label43:
+        goto label47;
+
+     label44:
+        $r34 := @caughtexception;
+
+     label45:
+        r9 = $r34;
+        exitmonitor r8;
+
+     label46:
+        throw r9;
+
+     label47:
+        $z12 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z12 != 0 goto label48;
+
+        $z13 = staticinvoke <sun.nio.ch.IOStatus: boolean check(long)>(l2);
+        if $z13 != 0 goto label48;
+
+        $r35 = new java.lang.AssertionError;
+        specialinvoke $r35.<java.lang.AssertionError: void <init>()>();
+        throw $r35;
+
+     label48:
+        exitmonitor r2;
+
+     label49:
+        return l17;
+
+     label50:
+        $r36 := @caughtexception;
+
+     label51:
+        r10 = $r36;
+
+     label52:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void readerCleanup()>();
+        $z14 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isBlocking()>();
+        if $z14 == 0 goto label55;
+
+        $r37 = r3;
+        $r38 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $r39 = virtualinvoke $r38.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        $r40 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $i26 = virtualinvoke $r40.<java.net.InetSocketAddress: int getPort()>();
+        $b27 = 0;
+        $b28 = l2 cmp 0L;
+        if $b28 <= 0 goto label53;
+
+        $l29 = l2;
+        goto label54;
+
+     label53:
+        $l29 = 0L;
+
+     label54:
+        staticinvoke <sun.misc.IoTrace: void socketReadEnd(java.lang.Object,java.net.InetAddress,int,int,long)>($r37, $r39, $i26, $b27, $l29);
+
+     label55:
+        $b30 = l2 cmp 0L;
+        if $b30 > 0 goto label56;
+
+        $b31 = l2 cmp -2L;
+        if $b31 != 0 goto label57;
+
+     label56:
+        $z15 = 1;
+        goto label58;
+
+     label57:
+        $z15 = 0;
+
+     label58:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z15);
+        $r42 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r11 = $r42;
+        entermonitor $r42;
+
+     label59:
+        $b32 = l2 cmp 0L;
+        if $b32 > 0 goto label62;
+
+        $z16 = r0.<sun.nio.ch.SocketChannelImpl: boolean isInputOpen>;
+        if $z16 != 0 goto label62;
+
+        $l33 = -1L;
+        exitmonitor r11;
+
+     label60:
+        exitmonitor r2;
+
+     label61:
+        return $l33;
+
+     label62:
+        exitmonitor r11;
+
+     label63:
+        goto label67;
+
+     label64:
+        $r43 := @caughtexception;
+
+     label65:
+        r12 = $r43;
+        exitmonitor r11;
+
+     label66:
+        throw r12;
+
+     label67:
+        $z17 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z17 != 0 goto label68;
+
+        $z18 = staticinvoke <sun.nio.ch.IOStatus: boolean check(long)>(l2);
+        if $z18 != 0 goto label68;
+
+        $r44 = new java.lang.AssertionError;
+        specialinvoke $r44.<java.lang.AssertionError: void <init>()>();
+        throw $r44;
+
+     label68:
+        throw r10;
+
+     label69:
+        $r45 := @caughtexception;
+        r13 = $r45;
+        exitmonitor r2;
+
+     label70:
+        throw r13;
+
+        catch java.lang.Throwable from label14 to label15 with label19;
+        catch java.lang.Throwable from label17 to label18 with label19;
+        catch java.lang.Throwable from label20 to label21 with label19;
+        catch java.lang.Throwable from label6 to label7 with label27;
+        catch java.lang.Throwable from label25 to label26 with label27;
+        catch java.lang.Throwable from label28 to label29 with label27;
+        catch java.lang.Throwable from label39 to label40 with label44;
+        catch java.lang.Throwable from label42 to label43 with label44;
+        catch java.lang.Throwable from label45 to label46 with label44;
+        catch java.lang.Throwable from label5 to label7 with label50;
+        catch java.lang.Throwable from label25 to label32 with label50;
+        catch java.lang.Throwable from label59 to label60 with label64;
+        catch java.lang.Throwable from label62 to label63 with label64;
+        catch java.lang.Throwable from label65 to label66 with label64;
+        catch java.lang.Throwable from label51 to label52 with label50;
+        catch java.lang.Throwable from label2 to label3 with label69;
+        catch java.lang.Throwable from label4 to label16 with label69;
+        catch java.lang.Throwable from label17 to label24 with label69;
+        catch java.lang.Throwable from label25 to label41 with label69;
+        catch java.lang.Throwable from label42 to label49 with label69;
+        catch java.lang.Throwable from label51 to label61 with label69;
+        catch java.lang.Throwable from label62 to label70 with label69;
+    }
+
+    public int write(java.nio.ByteBuffer) throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.nio.ByteBuffer r1;
+        java.lang.Object r2, r3, r4, r5, r11, $r15, $r16, $r22, $r33, r34, $r44;
+        int i0, $i2, i5, $i6, $i8;
+        byte b1;
+        java.lang.Throwable r6, r7, r9, r10, r12, r13, $r24, $r26, $r36, $r38, $r46, $r48;
+        sun.nio.ch.NativeDispatcher $r8;
+        java.lang.NullPointerException $r14;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13;
+        java.net.InetSocketAddress $r18, $r20, $r29, $r31, $r40, $r42;
+        java.net.InetAddress $r19, $r30, $r41;
+        long $l3, $l4, $l7, $l9;
+        java.nio.channels.AsynchronousCloseException $r23, $r35, $r45;
+        java.lang.AssertionError $r25, $r37, $r47;
+        java.io.FileDescriptor $r27;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        r1 := @parameter0: java.nio.ByteBuffer;
+        if r1 != null goto label0;
+
+        $r14 = new java.lang.NullPointerException;
+        specialinvoke $r14.<java.lang.NullPointerException: void <init>()>();
+        throw $r14;
+
+     label0:
+        $r15 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object writeLock>;
+        r2 = $r15;
+        entermonitor $r15;
+
+     label1:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void ensureWriteOpen()>();
+        i0 = 0;
+        r3 = staticinvoke <sun.misc.IoTrace: java.lang.Object socketWriteBegin()>();
+
+     label2:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void begin()>();
+        $r16 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r4 = $r16;
+        entermonitor $r16;
+
+     label3:
+        $z0 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z0 != 0 goto label19;
+
+        b1 = 0;
+        exitmonitor r4;
+
+     label4:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void writerCleanup()>();
+        $r18 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $r19 = virtualinvoke $r18.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        $r20 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $i2 = virtualinvoke $r20.<java.net.InetSocketAddress: int getPort()>();
+        if i0 <= 0 goto label5;
+
+        $l3 = (long) i0;
+        goto label6;
+
+     label5:
+        $l3 = 0L;
+
+     label6:
+        staticinvoke <sun.misc.IoTrace: void socketWriteEnd(java.lang.Object,java.net.InetAddress,int,long)>(r3, $r19, $i2, $l3);
+        if i0 > 0 goto label7;
+
+        if i0 != -2 goto label8;
+
+     label7:
+        $z1 = 1;
+        goto label9;
+
+     label8:
+        $z1 = 0;
+
+     label9:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z1);
+        $r22 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r5 = $r22;
+        entermonitor $r22;
+
+     label10:
+        if i0 > 0 goto label11;
+
+        $z2 = r0.<sun.nio.ch.SocketChannelImpl: boolean isOutputOpen>;
+        if $z2 != 0 goto label11;
+
+        $r23 = new java.nio.channels.AsynchronousCloseException;
+        specialinvoke $r23.<java.nio.channels.AsynchronousCloseException: void <init>()>();
+        throw $r23;
+
+     label11:
+        exitmonitor r5;
+
+     label12:
+        goto label16;
+
+     label13:
+        $r24 := @caughtexception;
+
+     label14:
+        r6 = $r24;
+        exitmonitor r5;
+
+     label15:
+        throw r6;
+
+     label16:
+        $z3 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z3 != 0 goto label17;
+
+        $z4 = staticinvoke <sun.nio.ch.IOStatus: boolean check(int)>(i0);
+        if $z4 != 0 goto label17;
+
+        $r25 = new java.lang.AssertionError;
+        specialinvoke $r25.<java.lang.AssertionError: void <init>()>();
+        throw $r25;
+
+     label17:
+        exitmonitor r2;
+
+     label18:
+        return b1;
+
+     label19:
+        $l4 = staticinvoke <sun.nio.ch.NativeThread: long current()>();
+        r0.<sun.nio.ch.SocketChannelImpl: long writerThread> = $l4;
+        exitmonitor r4;
+
+     label20:
+        goto label24;
+
+     label21:
+        $r26 := @caughtexception;
+
+     label22:
+        r7 = $r26;
+        exitmonitor r4;
+
+     label23:
+        throw r7;
+
+     label24:
+        $r27 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        $r8 = <sun.nio.ch.SocketChannelImpl: sun.nio.ch.NativeDispatcher nd>;
+        i0 = staticinvoke <sun.nio.ch.IOUtil: int write(java.io.FileDescriptor,java.nio.ByteBuffer,long,sun.nio.ch.NativeDispatcher)>($r27, r1, -1L, $r8);
+        if i0 != -3 goto label25;
+
+        $z5 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z5 == 0 goto label25;
+
+        goto label24;
+
+     label25:
+        i5 = staticinvoke <sun.nio.ch.IOStatus: int normalize(int)>(i0);
+
+     label26:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void writerCleanup()>();
+        $r29 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $r30 = virtualinvoke $r29.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        $r31 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $i6 = virtualinvoke $r31.<java.net.InetSocketAddress: int getPort()>();
+        if i0 <= 0 goto label27;
+
+        $l7 = (long) i0;
+        goto label28;
+
+     label27:
+        $l7 = 0L;
+
+     label28:
+        staticinvoke <sun.misc.IoTrace: void socketWriteEnd(java.lang.Object,java.net.InetAddress,int,long)>(r3, $r30, $i6, $l7);
+        if i0 > 0 goto label29;
+
+        if i0 != -2 goto label30;
+
+     label29:
+        $z6 = 1;
+        goto label31;
+
+     label30:
+        $z6 = 0;
+
+     label31:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z6);
+        $r33 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r34 = $r33;
+        entermonitor $r33;
+
+     label32:
+        if i0 > 0 goto label33;
+
+        $z7 = r0.<sun.nio.ch.SocketChannelImpl: boolean isOutputOpen>;
+        if $z7 != 0 goto label33;
+
+        $r35 = new java.nio.channels.AsynchronousCloseException;
+        specialinvoke $r35.<java.nio.channels.AsynchronousCloseException: void <init>()>();
+        throw $r35;
+
+     label33:
+        exitmonitor r34;
+
+     label34:
+        goto label38;
+
+     label35:
+        $r36 := @caughtexception;
+
+     label36:
+        r9 = $r36;
+        exitmonitor r34;
+
+     label37:
+        throw r9;
+
+     label38:
+        $z8 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z8 != 0 goto label39;
+
+        $z9 = staticinvoke <sun.nio.ch.IOStatus: boolean check(int)>(i0);
+        if $z9 != 0 goto label39;
+
+        $r37 = new java.lang.AssertionError;
+        specialinvoke $r37.<java.lang.AssertionError: void <init>()>();
+        throw $r37;
+
+     label39:
+        exitmonitor r2;
+
+     label40:
+        return i5;
+
+     label41:
+        $r38 := @caughtexception;
+
+     label42:
+        r10 = $r38;
+
+     label43:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void writerCleanup()>();
+        $r40 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $r41 = virtualinvoke $r40.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        $r42 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $i8 = virtualinvoke $r42.<java.net.InetSocketAddress: int getPort()>();
+        if i0 <= 0 goto label44;
+
+        $l9 = (long) i0;
+        goto label45;
+
+     label44:
+        $l9 = 0L;
+
+     label45:
+        staticinvoke <sun.misc.IoTrace: void socketWriteEnd(java.lang.Object,java.net.InetAddress,int,long)>(r3, $r41, $i8, $l9);
+        if i0 > 0 goto label46;
+
+        if i0 != -2 goto label47;
+
+     label46:
+        $z10 = 1;
+        goto label48;
+
+     label47:
+        $z10 = 0;
+
+     label48:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z10);
+        $r44 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r11 = $r44;
+        entermonitor $r44;
+
+     label49:
+        if i0 > 0 goto label50;
+
+        $z11 = r0.<sun.nio.ch.SocketChannelImpl: boolean isOutputOpen>;
+        if $z11 != 0 goto label50;
+
+        $r45 = new java.nio.channels.AsynchronousCloseException;
+        specialinvoke $r45.<java.nio.channels.AsynchronousCloseException: void <init>()>();
+        throw $r45;
+
+     label50:
+        exitmonitor r11;
+
+     label51:
+        goto label55;
+
+     label52:
+        $r46 := @caughtexception;
+
+     label53:
+        r12 = $r46;
+        exitmonitor r11;
+
+     label54:
+        throw r12;
+
+     label55:
+        $z12 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z12 != 0 goto label56;
+
+        $z13 = staticinvoke <sun.nio.ch.IOStatus: boolean check(int)>(i0);
+        if $z13 != 0 goto label56;
+
+        $r47 = new java.lang.AssertionError;
+        specialinvoke $r47.<java.lang.AssertionError: void <init>()>();
+        throw $r47;
+
+     label56:
+        throw r10;
+
+     label57:
+        $r48 := @caughtexception;
+        r13 = $r48;
+        exitmonitor r2;
+
+     label58:
+        throw r13;
+
+        catch java.lang.Throwable from label10 to label12 with label13;
+        catch java.lang.Throwable from label14 to label15 with label13;
+        catch java.lang.Throwable from label3 to label4 with label21;
+        catch java.lang.Throwable from label19 to label20 with label21;
+        catch java.lang.Throwable from label22 to label23 with label21;
+        catch java.lang.Throwable from label32 to label34 with label35;
+        catch java.lang.Throwable from label36 to label37 with label35;
+        catch java.lang.Throwable from label2 to label4 with label41;
+        catch java.lang.Throwable from label19 to label26 with label41;
+        catch java.lang.Throwable from label49 to label51 with label52;
+        catch java.lang.Throwable from label53 to label54 with label52;
+        catch java.lang.Throwable from label42 to label43 with label41;
+        catch java.lang.Throwable from label1 to label18 with label57;
+        catch java.lang.Throwable from label19 to label40 with label57;
+        catch java.lang.Throwable from label42 to label58 with label57;
+    }
+
+    public long write(java.nio.ByteBuffer[], int, int) throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.nio.ByteBuffer[] r1;
+        int i0, i1, $i4, $i5, $i6, $i15, $i21;
+        java.lang.Object r2, r3, r4, r5, r9, r12, $r16, $r17, $r23, $r34, $r44;
+        long l2, l3, $l8, $l12, l14, $l17, $l23;
+        java.lang.Throwable r6, r7, r10, r11, r13, r14, $r25, $r27, $r36, $r38, $r46, $r48;
+        sun.nio.ch.NativeDispatcher $r8;
+        java.lang.IndexOutOfBoundsException $r15;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13;
+        java.net.InetSocketAddress $r19, $r21, $r30, $r32, $r40, $r42;
+        java.net.InetAddress $r20, $r31, $r41;
+        byte $b7, $b9, $b10, $b11, $b13, $b16, $b18, $b19, $b20, $b22, $b24, $b25, $b26;
+        java.nio.channels.AsynchronousCloseException $r24, $r35, $r45;
+        java.lang.AssertionError $r26, $r37, $r47;
+        java.io.FileDescriptor $r28;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        r1 := @parameter0: java.nio.ByteBuffer[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        if i0 < 0 goto label0;
+
+        if i1 < 0 goto label0;
+
+        $i4 = lengthof r1;
+        $i5 = $i4 - i1;
+        if i0 <= $i5 goto label1;
+
+     label0:
+        $r15 = new java.lang.IndexOutOfBoundsException;
+        specialinvoke $r15.<java.lang.IndexOutOfBoundsException: void <init>()>();
+        throw $r15;
+
+     label1:
+        $r16 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object writeLock>;
+        r2 = $r16;
+        entermonitor $r16;
+
+     label2:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void ensureWriteOpen()>();
+        l2 = 0L;
+        r3 = staticinvoke <sun.misc.IoTrace: java.lang.Object socketWriteBegin()>();
+
+     label3:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void begin()>();
+        $r17 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r4 = $r17;
+        entermonitor $r17;
+
+     label4:
+        $z0 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z0 != 0 goto label20;
+
+        l3 = 0L;
+        exitmonitor r4;
+
+     label5:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void writerCleanup()>();
+        $r19 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $r20 = virtualinvoke $r19.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        $r21 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $i6 = virtualinvoke $r21.<java.net.InetSocketAddress: int getPort()>();
+        $b7 = l2 cmp 0L;
+        if $b7 <= 0 goto label6;
+
+        $l8 = l2;
+        goto label7;
+
+     label6:
+        $l8 = 0L;
+
+     label7:
+        staticinvoke <sun.misc.IoTrace: void socketWriteEnd(java.lang.Object,java.net.InetAddress,int,long)>(r3, $r20, $i6, $l8);
+        $b9 = l2 cmp 0L;
+        if $b9 > 0 goto label8;
+
+        $b10 = l2 cmp -2L;
+        if $b10 != 0 goto label9;
+
+     label8:
+        $z1 = 1;
+        goto label10;
+
+     label9:
+        $z1 = 0;
+
+     label10:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z1);
+        $r23 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r5 = $r23;
+        entermonitor $r23;
+
+     label11:
+        $b11 = l2 cmp 0L;
+        if $b11 > 0 goto label12;
+
+        $z2 = r0.<sun.nio.ch.SocketChannelImpl: boolean isOutputOpen>;
+        if $z2 != 0 goto label12;
+
+        $r24 = new java.nio.channels.AsynchronousCloseException;
+        specialinvoke $r24.<java.nio.channels.AsynchronousCloseException: void <init>()>();
+        throw $r24;
+
+     label12:
+        exitmonitor r5;
+
+     label13:
+        goto label17;
+
+     label14:
+        $r25 := @caughtexception;
+
+     label15:
+        r6 = $r25;
+        exitmonitor r5;
+
+     label16:
+        throw r6;
+
+     label17:
+        $z3 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z3 != 0 goto label18;
+
+        $z4 = staticinvoke <sun.nio.ch.IOStatus: boolean check(long)>(l2);
+        if $z4 != 0 goto label18;
+
+        $r26 = new java.lang.AssertionError;
+        specialinvoke $r26.<java.lang.AssertionError: void <init>()>();
+        throw $r26;
+
+     label18:
+        exitmonitor r2;
+
+     label19:
+        return l3;
+
+     label20:
+        $l12 = staticinvoke <sun.nio.ch.NativeThread: long current()>();
+        r0.<sun.nio.ch.SocketChannelImpl: long writerThread> = $l12;
+        exitmonitor r4;
+
+     label21:
+        goto label25;
+
+     label22:
+        $r27 := @caughtexception;
+
+     label23:
+        r7 = $r27;
+        exitmonitor r4;
+
+     label24:
+        throw r7;
+
+     label25:
+        $r28 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        $r8 = <sun.nio.ch.SocketChannelImpl: sun.nio.ch.NativeDispatcher nd>;
+        l2 = staticinvoke <sun.nio.ch.IOUtil: long write(java.io.FileDescriptor,java.nio.ByteBuffer[],int,int,sun.nio.ch.NativeDispatcher)>($r28, r1, i0, i1, $r8);
+        $b13 = l2 cmp -3L;
+        if $b13 != 0 goto label26;
+
+        $z5 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z5 == 0 goto label26;
+
+        goto label25;
+
+     label26:
+        l14 = staticinvoke <sun.nio.ch.IOStatus: long normalize(long)>(l2);
+
+     label27:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void writerCleanup()>();
+        $r30 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $r31 = virtualinvoke $r30.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        $r32 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $i15 = virtualinvoke $r32.<java.net.InetSocketAddress: int getPort()>();
+        $b16 = l2 cmp 0L;
+        if $b16 <= 0 goto label28;
+
+        $l17 = l2;
+        goto label29;
+
+     label28:
+        $l17 = 0L;
+
+     label29:
+        staticinvoke <sun.misc.IoTrace: void socketWriteEnd(java.lang.Object,java.net.InetAddress,int,long)>(r3, $r31, $i15, $l17);
+        $b18 = l2 cmp 0L;
+        if $b18 > 0 goto label30;
+
+        $b19 = l2 cmp -2L;
+        if $b19 != 0 goto label31;
+
+     label30:
+        $z6 = 1;
+        goto label32;
+
+     label31:
+        $z6 = 0;
+
+     label32:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z6);
+        $r34 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r9 = $r34;
+        entermonitor $r34;
+
+     label33:
+        $b20 = l2 cmp 0L;
+        if $b20 > 0 goto label34;
+
+        $z7 = r0.<sun.nio.ch.SocketChannelImpl: boolean isOutputOpen>;
+        if $z7 != 0 goto label34;
+
+        $r35 = new java.nio.channels.AsynchronousCloseException;
+        specialinvoke $r35.<java.nio.channels.AsynchronousCloseException: void <init>()>();
+        throw $r35;
+
+     label34:
+        exitmonitor r9;
+
+     label35:
+        goto label39;
+
+     label36:
+        $r36 := @caughtexception;
+
+     label37:
+        r10 = $r36;
+        exitmonitor r9;
+
+     label38:
+        throw r10;
+
+     label39:
+        $z8 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z8 != 0 goto label40;
+
+        $z9 = staticinvoke <sun.nio.ch.IOStatus: boolean check(long)>(l2);
+        if $z9 != 0 goto label40;
+
+        $r37 = new java.lang.AssertionError;
+        specialinvoke $r37.<java.lang.AssertionError: void <init>()>();
+        throw $r37;
+
+     label40:
+        exitmonitor r2;
+
+     label41:
+        return l14;
+
+     label42:
+        $r38 := @caughtexception;
+
+     label43:
+        r11 = $r38;
+
+     label44:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void writerCleanup()>();
+        $r40 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $r41 = virtualinvoke $r40.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        $r42 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        $i21 = virtualinvoke $r42.<java.net.InetSocketAddress: int getPort()>();
+        $b22 = l2 cmp 0L;
+        if $b22 <= 0 goto label45;
+
+        $l23 = l2;
+        goto label46;
+
+     label45:
+        $l23 = 0L;
+
+     label46:
+        staticinvoke <sun.misc.IoTrace: void socketWriteEnd(java.lang.Object,java.net.InetAddress,int,long)>(r3, $r41, $i21, $l23);
+        $b24 = l2 cmp 0L;
+        if $b24 > 0 goto label47;
+
+        $b25 = l2 cmp -2L;
+        if $b25 != 0 goto label48;
+
+     label47:
+        $z10 = 1;
+        goto label49;
+
+     label48:
+        $z10 = 0;
+
+     label49:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z10);
+        $r44 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r12 = $r44;
+        entermonitor $r44;
+
+     label50:
+        $b26 = l2 cmp 0L;
+        if $b26 > 0 goto label51;
+
+        $z11 = r0.<sun.nio.ch.SocketChannelImpl: boolean isOutputOpen>;
+        if $z11 != 0 goto label51;
+
+        $r45 = new java.nio.channels.AsynchronousCloseException;
+        specialinvoke $r45.<java.nio.channels.AsynchronousCloseException: void <init>()>();
+        throw $r45;
+
+     label51:
+        exitmonitor r12;
+
+     label52:
+        goto label56;
+
+     label53:
+        $r46 := @caughtexception;
+
+     label54:
+        r13 = $r46;
+        exitmonitor r12;
+
+     label55:
+        throw r13;
+
+     label56:
+        $z12 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z12 != 0 goto label57;
+
+        $z13 = staticinvoke <sun.nio.ch.IOStatus: boolean check(long)>(l2);
+        if $z13 != 0 goto label57;
+
+        $r47 = new java.lang.AssertionError;
+        specialinvoke $r47.<java.lang.AssertionError: void <init>()>();
+        throw $r47;
+
+     label57:
+        throw r11;
+
+     label58:
+        $r48 := @caughtexception;
+        r14 = $r48;
+        exitmonitor r2;
+
+     label59:
+        throw r14;
+
+        catch java.lang.Throwable from label11 to label13 with label14;
+        catch java.lang.Throwable from label15 to label16 with label14;
+        catch java.lang.Throwable from label4 to label5 with label22;
+        catch java.lang.Throwable from label20 to label21 with label22;
+        catch java.lang.Throwable from label23 to label24 with label22;
+        catch java.lang.Throwable from label33 to label35 with label36;
+        catch java.lang.Throwable from label37 to label38 with label36;
+        catch java.lang.Throwable from label3 to label5 with label42;
+        catch java.lang.Throwable from label20 to label27 with label42;
+        catch java.lang.Throwable from label50 to label52 with label53;
+        catch java.lang.Throwable from label54 to label55 with label53;
+        catch java.lang.Throwable from label43 to label44 with label42;
+        catch java.lang.Throwable from label2 to label19 with label58;
+        catch java.lang.Throwable from label20 to label41 with label58;
+        catch java.lang.Throwable from label43 to label59 with label58;
+    }
+
+    int sendOutOfBandData(byte) throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        byte b0, b2;
+        java.lang.Object r1, r2, r3, r8, $r11, $r12, $r14, $r21, r22, $r28;
+        int i1, i4;
+        java.lang.Throwable r4, r5, r6, r7, r9, r10, $r16, $r18, $r24, $r26, $r30, $r32;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13;
+        java.nio.channels.AsynchronousCloseException $r15, $r23, $r29;
+        java.lang.AssertionError $r17, $r25, $r31;
+        long $l3;
+        java.io.FileDescriptor $r19;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        b0 := @parameter0: byte;
+        $r11 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object writeLock>;
+        r1 = $r11;
+        entermonitor $r11;
+
+     label0:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void ensureWriteOpen()>();
+        i1 = 0;
+
+     label1:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void begin()>();
+        $r12 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r2 = $r12;
+        entermonitor $r12;
+
+     label2:
+        $z0 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z0 != 0 goto label16;
+
+        b2 = 0;
+        exitmonitor r2;
+
+     label3:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void writerCleanup()>();
+        if i1 > 0 goto label4;
+
+        if i1 != -2 goto label5;
+
+     label4:
+        $z1 = 1;
+        goto label6;
+
+     label5:
+        $z1 = 0;
+
+     label6:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z1);
+        $r14 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r3 = $r14;
+        entermonitor $r14;
+
+     label7:
+        if i1 > 0 goto label8;
+
+        $z2 = r0.<sun.nio.ch.SocketChannelImpl: boolean isOutputOpen>;
+        if $z2 != 0 goto label8;
+
+        $r15 = new java.nio.channels.AsynchronousCloseException;
+        specialinvoke $r15.<java.nio.channels.AsynchronousCloseException: void <init>()>();
+        throw $r15;
+
+     label8:
+        exitmonitor r3;
+
+     label9:
+        goto label13;
+
+     label10:
+        $r16 := @caughtexception;
+
+     label11:
+        r4 = $r16;
+        exitmonitor r3;
+
+     label12:
+        throw r4;
+
+     label13:
+        $z3 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z3 != 0 goto label14;
+
+        $z4 = staticinvoke <sun.nio.ch.IOStatus: boolean check(int)>(i1);
+        if $z4 != 0 goto label14;
+
+        $r17 = new java.lang.AssertionError;
+        specialinvoke $r17.<java.lang.AssertionError: void <init>()>();
+        throw $r17;
+
+     label14:
+        exitmonitor r1;
+
+     label15:
+        return b2;
+
+     label16:
+        $l3 = staticinvoke <sun.nio.ch.NativeThread: long current()>();
+        r0.<sun.nio.ch.SocketChannelImpl: long writerThread> = $l3;
+        exitmonitor r2;
+
+     label17:
+        goto label21;
+
+     label18:
+        $r18 := @caughtexception;
+
+     label19:
+        r5 = $r18;
+        exitmonitor r2;
+
+     label20:
+        throw r5;
+
+     label21:
+        $r19 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        i1 = staticinvoke <sun.nio.ch.SocketChannelImpl: int sendOutOfBandData(java.io.FileDescriptor,byte)>($r19, b0);
+        if i1 != -3 goto label22;
+
+        $z5 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z5 == 0 goto label22;
+
+        goto label21;
+
+     label22:
+        i4 = staticinvoke <sun.nio.ch.IOStatus: int normalize(int)>(i1);
+
+     label23:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void writerCleanup()>();
+        if i1 > 0 goto label24;
+
+        if i1 != -2 goto label25;
+
+     label24:
+        $z6 = 1;
+        goto label26;
+
+     label25:
+        $z6 = 0;
+
+     label26:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z6);
+        $r21 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r22 = $r21;
+        entermonitor $r21;
+
+     label27:
+        if i1 > 0 goto label28;
+
+        $z7 = r0.<sun.nio.ch.SocketChannelImpl: boolean isOutputOpen>;
+        if $z7 != 0 goto label28;
+
+        $r23 = new java.nio.channels.AsynchronousCloseException;
+        specialinvoke $r23.<java.nio.channels.AsynchronousCloseException: void <init>()>();
+        throw $r23;
+
+     label28:
+        exitmonitor r22;
+
+     label29:
+        goto label33;
+
+     label30:
+        $r24 := @caughtexception;
+
+     label31:
+        r6 = $r24;
+        exitmonitor r22;
+
+     label32:
+        throw r6;
+
+     label33:
+        $z8 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z8 != 0 goto label34;
+
+        $z9 = staticinvoke <sun.nio.ch.IOStatus: boolean check(int)>(i1);
+        if $z9 != 0 goto label34;
+
+        $r25 = new java.lang.AssertionError;
+        specialinvoke $r25.<java.lang.AssertionError: void <init>()>();
+        throw $r25;
+
+     label34:
+        exitmonitor r1;
+
+     label35:
+        return i4;
+
+     label36:
+        $r26 := @caughtexception;
+
+     label37:
+        r7 = $r26;
+
+     label38:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void writerCleanup()>();
+        if i1 > 0 goto label39;
+
+        if i1 != -2 goto label40;
+
+     label39:
+        $z10 = 1;
+        goto label41;
+
+     label40:
+        $z10 = 0;
+
+     label41:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z10);
+        $r28 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r8 = $r28;
+        entermonitor $r28;
+
+     label42:
+        if i1 > 0 goto label43;
+
+        $z11 = r0.<sun.nio.ch.SocketChannelImpl: boolean isOutputOpen>;
+        if $z11 != 0 goto label43;
+
+        $r29 = new java.nio.channels.AsynchronousCloseException;
+        specialinvoke $r29.<java.nio.channels.AsynchronousCloseException: void <init>()>();
+        throw $r29;
+
+     label43:
+        exitmonitor r8;
+
+     label44:
+        goto label48;
+
+     label45:
+        $r30 := @caughtexception;
+
+     label46:
+        r9 = $r30;
+        exitmonitor r8;
+
+     label47:
+        throw r9;
+
+     label48:
+        $z12 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z12 != 0 goto label49;
+
+        $z13 = staticinvoke <sun.nio.ch.IOStatus: boolean check(int)>(i1);
+        if $z13 != 0 goto label49;
+
+        $r31 = new java.lang.AssertionError;
+        specialinvoke $r31.<java.lang.AssertionError: void <init>()>();
+        throw $r31;
+
+     label49:
+        throw r7;
+
+     label50:
+        $r32 := @caughtexception;
+        r10 = $r32;
+        exitmonitor r1;
+
+     label51:
+        throw r10;
+
+        catch java.lang.Throwable from label7 to label9 with label10;
+        catch java.lang.Throwable from label11 to label12 with label10;
+        catch java.lang.Throwable from label2 to label3 with label18;
+        catch java.lang.Throwable from label16 to label17 with label18;
+        catch java.lang.Throwable from label19 to label20 with label18;
+        catch java.lang.Throwable from label27 to label29 with label30;
+        catch java.lang.Throwable from label31 to label32 with label30;
+        catch java.lang.Throwable from label1 to label3 with label36;
+        catch java.lang.Throwable from label16 to label23 with label36;
+        catch java.lang.Throwable from label42 to label44 with label45;
+        catch java.lang.Throwable from label46 to label47 with label45;
+        catch java.lang.Throwable from label37 to label38 with label36;
+        catch java.lang.Throwable from label0 to label15 with label50;
+        catch java.lang.Throwable from label16 to label35 with label50;
+        catch java.lang.Throwable from label37 to label51 with label50;
+    }
+
+    protected void implConfigureBlocking(boolean) throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        boolean z0;
+        java.io.FileDescriptor $r1;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        z0 := @parameter0: boolean;
+        $r1 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        staticinvoke <sun.nio.ch.IOUtil: void configureBlocking(java.io.FileDescriptor,boolean)>($r1, z0);
+        return;
+    }
+
+    public java.net.InetSocketAddress localAddress()
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r5;
+        java.net.InetSocketAddress $r4;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r3 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $r4 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress localAddress>;
+        exitmonitor r1;
+
+     label1:
+        return $r4;
+
+     label2:
+        $r5 := @caughtexception;
+
+     label3:
+        r2 = $r5;
+        exitmonitor r1;
+
+     label4:
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    public java.net.SocketAddress remoteAddress()
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r5;
+        java.net.InetSocketAddress $r4;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r3 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $r4 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress>;
+        exitmonitor r1;
+
+     label1:
+        return $r4;
+
+     label2:
+        $r5 := @caughtexception;
+
+     label3:
+        r2 = $r5;
+        exitmonitor r1;
+
+     label4:
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    public java.nio.channels.SocketChannel bind(java.net.SocketAddress) throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.net.SocketAddress r1;
+        java.lang.Object r2, r3, r4, $r10, $r11, $r12;
+        java.net.InetSocketAddress r5, $r15, $r17, $r23;
+        java.lang.SecurityManager r6;
+        java.lang.Throwable r7, r8, r9, $r24, $r25, $r26;
+        boolean $z0;
+        java.nio.channels.ClosedChannelException $r13;
+        int $i0, $i1, $i2, $i3;
+        java.nio.channels.ConnectionPendingException $r14;
+        java.nio.channels.AlreadyBoundException $r16;
+        java.io.FileDescriptor $r18, $r20, $r22;
+        java.net.InetAddress $r19, $r21;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        r1 := @parameter0: java.net.SocketAddress;
+        $r10 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object readLock>;
+        r2 = $r10;
+        entermonitor $r10;
+
+     label0:
+        $r11 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object writeLock>;
+        r3 = $r11;
+        entermonitor $r11;
+
+     label1:
+        $r12 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r4 = $r12;
+        entermonitor $r12;
+
+     label2:
+        $z0 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z0 != 0 goto label3;
+
+        $r13 = new java.nio.channels.ClosedChannelException;
+        specialinvoke $r13.<java.nio.channels.ClosedChannelException: void <init>()>();
+        throw $r13;
+
+     label3:
+        $i0 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        if $i0 != 1 goto label4;
+
+        $r14 = new java.nio.channels.ConnectionPendingException;
+        specialinvoke $r14.<java.nio.channels.ConnectionPendingException: void <init>()>();
+        throw $r14;
+
+     label4:
+        $r15 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress localAddress>;
+        if $r15 == null goto label5;
+
+        $r16 = new java.nio.channels.AlreadyBoundException;
+        specialinvoke $r16.<java.nio.channels.AlreadyBoundException: void <init>()>();
+        throw $r16;
+
+     label5:
+        if r1 != null goto label6;
+
+        $r17 = new java.net.InetSocketAddress;
+        specialinvoke $r17.<java.net.InetSocketAddress: void <init>(int)>(0);
+        goto label7;
+
+     label6:
+        $r17 = staticinvoke <sun.nio.ch.Net: java.net.InetSocketAddress checkAddress(java.net.SocketAddress)>(r1);
+
+     label7:
+        r5 = $r17;
+        r6 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r6 == null goto label8;
+
+        $i1 = virtualinvoke r5.<java.net.InetSocketAddress: int getPort()>();
+        virtualinvoke r6.<java.lang.SecurityManager: void checkListen(int)>($i1);
+
+     label8:
+        $r18 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        $r19 = virtualinvoke r5.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        $i2 = virtualinvoke r5.<java.net.InetSocketAddress: int getPort()>();
+        staticinvoke <sun.net.NetHooks: void beforeTcpBind(java.io.FileDescriptor,java.net.InetAddress,int)>($r18, $r19, $i2);
+        $r20 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        $r21 = virtualinvoke r5.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        $i3 = virtualinvoke r5.<java.net.InetSocketAddress: int getPort()>();
+        staticinvoke <sun.nio.ch.Net: void bind(java.io.FileDescriptor,java.net.InetAddress,int)>($r20, $r21, $i3);
+        $r22 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        $r23 = staticinvoke <sun.nio.ch.Net: java.net.InetSocketAddress localAddress(java.io.FileDescriptor)>($r22);
+        r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress localAddress> = $r23;
+        exitmonitor r4;
+
+     label9:
+        goto label13;
+
+     label10:
+        $r24 := @caughtexception;
+
+     label11:
+        r7 = $r24;
+        exitmonitor r4;
+
+     label12:
+        throw r7;
+
+     label13:
+        exitmonitor r3;
+
+     label14:
+        goto label18;
+
+     label15:
+        $r25 := @caughtexception;
+
+     label16:
+        r8 = $r25;
+        exitmonitor r3;
+
+     label17:
+        throw r8;
+
+     label18:
+        exitmonitor r2;
+
+     label19:
+        goto label23;
+
+     label20:
+        $r26 := @caughtexception;
+
+     label21:
+        r9 = $r26;
+        exitmonitor r2;
+
+     label22:
+        throw r9;
+
+     label23:
+        return r0;
+
+        catch java.lang.Throwable from label2 to label9 with label10;
+        catch java.lang.Throwable from label11 to label12 with label10;
+        catch java.lang.Throwable from label1 to label14 with label15;
+        catch java.lang.Throwable from label16 to label17 with label15;
+        catch java.lang.Throwable from label0 to label19 with label20;
+        catch java.lang.Throwable from label21 to label22 with label20;
+    }
+
+    public boolean isConnected()
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r4;
+        int $i0;
+        boolean $z0;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r3 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $i0 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        if $i0 != 2 goto label1;
+
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        exitmonitor r1;
+
+     label3:
+        return $z0;
+
+     label4:
+        $r4 := @caughtexception;
+
+     label5:
+        r2 = $r4;
+        exitmonitor r1;
+
+     label6:
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label3 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+    }
+
+    public boolean isConnectionPending()
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r4;
+        int $i0;
+        boolean $z0;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r3 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $i0 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        if $i0 != 1 goto label1;
+
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        exitmonitor r1;
+
+     label3:
+        return $z0;
+
+     label4:
+        $r4 := @caughtexception;
+
+     label5:
+        r2 = $r4;
+        exitmonitor r1;
+
+     label6:
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label3 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+    }
+
+    void ensureOpenAndUnconnected() throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r7;
+        boolean $z0;
+        java.nio.channels.ClosedChannelException $r4;
+        int $i0, $i1;
+        java.nio.channels.AlreadyConnectedException $r5;
+        java.nio.channels.ConnectionPendingException $r6;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r3 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $z0 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z0 != 0 goto label1;
+
+        $r4 = new java.nio.channels.ClosedChannelException;
+        specialinvoke $r4.<java.nio.channels.ClosedChannelException: void <init>()>();
+        throw $r4;
+
+     label1:
+        $i0 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        if $i0 != 2 goto label2;
+
+        $r5 = new java.nio.channels.AlreadyConnectedException;
+        specialinvoke $r5.<java.nio.channels.AlreadyConnectedException: void <init>()>();
+        throw $r5;
+
+     label2:
+        $i1 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        if $i1 != 1 goto label3;
+
+        $r6 = new java.nio.channels.ConnectionPendingException;
+        specialinvoke $r6.<java.nio.channels.ConnectionPendingException: void <init>()>();
+        throw $r6;
+
+     label3:
+        exitmonitor r1;
+
+     label4:
+        goto label8;
+
+     label5:
+        $r7 := @caughtexception;
+
+     label6:
+        r2 = $r7;
+        exitmonitor r1;
+
+     label7:
+        throw r2;
+
+     label8:
+        return;
+
+        catch java.lang.Throwable from label0 to label4 with label5;
+        catch java.lang.Throwable from label6 to label7 with label5;
+    }
+
+    public boolean connect(java.net.SocketAddress) throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.net.SocketAddress r1;
+        boolean z0, z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14, $z15, $z16, $z17, $z18;
+        java.lang.Object r2, r3, r6, r7, $r14, $r15, $r18, $r19, $r35, r36;
+        java.net.InetSocketAddress r4, $r22, $r38;
+        java.lang.SecurityManager r5;
+        int i0, $i1, $i2, $i4;
+        java.lang.Throwable r8, r9, r10, r11, r12, r13, $r25, $r30, $r40, $r41, $r42, $r43;
+        java.net.InetAddress $r16, $r24, r26;
+        java.lang.String $r17;
+        java.lang.AssertionError $r21, $r29, $r32, $r39;
+        java.io.FileDescriptor $r23, $r27, $r37;
+        long $l3;
+        java.io.IOException $r33, r34;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        r1 := @parameter0: java.net.SocketAddress;
+        z0 = 0;
+        $r14 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object readLock>;
+        r2 = $r14;
+        entermonitor $r14;
+
+     label0:
+        $r15 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object writeLock>;
+        r3 = $r15;
+        entermonitor $r15;
+
+     label1:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void ensureOpenAndUnconnected()>();
+        r4 = staticinvoke <sun.nio.ch.Net: java.net.InetSocketAddress checkAddress(java.net.SocketAddress)>(r1);
+        r5 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r5 == null goto label2;
+
+        $r16 = virtualinvoke r4.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        $r17 = virtualinvoke $r16.<java.net.InetAddress: java.lang.String getHostAddress()>();
+        $i1 = virtualinvoke r4.<java.net.InetSocketAddress: int getPort()>();
+        virtualinvoke r5.<java.lang.SecurityManager: void checkConnect(java.lang.String,int)>($r17, $i1);
+
+     label2:
+        $r18 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object blockingLock()>();
+        r6 = $r18;
+        entermonitor $r18;
+
+     label3:
+        i0 = 0;
+
+     label4:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void begin()>();
+        $r19 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r7 = $r19;
+        entermonitor $r19;
+
+     label5:
+        $z2 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z2 != 0 goto label14;
+
+        z1 = 0;
+        exitmonitor r7;
+
+     label6:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void readerCleanup()>();
+        if i0 > 0 goto label7;
+
+        if i0 != -2 goto label8;
+
+     label7:
+        $z3 = 1;
+        goto label9;
+
+     label8:
+        $z3 = 0;
+
+     label9:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z3);
+        $z4 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z4 != 0 goto label10;
+
+        $z5 = staticinvoke <sun.nio.ch.IOStatus: boolean check(int)>(i0);
+        if $z5 != 0 goto label10;
+
+        $r21 = new java.lang.AssertionError;
+        specialinvoke $r21.<java.lang.AssertionError: void <init>()>();
+        throw $r21;
+
+     label10:
+        exitmonitor r6;
+
+     label11:
+        exitmonitor r3;
+
+     label12:
+        exitmonitor r2;
+
+     label13:
+        return z1;
+
+     label14:
+        $r22 = r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress localAddress>;
+        if $r22 != null goto label15;
+
+        $r23 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        $r24 = virtualinvoke r4.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        $i2 = virtualinvoke r4.<java.net.InetSocketAddress: int getPort()>();
+        staticinvoke <sun.net.NetHooks: void beforeTcpConnect(java.io.FileDescriptor,java.net.InetAddress,int)>($r23, $r24, $i2);
+
+     label15:
+        $l3 = staticinvoke <sun.nio.ch.NativeThread: long current()>();
+        r0.<sun.nio.ch.SocketChannelImpl: long readerThread> = $l3;
+        exitmonitor r7;
+
+     label16:
+        goto label20;
+
+     label17:
+        $r25 := @caughtexception;
+
+     label18:
+        r8 = $r25;
+        exitmonitor r7;
+
+     label19:
+        throw r8;
+
+     label20:
+        r26 = virtualinvoke r4.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        $z6 = virtualinvoke r26.<java.net.InetAddress: boolean isAnyLocalAddress()>();
+        if $z6 == 0 goto label21;
+
+        r26 = staticinvoke <java.net.InetAddress: java.net.InetAddress getLocalHost()>();
+
+     label21:
+        $r27 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        $i4 = virtualinvoke r4.<java.net.InetSocketAddress: int getPort()>();
+        i0 = staticinvoke <sun.nio.ch.Net: int connect(java.io.FileDescriptor,java.net.InetAddress,int)>($r27, r26, $i4);
+        if i0 != -3 goto label22;
+
+        $z7 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z7 == 0 goto label22;
+
+        goto label20;
+
+     label22:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void readerCleanup()>();
+        if i0 > 0 goto label23;
+
+        if i0 != -2 goto label24;
+
+     label23:
+        $z8 = 1;
+        goto label25;
+
+     label24:
+        $z8 = 0;
+
+     label25:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z8);
+        $z9 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z9 != 0 goto label33;
+
+        $z10 = staticinvoke <sun.nio.ch.IOStatus: boolean check(int)>(i0);
+        if $z10 != 0 goto label33;
+
+        $r29 = new java.lang.AssertionError;
+        specialinvoke $r29.<java.lang.AssertionError: void <init>()>();
+        throw $r29;
+
+     label26:
+        $r30 := @caughtexception;
+
+     label27:
+        r9 = $r30;
+
+     label28:
+        specialinvoke r0.<sun.nio.ch.SocketChannelImpl: void readerCleanup()>();
+        if i0 > 0 goto label29;
+
+        if i0 != -2 goto label30;
+
+     label29:
+        $z11 = 1;
+        goto label31;
+
+     label30:
+        $z11 = 0;
+
+     label31:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z11);
+        $z12 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z12 != 0 goto label32;
+
+        $z13 = staticinvoke <sun.nio.ch.IOStatus: boolean check(int)>(i0);
+        if $z13 != 0 goto label32;
+
+        $r32 = new java.lang.AssertionError;
+        specialinvoke $r32.<java.lang.AssertionError: void <init>()>();
+        throw $r32;
+
+     label32:
+        throw r9;
+
+     label33:
+        goto label35;
+
+     label34:
+        $r33 := @caughtexception;
+        r34 = $r33;
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void close()>();
+        throw r34;
+
+     label35:
+        $r35 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r36 = $r35;
+        entermonitor $r35;
+
+     label36:
+        r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress remoteAddress> = r4;
+        if i0 <= 0 goto label42;
+
+        r0.<sun.nio.ch.SocketChannelImpl: int state> = 2;
+        $z14 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z14 == 0 goto label37;
+
+        $r37 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        $r38 = staticinvoke <sun.nio.ch.Net: java.net.InetSocketAddress localAddress(java.io.FileDescriptor)>($r37);
+        r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress localAddress> = $r38;
+
+     label37:
+        $z15 = 1;
+        exitmonitor r36;
+
+     label38:
+        exitmonitor r6;
+
+     label39:
+        exitmonitor r3;
+
+     label40:
+        exitmonitor r2;
+
+     label41:
+        return $z15;
+
+     label42:
+        $z16 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isBlocking()>();
+        if $z16 != 0 goto label43;
+
+        r0.<sun.nio.ch.SocketChannelImpl: int state> = 1;
+        goto label44;
+
+     label43:
+        $z17 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z17 != 0 goto label44;
+
+        $r39 = new java.lang.AssertionError;
+        specialinvoke $r39.<java.lang.AssertionError: void <init>()>();
+        throw $r39;
+
+     label44:
+        exitmonitor r36;
+
+     label45:
+        goto label49;
+
+     label46:
+        $r40 := @caughtexception;
+
+     label47:
+        r10 = $r40;
+        exitmonitor r36;
+
+     label48:
+        throw r10;
+
+     label49:
+        exitmonitor r6;
+
+     label50:
+        goto label54;
+
+     label51:
+        $r41 := @caughtexception;
+
+     label52:
+        r11 = $r41;
+        exitmonitor r6;
+
+     label53:
+        throw r11;
+
+     label54:
+        $z18 = 0;
+        exitmonitor r3;
+
+     label55:
+        exitmonitor r2;
+
+     label56:
+        return $z18;
+
+     label57:
+        $r42 := @caughtexception;
+
+     label58:
+        r12 = $r42;
+        exitmonitor r3;
+
+     label59:
+        throw r12;
+
+     label60:
+        $r43 := @caughtexception;
+        r13 = $r43;
+        exitmonitor r2;
+
+     label61:
+        throw r13;
+
+        catch java.lang.Throwable from label5 to label6 with label17;
+        catch java.lang.Throwable from label14 to label16 with label17;
+        catch java.lang.Throwable from label18 to label19 with label17;
+        catch java.lang.Throwable from label4 to label6 with label26;
+        catch java.lang.Throwable from label14 to label22 with label26;
+        catch java.lang.Throwable from label27 to label28 with label26;
+        catch java.io.IOException from label4 to label10 with label34;
+        catch java.io.IOException from label14 to label33 with label34;
+        catch java.lang.Throwable from label36 to label38 with label46;
+        catch java.lang.Throwable from label42 to label45 with label46;
+        catch java.lang.Throwable from label47 to label48 with label46;
+        catch java.lang.Throwable from label3 to label11 with label51;
+        catch java.lang.Throwable from label14 to label39 with label51;
+        catch java.lang.Throwable from label42 to label50 with label51;
+        catch java.lang.Throwable from label52 to label53 with label51;
+        catch java.lang.Throwable from label1 to label12 with label57;
+        catch java.lang.Throwable from label14 to label40 with label57;
+        catch java.lang.Throwable from label42 to label55 with label57;
+        catch java.lang.Throwable from label58 to label59 with label57;
+        catch java.lang.Throwable from label0 to label13 with label60;
+        catch java.lang.Throwable from label14 to label41 with label60;
+        catch java.lang.Throwable from label42 to label56 with label60;
+        catch java.lang.Throwable from label58 to label61 with label60;
+    }
+
+    public boolean finishConnect() throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.Object r1, r2, r3, r5, r6, r12, $r17, $r18, $r19, $r23, r24, $r25, $r26, $r34, r35, $r40, $r46, r47;
+        java.lang.Throwable r4, r7, r8, r9, r10, r11, r13, r14, r15, r16, $r22, $r27, $r30, $r33, $r36, $r39, $r41, $r50, $r51, $r52;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12, $z13, $z14, $z15, $z16, $z17, $z18, $z19, $z20;
+        java.nio.channels.ClosedChannelException $r20;
+        int $i0, $i1, i2, $i3, $i5, $i6;
+        java.nio.channels.NoConnectionPendingException $r21;
+        java.lang.AssertionError $r29, $r38, $r43;
+        long $l4;
+        java.io.FileDescriptor $r31, $r32, $r48;
+        java.io.IOException $r44, r45;
+        java.net.InetSocketAddress $r49;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r17 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object readLock>;
+        r1 = $r17;
+        entermonitor $r17;
+
+     label0:
+        $r18 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object writeLock>;
+        r2 = $r18;
+        entermonitor $r18;
+
+     label1:
+        $r19 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r3 = $r19;
+        entermonitor $r19;
+
+     label2:
+        $z1 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z1 != 0 goto label3;
+
+        $r20 = new java.nio.channels.ClosedChannelException;
+        specialinvoke $r20.<java.nio.channels.ClosedChannelException: void <init>()>();
+        throw $r20;
+
+     label3:
+        $i0 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        if $i0 != 2 goto label7;
+
+        $z2 = 1;
+        exitmonitor r3;
+
+     label4:
+        exitmonitor r2;
+
+     label5:
+        exitmonitor r1;
+
+     label6:
+        return $z2;
+
+     label7:
+        $i1 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        if $i1 == 1 goto label8;
+
+        $r21 = new java.nio.channels.NoConnectionPendingException;
+        specialinvoke $r21.<java.nio.channels.NoConnectionPendingException: void <init>()>();
+        throw $r21;
+
+     label8:
+        exitmonitor r3;
+
+     label9:
+        goto label13;
+
+     label10:
+        $r22 := @caughtexception;
+
+     label11:
+        r4 = $r22;
+        exitmonitor r3;
+
+     label12:
+        throw r4;
+
+     label13:
+        i2 = 0;
+
+     label14:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void begin()>();
+        $r23 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object blockingLock()>();
+        r24 = $r23;
+        entermonitor $r23;
+
+     label15:
+        $r25 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r5 = $r25;
+        entermonitor $r25;
+
+     label16:
+        $z3 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z3 != 0 goto label32;
+
+        z0 = 0;
+        exitmonitor r5;
+
+     label17:
+        exitmonitor r24;
+
+     label18:
+        $r26 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r6 = $r26;
+        entermonitor $r26;
+
+     label19:
+        r0.<sun.nio.ch.SocketChannelImpl: long readerThread> = 0L;
+        $i3 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        if $i3 != 3 goto label20;
+
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void kill()>();
+        i2 = 0;
+
+     label20:
+        exitmonitor r6;
+
+     label21:
+        goto label25;
+
+     label22:
+        $r27 := @caughtexception;
+
+     label23:
+        r7 = $r27;
+        exitmonitor r6;
+
+     label24:
+        throw r7;
+
+     label25:
+        if i2 > 0 goto label26;
+
+        if i2 != -2 goto label27;
+
+     label26:
+        $z4 = 1;
+        goto label28;
+
+     label27:
+        $z4 = 0;
+
+     label28:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z4);
+        $z5 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z5 != 0 goto label29;
+
+        $z6 = staticinvoke <sun.nio.ch.IOStatus: boolean check(int)>(i2);
+        if $z6 != 0 goto label29;
+
+        $r29 = new java.lang.AssertionError;
+        specialinvoke $r29.<java.lang.AssertionError: void <init>()>();
+        throw $r29;
+
+     label29:
+        exitmonitor r2;
+
+     label30:
+        exitmonitor r1;
+
+     label31:
+        return z0;
+
+     label32:
+        $l4 = staticinvoke <sun.nio.ch.NativeThread: long current()>();
+        r0.<sun.nio.ch.SocketChannelImpl: long readerThread> = $l4;
+        exitmonitor r5;
+
+     label33:
+        goto label37;
+
+     label34:
+        $r30 := @caughtexception;
+
+     label35:
+        r8 = $r30;
+        exitmonitor r5;
+
+     label36:
+        throw r8;
+
+     label37:
+        $z7 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isBlocking()>();
+        if $z7 != 0 goto label39;
+
+     label38:
+        $r31 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        $z8 = r0.<sun.nio.ch.SocketChannelImpl: boolean readyToConnect>;
+        i2 = staticinvoke <sun.nio.ch.SocketChannelImpl: int checkConnect(java.io.FileDescriptor,boolean,boolean)>($r31, 0, $z8);
+        if i2 != -3 goto label41;
+
+        $z9 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z9 == 0 goto label41;
+
+        goto label38;
+
+     label39:
+        $r32 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        $z10 = r0.<sun.nio.ch.SocketChannelImpl: boolean readyToConnect>;
+        i2 = staticinvoke <sun.nio.ch.SocketChannelImpl: int checkConnect(java.io.FileDescriptor,boolean,boolean)>($r32, 1, $z10);
+        if i2 != 0 goto label40;
+
+        goto label39;
+
+     label40:
+        if i2 != -3 goto label41;
+
+        $z11 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z11 == 0 goto label41;
+
+        goto label39;
+
+     label41:
+        exitmonitor r24;
+
+     label42:
+        goto label46;
+
+     label43:
+        $r33 := @caughtexception;
+
+     label44:
+        r9 = $r33;
+        exitmonitor r24;
+
+     label45:
+        throw r9;
+
+     label46:
+        $r34 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r35 = $r34;
+        entermonitor $r34;
+
+     label47:
+        r0.<sun.nio.ch.SocketChannelImpl: long readerThread> = 0L;
+        $i5 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        if $i5 != 3 goto label48;
+
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void kill()>();
+        i2 = 0;
+
+     label48:
+        exitmonitor r35;
+
+     label49:
+        goto label53;
+
+     label50:
+        $r36 := @caughtexception;
+
+     label51:
+        r10 = $r36;
+        exitmonitor r35;
+
+     label52:
+        throw r10;
+
+     label53:
+        if i2 > 0 goto label54;
+
+        if i2 != -2 goto label55;
+
+     label54:
+        $z12 = 1;
+        goto label56;
+
+     label55:
+        $z12 = 0;
+
+     label56:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z12);
+        $z13 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z13 != 0 goto label71;
+
+        $z14 = staticinvoke <sun.nio.ch.IOStatus: boolean check(int)>(i2);
+        if $z14 != 0 goto label71;
+
+        $r38 = new java.lang.AssertionError;
+        specialinvoke $r38.<java.lang.AssertionError: void <init>()>();
+        throw $r38;
+
+     label57:
+        $r39 := @caughtexception;
+
+     label58:
+        r11 = $r39;
+
+     label59:
+        $r40 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r12 = $r40;
+        entermonitor $r40;
+
+     label60:
+        r0.<sun.nio.ch.SocketChannelImpl: long readerThread> = 0L;
+        $i6 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        if $i6 != 3 goto label61;
+
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void kill()>();
+        i2 = 0;
+
+     label61:
+        exitmonitor r12;
+
+     label62:
+        goto label66;
+
+     label63:
+        $r41 := @caughtexception;
+
+     label64:
+        r13 = $r41;
+        exitmonitor r12;
+
+     label65:
+        throw r13;
+
+     label66:
+        if i2 > 0 goto label67;
+
+        if i2 != -2 goto label68;
+
+     label67:
+        $z15 = 1;
+        goto label69;
+
+     label68:
+        $z15 = 0;
+
+     label69:
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void end(boolean)>($z15);
+        $z16 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z16 != 0 goto label70;
+
+        $z17 = staticinvoke <sun.nio.ch.IOStatus: boolean check(int)>(i2);
+        if $z17 != 0 goto label70;
+
+        $r43 = new java.lang.AssertionError;
+        specialinvoke $r43.<java.lang.AssertionError: void <init>()>();
+        throw $r43;
+
+     label70:
+        throw r11;
+
+     label71:
+        goto label73;
+
+     label72:
+        $r44 := @caughtexception;
+        r45 = $r44;
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void close()>();
+        throw r45;
+
+     label73:
+        if i2 <= 0 goto label83;
+
+        $r46 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r47 = $r46;
+        entermonitor $r46;
+
+     label74:
+        r0.<sun.nio.ch.SocketChannelImpl: int state> = 2;
+        $z18 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z18 == 0 goto label75;
+
+        $r48 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        $r49 = staticinvoke <sun.nio.ch.Net: java.net.InetSocketAddress localAddress(java.io.FileDescriptor)>($r48);
+        r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress localAddress> = $r49;
+
+     label75:
+        exitmonitor r47;
+
+     label76:
+        goto label80;
+
+     label77:
+        $r50 := @caughtexception;
+
+     label78:
+        r14 = $r50;
+        exitmonitor r47;
+
+     label79:
+        throw r14;
+
+     label80:
+        $z19 = 1;
+        exitmonitor r2;
+
+     label81:
+        exitmonitor r1;
+
+     label82:
+        return $z19;
+
+     label83:
+        $z20 = 0;
+        exitmonitor r2;
+
+     label84:
+        exitmonitor r1;
+
+     label85:
+        return $z20;
+
+     label86:
+        $r51 := @caughtexception;
+
+     label87:
+        r15 = $r51;
+        exitmonitor r2;
+
+     label88:
+        throw r15;
+
+     label89:
+        $r52 := @caughtexception;
+        r16 = $r52;
+        exitmonitor r1;
+
+     label90:
+        throw r16;
+
+        catch java.lang.Throwable from label2 to label4 with label10;
+        catch java.lang.Throwable from label7 to label9 with label10;
+        catch java.lang.Throwable from label11 to label12 with label10;
+        catch java.lang.Throwable from label19 to label21 with label22;
+        catch java.lang.Throwable from label23 to label24 with label22;
+        catch java.lang.Throwable from label16 to label17 with label34;
+        catch java.lang.Throwable from label32 to label33 with label34;
+        catch java.lang.Throwable from label35 to label36 with label34;
+        catch java.lang.Throwable from label15 to label18 with label43;
+        catch java.lang.Throwable from label32 to label42 with label43;
+        catch java.lang.Throwable from label44 to label45 with label43;
+        catch java.lang.Throwable from label47 to label49 with label50;
+        catch java.lang.Throwable from label51 to label52 with label50;
+        catch java.lang.Throwable from label14 to label18 with label57;
+        catch java.lang.Throwable from label32 to label46 with label57;
+        catch java.lang.Throwable from label60 to label62 with label63;
+        catch java.lang.Throwable from label64 to label65 with label63;
+        catch java.lang.Throwable from label58 to label59 with label57;
+        catch java.io.IOException from label14 to label29 with label72;
+        catch java.io.IOException from label32 to label71 with label72;
+        catch java.lang.Throwable from label74 to label76 with label77;
+        catch java.lang.Throwable from label78 to label79 with label77;
+        catch java.lang.Throwable from label1 to label5 with label86;
+        catch java.lang.Throwable from label7 to label30 with label86;
+        catch java.lang.Throwable from label32 to label81 with label86;
+        catch java.lang.Throwable from label83 to label84 with label86;
+        catch java.lang.Throwable from label87 to label88 with label86;
+        catch java.lang.Throwable from label0 to label6 with label89;
+        catch java.lang.Throwable from label7 to label31 with label89;
+        catch java.lang.Throwable from label32 to label82 with label89;
+        catch java.lang.Throwable from label83 to label85 with label89;
+        catch java.lang.Throwable from label87 to label90 with label89;
+    }
+
+    public java.nio.channels.SocketChannel shutdownInput() throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r8;
+        boolean $z0, $z1, $z2;
+        java.nio.channels.ClosedChannelException $r4;
+        java.nio.channels.NotYetConnectedException $r5;
+        java.io.FileDescriptor $r6;
+        long $l0, $l2;
+        byte $b1;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r3 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $z0 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z0 != 0 goto label1;
+
+        $r4 = new java.nio.channels.ClosedChannelException;
+        specialinvoke $r4.<java.nio.channels.ClosedChannelException: void <init>()>();
+        throw $r4;
+
+     label1:
+        $z1 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isConnected()>();
+        if $z1 != 0 goto label2;
+
+        $r5 = new java.nio.channels.NotYetConnectedException;
+        specialinvoke $r5.<java.nio.channels.NotYetConnectedException: void <init>()>();
+        throw $r5;
+
+     label2:
+        $z2 = r0.<sun.nio.ch.SocketChannelImpl: boolean isInputOpen>;
+        if $z2 == 0 goto label4;
+
+        $r6 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        staticinvoke <sun.nio.ch.Net: void shutdown(java.io.FileDescriptor,int)>($r6, 0);
+        $l0 = r0.<sun.nio.ch.SocketChannelImpl: long readerThread>;
+        $b1 = $l0 cmp 0L;
+        if $b1 == 0 goto label3;
+
+        $l2 = r0.<sun.nio.ch.SocketChannelImpl: long readerThread>;
+        staticinvoke <sun.nio.ch.NativeThread: void signal(long)>($l2);
+
+     label3:
+        r0.<sun.nio.ch.SocketChannelImpl: boolean isInputOpen> = 0;
+
+     label4:
+        exitmonitor r1;
+
+     label5:
+        return r0;
+
+     label6:
+        $r8 := @caughtexception;
+
+     label7:
+        r2 = $r8;
+        exitmonitor r1;
+
+     label8:
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label5 with label6;
+        catch java.lang.Throwable from label7 to label8 with label6;
+    }
+
+    public java.nio.channels.SocketChannel shutdownOutput() throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r8;
+        boolean $z0, $z1, $z2;
+        java.nio.channels.ClosedChannelException $r4;
+        java.nio.channels.NotYetConnectedException $r5;
+        java.io.FileDescriptor $r6;
+        long $l0, $l2;
+        byte $b1;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r3 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $z0 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z0 != 0 goto label1;
+
+        $r4 = new java.nio.channels.ClosedChannelException;
+        specialinvoke $r4.<java.nio.channels.ClosedChannelException: void <init>()>();
+        throw $r4;
+
+     label1:
+        $z1 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isConnected()>();
+        if $z1 != 0 goto label2;
+
+        $r5 = new java.nio.channels.NotYetConnectedException;
+        specialinvoke $r5.<java.nio.channels.NotYetConnectedException: void <init>()>();
+        throw $r5;
+
+     label2:
+        $z2 = r0.<sun.nio.ch.SocketChannelImpl: boolean isOutputOpen>;
+        if $z2 == 0 goto label4;
+
+        $r6 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        staticinvoke <sun.nio.ch.Net: void shutdown(java.io.FileDescriptor,int)>($r6, 1);
+        $l0 = r0.<sun.nio.ch.SocketChannelImpl: long writerThread>;
+        $b1 = $l0 cmp 0L;
+        if $b1 == 0 goto label3;
+
+        $l2 = r0.<sun.nio.ch.SocketChannelImpl: long writerThread>;
+        staticinvoke <sun.nio.ch.NativeThread: void signal(long)>($l2);
+
+     label3:
+        r0.<sun.nio.ch.SocketChannelImpl: boolean isOutputOpen> = 0;
+
+     label4:
+        exitmonitor r1;
+
+     label5:
+        return r0;
+
+     label6:
+        $r8 := @caughtexception;
+
+     label7:
+        r2 = $r8;
+        exitmonitor r1;
+
+     label8:
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label5 with label6;
+        catch java.lang.Throwable from label7 to label8 with label6;
+    }
+
+    public boolean isInputOpen()
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r4;
+        boolean $z0;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r3 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $z0 = r0.<sun.nio.ch.SocketChannelImpl: boolean isInputOpen>;
+        exitmonitor r1;
+
+     label1:
+        return $z0;
+
+     label2:
+        $r4 := @caughtexception;
+
+     label3:
+        r2 = $r4;
+        exitmonitor r1;
+
+     label4:
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    public boolean isOutputOpen()
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r4;
+        boolean $z0;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r3 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $z0 = r0.<sun.nio.ch.SocketChannelImpl: boolean isOutputOpen>;
+        exitmonitor r1;
+
+     label1:
+        return $z0;
+
+     label2:
+        $r4 := @caughtexception;
+
+     label3:
+        r2 = $r4;
+        exitmonitor r1;
+
+     label4:
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    protected void implCloseSelectableChannel() throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r6;
+        int $i0;
+        sun.nio.ch.NativeDispatcher $r4;
+        java.io.FileDescriptor $r5;
+        long $l1, $l3, $l4, $l6;
+        byte $b2, $b5;
+        boolean $z0;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r3 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        r0.<sun.nio.ch.SocketChannelImpl: boolean isInputOpen> = 0;
+        r0.<sun.nio.ch.SocketChannelImpl: boolean isOutputOpen> = 0;
+        $i0 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        if $i0 == 4 goto label1;
+
+        $r4 = <sun.nio.ch.SocketChannelImpl: sun.nio.ch.NativeDispatcher nd>;
+        $r5 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        virtualinvoke $r4.<sun.nio.ch.NativeDispatcher: void preClose(java.io.FileDescriptor)>($r5);
+
+     label1:
+        $l1 = r0.<sun.nio.ch.SocketChannelImpl: long readerThread>;
+        $b2 = $l1 cmp 0L;
+        if $b2 == 0 goto label2;
+
+        $l3 = r0.<sun.nio.ch.SocketChannelImpl: long readerThread>;
+        staticinvoke <sun.nio.ch.NativeThread: void signal(long)>($l3);
+
+     label2:
+        $l4 = r0.<sun.nio.ch.SocketChannelImpl: long writerThread>;
+        $b5 = $l4 cmp 0L;
+        if $b5 == 0 goto label3;
+
+        $l6 = r0.<sun.nio.ch.SocketChannelImpl: long writerThread>;
+        staticinvoke <sun.nio.ch.NativeThread: void signal(long)>($l6);
+
+     label3:
+        $z0 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isRegistered()>();
+        if $z0 != 0 goto label4;
+
+        virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: void kill()>();
+
+     label4:
+        exitmonitor r1;
+
+     label5:
+        goto label9;
+
+     label6:
+        $r6 := @caughtexception;
+
+     label7:
+        r2 = $r6;
+        exitmonitor r1;
+
+     label8:
+        throw r2;
+
+     label9:
+        return;
+
+        catch java.lang.Throwable from label0 to label5 with label6;
+        catch java.lang.Throwable from label7 to label8 with label6;
+    }
+
+    public void kill() throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r7;
+        int $i0, $i1;
+        boolean $z0, $z1, $z2;
+        java.lang.AssertionError $r4;
+        long $l2, $l4;
+        byte $b3, $b5;
+        sun.nio.ch.NativeDispatcher $r5;
+        java.io.FileDescriptor $r6;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r3 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $i0 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        if $i0 != 4 goto label2;
+
+        exitmonitor r1;
+
+     label1:
+        return;
+
+     label2:
+        $i1 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        if $i1 != -1 goto label4;
+
+        r0.<sun.nio.ch.SocketChannelImpl: int state> = 4;
+        exitmonitor r1;
+
+     label3:
+        return;
+
+     label4:
+        $z0 = <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label6;
+
+        $z1 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z1 != 0 goto label5;
+
+        $z2 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isRegistered()>();
+        if $z2 == 0 goto label6;
+
+     label5:
+        $r4 = new java.lang.AssertionError;
+        specialinvoke $r4.<java.lang.AssertionError: void <init>()>();
+        throw $r4;
+
+     label6:
+        $l2 = r0.<sun.nio.ch.SocketChannelImpl: long readerThread>;
+        $b3 = $l2 cmp 0L;
+        if $b3 != 0 goto label7;
+
+        $l4 = r0.<sun.nio.ch.SocketChannelImpl: long writerThread>;
+        $b5 = $l4 cmp 0L;
+        if $b5 != 0 goto label7;
+
+        $r5 = <sun.nio.ch.SocketChannelImpl: sun.nio.ch.NativeDispatcher nd>;
+        $r6 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        virtualinvoke $r5.<sun.nio.ch.NativeDispatcher: void close(java.io.FileDescriptor)>($r6);
+        r0.<sun.nio.ch.SocketChannelImpl: int state> = 4;
+        goto label8;
+
+     label7:
+        r0.<sun.nio.ch.SocketChannelImpl: int state> = 3;
+
+     label8:
+        exitmonitor r1;
+
+     label9:
+        goto label13;
+
+     label10:
+        $r7 := @caughtexception;
+
+     label11:
+        r2 = $r7;
+        exitmonitor r1;
+
+     label12:
+        throw r2;
+
+     label13:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label10;
+        catch java.lang.Throwable from label2 to label3 with label10;
+        catch java.lang.Throwable from label4 to label9 with label10;
+        catch java.lang.Throwable from label11 to label12 with label10;
+    }
+
+    public boolean translateReadyOps(int, int, sun.nio.ch.SelectionKeyImpl)
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        int i0, i1, i2, i3, i4, $i5, $i6, i7, $i8, $i9, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21;
+        sun.nio.ch.SelectionKeyImpl r1;
+        boolean $z0, $z1;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        r1 := @parameter2: sun.nio.ch.SelectionKeyImpl;
+        i2 = virtualinvoke r1.<sun.nio.ch.SelectionKeyImpl: int nioInterestOps()>();
+        i3 = virtualinvoke r1.<sun.nio.ch.SelectionKeyImpl: int nioReadyOps()>();
+        i4 = i1;
+        $i5 = i0 & 32;
+        if $i5 == 0 goto label0;
+
+        return 0;
+
+     label0:
+        $i6 = i0 & 24;
+        if $i6 == 0 goto label3;
+
+        i7 = i2;
+        virtualinvoke r1.<sun.nio.ch.SelectionKeyImpl: void nioReadyOps(int)>(i7);
+        r0.<sun.nio.ch.SocketChannelImpl: boolean readyToConnect> = 1;
+        $i8 = i3 ^ -1;
+        $i9 = i7 & $i8;
+        if $i9 == 0 goto label1;
+
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+
+     label3:
+        $i10 = i0 & 1;
+        if $i10 == 0 goto label4;
+
+        $i11 = i2 & 1;
+        if $i11 == 0 goto label4;
+
+        $i12 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        if $i12 != 2 goto label4;
+
+        i4 = i4 | 1;
+
+     label4:
+        $i13 = i0 & 4;
+        if $i13 == 0 goto label6;
+
+        $i14 = i2 & 8;
+        if $i14 == 0 goto label6;
+
+        $i15 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        if $i15 == 0 goto label5;
+
+        $i16 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        if $i16 != 1 goto label6;
+
+     label5:
+        i4 = i4 | 8;
+        r0.<sun.nio.ch.SocketChannelImpl: boolean readyToConnect> = 1;
+
+     label6:
+        $i17 = i0 & 4;
+        if $i17 == 0 goto label7;
+
+        $i18 = i2 & 4;
+        if $i18 == 0 goto label7;
+
+        $i19 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        if $i19 != 2 goto label7;
+
+        i4 = i4 | 4;
+
+     label7:
+        virtualinvoke r1.<sun.nio.ch.SelectionKeyImpl: void nioReadyOps(int)>(i4);
+        $i20 = i3 ^ -1;
+        $i21 = i4 & $i20;
+        if $i21 == 0 goto label8;
+
+        $z1 = 1;
+        goto label9;
+
+     label8:
+        $z1 = 0;
+
+     label9:
+        return $z1;
+    }
+
+    public boolean translateAndUpdateReadyOps(int, sun.nio.ch.SelectionKeyImpl)
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        int i0, $i1;
+        sun.nio.ch.SelectionKeyImpl r1;
+        boolean $z0;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        i0 := @parameter0: int;
+        r1 := @parameter1: sun.nio.ch.SelectionKeyImpl;
+        $i1 = virtualinvoke r1.<sun.nio.ch.SelectionKeyImpl: int nioReadyOps()>();
+        $z0 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean translateReadyOps(int,int,sun.nio.ch.SelectionKeyImpl)>(i0, $i1, r1);
+        return $z0;
+    }
+
+    public boolean translateAndSetReadyOps(int, sun.nio.ch.SelectionKeyImpl)
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        int i0;
+        sun.nio.ch.SelectionKeyImpl r1;
+        boolean $z0;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        i0 := @parameter0: int;
+        r1 := @parameter1: sun.nio.ch.SelectionKeyImpl;
+        $z0 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean translateReadyOps(int,int,sun.nio.ch.SelectionKeyImpl)>(i0, 0, r1);
+        return $z0;
+    }
+
+    public void translateAndSetInterestOps(int, sun.nio.ch.SelectionKeyImpl)
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        int i0, $i2, $i3, $i4;
+        sun.nio.ch.SelectionKeyImpl r1;
+        byte b1;
+        sun.nio.ch.SelectorImpl $r2;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        i0 := @parameter0: int;
+        r1 := @parameter1: sun.nio.ch.SelectionKeyImpl;
+        b1 = 0;
+        $i2 = i0 & 1;
+        if $i2 == 0 goto label0;
+
+        b1 = b1 | 1;
+
+     label0:
+        $i3 = i0 & 4;
+        if $i3 == 0 goto label1;
+
+        b1 = b1 | 4;
+
+     label1:
+        $i4 = i0 & 8;
+        if $i4 == 0 goto label2;
+
+        b1 = b1 | 4;
+
+     label2:
+        $r2 = r1.<sun.nio.ch.SelectionKeyImpl: sun.nio.ch.SelectorImpl selector>;
+        virtualinvoke $r2.<sun.nio.ch.SelectorImpl: void putEventOps(sun.nio.ch.SelectionKeyImpl,int)>(r1, b1);
+        return;
+    }
+
+    public java.io.FileDescriptor getFD()
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.io.FileDescriptor $r1;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r1 = r0.<sun.nio.ch.SocketChannelImpl: java.io.FileDescriptor fd>;
+        return $r1;
+    }
+
+    public int getFDVal()
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        int $i0;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $i0 = r0.<sun.nio.ch.SocketChannelImpl: int fdVal>;
+        return $i0;
+    }
+
+    public java.lang.String toString()
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.lang.StringBuffer $r1, r2;
+        java.lang.Object r3, $r12;
+        java.net.InetSocketAddress r4;
+        java.lang.Throwable r5, $r26;
+        java.lang.Class $r6, $r7;
+        java.lang.String $r8, $r19, $r24, $r28;
+        boolean $z0, $z1, $z2;
+        int $i0;
+        java.net.SocketAddress $r21, $r23;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        r2 = $r1;
+        $r6 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+        $r7 = virtualinvoke $r6.<java.lang.Class: java.lang.Class getSuperclass()>();
+        $r8 = virtualinvoke $r7.<java.lang.Class: java.lang.String getName()>();
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r8);
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(91);
+        $z0 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: boolean isOpen()>();
+        if $z0 != 0 goto label0;
+
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("closed");
+        goto label13;
+
+     label0:
+        $r12 = r0.<sun.nio.ch.SocketChannelImpl: java.lang.Object stateLock>;
+        r3 = $r12;
+        entermonitor $r12;
+
+     label1:
+        $i0 = r0.<sun.nio.ch.SocketChannelImpl: int state>;
+        tableswitch($i0)
+        {
+            case 0: goto label2;
+            case 1: goto label3;
+            case 2: goto label4;
+            default: goto label6;
+        };
+
+     label2:
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("unconnected");
+        goto label6;
+
+     label3:
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("connection-pending");
+        goto label6;
+
+     label4:
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("connected");
+        $z1 = r0.<sun.nio.ch.SocketChannelImpl: boolean isInputOpen>;
+        if $z1 != 0 goto label5;
+
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ishut");
+
+     label5:
+        $z2 = r0.<sun.nio.ch.SocketChannelImpl: boolean isOutputOpen>;
+        if $z2 != 0 goto label6;
+
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" oshut");
+
+     label6:
+        r4 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: java.net.InetSocketAddress localAddress()>();
+        if r4 == null goto label7;
+
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" local=");
+        $r19 = staticinvoke <sun.nio.ch.Net: java.lang.String getRevealedLocalAddressAsString(java.net.InetSocketAddress)>(r4);
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r19);
+
+     label7:
+        $r21 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: java.net.SocketAddress remoteAddress()>();
+        if $r21 == null goto label8;
+
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" remote=");
+        $r23 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: java.net.SocketAddress remoteAddress()>();
+        $r24 = virtualinvoke $r23.<java.lang.Object: java.lang.String toString()>();
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r24);
+
+     label8:
+        exitmonitor r3;
+
+     label9:
+        goto label13;
+
+     label10:
+        $r26 := @caughtexception;
+
+     label11:
+        r5 = $r26;
+        exitmonitor r3;
+
+     label12:
+        throw r5;
+
+     label13:
+        virtualinvoke r2.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(93);
+        $r28 = virtualinvoke r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r28;
+
+        catch java.lang.Throwable from label1 to label9 with label10;
+        catch java.lang.Throwable from label11 to label12 with label10;
+    }
+
+    private static native int checkConnect(java.io.FileDescriptor, boolean, boolean) throws java.io.IOException;
+
+    private static native int sendOutOfBandData(java.io.FileDescriptor, byte) throws java.io.IOException;
+
+    public volatile java.nio.channels.NetworkChannel setOption(java.net.SocketOption, java.lang.Object) throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.net.SocketOption r1;
+        java.lang.Object r2;
+        java.nio.channels.SocketChannel $r3;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        r1 := @parameter0: java.net.SocketOption;
+        r2 := @parameter1: java.lang.Object;
+        $r3 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: java.nio.channels.SocketChannel setOption(java.net.SocketOption,java.lang.Object)>(r1, r2);
+        return $r3;
+    }
+
+    public volatile java.nio.channels.NetworkChannel bind(java.net.SocketAddress) throws java.io.IOException
+    {
+        sun.nio.ch.SocketChannelImpl r0;
+        java.net.SocketAddress r1;
+        java.nio.channels.SocketChannel $r2;
+
+        r0 := @this: sun.nio.ch.SocketChannelImpl;
+        r1 := @parameter0: java.net.SocketAddress;
+        $r2 = virtualinvoke r0.<sun.nio.ch.SocketChannelImpl: java.nio.channels.SocketChannel bind(java.net.SocketAddress)>(r1);
+        return $r2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        boolean $z0, $z1;
+        sun.nio.ch.SocketDispatcher $r1;
+
+        $r0 = class "sun/nio/ch/SocketChannelImpl";
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        <sun.nio.ch.SocketChannelImpl: boolean $assertionsDisabled> = $z1;
+        staticinvoke <sun.nio.ch.Util: void load()>();
+        $r1 = new sun.nio.ch.SocketDispatcher;
+        specialinvoke $r1.<sun.nio.ch.SocketDispatcher: void <init>()>();
+        <sun.nio.ch.SocketChannelImpl: sun.nio.ch.NativeDispatcher nd> = $r1;
+        return;
+    }
+}

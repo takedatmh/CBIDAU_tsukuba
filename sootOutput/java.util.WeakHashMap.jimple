@@ -1,0 +1,1078 @@
+public class java.util.WeakHashMap extends java.util.AbstractMap implements java.util.Map
+{
+    private static final int DEFAULT_INITIAL_CAPACITY;
+    private static final int MAXIMUM_CAPACITY;
+    private static final float DEFAULT_LOAD_FACTOR;
+    java.util.WeakHashMap$Entry[] table;
+    private int size;
+    private int threshold;
+    private final float loadFactor;
+    private final java.lang.ref.ReferenceQueue queue;
+    int modCount;
+    static final int ALTERNATIVE_HASHING_THRESHOLD_DEFAULT;
+    transient boolean useAltHashing;
+    final transient int hashSeed;
+    private static final java.lang.Object NULL_KEY;
+    private transient java.util.Set entrySet;
+
+    private java.util.WeakHashMap$Entry[] newTable(int)
+    {
+        java.util.WeakHashMap r0;
+        int i0;
+        java.util.WeakHashMap$Entry[] $r1, $r2;
+
+        r0 := @this: java.util.WeakHashMap;
+        i0 := @parameter0: int;
+        $r1 = newarray (java.util.WeakHashMap$Entry)[i0];
+        $r2 = (java.util.WeakHashMap$Entry[]) $r1;
+        return $r2;
+    }
+
+    public void <init>(int, float)
+    {
+        java.util.WeakHashMap r0;
+        int i0, i1, $i2, $i4, $i5;
+        float f0, $f1, $f2;
+        java.lang.ref.ReferenceQueue $r1;
+        java.lang.IllegalArgumentException $r2, $r7;
+        java.lang.StringBuilder $r3, $r4, $r5, $r8, $r9, $r10;
+        java.lang.String $r6, $r11;
+        byte $b3;
+        boolean $z0, $z1, $z2;
+        java.util.WeakHashMap$Entry[] $r12;
+
+        r0 := @this: java.util.WeakHashMap;
+        i0 := @parameter0: int;
+        f0 := @parameter1: float;
+        specialinvoke r0.<java.util.AbstractMap: void <init>()>();
+        $r1 = new java.lang.ref.ReferenceQueue;
+        specialinvoke $r1.<java.lang.ref.ReferenceQueue: void <init>()>();
+        r0.<java.util.WeakHashMap: java.lang.ref.ReferenceQueue queue> = $r1;
+        $i2 = staticinvoke <sun.misc.Hashing: int randomHashSeed(java.lang.Object)>(r0);
+        r0.<java.util.WeakHashMap: int hashSeed> = $i2;
+        r0.<java.util.WeakHashMap: java.util.Set entrySet> = null;
+        if i0 >= 0 goto label0;
+
+        $r2 = new java.lang.IllegalArgumentException;
+        $r3 = new java.lang.StringBuilder;
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>()>();
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Illegal Initial Capacity: ");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r6);
+        throw $r2;
+
+     label0:
+        if i0 <= 1073741824 goto label1;
+
+        i0 = 1073741824;
+
+     label1:
+        $b3 = f0 cmpg 0.0F;
+        if $b3 <= 0 goto label2;
+
+        $z0 = staticinvoke <java.lang.Float: boolean isNaN(float)>(f0);
+        if $z0 == 0 goto label3;
+
+     label2:
+        $r7 = new java.lang.IllegalArgumentException;
+        $r8 = new java.lang.StringBuilder;
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>()>();
+        $r9 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Illegal Load factor: ");
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(float)>(f0);
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r7.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r11);
+        throw $r7;
+
+     label3:
+        i1 = 1;
+
+     label4:
+        if i1 >= i0 goto label5;
+
+        i1 = i1 << 1;
+        goto label4;
+
+     label5:
+        $r12 = specialinvoke r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] newTable(int)>(i1);
+        r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] table> = $r12;
+        r0.<java.util.WeakHashMap: float loadFactor> = f0;
+        $f1 = (float) i1;
+        $f2 = $f1 * f0;
+        $i4 = (int) $f2;
+        r0.<java.util.WeakHashMap: int threshold> = $i4;
+        $z1 = staticinvoke <sun.misc.VM: boolean isBooted()>();
+        if $z1 == 0 goto label6;
+
+        $i5 = <java.util.WeakHashMap$Holder: int ALTERNATIVE_HASHING_THRESHOLD>;
+        if i1 < $i5 goto label6;
+
+        $z2 = 1;
+        goto label7;
+
+     label6:
+        $z2 = 0;
+
+     label7:
+        r0.<java.util.WeakHashMap: boolean useAltHashing> = $z2;
+        return;
+    }
+
+    public void <init>(int)
+    {
+        java.util.WeakHashMap r0;
+        int i0;
+
+        r0 := @this: java.util.WeakHashMap;
+        i0 := @parameter0: int;
+        specialinvoke r0.<java.util.WeakHashMap: void <init>(int,float)>(i0, 0.75F);
+        return;
+    }
+
+    public void <init>()
+    {
+        java.util.WeakHashMap r0;
+
+        r0 := @this: java.util.WeakHashMap;
+        specialinvoke r0.<java.util.WeakHashMap: void <init>(int,float)>(16, 0.75F);
+        return;
+    }
+
+    public void <init>(java.util.Map)
+    {
+        java.util.WeakHashMap r0;
+        java.util.Map r1;
+        int $i0, $i1, $i2, $i3;
+        float $f0, $f1;
+
+        r0 := @this: java.util.WeakHashMap;
+        r1 := @parameter0: java.util.Map;
+        $i0 = interfaceinvoke r1.<java.util.Map: int size()>();
+        $f0 = (float) $i0;
+        $f1 = $f0 / 0.75F;
+        $i1 = (int) $f1;
+        $i2 = $i1 + 1;
+        $i3 = staticinvoke <java.lang.Math: int max(int,int)>($i2, 16);
+        specialinvoke r0.<java.util.WeakHashMap: void <init>(int,float)>($i3, 0.75F);
+        virtualinvoke r0.<java.util.WeakHashMap: void putAll(java.util.Map)>(r1);
+        return;
+    }
+
+    private static java.lang.Object maskNull(java.lang.Object)
+    {
+        java.lang.Object r0, $r1;
+
+        r0 := @parameter0: java.lang.Object;
+        if r0 != null goto label0;
+
+        $r1 = <java.util.WeakHashMap: java.lang.Object NULL_KEY>;
+        goto label1;
+
+     label0:
+        $r1 = r0;
+
+     label1:
+        return $r1;
+    }
+
+    static java.lang.Object unmaskNull(java.lang.Object)
+    {
+        java.lang.Object r0, $r1, $r2;
+
+        r0 := @parameter0: java.lang.Object;
+        $r1 = <java.util.WeakHashMap: java.lang.Object NULL_KEY>;
+        if r0 != $r1 goto label0;
+
+        $r2 = null;
+        goto label1;
+
+     label0:
+        $r2 = r0;
+
+     label1:
+        return $r2;
+    }
+
+    private static boolean eq(java.lang.Object, java.lang.Object)
+    {
+        java.lang.Object r0, r1;
+        boolean $z0, $z1;
+
+        r0 := @parameter0: java.lang.Object;
+        r1 := @parameter1: java.lang.Object;
+        if r0 == r1 goto label0;
+
+        $z0 = virtualinvoke r0.<java.lang.Object: boolean equals(java.lang.Object)>(r1);
+        if $z0 == 0 goto label1;
+
+     label0:
+        $z1 = 1;
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        return $z1;
+    }
+
+    int hash(java.lang.Object)
+    {
+        java.util.WeakHashMap r0;
+        java.lang.Object r1;
+        int i0, $i1, $i2, i3, $i4, $i5, $i6, i7, $i8, $i9, $i10, $i11;
+        boolean $z0, $z1;
+        java.lang.String $r2;
+
+        r0 := @this: java.util.WeakHashMap;
+        r1 := @parameter0: java.lang.Object;
+        $z0 = r0.<java.util.WeakHashMap: boolean useAltHashing>;
+        if $z0 == 0 goto label1;
+
+        i0 = r0.<java.util.WeakHashMap: int hashSeed>;
+        $z1 = r1 instanceof java.lang.String;
+        if $z1 == 0 goto label0;
+
+        $r2 = (java.lang.String) r1;
+        $i1 = staticinvoke <sun.misc.Hashing: int stringHash32(java.lang.String)>($r2);
+        return $i1;
+
+     label0:
+        $i2 = virtualinvoke r1.<java.lang.Object: int hashCode()>();
+        i3 = i0 ^ $i2;
+        goto label2;
+
+     label1:
+        i3 = virtualinvoke r1.<java.lang.Object: int hashCode()>();
+
+     label2:
+        $i4 = i3 >>> 20;
+        $i5 = i3 >>> 12;
+        $i6 = $i4 ^ $i5;
+        i7 = i3 ^ $i6;
+        $i8 = i7 >>> 7;
+        $i9 = i7 ^ $i8;
+        $i10 = i7 >>> 4;
+        $i11 = $i9 ^ $i10;
+        return $i11;
+    }
+
+    private static int indexFor(int, int)
+    {
+        int i0, i1, $i2, $i3;
+
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $i2 = i1 - 1;
+        $i3 = i0 & $i2;
+        return $i3;
+    }
+
+    private void expungeStaleEntries()
+    {
+        java.util.WeakHashMap r0;
+        java.lang.ref.Reference r1, $r9;
+        java.lang.ref.ReferenceQueue r2, $r8, $r10;
+        java.util.WeakHashMap$Entry r3, r4, r5, r6;
+        int i0, $i1, $i2, $i3, $i4;
+        java.lang.Throwable r7, $r15;
+        java.util.WeakHashMap$Entry[] $r11, $r12, $r13;
+
+        r0 := @this: java.util.WeakHashMap;
+
+     label0:
+        $r8 = r0.<java.util.WeakHashMap: java.lang.ref.ReferenceQueue queue>;
+        $r9 = virtualinvoke $r8.<java.lang.ref.ReferenceQueue: java.lang.ref.Reference poll()>();
+        r1 = $r9;
+        if $r9 == null goto label12;
+
+        $r10 = r0.<java.util.WeakHashMap: java.lang.ref.ReferenceQueue queue>;
+        r2 = $r10;
+        entermonitor $r10;
+
+     label1:
+        r3 = (java.util.WeakHashMap$Entry) r1;
+        $i1 = r3.<java.util.WeakHashMap$Entry: int hash>;
+        $r11 = r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] table>;
+        $i2 = lengthof $r11;
+        i0 = staticinvoke <java.util.WeakHashMap: int indexFor(int,int)>($i1, $i2);
+        $r12 = r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] table>;
+        r4 = $r12[i0];
+        r5 = r4;
+
+     label2:
+        if r5 == null goto label6;
+
+        r6 = r5.<java.util.WeakHashMap$Entry: java.util.WeakHashMap$Entry next>;
+        if r5 != r3 goto label5;
+
+        if r4 != r3 goto label3;
+
+        $r13 = r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] table>;
+        $r13[i0] = r6;
+        goto label4;
+
+     label3:
+        r4.<java.util.WeakHashMap$Entry: java.util.WeakHashMap$Entry next> = r6;
+
+     label4:
+        r3.<java.util.WeakHashMap$Entry: java.lang.Object value> = null;
+        $i3 = r0.<java.util.WeakHashMap: int size>;
+        $i4 = $i3 - 1;
+        r0.<java.util.WeakHashMap: int size> = $i4;
+        goto label6;
+
+     label5:
+        r4 = r5;
+        r5 = r6;
+        goto label2;
+
+     label6:
+        exitmonitor r2;
+
+     label7:
+        goto label11;
+
+     label8:
+        $r15 := @caughtexception;
+
+     label9:
+        r7 = $r15;
+        exitmonitor r2;
+
+     label10:
+        throw r7;
+
+     label11:
+        goto label0;
+
+     label12:
+        return;
+
+        catch java.lang.Throwable from label1 to label7 with label8;
+        catch java.lang.Throwable from label9 to label10 with label8;
+    }
+
+    private java.util.WeakHashMap$Entry[] getTable()
+    {
+        java.util.WeakHashMap r0;
+        java.util.WeakHashMap$Entry[] $r1;
+
+        r0 := @this: java.util.WeakHashMap;
+        specialinvoke r0.<java.util.WeakHashMap: void expungeStaleEntries()>();
+        $r1 = r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] table>;
+        return $r1;
+    }
+
+    public int size()
+    {
+        java.util.WeakHashMap r0;
+        int $i0, $i1;
+
+        r0 := @this: java.util.WeakHashMap;
+        $i0 = r0.<java.util.WeakHashMap: int size>;
+        if $i0 != 0 goto label0;
+
+        return 0;
+
+     label0:
+        specialinvoke r0.<java.util.WeakHashMap: void expungeStaleEntries()>();
+        $i1 = r0.<java.util.WeakHashMap: int size>;
+        return $i1;
+    }
+
+    public boolean isEmpty()
+    {
+        java.util.WeakHashMap r0;
+        int $i0;
+        boolean $z0;
+
+        r0 := @this: java.util.WeakHashMap;
+        $i0 = virtualinvoke r0.<java.util.WeakHashMap: int size()>();
+        if $i0 != 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public java.lang.Object get(java.lang.Object)
+    {
+        java.util.WeakHashMap r0;
+        java.lang.Object r1, r2, $r5, $r6;
+        int i0, i1, $i2, $i3;
+        java.util.WeakHashMap$Entry[] r3;
+        java.util.WeakHashMap$Entry r4;
+        boolean $z0;
+
+        r0 := @this: java.util.WeakHashMap;
+        r1 := @parameter0: java.lang.Object;
+        r2 = staticinvoke <java.util.WeakHashMap: java.lang.Object maskNull(java.lang.Object)>(r1);
+        i0 = virtualinvoke r0.<java.util.WeakHashMap: int hash(java.lang.Object)>(r2);
+        r3 = specialinvoke r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] getTable()>();
+        $i2 = lengthof r3;
+        i1 = staticinvoke <java.util.WeakHashMap: int indexFor(int,int)>(i0, $i2);
+        r4 = r3[i1];
+
+     label0:
+        if r4 == null goto label2;
+
+        $i3 = r4.<java.util.WeakHashMap$Entry: int hash>;
+        if $i3 != i0 goto label1;
+
+        $r5 = virtualinvoke r4.<java.util.WeakHashMap$Entry: java.lang.Object get()>();
+        $z0 = staticinvoke <java.util.WeakHashMap: boolean eq(java.lang.Object,java.lang.Object)>(r2, $r5);
+        if $z0 == 0 goto label1;
+
+        $r6 = r4.<java.util.WeakHashMap$Entry: java.lang.Object value>;
+        return $r6;
+
+     label1:
+        r4 = r4.<java.util.WeakHashMap$Entry: java.util.WeakHashMap$Entry next>;
+        goto label0;
+
+     label2:
+        return null;
+    }
+
+    public boolean containsKey(java.lang.Object)
+    {
+        java.util.WeakHashMap r0;
+        java.lang.Object r1;
+        java.util.WeakHashMap$Entry $r2;
+        boolean $z0;
+
+        r0 := @this: java.util.WeakHashMap;
+        r1 := @parameter0: java.lang.Object;
+        $r2 = virtualinvoke r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry getEntry(java.lang.Object)>(r1);
+        if $r2 == null goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    java.util.WeakHashMap$Entry getEntry(java.lang.Object)
+    {
+        java.util.WeakHashMap r0;
+        java.lang.Object r1, r2, $r5;
+        int i0, i1, $i2, $i3;
+        java.util.WeakHashMap$Entry[] r3;
+        java.util.WeakHashMap$Entry r4;
+        boolean $z0;
+
+        r0 := @this: java.util.WeakHashMap;
+        r1 := @parameter0: java.lang.Object;
+        r2 = staticinvoke <java.util.WeakHashMap: java.lang.Object maskNull(java.lang.Object)>(r1);
+        i0 = virtualinvoke r0.<java.util.WeakHashMap: int hash(java.lang.Object)>(r2);
+        r3 = specialinvoke r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] getTable()>();
+        $i2 = lengthof r3;
+        i1 = staticinvoke <java.util.WeakHashMap: int indexFor(int,int)>(i0, $i2);
+        r4 = r3[i1];
+
+     label0:
+        if r4 == null goto label2;
+
+        $i3 = r4.<java.util.WeakHashMap$Entry: int hash>;
+        if $i3 != i0 goto label1;
+
+        $r5 = virtualinvoke r4.<java.util.WeakHashMap$Entry: java.lang.Object get()>();
+        $z0 = staticinvoke <java.util.WeakHashMap: boolean eq(java.lang.Object,java.lang.Object)>(r2, $r5);
+        if $z0 != 0 goto label2;
+
+     label1:
+        r4 = r4.<java.util.WeakHashMap$Entry: java.util.WeakHashMap$Entry next>;
+        goto label0;
+
+     label2:
+        return r4;
+    }
+
+    public java.lang.Object put(java.lang.Object, java.lang.Object)
+    {
+        java.util.WeakHashMap r0;
+        java.lang.Object r1, r2, r3, r6, $r7;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10;
+        java.util.WeakHashMap$Entry[] r4;
+        java.util.WeakHashMap$Entry r5, r9, $r10;
+        boolean $z0;
+        java.lang.ref.ReferenceQueue $r11;
+
+        r0 := @this: java.util.WeakHashMap;
+        r1 := @parameter0: java.lang.Object;
+        r2 := @parameter1: java.lang.Object;
+        r3 = staticinvoke <java.util.WeakHashMap: java.lang.Object maskNull(java.lang.Object)>(r1);
+        i0 = virtualinvoke r0.<java.util.WeakHashMap: int hash(java.lang.Object)>(r3);
+        r4 = specialinvoke r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] getTable()>();
+        $i2 = lengthof r4;
+        i1 = staticinvoke <java.util.WeakHashMap: int indexFor(int,int)>(i0, $i2);
+        r5 = r4[i1];
+
+     label0:
+        if r5 == null goto label3;
+
+        $i3 = r5.<java.util.WeakHashMap$Entry: int hash>;
+        if i0 != $i3 goto label2;
+
+        $r7 = virtualinvoke r5.<java.util.WeakHashMap$Entry: java.lang.Object get()>();
+        $z0 = staticinvoke <java.util.WeakHashMap: boolean eq(java.lang.Object,java.lang.Object)>(r3, $r7);
+        if $z0 == 0 goto label2;
+
+        r6 = r5.<java.util.WeakHashMap$Entry: java.lang.Object value>;
+        if r2 == r6 goto label1;
+
+        r5.<java.util.WeakHashMap$Entry: java.lang.Object value> = r2;
+
+     label1:
+        return r6;
+
+     label2:
+        r5 = r5.<java.util.WeakHashMap$Entry: java.util.WeakHashMap$Entry next>;
+        goto label0;
+
+     label3:
+        $i4 = r0.<java.util.WeakHashMap: int modCount>;
+        $i5 = $i4 + 1;
+        r0.<java.util.WeakHashMap: int modCount> = $i5;
+        r9 = r4[i1];
+        $r10 = new java.util.WeakHashMap$Entry;
+        $r11 = r0.<java.util.WeakHashMap: java.lang.ref.ReferenceQueue queue>;
+        specialinvoke $r10.<java.util.WeakHashMap$Entry: void <init>(java.lang.Object,java.lang.Object,java.lang.ref.ReferenceQueue,int,java.util.WeakHashMap$Entry)>(r3, r2, $r11, i0, r9);
+        r4[i1] = $r10;
+        $i6 = r0.<java.util.WeakHashMap: int size>;
+        $i7 = $i6 + 1;
+        r0.<java.util.WeakHashMap: int size> = $i7;
+        $i8 = r0.<java.util.WeakHashMap: int threshold>;
+        if $i7 < $i8 goto label4;
+
+        $i9 = lengthof r4;
+        $i10 = $i9 * 2;
+        virtualinvoke r0.<java.util.WeakHashMap: void resize(int)>($i10);
+
+     label4:
+        return null;
+    }
+
+    void resize(int)
+    {
+        java.util.WeakHashMap r0;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6;
+        java.util.WeakHashMap$Entry[] r1, r2;
+        boolean z0, $z1, z2, $z3, $z4, $z5, $z6;
+        float $f0, $f1, $f2;
+
+        r0 := @this: java.util.WeakHashMap;
+        i0 := @parameter0: int;
+        r1 = specialinvoke r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] getTable()>();
+        i1 = lengthof r1;
+        if i1 != 1073741824 goto label0;
+
+        r0.<java.util.WeakHashMap: int threshold> = 2147483647;
+        return;
+
+     label0:
+        r2 = specialinvoke r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] newTable(int)>(i0);
+        z0 = r0.<java.util.WeakHashMap: boolean useAltHashing>;
+        $z3 = r0.<java.util.WeakHashMap: boolean useAltHashing>;
+        $z1 = staticinvoke <sun.misc.VM: boolean isBooted()>();
+        if $z1 == 0 goto label1;
+
+        $i2 = <java.util.WeakHashMap$Holder: int ALTERNATIVE_HASHING_THRESHOLD>;
+        if i0 < $i2 goto label1;
+
+        $z4 = 1;
+        goto label2;
+
+     label1:
+        $z4 = 0;
+
+     label2:
+        $z5 = $z3 | $z4;
+        r0.<java.util.WeakHashMap: boolean useAltHashing> = $z5;
+        $z6 = r0.<java.util.WeakHashMap: boolean useAltHashing>;
+        z2 = z0 ^ $z6;
+        specialinvoke r0.<java.util.WeakHashMap: void transfer(java.util.WeakHashMap$Entry[],java.util.WeakHashMap$Entry[],boolean)>(r1, r2, z2);
+        r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] table> = r2;
+        $i3 = r0.<java.util.WeakHashMap: int size>;
+        $i4 = r0.<java.util.WeakHashMap: int threshold>;
+        $i5 = $i4 / 2;
+        if $i3 < $i5 goto label3;
+
+        $f0 = (float) i0;
+        $f1 = r0.<java.util.WeakHashMap: float loadFactor>;
+        $f2 = $f0 * $f1;
+        $i6 = (int) $f2;
+        r0.<java.util.WeakHashMap: int threshold> = $i6;
+        goto label4;
+
+     label3:
+        specialinvoke r0.<java.util.WeakHashMap: void expungeStaleEntries()>();
+        specialinvoke r0.<java.util.WeakHashMap: void transfer(java.util.WeakHashMap$Entry[],java.util.WeakHashMap$Entry[],boolean)>(r2, r1, 0);
+        r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] table> = r1;
+
+     label4:
+        return;
+    }
+
+    private void transfer(java.util.WeakHashMap$Entry[], java.util.WeakHashMap$Entry[], boolean)
+    {
+        java.util.WeakHashMap r0;
+        java.util.WeakHashMap$Entry[] r1, r2;
+        boolean z0;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7;
+        java.util.WeakHashMap$Entry r3, r4, $r7;
+        java.lang.Object r5;
+
+        r0 := @this: java.util.WeakHashMap;
+        r1 := @parameter0: java.util.WeakHashMap$Entry[];
+        r2 := @parameter1: java.util.WeakHashMap$Entry[];
+        z0 := @parameter2: boolean;
+        i0 = 0;
+
+     label0:
+        $i2 = lengthof r1;
+        if i0 >= $i2 goto label6;
+
+        r3 = r1[i0];
+        r1[i0] = null;
+
+     label1:
+        if r3 == null goto label5;
+
+        r4 = r3.<java.util.WeakHashMap$Entry: java.util.WeakHashMap$Entry next>;
+        r5 = virtualinvoke r3.<java.util.WeakHashMap$Entry: java.lang.Object get()>();
+        if r5 != null goto label2;
+
+        r3.<java.util.WeakHashMap$Entry: java.util.WeakHashMap$Entry next> = null;
+        r3.<java.util.WeakHashMap$Entry: java.lang.Object value> = null;
+        $i3 = r0.<java.util.WeakHashMap: int size>;
+        $i4 = $i3 - 1;
+        r0.<java.util.WeakHashMap: int size> = $i4;
+        goto label4;
+
+     label2:
+        if z0 == 0 goto label3;
+
+        $i5 = virtualinvoke r0.<java.util.WeakHashMap: int hash(java.lang.Object)>(r5);
+        r3.<java.util.WeakHashMap$Entry: int hash> = $i5;
+
+     label3:
+        $i6 = r3.<java.util.WeakHashMap$Entry: int hash>;
+        $i7 = lengthof r2;
+        i1 = staticinvoke <java.util.WeakHashMap: int indexFor(int,int)>($i6, $i7);
+        $r7 = r2[i1];
+        r3.<java.util.WeakHashMap$Entry: java.util.WeakHashMap$Entry next> = $r7;
+        r2[i1] = r3;
+
+     label4:
+        r3 = r4;
+        goto label1;
+
+     label5:
+        i0 = i0 + 1;
+        goto label0;
+
+     label6:
+        return;
+    }
+
+    public void putAll(java.util.Map)
+    {
+        java.util.WeakHashMap r0;
+        java.util.Map r1;
+        int i0, i1, i2, $i3, $i4;
+        float $f0, $f1, $f2, $f3;
+        java.util.WeakHashMap$Entry[] $r2, $r3;
+        java.util.Set $r4;
+        java.util.Iterator r5;
+        boolean $z0;
+        java.lang.Object $r6, $r8, $r9;
+        java.util.Map$Entry r7;
+
+        r0 := @this: java.util.WeakHashMap;
+        r1 := @parameter0: java.util.Map;
+        i0 = interfaceinvoke r1.<java.util.Map: int size()>();
+        if i0 != 0 goto label0;
+
+        return;
+
+     label0:
+        $i3 = r0.<java.util.WeakHashMap: int threshold>;
+        if i0 <= $i3 goto label4;
+
+        $f0 = (float) i0;
+        $f1 = r0.<java.util.WeakHashMap: float loadFactor>;
+        $f2 = $f0 / $f1;
+        $f3 = $f2 + 1.0F;
+        i1 = (int) $f3;
+        if i1 <= 1073741824 goto label1;
+
+        i1 = 1073741824;
+
+     label1:
+        $r2 = r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] table>;
+        i2 = lengthof $r2;
+
+     label2:
+        if i2 >= i1 goto label3;
+
+        i2 = i2 << 1;
+        goto label2;
+
+     label3:
+        $r3 = r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] table>;
+        $i4 = lengthof $r3;
+        if i2 <= $i4 goto label4;
+
+        virtualinvoke r0.<java.util.WeakHashMap: void resize(int)>(i2);
+
+     label4:
+        $r4 = interfaceinvoke r1.<java.util.Map: java.util.Set entrySet()>();
+        r5 = interfaceinvoke $r4.<java.util.Set: java.util.Iterator iterator()>();
+
+     label5:
+        $z0 = interfaceinvoke r5.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label6;
+
+        $r6 = interfaceinvoke r5.<java.util.Iterator: java.lang.Object next()>();
+        r7 = (java.util.Map$Entry) $r6;
+        $r8 = interfaceinvoke r7.<java.util.Map$Entry: java.lang.Object getKey()>();
+        $r9 = interfaceinvoke r7.<java.util.Map$Entry: java.lang.Object getValue()>();
+        virtualinvoke r0.<java.util.WeakHashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>($r8, $r9);
+        goto label5;
+
+     label6:
+        return;
+    }
+
+    public java.lang.Object remove(java.lang.Object)
+    {
+        java.util.WeakHashMap r0;
+        java.lang.Object r1, r2, $r7, $r10;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7;
+        java.util.WeakHashMap$Entry[] r3;
+        java.util.WeakHashMap$Entry r4, r5, r6;
+        boolean $z0;
+
+        r0 := @this: java.util.WeakHashMap;
+        r1 := @parameter0: java.lang.Object;
+        r2 = staticinvoke <java.util.WeakHashMap: java.lang.Object maskNull(java.lang.Object)>(r1);
+        i0 = virtualinvoke r0.<java.util.WeakHashMap: int hash(java.lang.Object)>(r2);
+        r3 = specialinvoke r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] getTable()>();
+        $i2 = lengthof r3;
+        i1 = staticinvoke <java.util.WeakHashMap: int indexFor(int,int)>(i0, $i2);
+        r4 = r3[i1];
+        r5 = r4;
+
+     label0:
+        if r5 == null goto label4;
+
+        r6 = r5.<java.util.WeakHashMap$Entry: java.util.WeakHashMap$Entry next>;
+        $i3 = r5.<java.util.WeakHashMap$Entry: int hash>;
+        if i0 != $i3 goto label3;
+
+        $r7 = virtualinvoke r5.<java.util.WeakHashMap$Entry: java.lang.Object get()>();
+        $z0 = staticinvoke <java.util.WeakHashMap: boolean eq(java.lang.Object,java.lang.Object)>(r2, $r7);
+        if $z0 == 0 goto label3;
+
+        $i4 = r0.<java.util.WeakHashMap: int modCount>;
+        $i5 = $i4 + 1;
+        r0.<java.util.WeakHashMap: int modCount> = $i5;
+        $i6 = r0.<java.util.WeakHashMap: int size>;
+        $i7 = $i6 - 1;
+        r0.<java.util.WeakHashMap: int size> = $i7;
+        if r4 != r5 goto label1;
+
+        r3[i1] = r6;
+        goto label2;
+
+     label1:
+        r4.<java.util.WeakHashMap$Entry: java.util.WeakHashMap$Entry next> = r6;
+
+     label2:
+        $r10 = r5.<java.util.WeakHashMap$Entry: java.lang.Object value>;
+        return $r10;
+
+     label3:
+        r4 = r5;
+        r5 = r6;
+        goto label0;
+
+     label4:
+        return null;
+    }
+
+    boolean removeMapping(java.lang.Object)
+    {
+        java.util.WeakHashMap r0;
+        java.lang.Object r1, r4, $r8;
+        java.util.WeakHashMap$Entry[] r2;
+        java.util.Map$Entry r3;
+        int i0, i1, $i2, $i3, $i4, $i5, $i6, $i7;
+        java.util.WeakHashMap$Entry r5, r6, r7;
+        boolean $z0, $z1;
+
+        r0 := @this: java.util.WeakHashMap;
+        r1 := @parameter0: java.lang.Object;
+        $z0 = r1 instanceof java.util.Map$Entry;
+        if $z0 != 0 goto label0;
+
+        return 0;
+
+     label0:
+        r2 = specialinvoke r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] getTable()>();
+        r3 = (java.util.Map$Entry) r1;
+        $r8 = interfaceinvoke r3.<java.util.Map$Entry: java.lang.Object getKey()>();
+        r4 = staticinvoke <java.util.WeakHashMap: java.lang.Object maskNull(java.lang.Object)>($r8);
+        i0 = virtualinvoke r0.<java.util.WeakHashMap: int hash(java.lang.Object)>(r4);
+        $i2 = lengthof r2;
+        i1 = staticinvoke <java.util.WeakHashMap: int indexFor(int,int)>(i0, $i2);
+        r5 = r2[i1];
+        r6 = r5;
+
+     label1:
+        if r6 == null goto label5;
+
+        r7 = r6.<java.util.WeakHashMap$Entry: java.util.WeakHashMap$Entry next>;
+        $i3 = r6.<java.util.WeakHashMap$Entry: int hash>;
+        if i0 != $i3 goto label4;
+
+        $z1 = virtualinvoke r6.<java.util.WeakHashMap$Entry: boolean equals(java.lang.Object)>(r3);
+        if $z1 == 0 goto label4;
+
+        $i4 = r0.<java.util.WeakHashMap: int modCount>;
+        $i5 = $i4 + 1;
+        r0.<java.util.WeakHashMap: int modCount> = $i5;
+        $i6 = r0.<java.util.WeakHashMap: int size>;
+        $i7 = $i6 - 1;
+        r0.<java.util.WeakHashMap: int size> = $i7;
+        if r5 != r6 goto label2;
+
+        r2[i1] = r7;
+        goto label3;
+
+     label2:
+        r5.<java.util.WeakHashMap$Entry: java.util.WeakHashMap$Entry next> = r7;
+
+     label3:
+        return 1;
+
+     label4:
+        r5 = r6;
+        r6 = r7;
+        goto label1;
+
+     label5:
+        return 0;
+    }
+
+    public void clear()
+    {
+        java.util.WeakHashMap r0;
+        java.lang.ref.ReferenceQueue $r1, $r5;
+        java.lang.ref.Reference $r2, $r6;
+        int $i0, $i1;
+        java.util.WeakHashMap$Entry[] $r4;
+
+        r0 := @this: java.util.WeakHashMap;
+
+     label0:
+        $r1 = r0.<java.util.WeakHashMap: java.lang.ref.ReferenceQueue queue>;
+        $r2 = virtualinvoke $r1.<java.lang.ref.ReferenceQueue: java.lang.ref.Reference poll()>();
+        if $r2 == null goto label1;
+
+        goto label0;
+
+     label1:
+        $i0 = r0.<java.util.WeakHashMap: int modCount>;
+        $i1 = $i0 + 1;
+        r0.<java.util.WeakHashMap: int modCount> = $i1;
+        $r4 = r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] table>;
+        staticinvoke <java.util.Arrays: void fill(java.lang.Object[],java.lang.Object)>($r4, null);
+        r0.<java.util.WeakHashMap: int size> = 0;
+
+     label2:
+        $r5 = r0.<java.util.WeakHashMap: java.lang.ref.ReferenceQueue queue>;
+        $r6 = virtualinvoke $r5.<java.lang.ref.ReferenceQueue: java.lang.ref.Reference poll()>();
+        if $r6 == null goto label3;
+
+        goto label2;
+
+     label3:
+        return;
+    }
+
+    public boolean containsValue(java.lang.Object)
+    {
+        java.util.WeakHashMap r0;
+        java.lang.Object r1, $r4;
+        java.util.WeakHashMap$Entry[] r2;
+        int i0, $i1;
+        java.util.WeakHashMap$Entry r3;
+        boolean $z0, $z1;
+
+        r0 := @this: java.util.WeakHashMap;
+        r1 := @parameter0: java.lang.Object;
+        if r1 != null goto label0;
+
+        $z0 = specialinvoke r0.<java.util.WeakHashMap: boolean containsNullValue()>();
+        return $z0;
+
+     label0:
+        r2 = specialinvoke r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] getTable()>();
+        i0 = lengthof r2;
+
+     label1:
+        $i1 = i0;
+        i0 = i0 + -1;
+        if $i1 <= 0 goto label5;
+
+        r3 = r2[i0];
+
+     label2:
+        if r3 == null goto label4;
+
+        $r4 = r3.<java.util.WeakHashMap$Entry: java.lang.Object value>;
+        $z1 = virtualinvoke r1.<java.lang.Object: boolean equals(java.lang.Object)>($r4);
+        if $z1 == 0 goto label3;
+
+        return 1;
+
+     label3:
+        r3 = r3.<java.util.WeakHashMap$Entry: java.util.WeakHashMap$Entry next>;
+        goto label2;
+
+     label4:
+        goto label1;
+
+     label5:
+        return 0;
+    }
+
+    private boolean containsNullValue()
+    {
+        java.util.WeakHashMap r0;
+        java.util.WeakHashMap$Entry[] r1;
+        int i0, $i1;
+        java.util.WeakHashMap$Entry r2;
+        java.lang.Object $r3;
+
+        r0 := @this: java.util.WeakHashMap;
+        r1 = specialinvoke r0.<java.util.WeakHashMap: java.util.WeakHashMap$Entry[] getTable()>();
+        i0 = lengthof r1;
+
+     label0:
+        $i1 = i0;
+        i0 = i0 + -1;
+        if $i1 <= 0 goto label4;
+
+        r2 = r1[i0];
+
+     label1:
+        if r2 == null goto label3;
+
+        $r3 = r2.<java.util.WeakHashMap$Entry: java.lang.Object value>;
+        if $r3 != null goto label2;
+
+        return 1;
+
+     label2:
+        r2 = r2.<java.util.WeakHashMap$Entry: java.util.WeakHashMap$Entry next>;
+        goto label1;
+
+     label3:
+        goto label0;
+
+     label4:
+        return 0;
+    }
+
+    public java.util.Set keySet()
+    {
+        java.util.WeakHashMap r0;
+        java.util.Set r1, $r3;
+        java.util.WeakHashMap$KeySet $r2;
+
+        r0 := @this: java.util.WeakHashMap;
+        r1 = r0.<java.util.WeakHashMap: java.util.Set keySet>;
+        if r1 == null goto label0;
+
+        $r3 = r1;
+        goto label1;
+
+     label0:
+        $r2 = new java.util.WeakHashMap$KeySet;
+        specialinvoke $r2.<java.util.WeakHashMap$KeySet: void <init>(java.util.WeakHashMap,java.util.WeakHashMap$1)>(r0, null);
+        $r3 = $r2;
+        r0.<java.util.WeakHashMap: java.util.Set keySet> = $r2;
+
+     label1:
+        return $r3;
+    }
+
+    public java.util.Collection values()
+    {
+        java.util.WeakHashMap r0;
+        java.util.Collection r1, $r3;
+        java.util.WeakHashMap$Values $r2;
+
+        r0 := @this: java.util.WeakHashMap;
+        r1 = r0.<java.util.WeakHashMap: java.util.Collection values>;
+        if r1 == null goto label0;
+
+        $r3 = r1;
+        goto label1;
+
+     label0:
+        $r2 = new java.util.WeakHashMap$Values;
+        specialinvoke $r2.<java.util.WeakHashMap$Values: void <init>(java.util.WeakHashMap,java.util.WeakHashMap$1)>(r0, null);
+        $r3 = $r2;
+        r0.<java.util.WeakHashMap: java.util.Collection values> = $r2;
+
+     label1:
+        return $r3;
+    }
+
+    public java.util.Set entrySet()
+    {
+        java.util.WeakHashMap r0;
+        java.util.Set r1, $r3;
+        java.util.WeakHashMap$EntrySet $r2;
+
+        r0 := @this: java.util.WeakHashMap;
+        r1 = r0.<java.util.WeakHashMap: java.util.Set entrySet>;
+        if r1 == null goto label0;
+
+        $r3 = r1;
+        goto label1;
+
+     label0:
+        $r2 = new java.util.WeakHashMap$EntrySet;
+        specialinvoke $r2.<java.util.WeakHashMap$EntrySet: void <init>(java.util.WeakHashMap,java.util.WeakHashMap$1)>(r0, null);
+        $r3 = $r2;
+        r0.<java.util.WeakHashMap: java.util.Set entrySet> = $r2;
+
+     label1:
+        return $r3;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Object $r0;
+
+        $r0 = new java.lang.Object;
+        specialinvoke $r0.<java.lang.Object: void <init>()>();
+        <java.util.WeakHashMap: java.lang.Object NULL_KEY> = $r0;
+        return;
+    }
+}

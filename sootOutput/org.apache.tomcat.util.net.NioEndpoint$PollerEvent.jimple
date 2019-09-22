@@ -1,0 +1,190 @@
+public class org.apache.tomcat.util.net.NioEndpoint$PollerEvent extends java.lang.Object implements java.lang.Runnable
+{
+    protected org.apache.tomcat.util.net.NioChannel socket;
+    protected int interestOps;
+    protected org.apache.tomcat.util.net.NioEndpoint$KeyAttachment key;
+
+    public void <init>(org.apache.tomcat.util.net.NioChannel, org.apache.tomcat.util.net.NioEndpoint$KeyAttachment, int)
+    {
+        org.apache.tomcat.util.net.NioEndpoint$PollerEvent r0;
+        org.apache.tomcat.util.net.NioChannel r1;
+        org.apache.tomcat.util.net.NioEndpoint$KeyAttachment r2;
+        int i0;
+
+        r0 := @this: org.apache.tomcat.util.net.NioEndpoint$PollerEvent;
+        r1 := @parameter0: org.apache.tomcat.util.net.NioChannel;
+        r2 := @parameter1: org.apache.tomcat.util.net.NioEndpoint$KeyAttachment;
+        i0 := @parameter2: int;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        virtualinvoke r0.<org.apache.tomcat.util.net.NioEndpoint$PollerEvent: void reset(org.apache.tomcat.util.net.NioChannel,org.apache.tomcat.util.net.NioEndpoint$KeyAttachment,int)>(r1, r2, i0);
+        return;
+    }
+
+    public void reset(org.apache.tomcat.util.net.NioChannel, org.apache.tomcat.util.net.NioEndpoint$KeyAttachment, int)
+    {
+        org.apache.tomcat.util.net.NioEndpoint$PollerEvent r0;
+        org.apache.tomcat.util.net.NioChannel r1;
+        org.apache.tomcat.util.net.NioEndpoint$KeyAttachment r2;
+        int i0;
+
+        r0 := @this: org.apache.tomcat.util.net.NioEndpoint$PollerEvent;
+        r1 := @parameter0: org.apache.tomcat.util.net.NioChannel;
+        r2 := @parameter1: org.apache.tomcat.util.net.NioEndpoint$KeyAttachment;
+        i0 := @parameter2: int;
+        r0.<org.apache.tomcat.util.net.NioEndpoint$PollerEvent: org.apache.tomcat.util.net.NioChannel socket> = r1;
+        r0.<org.apache.tomcat.util.net.NioEndpoint$PollerEvent: int interestOps> = i0;
+        r0.<org.apache.tomcat.util.net.NioEndpoint$PollerEvent: org.apache.tomcat.util.net.NioEndpoint$KeyAttachment key> = r2;
+        return;
+    }
+
+    public void reset()
+    {
+        org.apache.tomcat.util.net.NioEndpoint$PollerEvent r0;
+
+        r0 := @this: org.apache.tomcat.util.net.NioEndpoint$PollerEvent;
+        virtualinvoke r0.<org.apache.tomcat.util.net.NioEndpoint$PollerEvent: void reset(org.apache.tomcat.util.net.NioChannel,org.apache.tomcat.util.net.NioEndpoint$KeyAttachment,int)>(null, null, 0);
+        return;
+    }
+
+    public void run()
+    {
+        org.apache.tomcat.util.net.NioEndpoint$PollerEvent r0;
+        java.lang.Exception r1, $r10, $r34, r35;
+        org.apache.tomcat.util.net.NioEndpoint$KeyAttachment r2, $r8;
+        int i0, $i1, $i3, $i4, $i5, $i6, $i7, $i8;
+        org.apache.tomcat.util.net.NioChannel $r3, $r5, $r12, $r14, $r18, $r24, $r30;
+        java.nio.channels.SocketChannel $r4, $r13;
+        org.apache.tomcat.util.net.NioEndpoint$Poller $r6, $r15, $r19, $r25, $r31;
+        java.nio.channels.Selector $r7, $r16;
+        org.apache.juli.logging.Log $r11;
+        java.nio.channels.SelectionKey r17;
+        org.apache.tomcat.util.net.NioEndpoint $r20;
+        java.lang.Object $r21;
+        boolean $z0;
+        org.apache.tomcat.util.net.SocketStatus $r26, $r32;
+        java.nio.channels.CancelledKeyException $r28, r29;
+
+        r0 := @this: org.apache.tomcat.util.net.NioEndpoint$PollerEvent;
+        $i1 = r0.<org.apache.tomcat.util.net.NioEndpoint$PollerEvent: int interestOps>;
+        if $i1 != 256 goto label3;
+
+     label0:
+        $r3 = r0.<org.apache.tomcat.util.net.NioEndpoint$PollerEvent: org.apache.tomcat.util.net.NioChannel socket>;
+        $r4 = virtualinvoke $r3.<org.apache.tomcat.util.net.NioChannel: java.nio.channels.SocketChannel getIOChannel()>();
+        $r5 = r0.<org.apache.tomcat.util.net.NioEndpoint$PollerEvent: org.apache.tomcat.util.net.NioChannel socket>;
+        $r6 = virtualinvoke $r5.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.NioEndpoint$Poller getPoller()>();
+        $r7 = virtualinvoke $r6.<org.apache.tomcat.util.net.NioEndpoint$Poller: java.nio.channels.Selector getSelector()>();
+        $r8 = r0.<org.apache.tomcat.util.net.NioEndpoint$PollerEvent: org.apache.tomcat.util.net.NioEndpoint$KeyAttachment key>;
+        virtualinvoke $r4.<java.nio.channels.SocketChannel: java.nio.channels.SelectionKey register(java.nio.channels.Selector,int,java.lang.Object)>($r7, 1, $r8);
+
+     label1:
+        goto label14;
+
+     label2:
+        $r10 := @caughtexception;
+        r1 = $r10;
+        $r11 = staticinvoke <org.apache.tomcat.util.net.NioEndpoint: org.apache.juli.logging.Log access$1()>();
+        interfaceinvoke $r11.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("", r1);
+        goto label14;
+
+     label3:
+        $r12 = r0.<org.apache.tomcat.util.net.NioEndpoint$PollerEvent: org.apache.tomcat.util.net.NioChannel socket>;
+        $r13 = virtualinvoke $r12.<org.apache.tomcat.util.net.NioChannel: java.nio.channels.SocketChannel getIOChannel()>();
+        $r14 = r0.<org.apache.tomcat.util.net.NioEndpoint$PollerEvent: org.apache.tomcat.util.net.NioChannel socket>;
+        $r15 = virtualinvoke $r14.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.NioEndpoint$Poller getPoller()>();
+        $r16 = virtualinvoke $r15.<org.apache.tomcat.util.net.NioEndpoint$Poller: java.nio.channels.Selector getSelector()>();
+        r17 = virtualinvoke $r13.<java.nio.channels.SocketChannel: java.nio.channels.SelectionKey keyFor(java.nio.channels.Selector)>($r16);
+
+     label4:
+        if r17 != null goto label5;
+
+        $r18 = r0.<org.apache.tomcat.util.net.NioEndpoint$PollerEvent: org.apache.tomcat.util.net.NioChannel socket>;
+        $r19 = virtualinvoke $r18.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.NioEndpoint$Poller getPoller()>();
+        $r20 = virtualinvoke $r19.<org.apache.tomcat.util.net.NioEndpoint$Poller: org.apache.tomcat.util.net.NioEndpoint getEndpoint()>();
+        virtualinvoke $r20.<org.apache.tomcat.util.net.NioEndpoint: long countDownConnection()>();
+        goto label14;
+
+     label5:
+        $r21 = virtualinvoke r17.<java.nio.channels.SelectionKey: java.lang.Object attachment()>();
+        r2 = (org.apache.tomcat.util.net.NioEndpoint$KeyAttachment) $r21;
+        if r2 == null goto label8;
+
+        $z0 = virtualinvoke r2.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: boolean isComet()>();
+        if $z0 == 0 goto label6;
+
+        $i3 = r0.<org.apache.tomcat.util.net.NioEndpoint$PollerEvent: int interestOps>;
+        $i4 = $i3 & 512;
+        if $i4 != 512 goto label6;
+
+        virtualinvoke r2.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void setCometNotify(boolean)>(1);
+        goto label7;
+
+     label6:
+        virtualinvoke r2.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void setCometNotify(boolean)>(0);
+
+     label7:
+        $i5 = r0.<org.apache.tomcat.util.net.NioEndpoint$PollerEvent: int interestOps>;
+        $i6 = $i5 & -513;
+        r0.<org.apache.tomcat.util.net.NioEndpoint$PollerEvent: int interestOps> = $i6;
+        virtualinvoke r2.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: void access()>();
+        $i7 = virtualinvoke r17.<java.nio.channels.SelectionKey: int interestOps()>();
+        $i8 = r0.<org.apache.tomcat.util.net.NioEndpoint$PollerEvent: int interestOps>;
+        i0 = $i7 | $i8;
+        virtualinvoke r2.<org.apache.tomcat.util.net.NioEndpoint$KeyAttachment: int interestOps(int)>(i0);
+        virtualinvoke r17.<java.nio.channels.SelectionKey: java.nio.channels.SelectionKey interestOps(int)>(i0);
+        goto label14;
+
+     label8:
+        $r24 = r0.<org.apache.tomcat.util.net.NioEndpoint$PollerEvent: org.apache.tomcat.util.net.NioChannel socket>;
+        $r25 = virtualinvoke $r24.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.NioEndpoint$Poller getPoller()>();
+        $r26 = <org.apache.tomcat.util.net.SocketStatus: org.apache.tomcat.util.net.SocketStatus ERROR>;
+        virtualinvoke $r25.<org.apache.tomcat.util.net.NioEndpoint$Poller: org.apache.tomcat.util.net.NioEndpoint$KeyAttachment cancelledKey(java.nio.channels.SelectionKey,org.apache.tomcat.util.net.SocketStatus,boolean)>(r17, $r26, 0);
+
+     label9:
+        goto label14;
+
+     label10:
+        $r28 := @caughtexception;
+        r29 = $r28;
+
+     label11:
+        $r30 = r0.<org.apache.tomcat.util.net.NioEndpoint$PollerEvent: org.apache.tomcat.util.net.NioChannel socket>;
+        $r31 = virtualinvoke $r30.<org.apache.tomcat.util.net.NioChannel: org.apache.tomcat.util.net.NioEndpoint$Poller getPoller()>();
+        $r32 = <org.apache.tomcat.util.net.SocketStatus: org.apache.tomcat.util.net.SocketStatus DISCONNECT>;
+        virtualinvoke $r31.<org.apache.tomcat.util.net.NioEndpoint$Poller: org.apache.tomcat.util.net.NioEndpoint$KeyAttachment cancelledKey(java.nio.channels.SelectionKey,org.apache.tomcat.util.net.SocketStatus,boolean)>(r17, $r32, 1);
+
+     label12:
+        goto label14;
+
+     label13:
+        $r34 := @caughtexception;
+        r35 = $r34;
+
+     label14:
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+        catch java.nio.channels.CancelledKeyException from label4 to label9 with label10;
+        catch java.lang.Exception from label11 to label12 with label13;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.tomcat.util.net.NioEndpoint$PollerEvent r0;
+        java.lang.StringBuilder $r1, $r4, $r5, $r6;
+        java.lang.String $r2, $r3, $r7;
+        int $i0;
+
+        r0 := @this: org.apache.tomcat.util.net.NioEndpoint$PollerEvent;
+        $r1 = new java.lang.StringBuilder;
+        $r2 = specialinvoke r0.<java.lang.Object: java.lang.String toString()>();
+        $r3 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r2);
+        specialinvoke $r1.<java.lang.StringBuilder: void <init>(java.lang.String)>($r3);
+        $r4 = virtualinvoke $r1.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("[intOps=");
+        $i0 = r0.<org.apache.tomcat.util.net.NioEndpoint$PollerEvent: int interestOps>;
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i0);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.String toString()>();
+        return $r7;
+    }
+}

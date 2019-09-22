@@ -1,0 +1,541 @@
+public abstract class org.apache.coyote.AbstractProtocol$AbstractConnectionHandler extends java.lang.Object implements org.apache.tomcat.util.net.AbstractEndpoint$Handler
+{
+    protected org.apache.coyote.RequestGroupInfo global;
+    protected java.util.concurrent.atomic.AtomicLong registerCount;
+    protected final java.util.Map connections;
+    protected org.apache.coyote.AbstractProtocol$RecycledProcessors recycledProcessors;
+
+    protected void <init>()
+    {
+        org.apache.coyote.AbstractProtocol$AbstractConnectionHandler r0;
+        org.apache.coyote.RequestGroupInfo $r1;
+        java.util.concurrent.atomic.AtomicLong $r2;
+        java.util.concurrent.ConcurrentHashMap $r3;
+        org.apache.coyote.AbstractProtocol$RecycledProcessors $r4;
+
+        r0 := @this: org.apache.coyote.AbstractProtocol$AbstractConnectionHandler;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r1 = new org.apache.coyote.RequestGroupInfo;
+        specialinvoke $r1.<org.apache.coyote.RequestGroupInfo: void <init>()>();
+        r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.coyote.RequestGroupInfo global> = $r1;
+        $r2 = new java.util.concurrent.atomic.AtomicLong;
+        specialinvoke $r2.<java.util.concurrent.atomic.AtomicLong: void <init>(long)>(0L);
+        r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: java.util.concurrent.atomic.AtomicLong registerCount> = $r2;
+        $r3 = new java.util.concurrent.ConcurrentHashMap;
+        specialinvoke $r3.<java.util.concurrent.ConcurrentHashMap: void <init>()>();
+        r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: java.util.Map connections> = $r3;
+        $r4 = new org.apache.coyote.AbstractProtocol$RecycledProcessors;
+        specialinvoke $r4.<org.apache.coyote.AbstractProtocol$RecycledProcessors: void <init>(org.apache.coyote.AbstractProtocol$AbstractConnectionHandler)>(r0);
+        r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.coyote.AbstractProtocol$RecycledProcessors recycledProcessors> = $r4;
+        return;
+    }
+
+    protected abstract org.apache.juli.logging.Log getLog();
+
+    protected abstract org.apache.coyote.AbstractProtocol getProtocol();
+
+    public java.lang.Object getGlobal()
+    {
+        org.apache.coyote.AbstractProtocol$AbstractConnectionHandler r0;
+        org.apache.coyote.RequestGroupInfo $r1;
+
+        r0 := @this: org.apache.coyote.AbstractProtocol$AbstractConnectionHandler;
+        $r1 = r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.coyote.RequestGroupInfo global>;
+        return $r1;
+    }
+
+    public void recycle()
+    {
+        org.apache.coyote.AbstractProtocol$AbstractConnectionHandler r0;
+        org.apache.coyote.AbstractProtocol$RecycledProcessors $r1;
+
+        r0 := @this: org.apache.coyote.AbstractProtocol$AbstractConnectionHandler;
+        $r1 = r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.coyote.AbstractProtocol$RecycledProcessors recycledProcessors>;
+        virtualinvoke $r1.<org.apache.coyote.AbstractProtocol$RecycledProcessors: void clear()>();
+        return;
+    }
+
+    public org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState process(org.apache.tomcat.util.net.SocketWrapper, org.apache.tomcat.util.net.SocketStatus)
+    {
+        org.apache.coyote.AbstractProtocol$AbstractConnectionHandler r0;
+        org.apache.tomcat.util.net.SocketWrapper r1;
+        org.apache.tomcat.util.net.SocketStatus r2, $r11, $r14, $r52;
+        java.lang.Object r3, $r10;
+        org.apache.coyote.Processor r4;
+        org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState r5, $r7, $r8, $r12, $r15, $r16, $r20, $r21, $r25, $r37, $r38, $r39, $r40, $r43, $r46, $r49, $r74;
+        org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler r6, $r55;
+        java.util.Map $r9, $r22, $r41, $r44, $r47, $r50, $r53, $r72;
+        org.apache.coyote.AbstractProtocol$RecycledProcessors $r13;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9;
+        org.apache.coyote.AbstractProtocol $r17;
+        org.apache.tomcat.util.net.AbstractEndpoint $r18;
+        org.apache.coyote.http11.upgrade.UpgradeInbound $r19, r26;
+        org.apache.coyote.http11.upgrade.servlet31.WebConnection $r24;
+        org.apache.juli.logging.Log $r27, $r28, $r59, $r64, $r69;
+        java.lang.StringBuilder $r29, $r30, $r31, $r32, $r33, $r34, $r35;
+        java.lang.String $r36, $r61, $r66, $r71;
+        java.net.SocketException $r57, r58;
+        org.apache.tomcat.util.res.StringManager $r60, $r65, $r70;
+        java.io.IOException $r62, r63;
+        java.lang.Throwable $r67, r68;
+
+        r0 := @this: org.apache.coyote.AbstractProtocol$AbstractConnectionHandler;
+        r1 := @parameter0: org.apache.tomcat.util.net.SocketWrapper;
+        r2 := @parameter1: org.apache.tomcat.util.net.SocketStatus;
+        if r1 != null goto label0;
+
+        $r7 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState CLOSED>;
+        return $r7;
+
+     label0:
+        r3 = virtualinvoke r1.<org.apache.tomcat.util.net.SocketWrapper: java.lang.Object getSocket()>();
+        if r3 != null goto label1;
+
+        $r8 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState CLOSED>;
+        return $r8;
+
+     label1:
+        $r9 = r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: java.util.Map connections>;
+        $r10 = interfaceinvoke $r9.<java.util.Map: java.lang.Object get(java.lang.Object)>(r3);
+        r4 = (org.apache.coyote.Processor) $r10;
+        $r11 = <org.apache.tomcat.util.net.SocketStatus: org.apache.tomcat.util.net.SocketStatus DISCONNECT>;
+        if r2 != $r11 goto label2;
+
+        if r4 != null goto label2;
+
+        $r12 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState CLOSED>;
+        return $r12;
+
+     label2:
+        virtualinvoke r1.<org.apache.tomcat.util.net.SocketWrapper: void setAsync(boolean)>(0);
+        staticinvoke <org.apache.coyote.ContainerThreadMarker: void markAsContainerThread()>();
+
+     label3:
+        if r4 != null goto label4;
+
+        $r13 = r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.coyote.AbstractProtocol$RecycledProcessors recycledProcessors>;
+        r4 = virtualinvoke $r13.<org.apache.coyote.AbstractProtocol$RecycledProcessors: org.apache.coyote.Processor poll()>();
+
+     label4:
+        if r4 != null goto label5;
+
+        r4 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.coyote.Processor createProcessor()>();
+
+     label5:
+        virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: void initSsl(org.apache.tomcat.util.net.SocketWrapper,org.apache.coyote.Processor)>(r1, r4);
+        r5 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState CLOSED>;
+
+     label6:
+        $r14 = <org.apache.tomcat.util.net.SocketStatus: org.apache.tomcat.util.net.SocketStatus DISCONNECT>;
+        if r2 != $r14 goto label7;
+
+        $z0 = interfaceinvoke r4.<org.apache.coyote.Processor: boolean isComet()>();
+        if $z0 == 0 goto label13;
+
+     label7:
+        $z1 = interfaceinvoke r4.<org.apache.coyote.Processor: boolean isAsync()>();
+        if $z1 != 0 goto label8;
+
+        $r15 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState ASYNC_END>;
+        if r5 != $r15 goto label9;
+
+     label8:
+        r5 = interfaceinvoke r4.<org.apache.coyote.Processor: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState asyncDispatch(org.apache.tomcat.util.net.SocketStatus)>(r2);
+        $r16 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState OPEN>;
+        if r5 != $r16 goto label13;
+
+        $r17 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.coyote.AbstractProtocol getProtocol()>();
+        $r18 = $r17.<org.apache.coyote.AbstractProtocol: org.apache.tomcat.util.net.AbstractEndpoint endpoint>;
+        virtualinvoke $r18.<org.apache.tomcat.util.net.AbstractEndpoint: void removeWaitingRequest(org.apache.tomcat.util.net.SocketWrapper)>(r1);
+        r5 = interfaceinvoke r4.<org.apache.coyote.Processor: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState process(org.apache.tomcat.util.net.SocketWrapper)>(r1);
+        goto label13;
+
+     label9:
+        $z2 = interfaceinvoke r4.<org.apache.coyote.Processor: boolean isComet()>();
+        if $z2 == 0 goto label10;
+
+        r5 = interfaceinvoke r4.<org.apache.coyote.Processor: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState event(org.apache.tomcat.util.net.SocketStatus)>(r2);
+        goto label13;
+
+     label10:
+        $r19 = interfaceinvoke r4.<org.apache.coyote.Processor: org.apache.coyote.http11.upgrade.UpgradeInbound getUpgradeInbound()>();
+        if $r19 == null goto label11;
+
+        r5 = interfaceinvoke r4.<org.apache.coyote.Processor: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState upgradeDispatch()>();
+        goto label13;
+
+     label11:
+        $z3 = interfaceinvoke r4.<org.apache.coyote.Processor: boolean isUpgrade()>();
+        if $z3 == 0 goto label12;
+
+        r5 = interfaceinvoke r4.<org.apache.coyote.Processor: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState upgradeDispatch(org.apache.tomcat.util.net.SocketStatus)>(r2);
+        goto label13;
+
+     label12:
+        r5 = interfaceinvoke r4.<org.apache.coyote.Processor: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState process(org.apache.tomcat.util.net.SocketWrapper)>(r1);
+
+     label13:
+        $r20 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState CLOSED>;
+        if r5 == $r20 goto label14;
+
+        $z4 = interfaceinvoke r4.<org.apache.coyote.Processor: boolean isAsync()>();
+        if $z4 == 0 goto label14;
+
+        r5 = interfaceinvoke r4.<org.apache.coyote.Processor: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState asyncPostProcess()>();
+
+     label14:
+        $r21 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState UPGRADING>;
+        if r5 != $r21 goto label15;
+
+        r6 = interfaceinvoke r4.<org.apache.coyote.Processor: org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler getHttpUpgradeHandler()>();
+        virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: void release(org.apache.tomcat.util.net.SocketWrapper,org.apache.coyote.Processor,boolean,boolean)>(r1, r4, 0, 0);
+        r4 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.coyote.Processor createUpgradeProcessor(org.apache.tomcat.util.net.SocketWrapper,org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler)>(r1, r6);
+        virtualinvoke r1.<org.apache.tomcat.util.net.SocketWrapper: void setUpgraded(boolean)>(1);
+        $r22 = r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: java.util.Map connections>;
+        interfaceinvoke $r22.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(r3, r4);
+        $r24 = (org.apache.coyote.http11.upgrade.servlet31.WebConnection) r4;
+        interfaceinvoke r6.<org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler: void init(org.apache.coyote.http11.upgrade.servlet31.WebConnection)>($r24);
+        goto label16;
+
+     label15:
+        $r25 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState UPGRADING_TOMCAT>;
+        if r5 != $r25 goto label16;
+
+        r26 = interfaceinvoke r4.<org.apache.coyote.Processor: org.apache.coyote.http11.upgrade.UpgradeInbound getUpgradeInbound()>();
+        virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: void release(org.apache.tomcat.util.net.SocketWrapper,org.apache.coyote.Processor,boolean,boolean)>(r1, r4, 0, 0);
+        r4 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.coyote.Processor createUpgradeProcessor(org.apache.tomcat.util.net.SocketWrapper,org.apache.coyote.http11.upgrade.UpgradeInbound)>(r1, r26);
+        interfaceinvoke r26.<org.apache.coyote.http11.upgrade.UpgradeInbound: void onUpgradeComplete()>();
+
+     label16:
+        $r27 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.juli.logging.Log getLog()>();
+        $z5 = interfaceinvoke $r27.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z5 == 0 goto label17;
+
+        $r28 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.juli.logging.Log getLog()>();
+        $r29 = new java.lang.StringBuilder;
+        specialinvoke $r29.<java.lang.StringBuilder: void <init>(java.lang.String)>("Socket: [");
+        $r30 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r1);
+        $r31 = virtualinvoke $r30.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("], Status in: [");
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r2);
+        $r33 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("], State out: [");
+        $r34 = virtualinvoke $r33.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r5);
+        $r35 = virtualinvoke $r34.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+        $r36 = virtualinvoke $r35.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r28.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r36);
+
+     label17:
+        $r37 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState ASYNC_END>;
+        if r5 == $r37 goto label6;
+
+        $r38 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState UPGRADING>;
+        if r5 == $r38 goto label6;
+
+        $r39 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState UPGRADING_TOMCAT>;
+        if r5 == $r39 goto label6;
+
+        $r40 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState LONG>;
+        if r5 != $r40 goto label18;
+
+        $r41 = r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: java.util.Map connections>;
+        interfaceinvoke $r41.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(r3, r4);
+        virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: void longPoll(org.apache.tomcat.util.net.SocketWrapper,org.apache.coyote.Processor)>(r1, r4);
+        goto label23;
+
+     label18:
+        $r43 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState OPEN>;
+        if r5 != $r43 goto label19;
+
+        $r44 = r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: java.util.Map connections>;
+        interfaceinvoke $r44.<java.util.Map: java.lang.Object remove(java.lang.Object)>(r3);
+        virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: void release(org.apache.tomcat.util.net.SocketWrapper,org.apache.coyote.Processor,boolean,boolean)>(r1, r4, 0, 1);
+        goto label23;
+
+     label19:
+        $r46 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState SENDFILE>;
+        if r5 != $r46 goto label20;
+
+        $r47 = r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: java.util.Map connections>;
+        interfaceinvoke $r47.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(r3, r4);
+        goto label23;
+
+     label20:
+        $r49 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState UPGRADED>;
+        if r5 != $r49 goto label21;
+
+        $r50 = r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: java.util.Map connections>;
+        interfaceinvoke $r50.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(r3, r4);
+        $r52 = <org.apache.tomcat.util.net.SocketStatus: org.apache.tomcat.util.net.SocketStatus OPEN_WRITE>;
+        if r2 == $r52 goto label23;
+
+        virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: void longPoll(org.apache.tomcat.util.net.SocketWrapper,org.apache.coyote.Processor)>(r1, r4);
+        goto label23;
+
+     label21:
+        $r53 = r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: java.util.Map connections>;
+        interfaceinvoke $r53.<java.util.Map: java.lang.Object remove(java.lang.Object)>(r3);
+        $z6 = interfaceinvoke r4.<org.apache.coyote.Processor: boolean isUpgrade()>();
+        if $z6 == 0 goto label22;
+
+        $r55 = interfaceinvoke r4.<org.apache.coyote.Processor: org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler getHttpUpgradeHandler()>();
+        interfaceinvoke $r55.<org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler: void destroy()>();
+        goto label23;
+
+     label22:
+        $z7 = r4 instanceof org.apache.coyote.http11.upgrade.UpgradeProcessor;
+        if $z7 != 0 goto label23;
+
+        virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: void release(org.apache.tomcat.util.net.SocketWrapper,org.apache.coyote.Processor,boolean,boolean)>(r1, r4, 1, 0);
+
+     label23:
+        return r5;
+
+     label24:
+        $r57 := @caughtexception;
+        r58 = $r57;
+        $r59 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.juli.logging.Log getLog()>();
+        $r60 = <org.apache.coyote.AbstractProtocol: org.apache.tomcat.util.res.StringManager sm>;
+        $r61 = virtualinvoke $r60.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("abstractConnectionHandler.socketexception.debug");
+        interfaceinvoke $r59.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r61, r58);
+        goto label27;
+
+     label25:
+        $r62 := @caughtexception;
+        r63 = $r62;
+        $r64 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.juli.logging.Log getLog()>();
+        $r65 = <org.apache.coyote.AbstractProtocol: org.apache.tomcat.util.res.StringManager sm>;
+        $r66 = virtualinvoke $r65.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("abstractConnectionHandler.ioexception.debug");
+        interfaceinvoke $r64.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r66, r63);
+        goto label27;
+
+     label26:
+        $r67 := @caughtexception;
+        r68 = $r67;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r68);
+        $r69 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.juli.logging.Log getLog()>();
+        $r70 = <org.apache.coyote.AbstractProtocol: org.apache.tomcat.util.res.StringManager sm>;
+        $r71 = virtualinvoke $r70.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("abstractConnectionHandler.error");
+        interfaceinvoke $r69.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r71, r68);
+
+     label27:
+        $r72 = r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: java.util.Map connections>;
+        interfaceinvoke $r72.<java.util.Map: java.lang.Object remove(java.lang.Object)>(r3);
+        $z8 = r4 instanceof org.apache.coyote.http11.upgrade.UpgradeProcessor;
+        if $z8 != 0 goto label28;
+
+        $z9 = interfaceinvoke r4.<org.apache.coyote.Processor: boolean isUpgrade()>();
+        if $z9 != 0 goto label28;
+
+        virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: void release(org.apache.tomcat.util.net.SocketWrapper,org.apache.coyote.Processor,boolean,boolean)>(r1, r4, 1, 0);
+
+     label28:
+        $r74 = <org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState: org.apache.tomcat.util.net.AbstractEndpoint$Handler$SocketState CLOSED>;
+        return $r74;
+
+        catch java.net.SocketException from label3 to label23 with label24;
+        catch java.io.IOException from label3 to label23 with label25;
+        catch java.lang.Throwable from label3 to label23 with label26;
+    }
+
+    protected abstract org.apache.coyote.Processor createProcessor();
+
+    protected abstract void initSsl(org.apache.tomcat.util.net.SocketWrapper, org.apache.coyote.Processor);
+
+    protected abstract void longPoll(org.apache.tomcat.util.net.SocketWrapper, org.apache.coyote.Processor);
+
+    protected abstract void release(org.apache.tomcat.util.net.SocketWrapper, org.apache.coyote.Processor, boolean, boolean);
+
+    protected abstract org.apache.coyote.Processor createUpgradeProcessor(org.apache.tomcat.util.net.SocketWrapper, org.apache.coyote.http11.upgrade.UpgradeInbound) throws java.io.IOException;
+
+    protected abstract org.apache.coyote.Processor createUpgradeProcessor(org.apache.tomcat.util.net.SocketWrapper, org.apache.coyote.http11.upgrade.servlet31.HttpUpgradeHandler) throws java.io.IOException;
+
+    protected void register(org.apache.coyote.AbstractProcessor)
+    {
+        org.apache.coyote.AbstractProtocol$AbstractConnectionHandler r0, r2;
+        org.apache.coyote.AbstractProcessor r1;
+        long l0;
+        org.apache.coyote.RequestInfo r3;
+        java.lang.StringBuilder $r4, $r16, $r19, $r20, $r23, $r24, $r25, $r29, $r30;
+        javax.management.ObjectName r5, $r12;
+        org.apache.coyote.AbstractProtocol $r6, $r13, $r17, $r21;
+        java.lang.String $r7, $r14, $r15, $r18, $r22, $r26, $r31;
+        java.util.concurrent.atomic.AtomicLong $r9;
+        org.apache.coyote.Request $r10;
+        org.apache.coyote.RequestGroupInfo $r11;
+        org.apache.juli.logging.Log $r27, $r28, $r35;
+        boolean $z0;
+        org.apache.tomcat.util.modeler.Registry $r32;
+        java.lang.Exception $r33, r34;
+        java.lang.Throwable $r36;
+
+        r0 := @this: org.apache.coyote.AbstractProtocol$AbstractConnectionHandler;
+        r1 := @parameter0: org.apache.coyote.AbstractProcessor;
+        $r6 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.coyote.AbstractProtocol getProtocol()>();
+        $r7 = virtualinvoke $r6.<org.apache.coyote.AbstractProtocol: java.lang.String getDomain()>();
+        if $r7 == null goto label9;
+
+        r2 = r0;
+        entermonitor r0;
+
+     label0:
+        $r9 = r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: java.util.concurrent.atomic.AtomicLong registerCount>;
+        l0 = virtualinvoke $r9.<java.util.concurrent.atomic.AtomicLong: long incrementAndGet()>();
+        $r10 = virtualinvoke r1.<org.apache.coyote.AbstractProcessor: org.apache.coyote.Request getRequest()>();
+        r3 = virtualinvoke $r10.<org.apache.coyote.Request: org.apache.coyote.RequestInfo getRequestProcessor()>();
+        $r11 = r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.coyote.RequestGroupInfo global>;
+        virtualinvoke r3.<org.apache.coyote.RequestInfo: void setGlobalProcessor(org.apache.coyote.RequestGroupInfo)>($r11);
+        $r12 = new javax.management.ObjectName;
+        $r4 = new java.lang.StringBuilder;
+        $r13 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.coyote.AbstractProtocol getProtocol()>();
+        $r14 = virtualinvoke $r13.<org.apache.coyote.AbstractProtocol: java.lang.String getDomain()>();
+        $r15 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r14);
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>($r15);
+        $r16 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(":type=RequestProcessor,worker=");
+        $r17 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.coyote.AbstractProtocol getProtocol()>();
+        $r18 = virtualinvoke $r17.<org.apache.coyote.AbstractProtocol: java.lang.String getName()>();
+        $r19 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r18);
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(",name=");
+        $r21 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.coyote.AbstractProtocol getProtocol()>();
+        $r22 = virtualinvoke $r21.<org.apache.coyote.AbstractProtocol: java.lang.String getProtocolName()>();
+        $r23 = virtualinvoke $r20.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r22);
+        $r24 = virtualinvoke $r23.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Request");
+        $r25 = virtualinvoke $r24.<java.lang.StringBuilder: java.lang.StringBuilder append(long)>(l0);
+        $r26 = virtualinvoke $r25.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r12.<javax.management.ObjectName: void <init>(java.lang.String)>($r26);
+        r5 = $r12;
+        $r27 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.juli.logging.Log getLog()>();
+        $z0 = interfaceinvoke $r27.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label1;
+
+        $r28 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.juli.logging.Log getLog()>();
+        $r29 = new java.lang.StringBuilder;
+        specialinvoke $r29.<java.lang.StringBuilder: void <init>(java.lang.String)>("Register ");
+        $r30 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r5);
+        $r31 = virtualinvoke $r30.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r28.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r31);
+
+     label1:
+        $r32 = staticinvoke <org.apache.tomcat.util.modeler.Registry: org.apache.tomcat.util.modeler.Registry getRegistry(java.lang.Object,java.lang.Object)>(null, null);
+        virtualinvoke $r32.<org.apache.tomcat.util.modeler.Registry: void registerComponent(java.lang.Object,javax.management.ObjectName,java.lang.String)>(r3, r5, null);
+        virtualinvoke r3.<org.apache.coyote.RequestInfo: void setRpName(javax.management.ObjectName)>(r5);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r33 := @caughtexception;
+        r34 = $r33;
+        $r35 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.juli.logging.Log getLog()>();
+        interfaceinvoke $r35.<org.apache.juli.logging.Log: void warn(java.lang.Object)>("Error registering request");
+
+     label4:
+        exitmonitor r2;
+
+     label5:
+        goto label9;
+
+     label6:
+        $r36 := @caughtexception;
+
+     label7:
+        exitmonitor r2;
+
+     label8:
+        throw $r36;
+
+     label9:
+        return;
+
+        catch java.lang.Exception from label0 to label2 with label3;
+        catch java.lang.Throwable from label0 to label5 with label6;
+        catch java.lang.Throwable from label7 to label8 with label6;
+    }
+
+    protected void unregister(org.apache.coyote.Processor)
+    {
+        org.apache.coyote.AbstractProtocol$AbstractConnectionHandler r0, r2;
+        org.apache.coyote.Processor r1;
+        org.apache.coyote.Request r3;
+        org.apache.coyote.RequestInfo r4;
+        javax.management.ObjectName r5;
+        org.apache.coyote.AbstractProtocol $r6;
+        java.lang.String $r7, $r13;
+        org.apache.juli.logging.Log $r9, $r10, $r17;
+        boolean $z0;
+        java.lang.StringBuilder $r11, $r12;
+        org.apache.tomcat.util.modeler.Registry $r14;
+        java.lang.Exception $r15, r16;
+        java.lang.Throwable $r18;
+
+        r0 := @this: org.apache.coyote.AbstractProtocol$AbstractConnectionHandler;
+        r1 := @parameter0: org.apache.coyote.Processor;
+        $r6 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.coyote.AbstractProtocol getProtocol()>();
+        $r7 = virtualinvoke $r6.<org.apache.coyote.AbstractProtocol: java.lang.String getDomain()>();
+        if $r7 == null goto label12;
+
+        r2 = r0;
+        entermonitor r0;
+
+     label0:
+        r3 = interfaceinvoke r1.<org.apache.coyote.Processor: org.apache.coyote.Request getRequest()>();
+        if r3 != null goto label3;
+
+     label1:
+        exitmonitor r2;
+
+     label2:
+        return;
+
+     label3:
+        r4 = virtualinvoke r3.<org.apache.coyote.Request: org.apache.coyote.RequestInfo getRequestProcessor()>();
+        virtualinvoke r4.<org.apache.coyote.RequestInfo: void setGlobalProcessor(org.apache.coyote.RequestGroupInfo)>(null);
+        r5 = virtualinvoke r4.<org.apache.coyote.RequestInfo: javax.management.ObjectName getRpName()>();
+        $r9 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.juli.logging.Log getLog()>();
+        $z0 = interfaceinvoke $r9.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label4;
+
+        $r10 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.juli.logging.Log getLog()>();
+        $r11 = new java.lang.StringBuilder;
+        specialinvoke $r11.<java.lang.StringBuilder: void <init>(java.lang.String)>("Unregister ");
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>(r5);
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r10.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r13);
+
+     label4:
+        $r14 = staticinvoke <org.apache.tomcat.util.modeler.Registry: org.apache.tomcat.util.modeler.Registry getRegistry(java.lang.Object,java.lang.Object)>(null, null);
+        virtualinvoke $r14.<org.apache.tomcat.util.modeler.Registry: void unregisterComponent(javax.management.ObjectName)>(r5);
+        virtualinvoke r4.<org.apache.coyote.RequestInfo: void setRpName(javax.management.ObjectName)>(null);
+
+     label5:
+        goto label7;
+
+     label6:
+        $r15 := @caughtexception;
+        r16 = $r15;
+        $r17 = virtualinvoke r0.<org.apache.coyote.AbstractProtocol$AbstractConnectionHandler: org.apache.juli.logging.Log getLog()>();
+        interfaceinvoke $r17.<org.apache.juli.logging.Log: void warn(java.lang.Object,java.lang.Throwable)>("Error unregistering request", r16);
+
+     label7:
+        exitmonitor r2;
+
+     label8:
+        goto label12;
+
+     label9:
+        $r18 := @caughtexception;
+
+     label10:
+        exitmonitor r2;
+
+     label11:
+        throw $r18;
+
+     label12:
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label6;
+        catch java.lang.Exception from label3 to label5 with label6;
+        catch java.lang.Throwable from label0 to label2 with label9;
+        catch java.lang.Throwable from label3 to label8 with label9;
+        catch java.lang.Throwable from label10 to label11 with label9;
+    }
+}

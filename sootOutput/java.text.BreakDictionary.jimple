@@ -1,0 +1,388 @@
+class java.text.BreakDictionary extends java.lang.Object
+{
+    private static int supportedVersion;
+    private sun.text.CompactByteArray columnMap;
+    private sun.text.SupplementaryCharacterData supplementaryCharColumnMap;
+    private int numCols;
+    private int numColGroups;
+    private short[] table;
+    private short[] rowIndex;
+    private int[] rowIndexFlags;
+    private short[] rowIndexFlagsIndex;
+    private byte[] rowIndexShifts;
+
+    public void <init>(java.lang.String) throws java.io.IOException, java.util.MissingResourceException
+    {
+        java.text.BreakDictionary r0;
+        java.lang.String r1;
+
+        r0 := @this: java.text.BreakDictionary;
+        r1 := @parameter0: java.lang.String;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.text.BreakDictionary: sun.text.CompactByteArray columnMap> = null;
+        r0.<java.text.BreakDictionary: sun.text.SupplementaryCharacterData supplementaryCharColumnMap> = null;
+        r0.<java.text.BreakDictionary: short[] table> = null;
+        r0.<java.text.BreakDictionary: short[] rowIndex> = null;
+        r0.<java.text.BreakDictionary: int[] rowIndexFlags> = null;
+        r0.<java.text.BreakDictionary: short[] rowIndexFlagsIndex> = null;
+        r0.<java.text.BreakDictionary: byte[] rowIndexShifts> = null;
+        specialinvoke r0.<java.text.BreakDictionary: void readDictionaryFile(java.lang.String)>(r1);
+        return;
+    }
+
+    private void readDictionaryFile(java.lang.String) throws java.io.IOException, java.util.MissingResourceException
+    {
+        java.text.BreakDictionary r0;
+        java.lang.String r1, $r9, $r17;
+        java.text.BreakDictionary$1 $r2;
+        java.io.BufferedInputStream r3;
+        java.security.PrivilegedActionException r4, $r7;
+        int i0, i1, i3, i4, i5, i6, $i7, $i8, $i9, i10, i12, i13, $i15, i16, $i17, i18, i19, i20, i21, i23, i24, i25, i27, i28, i29, $i30, i31, i32, i33, i35, i36, i37, i39, i40, $i41;
+        byte b2, $b14, $b34;
+        short[] r5, $r22, $r23, $r24, $r25, $r30, $r31;
+        java.lang.Object $r6;
+        java.lang.InternalError $r8;
+        byte[] r10, r18, r20, $r28, $r29;
+        java.util.MissingResourceException $r11, $r12, $r19;
+        java.lang.StringBuilder $r13, $r14, $r15, $r16;
+        short $s11, $s22, $s26, $s38;
+        sun.text.CompactByteArray $r21;
+        int[] $r26, $r27, r32;
+        sun.text.SupplementaryCharacterData $r33;
+
+        r0 := @this: java.text.BreakDictionary;
+        r1 := @parameter0: java.lang.String;
+
+     label0:
+        $r2 = new java.text.BreakDictionary$1;
+        specialinvoke $r2.<java.text.BreakDictionary$1: void <init>(java.text.BreakDictionary,java.lang.String)>(r0, r1);
+        $r6 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedExceptionAction)>($r2);
+        r3 = (java.io.BufferedInputStream) $r6;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r7 := @caughtexception;
+        r4 = $r7;
+        $r8 = new java.lang.InternalError;
+        $r9 = virtualinvoke r4.<java.security.PrivilegedActionException: java.lang.String toString()>();
+        specialinvoke $r8.<java.lang.InternalError: void <init>(java.lang.String)>($r9);
+        throw $r8;
+
+     label3:
+        r10 = newarray (byte)[8];
+        $i7 = virtualinvoke r3.<java.io.BufferedInputStream: int read(byte[])>(r10);
+        if $i7 == 8 goto label4;
+
+        $r11 = new java.util.MissingResourceException;
+        specialinvoke $r11.<java.util.MissingResourceException: void <init>(java.lang.String,java.lang.String,java.lang.String)>("Wrong data length", r1, "");
+        throw $r11;
+
+     label4:
+        i0 = staticinvoke <java.text.BreakIterator: int getInt(byte[],int)>(r10, 0);
+        $i8 = <java.text.BreakDictionary: int supportedVersion>;
+        if i0 == $i8 goto label5;
+
+        $r12 = new java.util.MissingResourceException;
+        $r13 = new java.lang.StringBuilder;
+        specialinvoke $r13.<java.lang.StringBuilder: void <init>()>();
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Dictionary version(");
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(") is unsupported");
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r12.<java.util.MissingResourceException: void <init>(java.lang.String,java.lang.String,java.lang.String)>($r17, r1, "");
+        throw $r12;
+
+     label5:
+        i1 = staticinvoke <java.text.BreakIterator: int getInt(byte[],int)>(r10, 4);
+        r18 = newarray (byte)[i1];
+        $i9 = virtualinvoke r3.<java.io.BufferedInputStream: int read(byte[])>(r18);
+        if $i9 == i1 goto label6;
+
+        $r19 = new java.util.MissingResourceException;
+        specialinvoke $r19.<java.util.MissingResourceException: void <init>(java.lang.String,java.lang.String,java.lang.String)>("Wrong data length", r1, "");
+        throw $r19;
+
+     label6:
+        virtualinvoke r3.<java.io.BufferedInputStream: void close()>();
+        b2 = 0;
+        i3 = staticinvoke <java.text.BreakIterator: int getInt(byte[],int)>(r18, b2);
+        i10 = b2 + 4;
+        r5 = newarray (short)[i3];
+        i4 = 0;
+
+     label7:
+        if i4 >= i3 goto label8;
+
+        $s11 = staticinvoke <java.text.BreakIterator: short getShort(byte[],int)>(r18, i10);
+        r5[i4] = $s11;
+        i4 = i4 + 1;
+        i10 = i10 + 2;
+        goto label7;
+
+     label8:
+        i12 = staticinvoke <java.text.BreakIterator: int getInt(byte[],int)>(r18, i10);
+        i13 = i10 + 4;
+        r20 = newarray (byte)[i12];
+        i5 = 0;
+
+     label9:
+        if i5 >= i12 goto label10;
+
+        $b14 = r18[i13];
+        r20[i5] = $b14;
+        i5 = i5 + 1;
+        i13 = i13 + 1;
+        goto label9;
+
+     label10:
+        $r21 = new sun.text.CompactByteArray;
+        specialinvoke $r21.<sun.text.CompactByteArray: void <init>(short[],byte[])>(r5, r20);
+        r0.<java.text.BreakDictionary: sun.text.CompactByteArray columnMap> = $r21;
+        $i15 = staticinvoke <java.text.BreakIterator: int getInt(byte[],int)>(r18, i13);
+        r0.<java.text.BreakDictionary: int numCols> = $i15;
+        i16 = i13 + 4;
+        $i17 = staticinvoke <java.text.BreakIterator: int getInt(byte[],int)>(r18, i16);
+        r0.<java.text.BreakDictionary: int numColGroups> = $i17;
+        i18 = i16 + 4;
+        i19 = staticinvoke <java.text.BreakIterator: int getInt(byte[],int)>(r18, i18);
+        i20 = i18 + 4;
+        $r22 = newarray (short)[i19];
+        r0.<java.text.BreakDictionary: short[] rowIndex> = $r22;
+        i21 = 0;
+
+     label11:
+        if i21 >= i19 goto label12;
+
+        $r23 = r0.<java.text.BreakDictionary: short[] rowIndex>;
+        $s22 = staticinvoke <java.text.BreakIterator: short getShort(byte[],int)>(r18, i20);
+        $r23[i21] = $s22;
+        i21 = i21 + 1;
+        i20 = i20 + 2;
+        goto label11;
+
+     label12:
+        i23 = staticinvoke <java.text.BreakIterator: int getInt(byte[],int)>(r18, i20);
+        i24 = i20 + 4;
+        $r24 = newarray (short)[i23];
+        r0.<java.text.BreakDictionary: short[] rowIndexFlagsIndex> = $r24;
+        i25 = 0;
+
+     label13:
+        if i25 >= i23 goto label14;
+
+        $r25 = r0.<java.text.BreakDictionary: short[] rowIndexFlagsIndex>;
+        $s26 = staticinvoke <java.text.BreakIterator: short getShort(byte[],int)>(r18, i24);
+        $r25[i25] = $s26;
+        i25 = i25 + 1;
+        i24 = i24 + 2;
+        goto label13;
+
+     label14:
+        i27 = staticinvoke <java.text.BreakIterator: int getInt(byte[],int)>(r18, i24);
+        i28 = i24 + 4;
+        $r26 = newarray (int)[i27];
+        r0.<java.text.BreakDictionary: int[] rowIndexFlags> = $r26;
+        i29 = 0;
+
+     label15:
+        if i29 >= i27 goto label16;
+
+        $r27 = r0.<java.text.BreakDictionary: int[] rowIndexFlags>;
+        $i30 = staticinvoke <java.text.BreakIterator: int getInt(byte[],int)>(r18, i28);
+        $r27[i29] = $i30;
+        i29 = i29 + 1;
+        i28 = i28 + 4;
+        goto label15;
+
+     label16:
+        i31 = staticinvoke <java.text.BreakIterator: int getInt(byte[],int)>(r18, i28);
+        i32 = i28 + 4;
+        $r28 = newarray (byte)[i31];
+        r0.<java.text.BreakDictionary: byte[] rowIndexShifts> = $r28;
+        i33 = 0;
+
+     label17:
+        if i33 >= i31 goto label18;
+
+        $r29 = r0.<java.text.BreakDictionary: byte[] rowIndexShifts>;
+        $b34 = r18[i32];
+        $r29[i33] = $b34;
+        i33 = i33 + 1;
+        i32 = i32 + 1;
+        goto label17;
+
+     label18:
+        i35 = staticinvoke <java.text.BreakIterator: int getInt(byte[],int)>(r18, i32);
+        i36 = i32 + 4;
+        $r30 = newarray (short)[i35];
+        r0.<java.text.BreakDictionary: short[] table> = $r30;
+        i37 = 0;
+
+     label19:
+        if i37 >= i35 goto label20;
+
+        $r31 = r0.<java.text.BreakDictionary: short[] table>;
+        $s38 = staticinvoke <java.text.BreakIterator: short getShort(byte[],int)>(r18, i36);
+        $r31[i37] = $s38;
+        i37 = i37 + 1;
+        i36 = i36 + 2;
+        goto label19;
+
+     label20:
+        i39 = staticinvoke <java.text.BreakIterator: int getInt(byte[],int)>(r18, i36);
+        i40 = i36 + 4;
+        r32 = newarray (int)[i39];
+        i6 = 0;
+
+     label21:
+        if i6 >= i39 goto label22;
+
+        $i41 = staticinvoke <java.text.BreakIterator: int getInt(byte[],int)>(r18, i40);
+        r32[i6] = $i41;
+        i6 = i6 + 1;
+        i40 = i40 + 4;
+        goto label21;
+
+     label22:
+        $r33 = new sun.text.SupplementaryCharacterData;
+        specialinvoke $r33.<sun.text.SupplementaryCharacterData: void <init>(int[])>(r32);
+        r0.<java.text.BreakDictionary: sun.text.SupplementaryCharacterData supplementaryCharColumnMap> = $r33;
+        return;
+
+        catch java.security.PrivilegedActionException from label0 to label1 with label2;
+    }
+
+    public final short getNextStateFromCharacter(int, int)
+    {
+        java.text.BreakDictionary r0;
+        int i0, i1, i2;
+        sun.text.CompactByteArray $r1;
+        char $c3;
+        sun.text.SupplementaryCharacterData $r2;
+        short $s4;
+
+        r0 := @this: java.text.BreakDictionary;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        if i1 >= 65536 goto label0;
+
+        $r1 = r0.<java.text.BreakDictionary: sun.text.CompactByteArray columnMap>;
+        $c3 = (char) i1;
+        i2 = virtualinvoke $r1.<sun.text.CompactByteArray: byte elementAt(char)>($c3);
+        goto label1;
+
+     label0:
+        $r2 = r0.<java.text.BreakDictionary: sun.text.SupplementaryCharacterData supplementaryCharColumnMap>;
+        i2 = virtualinvoke $r2.<sun.text.SupplementaryCharacterData: int getValue(int)>(i1);
+
+     label1:
+        $s4 = virtualinvoke r0.<java.text.BreakDictionary: short getNextState(int,int)>(i0, i2);
+        return $s4;
+    }
+
+    public final short getNextState(int, int)
+    {
+        java.text.BreakDictionary r0;
+        int i0, i1, $i4;
+        boolean $z0;
+        short[] $r1;
+        short $s2, $s5;
+        byte[] $r2;
+        byte $b3;
+
+        r0 := @this: java.text.BreakDictionary;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $z0 = specialinvoke r0.<java.text.BreakDictionary: boolean cellIsPopulated(int,int)>(i0, i1);
+        if $z0 == 0 goto label0;
+
+        $r1 = r0.<java.text.BreakDictionary: short[] rowIndex>;
+        $s2 = $r1[i0];
+        $r2 = r0.<java.text.BreakDictionary: byte[] rowIndexShifts>;
+        $b3 = $r2[i0];
+        $i4 = i1 + $b3;
+        $s5 = specialinvoke r0.<java.text.BreakDictionary: short internalAt(int,int)>($s2, $i4);
+        return $s5;
+
+     label0:
+        return 0;
+    }
+
+    private final boolean cellIsPopulated(int, int)
+    {
+        java.text.BreakDictionary r0;
+        int i0, i1, i2, $i7, $i8, $i9, $i10, $i11;
+        short[] $r1, $r2, $r4;
+        short $s3, $s4, $s5, $s6;
+        boolean $z0, $z1;
+        int[] $r3;
+
+        r0 := @this: java.text.BreakDictionary;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $r1 = r0.<java.text.BreakDictionary: short[] rowIndexFlagsIndex>;
+        $s3 = $r1[i0];
+        if $s3 >= 0 goto label2;
+
+        $r2 = r0.<java.text.BreakDictionary: short[] rowIndexFlagsIndex>;
+        $s4 = $r2[i0];
+        $s5 = neg $s4;
+        if i1 != $s5 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+
+     label2:
+        $r3 = r0.<java.text.BreakDictionary: int[] rowIndexFlags>;
+        $r4 = r0.<java.text.BreakDictionary: short[] rowIndexFlagsIndex>;
+        $s6 = $r4[i0];
+        $i7 = i1 >> 5;
+        $i8 = $s6 + $i7;
+        i2 = $r3[$i8];
+        $i9 = i1 & 31;
+        $i10 = 1 << $i9;
+        $i11 = i2 & $i10;
+        if $i11 == 0 goto label3;
+
+        $z1 = 1;
+        goto label4;
+
+     label3:
+        $z1 = 0;
+
+     label4:
+        return $z1;
+    }
+
+    private final short internalAt(int, int)
+    {
+        java.text.BreakDictionary r0;
+        int i0, i1, $i2, $i3, $i4;
+        short[] $r1;
+        short $s5;
+
+        r0 := @this: java.text.BreakDictionary;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $r1 = r0.<java.text.BreakDictionary: short[] table>;
+        $i2 = r0.<java.text.BreakDictionary: int numCols>;
+        $i3 = i0 * $i2;
+        $i4 = $i3 + i1;
+        $s5 = $r1[$i4];
+        return $s5;
+    }
+
+    static void <clinit>()
+    {
+        <java.text.BreakDictionary: int supportedVersion> = 1;
+        return;
+    }
+}

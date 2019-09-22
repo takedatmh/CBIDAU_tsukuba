@@ -1,0 +1,385 @@
+public class sun.net.dns.ResolverConfigurationImpl extends sun.net.dns.ResolverConfiguration
+{
+    private static java.lang.Object lock;
+    private static long lastRefresh;
+    private static final int TIMEOUT;
+    private final sun.net.dns.ResolverConfiguration$Options opts;
+    private java.util.LinkedList searchlist;
+    private java.util.LinkedList nameservers;
+    static final boolean $assertionsDisabled;
+
+    private java.util.LinkedList resolvconf(java.lang.String, int, int)
+    {
+        sun.net.dns.ResolverConfigurationImpl r0;
+        java.lang.String r1, r6, r7, r9, $r11;
+        int i0, i1, i2, $i3, $i6, $i7;
+        java.util.LinkedList $r2, r3;
+        java.io.FileReader $r4;
+        java.io.BufferedReader r5, $r10;
+        java.util.StringTokenizer r8, $r12;
+        char $c4, $c5, $c8, $c9, $c10, $c11;
+        boolean $z0, $z1;
+        java.io.IOException $r13, r14;
+
+        r0 := @this: sun.net.dns.ResolverConfigurationImpl;
+        r1 := @parameter0: java.lang.String;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        $r2 = new java.util.LinkedList;
+        specialinvoke $r2.<java.util.LinkedList: void <init>()>();
+        r3 = $r2;
+
+     label0:
+        $r10 = new java.io.BufferedReader;
+        $r4 = new java.io.FileReader;
+        specialinvoke $r4.<java.io.FileReader: void <init>(java.lang.String)>("/etc/resolv.conf");
+        specialinvoke $r10.<java.io.BufferedReader: void <init>(java.io.Reader)>($r4);
+        r5 = $r10;
+
+     label1:
+        $r11 = virtualinvoke r5.<java.io.BufferedReader: java.lang.String readLine()>();
+        r6 = $r11;
+        if $r11 == null goto label12;
+
+        i2 = i0;
+        $i3 = virtualinvoke r6.<java.lang.String: int length()>();
+        if $i3 != 0 goto label2;
+
+        goto label1;
+
+     label2:
+        $c4 = virtualinvoke r6.<java.lang.String: char charAt(int)>(0);
+        if $c4 == 35 goto label1;
+
+        $c5 = virtualinvoke r6.<java.lang.String: char charAt(int)>(0);
+        if $c5 != 59 goto label3;
+
+        goto label1;
+
+     label3:
+        $z0 = virtualinvoke r6.<java.lang.String: boolean startsWith(java.lang.String)>(r1);
+        if $z0 != 0 goto label4;
+
+        goto label1;
+
+     label4:
+        $i6 = virtualinvoke r1.<java.lang.String: int length()>();
+        r7 = virtualinvoke r6.<java.lang.String: java.lang.String substring(int)>($i6);
+        $i7 = virtualinvoke r7.<java.lang.String: int length()>();
+        if $i7 != 0 goto label5;
+
+        goto label1;
+
+     label5:
+        $c8 = virtualinvoke r7.<java.lang.String: char charAt(int)>(0);
+        if $c8 == 32 goto label6;
+
+        $c9 = virtualinvoke r7.<java.lang.String: char charAt(int)>(0);
+        if $c9 == 9 goto label6;
+
+        goto label1;
+
+     label6:
+        $r12 = new java.util.StringTokenizer;
+        specialinvoke $r12.<java.util.StringTokenizer: void <init>(java.lang.String,java.lang.String)>(r7, " \t");
+        r8 = $r12;
+
+     label7:
+        $z1 = virtualinvoke r8.<java.util.StringTokenizer: boolean hasMoreTokens()>();
+        if $z1 == 0 goto label10;
+
+        r9 = virtualinvoke r8.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        $c10 = virtualinvoke r9.<java.lang.String: char charAt(int)>(0);
+        if $c10 == 35 goto label10;
+
+        $c11 = virtualinvoke r9.<java.lang.String: char charAt(int)>(0);
+        if $c11 != 59 goto label8;
+
+        goto label10;
+
+     label8:
+        virtualinvoke r3.<java.util.LinkedList: boolean add(java.lang.Object)>(r9);
+        i2 = i2 + -1;
+        if i2 != 0 goto label9;
+
+        goto label10;
+
+     label9:
+        goto label7;
+
+     label10:
+        i1 = i1 + -1;
+        if i1 != 0 goto label11;
+
+        goto label12;
+
+     label11:
+        goto label1;
+
+     label12:
+        virtualinvoke r5.<java.io.BufferedReader: void close()>();
+
+     label13:
+        goto label15;
+
+     label14:
+        $r13 := @caughtexception;
+        r14 = $r13;
+
+     label15:
+        return r3;
+
+        catch java.io.IOException from label0 to label13 with label14;
+    }
+
+    private void loadConfig()
+    {
+        sun.net.dns.ResolverConfigurationImpl r0;
+        boolean $z0, $z1;
+        long l0, $l1, $l3, $l4, $l6;
+        java.lang.Object $r1, $r4;
+        java.lang.AssertionError $r2;
+        byte $b2, $b5;
+        sun.net.dns.ResolverConfigurationImpl$1 $r3;
+        java.util.LinkedList $r5, $r6;
+
+        r0 := @this: sun.net.dns.ResolverConfigurationImpl;
+        $z0 = <sun.net.dns.ResolverConfigurationImpl: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label0;
+
+        $r1 = <sun.net.dns.ResolverConfigurationImpl: java.lang.Object lock>;
+        $z1 = staticinvoke <java.lang.Thread: boolean holdsLock(java.lang.Object)>($r1);
+        if $z1 != 0 goto label0;
+
+        $r2 = new java.lang.AssertionError;
+        specialinvoke $r2.<java.lang.AssertionError: void <init>()>();
+        throw $r2;
+
+     label0:
+        $l1 = <sun.net.dns.ResolverConfigurationImpl: long lastRefresh>;
+        $b2 = $l1 cmp 0L;
+        if $b2 < 0 goto label1;
+
+        l0 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        $l3 = <sun.net.dns.ResolverConfigurationImpl: long lastRefresh>;
+        $l4 = l0 - $l3;
+        $b5 = $l4 cmp 300000L;
+        if $b5 >= 0 goto label1;
+
+        return;
+
+     label1:
+        $r3 = new sun.net.dns.ResolverConfigurationImpl$1;
+        specialinvoke $r3.<sun.net.dns.ResolverConfigurationImpl$1: void <init>(sun.net.dns.ResolverConfigurationImpl)>(r0);
+        $r4 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r3);
+        $r5 = (java.util.LinkedList) $r4;
+        r0.<sun.net.dns.ResolverConfigurationImpl: java.util.LinkedList nameservers> = $r5;
+        $r6 = specialinvoke r0.<sun.net.dns.ResolverConfigurationImpl: java.util.LinkedList getSearchList()>();
+        r0.<sun.net.dns.ResolverConfigurationImpl: java.util.LinkedList searchlist> = $r6;
+        $l6 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        <sun.net.dns.ResolverConfigurationImpl: long lastRefresh> = $l6;
+        return;
+    }
+
+    private java.util.LinkedList getSearchList()
+    {
+        sun.net.dns.ResolverConfigurationImpl r0;
+        sun.net.dns.ResolverConfigurationImpl$2 $r1;
+        java.util.LinkedList r2, $r6, r7, r10, $r11, r12;
+        java.lang.String r3, r4;
+        java.lang.Object $r5, $r9;
+        int $i0, $i1;
+        sun.net.dns.ResolverConfigurationImpl$3 $r8;
+
+        r0 := @this: sun.net.dns.ResolverConfigurationImpl;
+        $r1 = new sun.net.dns.ResolverConfigurationImpl$2;
+        specialinvoke $r1.<sun.net.dns.ResolverConfigurationImpl$2: void <init>(sun.net.dns.ResolverConfigurationImpl)>(r0);
+        $r5 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r1);
+        r2 = (java.util.LinkedList) $r5;
+        if r2 == null goto label0;
+
+        return r2;
+
+     label0:
+        r3 = staticinvoke <sun.net.dns.ResolverConfigurationImpl: java.lang.String localDomain0()>();
+        if r3 == null goto label1;
+
+        $i0 = virtualinvoke r3.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label1;
+
+        $r6 = new java.util.LinkedList;
+        specialinvoke $r6.<java.util.LinkedList: void <init>()>();
+        r7 = $r6;
+        virtualinvoke r7.<java.util.LinkedList: boolean add(java.lang.Object)>(r3);
+        return r7;
+
+     label1:
+        $r8 = new sun.net.dns.ResolverConfigurationImpl$3;
+        specialinvoke $r8.<sun.net.dns.ResolverConfigurationImpl$3: void <init>(sun.net.dns.ResolverConfigurationImpl)>(r0);
+        $r9 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r8);
+        r10 = (java.util.LinkedList) $r9;
+        if r10 == null goto label2;
+
+        return r10;
+
+     label2:
+        $r11 = new java.util.LinkedList;
+        specialinvoke $r11.<java.util.LinkedList: void <init>()>();
+        r12 = $r11;
+        r4 = staticinvoke <sun.net.dns.ResolverConfigurationImpl: java.lang.String fallbackDomain0()>();
+        if r4 == null goto label3;
+
+        $i1 = virtualinvoke r4.<java.lang.String: int length()>();
+        if $i1 <= 0 goto label3;
+
+        virtualinvoke r12.<java.util.LinkedList: boolean add(java.lang.Object)>(r4);
+
+     label3:
+        return r12;
+    }
+
+    void <init>()
+    {
+        sun.net.dns.ResolverConfigurationImpl r0;
+        sun.net.dns.OptionsImpl $r1;
+
+        r0 := @this: sun.net.dns.ResolverConfigurationImpl;
+        specialinvoke r0.<sun.net.dns.ResolverConfiguration: void <init>()>();
+        $r1 = new sun.net.dns.OptionsImpl;
+        specialinvoke $r1.<sun.net.dns.OptionsImpl: void <init>()>();
+        r0.<sun.net.dns.ResolverConfigurationImpl: sun.net.dns.ResolverConfiguration$Options opts> = $r1;
+        return;
+    }
+
+    public java.util.List searchlist()
+    {
+        sun.net.dns.ResolverConfigurationImpl r0;
+        java.lang.Object $r1, r2, $r5;
+        java.lang.Throwable r3, $r7;
+        java.util.LinkedList $r4;
+        java.util.List $r6;
+
+        r0 := @this: sun.net.dns.ResolverConfigurationImpl;
+        $r1 = <sun.net.dns.ResolverConfigurationImpl: java.lang.Object lock>;
+        r2 = $r1;
+        entermonitor $r1;
+
+     label0:
+        specialinvoke r0.<sun.net.dns.ResolverConfigurationImpl: void loadConfig()>();
+        $r4 = r0.<sun.net.dns.ResolverConfigurationImpl: java.util.LinkedList searchlist>;
+        $r5 = virtualinvoke $r4.<java.util.LinkedList: java.lang.Object clone()>();
+        $r6 = (java.util.List) $r5;
+        exitmonitor r2;
+
+     label1:
+        return $r6;
+
+     label2:
+        $r7 := @caughtexception;
+
+     label3:
+        r3 = $r7;
+        exitmonitor r2;
+
+     label4:
+        throw r3;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    public java.util.List nameservers()
+    {
+        sun.net.dns.ResolverConfigurationImpl r0;
+        java.lang.Object $r1, r2, $r5;
+        java.lang.Throwable r3, $r7;
+        java.util.LinkedList $r4;
+        java.util.List $r6;
+
+        r0 := @this: sun.net.dns.ResolverConfigurationImpl;
+        $r1 = <sun.net.dns.ResolverConfigurationImpl: java.lang.Object lock>;
+        r2 = $r1;
+        entermonitor $r1;
+
+     label0:
+        specialinvoke r0.<sun.net.dns.ResolverConfigurationImpl: void loadConfig()>();
+        $r4 = r0.<sun.net.dns.ResolverConfigurationImpl: java.util.LinkedList nameservers>;
+        $r5 = virtualinvoke $r4.<java.util.LinkedList: java.lang.Object clone()>();
+        $r6 = (java.util.List) $r5;
+        exitmonitor r2;
+
+     label1:
+        return $r6;
+
+     label2:
+        $r7 := @caughtexception;
+
+     label3:
+        r3 = $r7;
+        exitmonitor r2;
+
+     label4:
+        throw r3;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    public sun.net.dns.ResolverConfiguration$Options options()
+    {
+        sun.net.dns.ResolverConfigurationImpl r0;
+        sun.net.dns.ResolverConfiguration$Options $r1;
+
+        r0 := @this: sun.net.dns.ResolverConfigurationImpl;
+        $r1 = r0.<sun.net.dns.ResolverConfigurationImpl: sun.net.dns.ResolverConfiguration$Options opts>;
+        return $r1;
+    }
+
+    static native java.lang.String localDomain0();
+
+    static native java.lang.String fallbackDomain0();
+
+    static java.util.LinkedList access$000(sun.net.dns.ResolverConfigurationImpl, java.lang.String, int, int)
+    {
+        sun.net.dns.ResolverConfigurationImpl r0;
+        java.lang.String r1;
+        int i0, i1;
+        java.util.LinkedList $r2;
+
+        r0 := @parameter0: sun.net.dns.ResolverConfigurationImpl;
+        r1 := @parameter1: java.lang.String;
+        i0 := @parameter2: int;
+        i1 := @parameter3: int;
+        $r2 = specialinvoke r0.<sun.net.dns.ResolverConfigurationImpl: java.util.LinkedList resolvconf(java.lang.String,int,int)>(r1, i0, i1);
+        return $r2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        boolean $z0, $z1;
+        java.lang.Object $r1;
+        sun.security.action.LoadLibraryAction $r2;
+
+        $r0 = class "sun/net/dns/ResolverConfigurationImpl";
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        <sun.net.dns.ResolverConfigurationImpl: boolean $assertionsDisabled> = $z1;
+        $r1 = new java.lang.Object;
+        specialinvoke $r1.<java.lang.Object: void <init>()>();
+        <sun.net.dns.ResolverConfigurationImpl: java.lang.Object lock> = $r1;
+        <sun.net.dns.ResolverConfigurationImpl: long lastRefresh> = -1L;
+        $r2 = new sun.security.action.LoadLibraryAction;
+        specialinvoke $r2.<sun.security.action.LoadLibraryAction: void <init>(java.lang.String)>("net");
+        staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r2);
+        return;
+    }
+}

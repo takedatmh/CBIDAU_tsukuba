@@ -1,0 +1,156 @@
+class java.nio.channels.spi.AsynchronousChannelProvider$ProviderHolder extends java.lang.Object
+{
+    static final java.nio.channels.spi.AsynchronousChannelProvider provider;
+
+    private void <init>()
+    {
+        java.nio.channels.spi.AsynchronousChannelProvider$ProviderHolder r0;
+
+        r0 := @this: java.nio.channels.spi.AsynchronousChannelProvider$ProviderHolder;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    private static java.nio.channels.spi.AsynchronousChannelProvider load()
+    {
+        java.nio.channels.spi.AsynchronousChannelProvider$ProviderHolder$1 $r0;
+        java.lang.Object $r1;
+        java.nio.channels.spi.AsynchronousChannelProvider $r2;
+
+        $r0 = new java.nio.channels.spi.AsynchronousChannelProvider$ProviderHolder$1;
+        specialinvoke $r0.<java.nio.channels.spi.AsynchronousChannelProvider$ProviderHolder$1: void <init>()>();
+        $r1 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r0);
+        $r2 = (java.nio.channels.spi.AsynchronousChannelProvider) $r1;
+        return $r2;
+    }
+
+    private static java.nio.channels.spi.AsynchronousChannelProvider loadProviderFromProperty()
+    {
+        java.lang.String r0;
+        java.lang.ClassLoader $r1;
+        java.lang.Class r2;
+        java.lang.Object $r3;
+        java.nio.channels.spi.AsynchronousChannelProvider $r4;
+        java.lang.ClassNotFoundException $r5, r6;
+        java.util.ServiceConfigurationError $r7, $r10, $r13, $r16;
+        java.lang.IllegalAccessException $r8, r9;
+        java.lang.InstantiationException $r11, r12;
+        java.lang.SecurityException $r14, r15;
+
+        r0 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("java.nio.channels.spi.AsynchronousChannelProvider");
+        if r0 != null goto label0;
+
+        return null;
+
+     label0:
+        $r1 = staticinvoke <java.lang.ClassLoader: java.lang.ClassLoader getSystemClassLoader()>();
+        r2 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String,boolean,java.lang.ClassLoader)>(r0, 1, $r1);
+        $r3 = virtualinvoke r2.<java.lang.Class: java.lang.Object newInstance()>();
+        $r4 = (java.nio.channels.spi.AsynchronousChannelProvider) $r3;
+
+     label1:
+        return $r4;
+
+     label2:
+        $r5 := @caughtexception;
+        r6 = $r5;
+        $r7 = new java.util.ServiceConfigurationError;
+        specialinvoke $r7.<java.util.ServiceConfigurationError: void <init>(java.lang.String,java.lang.Throwable)>(null, r6);
+        throw $r7;
+
+     label3:
+        $r8 := @caughtexception;
+        r9 = $r8;
+        $r10 = new java.util.ServiceConfigurationError;
+        specialinvoke $r10.<java.util.ServiceConfigurationError: void <init>(java.lang.String,java.lang.Throwable)>(null, r9);
+        throw $r10;
+
+     label4:
+        $r11 := @caughtexception;
+        r12 = $r11;
+        $r13 = new java.util.ServiceConfigurationError;
+        specialinvoke $r13.<java.util.ServiceConfigurationError: void <init>(java.lang.String,java.lang.Throwable)>(null, r12);
+        throw $r13;
+
+     label5:
+        $r14 := @caughtexception;
+        r15 = $r14;
+        $r16 = new java.util.ServiceConfigurationError;
+        specialinvoke $r16.<java.util.ServiceConfigurationError: void <init>(java.lang.String,java.lang.Throwable)>(null, r15);
+        throw $r16;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+        catch java.lang.IllegalAccessException from label0 to label1 with label3;
+        catch java.lang.InstantiationException from label0 to label1 with label4;
+        catch java.lang.SecurityException from label0 to label1 with label5;
+    }
+
+    private static java.nio.channels.spi.AsynchronousChannelProvider loadProviderAsService()
+    {
+        java.lang.ClassLoader $r0;
+        java.util.ServiceLoader r1;
+        java.util.Iterator r2;
+        java.util.ServiceConfigurationError r3, $r6;
+        boolean $z0, $z1;
+        java.lang.Object $r4;
+        java.nio.channels.spi.AsynchronousChannelProvider $r5;
+        java.lang.Throwable $r7;
+
+        $r0 = staticinvoke <java.lang.ClassLoader: java.lang.ClassLoader getSystemClassLoader()>();
+        r1 = staticinvoke <java.util.ServiceLoader: java.util.ServiceLoader load(java.lang.Class,java.lang.ClassLoader)>(class "java/nio/channels/spi/AsynchronousChannelProvider", $r0);
+        r2 = virtualinvoke r1.<java.util.ServiceLoader: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke r2.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r4 = interfaceinvoke r2.<java.util.Iterator: java.lang.Object next()>();
+        $r5 = (java.nio.channels.spi.AsynchronousChannelProvider) $r4;
+        goto label2;
+
+     label1:
+        $r5 = null;
+
+     label2:
+        return $r5;
+
+     label3:
+        $r6 := @caughtexception;
+        r3 = $r6;
+        $r7 = virtualinvoke r3.<java.util.ServiceConfigurationError: java.lang.Throwable getCause()>();
+        $z1 = $r7 instanceof java.lang.SecurityException;
+        if $z1 == 0 goto label4;
+
+        goto label0;
+
+     label4:
+        throw r3;
+
+        catch java.util.ServiceConfigurationError from label0 to label2 with label3;
+    }
+
+    static java.nio.channels.spi.AsynchronousChannelProvider access$000()
+    {
+        java.nio.channels.spi.AsynchronousChannelProvider $r0;
+
+        $r0 = staticinvoke <java.nio.channels.spi.AsynchronousChannelProvider$ProviderHolder: java.nio.channels.spi.AsynchronousChannelProvider loadProviderFromProperty()>();
+        return $r0;
+    }
+
+    static java.nio.channels.spi.AsynchronousChannelProvider access$100()
+    {
+        java.nio.channels.spi.AsynchronousChannelProvider $r0;
+
+        $r0 = staticinvoke <java.nio.channels.spi.AsynchronousChannelProvider$ProviderHolder: java.nio.channels.spi.AsynchronousChannelProvider loadProviderAsService()>();
+        return $r0;
+    }
+
+    static void <clinit>()
+    {
+        java.nio.channels.spi.AsynchronousChannelProvider $r0;
+
+        $r0 = staticinvoke <java.nio.channels.spi.AsynchronousChannelProvider$ProviderHolder: java.nio.channels.spi.AsynchronousChannelProvider load()>();
+        <java.nio.channels.spi.AsynchronousChannelProvider$ProviderHolder: java.nio.channels.spi.AsynchronousChannelProvider provider> = $r0;
+        return;
+    }
+}

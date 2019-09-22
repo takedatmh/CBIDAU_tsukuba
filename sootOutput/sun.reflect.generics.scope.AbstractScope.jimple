@@ -1,0 +1,85 @@
+public abstract class sun.reflect.generics.scope.AbstractScope extends java.lang.Object implements sun.reflect.generics.scope.Scope
+{
+    private java.lang.reflect.GenericDeclaration recvr;
+    private sun.reflect.generics.scope.Scope enclosingScope;
+
+    protected void <init>(java.lang.reflect.GenericDeclaration)
+    {
+        sun.reflect.generics.scope.AbstractScope r0;
+        java.lang.reflect.GenericDeclaration r1;
+
+        r0 := @this: sun.reflect.generics.scope.AbstractScope;
+        r1 := @parameter0: java.lang.reflect.GenericDeclaration;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<sun.reflect.generics.scope.AbstractScope: java.lang.reflect.GenericDeclaration recvr> = r1;
+        return;
+    }
+
+    protected java.lang.reflect.GenericDeclaration getRecvr()
+    {
+        sun.reflect.generics.scope.AbstractScope r0;
+        java.lang.reflect.GenericDeclaration $r1;
+
+        r0 := @this: sun.reflect.generics.scope.AbstractScope;
+        $r1 = r0.<sun.reflect.generics.scope.AbstractScope: java.lang.reflect.GenericDeclaration recvr>;
+        return $r1;
+    }
+
+    protected abstract sun.reflect.generics.scope.Scope computeEnclosingScope();
+
+    protected sun.reflect.generics.scope.Scope getEnclosingScope()
+    {
+        sun.reflect.generics.scope.AbstractScope r0;
+        sun.reflect.generics.scope.Scope $r1, $r2, $r3;
+
+        r0 := @this: sun.reflect.generics.scope.AbstractScope;
+        $r1 = r0.<sun.reflect.generics.scope.AbstractScope: sun.reflect.generics.scope.Scope enclosingScope>;
+        if $r1 != null goto label0;
+
+        $r2 = virtualinvoke r0.<sun.reflect.generics.scope.AbstractScope: sun.reflect.generics.scope.Scope computeEnclosingScope()>();
+        r0.<sun.reflect.generics.scope.AbstractScope: sun.reflect.generics.scope.Scope enclosingScope> = $r2;
+
+     label0:
+        $r3 = r0.<sun.reflect.generics.scope.AbstractScope: sun.reflect.generics.scope.Scope enclosingScope>;
+        return $r3;
+    }
+
+    public java.lang.reflect.TypeVariable lookup(java.lang.String)
+    {
+        sun.reflect.generics.scope.AbstractScope r0;
+        java.lang.String r1, $r6;
+        java.lang.reflect.TypeVariable[] r2, r3;
+        int i0, i1;
+        java.lang.reflect.TypeVariable r4, $r8;
+        java.lang.reflect.GenericDeclaration $r5;
+        boolean $z0;
+        sun.reflect.generics.scope.Scope $r7;
+
+        r0 := @this: sun.reflect.generics.scope.AbstractScope;
+        r1 := @parameter0: java.lang.String;
+        $r5 = virtualinvoke r0.<sun.reflect.generics.scope.AbstractScope: java.lang.reflect.GenericDeclaration getRecvr()>();
+        r2 = interfaceinvoke $r5.<java.lang.reflect.GenericDeclaration: java.lang.reflect.TypeVariable[] getTypeParameters()>();
+        r3 = r2;
+        i0 = lengthof r3;
+        i1 = 0;
+
+     label0:
+        if i1 >= i0 goto label2;
+
+        r4 = r3[i1];
+        $r6 = interfaceinvoke r4.<java.lang.reflect.TypeVariable: java.lang.String getName()>();
+        $z0 = virtualinvoke $r6.<java.lang.String: boolean equals(java.lang.Object)>(r1);
+        if $z0 == 0 goto label1;
+
+        return r4;
+
+     label1:
+        i1 = i1 + 1;
+        goto label0;
+
+     label2:
+        $r7 = virtualinvoke r0.<sun.reflect.generics.scope.AbstractScope: sun.reflect.generics.scope.Scope getEnclosingScope()>();
+        $r8 = interfaceinvoke $r7.<sun.reflect.generics.scope.Scope: java.lang.reflect.TypeVariable lookup(java.lang.String)>(r1);
+        return $r8;
+    }
+}

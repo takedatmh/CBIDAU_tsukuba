@@ -1,0 +1,266 @@
+public class org.apache.coyote.http11.filters.IdentityInputFilter extends java.lang.Object implements org.apache.coyote.http11.InputFilter
+{
+    private static final org.apache.tomcat.util.res.StringManager sm;
+    protected static final java.lang.String ENCODING_NAME;
+    protected static final org.apache.tomcat.util.buf.ByteChunk ENCODING;
+    protected long contentLength;
+    protected long remaining;
+    protected org.apache.coyote.InputBuffer buffer;
+    protected org.apache.tomcat.util.buf.ByteChunk endChunk;
+    private final int maxSwallowSize;
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        java.nio.charset.Charset $r1;
+        java.lang.String $r2, $r4, $r8;
+        java.lang.Package $r3;
+        org.apache.tomcat.util.res.StringManager $r5;
+        org.apache.tomcat.util.buf.ByteChunk $r6, $r7;
+        byte[] $r9;
+        int $i0;
+
+        $r0 = class "org/apache/coyote/http11/filters/IdentityInputFilter";
+        $r3 = virtualinvoke $r0.<java.lang.Class: java.lang.Package getPackage()>();
+        $r4 = virtualinvoke $r3.<java.lang.Package: java.lang.String getName()>();
+        $r5 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String)>($r4);
+        <org.apache.coyote.http11.filters.IdentityInputFilter: org.apache.tomcat.util.res.StringManager sm> = $r5;
+        $r6 = new org.apache.tomcat.util.buf.ByteChunk;
+        specialinvoke $r6.<org.apache.tomcat.util.buf.ByteChunk: void <init>()>();
+        <org.apache.coyote.http11.filters.IdentityInputFilter: org.apache.tomcat.util.buf.ByteChunk ENCODING> = $r6;
+        $r7 = <org.apache.coyote.http11.filters.IdentityInputFilter: org.apache.tomcat.util.buf.ByteChunk ENCODING>;
+        $r8 = "identity";
+        $r1 = staticinvoke <java.nio.charset.Charset: java.nio.charset.Charset defaultCharset()>();
+        $r9 = virtualinvoke $r8.<java.lang.String: byte[] getBytes(java.nio.charset.Charset)>($r1);
+        $r2 = "identity";
+        $i0 = virtualinvoke $r2.<java.lang.String: int length()>();
+        virtualinvoke $r7.<org.apache.tomcat.util.buf.ByteChunk: void setBytes(byte[],int,int)>($r9, 0, $i0);
+        return;
+    }
+
+    public long getContentLength()
+    {
+        org.apache.coyote.http11.filters.IdentityInputFilter r0;
+        long $l0;
+
+        r0 := @this: org.apache.coyote.http11.filters.IdentityInputFilter;
+        $l0 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long contentLength>;
+        return $l0;
+    }
+
+    public long getRemaining()
+    {
+        org.apache.coyote.http11.filters.IdentityInputFilter r0;
+        long $l0;
+
+        r0 := @this: org.apache.coyote.http11.filters.IdentityInputFilter;
+        $l0 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long remaining>;
+        return $l0;
+    }
+
+    public void <init>(int)
+    {
+        org.apache.coyote.http11.filters.IdentityInputFilter r0;
+        int i0;
+        org.apache.tomcat.util.buf.ByteChunk $r1;
+
+        r0 := @this: org.apache.coyote.http11.filters.IdentityInputFilter;
+        i0 := @parameter0: int;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long contentLength> = -1L;
+        r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long remaining> = 0L;
+        $r1 = new org.apache.tomcat.util.buf.ByteChunk;
+        specialinvoke $r1.<org.apache.tomcat.util.buf.ByteChunk: void <init>()>();
+        r0.<org.apache.coyote.http11.filters.IdentityInputFilter: org.apache.tomcat.util.buf.ByteChunk endChunk> = $r1;
+        r0.<org.apache.coyote.http11.filters.IdentityInputFilter: int maxSwallowSize> = i0;
+        return;
+    }
+
+    public int doRead(org.apache.tomcat.util.buf.ByteChunk, org.apache.coyote.Request) throws java.io.IOException
+    {
+        org.apache.coyote.http11.filters.IdentityInputFilter r0;
+        org.apache.tomcat.util.buf.ByteChunk r1;
+        org.apache.coyote.Request r2;
+        int i0, i1, $i9, $i11;
+        long $l2, $l4, $l6, $l7, $l10, $l12, $l13, $l14, $l15;
+        byte $b3, $b5, $b8;
+        org.apache.coyote.InputBuffer $r3;
+        byte[] $r4;
+
+        r0 := @this: org.apache.coyote.http11.filters.IdentityInputFilter;
+        r1 := @parameter0: org.apache.tomcat.util.buf.ByteChunk;
+        r2 := @parameter1: org.apache.coyote.Request;
+        i0 = -1;
+        $l2 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long contentLength>;
+        $b3 = $l2 cmp 0L;
+        if $b3 < 0 goto label3;
+
+        $l4 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long remaining>;
+        $b5 = $l4 cmp 0L;
+        if $b5 <= 0 goto label2;
+
+        $r3 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: org.apache.coyote.InputBuffer buffer>;
+        i1 = interfaceinvoke $r3.<org.apache.coyote.InputBuffer: int doRead(org.apache.tomcat.util.buf.ByteChunk,org.apache.coyote.Request)>(r1, r2);
+        $l6 = (long) i1;
+        $l7 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long remaining>;
+        $b8 = $l6 cmp $l7;
+        if $b8 <= 0 goto label0;
+
+        $r4 = virtualinvoke r1.<org.apache.tomcat.util.buf.ByteChunk: byte[] getBytes()>();
+        $i9 = virtualinvoke r1.<org.apache.tomcat.util.buf.ByteChunk: int getStart()>();
+        $l10 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long remaining>;
+        $i11 = (int) $l10;
+        virtualinvoke r1.<org.apache.tomcat.util.buf.ByteChunk: void setBytes(byte[],int,int)>($r4, $i9, $i11);
+        $l12 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long remaining>;
+        i0 = (int) $l12;
+        goto label1;
+
+     label0:
+        i0 = i1;
+
+     label1:
+        if i1 <= 0 goto label3;
+
+        $l13 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long remaining>;
+        $l14 = (long) i1;
+        $l15 = $l13 - $l14;
+        r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long remaining> = $l15;
+        goto label3;
+
+     label2:
+        virtualinvoke r1.<org.apache.tomcat.util.buf.ByteChunk: void recycle()>();
+        i0 = -1;
+
+     label3:
+        return i0;
+    }
+
+    public void setRequest(org.apache.coyote.Request)
+    {
+        org.apache.coyote.http11.filters.IdentityInputFilter r0;
+        org.apache.coyote.Request r1;
+        long $l0, $l1;
+
+        r0 := @this: org.apache.coyote.http11.filters.IdentityInputFilter;
+        r1 := @parameter0: org.apache.coyote.Request;
+        $l0 = virtualinvoke r1.<org.apache.coyote.Request: long getContentLengthLong()>();
+        r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long contentLength> = $l0;
+        $l1 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long contentLength>;
+        r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long remaining> = $l1;
+        return;
+    }
+
+    public long end() throws java.io.IOException
+    {
+        org.apache.coyote.http11.filters.IdentityInputFilter r0;
+        boolean z0, $z1;
+        long l0, $l3, $l5, $l7, $l8, $l9, $l10, $l12, $l14, $l16, $l17;
+        int i1, $i2, $i4, $i11;
+        byte $b6, $b13, $b15;
+        org.apache.coyote.InputBuffer $r1;
+        org.apache.tomcat.util.buf.ByteChunk $r2;
+        java.io.IOException $r4;
+        org.apache.tomcat.util.res.StringManager $r5;
+        java.lang.String $r6;
+
+        r0 := @this: org.apache.coyote.http11.filters.IdentityInputFilter;
+        $i2 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: int maxSwallowSize>;
+        if $i2 <= -1 goto label0;
+
+        $l3 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long remaining>;
+        $i4 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: int maxSwallowSize>;
+        $l5 = (long) $i4;
+        $b6 = $l3 cmp $l5;
+        if $b6 <= 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        z0 = $z1;
+        l0 = 0L;
+        goto label4;
+
+     label2:
+        $r1 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: org.apache.coyote.InputBuffer buffer>;
+        $r2 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: org.apache.tomcat.util.buf.ByteChunk endChunk>;
+        i1 = interfaceinvoke $r1.<org.apache.coyote.InputBuffer: int doRead(org.apache.tomcat.util.buf.ByteChunk,org.apache.coyote.Request)>($r2, null);
+        if i1 <= 0 goto label3;
+
+        $l7 = (long) i1;
+        l0 = l0 + $l7;
+        $l8 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long remaining>;
+        $l9 = (long) i1;
+        $l10 = $l8 - $l9;
+        r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long remaining> = $l10;
+        if z0 == 0 goto label4;
+
+        $i11 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: int maxSwallowSize>;
+        $l12 = (long) $i11;
+        $b13 = l0 cmp $l12;
+        if $b13 <= 0 goto label4;
+
+        $r4 = new java.io.IOException;
+        $r5 = <org.apache.coyote.http11.filters.IdentityInputFilter: org.apache.tomcat.util.res.StringManager sm>;
+        $r6 = virtualinvoke $r5.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("inputFilter.maxSwallow");
+        specialinvoke $r4.<java.io.IOException: void <init>(java.lang.String)>($r6);
+        throw $r4;
+
+     label3:
+        r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long remaining> = 0L;
+
+     label4:
+        $l14 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long remaining>;
+        $b15 = $l14 cmp 0L;
+        if $b15 > 0 goto label2;
+
+        $l16 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long remaining>;
+        $l17 = neg $l16;
+        return $l17;
+    }
+
+    public int available()
+    {
+        org.apache.coyote.http11.filters.IdentityInputFilter r0;
+
+        r0 := @this: org.apache.coyote.http11.filters.IdentityInputFilter;
+        return 0;
+    }
+
+    public void setBuffer(org.apache.coyote.InputBuffer)
+    {
+        org.apache.coyote.http11.filters.IdentityInputFilter r0;
+        org.apache.coyote.InputBuffer r1;
+
+        r0 := @this: org.apache.coyote.http11.filters.IdentityInputFilter;
+        r1 := @parameter0: org.apache.coyote.InputBuffer;
+        r0.<org.apache.coyote.http11.filters.IdentityInputFilter: org.apache.coyote.InputBuffer buffer> = r1;
+        return;
+    }
+
+    public void recycle()
+    {
+        org.apache.coyote.http11.filters.IdentityInputFilter r0;
+        org.apache.tomcat.util.buf.ByteChunk $r1;
+
+        r0 := @this: org.apache.coyote.http11.filters.IdentityInputFilter;
+        r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long contentLength> = -1L;
+        r0.<org.apache.coyote.http11.filters.IdentityInputFilter: long remaining> = 0L;
+        $r1 = r0.<org.apache.coyote.http11.filters.IdentityInputFilter: org.apache.tomcat.util.buf.ByteChunk endChunk>;
+        virtualinvoke $r1.<org.apache.tomcat.util.buf.ByteChunk: void recycle()>();
+        return;
+    }
+
+    public org.apache.tomcat.util.buf.ByteChunk getEncodingName()
+    {
+        org.apache.coyote.http11.filters.IdentityInputFilter r0;
+        org.apache.tomcat.util.buf.ByteChunk $r1;
+
+        r0 := @this: org.apache.coyote.http11.filters.IdentityInputFilter;
+        $r1 = <org.apache.coyote.http11.filters.IdentityInputFilter: org.apache.tomcat.util.buf.ByteChunk ENCODING>;
+        return $r1;
+    }
+}

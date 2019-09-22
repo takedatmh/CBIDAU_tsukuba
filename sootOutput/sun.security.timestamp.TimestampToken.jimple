@@ -1,0 +1,150 @@
+public class sun.security.timestamp.TimestampToken extends java.lang.Object
+{
+    private int version;
+    private sun.security.util.ObjectIdentifier policy;
+    private java.math.BigInteger serialNumber;
+    private sun.security.x509.AlgorithmId hashAlgorithm;
+    private byte[] hashedMessage;
+    private java.util.Date genTime;
+    private java.math.BigInteger nonce;
+
+    public void <init>(byte[]) throws java.io.IOException
+    {
+        sun.security.timestamp.TimestampToken r0;
+        byte[] r1;
+        java.io.IOException $r2;
+
+        r0 := @this: sun.security.timestamp.TimestampToken;
+        r1 := @parameter0: byte[];
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        if r1 != null goto label0;
+
+        $r2 = new java.io.IOException;
+        specialinvoke $r2.<java.io.IOException: void <init>(java.lang.String)>("No timestamp token info");
+        throw $r2;
+
+     label0:
+        specialinvoke r0.<sun.security.timestamp.TimestampToken: void parse(byte[])>(r1);
+        return;
+    }
+
+    public java.util.Date getDate()
+    {
+        sun.security.timestamp.TimestampToken r0;
+        java.util.Date $r1;
+
+        r0 := @this: sun.security.timestamp.TimestampToken;
+        $r1 = r0.<sun.security.timestamp.TimestampToken: java.util.Date genTime>;
+        return $r1;
+    }
+
+    public sun.security.x509.AlgorithmId getHashAlgorithm()
+    {
+        sun.security.timestamp.TimestampToken r0;
+        sun.security.x509.AlgorithmId $r1;
+
+        r0 := @this: sun.security.timestamp.TimestampToken;
+        $r1 = r0.<sun.security.timestamp.TimestampToken: sun.security.x509.AlgorithmId hashAlgorithm>;
+        return $r1;
+    }
+
+    public byte[] getHashedMessage()
+    {
+        sun.security.timestamp.TimestampToken r0;
+        byte[] $r1;
+
+        r0 := @this: sun.security.timestamp.TimestampToken;
+        $r1 = r0.<sun.security.timestamp.TimestampToken: byte[] hashedMessage>;
+        return $r1;
+    }
+
+    public java.math.BigInteger getNonce()
+    {
+        sun.security.timestamp.TimestampToken r0;
+        java.math.BigInteger $r1;
+
+        r0 := @this: sun.security.timestamp.TimestampToken;
+        $r1 = r0.<sun.security.timestamp.TimestampToken: java.math.BigInteger nonce>;
+        return $r1;
+    }
+
+    public java.math.BigInteger getSerialNumber()
+    {
+        sun.security.timestamp.TimestampToken r0;
+        java.math.BigInteger $r1;
+
+        r0 := @this: sun.security.timestamp.TimestampToken;
+        $r1 = r0.<sun.security.timestamp.TimestampToken: java.math.BigInteger serialNumber>;
+        return $r1;
+    }
+
+    private void parse(byte[]) throws java.io.IOException
+    {
+        sun.security.timestamp.TimestampToken r0;
+        byte[] r1, $r15;
+        sun.security.util.DerValue $r2, r3, r4, r5, $r12;
+        byte $b0, $b3;
+        java.io.IOException $r6;
+        sun.security.util.DerInputStream $r7, $r8, $r10, $r11, $r14, $r16, $r18, $r20, $r21;
+        int $i1, $i2;
+        sun.security.util.ObjectIdentifier $r9;
+        sun.security.x509.AlgorithmId $r13;
+        java.math.BigInteger $r17, $r22;
+        java.util.Date $r19;
+
+        r0 := @this: sun.security.timestamp.TimestampToken;
+        r1 := @parameter0: byte[];
+        $r2 = new sun.security.util.DerValue;
+        specialinvoke $r2.<sun.security.util.DerValue: void <init>(byte[])>(r1);
+        r3 = $r2;
+        $b0 = r3.<sun.security.util.DerValue: byte tag>;
+        if $b0 == 48 goto label0;
+
+        $r6 = new java.io.IOException;
+        specialinvoke $r6.<java.io.IOException: void <init>(java.lang.String)>("Bad encoding for timestamp token info");
+        throw $r6;
+
+     label0:
+        $r7 = r3.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $i1 = virtualinvoke $r7.<sun.security.util.DerInputStream: int getInteger()>();
+        r0.<sun.security.timestamp.TimestampToken: int version> = $i1;
+        $r8 = r3.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $r9 = virtualinvoke $r8.<sun.security.util.DerInputStream: sun.security.util.ObjectIdentifier getOID()>();
+        r0.<sun.security.timestamp.TimestampToken: sun.security.util.ObjectIdentifier policy> = $r9;
+        $r10 = r3.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        r4 = virtualinvoke $r10.<sun.security.util.DerInputStream: sun.security.util.DerValue getDerValue()>();
+        $r11 = r4.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $r12 = virtualinvoke $r11.<sun.security.util.DerInputStream: sun.security.util.DerValue getDerValue()>();
+        $r13 = staticinvoke <sun.security.x509.AlgorithmId: sun.security.x509.AlgorithmId parse(sun.security.util.DerValue)>($r12);
+        r0.<sun.security.timestamp.TimestampToken: sun.security.x509.AlgorithmId hashAlgorithm> = $r13;
+        $r14 = r4.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $r15 = virtualinvoke $r14.<sun.security.util.DerInputStream: byte[] getOctetString()>();
+        r0.<sun.security.timestamp.TimestampToken: byte[] hashedMessage> = $r15;
+        $r16 = r3.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $r17 = virtualinvoke $r16.<sun.security.util.DerInputStream: java.math.BigInteger getBigInteger()>();
+        r0.<sun.security.timestamp.TimestampToken: java.math.BigInteger serialNumber> = $r17;
+        $r18 = r3.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $r19 = virtualinvoke $r18.<sun.security.util.DerInputStream: java.util.Date getGeneralizedTime()>();
+        r0.<sun.security.timestamp.TimestampToken: java.util.Date genTime> = $r19;
+
+     label1:
+        $r20 = r3.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        $i2 = virtualinvoke $r20.<sun.security.util.DerInputStream: int available()>();
+        if $i2 <= 0 goto label3;
+
+        $r21 = r3.<sun.security.util.DerValue: sun.security.util.DerInputStream data>;
+        r5 = virtualinvoke $r21.<sun.security.util.DerInputStream: sun.security.util.DerValue getDerValue()>();
+        $b3 = r5.<sun.security.util.DerValue: byte tag>;
+        if $b3 != 2 goto label2;
+
+        $r22 = virtualinvoke r5.<sun.security.util.DerValue: java.math.BigInteger getBigInteger()>();
+        r0.<sun.security.timestamp.TimestampToken: java.math.BigInteger nonce> = $r22;
+        goto label3;
+
+     label2:
+        goto label1;
+
+     label3:
+        return;
+    }
+}

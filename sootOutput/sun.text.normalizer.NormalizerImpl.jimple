@@ -1,0 +1,3809 @@
+public final class sun.text.normalizer.NormalizerImpl extends java.lang.Object
+{
+    static final sun.text.normalizer.NormalizerImpl IMPL;
+    static final int UNSIGNED_BYTE_MASK;
+    static final long UNSIGNED_INT_MASK;
+    private static final java.lang.String DATA_FILE_NAME;
+    public static final int QC_NFC;
+    public static final int QC_NFKC;
+    public static final int QC_NFD;
+    public static final int QC_NFKD;
+    public static final int QC_ANY_NO;
+    public static final int QC_MAYBE;
+    public static final int QC_ANY_MAYBE;
+    public static final int QC_MASK;
+    private static final int COMBINES_FWD;
+    private static final int COMBINES_BACK;
+    public static final int COMBINES_ANY;
+    private static final int CC_SHIFT;
+    public static final int CC_MASK;
+    private static final int EXTRA_SHIFT;
+    private static final long MIN_SPECIAL;
+    private static final long SURROGATES_TOP;
+    private static final long MIN_HANGUL;
+    private static final long JAMO_V_TOP;
+    static final int INDEX_TRIE_SIZE;
+    static final int INDEX_CHAR_COUNT;
+    static final int INDEX_COMBINE_DATA_COUNT;
+    public static final int INDEX_MIN_NFC_NO_MAYBE;
+    public static final int INDEX_MIN_NFKC_NO_MAYBE;
+    public static final int INDEX_MIN_NFD_NO_MAYBE;
+    public static final int INDEX_MIN_NFKD_NO_MAYBE;
+    static final int INDEX_FCD_TRIE_SIZE;
+    static final int INDEX_AUX_TRIE_SIZE;
+    static final int INDEX_TOP;
+    private static final int AUX_UNSAFE_SHIFT;
+    private static final int AUX_COMP_EX_SHIFT;
+    private static final int AUX_NFC_SKIPPABLE_F_SHIFT;
+    private static final int AUX_MAX_FNC;
+    private static final int AUX_UNSAFE_MASK;
+    private static final int AUX_FNC_MASK;
+    private static final int AUX_COMP_EX_MASK;
+    private static final long AUX_NFC_SKIP_F_MASK;
+    private static final int MAX_BUFFER_SIZE;
+    private static sun.text.normalizer.NormalizerImpl$FCDTrieImpl fcdTrieImpl;
+    private static sun.text.normalizer.NormalizerImpl$NormTrieImpl normTrieImpl;
+    private static sun.text.normalizer.NormalizerImpl$AuxTrieImpl auxTrieImpl;
+    private static int[] indexes;
+    private static char[] combiningTable;
+    private static char[] extraData;
+    private static boolean isDataLoaded;
+    private static boolean isFormatVersion_2_1;
+    private static boolean isFormatVersion_2_2;
+    private static byte[] unicodeVersion;
+    private static final int DATA_BUFFER_SIZE;
+    public static final int MIN_WITH_LEAD_CC;
+    private static final int DECOMP_FLAG_LENGTH_HAS_CC;
+    private static final int DECOMP_LENGTH_MASK;
+    private static final int BMP_INDEX_LENGTH;
+    private static final int SURROGATE_BLOCK_BITS;
+    public static final int JAMO_L_BASE;
+    public static final int JAMO_V_BASE;
+    public static final int JAMO_T_BASE;
+    public static final int HANGUL_BASE;
+    public static final int JAMO_L_COUNT;
+    public static final int JAMO_V_COUNT;
+    public static final int JAMO_T_COUNT;
+    public static final int HANGUL_COUNT;
+    private static final int OPTIONS_NX_MASK;
+    private static final int OPTIONS_UNICODE_MASK;
+    public static final int OPTIONS_SETS_MASK;
+    private static final sun.text.normalizer.UnicodeSet[] nxCache;
+    private static final int NX_HANGUL;
+    private static final int NX_CJK_COMPAT;
+    public static final int BEFORE_PRI_29;
+    public static final int OPTIONS_COMPAT;
+    public static final int OPTIONS_COMPOSE_CONTIGUOUS;
+    public static final int WITHOUT_CORRIGENDUM4_CORRECTIONS;
+    private static final char[][] corrigendum4MappingTable;
+
+    public static int getFromIndexesArr(int)
+    {
+        int i0, $i1;
+        int[] $r0;
+
+        i0 := @parameter0: int;
+        $r0 = <sun.text.normalizer.NormalizerImpl: int[] indexes>;
+        $i1 = $r0[i0];
+        return $i1;
+    }
+
+    private void <init>() throws java.io.IOException
+    {
+        sun.text.normalizer.NormalizerImpl r0;
+        java.io.InputStream r1;
+        java.io.BufferedInputStream r2, $r10;
+        sun.text.normalizer.NormalizerDataReader r3, $r11;
+        byte[] r4, r5, r6, r9, $r32;
+        int i0, i1, $i2, $i3, $i4;
+        char[] $r7, $r8, $r15, $r17;
+        boolean $z0, $z1, $z2;
+        int[] $r12, $r13, $r14, $r16, $r18, $r19;
+        sun.text.normalizer.NormalizerImpl$FCDTrieImpl $r20, $r28;
+        sun.text.normalizer.NormalizerImpl$NormTrieImpl $r21, $r25;
+        sun.text.normalizer.NormalizerImpl$AuxTrieImpl $r22, $r31;
+        sun.text.normalizer.IntTrie $r23;
+        java.io.ByteArrayInputStream $r24, $r27, $r30;
+        sun.text.normalizer.CharTrie $r26, $r29;
+        byte $b5, $b6, $b7, $b8, $b9, $b10;
+
+        r0 := @this: sun.text.normalizer.NormalizerImpl;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $z0 = <sun.text.normalizer.NormalizerImpl: boolean isDataLoaded>;
+        if $z0 != 0 goto label6;
+
+        r1 = staticinvoke <sun.text.normalizer.ICUData: java.io.InputStream getRequiredStream(java.lang.String)>("/sun/text/resources/unorm.icu");
+        $r10 = new java.io.BufferedInputStream;
+        specialinvoke $r10.<java.io.BufferedInputStream: void <init>(java.io.InputStream,int)>(r1, 25000);
+        r2 = $r10;
+        $r11 = new sun.text.normalizer.NormalizerDataReader;
+        specialinvoke $r11.<sun.text.normalizer.NormalizerDataReader: void <init>(java.io.InputStream)>(r2);
+        r3 = $r11;
+        $r12 = virtualinvoke r3.<sun.text.normalizer.NormalizerDataReader: int[] readIndexes(int)>(32);
+        <sun.text.normalizer.NormalizerImpl: int[] indexes> = $r12;
+        $r13 = <sun.text.normalizer.NormalizerImpl: int[] indexes>;
+        $i2 = $r13[0];
+        r4 = newarray (byte)[$i2];
+        $r14 = <sun.text.normalizer.NormalizerImpl: int[] indexes>;
+        i0 = $r14[2];
+        $r15 = newarray (char)[i0];
+        <sun.text.normalizer.NormalizerImpl: char[] combiningTable> = $r15;
+        $r16 = <sun.text.normalizer.NormalizerImpl: int[] indexes>;
+        i1 = $r16[1];
+        $r17 = newarray (char)[i1];
+        <sun.text.normalizer.NormalizerImpl: char[] extraData> = $r17;
+        $r18 = <sun.text.normalizer.NormalizerImpl: int[] indexes>;
+        $i3 = $r18[10];
+        r5 = newarray (byte)[$i3];
+        $r19 = <sun.text.normalizer.NormalizerImpl: int[] indexes>;
+        $i4 = $r19[11];
+        r6 = newarray (byte)[$i4];
+        $r20 = new sun.text.normalizer.NormalizerImpl$FCDTrieImpl;
+        specialinvoke $r20.<sun.text.normalizer.NormalizerImpl$FCDTrieImpl: void <init>()>();
+        <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.NormalizerImpl$FCDTrieImpl fcdTrieImpl> = $r20;
+        $r21 = new sun.text.normalizer.NormalizerImpl$NormTrieImpl;
+        specialinvoke $r21.<sun.text.normalizer.NormalizerImpl$NormTrieImpl: void <init>()>();
+        <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.NormalizerImpl$NormTrieImpl normTrieImpl> = $r21;
+        $r22 = new sun.text.normalizer.NormalizerImpl$AuxTrieImpl;
+        specialinvoke $r22.<sun.text.normalizer.NormalizerImpl$AuxTrieImpl: void <init>()>();
+        <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.NormalizerImpl$AuxTrieImpl auxTrieImpl> = $r22;
+        $r7 = <sun.text.normalizer.NormalizerImpl: char[] extraData>;
+        $r8 = <sun.text.normalizer.NormalizerImpl: char[] combiningTable>;
+        virtualinvoke r3.<sun.text.normalizer.NormalizerDataReader: void read(byte[],byte[],byte[],char[],char[])>(r4, r5, r6, $r7, $r8);
+        $r23 = new sun.text.normalizer.IntTrie;
+        $r24 = new java.io.ByteArrayInputStream;
+        specialinvoke $r24.<java.io.ByteArrayInputStream: void <init>(byte[])>(r4);
+        $r25 = <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.NormalizerImpl$NormTrieImpl normTrieImpl>;
+        specialinvoke $r23.<sun.text.normalizer.IntTrie: void <init>(java.io.InputStream,sun.text.normalizer.Trie$DataManipulate)>($r24, $r25);
+        <sun.text.normalizer.NormalizerImpl$NormTrieImpl: sun.text.normalizer.IntTrie normTrie> = $r23;
+        $r26 = new sun.text.normalizer.CharTrie;
+        $r27 = new java.io.ByteArrayInputStream;
+        specialinvoke $r27.<java.io.ByteArrayInputStream: void <init>(byte[])>(r5);
+        $r28 = <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.NormalizerImpl$FCDTrieImpl fcdTrieImpl>;
+        specialinvoke $r26.<sun.text.normalizer.CharTrie: void <init>(java.io.InputStream,sun.text.normalizer.Trie$DataManipulate)>($r27, $r28);
+        <sun.text.normalizer.NormalizerImpl$FCDTrieImpl: sun.text.normalizer.CharTrie fcdTrie> = $r26;
+        $r29 = new sun.text.normalizer.CharTrie;
+        $r30 = new java.io.ByteArrayInputStream;
+        specialinvoke $r30.<java.io.ByteArrayInputStream: void <init>(byte[])>(r6);
+        $r31 = <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.NormalizerImpl$AuxTrieImpl auxTrieImpl>;
+        specialinvoke $r29.<sun.text.normalizer.CharTrie: void <init>(java.io.InputStream,sun.text.normalizer.Trie$DataManipulate)>($r30, $r31);
+        <sun.text.normalizer.NormalizerImpl$AuxTrieImpl: sun.text.normalizer.CharTrie auxTrie> = $r29;
+        <sun.text.normalizer.NormalizerImpl: boolean isDataLoaded> = 1;
+        r9 = virtualinvoke r3.<sun.text.normalizer.NormalizerDataReader: byte[] getDataFormatVersion()>();
+        $b5 = r9[0];
+        if $b5 > 2 goto label0;
+
+        $b6 = r9[0];
+        if $b6 != 2 goto label1;
+
+        $b7 = r9[1];
+        if $b7 < 1 goto label1;
+
+     label0:
+        $z1 = 1;
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        <sun.text.normalizer.NormalizerImpl: boolean isFormatVersion_2_1> = $z1;
+        $b8 = r9[0];
+        if $b8 > 2 goto label3;
+
+        $b9 = r9[0];
+        if $b9 != 2 goto label4;
+
+        $b10 = r9[1];
+        if $b10 < 2 goto label4;
+
+     label3:
+        $z2 = 1;
+        goto label5;
+
+     label4:
+        $z2 = 0;
+
+     label5:
+        <sun.text.normalizer.NormalizerImpl: boolean isFormatVersion_2_2> = $z2;
+        $r32 = virtualinvoke r3.<sun.text.normalizer.NormalizerDataReader: byte[] getUnicodeVersion()>();
+        <sun.text.normalizer.NormalizerImpl: byte[] unicodeVersion> = $r32;
+        virtualinvoke r2.<java.io.BufferedInputStream: void close()>();
+
+     label6:
+        return;
+    }
+
+    private static boolean isHangulWithoutJamoT(char)
+    {
+        char c0, c2;
+        int $i1, $i3;
+        boolean $z0;
+
+        c0 := @parameter0: char;
+        $i1 = c0 - 44032;
+        c2 = (char) $i1;
+        if c2 >= 11172 goto label0;
+
+        $i3 = c2 % 28;
+        if $i3 != 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    private static boolean isNorm32Regular(long)
+    {
+        long l0;
+        byte $b1;
+        boolean $z0;
+
+        l0 := @parameter0: long;
+        $b1 = l0 cmp 4227858432L;
+        if $b1 >= 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    private static boolean isNorm32LeadSurrogate(long)
+    {
+        long l0;
+        byte $b1, $b2;
+        boolean $z0;
+
+        l0 := @parameter0: long;
+        $b1 = 4227858432L cmp l0;
+        if $b1 > 0 goto label0;
+
+        $b2 = l0 cmp 4293918720L;
+        if $b2 >= 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    private static boolean isNorm32HangulOrJamo(long)
+    {
+        long l0;
+        byte $b1;
+        boolean $z0;
+
+        l0 := @parameter0: long;
+        $b1 = l0 cmp 4293918720L;
+        if $b1 < 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    private static boolean isJamoVTNorm32JamoV(long)
+    {
+        long l0;
+        byte $b1;
+        boolean $z0;
+
+        l0 := @parameter0: long;
+        $b1 = l0 cmp 4294115328L;
+        if $b1 >= 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public static long getNorm32(char)
+    {
+        char c0;
+        sun.text.normalizer.IntTrie $r0;
+        int $i1;
+        long $l2, $l3;
+
+        c0 := @parameter0: char;
+        $r0 = <sun.text.normalizer.NormalizerImpl$NormTrieImpl: sun.text.normalizer.IntTrie normTrie>;
+        $i1 = virtualinvoke $r0.<sun.text.normalizer.IntTrie: int getLeadValue(char)>(c0);
+        $l2 = (long) $i1;
+        $l3 = 4294967295L & $l2;
+        return $l3;
+    }
+
+    public static long getNorm32FromSurrogatePair(long, char)
+    {
+        long l0, $l4, $l5;
+        char c1;
+        sun.text.normalizer.IntTrie $r0;
+        int $i2, $i3;
+
+        l0 := @parameter0: long;
+        c1 := @parameter1: char;
+        $r0 = <sun.text.normalizer.NormalizerImpl$NormTrieImpl: sun.text.normalizer.IntTrie normTrie>;
+        $i2 = (int) l0;
+        $i3 = virtualinvoke $r0.<sun.text.normalizer.IntTrie: int getTrailValue(int,char)>($i2, c1);
+        $l4 = (long) $i3;
+        $l5 = 4294967295L & $l4;
+        return $l5;
+    }
+
+    private static long getNorm32(int)
+    {
+        int i0, $i1;
+        sun.text.normalizer.IntTrie $r0;
+        long $l2, $l3;
+
+        i0 := @parameter0: int;
+        $r0 = <sun.text.normalizer.NormalizerImpl$NormTrieImpl: sun.text.normalizer.IntTrie normTrie>;
+        $i1 = virtualinvoke $r0.<sun.text.normalizer.IntTrie: int getCodePointValue(int)>(i0);
+        $l2 = (long) $i1;
+        $l3 = 4294967295L & $l2;
+        return $l3;
+    }
+
+    private static long getNorm32(char[], int, int)
+    {
+        char[] r0;
+        int i0, i1, $i7;
+        long l2, $l4, $l5;
+        char $c3, $c8;
+        byte $b6;
+        boolean $z0;
+
+        r0 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        $c3 = r0[i0];
+        l2 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32(char)>($c3);
+        $l4 = (long) i1;
+        $l5 = l2 & $l4;
+        $b6 = $l5 cmp 0L;
+        if $b6 <= 0 goto label0;
+
+        $z0 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isNorm32LeadSurrogate(long)>(l2);
+        if $z0 == 0 goto label0;
+
+        $i7 = i0 + 1;
+        $c8 = r0[$i7];
+        l2 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32FromSurrogatePair(long,char)>(l2, $c8);
+
+     label0:
+        return l2;
+    }
+
+    public static sun.text.normalizer.VersionInfo getUnicodeVersion()
+    {
+        byte[] $r0, $r1, $r2, $r3;
+        byte $b0, $b1, $b2, $b3;
+        sun.text.normalizer.VersionInfo $r4;
+
+        $r0 = <sun.text.normalizer.NormalizerImpl: byte[] unicodeVersion>;
+        $b0 = $r0[0];
+        $r1 = <sun.text.normalizer.NormalizerImpl: byte[] unicodeVersion>;
+        $b1 = $r1[1];
+        $r2 = <sun.text.normalizer.NormalizerImpl: byte[] unicodeVersion>;
+        $b2 = $r2[2];
+        $r3 = <sun.text.normalizer.NormalizerImpl: byte[] unicodeVersion>;
+        $b3 = $r3[3];
+        $r4 = staticinvoke <sun.text.normalizer.VersionInfo: sun.text.normalizer.VersionInfo getInstance(int,int,int,int)>($b0, $b1, $b2, $b3);
+        return $r4;
+    }
+
+    public static char getFCD16(char)
+    {
+        char c0, $c1;
+        sun.text.normalizer.CharTrie $r0;
+
+        c0 := @parameter0: char;
+        $r0 = <sun.text.normalizer.NormalizerImpl$FCDTrieImpl: sun.text.normalizer.CharTrie fcdTrie>;
+        $c1 = virtualinvoke $r0.<sun.text.normalizer.CharTrie: char getLeadValue(char)>(c0);
+        return $c1;
+    }
+
+    public static char getFCD16FromSurrogatePair(char, char)
+    {
+        char c0, c1, $c2;
+        sun.text.normalizer.CharTrie $r0;
+
+        c0 := @parameter0: char;
+        c1 := @parameter1: char;
+        $r0 = <sun.text.normalizer.NormalizerImpl$FCDTrieImpl: sun.text.normalizer.CharTrie fcdTrie>;
+        $c2 = virtualinvoke $r0.<sun.text.normalizer.CharTrie: char getTrailValue(int,char)>(c0, c1);
+        return $c2;
+    }
+
+    public static int getFCD16(int)
+    {
+        int i0;
+        sun.text.normalizer.CharTrie $r0;
+        char $c1;
+
+        i0 := @parameter0: int;
+        $r0 = <sun.text.normalizer.NormalizerImpl$FCDTrieImpl: sun.text.normalizer.CharTrie fcdTrie>;
+        $c1 = virtualinvoke $r0.<sun.text.normalizer.CharTrie: char getCodePointValue(int)>(i0);
+        return $c1;
+    }
+
+    private static int getExtraDataIndex(long)
+    {
+        long l0, $l1;
+        int $i2;
+
+        l0 := @parameter0: long;
+        $l1 = l0 >> 16;
+        $i2 = (int) $l1;
+        return $i2;
+    }
+
+    private static int decompose(long, int, sun.text.normalizer.NormalizerImpl$DecomposeArgs)
+    {
+        long l0, $l6, $l7, $l8;
+        int i1, i2, i4, $i10, $i11, $i12, $i13, $i14, $i15, $i16, $i17, $i18, $i19, $i20, $i21, $i26, $i27;
+        sun.text.normalizer.NormalizerImpl$DecomposeArgs r0;
+        char[] $r1, $r3;
+        char c3, $c5, $c22, $c23, $c24;
+        byte $b9, $b25;
+
+        l0 := @parameter0: long;
+        i1 := @parameter1: int;
+        r0 := @parameter2: sun.text.normalizer.NormalizerImpl$DecomposeArgs;
+        i2 = staticinvoke <sun.text.normalizer.NormalizerImpl: int getExtraDataIndex(long)>(l0);
+        $r1 = <sun.text.normalizer.NormalizerImpl: char[] extraData>;
+        i4 = i2 + 1;
+        $c5 = $r1[i2];
+        r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int length> = $c5;
+        $l6 = (long) i1;
+        $l7 = l0 & $l6;
+        $l8 = $l7 & 8L;
+        $b9 = $l8 cmp 0L;
+        if $b9 == 0 goto label0;
+
+        $i10 = r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int length>;
+        if $i10 < 256 goto label0;
+
+        $i11 = r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int length>;
+        $i12 = $i11 >> 7;
+        $i13 = $i12 & 1;
+        $i14 = r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int length>;
+        $i15 = $i14 & 127;
+        $i16 = $i13 + $i15;
+        i4 = i4 + $i16;
+        $i17 = r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int length>;
+        $i18 = $i17 >> 8;
+        r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int length> = $i18;
+
+     label0:
+        $i19 = r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int length>;
+        $i20 = $i19 & 128;
+        if $i20 <= 0 goto label1;
+
+        $r3 = <sun.text.normalizer.NormalizerImpl: char[] extraData>;
+        $i21 = i4;
+        i4 = i4 + 1;
+        c3 = $r3[$i21];
+        $c22 = c3 >> 8;
+        $c23 = 255 & $c22;
+        r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int cc> = $c23;
+        $c24 = 255 & c3;
+        r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int trailCC> = $c24;
+        goto label2;
+
+     label1:
+        $b25 = 0;
+        r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int trailCC> = $b25;
+        r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int cc> = $b25;
+
+     label2:
+        $i26 = r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int length>;
+        $i27 = $i26 & 127;
+        r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int length> = $i27;
+        return i4;
+    }
+
+    private static int decompose(long, sun.text.normalizer.NormalizerImpl$DecomposeArgs)
+    {
+        long l0;
+        sun.text.normalizer.NormalizerImpl$DecomposeArgs r0;
+        int i1, i3, $i5, $i6, $i7, $i12, $i13;
+        char[] $r1, $r2;
+        char c2, $c4, $c8, $c9, $c10;
+        byte $b11;
+
+        l0 := @parameter0: long;
+        r0 := @parameter1: sun.text.normalizer.NormalizerImpl$DecomposeArgs;
+        i1 = staticinvoke <sun.text.normalizer.NormalizerImpl: int getExtraDataIndex(long)>(l0);
+        $r1 = <sun.text.normalizer.NormalizerImpl: char[] extraData>;
+        i3 = i1 + 1;
+        $c4 = $r1[i1];
+        r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int length> = $c4;
+        $i5 = r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int length>;
+        $i6 = $i5 & 128;
+        if $i6 <= 0 goto label0;
+
+        $r2 = <sun.text.normalizer.NormalizerImpl: char[] extraData>;
+        $i7 = i3;
+        i3 = i3 + 1;
+        c2 = $r2[$i7];
+        $c8 = c2 >> 8;
+        $c9 = 255 & $c8;
+        r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int cc> = $c9;
+        $c10 = 255 & c2;
+        r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int trailCC> = $c10;
+        goto label1;
+
+     label0:
+        $b11 = 0;
+        r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int trailCC> = $b11;
+        r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int cc> = $b11;
+
+     label1:
+        $i12 = r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int length>;
+        $i13 = $i12 & 127;
+        r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int length> = $i13;
+        return i3;
+    }
+
+    private static int getNextCC(sun.text.normalizer.NormalizerImpl$NextCCArgs)
+    {
+        sun.text.normalizer.NormalizerImpl$NextCCArgs r0;
+        int $i0, $i2, $i7, $i8, $i9, $i11, $i12, $i16;
+        long l1, $l5, $l14, $l15;
+        char[] $r2, $r3;
+        char $c3, $c4, $c10, $c13;
+        byte $b6;
+        boolean $z0, $z1;
+
+        r0 := @parameter0: sun.text.normalizer.NormalizerImpl$NextCCArgs;
+        $r2 = r0.<sun.text.normalizer.NormalizerImpl$NextCCArgs: char[] source>;
+        $i0 = r0.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int next>;
+        $i2 = $i0 + 1;
+        r0.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int next> = $i2;
+        $c3 = $r2[$i0];
+        r0.<sun.text.normalizer.NormalizerImpl$NextCCArgs: char c> = $c3;
+        $c4 = r0.<sun.text.normalizer.NormalizerImpl$NextCCArgs: char c>;
+        l1 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32(char)>($c4);
+        $l5 = l1 & 65280L;
+        $b6 = $l5 cmp 0L;
+        if $b6 != 0 goto label0;
+
+        r0.<sun.text.normalizer.NormalizerImpl$NextCCArgs: char c2> = 0;
+        return 0;
+
+     label0:
+        $z0 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isNorm32LeadSurrogate(long)>(l1);
+        if $z0 != 0 goto label1;
+
+        r0.<sun.text.normalizer.NormalizerImpl$NextCCArgs: char c2> = 0;
+        goto label3;
+
+     label1:
+        $i7 = r0.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int next>;
+        $i8 = r0.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int limit>;
+        if $i7 == $i8 goto label2;
+
+        $r3 = r0.<sun.text.normalizer.NormalizerImpl$NextCCArgs: char[] source>;
+        $i9 = r0.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int next>;
+        $c10 = $r3[$i9];
+        r0.<sun.text.normalizer.NormalizerImpl$NextCCArgs: char c2> = $c10;
+        $z1 = staticinvoke <sun.text.normalizer.UTF16: boolean isTrailSurrogate(char)>($c10);
+        if $z1 == 0 goto label2;
+
+        $i11 = r0.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int next>;
+        $i12 = $i11 + 1;
+        r0.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int next> = $i12;
+        $c13 = r0.<sun.text.normalizer.NormalizerImpl$NextCCArgs: char c2>;
+        l1 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32FromSurrogatePair(long,char)>(l1, $c13);
+        goto label3;
+
+     label2:
+        r0.<sun.text.normalizer.NormalizerImpl$NextCCArgs: char c2> = 0;
+        return 0;
+
+     label3:
+        $l14 = l1 >> 8;
+        $l15 = 255L & $l14;
+        $i16 = (int) $l15;
+        return $i16;
+    }
+
+    private static long getPrevNorm32(sun.text.normalizer.NormalizerImpl$PrevArgs, int, int)
+    {
+        sun.text.normalizer.NormalizerImpl$PrevArgs r0;
+        int i0, i1, $i3, $i4, $i11, $i12, $i13, $i14, $i16, $i17;
+        long l2, $l9, $l19, $l20, $l23;
+        char[] $r2, $r3;
+        char $c5, $c6, $c7, $c8, $c10, $c15, $c18, $c22;
+        boolean $z0, $z1, $z2;
+        byte $b21;
+
+        r0 := @parameter0: sun.text.normalizer.NormalizerImpl$PrevArgs;
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        $r2 = r0.<sun.text.normalizer.NormalizerImpl$PrevArgs: char[] src>;
+        $i3 = r0.<sun.text.normalizer.NormalizerImpl$PrevArgs: int current>;
+        $i4 = $i3 - 1;
+        r0.<sun.text.normalizer.NormalizerImpl$PrevArgs: int current> = $i4;
+        $c5 = $r2[$i4];
+        r0.<sun.text.normalizer.NormalizerImpl$PrevArgs: char c> = $c5;
+        r0.<sun.text.normalizer.NormalizerImpl$PrevArgs: char c2> = 0;
+        $c6 = r0.<sun.text.normalizer.NormalizerImpl$PrevArgs: char c>;
+        if $c6 >= i0 goto label0;
+
+        return 0L;
+
+     label0:
+        $c7 = r0.<sun.text.normalizer.NormalizerImpl$PrevArgs: char c>;
+        $z0 = staticinvoke <sun.text.normalizer.UTF16: boolean isSurrogate(char)>($c7);
+        if $z0 != 0 goto label1;
+
+        $c8 = r0.<sun.text.normalizer.NormalizerImpl$PrevArgs: char c>;
+        $l9 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32(char)>($c8);
+        return $l9;
+
+     label1:
+        $c10 = r0.<sun.text.normalizer.NormalizerImpl$PrevArgs: char c>;
+        $z1 = staticinvoke <sun.text.normalizer.UTF16: boolean isLeadSurrogate(char)>($c10);
+        if $z1 == 0 goto label2;
+
+        return 0L;
+
+     label2:
+        $i11 = r0.<sun.text.normalizer.NormalizerImpl$PrevArgs: int current>;
+        $i12 = r0.<sun.text.normalizer.NormalizerImpl$PrevArgs: int start>;
+        if $i11 == $i12 goto label4;
+
+        $r3 = r0.<sun.text.normalizer.NormalizerImpl$PrevArgs: char[] src>;
+        $i13 = r0.<sun.text.normalizer.NormalizerImpl$PrevArgs: int current>;
+        $i14 = $i13 - 1;
+        $c15 = $r3[$i14];
+        r0.<sun.text.normalizer.NormalizerImpl$PrevArgs: char c2> = $c15;
+        $z2 = staticinvoke <sun.text.normalizer.UTF16: boolean isLeadSurrogate(char)>($c15);
+        if $z2 == 0 goto label4;
+
+        $i16 = r0.<sun.text.normalizer.NormalizerImpl$PrevArgs: int current>;
+        $i17 = $i16 - 1;
+        r0.<sun.text.normalizer.NormalizerImpl$PrevArgs: int current> = $i17;
+        $c18 = r0.<sun.text.normalizer.NormalizerImpl$PrevArgs: char c2>;
+        l2 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32(char)>($c18);
+        $l19 = (long) i1;
+        $l20 = l2 & $l19;
+        $b21 = $l20 cmp 0L;
+        if $b21 != 0 goto label3;
+
+        return 0L;
+
+     label3:
+        $c22 = r0.<sun.text.normalizer.NormalizerImpl$PrevArgs: char c>;
+        $l23 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32FromSurrogatePair(long,char)>(l2, $c22);
+        return $l23;
+
+     label4:
+        r0.<sun.text.normalizer.NormalizerImpl$PrevArgs: char c2> = 0;
+        return 0L;
+    }
+
+    private static int getPrevCC(sun.text.normalizer.NormalizerImpl$PrevArgs)
+    {
+        sun.text.normalizer.NormalizerImpl$PrevArgs r0;
+        long $l0, $l1, $l2;
+        int $i3;
+
+        r0 := @parameter0: sun.text.normalizer.NormalizerImpl$PrevArgs;
+        $l0 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getPrevNorm32(sun.text.normalizer.NormalizerImpl$PrevArgs,int,int)>(r0, 768, 65280);
+        $l1 = $l0 >> 8;
+        $l2 = 255L & $l1;
+        $i3 = (int) $l2;
+        return $i3;
+    }
+
+    public static boolean isNFDSafe(long, int, int)
+    {
+        long l0, $l3, $l4, $l6, $l7, $l11;
+        int i1, i2, $i10;
+        sun.text.normalizer.NormalizerImpl$DecomposeArgs r0, $r1;
+        byte $b5, $b8, $b12;
+        boolean $z0, $z1, $z2;
+
+        l0 := @parameter0: long;
+        i1 := @parameter1: int;
+        i2 := @parameter2: int;
+        $l3 = (long) i1;
+        $l4 = l0 & $l3;
+        $b5 = $l4 cmp 0L;
+        if $b5 != 0 goto label0;
+
+        return 1;
+
+     label0:
+        $z0 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isNorm32Regular(long)>(l0);
+        if $z0 == 0 goto label3;
+
+        $l6 = (long) i2;
+        $l7 = l0 & $l6;
+        $b8 = $l7 cmp 0L;
+        if $b8 == 0 goto label3;
+
+        $r1 = new sun.text.normalizer.NormalizerImpl$DecomposeArgs;
+        specialinvoke $r1.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: void <init>(sun.text.normalizer.NormalizerImpl$1)>(null);
+        r0 = $r1;
+        staticinvoke <sun.text.normalizer.NormalizerImpl: int decompose(long,int,sun.text.normalizer.NormalizerImpl$DecomposeArgs)>(l0, i2, r0);
+        $i10 = r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int cc>;
+        if $i10 != 0 goto label1;
+
+        $z1 = 1;
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        return $z1;
+
+     label3:
+        $l11 = l0 & 65280L;
+        $b12 = $l11 cmp 0L;
+        if $b12 != 0 goto label4;
+
+        $z2 = 1;
+        goto label5;
+
+     label4:
+        $z2 = 0;
+
+     label5:
+        return $z2;
+    }
+
+    public static boolean isTrueStarter(long, int, int)
+    {
+        long l0, $l5, $l6, $l8, $l9, $l12, $l13, $l14;
+        int i1, i2, i3, i4, $i11;
+        sun.text.normalizer.NormalizerImpl$DecomposeArgs r0, $r1;
+        byte $b7, $b10, $b15;
+        char[] $r2;
+
+        l0 := @parameter0: long;
+        i1 := @parameter1: int;
+        i2 := @parameter2: int;
+        $l5 = (long) i1;
+        $l6 = l0 & $l5;
+        $b7 = $l6 cmp 0L;
+        if $b7 != 0 goto label0;
+
+        return 1;
+
+     label0:
+        $l8 = (long) i2;
+        $l9 = l0 & $l8;
+        $b10 = $l9 cmp 0L;
+        if $b10 == 0 goto label1;
+
+        $r1 = new sun.text.normalizer.NormalizerImpl$DecomposeArgs;
+        specialinvoke $r1.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: void <init>(sun.text.normalizer.NormalizerImpl$1)>(null);
+        r0 = $r1;
+        i3 = staticinvoke <sun.text.normalizer.NormalizerImpl: int decompose(long,int,sun.text.normalizer.NormalizerImpl$DecomposeArgs)>(l0, i2, r0);
+        $i11 = r0.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int cc>;
+        if $i11 != 0 goto label1;
+
+        i4 = i1 & 63;
+        $r2 = <sun.text.normalizer.NormalizerImpl: char[] extraData>;
+        $l12 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32(char[],int,int)>($r2, i3, i4);
+        $l13 = (long) i4;
+        $l14 = $l12 & $l13;
+        $b15 = $l14 cmp 0L;
+        if $b15 != 0 goto label1;
+
+        return 1;
+
+     label1:
+        return 0;
+    }
+
+    private static int insertOrdered(char[], int, int, int, char, char, int)
+    {
+        char[] r0;
+        int i0, i1, i2, i5, i6, i7, i8, i9, i10, i12, i13, i14, $i16;
+        char c3, c4, $c15;
+        sun.text.normalizer.NormalizerImpl$PrevArgs r1, $r2;
+
+        r0 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        i2 := @parameter3: int;
+        c3 := @parameter4: char;
+        c4 := @parameter5: char;
+        i5 := @parameter6: int;
+        i6 = i5;
+        if i0 >= i1 goto label4;
+
+        if i5 == 0 goto label4;
+
+        i7 = i1;
+        i8 = i1;
+        $r2 = new sun.text.normalizer.NormalizerImpl$PrevArgs;
+        specialinvoke $r2.<sun.text.normalizer.NormalizerImpl$PrevArgs: void <init>(sun.text.normalizer.NormalizerImpl$1)>(null);
+        r1 = $r2;
+        r1.<sun.text.normalizer.NormalizerImpl$PrevArgs: int current> = i1;
+        r1.<sun.text.normalizer.NormalizerImpl$PrevArgs: int start> = i0;
+        r1.<sun.text.normalizer.NormalizerImpl$PrevArgs: char[] src> = r0;
+        i9 = staticinvoke <sun.text.normalizer.NormalizerImpl: int getPrevCC(sun.text.normalizer.NormalizerImpl$PrevArgs)>(r1);
+        i12 = r1.<sun.text.normalizer.NormalizerImpl$PrevArgs: int current>;
+        if i5 >= i9 goto label4;
+
+        i6 = i9;
+        i13 = i12;
+
+     label0:
+        if i0 >= i12 goto label2;
+
+        i14 = staticinvoke <sun.text.normalizer.NormalizerImpl: int getPrevCC(sun.text.normalizer.NormalizerImpl$PrevArgs)>(r1);
+        i12 = r1.<sun.text.normalizer.NormalizerImpl$PrevArgs: int current>;
+        if i5 < i14 goto label1;
+
+        goto label2;
+
+     label1:
+        i13 = i12;
+        goto label0;
+
+     label2:
+        i10 = i2;
+
+     label3:
+        i10 = i10 + -1;
+        i1 = i1 + -1;
+        $c15 = r0[i1];
+        r0[i10] = $c15;
+        if i13 != i1 goto label3;
+
+     label4:
+        r0[i1] = c3;
+        if c4 == 0 goto label5;
+
+        $i16 = i1 + 1;
+        r0[$i16] = c4;
+
+     label5:
+        return i6;
+    }
+
+    private static int mergeOrdered(char[], int, int, char[], int, int, boolean)
+    {
+        char[] r0, r1;
+        int i0, i1, i2, i3, i4, i5, i6, $i7, $i8, $i9, $i12, $i14, $i19, $i20, $i21, $i22, $i23, $i25, $i26, $i27, $i28;
+        boolean z0, z1, $z2;
+        sun.text.normalizer.NormalizerImpl$NextCCArgs r2, $r4;
+        sun.text.normalizer.NormalizerImpl$PrevArgs r3, $r6;
+        char $c10, $c11, $c13, $c15, $c17, $c18, $c24;
+        byte $b16;
+
+        r0 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        r1 := @parameter3: char[];
+        i2 := @parameter4: int;
+        i3 := @parameter5: int;
+        z0 := @parameter6: boolean;
+        i4 = 0;
+        if i1 != i2 goto label0;
+
+        $z2 = 1;
+        goto label1;
+
+     label0:
+        $z2 = 0;
+
+     label1:
+        z1 = $z2;
+        $r4 = new sun.text.normalizer.NormalizerImpl$NextCCArgs;
+        specialinvoke $r4.<sun.text.normalizer.NormalizerImpl$NextCCArgs: void <init>(sun.text.normalizer.NormalizerImpl$1)>(null);
+        r2 = $r4;
+        r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: char[] source> = r1;
+        r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int next> = i2;
+        r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int limit> = i3;
+        if i0 != i1 goto label2;
+
+        if z0 != 0 goto label9;
+
+     label2:
+        $i7 = r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int next>;
+        $i8 = r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int limit>;
+        if $i7 >= $i8 goto label9;
+
+        i5 = staticinvoke <sun.text.normalizer.NormalizerImpl: int getNextCC(sun.text.normalizer.NormalizerImpl$NextCCArgs)>(r2);
+        if i5 != 0 goto label6;
+
+        i4 = 0;
+        if z1 == 0 goto label3;
+
+        i1 = r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int next>;
+        goto label4;
+
+     label3:
+        $i9 = i1;
+        i1 = i1 + 1;
+        $c10 = r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: char c>;
+        r1[$i9] = $c10;
+        $c11 = r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: char c2>;
+        if $c11 == 0 goto label4;
+
+        $i12 = i1;
+        i1 = i1 + 1;
+        $c13 = r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: char c2>;
+        r1[$i12] = $c13;
+
+     label4:
+        if z0 == 0 goto label5;
+
+        goto label9;
+
+     label5:
+        i0 = i1;
+        goto label2;
+
+     label6:
+        $i14 = i1;
+        $c15 = r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: char c2>;
+        if $c15 != 0 goto label7;
+
+        $b16 = 1;
+        goto label8;
+
+     label7:
+        $b16 = 2;
+
+     label8:
+        i6 = $i14 + $b16;
+        $c17 = r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: char c>;
+        $c18 = r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: char c2>;
+        i4 = staticinvoke <sun.text.normalizer.NormalizerImpl: int insertOrdered(char[],int,int,int,char,char,int)>(r0, i0, i1, i6, $c17, $c18, i5);
+        i1 = i6;
+        goto label2;
+
+     label9:
+        $i19 = r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int next>;
+        $i20 = r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int limit>;
+        if $i19 != $i20 goto label10;
+
+        return i4;
+
+     label10:
+        if z1 != 0 goto label12;
+
+     label11:
+        $i21 = i1;
+        i1 = i1 + 1;
+        $i22 = r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int next>;
+        $i23 = $i22 + 1;
+        r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int next> = $i23;
+        $c24 = r1[$i22];
+        r0[$i21] = $c24;
+        $i25 = r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int next>;
+        $i26 = r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int limit>;
+        if $i25 != $i26 goto label11;
+
+        r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int limit> = i1;
+
+     label12:
+        $r6 = new sun.text.normalizer.NormalizerImpl$PrevArgs;
+        specialinvoke $r6.<sun.text.normalizer.NormalizerImpl$PrevArgs: void <init>(sun.text.normalizer.NormalizerImpl$1)>(null);
+        r3 = $r6;
+        r3.<sun.text.normalizer.NormalizerImpl$PrevArgs: char[] src> = r1;
+        r3.<sun.text.normalizer.NormalizerImpl$PrevArgs: int start> = i0;
+        $i27 = r2.<sun.text.normalizer.NormalizerImpl$NextCCArgs: int limit>;
+        r3.<sun.text.normalizer.NormalizerImpl$PrevArgs: int current> = $i27;
+        $i28 = staticinvoke <sun.text.normalizer.NormalizerImpl: int getPrevCC(sun.text.normalizer.NormalizerImpl$PrevArgs)>(r3);
+        return $i28;
+    }
+
+    private static int mergeOrdered(char[], int, int, char[], int, int)
+    {
+        char[] r0, r1;
+        int i0, i1, i2, i3, $i4;
+
+        r0 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        r1 := @parameter3: char[];
+        i2 := @parameter4: int;
+        i3 := @parameter5: int;
+        $i4 = staticinvoke <sun.text.normalizer.NormalizerImpl: int mergeOrdered(char[],int,int,char[],int,int,boolean)>(r0, i0, i1, r1, i2, i3, 1);
+        return $i4;
+    }
+
+    public static sun.text.normalizer.NormalizerBase$QuickCheckResult quickCheck(char[], int, int, int, int, int, boolean, sun.text.normalizer.UnicodeSet)
+    {
+        char[] r0, r5;
+        int i0, i1, i2, i3, i4, i5, i6, i13, i14, $i15, $i24, $i29, i32, $i34, $i35;
+        boolean z0, $z1, $z2, $z3, $z4, $z5;
+        sun.text.normalizer.UnicodeSet r1;
+        sun.text.normalizer.NormalizerImpl$ComposePartArgs $r2, r3;
+        sun.text.normalizer.NormalizerBase$QuickCheckResult r4, $r6, $r7, r8;
+        char c7, c8, c10, c11, $c16, $c21, $c30, $c31, $c33;
+        long l9, l12, $l17, $l18, $l19, $l22, $l23, $l25, $l26;
+        byte $b20, $b27, $b28;
+
+        r0 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        i2 := @parameter3: int;
+        i3 := @parameter4: int;
+        i4 := @parameter5: int;
+        z0 := @parameter6: boolean;
+        r1 := @parameter7: sun.text.normalizer.UnicodeSet;
+        $r2 = new sun.text.normalizer.NormalizerImpl$ComposePartArgs;
+        specialinvoke $r2.<sun.text.normalizer.NormalizerImpl$ComposePartArgs: void <init>(sun.text.normalizer.NormalizerImpl$1)>(null);
+        r3 = $r2;
+        i5 = i0;
+        $z1 = <sun.text.normalizer.NormalizerImpl: boolean isDataLoaded>;
+        if $z1 != 0 goto label0;
+
+        $r6 = <sun.text.normalizer.NormalizerBase: sun.text.normalizer.NormalizerBase$QuickCheckResult MAYBE>;
+        return $r6;
+
+     label0:
+        i6 = 65280 | i3;
+        r4 = <sun.text.normalizer.NormalizerBase: sun.text.normalizer.NormalizerBase$QuickCheckResult YES>;
+        c7 = 0;
+
+     label1:
+        if i0 != i1 goto label2;
+
+        return r4;
+
+     label2:
+        $i15 = i0;
+        i0 = i0 + 1;
+        $c16 = r0[$i15];
+        c8 = $c16;
+        if $c16 < i2 goto label3;
+
+        $l17 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32(char)>(c8);
+        l9 = $l17;
+        $l18 = (long) i6;
+        $l19 = $l17 & $l18;
+        $b20 = $l19 cmp 0L;
+        if $b20 == 0 goto label3;
+
+        goto label4;
+
+     label3:
+        c7 = 0;
+        goto label1;
+
+     label4:
+        $z2 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isNorm32LeadSurrogate(long)>(l9);
+        if $z2 == 0 goto label6;
+
+        if i0 == i1 goto label5;
+
+        $c21 = r0[i0];
+        c10 = $c21;
+        $z3 = staticinvoke <sun.text.normalizer.UTF16: boolean isTrailSurrogate(char)>($c21);
+        if $z3 == 0 goto label5;
+
+        i0 = i0 + 1;
+        l9 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32FromSurrogatePair(long,char)>(l9, c10);
+        goto label7;
+
+     label5:
+        l9 = 0L;
+        c10 = 0;
+        goto label7;
+
+     label6:
+        c10 = 0;
+
+     label7:
+        $z4 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean nx_contains(sun.text.normalizer.UnicodeSet,char,char)>(r1, c8, c10);
+        if $z4 == 0 goto label8;
+
+        l9 = 0L;
+
+     label8:
+        $l22 = l9 >> 8;
+        $l23 = $l22 & 255L;
+        $i24 = (int) $l23;
+        c11 = (char) $i24;
+        if c11 == 0 goto label9;
+
+        if c11 >= c7 goto label9;
+
+        $r7 = <sun.text.normalizer.NormalizerBase: sun.text.normalizer.NormalizerBase$QuickCheckResult NO>;
+        return $r7;
+
+     label9:
+        c7 = c11;
+        $l25 = (long) i3;
+        l12 = l9 & $l25;
+        $l26 = l12 & 15L;
+        $b27 = $l26 cmp 1L;
+        if $b27 < 0 goto label10;
+
+        r8 = <sun.text.normalizer.NormalizerBase: sun.text.normalizer.NormalizerBase$QuickCheckResult NO>;
+        goto label14;
+
+     label10:
+        $b28 = l12 cmp 0L;
+        if $b28 == 0 goto label1;
+
+        if z0 == 0 goto label11;
+
+        r4 = <sun.text.normalizer.NormalizerBase: sun.text.normalizer.NormalizerBase$QuickCheckResult MAYBE>;
+        goto label1;
+
+     label11:
+        $i29 = i3 << 2;
+        i13 = $i29 & 15;
+        i14 = i0 - 1;
+        $c30 = r0[i14];
+        $z5 = staticinvoke <sun.text.normalizer.UTF16: boolean isTrailSurrogate(char)>($c30);
+        if $z5 == 0 goto label12;
+
+        i14 = i14 + -1;
+
+     label12:
+        $c31 = (char) i2;
+        i32 = staticinvoke <sun.text.normalizer.NormalizerImpl: int findPreviousStarter(char[],int,int,int,int,char)>(r0, i5, i14, i6, i13, $c31);
+        $c33 = (char) i2;
+        i0 = staticinvoke <sun.text.normalizer.NormalizerImpl: int findNextStarter(char[],int,int,int,int,char)>(r0, i0, i1, i3, i13, $c33);
+        r3.<sun.text.normalizer.NormalizerImpl$ComposePartArgs: int prevCC> = c7;
+        r5 = staticinvoke <sun.text.normalizer.NormalizerImpl: char[] composePart(sun.text.normalizer.NormalizerImpl$ComposePartArgs,int,char[],int,int,int,sun.text.normalizer.UnicodeSet)>(r3, i32, r0, i0, i1, i4, r1);
+        $i34 = r3.<sun.text.normalizer.NormalizerImpl$ComposePartArgs: int length>;
+        $i35 = staticinvoke <sun.text.normalizer.NormalizerImpl: int strCompare(char[],int,int,char[],int,int,boolean)>(r5, 0, $i34, r0, i32, i0, 0);
+        if 0 == $i35 goto label13;
+
+        r8 = <sun.text.normalizer.NormalizerBase: sun.text.normalizer.NormalizerBase$QuickCheckResult NO>;
+        goto label14;
+
+     label13:
+        goto label1;
+
+     label14:
+        return r8;
+    }
+
+    public static int decompose(char[], int, int, char[], int, int, boolean, int[], sun.text.normalizer.UnicodeSet)
+    {
+        char[] r0, r1, r4, r5;
+        int i0, i1, i2, i3, i4, i5, i9, i10, i13, i14, i15, i16, i17, $i19, $i20, $i27, i28, $i30, $i32, $i33, $i34, $i36, $i37, $i39, $i40, $i49, $i50, i51, $i52, $i53, $i54, $i55, $i56, $i58;
+        boolean z0, $z1, $z2, $z3, $z4, $z5;
+        int[] r2, $r7, $r8;
+        sun.text.normalizer.UnicodeSet r3;
+        char c6, c7, c8, c12, c18, $c22, c31, $c35, $c38, $c41, $c42, $c57;
+        long l11, $l23, $l24, $l25, $l44, $l45, $l47, $l48;
+        sun.text.normalizer.NormalizerImpl$DecomposeArgs r6, $r9;
+        byte $b21, $b26, $b29, $b43, $b46;
+
+        r0 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        r1 := @parameter3: char[];
+        i2 := @parameter4: int;
+        i3 := @parameter5: int;
+        z0 := @parameter6: boolean;
+        r2 := @parameter7: int[];
+        r3 := @parameter8: sun.text.normalizer.UnicodeSet;
+        r4 = newarray (char)[3];
+        i4 = i2;
+        i5 = i0;
+        if z0 != 0 goto label0;
+
+        $r7 = <sun.text.normalizer.NormalizerImpl: int[] indexes>;
+        $i19 = $r7[8];
+        c6 = (char) $i19;
+        c7 = 4;
+        goto label1;
+
+     label0:
+        $r8 = <sun.text.normalizer.NormalizerImpl: int[] indexes>;
+        $i20 = $r8[9];
+        c6 = (char) $i20;
+        c7 = 8;
+
+     label1:
+        c8 = 65280 | c7;
+        i9 = 0;
+        i10 = 0;
+        l11 = 0L;
+        c12 = 0;
+        i13 = 0;
+        $b21 = -1;
+        i14 = $b21;
+        i15 = $b21;
+
+     label2:
+        i16 = i5;
+
+     label3:
+        if i5 == i1 goto label5;
+
+        $c22 = r0[i5];
+        c12 = $c22;
+        if $c22 < c6 goto label4;
+
+        $l23 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32(char)>(c12);
+        l11 = $l23;
+        $l24 = (long) c8;
+        $l25 = $l23 & $l24;
+        $b26 = $l25 cmp 0L;
+        if $b26 != 0 goto label5;
+
+     label4:
+        i10 = 0;
+        i5 = i5 + 1;
+        goto label3;
+
+     label5:
+        if i5 == i16 goto label7;
+
+        i17 = i5 - i16;
+        $i27 = i4 + i17;
+        if $i27 > i3 goto label6;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r0, i16, r1, i4, i17);
+
+     label6:
+        i4 = i4 + i17;
+        i9 = i4;
+
+     label7:
+        if i5 != i1 goto label8;
+
+        goto label25;
+
+     label8:
+        i5 = i5 + 1;
+        $z1 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isNorm32HangulOrJamo(long)>(l11);
+        if $z1 == 0 goto label12;
+
+        $z2 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean nx_contains(sun.text.normalizer.UnicodeSet,int)>(r3, c12);
+        if $z2 == 0 goto label9;
+
+        c18 = 0;
+        r5 = null;
+        i28 = 1;
+        goto label18;
+
+     label9:
+        r5 = r4;
+        i13 = 0;
+        $b29 = 0;
+        i14 = $b29;
+        i15 = $b29;
+        $i30 = c12 - 44032;
+        c31 = (char) $i30;
+        $i32 = c31 % 28;
+        c18 = (char) $i32;
+        $i33 = c31 / 28;
+        c12 = (char) $i33;
+        if c18 <= 0 goto label10;
+
+        $i34 = 4519 + c18;
+        $c35 = (char) $i34;
+        r4[2] = $c35;
+        i28 = 3;
+        goto label11;
+
+     label10:
+        i28 = 2;
+
+     label11:
+        $i36 = c12 % 21;
+        $i37 = 4449 + $i36;
+        $c38 = (char) $i37;
+        r4[1] = $c38;
+        $i39 = c12 / 21;
+        $i40 = 4352 + $i39;
+        $c41 = (char) $i40;
+        r4[0] = $c41;
+        goto label18;
+
+     label12:
+        $z3 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isNorm32Regular(long)>(l11);
+        if $z3 == 0 goto label13;
+
+        c18 = 0;
+        i28 = 1;
+        goto label15;
+
+     label13:
+        if i5 == i1 goto label14;
+
+        $c42 = r0[i5];
+        c18 = $c42;
+        $z4 = staticinvoke <sun.text.normalizer.UTF16: boolean isTrailSurrogate(char)>($c42);
+        if $z4 == 0 goto label14;
+
+        i5 = i5 + 1;
+        i28 = 2;
+        l11 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32FromSurrogatePair(long,char)>(l11, c18);
+        goto label15;
+
+     label14:
+        c18 = 0;
+        i28 = 1;
+        l11 = 0L;
+
+     label15:
+        $z5 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean nx_contains(sun.text.normalizer.UnicodeSet,char,char)>(r3, c12, c18);
+        if $z5 == 0 goto label16;
+
+        $b43 = 0;
+        i14 = $b43;
+        i15 = $b43;
+        r5 = null;
+        goto label18;
+
+     label16:
+        $l44 = (long) c7;
+        $l45 = l11 & $l44;
+        $b46 = $l45 cmp 0L;
+        if $b46 != 0 goto label17;
+
+        $l47 = l11 >> 8;
+        $l48 = 255L & $l47;
+        $i49 = (int) $l48;
+        i14 = $i49;
+        i15 = $i49;
+        r5 = null;
+        i13 = -1;
+        goto label18;
+
+     label17:
+        $r9 = new sun.text.normalizer.NormalizerImpl$DecomposeArgs;
+        specialinvoke $r9.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: void <init>(sun.text.normalizer.NormalizerImpl$1)>(null);
+        r6 = $r9;
+        i13 = staticinvoke <sun.text.normalizer.NormalizerImpl: int decompose(long,int,sun.text.normalizer.NormalizerImpl$DecomposeArgs)>(l11, c7, r6);
+        r5 = <sun.text.normalizer.NormalizerImpl: char[] extraData>;
+        i28 = r6.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int length>;
+        i15 = r6.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int cc>;
+        i14 = r6.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int trailCC>;
+        if i28 != 1 goto label18;
+
+        c12 = r5[i13];
+        c18 = 0;
+        r5 = null;
+        i13 = -1;
+
+     label18:
+        $i50 = i4 + i28;
+        if $i50 > i3 goto label23;
+
+        i51 = i4;
+        if r5 != null goto label20;
+
+        if i15 == 0 goto label19;
+
+        if i15 >= i10 goto label19;
+
+        i4 = i4 + i28;
+        i14 = staticinvoke <sun.text.normalizer.NormalizerImpl: int insertOrdered(char[],int,int,int,char,char,int)>(r1, i9, i51, i4, c12, c18, i15);
+        goto label22;
+
+     label19:
+        $i52 = i4;
+        i4 = i4 + 1;
+        r1[$i52] = c12;
+        if c18 == 0 goto label22;
+
+        $i53 = i4;
+        i4 = i4 + 1;
+        r1[$i53] = c18;
+        goto label22;
+
+     label20:
+        if i15 == 0 goto label21;
+
+        if i15 >= i10 goto label21;
+
+        i4 = i4 + i28;
+        $i54 = i13 + i28;
+        i14 = staticinvoke <sun.text.normalizer.NormalizerImpl: int mergeOrdered(char[],int,int,char[],int,int)>(r1, i9, i51, r5, i13, $i54);
+        goto label22;
+
+     label21:
+        $i55 = i4;
+        i4 = i4 + 1;
+        $i56 = i13;
+        i13 = i13 + 1;
+        $c57 = r5[$i56];
+        r1[$i55] = $c57;
+        i28 = i28 + -1;
+        if i28 > 0 goto label21;
+
+     label22:
+        goto label24;
+
+     label23:
+        i4 = i4 + i28;
+
+     label24:
+        i10 = i14;
+        if i10 != 0 goto label2;
+
+        i9 = i4;
+        goto label2;
+
+     label25:
+        r2[0] = i10;
+        $i58 = i4 - i2;
+        return $i58;
+    }
+
+    private static int getNextCombining(sun.text.normalizer.NormalizerImpl$NextCombiningArgs, int, sun.text.normalizer.UnicodeSet)
+    {
+        sun.text.normalizer.NormalizerImpl$NextCombiningArgs r0;
+        int i0, $i1, i3, i4, $i5, $i13, $i15, $i16, $i17, $i19, $i20, $i26, $i29;
+        sun.text.normalizer.UnicodeSet r1;
+        long l2, $l8, $l10, $l11, $l12, $l14, $l24, $l25, $l28;
+        char[] $r3, $r4, $r7;
+        char $c6, $c7, $c18, $c21, $c22, $c23, $c27, $c30;
+        byte $b9;
+        boolean $z0, $z1, $z2, $z3;
+
+        r0 := @parameter0: sun.text.normalizer.NormalizerImpl$NextCombiningArgs;
+        i0 := @parameter1: int;
+        r1 := @parameter2: sun.text.normalizer.UnicodeSet;
+        $r3 = r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char[] source>;
+        $i1 = r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: int start>;
+        $i5 = $i1 + 1;
+        r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: int start> = $i5;
+        $c6 = $r3[$i1];
+        r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c> = $c6;
+        $c7 = r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c>;
+        l2 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32(char)>($c7);
+        r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2> = 0;
+        r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: int combiningIndex> = 0;
+        r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char cc> = 0;
+        $l8 = l2 & 65472L;
+        $b9 = $l8 cmp 0L;
+        if $b9 != 0 goto label0;
+
+        return 0;
+
+     label0:
+        $z0 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isNorm32Regular(long)>(l2);
+        if $z0 == 0 goto label1;
+
+        goto label4;
+
+     label1:
+        $z1 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isNorm32HangulOrJamo(long)>(l2);
+        if $z1 == 0 goto label2;
+
+        $l10 = l2 >> 16;
+        $l11 = 65520L | $l10;
+        $l12 = 4294967295L & $l11;
+        $i13 = (int) $l12;
+        r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: int combiningIndex> = $i13;
+        $l14 = l2 & 192L;
+        $i15 = (int) $l14;
+        return $i15;
+
+     label2:
+        $i16 = r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: int start>;
+        if $i16 == i0 goto label3;
+
+        $r4 = r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char[] source>;
+        $i17 = r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: int start>;
+        $c18 = $r4[$i17];
+        r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2> = $c18;
+        $z2 = staticinvoke <sun.text.normalizer.UTF16: boolean isTrailSurrogate(char)>($c18);
+        if $z2 == 0 goto label3;
+
+        $i19 = r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: int start>;
+        $i20 = $i19 + 1;
+        r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: int start> = $i20;
+        $c21 = r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2>;
+        l2 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32FromSurrogatePair(long,char)>(l2, $c21);
+        goto label4;
+
+     label3:
+        r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2> = 0;
+        return 0;
+
+     label4:
+        $c22 = r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c>;
+        $c23 = r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2>;
+        $z3 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean nx_contains(sun.text.normalizer.UnicodeSet,char,char)>(r1, $c22, $c23);
+        if $z3 == 0 goto label5;
+
+        return 0;
+
+     label5:
+        $l24 = l2 >> 8;
+        $l25 = $l24 & 255L;
+        $i26 = (int) $l25;
+        $c27 = (char) $i26;
+        r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char cc> = $c27;
+        $l28 = l2 & 192L;
+        i3 = (int) $l28;
+        if i3 == 0 goto label8;
+
+        i4 = staticinvoke <sun.text.normalizer.NormalizerImpl: int getExtraDataIndex(long)>(l2);
+        if i4 <= 0 goto label6;
+
+        $r7 = <sun.text.normalizer.NormalizerImpl: char[] extraData>;
+        $i29 = i4 - 1;
+        $c30 = $r7[$i29];
+        goto label7;
+
+     label6:
+        $c30 = 0;
+
+     label7:
+        r0.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: int combiningIndex> = $c30;
+
+     label8:
+        return i3;
+    }
+
+    private static int getCombiningIndexFromStarter(char, char)
+    {
+        char c0, c1, $c5;
+        long l2;
+        char[] $r0;
+        int $i3, $i4;
+
+        c0 := @parameter0: char;
+        c1 := @parameter1: char;
+        l2 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32(char)>(c0);
+        if c1 == 0 goto label0;
+
+        l2 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32FromSurrogatePair(long,char)>(l2, c1);
+
+     label0:
+        $r0 = <sun.text.normalizer.NormalizerImpl: char[] extraData>;
+        $i3 = staticinvoke <sun.text.normalizer.NormalizerImpl: int getExtraDataIndex(long)>(l2);
+        $i4 = $i3 - 1;
+        $c5 = $r0[$i4];
+        return $c5;
+    }
+
+    private static int combine(char[], int, int, int[])
+    {
+        char[] r0;
+        int i0, i1, $i5, i6, $i13, i16, i23, $i24, $i25;
+        int[] r1;
+        char c2, c3, c4, $c8, $c9, $c11, $c12, $c17, $c18, $c19, $c20;
+        java.lang.IllegalArgumentException $r2;
+        byte $b10;
+        long $l14, $l15, $l21, $l22;
+
+        r0 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        r1 := @parameter3: int[];
+        $i5 = lengthof r1;
+        if $i5 >= 2 goto label0;
+
+        $r2 = new java.lang.IllegalArgumentException;
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>()>();
+        throw $r2;
+
+     label0:
+        i6 = i0 + 1;
+        c2 = r0[i0];
+        if c2 < i1 goto label1;
+
+        goto label4;
+
+     label1:
+        $c8 = r0[i6];
+        $c9 = $c8 & 32768;
+        if $c9 == 0 goto label2;
+
+        $b10 = 2;
+        goto label3;
+
+     label2:
+        $b10 = 1;
+
+     label3:
+        i0 = i6 + $b10;
+        goto label0;
+
+     label4:
+        $c11 = c2 & 32767;
+        if $c11 != i1 goto label8;
+
+        c3 = r0[i6];
+        $c12 = c3 & 8192;
+        $i13 = $c12 + 1;
+        $l14 = (long) $i13;
+        $l15 = 4294967295L & $l14;
+        i16 = (int) $l15;
+        $c17 = c3 & 32768;
+        if $c17 == 0 goto label6;
+
+        $c18 = c3 & 16384;
+        if $c18 == 0 goto label5;
+
+        $c19 = c3 & 1023;
+        $c20 = $c19 | 55296;
+        $l21 = (long) $c20;
+        $l22 = 4294967295L & $l21;
+        i23 = (int) $l22;
+        $i24 = i6 + 1;
+        c4 = r0[$i24];
+        goto label7;
+
+     label5:
+        $i25 = i6 + 1;
+        i23 = r0[$i25];
+        c4 = 0;
+        goto label7;
+
+     label6:
+        i23 = c3 & 8191;
+        c4 = 0;
+
+     label7:
+        r1[0] = i23;
+        r1[1] = c4;
+        return i16;
+
+     label8:
+        return 0;
+    }
+
+    private static char recompose(sun.text.normalizer.NormalizerImpl$RecomposeArgs, int, sun.text.normalizer.UnicodeSet)
+    {
+        sun.text.normalizer.NormalizerImpl$RecomposeArgs r0;
+        int i0, i1, i2, i3, i4, i6, i7, i8, i9, i10, i11, $i12, $i13, $i14, $i15, $i16, $i17, $i20, $i23, $i25, $i27, $i28, $i29, $i30, $i32, $i33, $i34, $i36, $i38, $i39, $i42, $i47, $i48, $i52, $i53, $i56, $i58, $i59, $i60, $i62, $i63, $i65, $i66, $i69, $i73, $i74, $i75, i76, $i78, i80, i81, $i82, $i83, $i85, $i87, i88, i89, $i90, $i91, $i92, $i94, $i95, $i99, $i100, $i103, $i105, $i106, $i107;
+        sun.text.normalizer.UnicodeSet r1;
+        int[] r2;
+        boolean z0, $z1, $z2, $z3, $z4, $z5;
+        char c5, $c18, $c19, $c21, $c22, $c24, $c26, $c31, $c35, $c37, $c40, $c41, $c43, $c44, $c45, $c46, $c49, $c50, $c51, $c54, $c55, $c57, $c61, $c64, $c67, $c68, $c70, $c71, $c72, $c77, $c79, $c84, $c86, $c93, $c96, $c97, $c98, $c101, $c102, $c104;
+        sun.text.normalizer.NormalizerImpl$NextCombiningArgs r3, $r4;
+        char[] $r5, $r6, $r7, $r10, $r13, $r14, $r15, $r16, $r17, $r18, $r19, $r20, $r21, $r22, $r23;
+
+        r0 := @parameter0: sun.text.normalizer.NormalizerImpl$RecomposeArgs;
+        i0 := @parameter1: int;
+        r1 := @parameter2: sun.text.normalizer.UnicodeSet;
+        i1 = 0;
+        i2 = 0;
+        r2 = newarray (int)[2];
+        i3 = -1;
+        i4 = 0;
+        z0 = 0;
+        c5 = 0;
+        $r4 = new sun.text.normalizer.NormalizerImpl$NextCombiningArgs;
+        specialinvoke $r4.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: void <init>(sun.text.normalizer.NormalizerImpl$1)>(null);
+        r3 = $r4;
+        $r5 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: char[] source>;
+        r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char[] source> = $r5;
+        r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char cc> = 0;
+        r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2> = 0;
+
+     label0:
+        $i12 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start>;
+        r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: int start> = $i12;
+        $i13 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int limit>;
+        i6 = staticinvoke <sun.text.normalizer.NormalizerImpl: int getNextCombining(sun.text.normalizer.NormalizerImpl$NextCombiningArgs,int,sun.text.normalizer.UnicodeSet)>(r3, $i13, r1);
+        i7 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: int combiningIndex>;
+        $i14 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: int start>;
+        r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start> = $i14;
+        $i15 = i6 & 128;
+        if $i15 == 0 goto label27;
+
+        if i3 == -1 goto label27;
+
+        $i16 = i7 & 32768;
+        if $i16 == 0 goto label12;
+
+        $i17 = i0 & 256;
+        if $i17 != 0 goto label1;
+
+        if c5 != 0 goto label27;
+
+     label1:
+        i8 = -1;
+        i6 = 0;
+        $r6 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: char[] source>;
+        $c18 = $r6[i3];
+        r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2> = $c18;
+        if i7 != 65522 goto label6;
+
+        $c19 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2>;
+        $i20 = $c19 - 4352;
+        $c21 = (char) $i20;
+        r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2> = $c21;
+        $c22 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2>;
+        if $c22 >= 19 goto label7;
+
+        $i23 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start>;
+        i8 = $i23 - 1;
+        $c24 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2>;
+        $i25 = $c24 * 21;
+        $c26 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c>;
+        $i27 = $c26 - 4449;
+        $i28 = $i25 + $i27;
+        $i29 = $i28 * 28;
+        $i30 = 44032 + $i29;
+        $c31 = (char) $i30;
+        r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c> = $c31;
+        $i32 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start>;
+        $i33 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int limit>;
+        if $i32 == $i33 goto label2;
+
+        $r7 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: char[] source>;
+        $i34 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start>;
+        $c35 = $r7[$i34];
+        $i36 = $c35 - 4519;
+        $c37 = (char) $i36;
+        r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2> = $c37;
+        if $c37 >= 28 goto label2;
+
+        $i38 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start>;
+        $i39 = $i38 + 1;
+        r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start> = $i39;
+        $c40 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c>;
+        $c41 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2>;
+        $i42 = $c40 + $c41;
+        $c43 = (char) $i42;
+        r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c> = $c43;
+        goto label3;
+
+     label2:
+        i6 = 64;
+
+     label3:
+        $c44 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c>;
+        $z1 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean nx_contains(sun.text.normalizer.UnicodeSet,int)>(r1, $c44);
+        if $z1 != 0 goto label4;
+
+        $r10 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: char[] source>;
+        $c45 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c>;
+        $r10[i3] = $c45;
+        goto label7;
+
+     label4:
+        $c46 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c>;
+        $z2 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isHangulWithoutJamoT(char)>($c46);
+        if $z2 != 0 goto label5;
+
+        $i47 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start>;
+        $i48 = $i47 - 1;
+        r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start> = $i48;
+
+     label5:
+        i8 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start>;
+        goto label7;
+
+     label6:
+        $c49 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2>;
+        $z3 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isHangulWithoutJamoT(char)>($c49);
+        if $z3 == 0 goto label7;
+
+        $c50 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2>;
+        $c51 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c>;
+        $i52 = $c51 - 4519;
+        $i53 = $c50 + $i52;
+        $c54 = (char) $i53;
+        r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2> = $c54;
+        $c55 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2>;
+        $z4 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean nx_contains(sun.text.normalizer.UnicodeSet,int)>(r1, $c55);
+        if $z4 != 0 goto label7;
+
+        $i56 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start>;
+        i8 = $i56 - 1;
+        $r13 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: char[] source>;
+        $c57 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2>;
+        $r13[i3] = $c57;
+
+     label7:
+        if i8 == -1 goto label10;
+
+        i9 = i8;
+        i10 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start>;
+
+     label8:
+        $i58 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int limit>;
+        if i10 >= $i58 goto label9;
+
+        $r14 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: char[] source>;
+        $i59 = i9;
+        i9 = i9 + 1;
+        $r15 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: char[] source>;
+        $i60 = i10;
+        i10 = i10 + 1;
+        $c61 = $r15[$i60];
+        $r14[$i59] = $c61;
+        goto label8;
+
+     label9:
+        r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start> = i8;
+        r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int limit> = i9;
+
+     label10:
+        r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2> = 0;
+        if i6 == 0 goto label27;
+
+        $i62 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start>;
+        $i63 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int limit>;
+        if $i62 != $i63 goto label11;
+
+        $c64 = (char) c5;
+        return $c64;
+
+     label11:
+        i4 = 65520;
+        goto label0;
+
+     label12:
+        $i65 = i4 & 32768;
+        if $i65 != 0 goto label27;
+
+        $i66 = i0 & 256;
+        if $i66 == 0 goto label13;
+
+        $c67 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char cc>;
+        if c5 != $c67 goto label14;
+
+        if c5 != 0 goto label27;
+
+        goto label14;
+
+     label13:
+        $c68 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char cc>;
+        if c5 < $c68 goto label14;
+
+        if c5 != 0 goto label27;
+
+     label14:
+        $r16 = <sun.text.normalizer.NormalizerImpl: char[] combiningTable>;
+        $i69 = staticinvoke <sun.text.normalizer.NormalizerImpl: int combine(char[],int,int,int[])>($r16, i4, i7, r2);
+        i11 = $i69;
+        if 0 == $i69 goto label27;
+
+        $c70 = (char) i1;
+        $c71 = (char) i2;
+        $z5 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean nx_contains(sun.text.normalizer.UnicodeSet,char,char)>(r1, $c70, $c71);
+        if $z5 != 0 goto label27;
+
+        i1 = r2[0];
+        i2 = r2[1];
+        $c72 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2>;
+        if $c72 != 0 goto label15;
+
+        $i73 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start>;
+        $i74 = $i73 - 1;
+        goto label16;
+
+     label15:
+        $i75 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start>;
+        $i74 = $i75 - 2;
+
+     label16:
+        i76 = $i74;
+        $r17 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: char[] source>;
+        $c77 = (char) i1;
+        $r17[i3] = $c77;
+        if z0 == 0 goto label20;
+
+        if i2 == 0 goto label17;
+
+        $r18 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: char[] source>;
+        $i78 = i3 + 1;
+        $c79 = (char) i2;
+        $r18[$i78] = $c79;
+        goto label21;
+
+     label17:
+        z0 = 0;
+        i80 = i3 + 1;
+        i81 = i80 + 1;
+
+     label18:
+        if i81 >= i76 goto label19;
+
+        $r19 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: char[] source>;
+        $i82 = i80;
+        i80 = i80 + 1;
+        $r20 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: char[] source>;
+        $i83 = i81;
+        i81 = i81 + 1;
+        $c84 = $r20[$i83];
+        $r19[$i82] = $c84;
+        goto label18;
+
+     label19:
+        i76 = i76 + -1;
+        goto label21;
+
+     label20:
+        if i2 == 0 goto label21;
+
+        z0 = 1;
+        $r21 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: char[] source>;
+        $i85 = i3 + 1;
+        $c86 = (char) i2;
+        $r21[$i85] = $c86;
+
+     label21:
+        $i87 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start>;
+        if i76 >= $i87 goto label24;
+
+        i88 = i76;
+        i89 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start>;
+
+     label22:
+        $i90 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int limit>;
+        if i89 >= $i90 goto label23;
+
+        $r22 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: char[] source>;
+        $i91 = i88;
+        i88 = i88 + 1;
+        $r23 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: char[] source>;
+        $i92 = i89;
+        i89 = i89 + 1;
+        $c93 = $r23[$i92];
+        $r22[$i91] = $c93;
+        goto label22;
+
+     label23:
+        r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start> = i76;
+        r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int limit> = i88;
+
+     label24:
+        $i94 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start>;
+        $i95 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int limit>;
+        if $i94 != $i95 goto label25;
+
+        $c96 = (char) c5;
+        return $c96;
+
+     label25:
+        if i11 <= 1 goto label26;
+
+        $c97 = (char) i1;
+        $c98 = (char) i2;
+        i4 = staticinvoke <sun.text.normalizer.NormalizerImpl: int getCombiningIndexFromStarter(char,char)>($c97, $c98);
+        goto label0;
+
+     label26:
+        i3 = -1;
+        goto label0;
+
+     label27:
+        c5 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char cc>;
+        $i99 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start>;
+        $i100 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int limit>;
+        if $i99 != $i100 goto label28;
+
+        $c101 = (char) c5;
+        return $c101;
+
+     label28:
+        $c102 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char cc>;
+        if $c102 != 0 goto label32;
+
+        $i103 = i6 & 64;
+        if $i103 == 0 goto label31;
+
+        $c104 = r3.<sun.text.normalizer.NormalizerImpl$NextCombiningArgs: char c2>;
+        if $c104 != 0 goto label29;
+
+        z0 = 0;
+        $i105 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start>;
+        i3 = $i105 - 1;
+        goto label30;
+
+     label29:
+        z0 = 0;
+        $i106 = r0.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start>;
+        i3 = $i106 - 2;
+
+     label30:
+        i4 = i7;
+        goto label0;
+
+     label31:
+        i3 = -1;
+        goto label0;
+
+     label32:
+        $i107 = i0 & 8192;
+        if $i107 == 0 goto label0;
+
+        i3 = -1;
+        goto label0;
+    }
+
+    private static int findPreviousStarter(char[], int, int, int, int, char)
+    {
+        char[] r0;
+        int i0, i1, i2, i3, $i6, $i7, $i8, $i9;
+        char c4;
+        sun.text.normalizer.NormalizerImpl$PrevArgs $r1, r2;
+        long l5;
+        boolean $z0;
+
+        r0 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        i2 := @parameter3: int;
+        i3 := @parameter4: int;
+        c4 := @parameter5: char;
+        $r1 = new sun.text.normalizer.NormalizerImpl$PrevArgs;
+        specialinvoke $r1.<sun.text.normalizer.NormalizerImpl$PrevArgs: void <init>(sun.text.normalizer.NormalizerImpl$1)>(null);
+        r2 = $r1;
+        r2.<sun.text.normalizer.NormalizerImpl$PrevArgs: char[] src> = r0;
+        r2.<sun.text.normalizer.NormalizerImpl$PrevArgs: int start> = i0;
+        r2.<sun.text.normalizer.NormalizerImpl$PrevArgs: int current> = i1;
+
+     label0:
+        $i6 = r2.<sun.text.normalizer.NormalizerImpl$PrevArgs: int start>;
+        $i7 = r2.<sun.text.normalizer.NormalizerImpl$PrevArgs: int current>;
+        if $i6 >= $i7 goto label1;
+
+        $i8 = i2 | i3;
+        l5 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getPrevNorm32(sun.text.normalizer.NormalizerImpl$PrevArgs,int,int)>(r2, c4, $i8);
+        $z0 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isTrueStarter(long,int,int)>(l5, i2, i3);
+        if $z0 == 0 goto label0;
+
+        goto label1;
+
+     label1:
+        $i9 = r2.<sun.text.normalizer.NormalizerImpl$PrevArgs: int current>;
+        return $i9;
+    }
+
+    private static int findNextStarter(char[], int, int, int, int, char)
+    {
+        char[] r0, $r3;
+        int i0, i1, i2, i3, i5, i9, $i13, $i14, $i22, $i27;
+        char c4, c6, c8, $c15;
+        sun.text.normalizer.NormalizerImpl$DecomposeArgs r1, $r2;
+        long l7, $l10, $l11, $l16, $l17, $l19, $l20, $l23, $l24, $l25;
+        byte $b12, $b18, $b21, $b26, $b28;
+        boolean $z0, $z1;
+
+        r0 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        i2 := @parameter3: int;
+        i3 := @parameter4: int;
+        c4 := @parameter5: char;
+        i5 = 65280 | i2;
+        $r2 = new sun.text.normalizer.NormalizerImpl$DecomposeArgs;
+        specialinvoke $r2.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: void <init>(sun.text.normalizer.NormalizerImpl$1)>(null);
+        r1 = $r2;
+
+     label0:
+        if i0 != i1 goto label1;
+
+        goto label10;
+
+     label1:
+        c6 = r0[i0];
+        if c6 >= c4 goto label2;
+
+        goto label10;
+
+     label2:
+        l7 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32(char)>(c6);
+        $l10 = (long) i5;
+        $l11 = l7 & $l10;
+        $b12 = $l11 cmp 0L;
+        if $b12 != 0 goto label3;
+
+        goto label10;
+
+     label3:
+        $z0 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isNorm32LeadSurrogate(long)>(l7);
+        if $z0 == 0 goto label5;
+
+        $i13 = i0 + 1;
+        if $i13 == i1 goto label10;
+
+        $i14 = i0 + 1;
+        $c15 = r0[$i14];
+        c8 = $c15;
+        $z1 = staticinvoke <sun.text.normalizer.UTF16: boolean isTrailSurrogate(char)>($c15);
+        if $z1 != 0 goto label4;
+
+        goto label10;
+
+     label4:
+        l7 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32FromSurrogatePair(long,char)>(l7, c8);
+        $l16 = (long) i5;
+        $l17 = l7 & $l16;
+        $b18 = $l17 cmp 0L;
+        if $b18 != 0 goto label6;
+
+        goto label10;
+
+     label5:
+        c8 = 0;
+
+     label6:
+        $l19 = (long) i3;
+        $l20 = l7 & $l19;
+        $b21 = $l20 cmp 0L;
+        if $b21 == 0 goto label7;
+
+        i9 = staticinvoke <sun.text.normalizer.NormalizerImpl: int decompose(long,int,sun.text.normalizer.NormalizerImpl$DecomposeArgs)>(l7, i3, r1);
+        $i22 = r1.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int cc>;
+        if $i22 != 0 goto label7;
+
+        $r3 = <sun.text.normalizer.NormalizerImpl: char[] extraData>;
+        $l23 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32(char[],int,int)>($r3, i9, i2);
+        $l24 = (long) i2;
+        $l25 = $l23 & $l24;
+        $b26 = $l25 cmp 0L;
+        if $b26 != 0 goto label7;
+
+        goto label10;
+
+     label7:
+        $i27 = i0;
+        if c8 != 0 goto label8;
+
+        $b28 = 1;
+        goto label9;
+
+     label8:
+        $b28 = 2;
+
+     label9:
+        i0 = $i27 + $b28;
+        goto label0;
+
+     label10:
+        return i0;
+    }
+
+    private static char[] composePart(sun.text.normalizer.NormalizerImpl$ComposePartArgs, int, char[], int, int, int, sun.text.normalizer.UnicodeSet)
+    {
+        sun.text.normalizer.NormalizerImpl$ComposePartArgs r0;
+        int i0, i1, i2, i3, i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13;
+        char[] r1, r4;
+        sun.text.normalizer.UnicodeSet r2;
+        boolean z0, $z1;
+        int[] r3;
+        sun.text.normalizer.NormalizerImpl$RecomposeArgs r5, $r6;
+        char $c14;
+
+        r0 := @parameter0: sun.text.normalizer.NormalizerImpl$ComposePartArgs;
+        i0 := @parameter1: int;
+        r1 := @parameter2: char[];
+        i1 := @parameter3: int;
+        i2 := @parameter4: int;
+        i3 := @parameter5: int;
+        r2 := @parameter6: sun.text.normalizer.UnicodeSet;
+        $i5 = i3 & 4096;
+        if $i5 == 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        z0 = $z1;
+        r3 = newarray (int)[1];
+        $i6 = i2 - i0;
+        $i7 = $i6 * 20;
+        r4 = newarray (char)[$i7];
+
+     label2:
+        $i8 = lengthof r4;
+        $i9 = staticinvoke <sun.text.normalizer.NormalizerImpl: int decompose(char[],int,int,char[],int,int,boolean,int[],sun.text.normalizer.UnicodeSet)>(r1, i0, i1, r4, 0, $i8, z0, r3, r2);
+        r0.<sun.text.normalizer.NormalizerImpl$ComposePartArgs: int length> = $i9;
+        $i10 = r0.<sun.text.normalizer.NormalizerImpl$ComposePartArgs: int length>;
+        $i11 = lengthof r4;
+        if $i10 > $i11 goto label3;
+
+        goto label4;
+
+     label3:
+        $i12 = r0.<sun.text.normalizer.NormalizerImpl$ComposePartArgs: int length>;
+        r4 = newarray (char)[$i12];
+        goto label2;
+
+     label4:
+        i4 = r0.<sun.text.normalizer.NormalizerImpl$ComposePartArgs: int length>;
+        $i13 = r0.<sun.text.normalizer.NormalizerImpl$ComposePartArgs: int length>;
+        if $i13 < 2 goto label5;
+
+        $r6 = new sun.text.normalizer.NormalizerImpl$RecomposeArgs;
+        specialinvoke $r6.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: void <init>(sun.text.normalizer.NormalizerImpl$1)>(null);
+        r5 = $r6;
+        r5.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: char[] source> = r4;
+        r5.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int start> = 0;
+        r5.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int limit> = i4;
+        $c14 = staticinvoke <sun.text.normalizer.NormalizerImpl: char recompose(sun.text.normalizer.NormalizerImpl$RecomposeArgs,int,sun.text.normalizer.UnicodeSet)>(r5, i3, r2);
+        r0.<sun.text.normalizer.NormalizerImpl$ComposePartArgs: int prevCC> = $c14;
+        i4 = r5.<sun.text.normalizer.NormalizerImpl$RecomposeArgs: int limit>;
+
+     label5:
+        r0.<sun.text.normalizer.NormalizerImpl$ComposePartArgs: int length> = i4;
+        return r4;
+    }
+
+    private static boolean composeHangul(char, char, long, char[], int[], int, boolean, char[], int, sun.text.normalizer.UnicodeSet)
+    {
+        char c0, c1, c6, c7, c10, c16, $c18, $c24, $c26, c27, c32;
+        long l2, l20, $l21;
+        char[] r0, r2, $r6;
+        int[] r1;
+        int i3, i4, i5, i8, $i9, $i11, $i12, $i13, $i14, $i15, $i17, $i19, $i23, $i25, $i28, i29, $i30, $i31;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6;
+        sun.text.normalizer.UnicodeSet r3;
+        sun.text.normalizer.NormalizerImpl$DecomposeArgs r4, $r5;
+        byte $b22;
+
+        c0 := @parameter0: char;
+        c1 := @parameter1: char;
+        l2 := @parameter2: long;
+        r0 := @parameter3: char[];
+        r1 := @parameter4: int[];
+        i3 := @parameter5: int;
+        z0 := @parameter6: boolean;
+        r2 := @parameter7: char[];
+        i4 := @parameter8: int;
+        r3 := @parameter9: sun.text.normalizer.UnicodeSet;
+        i5 = r1[0];
+        $z1 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isJamoVTNorm32JamoV(long)>(l2);
+        if $z1 == 0 goto label4;
+
+        $i9 = c0 - 4352;
+        c10 = (char) $i9;
+        if c10 >= 19 goto label6;
+
+        $i11 = c10 * 21;
+        $i12 = c1 - 4449;
+        $i13 = $i11 + $i12;
+        $i14 = $i13 * 28;
+        $i15 = 44032 + $i14;
+        c16 = (char) $i15;
+        if i5 == i3 goto label1;
+
+        c6 = r0[i5];
+        $i17 = c6 - 4519;
+        $c18 = (char) $i17;
+        c7 = $c18;
+        if $c18 >= 28 goto label0;
+
+        i5 = i5 + 1;
+        $i19 = c16 + c7;
+        c16 = (char) $i19;
+        goto label1;
+
+     label0:
+        if z0 == 0 goto label1;
+
+        l20 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32(char)>(c6);
+        $z2 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isNorm32Regular(long)>(l20);
+        if $z2 == 0 goto label1;
+
+        $l21 = l20 & 8L;
+        $b22 = $l21 cmp 0L;
+        if $b22 == 0 goto label1;
+
+        $r5 = new sun.text.normalizer.NormalizerImpl$DecomposeArgs;
+        specialinvoke $r5.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: void <init>(sun.text.normalizer.NormalizerImpl$1)>(null);
+        r4 = $r5;
+        i8 = staticinvoke <sun.text.normalizer.NormalizerImpl: int decompose(long,int,sun.text.normalizer.NormalizerImpl$DecomposeArgs)>(l20, 8, r4);
+        $i23 = r4.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int length>;
+        if $i23 != 1 goto label1;
+
+        $r6 = <sun.text.normalizer.NormalizerImpl: char[] extraData>;
+        $c24 = $r6[i8];
+        $i25 = $c24 - 4519;
+        $c26 = (char) $i25;
+        c27 = $c26;
+        if $c26 >= 28 goto label1;
+
+        i5 = i5 + 1;
+        $i28 = c16 + c27;
+        c16 = (char) $i28;
+
+     label1:
+        $z3 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean nx_contains(sun.text.normalizer.UnicodeSet,int)>(r3, c16);
+        if $z3 == 0 goto label3;
+
+        $z4 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isHangulWithoutJamoT(char)>(c16);
+        if $z4 != 0 goto label2;
+
+        i29 = i5 + -1;
+
+     label2:
+        return 0;
+
+     label3:
+        r2[i4] = c16;
+        r1[0] = i5;
+        return 1;
+
+     label4:
+        $z5 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isHangulWithoutJamoT(char)>(c0);
+        if $z5 == 0 goto label6;
+
+        $i30 = c1 - 4519;
+        $i31 = c0 + $i30;
+        c32 = (char) $i31;
+        $z6 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean nx_contains(sun.text.normalizer.UnicodeSet,int)>(r3, c32);
+        if $z6 == 0 goto label5;
+
+        return 0;
+
+     label5:
+        r2[i4] = c32;
+        r1[0] = i5;
+        return 1;
+
+     label6:
+        return 0;
+    }
+
+    public static int compose(char[], int, int, char[], int, int, int, sun.text.normalizer.UnicodeSet)
+    {
+        char[] r0, r1, r6;
+        int i0, i1, i2, i3, i4, i5, i6, i9, i11, i12, i15, i16, i17, i20, i21, $i22, $i23, $i24, $i30, $i32, $i35, $i39, $i40, $i48, $i50, i51, $i52, $i53, $i54, $i55, $i56, $i58, i59, $i60, $i61, $i62;
+        sun.text.normalizer.UnicodeSet r2;
+        int[] r3, $r7, $r8;
+        char c7, c8, c10, c14, c19, $c25, $c31, $c33, $c36, $c37, $c42, $c49, $c57;
+        long l13, $l26, $l27, $l28, $l38, $l43, $l44, $l46, $l47;
+        sun.text.normalizer.NormalizerImpl$ComposePartArgs r5, $r11;
+        byte $b29, $b34, b41, $b45;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8;
+
+        r0 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        r1 := @parameter3: char[];
+        i2 := @parameter4: int;
+        i3 := @parameter5: int;
+        i4 := @parameter6: int;
+        r2 := @parameter7: sun.text.normalizer.UnicodeSet;
+        r3 = newarray (int)[1];
+        i5 = i2;
+        i6 = i0;
+        $i22 = i4 & 4096;
+        if $i22 == 0 goto label0;
+
+        $r7 = <sun.text.normalizer.NormalizerImpl: int[] indexes>;
+        $i23 = $r7[7];
+        c7 = (char) $i23;
+        c8 = 34;
+        goto label1;
+
+     label0:
+        $r8 = <sun.text.normalizer.NormalizerImpl: int[] indexes>;
+        $i24 = $r8[6];
+        c7 = (char) $i24;
+        c8 = 17;
+
+     label1:
+        i9 = i6;
+        c10 = 65280 | c8;
+        i11 = 0;
+        i12 = 0;
+        l13 = 0L;
+        c14 = 0;
+
+     label2:
+        i15 = i6;
+
+     label3:
+        if i6 == i1 goto label5;
+
+        $c25 = r0[i6];
+        c14 = $c25;
+        if $c25 < c7 goto label4;
+
+        $l26 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32(char)>(c14);
+        l13 = $l26;
+        $l27 = (long) c10;
+        $l28 = $l26 & $l27;
+        $b29 = $l28 cmp 0L;
+        if $b29 != 0 goto label5;
+
+     label4:
+        i12 = 0;
+        i6 = i6 + 1;
+        goto label3;
+
+     label5:
+        if i6 == i15 goto label8;
+
+        i16 = i6 - i15;
+        $i30 = i5 + i16;
+        if $i30 > i3 goto label6;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r0, i15, r1, i5, i16);
+
+     label6:
+        i5 = i5 + i16;
+        i11 = i5;
+        i9 = i6 - 1;
+        $c31 = r0[i9];
+        $z0 = staticinvoke <sun.text.normalizer.UTF16: boolean isTrailSurrogate(char)>($c31);
+        if $z0 == 0 goto label7;
+
+        if i15 >= i9 goto label7;
+
+        $i32 = i9 - 1;
+        $c33 = r0[$i32];
+        $z1 = staticinvoke <sun.text.normalizer.UTF16: boolean isLeadSurrogate(char)>($c33);
+        if $z1 == 0 goto label7;
+
+        i9 = i9 + -1;
+
+     label7:
+        i15 = i6;
+
+     label8:
+        if i6 != i1 goto label9;
+
+        goto label32;
+
+     label9:
+        i6 = i6 + 1;
+        $z2 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isNorm32HangulOrJamo(long)>(l13);
+        if $z2 == 0 goto label15;
+
+        $b34 = 0;
+        i17 = $b34;
+        i12 = $b34;
+        i11 = i5;
+        r3[0] = i6;
+        if i5 <= 0 goto label14;
+
+        $i35 = i15 - 1;
+        $c36 = r0[$i35];
+        $c37 = c14;
+        $l38 = l13;
+        $i39 = i4 & 4096;
+        if $i39 == 0 goto label10;
+
+        $z3 = 1;
+        goto label11;
+
+     label10:
+        $z3 = 0;
+
+     label11:
+        if i5 > i3 goto label12;
+
+        $i40 = i5 - 1;
+        goto label13;
+
+     label12:
+        $i40 = 0;
+
+     label13:
+        $z4 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean composeHangul(char,char,long,char[],int[],int,boolean,char[],int,sun.text.normalizer.UnicodeSet)>($c36, $c37, $l38, r0, r3, i1, $z3, r1, $i40, r2);
+        if $z4 == 0 goto label14;
+
+        i6 = r3[0];
+        i9 = i6;
+        goto label2;
+
+     label14:
+        i6 = r3[0];
+        c19 = 0;
+        b41 = 1;
+        i9 = i15;
+        goto label28;
+
+     label15:
+        $z5 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isNorm32Regular(long)>(l13);
+        if $z5 == 0 goto label16;
+
+        c19 = 0;
+        b41 = 1;
+        goto label18;
+
+     label16:
+        if i6 == i1 goto label17;
+
+        $c42 = r0[i6];
+        c19 = $c42;
+        $z6 = staticinvoke <sun.text.normalizer.UTF16: boolean isTrailSurrogate(char)>($c42);
+        if $z6 == 0 goto label17;
+
+        i6 = i6 + 1;
+        b41 = 2;
+        l13 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32FromSurrogatePair(long,char)>(l13, c19);
+        goto label18;
+
+     label17:
+        c19 = 0;
+        b41 = 1;
+        l13 = 0L;
+
+     label18:
+        $r11 = new sun.text.normalizer.NormalizerImpl$ComposePartArgs;
+        specialinvoke $r11.<sun.text.normalizer.NormalizerImpl$ComposePartArgs: void <init>(sun.text.normalizer.NormalizerImpl$1)>(null);
+        r5 = $r11;
+        $z7 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean nx_contains(sun.text.normalizer.UnicodeSet,char,char)>(r2, c14, c19);
+        if $z7 == 0 goto label19;
+
+        i17 = 0;
+        goto label28;
+
+     label19:
+        $l43 = (long) c8;
+        $l44 = l13 & $l43;
+        $b45 = $l44 cmp 0L;
+        if $b45 != 0 goto label20;
+
+        $l46 = l13 >> 8;
+        $l47 = 255L & $l46;
+        i17 = (int) $l47;
+        goto label28;
+
+     label20:
+        $i48 = c8 << 2;
+        i20 = $i48 & 15;
+        $c49 = 65280 | c8;
+        $z8 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isTrueStarter(long,int,int)>(l13, $c49, i20);
+        if $z8 == 0 goto label21;
+
+        i9 = i15;
+        goto label22;
+
+     label21:
+        $i50 = i15 - i9;
+        i5 = i5 - $i50;
+
+     label22:
+        i6 = staticinvoke <sun.text.normalizer.NormalizerImpl: int findNextStarter(char[],int,int,int,int,char)>(r0, i6, i1, c8, i20, c7);
+        r5.<sun.text.normalizer.NormalizerImpl$ComposePartArgs: int prevCC> = i12;
+        r5.<sun.text.normalizer.NormalizerImpl$ComposePartArgs: int length> = b41;
+        r6 = staticinvoke <sun.text.normalizer.NormalizerImpl: char[] composePart(sun.text.normalizer.NormalizerImpl$ComposePartArgs,int,char[],int,int,int,sun.text.normalizer.UnicodeSet)>(r5, i9, r0, i6, i1, i4, r2);
+        if r6 != null goto label23;
+
+        goto label32;
+
+     label23:
+        i12 = r5.<sun.text.normalizer.NormalizerImpl$ComposePartArgs: int prevCC>;
+        i51 = r5.<sun.text.normalizer.NormalizerImpl$ComposePartArgs: int length>;
+        $i52 = r5.<sun.text.normalizer.NormalizerImpl$ComposePartArgs: int length>;
+        $i53 = i5 + $i52;
+        if $i53 > i3 goto label26;
+
+        i21 = 0;
+
+     label24:
+        $i54 = r5.<sun.text.normalizer.NormalizerImpl$ComposePartArgs: int length>;
+        if i21 >= $i54 goto label25;
+
+        $i55 = i5;
+        i5 = i5 + 1;
+        $i56 = i21;
+        i21 = i21 + 1;
+        $c57 = r6[$i56];
+        r1[$i55] = $c57;
+        i51 = i51 + -1;
+        goto label24;
+
+     label25:
+        goto label27;
+
+     label26:
+        i5 = i5 + i51;
+
+     label27:
+        i9 = i6;
+        goto label2;
+
+     label28:
+        $i58 = i5 + b41;
+        if $i58 > i3 goto label31;
+
+        if i17 == 0 goto label29;
+
+        if i17 >= i12 goto label29;
+
+        i59 = i5;
+        i5 = i5 + b41;
+        i12 = staticinvoke <sun.text.normalizer.NormalizerImpl: int insertOrdered(char[],int,int,int,char,char,int)>(r1, i11, i59, i5, c14, c19, i17);
+        goto label2;
+
+     label29:
+        $i60 = i5;
+        i5 = i5 + 1;
+        r1[$i60] = c14;
+        if c19 == 0 goto label30;
+
+        $i61 = i5;
+        i5 = i5 + 1;
+        r1[$i61] = c19;
+
+     label30:
+        i12 = i17;
+        goto label2;
+
+     label31:
+        i5 = i5 + b41;
+        i12 = i17;
+        goto label2;
+
+     label32:
+        $i62 = i5 - i2;
+        return $i62;
+    }
+
+    public static int getCombiningClass(int)
+    {
+        int i0, $i4;
+        long l1, $l2, $l3;
+        char $c5;
+
+        i0 := @parameter0: int;
+        l1 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32(int)>(i0);
+        $l2 = l1 >> 8;
+        $l3 = $l2 & 255L;
+        $i4 = (int) $l3;
+        $c5 = (char) $i4;
+        return $c5;
+    }
+
+    public static boolean isFullCompositionExclusion(int)
+    {
+        int i0;
+        boolean $z0, $z1;
+        char c1, $c2;
+        sun.text.normalizer.CharTrie $r0;
+
+        i0 := @parameter0: int;
+        $z0 = <sun.text.normalizer.NormalizerImpl: boolean isFormatVersion_2_1>;
+        if $z0 == 0 goto label2;
+
+        $r0 = <sun.text.normalizer.NormalizerImpl$AuxTrieImpl: sun.text.normalizer.CharTrie auxTrie>;
+        c1 = virtualinvoke $r0.<sun.text.normalizer.CharTrie: char getCodePointValue(int)>(i0);
+        $c2 = c1 & 1024;
+        if $c2 == 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        return $z1;
+
+     label2:
+        return 0;
+    }
+
+    public static boolean isCanonSafeStart(int)
+    {
+        int i0;
+        boolean $z0, $z1;
+        char c1, $c2;
+        sun.text.normalizer.CharTrie $r0;
+
+        i0 := @parameter0: int;
+        $z0 = <sun.text.normalizer.NormalizerImpl: boolean isFormatVersion_2_1>;
+        if $z0 == 0 goto label2;
+
+        $r0 = <sun.text.normalizer.NormalizerImpl$AuxTrieImpl: sun.text.normalizer.CharTrie auxTrie>;
+        c1 = virtualinvoke $r0.<sun.text.normalizer.CharTrie: char getCodePointValue(int)>(i0);
+        $c2 = c1 & 2048;
+        if $c2 != 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        return $z1;
+
+     label2:
+        return 0;
+    }
+
+    public static boolean isNFSkippable(int, sun.text.normalizer.NormalizerBase$Mode, long)
+    {
+        int i0;
+        sun.text.normalizer.NormalizerBase$Mode r0, $r1, $r2, $r3;
+        long l1, l2, l4, $l5, $l7, $l10, $l11;
+        char c3, $c9;
+        byte $b6, $b8, $b12;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        sun.text.normalizer.CharTrie $r4;
+
+        i0 := @parameter0: int;
+        r0 := @parameter1: sun.text.normalizer.NormalizerBase$Mode;
+        l1 := @parameter2: long;
+        l4 = l1 & 4294967295L;
+        l2 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32(int)>(i0);
+        $l5 = l2 & l4;
+        $b6 = $l5 cmp 0L;
+        if $b6 == 0 goto label0;
+
+        return 0;
+
+     label0:
+        $r1 = <sun.text.normalizer.NormalizerBase: sun.text.normalizer.NormalizerBase$Mode NFD>;
+        if r0 == $r1 goto label1;
+
+        $r2 = <sun.text.normalizer.NormalizerBase: sun.text.normalizer.NormalizerBase$Mode NFKD>;
+        if r0 == $r2 goto label1;
+
+        $r3 = <sun.text.normalizer.NormalizerBase: sun.text.normalizer.NormalizerBase$Mode NONE>;
+        if r0 != $r3 goto label2;
+
+     label1:
+        return 1;
+
+     label2:
+        $l7 = l2 & 4L;
+        $b8 = $l7 cmp 0L;
+        if $b8 != 0 goto label3;
+
+        return 1;
+
+     label3:
+        $z0 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isNorm32HangulOrJamo(long)>(l2);
+        if $z0 == 0 goto label6;
+
+        $c9 = (char) i0;
+        $z1 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isHangulWithoutJamoT(char)>($c9);
+        if $z1 != 0 goto label4;
+
+        $z2 = 1;
+        goto label5;
+
+     label4:
+        $z2 = 0;
+
+     label5:
+        return $z2;
+
+     label6:
+        $z3 = <sun.text.normalizer.NormalizerImpl: boolean isFormatVersion_2_2>;
+        if $z3 != 0 goto label7;
+
+        return 0;
+
+     label7:
+        $r4 = <sun.text.normalizer.NormalizerImpl$AuxTrieImpl: sun.text.normalizer.CharTrie auxTrie>;
+        c3 = virtualinvoke $r4.<sun.text.normalizer.CharTrie: char getCodePointValue(int)>(i0);
+        $l10 = (long) c3;
+        $l11 = $l10 & 4096L;
+        $b12 = $l11 cmp 0L;
+        if $b12 != 0 goto label8;
+
+        $z4 = 1;
+        goto label9;
+
+     label8:
+        $z4 = 0;
+
+     label9:
+        return $z4;
+    }
+
+    public static sun.text.normalizer.UnicodeSet addPropertyStarts(sun.text.normalizer.UnicodeSet)
+    {
+        sun.text.normalizer.UnicodeSet r0;
+        sun.text.normalizer.TrieIterator $r1, r3, r5, r7, $r11, $r15;
+        sun.text.normalizer.IntTrie $r2;
+        sun.text.normalizer.RangeValueIterator$Element r4, r6, r8, $r9, $r13, $r17;
+        int i0, $i1, $i2, $i3, $i4;
+        boolean $z0, $z1, $z2, $z3;
+        sun.text.normalizer.CharTrie $r12, $r16;
+
+        r0 := @parameter0: sun.text.normalizer.UnicodeSet;
+        $r1 = new sun.text.normalizer.TrieIterator;
+        $r2 = <sun.text.normalizer.NormalizerImpl$NormTrieImpl: sun.text.normalizer.IntTrie normTrie>;
+        specialinvoke $r1.<sun.text.normalizer.TrieIterator: void <init>(sun.text.normalizer.Trie)>($r2);
+        r3 = $r1;
+        $r9 = new sun.text.normalizer.RangeValueIterator$Element;
+        specialinvoke $r9.<sun.text.normalizer.RangeValueIterator$Element: void <init>()>();
+        r4 = $r9;
+
+     label0:
+        $z0 = virtualinvoke r3.<sun.text.normalizer.TrieIterator: boolean next(sun.text.normalizer.RangeValueIterator$Element)>(r4);
+        if $z0 == 0 goto label1;
+
+        $i1 = r4.<sun.text.normalizer.RangeValueIterator$Element: int start>;
+        virtualinvoke r0.<sun.text.normalizer.UnicodeSet: sun.text.normalizer.UnicodeSet add(int)>($i1);
+        goto label0;
+
+     label1:
+        $r11 = new sun.text.normalizer.TrieIterator;
+        $r12 = <sun.text.normalizer.NormalizerImpl$FCDTrieImpl: sun.text.normalizer.CharTrie fcdTrie>;
+        specialinvoke $r11.<sun.text.normalizer.TrieIterator: void <init>(sun.text.normalizer.Trie)>($r12);
+        r5 = $r11;
+        $r13 = new sun.text.normalizer.RangeValueIterator$Element;
+        specialinvoke $r13.<sun.text.normalizer.RangeValueIterator$Element: void <init>()>();
+        r6 = $r13;
+
+     label2:
+        $z1 = virtualinvoke r5.<sun.text.normalizer.TrieIterator: boolean next(sun.text.normalizer.RangeValueIterator$Element)>(r6);
+        if $z1 == 0 goto label3;
+
+        $i2 = r6.<sun.text.normalizer.RangeValueIterator$Element: int start>;
+        virtualinvoke r0.<sun.text.normalizer.UnicodeSet: sun.text.normalizer.UnicodeSet add(int)>($i2);
+        goto label2;
+
+     label3:
+        $z2 = <sun.text.normalizer.NormalizerImpl: boolean isFormatVersion_2_1>;
+        if $z2 == 0 goto label5;
+
+        $r15 = new sun.text.normalizer.TrieIterator;
+        $r16 = <sun.text.normalizer.NormalizerImpl$AuxTrieImpl: sun.text.normalizer.CharTrie auxTrie>;
+        specialinvoke $r15.<sun.text.normalizer.TrieIterator: void <init>(sun.text.normalizer.Trie)>($r16);
+        r7 = $r15;
+        $r17 = new sun.text.normalizer.RangeValueIterator$Element;
+        specialinvoke $r17.<sun.text.normalizer.RangeValueIterator$Element: void <init>()>();
+        r8 = $r17;
+
+     label4:
+        $z3 = virtualinvoke r7.<sun.text.normalizer.TrieIterator: boolean next(sun.text.normalizer.RangeValueIterator$Element)>(r8);
+        if $z3 == 0 goto label5;
+
+        $i3 = r8.<sun.text.normalizer.RangeValueIterator$Element: int start>;
+        virtualinvoke r0.<sun.text.normalizer.UnicodeSet: sun.text.normalizer.UnicodeSet add(int)>($i3);
+        goto label4;
+
+     label5:
+        i0 = 44032;
+
+     label6:
+        if i0 >= 55204 goto label7;
+
+        virtualinvoke r0.<sun.text.normalizer.UnicodeSet: sun.text.normalizer.UnicodeSet add(int)>(i0);
+        $i4 = i0 + 1;
+        virtualinvoke r0.<sun.text.normalizer.UnicodeSet: sun.text.normalizer.UnicodeSet add(int)>($i4);
+        i0 = i0 + 28;
+        goto label6;
+
+     label7:
+        virtualinvoke r0.<sun.text.normalizer.UnicodeSet: sun.text.normalizer.UnicodeSet add(int)>(55204);
+        return r0;
+    }
+
+    public static final int quickCheck(int, int)
+    {
+        int i0, i1, i2, $i4, $i5, $i6;
+        int[] r0, $r1;
+        long $l3;
+
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        $r1 = newarray (int)[6];
+        $r1[0] = 0;
+        $r1[1] = 0;
+        $r1[2] = 4;
+        $r1[3] = 8;
+        $r1[4] = 17;
+        $r1[5] = 34;
+        r0 = $r1;
+        $l3 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32(int)>(i0);
+        $i4 = (int) $l3;
+        $i5 = r0[i1];
+        i2 = $i4 & $i5;
+        if i2 != 0 goto label0;
+
+        return 1;
+
+     label0:
+        $i6 = i2 & 15;
+        if $i6 == 0 goto label1;
+
+        return 0;
+
+     label1:
+        return 2;
+    }
+
+    private static int strCompare(char[], int, int, char[], int, int, boolean)
+    {
+        char[] r0, r1;
+        int i0, i1, i2, i3, i4, i5, i6, i7, i9, i12, i13, $i14, $i15, $i17, $i19, $i20, $i21, $i23, $i25, $i26;
+        boolean z0, $z1, $z2, $z3, $z4, $z5, $z6;
+        byte b8;
+        char c10, c11, $c16, $c18, $c22, $c24;
+
+        r0 := @parameter0: char[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        r1 := @parameter3: char[];
+        i2 := @parameter4: int;
+        i3 := @parameter5: int;
+        z0 := @parameter6: boolean;
+        i4 = i0;
+        i5 = i2;
+        i6 = i1 - i0;
+        i7 = i3 - i2;
+        if i6 >= i7 goto label0;
+
+        b8 = -1;
+        i9 = i4 + i6;
+        goto label2;
+
+     label0:
+        if i6 != i7 goto label1;
+
+        b8 = 0;
+        i9 = i4 + i6;
+        goto label2;
+
+     label1:
+        b8 = 1;
+        i9 = i4 + i7;
+
+     label2:
+        if r0 != r1 goto label3;
+
+        return b8;
+
+     label3:
+        if i0 != i9 goto label4;
+
+        return b8;
+
+     label4:
+        c10 = r0[i0];
+        c11 = r1[i2];
+        if c10 == c11 goto label5;
+
+        goto label6;
+
+     label5:
+        i0 = i0 + 1;
+        i2 = i2 + 1;
+        goto label3;
+
+     label6:
+        i13 = i4 + i6;
+        i12 = i5 + i7;
+        if c10 < 55296 goto label12;
+
+        if c11 < 55296 goto label12;
+
+        if z0 == 0 goto label12;
+
+        if c10 > 56319 goto label7;
+
+        $i14 = i0 + 1;
+        if $i14 == i13 goto label7;
+
+        $i15 = i0 + 1;
+        $c16 = r0[$i15];
+        $z1 = staticinvoke <sun.text.normalizer.UTF16: boolean isTrailSurrogate(char)>($c16);
+        if $z1 != 0 goto label9;
+
+     label7:
+        $z2 = staticinvoke <sun.text.normalizer.UTF16: boolean isTrailSurrogate(char)>(c10);
+        if $z2 == 0 goto label8;
+
+        if i4 == i0 goto label8;
+
+        $i17 = i0 - 1;
+        $c18 = r0[$i17];
+        $z3 = staticinvoke <sun.text.normalizer.UTF16: boolean isLeadSurrogate(char)>($c18);
+        if $z3 == 0 goto label8;
+
+        goto label9;
+
+     label8:
+        $i19 = c10 - 10240;
+        c10 = (char) $i19;
+
+     label9:
+        if c11 > 56319 goto label10;
+
+        $i20 = i2 + 1;
+        if $i20 == i12 goto label10;
+
+        $i21 = i2 + 1;
+        $c22 = r1[$i21];
+        $z4 = staticinvoke <sun.text.normalizer.UTF16: boolean isTrailSurrogate(char)>($c22);
+        if $z4 != 0 goto label12;
+
+     label10:
+        $z5 = staticinvoke <sun.text.normalizer.UTF16: boolean isTrailSurrogate(char)>(c11);
+        if $z5 == 0 goto label11;
+
+        if i5 == i2 goto label11;
+
+        $i23 = i2 - 1;
+        $c24 = r1[$i23];
+        $z6 = staticinvoke <sun.text.normalizer.UTF16: boolean isLeadSurrogate(char)>($c24);
+        if $z6 == 0 goto label11;
+
+        goto label12;
+
+     label11:
+        $i25 = c11 - 10240;
+        c11 = (char) $i25;
+
+     label12:
+        $i26 = c10 - c11;
+        return $i26;
+    }
+
+    private static final synchronized sun.text.normalizer.UnicodeSet internalGetNXHangul()
+    {
+        sun.text.normalizer.UnicodeSet[] $r0, $r3, $r4;
+        sun.text.normalizer.UnicodeSet $r1, $r2, $r5;
+
+        $r0 = <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet[] nxCache>;
+        $r2 = $r0[1];
+        if $r2 != null goto label0;
+
+        $r3 = <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet[] nxCache>;
+        $r1 = new sun.text.normalizer.UnicodeSet;
+        specialinvoke $r1.<sun.text.normalizer.UnicodeSet: void <init>(int,int)>(44032, 55203);
+        $r3[1] = $r1;
+
+     label0:
+        $r4 = <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet[] nxCache>;
+        $r5 = $r4[1];
+        return $r5;
+    }
+
+    private static final synchronized sun.text.normalizer.UnicodeSet internalGetNXCJKCompat()
+    {
+        sun.text.normalizer.UnicodeSet[] $r0, $r9, $r10;
+        sun.text.normalizer.UnicodeSet r1, r2, $r4, $r5, $r6, $r11;
+        sun.text.normalizer.UnicodeSetIterator r3, $r7;
+        int i0, i1, $i3, $i4;
+        long l2, $l5;
+        boolean $z0;
+        byte $b6;
+
+        $r0 = <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet[] nxCache>;
+        $r4 = $r0[2];
+        if $r4 != null goto label4;
+
+        $r5 = new sun.text.normalizer.UnicodeSet;
+        specialinvoke $r5.<sun.text.normalizer.UnicodeSet: void <init>(java.lang.String)>("[:Ideographic:]");
+        r1 = $r5;
+        $r6 = new sun.text.normalizer.UnicodeSet;
+        specialinvoke $r6.<sun.text.normalizer.UnicodeSet: void <init>()>();
+        r2 = $r6;
+        $r7 = new sun.text.normalizer.UnicodeSetIterator;
+        specialinvoke $r7.<sun.text.normalizer.UnicodeSetIterator: void <init>(sun.text.normalizer.UnicodeSet)>(r1);
+        r3 = $r7;
+
+     label0:
+        $z0 = virtualinvoke r3.<sun.text.normalizer.UnicodeSetIterator: boolean nextRange()>();
+        if $z0 == 0 goto label3;
+
+        $i3 = r3.<sun.text.normalizer.UnicodeSetIterator: int codepoint>;
+        $i4 = <sun.text.normalizer.UnicodeSetIterator: int IS_STRING>;
+        if $i3 == $i4 goto label3;
+
+        i0 = r3.<sun.text.normalizer.UnicodeSetIterator: int codepoint>;
+        i1 = r3.<sun.text.normalizer.UnicodeSetIterator: int codepointEnd>;
+
+     label1:
+        if i0 > i1 goto label0;
+
+        l2 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32(int)>(i0);
+        $l5 = l2 & 4L;
+        $b6 = $l5 cmp 0L;
+        if $b6 <= 0 goto label2;
+
+        virtualinvoke r2.<sun.text.normalizer.UnicodeSet: sun.text.normalizer.UnicodeSet add(int)>(i0);
+
+     label2:
+        i0 = i0 + 1;
+        goto label1;
+
+     label3:
+        $r9 = <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet[] nxCache>;
+        $r9[2] = r2;
+
+     label4:
+        $r10 = <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet[] nxCache>;
+        $r11 = $r10[2];
+        return $r11;
+    }
+
+    private static final synchronized sun.text.normalizer.UnicodeSet internalGetNXUnicode(int)
+    {
+        int i0, i1;
+        sun.text.normalizer.UnicodeSet r0, $r2, $r3, $r7;
+        sun.text.normalizer.UnicodeSet[] $r1, $r5, $r6;
+
+        i0 := @parameter0: int;
+        i1 = i0 & 224;
+        if i1 != 0 goto label0;
+
+        return null;
+
+     label0:
+        $r1 = <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet[] nxCache>;
+        $r2 = $r1[i1];
+        if $r2 != null goto label4;
+
+        $r3 = new sun.text.normalizer.UnicodeSet;
+        specialinvoke $r3.<sun.text.normalizer.UnicodeSet: void <init>()>();
+        r0 = $r3;
+        lookupswitch(i1)
+        {
+            case 32: goto label1;
+            default: goto label2;
+        };
+
+     label1:
+        virtualinvoke r0.<sun.text.normalizer.UnicodeSet: sun.text.normalizer.UnicodeSet applyPattern(java.lang.String)>("[:^Age=3.2:]");
+        goto label3;
+
+     label2:
+        return null;
+
+     label3:
+        $r5 = <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet[] nxCache>;
+        $r5[i1] = r0;
+
+     label4:
+        $r6 = <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet[] nxCache>;
+        $r7 = $r6[i1];
+        return $r7;
+    }
+
+    private static final synchronized sun.text.normalizer.UnicodeSet internalGetNX(int)
+    {
+        int i0, i1, $i2, $i3, $i4, $i5, $i6;
+        sun.text.normalizer.UnicodeSet r0, r1, $r3, $r4, $r5, $r6, $r7, $r8, $r10, r11, $r13, r14, $r18;
+        sun.text.normalizer.UnicodeSet[] $r2, $r16, $r17;
+
+        i0 := @parameter0: int;
+        i1 = i0 & 255;
+        $r2 = <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet[] nxCache>;
+        $r3 = $r2[i1];
+        if $r3 != null goto label6;
+
+        if i1 != 1 goto label0;
+
+        $r4 = staticinvoke <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet internalGetNXHangul()>();
+        return $r4;
+
+     label0:
+        if i1 != 2 goto label1;
+
+        $r5 = staticinvoke <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet internalGetNXCJKCompat()>();
+        return $r5;
+
+     label1:
+        $i2 = i1 & 224;
+        if $i2 == 0 goto label2;
+
+        $i3 = i1 & 31;
+        if $i3 != 0 goto label2;
+
+        $r6 = staticinvoke <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet internalGetNXUnicode(int)>(i1);
+        return $r6;
+
+     label2:
+        $r7 = new sun.text.normalizer.UnicodeSet;
+        specialinvoke $r7.<sun.text.normalizer.UnicodeSet: void <init>()>();
+        r0 = $r7;
+        $i4 = i1 & 1;
+        if $i4 == 0 goto label3;
+
+        $r8 = staticinvoke <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet internalGetNXHangul()>();
+        r1 = $r8;
+        if null == $r8 goto label3;
+
+        virtualinvoke r0.<sun.text.normalizer.UnicodeSet: sun.text.normalizer.UnicodeSet addAll(sun.text.normalizer.UnicodeSet)>(r1);
+
+     label3:
+        $i5 = i1 & 2;
+        if $i5 == 0 goto label4;
+
+        $r10 = staticinvoke <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet internalGetNXCJKCompat()>();
+        r11 = $r10;
+        if null == $r10 goto label4;
+
+        virtualinvoke r0.<sun.text.normalizer.UnicodeSet: sun.text.normalizer.UnicodeSet addAll(sun.text.normalizer.UnicodeSet)>(r11);
+
+     label4:
+        $i6 = i1 & 224;
+        if $i6 == 0 goto label5;
+
+        $r13 = staticinvoke <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet internalGetNXUnicode(int)>(i1);
+        r14 = $r13;
+        if null == $r13 goto label5;
+
+        virtualinvoke r0.<sun.text.normalizer.UnicodeSet: sun.text.normalizer.UnicodeSet addAll(sun.text.normalizer.UnicodeSet)>(r14);
+
+     label5:
+        $r16 = <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet[] nxCache>;
+        $r16[i1] = r0;
+
+     label6:
+        $r17 = <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet[] nxCache>;
+        $r18 = $r17[i1];
+        return $r18;
+    }
+
+    public static final sun.text.normalizer.UnicodeSet getNX(int)
+    {
+        int i0, $i1, i2;
+        sun.text.normalizer.UnicodeSet $r0;
+
+        i0 := @parameter0: int;
+        $i1 = i0 & 255;
+        i2 = $i1;
+        if $i1 != 0 goto label0;
+
+        return null;
+
+     label0:
+        $r0 = staticinvoke <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet internalGetNX(int)>(i2);
+        return $r0;
+    }
+
+    private static final boolean nx_contains(sun.text.normalizer.UnicodeSet, int)
+    {
+        sun.text.normalizer.UnicodeSet r0;
+        int i0;
+        boolean $z0, $z1;
+
+        r0 := @parameter0: sun.text.normalizer.UnicodeSet;
+        i0 := @parameter1: int;
+        if r0 == null goto label0;
+
+        $z0 = virtualinvoke r0.<sun.text.normalizer.UnicodeSet: boolean contains(int)>(i0);
+        if $z0 == 0 goto label0;
+
+        $z1 = 1;
+        goto label1;
+
+     label0:
+        $z1 = 0;
+
+     label1:
+        return $z1;
+    }
+
+    private static final boolean nx_contains(sun.text.normalizer.UnicodeSet, char, char)
+    {
+        sun.text.normalizer.UnicodeSet r0;
+        char c0, c1;
+        int $i2;
+        boolean $z0, $z1;
+
+        r0 := @parameter0: sun.text.normalizer.UnicodeSet;
+        c0 := @parameter1: char;
+        c1 := @parameter2: char;
+        if r0 == null goto label2;
+
+        if c1 != 0 goto label0;
+
+        $i2 = c0;
+        goto label1;
+
+     label0:
+        $i2 = staticinvoke <sun.text.normalizer.UCharacterProperty: int getRawSupplementary(char,char)>(c0, c1);
+
+     label1:
+        $z0 = virtualinvoke r0.<sun.text.normalizer.UnicodeSet: boolean contains(int)>($i2);
+        if $z0 == 0 goto label2;
+
+        $z1 = 1;
+        goto label3;
+
+     label2:
+        $z1 = 0;
+
+     label3:
+        return $z1;
+    }
+
+    public static int getDecompose(int[], java.lang.String[])
+    {
+        int[] r0;
+        java.lang.String[] r1;
+        sun.text.normalizer.NormalizerImpl$DecomposeArgs $r2, r3;
+        boolean z0, z1;
+        long l0, l3, $l4;
+        int i1, i2, $i6, i7, $i8, $i9;
+        char[] $r4;
+        byte $b5;
+        java.lang.String $r5;
+
+        r0 := @parameter0: int[];
+        r1 := @parameter1: java.lang.String[];
+        $r2 = new sun.text.normalizer.NormalizerImpl$DecomposeArgs;
+        specialinvoke $r2.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: void <init>(sun.text.normalizer.NormalizerImpl$1)>(null);
+        r3 = $r2;
+        z0 = 0;
+        l0 = 0L;
+        i1 = -1;
+        z1 = 0;
+        i2 = 0;
+
+     label0:
+        i1 = i1 + 1;
+        if i1 >= 195102 goto label4;
+
+        if i1 != 12543 goto label1;
+
+        i1 = 63744;
+        goto label3;
+
+     label1:
+        if i1 != 65536 goto label2;
+
+        i1 = 119134;
+        goto label3;
+
+     label2:
+        if i1 != 119233 goto label3;
+
+        i1 = 194560;
+
+     label3:
+        l3 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32(int)>(i1);
+        $l4 = l3 & 4L;
+        $b5 = $l4 cmp 0L;
+        if $b5 == 0 goto label0;
+
+        $i6 = lengthof r0;
+        if i2 >= $i6 goto label0;
+
+        r0[i2] = i1;
+        i7 = staticinvoke <sun.text.normalizer.NormalizerImpl: int decompose(long,sun.text.normalizer.NormalizerImpl$DecomposeArgs)>(l3, r3);
+        $i8 = i2;
+        i2 = i2 + 1;
+        $r5 = new java.lang.String;
+        $r4 = <sun.text.normalizer.NormalizerImpl: char[] extraData>;
+        $i9 = r3.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int length>;
+        specialinvoke $r5.<java.lang.String: void <init>(char[],int,int)>($r4, i7, $i9);
+        r1[$i8] = $r5;
+        goto label0;
+
+     label4:
+        return i2;
+    }
+
+    private static boolean needSingleQuotation(char)
+    {
+        char c0;
+        boolean $z0;
+
+        c0 := @parameter0: char;
+        if c0 < 9 goto label0;
+
+        if c0 <= 13 goto label4;
+
+     label0:
+        if c0 < 32 goto label1;
+
+        if c0 <= 47 goto label4;
+
+     label1:
+        if c0 < 58 goto label2;
+
+        if c0 <= 64 goto label4;
+
+     label2:
+        if c0 < 91 goto label3;
+
+        if c0 <= 96 goto label4;
+
+     label3:
+        if c0 < 123 goto label5;
+
+        if c0 > 126 goto label5;
+
+     label4:
+        $z0 = 1;
+        goto label6;
+
+     label5:
+        $z0 = 0;
+
+     label6:
+        return $z0;
+    }
+
+    public static java.lang.String canonicalDecomposeWithSingleQuotation(java.lang.String)
+    {
+        java.lang.String r0, $r9;
+        char[] r1, r2, r3, r4, r8;
+        int i0, i1, i2, i3, i7, i8, i13, i14, $i16, $i17, $i18, $i25, i26, $i33, i34, i35, i36, $i37, $i38, $i39, i40, i41, i42, $i43, $i44, i46, i47, i48, i50, $i51, $i52, $i54, $i55, $i56;
+        char c4, c5, c6, c10, c15, $c20, $c27, $c45, $c49, $c53, $c57;
+        long l9, $l21, $l22, $l23, $l28, $l29, $l31, $l32;
+        boolean z0, $z1, $z2, $z3, $z4;
+        byte b11, b12, $b19, $b24, $b30;
+        sun.text.normalizer.NormalizerImpl$DecomposeArgs r5, $r7;
+        int[] $r6;
+
+        r0 := @parameter0: java.lang.String;
+        r1 = virtualinvoke r0.<java.lang.String: char[] toCharArray()>();
+        i0 = 0;
+        i1 = lengthof r1;
+        $i16 = lengthof r1;
+        $i17 = $i16 * 3;
+        r2 = newarray (char)[$i17];
+        i2 = 0;
+        i3 = lengthof r2;
+        r3 = newarray (char)[3];
+        c4 = 4;
+        $r6 = <sun.text.normalizer.NormalizerImpl: int[] indexes>;
+        $i18 = $r6[8];
+        c5 = (char) $i18;
+        c6 = 65280 | c4;
+        i7 = 0;
+        i8 = 0;
+        l9 = 0L;
+        c10 = 0;
+        z0 = 0;
+        $b19 = -1;
+        b11 = $b19;
+        b12 = $b19;
+
+     label0:
+        i13 = i0;
+
+     label1:
+        if i0 == i1 goto label3;
+
+        $c20 = r1[i0];
+        c10 = $c20;
+        if $c20 < c5 goto label2;
+
+        $l21 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32(char)>(c10);
+        l9 = $l21;
+        $l22 = (long) c6;
+        $l23 = $l21 & $l22;
+        $b24 = $l23 cmp 0L;
+        if $b24 == 0 goto label2;
+
+        if c10 < 44032 goto label3;
+
+        if c10 > 55203 goto label3;
+
+     label2:
+        i8 = 0;
+        i0 = i0 + 1;
+        goto label1;
+
+     label3:
+        if i0 == i13 goto label5;
+
+        i14 = i0 - i13;
+        $i25 = i2 + i14;
+        if $i25 > i3 goto label4;
+
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r1, i13, r2, i2, i14);
+
+     label4:
+        i2 = i2 + i14;
+        i7 = i2;
+
+     label5:
+        if i0 != i1 goto label6;
+
+        goto label20;
+
+     label6:
+        i0 = i0 + 1;
+        $z1 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean isNorm32Regular(long)>(l9);
+        if $z1 == 0 goto label7;
+
+        c15 = 0;
+        i26 = 1;
+        goto label9;
+
+     label7:
+        if i0 == i1 goto label8;
+
+        $c27 = r1[i0];
+        c15 = $c27;
+        $z2 = staticinvoke <java.lang.Character: boolean isLowSurrogate(char)>($c27);
+        if $z2 == 0 goto label8;
+
+        i0 = i0 + 1;
+        i26 = 2;
+        l9 = staticinvoke <sun.text.normalizer.NormalizerImpl: long getNorm32FromSurrogatePair(long,char)>(l9, c15);
+        goto label9;
+
+     label8:
+        c15 = 0;
+        i26 = 1;
+        l9 = 0L;
+
+     label9:
+        $l28 = (long) c4;
+        $l29 = l9 & $l28;
+        $b30 = $l29 cmp 0L;
+        if $b30 != 0 goto label10;
+
+        $l31 = l9 >> 8;
+        $l32 = 255L & $l31;
+        $i33 = (int) $l32;
+        i34 = $i33;
+        i35 = $i33;
+        r4 = null;
+        i36 = -1;
+        goto label11;
+
+     label10:
+        $r7 = new sun.text.normalizer.NormalizerImpl$DecomposeArgs;
+        specialinvoke $r7.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: void <init>(sun.text.normalizer.NormalizerImpl$1)>(null);
+        r5 = $r7;
+        i36 = staticinvoke <sun.text.normalizer.NormalizerImpl: int decompose(long,int,sun.text.normalizer.NormalizerImpl$DecomposeArgs)>(l9, c4, r5);
+        r4 = <sun.text.normalizer.NormalizerImpl: char[] extraData>;
+        i26 = r5.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int length>;
+        i35 = r5.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int cc>;
+        i34 = r5.<sun.text.normalizer.NormalizerImpl$DecomposeArgs: int trailCC>;
+        if i26 != 1 goto label11;
+
+        c10 = r4[i36];
+        c15 = 0;
+        r4 = null;
+        i36 = -1;
+
+     label11:
+        $i37 = i26 * 3;
+        $i38 = i2 + $i37;
+        if $i38 < i3 goto label12;
+
+        $i39 = i3 * 2;
+        r8 = newarray (char)[$i39];
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r2, 0, r8, 0, i2);
+        r2 = r8;
+        i3 = lengthof r2;
+
+     label12:
+        i40 = i2;
+        if r4 != null goto label15;
+
+        $z3 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean needSingleQuotation(char)>(c10);
+        if $z3 == 0 goto label13;
+
+        i41 = i2 + 1;
+        r2[i2] = 39;
+        i42 = i41 + 1;
+        r2[i41] = c10;
+        i2 = i42 + 1;
+        r2[i42] = 39;
+        i34 = 0;
+        goto label19;
+
+     label13:
+        if i35 == 0 goto label14;
+
+        if i35 >= i8 goto label14;
+
+        i2 = i2 + i26;
+        i34 = staticinvoke <sun.text.normalizer.NormalizerImpl: int insertOrdered(char[],int,int,int,char,char,int)>(r2, i7, i40, i2, c10, c15, i35);
+        goto label19;
+
+     label14:
+        $i43 = i2;
+        i2 = i2 + 1;
+        r2[$i43] = c10;
+        if c15 == 0 goto label19;
+
+        $i44 = i2;
+        i2 = i2 + 1;
+        r2[$i44] = c15;
+        goto label19;
+
+     label15:
+        $c45 = r4[i36];
+        $z4 = staticinvoke <sun.text.normalizer.NormalizerImpl: boolean needSingleQuotation(char)>($c45);
+        if $z4 == 0 goto label17;
+
+        i46 = i2 + 1;
+        r2[i2] = 39;
+        i47 = i46 + 1;
+        i48 = i36 + 1;
+        $c49 = r4[i36];
+        r2[i46] = $c49;
+        i2 = i47 + 1;
+        r2[i47] = 39;
+        i50 = i26 + -1;
+
+     label16:
+        $i51 = i2;
+        i2 = i2 + 1;
+        $i52 = i48;
+        i48 = i48 + 1;
+        $c53 = r4[$i52];
+        r2[$i51] = $c53;
+        i50 = i50 + -1;
+        if i50 > 0 goto label16;
+
+        goto label19;
+
+     label17:
+        if i35 == 0 goto label18;
+
+        if i35 >= i8 goto label18;
+
+        i2 = i2 + i26;
+        $i54 = i36 + i26;
+        i34 = staticinvoke <sun.text.normalizer.NormalizerImpl: int mergeOrdered(char[],int,int,char[],int,int)>(r2, i7, i40, r4, i36, $i54);
+        goto label19;
+
+     label18:
+        $i55 = i2;
+        i2 = i2 + 1;
+        $i56 = i36;
+        i36 = i36 + 1;
+        $c57 = r4[$i56];
+        r2[$i55] = $c57;
+        i26 = i26 + -1;
+        if i26 > 0 goto label18;
+
+     label19:
+        i8 = i34;
+        if i8 != 0 goto label0;
+
+        i7 = i2;
+        goto label0;
+
+     label20:
+        $r9 = new java.lang.String;
+        specialinvoke $r9.<java.lang.String: void <init>(char[],int,int)>(r2, 0, i2);
+        return $r9;
+    }
+
+    public static java.lang.String convert(java.lang.String)
+    {
+        java.lang.String r0, $r20;
+        byte b0;
+        java.lang.StringBuffer r1, $r3;
+        sun.text.normalizer.UCharacterIterator r2;
+        int $i1, i2;
+        char[][] $r4, $r7, $r10, $r13, $r16;
+        char[] $r5, $r8, $r11, $r14, $r17;
+
+        r0 := @parameter0: java.lang.String;
+        if r0 != null goto label0;
+
+        return null;
+
+     label0:
+        b0 = -1;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        r1 = $r3;
+        r2 = staticinvoke <sun.text.normalizer.UCharacterIterator: sun.text.normalizer.UCharacterIterator getInstance(java.lang.String)>(r0);
+
+     label1:
+        $i1 = virtualinvoke r2.<sun.text.normalizer.UCharacterIterator: int nextCodePoint()>();
+        i2 = $i1;
+        if $i1 == -1 goto label8;
+
+        lookupswitch(i2)
+        {
+            case 194664: goto label2;
+            case 194676: goto label3;
+            case 194847: goto label4;
+            case 194911: goto label5;
+            case 195007: goto label6;
+            default: goto label7;
+        };
+
+     label2:
+        $r4 = <sun.text.normalizer.NormalizerImpl: char[][] corrigendum4MappingTable>;
+        $r5 = $r4[0];
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char[])>($r5);
+        goto label1;
+
+     label3:
+        $r7 = <sun.text.normalizer.NormalizerImpl: char[][] corrigendum4MappingTable>;
+        $r8 = $r7[1];
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char[])>($r8);
+        goto label1;
+
+     label4:
+        $r10 = <sun.text.normalizer.NormalizerImpl: char[][] corrigendum4MappingTable>;
+        $r11 = $r10[2];
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char[])>($r11);
+        goto label1;
+
+     label5:
+        $r13 = <sun.text.normalizer.NormalizerImpl: char[][] corrigendum4MappingTable>;
+        $r14 = $r13[3];
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char[])>($r14);
+        goto label1;
+
+     label6:
+        $r16 = <sun.text.normalizer.NormalizerImpl: char[][] corrigendum4MappingTable>;
+        $r17 = $r16[4];
+        virtualinvoke r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char[])>($r17);
+        goto label1;
+
+     label7:
+        staticinvoke <sun.text.normalizer.UTF16: java.lang.StringBuffer append(java.lang.StringBuffer,int)>(r1, i2);
+        goto label1;
+
+     label8:
+        $r20 = virtualinvoke r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r20;
+    }
+
+    static void <clinit>()
+    {
+        sun.text.normalizer.NormalizerImpl $r0;
+        java.lang.Exception r1, $r2;
+        java.lang.RuntimeException $r3;
+        java.lang.String $r4;
+        sun.text.normalizer.UnicodeSet[] $r5;
+        char[][] $r6;
+        char[] $r7, $r8, $r9, $r10, $r11;
+
+     label0:
+        $r0 = new sun.text.normalizer.NormalizerImpl;
+        specialinvoke $r0.<sun.text.normalizer.NormalizerImpl: void <init>()>();
+        <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.NormalizerImpl IMPL> = $r0;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r2 := @caughtexception;
+        r1 = $r2;
+        $r3 = new java.lang.RuntimeException;
+        $r4 = virtualinvoke r1.<java.lang.Exception: java.lang.String getMessage()>();
+        specialinvoke $r3.<java.lang.RuntimeException: void <init>(java.lang.String)>($r4);
+        throw $r3;
+
+     label3:
+        $r5 = newarray (sun.text.normalizer.UnicodeSet)[256];
+        <sun.text.normalizer.NormalizerImpl: sun.text.normalizer.UnicodeSet[] nxCache> = $r5;
+        $r6 = newarray (char[])[5];
+        $r7 = newarray (char)[2];
+        $r7[0] = 55364;
+        $r7[1] = 57194;
+        $r6[0] = $r7;
+        $r8 = newarray (char)[1];
+        $r8[0] = 24371;
+        $r6[1] = $r8;
+        $r9 = newarray (char)[1];
+        $r9[0] = 17323;
+        $r6[2] = $r9;
+        $r10 = newarray (char)[1];
+        $r10[0] = 31406;
+        $r6[3] = $r10;
+        $r11 = newarray (char)[1];
+        $r11[0] = 19799;
+        $r6[4] = $r11;
+        <sun.text.normalizer.NormalizerImpl: char[][] corrigendum4MappingTable> = $r6;
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+}

@@ -1,0 +1,1083 @@
+class sun.nio.fs.UnixCopyFile extends java.lang.Object
+{
+
+    private void <init>()
+    {
+        sun.nio.fs.UnixCopyFile r0;
+
+        r0 := @this: sun.nio.fs.UnixCopyFile;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    private static void copyDirectory(sun.nio.fs.UnixPath, sun.nio.fs.UnixFileAttributes, sun.nio.fs.UnixPath, sun.nio.fs.UnixCopyFile$Flags) throws java.io.IOException
+    {
+        sun.nio.fs.UnixPath r0, r2;
+        sun.nio.fs.UnixFileAttributes r1;
+        sun.nio.fs.UnixCopyFile$Flags r3;
+        sun.nio.fs.UnixException r4, r5, r6, r7, r10, $r11, $r12, $r13, $r14, r15, $r16, $r25, r26, $r27, r28, $r30;
+        java.util.concurrent.TimeUnit $r8, $r19, $r22, $r24;
+        java.lang.Throwable r9, $r29;
+        int $i0, i1, $i2, $i3, $i4, $i5, $i6, $i7, i8;
+        boolean $z0, $z1, $z2, $z3, $z4, z5, $z6, $z7, $z8, $z9, $z10, $z11;
+        sun.nio.fs.UnixFileSystem $r17;
+        java.nio.file.attribute.FileTime $r18, $r20, $r21, $r23;
+        long $l9, $l10, $l11, $l12;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        r1 := @parameter1: sun.nio.fs.UnixFileAttributes;
+        r2 := @parameter2: sun.nio.fs.UnixPath;
+        r3 := @parameter3: sun.nio.fs.UnixCopyFile$Flags;
+
+     label0:
+        $i0 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: int mode()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void mkdir(sun.nio.fs.UnixPath,int)>(r2, $i0);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r11 := @caughtexception;
+        r4 = $r11;
+        virtualinvoke r4.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r2);
+
+     label3:
+        $z0 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean copyBasicAttributes>;
+        if $z0 != 0 goto label4;
+
+        $z1 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean copyPosixAttributes>;
+        if $z1 != 0 goto label4;
+
+        $z2 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean copyNonPosixAttributes>;
+        if $z2 != 0 goto label4;
+
+        return;
+
+     label4:
+        i1 = -1;
+
+     label5:
+        i1 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: int open(sun.nio.fs.UnixPath,int,int)>(r2, 0, 0);
+
+     label6:
+        goto label12;
+
+     label7:
+        $r12 := @caughtexception;
+        r5 = $r12;
+        $z3 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean copyNonPosixAttributes>;
+        if $z3 == 0 goto label12;
+
+        $z4 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean failIfUnableToCopyNonPosix>;
+        if $z4 == 0 goto label12;
+
+     label8:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void rmdir(sun.nio.fs.UnixPath)>(r2);
+
+     label9:
+        goto label11;
+
+     label10:
+        $r13 := @caughtexception;
+        r6 = $r13;
+
+     label11:
+        virtualinvoke r5.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r2);
+
+     label12:
+        z5 = 0;
+
+     label13:
+        $z6 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean copyPosixAttributes>;
+        if $z6 == 0 goto label18;
+
+     label14:
+        if i1 < 0 goto label15;
+
+        $i2 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: int uid()>();
+        $i3 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: int gid()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void fchown(int,int,int)>(i1, $i2, $i3);
+        $i4 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: int mode()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void fchmod(int,int)>(i1, $i4);
+        goto label16;
+
+     label15:
+        $i5 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: int uid()>();
+        $i6 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: int gid()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void chown(sun.nio.fs.UnixPath,int,int)>(r2, $i5, $i6);
+        $i7 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: int mode()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void chmod(sun.nio.fs.UnixPath,int)>(r2, $i7);
+
+     label16:
+        goto label18;
+
+     label17:
+        $r14 := @caughtexception;
+        r15 = $r14;
+        $z7 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean failIfUnableToCopyPosix>;
+        if $z7 == 0 goto label18;
+
+        virtualinvoke r15.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r2);
+
+     label18:
+        $z8 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean copyNonPosixAttributes>;
+        if $z8 == 0 goto label23;
+
+        if i1 < 0 goto label23;
+
+        i8 = -1;
+
+     label19:
+        i8 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: int open(sun.nio.fs.UnixPath,int,int)>(r0, 0, 0);
+
+     label20:
+        goto label22;
+
+     label21:
+        $r16 := @caughtexception;
+        r7 = $r16;
+        $z9 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean failIfUnableToCopyNonPosix>;
+        if $z9 == 0 goto label22;
+
+        virtualinvoke r7.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r0);
+
+     label22:
+        if i8 < 0 goto label23;
+
+        $r17 = virtualinvoke r0.<sun.nio.fs.UnixPath: sun.nio.fs.UnixFileSystem getFileSystem()>();
+        virtualinvoke $r17.<sun.nio.fs.UnixFileSystem: void copyNonPosixAttributes(int,int)>(i8, i1);
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void close(int)>(i8);
+
+     label23:
+        $z10 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean copyBasicAttributes>;
+        if $z10 == 0 goto label28;
+
+     label24:
+        if i1 < 0 goto label25;
+
+        $r18 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: java.nio.file.attribute.FileTime lastAccessTime()>();
+        $r19 = <java.util.concurrent.TimeUnit: java.util.concurrent.TimeUnit MICROSECONDS>;
+        $l9 = virtualinvoke $r18.<java.nio.file.attribute.FileTime: long 'to'(java.util.concurrent.TimeUnit)>($r19);
+        $r20 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: java.nio.file.attribute.FileTime lastModifiedTime()>();
+        $r8 = <java.util.concurrent.TimeUnit: java.util.concurrent.TimeUnit MICROSECONDS>;
+        $l10 = virtualinvoke $r20.<java.nio.file.attribute.FileTime: long 'to'(java.util.concurrent.TimeUnit)>($r8);
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void futimes(int,long,long)>(i1, $l9, $l10);
+        goto label26;
+
+     label25:
+        $r21 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: java.nio.file.attribute.FileTime lastAccessTime()>();
+        $r22 = <java.util.concurrent.TimeUnit: java.util.concurrent.TimeUnit MICROSECONDS>;
+        $l11 = virtualinvoke $r21.<java.nio.file.attribute.FileTime: long 'to'(java.util.concurrent.TimeUnit)>($r22);
+        $r23 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: java.nio.file.attribute.FileTime lastModifiedTime()>();
+        $r24 = <java.util.concurrent.TimeUnit: java.util.concurrent.TimeUnit MICROSECONDS>;
+        $l12 = virtualinvoke $r23.<java.nio.file.attribute.FileTime: long 'to'(java.util.concurrent.TimeUnit)>($r24);
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void utimes(sun.nio.fs.UnixPath,long,long)>(r2, $l11, $l12);
+
+     label26:
+        goto label28;
+
+     label27:
+        $r25 := @caughtexception;
+        r26 = $r25;
+        $z11 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean failIfUnableToCopyBasic>;
+        if $z11 == 0 goto label28;
+
+        virtualinvoke r26.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r2);
+
+     label28:
+        z5 = 1;
+
+     label29:
+        if i1 < 0 goto label30;
+
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void close(int)>(i1);
+
+     label30:
+        if z5 != 0 goto label42;
+
+     label31:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void rmdir(sun.nio.fs.UnixPath)>(r2);
+
+     label32:
+        goto label42;
+
+     label33:
+        $r27 := @caughtexception;
+        r28 = $r27;
+        goto label42;
+
+     label34:
+        $r29 := @caughtexception;
+
+     label35:
+        r9 = $r29;
+
+     label36:
+        if i1 < 0 goto label37;
+
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void close(int)>(i1);
+
+     label37:
+        if z5 != 0 goto label41;
+
+     label38:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void rmdir(sun.nio.fs.UnixPath)>(r2);
+
+     label39:
+        goto label41;
+
+     label40:
+        $r30 := @caughtexception;
+        r10 = $r30;
+
+     label41:
+        throw r9;
+
+     label42:
+        return;
+
+        catch sun.nio.fs.UnixException from label0 to label1 with label2;
+        catch sun.nio.fs.UnixException from label5 to label6 with label7;
+        catch sun.nio.fs.UnixException from label8 to label9 with label10;
+        catch sun.nio.fs.UnixException from label14 to label16 with label17;
+        catch sun.nio.fs.UnixException from label19 to label20 with label21;
+        catch sun.nio.fs.UnixException from label24 to label26 with label27;
+        catch sun.nio.fs.UnixException from label31 to label32 with label33;
+        catch java.lang.Throwable from label13 to label29 with label34;
+        catch sun.nio.fs.UnixException from label38 to label39 with label40;
+        catch java.lang.Throwable from label35 to label36 with label34;
+    }
+
+    private static void copyFile(sun.nio.fs.UnixPath, sun.nio.fs.UnixFileAttributes, sun.nio.fs.UnixPath, sun.nio.fs.UnixCopyFile$Flags, long) throws java.io.IOException
+    {
+        sun.nio.fs.UnixPath r0, r2;
+        sun.nio.fs.UnixFileAttributes r1;
+        sun.nio.fs.UnixCopyFile$Flags r3;
+        long l0, $l7, $l8;
+        int i1, i2, $i3, $i4, $i5, $i6;
+        sun.nio.fs.UnixException r4, r5, r6, r9, $r11, $r12, $r13, $r14, r15, $r20, r21, $r22, r23, $r25;
+        java.util.concurrent.TimeUnit $r7, $r18;
+        java.lang.Throwable r8, r10, $r24, $r26;
+        boolean z0, $z1, $z2, $z3, $z4, $z5;
+        sun.nio.fs.UnixFileSystem $r16;
+        java.nio.file.attribute.FileTime $r17, $r19;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        r1 := @parameter1: sun.nio.fs.UnixFileAttributes;
+        r2 := @parameter2: sun.nio.fs.UnixPath;
+        r3 := @parameter3: sun.nio.fs.UnixCopyFile$Flags;
+        l0 := @parameter4: long;
+        i1 = -1;
+
+     label0:
+        i1 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: int open(sun.nio.fs.UnixPath,int,int)>(r0, 0, 0);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r11 := @caughtexception;
+        r4 = $r11;
+        virtualinvoke r4.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r0);
+
+     label3:
+        i2 = -1;
+
+     label4:
+        $i3 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: int mode()>();
+        i2 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: int open(sun.nio.fs.UnixPath,int,int)>(r2, 2561, $i3);
+
+     label5:
+        goto label7;
+
+     label6:
+        $r12 := @caughtexception;
+        r5 = $r12;
+        virtualinvoke r5.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r2);
+
+     label7:
+        z0 = 0;
+
+     label8:
+        staticinvoke <sun.nio.fs.UnixCopyFile: void transfer(int,int,long)>(i2, i1, l0);
+
+     label9:
+        goto label11;
+
+     label10:
+        $r13 := @caughtexception;
+        r6 = $r13;
+        virtualinvoke r6.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath,sun.nio.fs.UnixPath)>(r0, r2);
+
+     label11:
+        $z1 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean copyPosixAttributes>;
+        if $z1 == 0 goto label15;
+
+     label12:
+        $i4 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: int uid()>();
+        $i5 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: int gid()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void fchown(int,int,int)>(i2, $i4, $i5);
+        $i6 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: int mode()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void fchmod(int,int)>(i2, $i6);
+
+     label13:
+        goto label15;
+
+     label14:
+        $r14 := @caughtexception;
+        r15 = $r14;
+        $z2 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean failIfUnableToCopyPosix>;
+        if $z2 == 0 goto label15;
+
+        virtualinvoke r15.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r2);
+
+     label15:
+        $z3 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean copyNonPosixAttributes>;
+        if $z3 == 0 goto label16;
+
+        $r16 = virtualinvoke r0.<sun.nio.fs.UnixPath: sun.nio.fs.UnixFileSystem getFileSystem()>();
+        virtualinvoke $r16.<sun.nio.fs.UnixFileSystem: void copyNonPosixAttributes(int,int)>(i1, i2);
+
+     label16:
+        $z4 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean copyBasicAttributes>;
+        if $z4 == 0 goto label20;
+
+     label17:
+        $r17 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: java.nio.file.attribute.FileTime lastAccessTime()>();
+        $r18 = <java.util.concurrent.TimeUnit: java.util.concurrent.TimeUnit MICROSECONDS>;
+        $l7 = virtualinvoke $r17.<java.nio.file.attribute.FileTime: long 'to'(java.util.concurrent.TimeUnit)>($r18);
+        $r19 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: java.nio.file.attribute.FileTime lastModifiedTime()>();
+        $r7 = <java.util.concurrent.TimeUnit: java.util.concurrent.TimeUnit MICROSECONDS>;
+        $l8 = virtualinvoke $r19.<java.nio.file.attribute.FileTime: long 'to'(java.util.concurrent.TimeUnit)>($r7);
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void futimes(int,long,long)>(i2, $l7, $l8);
+
+     label18:
+        goto label20;
+
+     label19:
+        $r20 := @caughtexception;
+        r21 = $r20;
+        $z5 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean failIfUnableToCopyBasic>;
+        if $z5 == 0 goto label20;
+
+        virtualinvoke r21.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r2);
+
+     label20:
+        z0 = 1;
+
+     label21:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void close(int)>(i2);
+        if z0 != 0 goto label32;
+
+     label22:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void unlink(sun.nio.fs.UnixPath)>(r2);
+
+     label23:
+        goto label32;
+
+     label24:
+        $r22 := @caughtexception;
+        r23 = $r22;
+        goto label32;
+
+     label25:
+        $r24 := @caughtexception;
+
+     label26:
+        r8 = $r24;
+
+     label27:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void close(int)>(i2);
+        if z0 != 0 goto label31;
+
+     label28:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void unlink(sun.nio.fs.UnixPath)>(r2);
+
+     label29:
+        goto label31;
+
+     label30:
+        $r25 := @caughtexception;
+        r9 = $r25;
+
+     label31:
+        throw r8;
+
+     label32:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void close(int)>(i1);
+        goto label36;
+
+     label33:
+        $r26 := @caughtexception;
+
+     label34:
+        r10 = $r26;
+
+     label35:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void close(int)>(i1);
+        throw r10;
+
+     label36:
+        return;
+
+        catch sun.nio.fs.UnixException from label0 to label1 with label2;
+        catch sun.nio.fs.UnixException from label4 to label5 with label6;
+        catch sun.nio.fs.UnixException from label8 to label9 with label10;
+        catch sun.nio.fs.UnixException from label12 to label13 with label14;
+        catch sun.nio.fs.UnixException from label17 to label18 with label19;
+        catch sun.nio.fs.UnixException from label22 to label23 with label24;
+        catch java.lang.Throwable from label8 to label21 with label25;
+        catch sun.nio.fs.UnixException from label28 to label29 with label30;
+        catch java.lang.Throwable from label26 to label27 with label25;
+        catch java.lang.Throwable from label3 to label32 with label33;
+        catch java.lang.Throwable from label34 to label35 with label33;
+    }
+
+    private static void copyLink(sun.nio.fs.UnixPath, sun.nio.fs.UnixFileAttributes, sun.nio.fs.UnixPath, sun.nio.fs.UnixCopyFile$Flags) throws java.io.IOException
+    {
+        sun.nio.fs.UnixPath r0, r2;
+        sun.nio.fs.UnixFileAttributes r1;
+        sun.nio.fs.UnixCopyFile$Flags r3;
+        byte[] r4;
+        sun.nio.fs.UnixException r5, $r6, $r7, r8, $r9, r10;
+        boolean $z0;
+        int $i0, $i1;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        r1 := @parameter1: sun.nio.fs.UnixFileAttributes;
+        r2 := @parameter2: sun.nio.fs.UnixPath;
+        r3 := @parameter3: sun.nio.fs.UnixCopyFile$Flags;
+        r4 = null;
+
+     label0:
+        r4 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: byte[] readlink(sun.nio.fs.UnixPath)>(r0);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r6 := @caughtexception;
+        r5 = $r6;
+        virtualinvoke r5.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r0);
+
+     label3:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void symlink(byte[],sun.nio.fs.UnixPath)>(r4, r2);
+        $z0 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean copyPosixAttributes>;
+        if $z0 == 0 goto label7;
+
+     label4:
+        $i0 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: int uid()>();
+        $i1 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: int gid()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void lchown(sun.nio.fs.UnixPath,int,int)>(r2, $i0, $i1);
+
+     label5:
+        goto label7;
+
+     label6:
+        $r7 := @caughtexception;
+        r8 = $r7;
+
+     label7:
+        goto label9;
+
+     label8:
+        $r9 := @caughtexception;
+        r10 = $r9;
+        virtualinvoke r10.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r2);
+
+     label9:
+        return;
+
+        catch sun.nio.fs.UnixException from label0 to label1 with label2;
+        catch sun.nio.fs.UnixException from label4 to label5 with label6;
+        catch sun.nio.fs.UnixException from label3 to label7 with label8;
+    }
+
+    private static void copySpecial(sun.nio.fs.UnixPath, sun.nio.fs.UnixFileAttributes, sun.nio.fs.UnixPath, sun.nio.fs.UnixCopyFile$Flags) throws java.io.IOException
+    {
+        sun.nio.fs.UnixPath r0, r2;
+        sun.nio.fs.UnixFileAttributes r1;
+        sun.nio.fs.UnixCopyFile$Flags r3;
+        sun.nio.fs.UnixException r4, r5, r8, $r9, $r10, $r14, r15, $r16, r17, $r19;
+        java.util.concurrent.TimeUnit $r6, $r12;
+        java.lang.Throwable r7, $r18;
+        int $i0, $i2, $i3, $i4;
+        long $l1, $l5, $l6;
+        boolean z0, $z1, $z2, $z3, $z4;
+        java.nio.file.attribute.FileTime $r11, $r13;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        r1 := @parameter1: sun.nio.fs.UnixFileAttributes;
+        r2 := @parameter2: sun.nio.fs.UnixPath;
+        r3 := @parameter3: sun.nio.fs.UnixCopyFile$Flags;
+
+     label0:
+        $i0 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: int mode()>();
+        $l1 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: long rdev()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void mknod(sun.nio.fs.UnixPath,int,long)>(r2, $i0, $l1);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r9 := @caughtexception;
+        r4 = $r9;
+        virtualinvoke r4.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r2);
+
+     label3:
+        z0 = 0;
+
+     label4:
+        $z1 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean copyPosixAttributes>;
+        if $z1 == 0 goto label8;
+
+     label5:
+        $i2 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: int uid()>();
+        $i3 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: int gid()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void chown(sun.nio.fs.UnixPath,int,int)>(r2, $i2, $i3);
+        $i4 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: int mode()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void chmod(sun.nio.fs.UnixPath,int)>(r2, $i4);
+
+     label6:
+        goto label8;
+
+     label7:
+        $r10 := @caughtexception;
+        r5 = $r10;
+        $z2 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean failIfUnableToCopyPosix>;
+        if $z2 == 0 goto label8;
+
+        virtualinvoke r5.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r2);
+
+     label8:
+        $z3 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean copyBasicAttributes>;
+        if $z3 == 0 goto label12;
+
+     label9:
+        $r11 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: java.nio.file.attribute.FileTime lastAccessTime()>();
+        $r12 = <java.util.concurrent.TimeUnit: java.util.concurrent.TimeUnit MICROSECONDS>;
+        $l5 = virtualinvoke $r11.<java.nio.file.attribute.FileTime: long 'to'(java.util.concurrent.TimeUnit)>($r12);
+        $r13 = virtualinvoke r1.<sun.nio.fs.UnixFileAttributes: java.nio.file.attribute.FileTime lastModifiedTime()>();
+        $r6 = <java.util.concurrent.TimeUnit: java.util.concurrent.TimeUnit MICROSECONDS>;
+        $l6 = virtualinvoke $r13.<java.nio.file.attribute.FileTime: long 'to'(java.util.concurrent.TimeUnit)>($r6);
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void utimes(sun.nio.fs.UnixPath,long,long)>(r2, $l5, $l6);
+
+     label10:
+        goto label12;
+
+     label11:
+        $r14 := @caughtexception;
+        r15 = $r14;
+        $z4 = r3.<sun.nio.fs.UnixCopyFile$Flags: boolean failIfUnableToCopyBasic>;
+        if $z4 == 0 goto label12;
+
+        virtualinvoke r15.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r2);
+
+     label12:
+        z0 = 1;
+
+     label13:
+        if z0 != 0 goto label24;
+
+     label14:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void unlink(sun.nio.fs.UnixPath)>(r2);
+
+     label15:
+        goto label24;
+
+     label16:
+        $r16 := @caughtexception;
+        r17 = $r16;
+        goto label24;
+
+     label17:
+        $r18 := @caughtexception;
+
+     label18:
+        r7 = $r18;
+
+     label19:
+        if z0 != 0 goto label23;
+
+     label20:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void unlink(sun.nio.fs.UnixPath)>(r2);
+
+     label21:
+        goto label23;
+
+     label22:
+        $r19 := @caughtexception;
+        r8 = $r19;
+
+     label23:
+        throw r7;
+
+     label24:
+        return;
+
+        catch sun.nio.fs.UnixException from label0 to label1 with label2;
+        catch sun.nio.fs.UnixException from label5 to label6 with label7;
+        catch sun.nio.fs.UnixException from label9 to label10 with label11;
+        catch sun.nio.fs.UnixException from label14 to label15 with label16;
+        catch java.lang.Throwable from label4 to label13 with label17;
+        catch sun.nio.fs.UnixException from label20 to label21 with label22;
+        catch java.lang.Throwable from label18 to label19 with label17;
+    }
+
+    static transient void move(sun.nio.fs.UnixPath, sun.nio.fs.UnixPath, java.nio.file.CopyOption[]) throws java.io.IOException
+    {
+        sun.nio.fs.UnixPath r0, r1;
+        java.nio.file.CopyOption[] r2;
+        java.lang.SecurityManager r3;
+        sun.nio.fs.UnixCopyFile$Flags r4;
+        sun.nio.fs.UnixException r5, r7, r8, r9, $r10, $r16, $r17, r18, $r21, $r24, r25, $r26, r27, $r28;
+        sun.nio.fs.UnixFileAttributes r6, r15;
+        boolean $z0, $z1, z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6;
+        java.nio.file.AtomicMoveNotSupportedException $r11;
+        java.lang.String $r12, $r13, $r14, $r20, $r23, $r30;
+        java.nio.file.FileAlreadyExistsException $r19;
+        java.nio.file.DirectoryNotEmptyException $r22, $r29;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        r1 := @parameter1: sun.nio.fs.UnixPath;
+        r2 := @parameter2: java.nio.file.CopyOption[];
+        r3 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r3 == null goto label0;
+
+        virtualinvoke r0.<sun.nio.fs.UnixPath: void checkWrite()>();
+        virtualinvoke r1.<sun.nio.fs.UnixPath: void checkWrite()>();
+
+     label0:
+        r4 = staticinvoke <sun.nio.fs.UnixCopyFile$Flags: sun.nio.fs.UnixCopyFile$Flags fromMoveOptions(java.nio.file.CopyOption[])>(r2);
+        $z0 = r4.<sun.nio.fs.UnixCopyFile$Flags: boolean atomicMove>;
+        if $z0 == 0 goto label6;
+
+     label1:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void rename(sun.nio.fs.UnixPath,sun.nio.fs.UnixPath)>(r0, r1);
+
+     label2:
+        goto label5;
+
+     label3:
+        $r10 := @caughtexception;
+        r5 = $r10;
+        $i0 = virtualinvoke r5.<sun.nio.fs.UnixException: int errno()>();
+        if $i0 != 18 goto label4;
+
+        $r11 = new java.nio.file.AtomicMoveNotSupportedException;
+        $r12 = virtualinvoke r0.<sun.nio.fs.UnixPath: java.lang.String getPathForExceptionMessage()>();
+        $r13 = virtualinvoke r1.<sun.nio.fs.UnixPath: java.lang.String getPathForExceptionMessage()>();
+        $r14 = virtualinvoke r5.<sun.nio.fs.UnixException: java.lang.String errorString()>();
+        specialinvoke $r11.<java.nio.file.AtomicMoveNotSupportedException: void <init>(java.lang.String,java.lang.String,java.lang.String)>($r12, $r13, $r14);
+        throw $r11;
+
+     label4:
+        virtualinvoke r5.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath,sun.nio.fs.UnixPath)>(r0, r1);
+
+     label5:
+        return;
+
+     label6:
+        r15 = null;
+        r6 = null;
+
+     label7:
+        r15 = staticinvoke <sun.nio.fs.UnixFileAttributes: sun.nio.fs.UnixFileAttributes get(sun.nio.fs.UnixPath,boolean)>(r0, 0);
+
+     label8:
+        goto label10;
+
+     label9:
+        $r16 := @caughtexception;
+        r7 = $r16;
+        virtualinvoke r7.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r0);
+
+     label10:
+        r6 = staticinvoke <sun.nio.fs.UnixFileAttributes: sun.nio.fs.UnixFileAttributes get(sun.nio.fs.UnixPath,boolean)>(r1, 0);
+
+     label11:
+        goto label13;
+
+     label12:
+        $r17 := @caughtexception;
+        r18 = $r17;
+
+     label13:
+        if r6 == null goto label14;
+
+        $z1 = 1;
+        goto label15;
+
+     label14:
+        $z1 = 0;
+
+     label15:
+        z2 = $z1;
+        if z2 == 0 goto label23;
+
+        $z3 = virtualinvoke r15.<sun.nio.fs.UnixFileAttributes: boolean isSameFile(sun.nio.fs.UnixFileAttributes)>(r6);
+        if $z3 == 0 goto label16;
+
+        return;
+
+     label16:
+        $z4 = r4.<sun.nio.fs.UnixCopyFile$Flags: boolean replaceExisting>;
+        if $z4 != 0 goto label17;
+
+        $r19 = new java.nio.file.FileAlreadyExistsException;
+        $r20 = virtualinvoke r1.<sun.nio.fs.UnixPath: java.lang.String getPathForExceptionMessage()>();
+        specialinvoke $r19.<java.nio.file.FileAlreadyExistsException: void <init>(java.lang.String)>($r20);
+        throw $r19;
+
+     label17:
+        $z5 = virtualinvoke r6.<sun.nio.fs.UnixFileAttributes: boolean isDirectory()>();
+        if $z5 == 0 goto label18;
+
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void rmdir(sun.nio.fs.UnixPath)>(r1);
+        goto label19;
+
+     label18:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void unlink(sun.nio.fs.UnixPath)>(r1);
+
+     label19:
+        goto label23;
+
+     label20:
+        $r21 := @caughtexception;
+        r8 = $r21;
+        $z6 = virtualinvoke r6.<sun.nio.fs.UnixFileAttributes: boolean isDirectory()>();
+        if $z6 == 0 goto label22;
+
+        $i1 = virtualinvoke r8.<sun.nio.fs.UnixException: int errno()>();
+        if $i1 == 17 goto label21;
+
+        $i2 = virtualinvoke r8.<sun.nio.fs.UnixException: int errno()>();
+        if $i2 != 66 goto label22;
+
+     label21:
+        $r22 = new java.nio.file.DirectoryNotEmptyException;
+        $r23 = virtualinvoke r1.<sun.nio.fs.UnixPath: java.lang.String getPathForExceptionMessage()>();
+        specialinvoke $r22.<java.nio.file.DirectoryNotEmptyException: void <init>(java.lang.String)>($r23);
+        throw $r22;
+
+     label22:
+        virtualinvoke r8.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r1);
+
+     label23:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void rename(sun.nio.fs.UnixPath,sun.nio.fs.UnixPath)>(r0, r1);
+
+     label24:
+        return;
+
+     label25:
+        $r24 := @caughtexception;
+        r25 = $r24;
+        $i3 = virtualinvoke r25.<sun.nio.fs.UnixException: int errno()>();
+        if $i3 == 18 goto label26;
+
+        $i4 = virtualinvoke r25.<sun.nio.fs.UnixException: int errno()>();
+        if $i4 == 21 goto label26;
+
+        virtualinvoke r25.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath,sun.nio.fs.UnixPath)>(r0, r1);
+
+     label26:
+        $z7 = virtualinvoke r15.<sun.nio.fs.UnixFileAttributes: boolean isDirectory()>();
+        if $z7 == 0 goto label27;
+
+        staticinvoke <sun.nio.fs.UnixCopyFile: void copyDirectory(sun.nio.fs.UnixPath,sun.nio.fs.UnixFileAttributes,sun.nio.fs.UnixPath,sun.nio.fs.UnixCopyFile$Flags)>(r0, r15, r1, r4);
+        goto label30;
+
+     label27:
+        $z8 = virtualinvoke r15.<sun.nio.fs.UnixFileAttributes: boolean isSymbolicLink()>();
+        if $z8 == 0 goto label28;
+
+        staticinvoke <sun.nio.fs.UnixCopyFile: void copyLink(sun.nio.fs.UnixPath,sun.nio.fs.UnixFileAttributes,sun.nio.fs.UnixPath,sun.nio.fs.UnixCopyFile$Flags)>(r0, r15, r1, r4);
+        goto label30;
+
+     label28:
+        $z9 = virtualinvoke r15.<sun.nio.fs.UnixFileAttributes: boolean isDevice()>();
+        if $z9 == 0 goto label29;
+
+        staticinvoke <sun.nio.fs.UnixCopyFile: void copySpecial(sun.nio.fs.UnixPath,sun.nio.fs.UnixFileAttributes,sun.nio.fs.UnixPath,sun.nio.fs.UnixCopyFile$Flags)>(r0, r15, r1, r4);
+        goto label30;
+
+     label29:
+        staticinvoke <sun.nio.fs.UnixCopyFile: void copyFile(sun.nio.fs.UnixPath,sun.nio.fs.UnixFileAttributes,sun.nio.fs.UnixPath,sun.nio.fs.UnixCopyFile$Flags,long)>(r0, r15, r1, r4, 0L);
+
+     label30:
+        $z10 = virtualinvoke r15.<sun.nio.fs.UnixFileAttributes: boolean isDirectory()>();
+        if $z10 == 0 goto label31;
+
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void rmdir(sun.nio.fs.UnixPath)>(r0);
+        goto label32;
+
+     label31:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void unlink(sun.nio.fs.UnixPath)>(r0);
+
+     label32:
+        goto label41;
+
+     label33:
+        $r26 := @caughtexception;
+        r27 = $r26;
+
+     label34:
+        $z11 = virtualinvoke r15.<sun.nio.fs.UnixFileAttributes: boolean isDirectory()>();
+        if $z11 == 0 goto label35;
+
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void rmdir(sun.nio.fs.UnixPath)>(r1);
+        goto label36;
+
+     label35:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void unlink(sun.nio.fs.UnixPath)>(r1);
+
+     label36:
+        goto label38;
+
+     label37:
+        $r28 := @caughtexception;
+        r9 = $r28;
+
+     label38:
+        $z12 = virtualinvoke r15.<sun.nio.fs.UnixFileAttributes: boolean isDirectory()>();
+        if $z12 == 0 goto label40;
+
+        $i5 = virtualinvoke r27.<sun.nio.fs.UnixException: int errno()>();
+        if $i5 == 17 goto label39;
+
+        $i6 = virtualinvoke r27.<sun.nio.fs.UnixException: int errno()>();
+        if $i6 != 66 goto label40;
+
+     label39:
+        $r29 = new java.nio.file.DirectoryNotEmptyException;
+        $r30 = virtualinvoke r0.<sun.nio.fs.UnixPath: java.lang.String getPathForExceptionMessage()>();
+        specialinvoke $r29.<java.nio.file.DirectoryNotEmptyException: void <init>(java.lang.String)>($r30);
+        throw $r29;
+
+     label40:
+        virtualinvoke r27.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r0);
+
+     label41:
+        return;
+
+        catch sun.nio.fs.UnixException from label1 to label2 with label3;
+        catch sun.nio.fs.UnixException from label7 to label8 with label9;
+        catch sun.nio.fs.UnixException from label10 to label11 with label12;
+        catch sun.nio.fs.UnixException from label17 to label19 with label20;
+        catch sun.nio.fs.UnixException from label23 to label24 with label25;
+        catch sun.nio.fs.UnixException from label30 to label32 with label33;
+        catch sun.nio.fs.UnixException from label34 to label36 with label37;
+    }
+
+    static transient void copy(sun.nio.fs.UnixPath, sun.nio.fs.UnixPath, java.nio.file.CopyOption[]) throws java.io.IOException
+    {
+        sun.nio.fs.UnixPath r0, r1;
+        java.nio.file.CopyOption[] r2;
+        java.lang.SecurityManager r3;
+        sun.nio.fs.UnixCopyFile$Flags r4;
+        sun.nio.fs.UnixFileAttributes r5, r6, r21;
+        sun.nio.fs.UnixException r7, r8, $r12, $r14, r15, $r18;
+        sun.nio.fs.UnixCopyFile$1 r9, $r22;
+        java.util.concurrent.ExecutionException r10, $r23;
+        java.lang.Throwable r11;
+        boolean $z0, $z1, $z2, z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11;
+        java.nio.file.LinkPermission $r13;
+        java.nio.file.FileAlreadyExistsException $r16;
+        java.lang.String $r17, $r20;
+        int $i0, $i1;
+        java.nio.file.DirectoryNotEmptyException $r19;
+        java.io.IOException $r24, $r25;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        r1 := @parameter1: sun.nio.fs.UnixPath;
+        r2 := @parameter2: java.nio.file.CopyOption[];
+        r3 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r3 == null goto label0;
+
+        virtualinvoke r0.<sun.nio.fs.UnixPath: void checkRead()>();
+        virtualinvoke r1.<sun.nio.fs.UnixPath: void checkWrite()>();
+
+     label0:
+        r4 = staticinvoke <sun.nio.fs.UnixCopyFile$Flags: sun.nio.fs.UnixCopyFile$Flags fromCopyOptions(java.nio.file.CopyOption[])>(r2);
+        r5 = null;
+        r6 = null;
+
+     label1:
+        $z0 = r4.<sun.nio.fs.UnixCopyFile$Flags: boolean followLinks>;
+        r5 = staticinvoke <sun.nio.fs.UnixFileAttributes: sun.nio.fs.UnixFileAttributes get(sun.nio.fs.UnixPath,boolean)>(r0, $z0);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r12 := @caughtexception;
+        r7 = $r12;
+        virtualinvoke r7.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r0);
+
+     label4:
+        if r3 == null goto label5;
+
+        $z1 = virtualinvoke r5.<sun.nio.fs.UnixFileAttributes: boolean isSymbolicLink()>();
+        if $z1 == 0 goto label5;
+
+        $r13 = new java.nio.file.LinkPermission;
+        specialinvoke $r13.<java.nio.file.LinkPermission: void <init>(java.lang.String)>("symbolic");
+        virtualinvoke r3.<java.lang.SecurityManager: void checkPermission(java.security.Permission)>($r13);
+
+     label5:
+        r6 = staticinvoke <sun.nio.fs.UnixFileAttributes: sun.nio.fs.UnixFileAttributes get(sun.nio.fs.UnixPath,boolean)>(r1, 0);
+
+     label6:
+        goto label8;
+
+     label7:
+        $r14 := @caughtexception;
+        r15 = $r14;
+
+     label8:
+        if r6 == null goto label9;
+
+        $z2 = 1;
+        goto label10;
+
+     label9:
+        $z2 = 0;
+
+     label10:
+        z3 = $z2;
+        if z3 == 0 goto label18;
+
+        $z4 = virtualinvoke r5.<sun.nio.fs.UnixFileAttributes: boolean isSameFile(sun.nio.fs.UnixFileAttributes)>(r6);
+        if $z4 == 0 goto label11;
+
+        return;
+
+     label11:
+        $z5 = r4.<sun.nio.fs.UnixCopyFile$Flags: boolean replaceExisting>;
+        if $z5 != 0 goto label12;
+
+        $r16 = new java.nio.file.FileAlreadyExistsException;
+        $r17 = virtualinvoke r1.<sun.nio.fs.UnixPath: java.lang.String getPathForExceptionMessage()>();
+        specialinvoke $r16.<java.nio.file.FileAlreadyExistsException: void <init>(java.lang.String)>($r17);
+        throw $r16;
+
+     label12:
+        $z6 = virtualinvoke r6.<sun.nio.fs.UnixFileAttributes: boolean isDirectory()>();
+        if $z6 == 0 goto label13;
+
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void rmdir(sun.nio.fs.UnixPath)>(r1);
+        goto label14;
+
+     label13:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void unlink(sun.nio.fs.UnixPath)>(r1);
+
+     label14:
+        goto label18;
+
+     label15:
+        $r18 := @caughtexception;
+        r8 = $r18;
+        $z7 = virtualinvoke r6.<sun.nio.fs.UnixFileAttributes: boolean isDirectory()>();
+        if $z7 == 0 goto label17;
+
+        $i0 = virtualinvoke r8.<sun.nio.fs.UnixException: int errno()>();
+        if $i0 == 17 goto label16;
+
+        $i1 = virtualinvoke r8.<sun.nio.fs.UnixException: int errno()>();
+        if $i1 != 66 goto label17;
+
+     label16:
+        $r19 = new java.nio.file.DirectoryNotEmptyException;
+        $r20 = virtualinvoke r1.<sun.nio.fs.UnixPath: java.lang.String getPathForExceptionMessage()>();
+        specialinvoke $r19.<java.nio.file.DirectoryNotEmptyException: void <init>(java.lang.String)>($r20);
+        throw $r19;
+
+     label17:
+        virtualinvoke r8.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r1);
+
+     label18:
+        $z8 = virtualinvoke r5.<sun.nio.fs.UnixFileAttributes: boolean isDirectory()>();
+        if $z8 == 0 goto label19;
+
+        staticinvoke <sun.nio.fs.UnixCopyFile: void copyDirectory(sun.nio.fs.UnixPath,sun.nio.fs.UnixFileAttributes,sun.nio.fs.UnixPath,sun.nio.fs.UnixCopyFile$Flags)>(r0, r5, r1, r4);
+        return;
+
+     label19:
+        $z9 = virtualinvoke r5.<sun.nio.fs.UnixFileAttributes: boolean isSymbolicLink()>();
+        if $z9 == 0 goto label20;
+
+        staticinvoke <sun.nio.fs.UnixCopyFile: void copyLink(sun.nio.fs.UnixPath,sun.nio.fs.UnixFileAttributes,sun.nio.fs.UnixPath,sun.nio.fs.UnixCopyFile$Flags)>(r0, r5, r1, r4);
+        return;
+
+     label20:
+        $z10 = r4.<sun.nio.fs.UnixCopyFile$Flags: boolean interruptible>;
+        if $z10 != 0 goto label21;
+
+        staticinvoke <sun.nio.fs.UnixCopyFile: void copyFile(sun.nio.fs.UnixPath,sun.nio.fs.UnixFileAttributes,sun.nio.fs.UnixPath,sun.nio.fs.UnixCopyFile$Flags,long)>(r0, r5, r1, r4, 0L);
+        return;
+
+     label21:
+        r21 = r5;
+        $r22 = new sun.nio.fs.UnixCopyFile$1;
+        specialinvoke $r22.<sun.nio.fs.UnixCopyFile$1: void <init>(sun.nio.fs.UnixPath,sun.nio.fs.UnixFileAttributes,sun.nio.fs.UnixPath,sun.nio.fs.UnixCopyFile$Flags)>(r0, r21, r1, r4);
+        r9 = $r22;
+
+     label22:
+        staticinvoke <sun.nio.fs.Cancellable: void runInterruptibly(sun.nio.fs.Cancellable)>(r9);
+
+     label23:
+        goto label26;
+
+     label24:
+        $r23 := @caughtexception;
+        r10 = $r23;
+        r11 = virtualinvoke r10.<java.util.concurrent.ExecutionException: java.lang.Throwable getCause()>();
+        $z11 = r11 instanceof java.io.IOException;
+        if $z11 == 0 goto label25;
+
+        $r24 = (java.io.IOException) r11;
+        throw $r24;
+
+     label25:
+        $r25 = new java.io.IOException;
+        specialinvoke $r25.<java.io.IOException: void <init>(java.lang.Throwable)>(r11);
+        throw $r25;
+
+     label26:
+        return;
+
+        catch sun.nio.fs.UnixException from label1 to label2 with label3;
+        catch sun.nio.fs.UnixException from label5 to label6 with label7;
+        catch sun.nio.fs.UnixException from label12 to label14 with label15;
+        catch java.util.concurrent.ExecutionException from label22 to label23 with label24;
+    }
+
+    static native void transfer(int, int, long) throws sun.nio.fs.UnixException;
+
+    static void access$000(sun.nio.fs.UnixPath, sun.nio.fs.UnixFileAttributes, sun.nio.fs.UnixPath, sun.nio.fs.UnixCopyFile$Flags, long) throws java.io.IOException
+    {
+        sun.nio.fs.UnixPath r0, r2;
+        sun.nio.fs.UnixFileAttributes r1;
+        sun.nio.fs.UnixCopyFile$Flags r3;
+        long l0;
+
+        r0 := @parameter0: sun.nio.fs.UnixPath;
+        r1 := @parameter1: sun.nio.fs.UnixFileAttributes;
+        r2 := @parameter2: sun.nio.fs.UnixPath;
+        r3 := @parameter3: sun.nio.fs.UnixCopyFile$Flags;
+        l0 := @parameter4: long;
+        staticinvoke <sun.nio.fs.UnixCopyFile: void copyFile(sun.nio.fs.UnixPath,sun.nio.fs.UnixFileAttributes,sun.nio.fs.UnixPath,sun.nio.fs.UnixCopyFile$Flags,long)>(r0, r1, r2, r3, l0);
+        return;
+    }
+
+    static void <clinit>()
+    {
+        sun.nio.fs.UnixCopyFile$2 $r0;
+
+        $r0 = new sun.nio.fs.UnixCopyFile$2;
+        specialinvoke $r0.<sun.nio.fs.UnixCopyFile$2: void <init>()>();
+        staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r0);
+        return;
+    }
+}

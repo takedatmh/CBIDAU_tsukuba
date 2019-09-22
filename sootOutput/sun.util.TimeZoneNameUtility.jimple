@@ -1,0 +1,193 @@
+public final class sun.util.TimeZoneNameUtility extends java.lang.Object
+{
+    private static java.util.concurrent.ConcurrentHashMap cachedBundles;
+    private static java.util.concurrent.ConcurrentHashMap cachedZoneData;
+
+    public void <init>()
+    {
+        sun.util.TimeZoneNameUtility r0;
+
+        r0 := @this: sun.util.TimeZoneNameUtility;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static final java.lang.String[][] getZoneStrings(java.util.Locale)
+    {
+        java.util.Locale r0;
+        java.util.concurrent.ConcurrentHashMap $r1, $r9;
+        java.lang.ref.SoftReference r2, $r7, r8;
+        java.lang.String[][] r3, $r6;
+        java.lang.Object $r4, $r5;
+
+        r0 := @parameter0: java.util.Locale;
+        $r1 = <sun.util.TimeZoneNameUtility: java.util.concurrent.ConcurrentHashMap cachedZoneData>;
+        $r4 = virtualinvoke $r1.<java.util.concurrent.ConcurrentHashMap: java.lang.Object get(java.lang.Object)>(r0);
+        r2 = (java.lang.ref.SoftReference) $r4;
+        if r2 == null goto label0;
+
+        $r5 = virtualinvoke r2.<java.lang.ref.SoftReference: java.lang.Object get()>();
+        $r6 = (java.lang.String[][]) $r5;
+        r3 = $r6;
+        if $r6 != null goto label1;
+
+     label0:
+        r3 = staticinvoke <sun.util.TimeZoneNameUtility: java.lang.String[][] loadZoneStrings(java.util.Locale)>(r0);
+        $r7 = new java.lang.ref.SoftReference;
+        specialinvoke $r7.<java.lang.ref.SoftReference: void <init>(java.lang.Object)>(r3);
+        r8 = $r7;
+        $r9 = <sun.util.TimeZoneNameUtility: java.util.concurrent.ConcurrentHashMap cachedZoneData>;
+        virtualinvoke $r9.<java.util.concurrent.ConcurrentHashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(r0, r8);
+
+     label1:
+        return r3;
+    }
+
+    private static final java.lang.String[][] loadZoneStrings(java.util.Locale)
+    {
+        java.util.Locale r0;
+        java.util.LinkedList $r1, r2;
+        sun.util.resources.OpenListResourceBundle r3;
+        java.util.Enumeration r4;
+        null_type n0;
+        java.lang.String r5;
+        boolean $z0;
+        java.lang.Object $r6;
+        java.lang.String[] r7;
+        int $i0;
+        java.lang.String[][] r8, $r10;
+        java.lang.Object[] $r9;
+
+        r0 := @parameter0: java.util.Locale;
+        $r1 = new java.util.LinkedList;
+        specialinvoke $r1.<java.util.LinkedList: void <init>()>();
+        r2 = $r1;
+        r3 = staticinvoke <sun.util.TimeZoneNameUtility: sun.util.resources.OpenListResourceBundle getBundle(java.util.Locale)>(r0);
+        r4 = virtualinvoke r3.<sun.util.resources.OpenListResourceBundle: java.util.Enumeration getKeys()>();
+        n0 = null;
+
+     label0:
+        $z0 = interfaceinvoke r4.<java.util.Enumeration: boolean hasMoreElements()>();
+        if $z0 == 0 goto label2;
+
+        $r6 = interfaceinvoke r4.<java.util.Enumeration: java.lang.Object nextElement()>();
+        r5 = (java.lang.String) $r6;
+        r7 = staticinvoke <sun.util.TimeZoneNameUtility: java.lang.String[] retrieveDisplayNames(sun.util.resources.OpenListResourceBundle,java.lang.String,java.util.Locale)>(r3, r5, r0);
+        if r7 == null goto label1;
+
+        interfaceinvoke r2.<java.util.List: boolean add(java.lang.Object)>(r7);
+
+     label1:
+        goto label0;
+
+     label2:
+        $i0 = interfaceinvoke r2.<java.util.List: int size()>();
+        r8 = newarray (java.lang.String[])[$i0];
+        $r9 = interfaceinvoke r2.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>(r8);
+        $r10 = (java.lang.String[][]) $r9;
+        return $r10;
+    }
+
+    public static final java.lang.String[] retrieveDisplayNames(java.lang.String, java.util.Locale)
+    {
+        java.lang.String r0;
+        java.util.Locale r1;
+        sun.util.resources.OpenListResourceBundle r2;
+        java.lang.String[] $r3;
+
+        r0 := @parameter0: java.lang.String;
+        r1 := @parameter1: java.util.Locale;
+        r2 = staticinvoke <sun.util.TimeZoneNameUtility: sun.util.resources.OpenListResourceBundle getBundle(java.util.Locale)>(r1);
+        $r3 = staticinvoke <sun.util.TimeZoneNameUtility: java.lang.String[] retrieveDisplayNames(sun.util.resources.OpenListResourceBundle,java.lang.String,java.util.Locale)>(r2, r0, r1);
+        return $r3;
+    }
+
+    private static final java.lang.String[] retrieveDisplayNames(sun.util.resources.OpenListResourceBundle, java.lang.String, java.util.Locale)
+    {
+        sun.util.resources.OpenListResourceBundle r0;
+        java.lang.String r1;
+        java.util.Locale r2;
+        sun.util.LocaleServiceProviderPool r3;
+        java.lang.String[] r4;
+        sun.util.TimeZoneNameUtility$TimeZoneNameGetter $r5;
+        java.util.MissingResourceException r6, $r9;
+        boolean $z0;
+        java.lang.Object[] $r7;
+        java.lang.Object $r8;
+
+        r0 := @parameter0: sun.util.resources.OpenListResourceBundle;
+        r1 := @parameter1: java.lang.String;
+        r2 := @parameter2: java.util.Locale;
+        r3 = staticinvoke <sun.util.LocaleServiceProviderPool: sun.util.LocaleServiceProviderPool getPool(java.lang.Class)>(class "java/util/spi/TimeZoneNameProvider");
+        r4 = null;
+        $z0 = virtualinvoke r3.<sun.util.LocaleServiceProviderPool: boolean hasProviders()>();
+        if $z0 == 0 goto label0;
+
+        $r5 = staticinvoke <sun.util.TimeZoneNameUtility$TimeZoneNameGetter: sun.util.TimeZoneNameUtility$TimeZoneNameGetter access$000()>();
+        $r7 = newarray (java.lang.Object)[0];
+        $r8 = virtualinvoke r3.<sun.util.LocaleServiceProviderPool: java.lang.Object getLocalizedObject(sun.util.LocaleServiceProviderPool$LocalizedObjectGetter,java.util.Locale,sun.util.resources.OpenListResourceBundle,java.lang.String,java.lang.Object[])>($r5, r2, r0, r1, $r7);
+        r4 = (java.lang.String[]) $r8;
+
+     label0:
+        if r4 != null goto label4;
+
+     label1:
+        r4 = virtualinvoke r0.<sun.util.resources.OpenListResourceBundle: java.lang.String[] getStringArray(java.lang.String)>(r1);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r9 := @caughtexception;
+        r6 = $r9;
+
+     label4:
+        return r4;
+
+        catch java.util.MissingResourceException from label1 to label2 with label3;
+    }
+
+    private static final sun.util.resources.OpenListResourceBundle getBundle(java.util.Locale)
+    {
+        java.util.Locale r0;
+        java.util.concurrent.ConcurrentHashMap $r1, $r9;
+        java.lang.ref.SoftReference r2, $r7, r8;
+        sun.util.resources.OpenListResourceBundle r3, $r6;
+        java.lang.Object $r4, $r5;
+
+        r0 := @parameter0: java.util.Locale;
+        $r1 = <sun.util.TimeZoneNameUtility: java.util.concurrent.ConcurrentHashMap cachedBundles>;
+        $r4 = virtualinvoke $r1.<java.util.concurrent.ConcurrentHashMap: java.lang.Object get(java.lang.Object)>(r0);
+        r2 = (java.lang.ref.SoftReference) $r4;
+        if r2 == null goto label0;
+
+        $r5 = virtualinvoke r2.<java.lang.ref.SoftReference: java.lang.Object get()>();
+        $r6 = (sun.util.resources.OpenListResourceBundle) $r5;
+        r3 = $r6;
+        if $r6 != null goto label1;
+
+     label0:
+        r3 = staticinvoke <sun.util.resources.LocaleData: sun.util.resources.OpenListResourceBundle getTimeZoneNames(java.util.Locale)>(r0);
+        $r7 = new java.lang.ref.SoftReference;
+        specialinvoke $r7.<java.lang.ref.SoftReference: void <init>(java.lang.Object)>(r3);
+        r8 = $r7;
+        $r9 = <sun.util.TimeZoneNameUtility: java.util.concurrent.ConcurrentHashMap cachedBundles>;
+        virtualinvoke $r9.<java.util.concurrent.ConcurrentHashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(r0, r8);
+
+     label1:
+        return r3;
+    }
+
+    static void <clinit>()
+    {
+        java.util.concurrent.ConcurrentHashMap $r0, $r1;
+
+        $r0 = new java.util.concurrent.ConcurrentHashMap;
+        specialinvoke $r0.<java.util.concurrent.ConcurrentHashMap: void <init>()>();
+        <sun.util.TimeZoneNameUtility: java.util.concurrent.ConcurrentHashMap cachedBundles> = $r0;
+        $r1 = new java.util.concurrent.ConcurrentHashMap;
+        specialinvoke $r1.<java.util.concurrent.ConcurrentHashMap: void <init>()>();
+        <sun.util.TimeZoneNameUtility: java.util.concurrent.ConcurrentHashMap cachedZoneData> = $r1;
+        return;
+    }
+}

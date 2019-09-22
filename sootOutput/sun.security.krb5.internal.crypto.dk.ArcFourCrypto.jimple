@@ -1,0 +1,744 @@
+public class sun.security.krb5.internal.crypto.dk.ArcFourCrypto extends sun.security.krb5.internal.crypto.dk.DkCrypto
+{
+    private static final boolean debug;
+    private static final int confounderSize;
+    private static final byte[] ZERO_IV;
+    private static final int hashSize;
+    private final int keyLength;
+
+    public void <init>(int)
+    {
+        sun.security.krb5.internal.crypto.dk.ArcFourCrypto r0;
+        int i0;
+
+        r0 := @this: sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
+        i0 := @parameter0: int;
+        specialinvoke r0.<sun.security.krb5.internal.crypto.dk.DkCrypto: void <init>()>();
+        r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: int keyLength> = i0;
+        return;
+    }
+
+    protected int getKeySeedLength()
+    {
+        sun.security.krb5.internal.crypto.dk.ArcFourCrypto r0;
+        int $i0;
+
+        r0 := @this: sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
+        $i0 = r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: int keyLength>;
+        return $i0;
+    }
+
+    protected byte[] randomToKey(byte[])
+    {
+        sun.security.krb5.internal.crypto.dk.ArcFourCrypto r0;
+        byte[] r1;
+
+        r0 := @this: sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
+        r1 := @parameter0: byte[];
+        return r1;
+    }
+
+    public byte[] stringToKey(char[]) throws java.security.GeneralSecurityException
+    {
+        sun.security.krb5.internal.crypto.dk.ArcFourCrypto r0;
+        char[] r1;
+        byte[] $r2;
+
+        r0 := @this: sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
+        r1 := @parameter0: char[];
+        $r2 = specialinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] stringToKey(char[],byte[])>(r1, null);
+        return $r2;
+    }
+
+    private byte[] stringToKey(char[], byte[]) throws java.security.GeneralSecurityException
+    {
+        sun.security.krb5.internal.crypto.dk.ArcFourCrypto r0;
+        char[] r1;
+        byte[] r2, r3, r7;
+        null_type n0, n1;
+        java.security.MessageDigest r4;
+        java.lang.Throwable r5, $r10;
+        int $i0;
+        java.lang.RuntimeException $r6;
+        java.lang.Exception $r8, r9;
+
+        r0 := @this: sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
+        r1 := @parameter0: char[];
+        r2 := @parameter1: byte[];
+        if r2 == null goto label0;
+
+        $i0 = lengthof r2;
+        if $i0 <= 0 goto label0;
+
+        $r6 = new java.lang.RuntimeException;
+        specialinvoke $r6.<java.lang.RuntimeException: void <init>(java.lang.String)>("Invalid parameter to stringToKey");
+        throw $r6;
+
+     label0:
+        r3 = null;
+        n0 = null;
+
+     label1:
+        r3 = staticinvoke <sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] charToUtf16(char[])>(r1);
+        r4 = staticinvoke <sun.security.provider.MD4: java.security.MessageDigest getInstance()>();
+        virtualinvoke r4.<java.security.MessageDigest: void update(byte[])>(r3);
+        r7 = virtualinvoke r4.<java.security.MessageDigest: byte[] digest()>();
+
+     label2:
+        if r3 == null goto label11;
+
+        staticinvoke <java.util.Arrays: void fill(byte[],byte)>(r3, 0);
+        goto label11;
+
+     label3:
+        $r8 := @caughtexception;
+
+     label4:
+        r9 = $r8;
+        n1 = null;
+
+     label5:
+        if r3 == null goto label6;
+
+        staticinvoke <java.util.Arrays: void fill(byte[],byte)>(r3, 0);
+
+     label6:
+        return n1;
+
+     label7:
+        $r10 := @caughtexception;
+
+     label8:
+        r5 = $r10;
+
+     label9:
+        if r3 == null goto label10;
+
+        staticinvoke <java.util.Arrays: void fill(byte[],byte)>(r3, 0);
+
+     label10:
+        throw r5;
+
+     label11:
+        return r7;
+
+        catch java.lang.Exception from label1 to label2 with label3;
+        catch java.lang.Throwable from label1 to label2 with label7;
+        catch java.lang.Throwable from label4 to label5 with label7;
+        catch java.lang.Throwable from label8 to label9 with label7;
+    }
+
+    protected javax.crypto.Cipher getCipher(byte[], byte[], int) throws java.security.GeneralSecurityException
+    {
+        sun.security.krb5.internal.crypto.dk.ArcFourCrypto r0;
+        byte[] r1, r2;
+        int i0, $i1;
+        javax.crypto.spec.SecretKeySpec r3, $r6;
+        javax.crypto.Cipher r4;
+        javax.crypto.spec.IvParameterSpec r5, $r7;
+
+        r0 := @this: sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
+        r1 := @parameter0: byte[];
+        r2 := @parameter1: byte[];
+        i0 := @parameter2: int;
+        if r2 != null goto label0;
+
+        r2 = <sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] ZERO_IV>;
+
+     label0:
+        $r6 = new javax.crypto.spec.SecretKeySpec;
+        specialinvoke $r6.<javax.crypto.spec.SecretKeySpec: void <init>(byte[],java.lang.String)>(r1, "ARCFOUR");
+        r3 = $r6;
+        r4 = staticinvoke <javax.crypto.Cipher: javax.crypto.Cipher getInstance(java.lang.String)>("ARCFOUR");
+        $r7 = new javax.crypto.spec.IvParameterSpec;
+        $i1 = lengthof r2;
+        specialinvoke $r7.<javax.crypto.spec.IvParameterSpec: void <init>(byte[],int,int)>(r2, 0, $i1);
+        r5 = $r7;
+        virtualinvoke r4.<javax.crypto.Cipher: void init(int,java.security.Key,java.security.spec.AlgorithmParameterSpec)>(i0, r3, r5);
+        return r4;
+    }
+
+    public int getChecksumLength()
+    {
+        sun.security.krb5.internal.crypto.dk.ArcFourCrypto r0;
+
+        r0 := @this: sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
+        return 16;
+    }
+
+    protected byte[] getHmac(byte[], byte[]) throws java.security.GeneralSecurityException
+    {
+        sun.security.krb5.internal.crypto.dk.ArcFourCrypto r0;
+        byte[] r1, r2, r6;
+        javax.crypto.spec.SecretKeySpec $r3, r4;
+        javax.crypto.Mac r5;
+
+        r0 := @this: sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
+        r1 := @parameter0: byte[];
+        r2 := @parameter1: byte[];
+        $r3 = new javax.crypto.spec.SecretKeySpec;
+        specialinvoke $r3.<javax.crypto.spec.SecretKeySpec: void <init>(byte[],java.lang.String)>(r1, "HmacMD5");
+        r4 = $r3;
+        r5 = staticinvoke <javax.crypto.Mac: javax.crypto.Mac getInstance(java.lang.String)>("HmacMD5");
+        virtualinvoke r5.<javax.crypto.Mac: void init(java.security.Key)>(r4);
+        r6 = virtualinvoke r5.<javax.crypto.Mac: byte[] doFinal(byte[])>(r2);
+        return r6;
+    }
+
+    public byte[] calculateChecksum(byte[], int, byte[], int, int) throws java.security.GeneralSecurityException
+    {
+        sun.security.krb5.internal.crypto.dk.ArcFourCrypto r0;
+        byte[] r1, r2, r4, r5, r8, r14, r20, r25, r26;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13;
+        java.lang.StringBuilder $r3, $r10, $r11, $r28, $r29, $r30, $r31, $r32;
+        null_type n0, n1;
+        java.security.NoSuchAlgorithmException r6, $r22;
+        java.security.GeneralSecurityException r7, $r9, $r17, r18, $r23, $r27;
+        boolean $z0;
+        java.lang.String $r12, $r13, $r33;
+        java.lang.Exception $r15, r16;
+        java.security.MessageDigest r21;
+
+        r0 := @this: sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
+        r1 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        r2 := @parameter2: byte[];
+        i1 := @parameter3: int;
+        i2 := @parameter4: int;
+        $z0 = staticinvoke <sun.security.krb5.internal.crypto.KeyUsage: boolean isValid(int)>(i0);
+        if $z0 != 0 goto label0;
+
+        $r9 = new java.security.GeneralSecurityException;
+        $r3 = new java.lang.StringBuilder;
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>()>();
+        $r10 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Invalid key usage number: ");
+        $r11 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r9.<java.security.GeneralSecurityException: void <init>(java.lang.String)>($r12);
+        throw $r9;
+
+     label0:
+        n0 = null;
+
+     label1:
+        $r13 = "signaturekey";
+        r4 = virtualinvoke $r13.<java.lang.String: byte[] getBytes()>();
+        $i3 = lengthof r4;
+        $i4 = $i3 + 1;
+        r5 = newarray (byte)[$i4];
+        $i5 = lengthof r4;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r4, 0, r5, 0, $i5);
+        r14 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] getHmac(byte[],byte[])>(r1, r5);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r15 := @caughtexception;
+        r16 = $r15;
+        $r17 = new java.security.GeneralSecurityException;
+        specialinvoke $r17.<java.security.GeneralSecurityException: void <init>(java.lang.String)>("Calculate Checkum Failed!");
+        r18 = $r17;
+        virtualinvoke r18.<java.security.GeneralSecurityException: java.lang.Throwable initCause(java.lang.Throwable)>(r16);
+        throw r18;
+
+     label4:
+        r20 = specialinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] getSalt(int)>(i0);
+        n1 = null;
+
+     label5:
+        r21 = staticinvoke <java.security.MessageDigest: java.security.MessageDigest getInstance(java.lang.String)>("MD5");
+
+     label6:
+        goto label8;
+
+     label7:
+        $r22 := @caughtexception;
+        r6 = $r22;
+        $r23 = new java.security.GeneralSecurityException;
+        specialinvoke $r23.<java.security.GeneralSecurityException: void <init>(java.lang.String)>("Calculate Checkum Failed!");
+        r7 = $r23;
+        virtualinvoke r7.<java.security.GeneralSecurityException: java.lang.Throwable initCause(java.lang.Throwable)>(r6);
+        throw r7;
+
+     label8:
+        virtualinvoke r21.<java.security.MessageDigest: void update(byte[])>(r20);
+        virtualinvoke r21.<java.security.MessageDigest: void update(byte[],int,int)>(r2, i1, i2);
+        r25 = virtualinvoke r21.<java.security.MessageDigest: byte[] digest()>();
+        r26 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] getHmac(byte[],byte[])>(r14, r25);
+        $i6 = lengthof r26;
+        $i7 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: int getChecksumLength()>();
+        if $i6 != $i7 goto label9;
+
+        return r26;
+
+     label9:
+        $i8 = lengthof r26;
+        $i9 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: int getChecksumLength()>();
+        if $i8 <= $i9 goto label10;
+
+        $i10 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: int getChecksumLength()>();
+        r8 = newarray (byte)[$i10];
+        $i11 = lengthof r8;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r26, 0, r8, 0, $i11);
+        return r8;
+
+     label10:
+        $r27 = new java.security.GeneralSecurityException;
+        $r28 = new java.lang.StringBuilder;
+        specialinvoke $r28.<java.lang.StringBuilder: void <init>()>();
+        $r29 = virtualinvoke $r28.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("checksum size too short: ");
+        $i12 = lengthof r26;
+        $r30 = virtualinvoke $r29.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i12);
+        $r31 = virtualinvoke $r30.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("; expecting : ");
+        $i13 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: int getChecksumLength()>();
+        $r32 = virtualinvoke $r31.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i13);
+        $r33 = virtualinvoke $r32.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r27.<java.security.GeneralSecurityException: void <init>(java.lang.String)>($r33);
+        throw $r27;
+
+        catch java.lang.Exception from label1 to label2 with label3;
+        catch java.security.NoSuchAlgorithmException from label5 to label6 with label7;
+    }
+
+    public byte[] encryptSeq(byte[], int, byte[], byte[], int, int) throws java.security.GeneralSecurityException, sun.security.krb5.KrbCryptoException
+    {
+        sun.security.krb5.internal.crypto.dk.ArcFourCrypto r0;
+        byte[] r1, r2, r3, r5, r6, r9, r14;
+        int i0, i1, i2;
+        java.lang.StringBuilder $r4, $r11, $r12;
+        javax.crypto.Cipher r7;
+        javax.crypto.spec.SecretKeySpec r8, $r15;
+        boolean $z0;
+        java.security.GeneralSecurityException $r10;
+        java.lang.String $r13;
+
+        r0 := @this: sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
+        r1 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        r2 := @parameter2: byte[];
+        r3 := @parameter3: byte[];
+        i1 := @parameter4: int;
+        i2 := @parameter5: int;
+        $z0 = staticinvoke <sun.security.krb5.internal.crypto.KeyUsage: boolean isValid(int)>(i0);
+        if $z0 != 0 goto label0;
+
+        $r10 = new java.security.GeneralSecurityException;
+        $r4 = new java.lang.StringBuilder;
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>()>();
+        $r11 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Invalid key usage number: ");
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r10.<java.security.GeneralSecurityException: void <init>(java.lang.String)>($r13);
+        throw $r10;
+
+     label0:
+        r5 = newarray (byte)[4];
+        r6 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] getHmac(byte[],byte[])>(r1, r5);
+        r14 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] getHmac(byte[],byte[])>(r6, r2);
+        r7 = staticinvoke <javax.crypto.Cipher: javax.crypto.Cipher getInstance(java.lang.String)>("ARCFOUR");
+        $r15 = new javax.crypto.spec.SecretKeySpec;
+        specialinvoke $r15.<javax.crypto.spec.SecretKeySpec: void <init>(byte[],java.lang.String)>(r14, "ARCFOUR");
+        r8 = $r15;
+        virtualinvoke r7.<javax.crypto.Cipher: void init(int,java.security.Key)>(1, r8);
+        r9 = virtualinvoke r7.<javax.crypto.Cipher: byte[] doFinal(byte[],int,int)>(r3, i1, i2);
+        return r9;
+    }
+
+    public byte[] decryptSeq(byte[], int, byte[], byte[], int, int) throws java.security.GeneralSecurityException, sun.security.krb5.KrbCryptoException
+    {
+        sun.security.krb5.internal.crypto.dk.ArcFourCrypto r0;
+        byte[] r1, r2, r3, r5, r6, r9, r14;
+        int i0, i1, i2;
+        java.lang.StringBuilder $r4, $r11, $r12;
+        javax.crypto.Cipher r7;
+        javax.crypto.spec.SecretKeySpec r8, $r15;
+        boolean $z0;
+        java.security.GeneralSecurityException $r10;
+        java.lang.String $r13;
+
+        r0 := @this: sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
+        r1 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        r2 := @parameter2: byte[];
+        r3 := @parameter3: byte[];
+        i1 := @parameter4: int;
+        i2 := @parameter5: int;
+        $z0 = staticinvoke <sun.security.krb5.internal.crypto.KeyUsage: boolean isValid(int)>(i0);
+        if $z0 != 0 goto label0;
+
+        $r10 = new java.security.GeneralSecurityException;
+        $r4 = new java.lang.StringBuilder;
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>()>();
+        $r11 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Invalid key usage number: ");
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r10.<java.security.GeneralSecurityException: void <init>(java.lang.String)>($r13);
+        throw $r10;
+
+     label0:
+        r5 = newarray (byte)[4];
+        r6 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] getHmac(byte[],byte[])>(r1, r5);
+        r14 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] getHmac(byte[],byte[])>(r6, r2);
+        r7 = staticinvoke <javax.crypto.Cipher: javax.crypto.Cipher getInstance(java.lang.String)>("ARCFOUR");
+        $r15 = new javax.crypto.spec.SecretKeySpec;
+        specialinvoke $r15.<javax.crypto.spec.SecretKeySpec: void <init>(byte[],java.lang.String)>(r14, "ARCFOUR");
+        r8 = $r15;
+        virtualinvoke r7.<javax.crypto.Cipher: void init(int,java.security.Key)>(2, r8);
+        r9 = virtualinvoke r7.<javax.crypto.Cipher: byte[] doFinal(byte[],int,int)>(r3, i1, i2);
+        return r9;
+    }
+
+    public byte[] encrypt(byte[], int, byte[], byte[], byte[], int, int) throws java.security.GeneralSecurityException, sun.security.krb5.KrbCryptoException
+    {
+        sun.security.krb5.internal.crypto.dk.ArcFourCrypto r0;
+        byte[] r1, r2, r3, r4, r6, r7, r8, r9, r10, r11, r12, r15, r16;
+        int i0, i1, i2, i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11, $i12, $i13;
+        java.lang.StringBuilder $r5, $r18, $r19;
+        javax.crypto.Cipher r13;
+        javax.crypto.spec.SecretKeySpec r14, $r21;
+        boolean $z0;
+        java.security.GeneralSecurityException $r17;
+        java.lang.String $r20;
+
+        r0 := @this: sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
+        r1 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        r2 := @parameter2: byte[];
+        r3 := @parameter3: byte[];
+        r4 := @parameter4: byte[];
+        i1 := @parameter5: int;
+        i2 := @parameter6: int;
+        $z0 = staticinvoke <sun.security.krb5.internal.crypto.KeyUsage: boolean isValid(int)>(i0);
+        if $z0 != 0 goto label0;
+
+        $r17 = new java.security.GeneralSecurityException;
+        $r5 = new java.lang.StringBuilder;
+        specialinvoke $r5.<java.lang.StringBuilder: void <init>()>();
+        $r18 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Invalid key usage number: ");
+        $r19 = virtualinvoke $r18.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r20 = virtualinvoke $r19.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r17.<java.security.GeneralSecurityException: void <init>(java.lang.String)>($r20);
+        throw $r17;
+
+     label0:
+        r6 = staticinvoke <sun.security.krb5.Confounder: byte[] bytes(int)>(8);
+        $i4 = lengthof r6;
+        $i5 = $i4 + i2;
+        i3 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: int roundup(int,int)>($i5, 1);
+        r7 = newarray (byte)[i3];
+        $i6 = lengthof r6;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r6, 0, r7, 0, $i6);
+        $i7 = lengthof r6;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r4, i1, r7, $i7, i2);
+        $i8 = lengthof r1;
+        r8 = newarray (byte)[$i8];
+        $i9 = lengthof r1;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r1, 0, r8, 0, $i9);
+        r9 = specialinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] getSalt(int)>(i0);
+        r10 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] getHmac(byte[],byte[])>(r8, r9);
+        r11 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] getHmac(byte[],byte[])>(r10, r7);
+        r12 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] getHmac(byte[],byte[])>(r10, r11);
+        r13 = staticinvoke <javax.crypto.Cipher: javax.crypto.Cipher getInstance(java.lang.String)>("ARCFOUR");
+        $r21 = new javax.crypto.spec.SecretKeySpec;
+        specialinvoke $r21.<javax.crypto.spec.SecretKeySpec: void <init>(byte[],java.lang.String)>(r12, "ARCFOUR");
+        r14 = $r21;
+        virtualinvoke r13.<javax.crypto.Cipher: void init(int,java.security.Key)>(1, r14);
+        $i10 = lengthof r7;
+        r15 = virtualinvoke r13.<javax.crypto.Cipher: byte[] doFinal(byte[],int,int)>(r7, 0, $i10);
+        $i11 = lengthof r15;
+        $i12 = 16 + $i11;
+        r16 = newarray (byte)[$i12];
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r11, 0, r16, 0, 16);
+        $i13 = lengthof r15;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r15, 0, r16, 16, $i13);
+        return r16;
+    }
+
+    public byte[] encryptRaw(byte[], int, byte[], byte[], int, int) throws java.security.GeneralSecurityException, sun.security.krb5.KrbCryptoException
+    {
+        sun.security.krb5.internal.crypto.dk.ArcFourCrypto r0;
+        byte[] r1, r2, r3, r5, r6, r9, r14, r15;
+        int i0, i1, i2, i3, $i4;
+        java.lang.StringBuilder $r4, $r11, $r12;
+        javax.crypto.Cipher r7;
+        javax.crypto.spec.SecretKeySpec r8, $r16;
+        boolean $z0;
+        java.security.GeneralSecurityException $r10;
+        java.lang.String $r13;
+        byte $b5, $b7;
+        short $s6;
+
+        r0 := @this: sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
+        r1 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        r2 := @parameter2: byte[];
+        r3 := @parameter3: byte[];
+        i1 := @parameter4: int;
+        i2 := @parameter5: int;
+        $z0 = staticinvoke <sun.security.krb5.internal.crypto.KeyUsage: boolean isValid(int)>(i0);
+        if $z0 != 0 goto label0;
+
+        $r10 = new java.security.GeneralSecurityException;
+        $r4 = new java.lang.StringBuilder;
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>()>();
+        $r11 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Invalid key usage number: ");
+        $r12 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r10.<java.security.GeneralSecurityException: void <init>(java.lang.String)>($r13);
+        throw $r10;
+
+     label0:
+        $i4 = lengthof r1;
+        r5 = newarray (byte)[$i4];
+        i3 = 0;
+
+     label1:
+        if i3 > 15 goto label2;
+
+        $b5 = r1[i3];
+        $s6 = $b5 ^ 240;
+        $b7 = (byte) $s6;
+        r5[i3] = $b7;
+        i3 = i3 + 1;
+        goto label1;
+
+     label2:
+        r14 = newarray (byte)[4];
+        r6 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] getHmac(byte[],byte[])>(r5, r14);
+        r15 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] getHmac(byte[],byte[])>(r6, r2);
+        r7 = staticinvoke <javax.crypto.Cipher: javax.crypto.Cipher getInstance(java.lang.String)>("ARCFOUR");
+        $r16 = new javax.crypto.spec.SecretKeySpec;
+        specialinvoke $r16.<javax.crypto.spec.SecretKeySpec: void <init>(byte[],java.lang.String)>(r15, "ARCFOUR");
+        r8 = $r16;
+        virtualinvoke r7.<javax.crypto.Cipher: void init(int,java.security.Key)>(1, r8);
+        r9 = virtualinvoke r7.<javax.crypto.Cipher: byte[] doFinal(byte[],int,int)>(r3, i1, i2);
+        return r9;
+    }
+
+    public byte[] decrypt(byte[], int, byte[], byte[], int, int) throws java.security.GeneralSecurityException
+    {
+        sun.security.krb5.internal.crypto.dk.ArcFourCrypto r0;
+        byte[] r1, r2, r3, r5, r6, r7, r8, r9, r12, r13, r20;
+        int i0, i1, i2, i3, $i4, $i5, $i6, $i7, $i8, $i11, $i12, $i13;
+        java.lang.StringBuilder $r4, $r15, $r16;
+        javax.crypto.Cipher r10;
+        javax.crypto.spec.SecretKeySpec r11, $r18;
+        boolean z0, $z1;
+        java.security.GeneralSecurityException $r14, $r19;
+        java.lang.String $r17;
+        byte $b9, $b10;
+
+        r0 := @this: sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
+        r1 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        r2 := @parameter2: byte[];
+        r3 := @parameter3: byte[];
+        i1 := @parameter4: int;
+        i2 := @parameter5: int;
+        $z1 = staticinvoke <sun.security.krb5.internal.crypto.KeyUsage: boolean isValid(int)>(i0);
+        if $z1 != 0 goto label0;
+
+        $r14 = new java.security.GeneralSecurityException;
+        $r4 = new java.lang.StringBuilder;
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>()>();
+        $r15 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Invalid key usage number: ");
+        $r16 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r17 = virtualinvoke $r16.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r14.<java.security.GeneralSecurityException: void <init>(java.lang.String)>($r17);
+        throw $r14;
+
+     label0:
+        $i4 = lengthof r1;
+        r5 = newarray (byte)[$i4];
+        $i5 = lengthof r1;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r1, 0, r5, 0, $i5);
+        r6 = specialinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] getSalt(int)>(i0);
+        r7 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] getHmac(byte[],byte[])>(r5, r6);
+        r8 = newarray (byte)[16];
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r3, i1, r8, 0, 16);
+        r9 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] getHmac(byte[],byte[])>(r7, r8);
+        r10 = staticinvoke <javax.crypto.Cipher: javax.crypto.Cipher getInstance(java.lang.String)>("ARCFOUR");
+        $r18 = new javax.crypto.spec.SecretKeySpec;
+        specialinvoke $r18.<javax.crypto.spec.SecretKeySpec: void <init>(byte[],java.lang.String)>(r9, "ARCFOUR");
+        r11 = $r18;
+        virtualinvoke r10.<javax.crypto.Cipher: void init(int,java.security.Key)>(2, r11);
+        $i6 = i1 + 16;
+        $i7 = i2 - 16;
+        r12 = virtualinvoke r10.<javax.crypto.Cipher: byte[] doFinal(byte[],int,int)>(r3, $i6, $i7);
+        r13 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] getHmac(byte[],byte[])>(r7, r12);
+        z0 = 0;
+        $i8 = lengthof r13;
+        if $i8 < 16 goto label3;
+
+        i3 = 0;
+
+     label1:
+        if i3 >= 16 goto label3;
+
+        $b9 = r13[i3];
+        $b10 = r3[i3];
+        if $b9 == $b10 goto label2;
+
+        z0 = 1;
+        goto label3;
+
+     label2:
+        i3 = i3 + 1;
+        goto label1;
+
+     label3:
+        if z0 == 0 goto label4;
+
+        $r19 = new java.security.GeneralSecurityException;
+        specialinvoke $r19.<java.security.GeneralSecurityException: void <init>(java.lang.String)>("Checksum failed");
+        throw $r19;
+
+     label4:
+        $i11 = lengthof r12;
+        $i12 = $i11 - 8;
+        r20 = newarray (byte)[$i12];
+        $i13 = lengthof r20;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r12, 8, r20, 0, $i13);
+        return r20;
+    }
+
+    public byte[] decryptRaw(byte[], int, byte[], byte[], int, int, byte[]) throws java.security.GeneralSecurityException
+    {
+        sun.security.krb5.internal.crypto.dk.ArcFourCrypto r0;
+        byte[] r1, r2, r3, r4, r6, r7, r8, r11, r16, r17;
+        int i0, i1, i2, i3, $i4, $i8;
+        java.lang.StringBuilder $r5, $r13, $r14;
+        javax.crypto.Cipher r9;
+        javax.crypto.spec.SecretKeySpec r10, $r18;
+        boolean $z0;
+        java.security.GeneralSecurityException $r12;
+        java.lang.String $r15;
+        byte $b5, $b7;
+        short $s6;
+
+        r0 := @this: sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
+        r1 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        r2 := @parameter2: byte[];
+        r3 := @parameter3: byte[];
+        i1 := @parameter4: int;
+        i2 := @parameter5: int;
+        r4 := @parameter6: byte[];
+        $z0 = staticinvoke <sun.security.krb5.internal.crypto.KeyUsage: boolean isValid(int)>(i0);
+        if $z0 != 0 goto label0;
+
+        $r12 = new java.security.GeneralSecurityException;
+        $r5 = new java.lang.StringBuilder;
+        specialinvoke $r5.<java.lang.StringBuilder: void <init>()>();
+        $r13 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Invalid key usage number: ");
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(i0);
+        $r15 = virtualinvoke $r14.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r12.<java.security.GeneralSecurityException: void <init>(java.lang.String)>($r15);
+        throw $r12;
+
+     label0:
+        $i4 = lengthof r1;
+        r6 = newarray (byte)[$i4];
+        i3 = 0;
+
+     label1:
+        if i3 > 15 goto label2;
+
+        $b5 = r1[i3];
+        $s6 = $b5 ^ 240;
+        $b7 = (byte) $s6;
+        r6[i3] = $b7;
+        i3 = i3 + 1;
+        goto label1;
+
+     label2:
+        r16 = newarray (byte)[4];
+        r7 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] getHmac(byte[],byte[])>(r6, r16);
+        r8 = newarray (byte)[4];
+        $i8 = lengthof r8;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r4, 0, r8, 0, $i8);
+        r17 = virtualinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] getHmac(byte[],byte[])>(r7, r8);
+        r9 = staticinvoke <javax.crypto.Cipher: javax.crypto.Cipher getInstance(java.lang.String)>("ARCFOUR");
+        $r18 = new javax.crypto.spec.SecretKeySpec;
+        specialinvoke $r18.<javax.crypto.spec.SecretKeySpec: void <init>(byte[],java.lang.String)>(r17, "ARCFOUR");
+        r10 = $r18;
+        virtualinvoke r9.<javax.crypto.Cipher: void init(int,java.security.Key)>(2, r10);
+        r11 = virtualinvoke r9.<javax.crypto.Cipher: byte[] doFinal(byte[],int,int)>(r3, i1, i2);
+        return r11;
+    }
+
+    private byte[] getSalt(int)
+    {
+        sun.security.krb5.internal.crypto.dk.ArcFourCrypto r0;
+        int i0, i1, $i2, $i4, $i5, $i7, $i8, $i10, $i11;
+        byte[] r1;
+        byte $b3, $b6, $b9, $b12;
+
+        r0 := @this: sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
+        i0 := @parameter0: int;
+        i1 = specialinvoke r0.<sun.security.krb5.internal.crypto.dk.ArcFourCrypto: int arcfour_translate_usage(int)>(i0);
+        r1 = newarray (byte)[4];
+        $i2 = i1 & 255;
+        $b3 = (byte) $i2;
+        r1[0] = $b3;
+        $i4 = i1 >> 8;
+        $i5 = $i4 & 255;
+        $b6 = (byte) $i5;
+        r1[1] = $b6;
+        $i7 = i1 >> 16;
+        $i8 = $i7 & 255;
+        $b9 = (byte) $i8;
+        r1[2] = $b9;
+        $i10 = i1 >> 24;
+        $i11 = $i10 & 255;
+        $b12 = (byte) $i11;
+        r1[3] = $b12;
+        return r1;
+    }
+
+    private int arcfour_translate_usage(int)
+    {
+        sun.security.krb5.internal.crypto.dk.ArcFourCrypto r0;
+        int i0;
+
+        r0 := @this: sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
+        i0 := @parameter0: int;
+        lookupswitch(i0)
+        {
+            case 3: goto label0;
+            case 9: goto label1;
+            case 23: goto label2;
+            default: goto label3;
+        };
+
+     label0:
+        return 8;
+
+     label1:
+        return 8;
+
+     label2:
+        return 13;
+
+     label3:
+        return i0;
+    }
+
+    static void <clinit>()
+    {
+        byte[] $r0;
+
+        $r0 = newarray (byte)[8];
+        $r0[0] = 0;
+        $r0[1] = 0;
+        $r0[2] = 0;
+        $r0[3] = 0;
+        $r0[4] = 0;
+        $r0[5] = 0;
+        $r0[6] = 0;
+        $r0[7] = 0;
+        <sun.security.krb5.internal.crypto.dk.ArcFourCrypto: byte[] ZERO_IV> = $r0;
+        return;
+    }
+}

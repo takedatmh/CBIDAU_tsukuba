@@ -1,0 +1,52 @@
+public class org.apache.tomcat.util.net.NioBlockingSelector$KeyReference extends java.lang.Object
+{
+    java.nio.channels.SelectionKey key;
+
+    public void <init>()
+    {
+        org.apache.tomcat.util.net.NioBlockingSelector$KeyReference r0;
+
+        r0 := @this: org.apache.tomcat.util.net.NioBlockingSelector$KeyReference;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<org.apache.tomcat.util.net.NioBlockingSelector$KeyReference: java.nio.channels.SelectionKey key> = null;
+        return;
+    }
+
+    public void finalize() throws java.lang.Throwable
+    {
+        org.apache.tomcat.util.net.NioBlockingSelector$KeyReference r0;
+        java.lang.Exception r1, $r6;
+        java.nio.channels.SelectionKey $r2, $r3, $r5;
+        boolean $z0;
+        org.apache.juli.logging.Log $r4;
+
+        r0 := @this: org.apache.tomcat.util.net.NioBlockingSelector$KeyReference;
+        $r2 = r0.<org.apache.tomcat.util.net.NioBlockingSelector$KeyReference: java.nio.channels.SelectionKey key>;
+        if $r2 == null goto label3;
+
+        $r3 = r0.<org.apache.tomcat.util.net.NioBlockingSelector$KeyReference: java.nio.channels.SelectionKey key>;
+        $z0 = virtualinvoke $r3.<java.nio.channels.SelectionKey: boolean isValid()>();
+        if $z0 == 0 goto label3;
+
+        $r4 = staticinvoke <org.apache.tomcat.util.net.NioBlockingSelector: org.apache.juli.logging.Log access$0()>();
+        interfaceinvoke $r4.<org.apache.juli.logging.Log: void warn(java.lang.Object)>("Possible key leak, cancelling key in the finalizer.");
+
+     label0:
+        $r5 = r0.<org.apache.tomcat.util.net.NioBlockingSelector$KeyReference: java.nio.channels.SelectionKey key>;
+        virtualinvoke $r5.<java.nio.channels.SelectionKey: void cancel()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r6 := @caughtexception;
+        r1 = $r6;
+
+     label3:
+        r0.<org.apache.tomcat.util.net.NioBlockingSelector$KeyReference: java.nio.channels.SelectionKey key> = null;
+        specialinvoke r0.<java.lang.Object: void finalize()>();
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+}

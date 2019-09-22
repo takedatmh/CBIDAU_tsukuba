@@ -1,0 +1,732 @@
+public abstract class org.apache.catalina.util.LifecycleBase extends java.lang.Object implements org.apache.catalina.Lifecycle
+{
+    private static org.apache.juli.logging.Log log;
+    private static org.apache.tomcat.util.res.StringManager sm;
+    private org.apache.catalina.util.LifecycleSupport lifecycle;
+    private volatile org.apache.catalina.LifecycleState state;
+
+    static void <clinit>()
+    {
+        org.apache.juli.logging.Log $r0;
+        org.apache.tomcat.util.res.StringManager $r1;
+
+        $r0 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/catalina/util/LifecycleBase");
+        <org.apache.catalina.util.LifecycleBase: org.apache.juli.logging.Log log> = $r0;
+        $r1 = staticinvoke <org.apache.tomcat.util.res.StringManager: org.apache.tomcat.util.res.StringManager getManager(java.lang.String)>("org.apache.catalina.util");
+        <org.apache.catalina.util.LifecycleBase: org.apache.tomcat.util.res.StringManager sm> = $r1;
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.catalina.util.LifecycleBase r0;
+        org.apache.catalina.util.LifecycleSupport $r1;
+        org.apache.catalina.LifecycleState $r2;
+
+        r0 := @this: org.apache.catalina.util.LifecycleBase;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r1 = new org.apache.catalina.util.LifecycleSupport;
+        specialinvoke $r1.<org.apache.catalina.util.LifecycleSupport: void <init>(org.apache.catalina.Lifecycle)>(r0);
+        r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.util.LifecycleSupport lifecycle> = $r1;
+        $r2 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState NEW>;
+        r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state> = $r2;
+        return;
+    }
+
+    public void addLifecycleListener(org.apache.catalina.LifecycleListener)
+    {
+        org.apache.catalina.util.LifecycleBase r0;
+        org.apache.catalina.LifecycleListener r1;
+        org.apache.catalina.util.LifecycleSupport $r2;
+
+        r0 := @this: org.apache.catalina.util.LifecycleBase;
+        r1 := @parameter0: org.apache.catalina.LifecycleListener;
+        $r2 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.util.LifecycleSupport lifecycle>;
+        virtualinvoke $r2.<org.apache.catalina.util.LifecycleSupport: void addLifecycleListener(org.apache.catalina.LifecycleListener)>(r1);
+        return;
+    }
+
+    public org.apache.catalina.LifecycleListener[] findLifecycleListeners()
+    {
+        org.apache.catalina.util.LifecycleBase r0;
+        org.apache.catalina.util.LifecycleSupport $r1;
+        org.apache.catalina.LifecycleListener[] $r2;
+
+        r0 := @this: org.apache.catalina.util.LifecycleBase;
+        $r1 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.util.LifecycleSupport lifecycle>;
+        $r2 = virtualinvoke $r1.<org.apache.catalina.util.LifecycleSupport: org.apache.catalina.LifecycleListener[] findLifecycleListeners()>();
+        return $r2;
+    }
+
+    public void removeLifecycleListener(org.apache.catalina.LifecycleListener)
+    {
+        org.apache.catalina.util.LifecycleBase r0;
+        org.apache.catalina.LifecycleListener r1;
+        org.apache.catalina.util.LifecycleSupport $r2;
+
+        r0 := @this: org.apache.catalina.util.LifecycleBase;
+        r1 := @parameter0: org.apache.catalina.LifecycleListener;
+        $r2 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.util.LifecycleSupport lifecycle>;
+        virtualinvoke $r2.<org.apache.catalina.util.LifecycleSupport: void removeLifecycleListener(org.apache.catalina.LifecycleListener)>(r1);
+        return;
+    }
+
+    protected void fireLifecycleEvent(java.lang.String, java.lang.Object)
+    {
+        org.apache.catalina.util.LifecycleBase r0;
+        java.lang.String r1;
+        java.lang.Object r2;
+        org.apache.catalina.util.LifecycleSupport $r3;
+
+        r0 := @this: org.apache.catalina.util.LifecycleBase;
+        r1 := @parameter0: java.lang.String;
+        r2 := @parameter1: java.lang.Object;
+        $r3 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.util.LifecycleSupport lifecycle>;
+        virtualinvoke $r3.<org.apache.catalina.util.LifecycleSupport: void fireLifecycleEvent(java.lang.String,java.lang.Object)>(r1, r2);
+        return;
+    }
+
+    public final synchronized void init() throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.util.LifecycleBase r0;
+        org.apache.catalina.LifecycleState $r1, $r3, $r4, $r5, $r7;
+        java.lang.Throwable r2, $r6;
+        boolean $z0;
+        org.apache.catalina.LifecycleException $r8;
+        org.apache.tomcat.util.res.StringManager $r9;
+        java.lang.Object[] $r10;
+        java.lang.String $r11, $r12;
+
+        r0 := @this: org.apache.catalina.util.LifecycleBase;
+        $r3 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r1 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState NEW>;
+        $z0 = virtualinvoke $r3.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r1);
+        if $z0 != 0 goto label0;
+
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void invalidTransition(java.lang.String)>("before_init");
+
+     label0:
+        $r4 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState INITIALIZING>;
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void setStateInternal(org.apache.catalina.LifecycleState,java.lang.Object,boolean)>($r4, null, 0);
+        virtualinvoke r0.<org.apache.catalina.util.LifecycleBase: void initInternal()>();
+        $r5 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState INITIALIZED>;
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void setStateInternal(org.apache.catalina.LifecycleState,java.lang.Object,boolean)>($r5, null, 0);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r6 := @caughtexception;
+        r2 = $r6;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r2);
+        $r7 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState FAILED>;
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void setStateInternal(org.apache.catalina.LifecycleState,java.lang.Object,boolean)>($r7, null, 0);
+        $r8 = new org.apache.catalina.LifecycleException;
+        $r9 = <org.apache.catalina.util.LifecycleBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r10 = newarray (java.lang.Object)[1];
+        $r11 = virtualinvoke r0.<java.lang.Object: java.lang.String toString()>();
+        $r10[0] = $r11;
+        $r12 = virtualinvoke $r9.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("lifecycleBase.initFail", $r10);
+        specialinvoke $r8.<org.apache.catalina.LifecycleException: void <init>(java.lang.String,java.lang.Throwable)>($r12, r2);
+        throw $r8;
+
+     label3:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+    }
+
+    protected abstract void initInternal() throws org.apache.catalina.LifecycleException;
+
+    public final synchronized void start() throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.util.LifecycleBase r0;
+        org.apache.catalina.LifecycleState $r1, $r3, $r4, $r5, $r6, $r7, $r21, $r22, $r23, $r24, $r25, $r26, $r27, $r28, $r29, $r30, $r31, $r32, $r33, $r34, $r37;
+        org.apache.catalina.LifecycleException r2, $r9, $r38;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10;
+        org.apache.juli.logging.Log $r8, $r10, $r15, $r16;
+        org.apache.tomcat.util.res.StringManager $r11, $r17, $r39;
+        java.lang.Object[] $r12, $r18, $r40;
+        java.lang.String $r13, $r14, $r19, $r20, $r41, $r42;
+        java.lang.Throwable $r35, r36;
+
+        r0 := @this: org.apache.catalina.util.LifecycleBase;
+        $r1 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STARTING_PREP>;
+        $r3 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $z0 = virtualinvoke $r1.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r3);
+        if $z0 != 0 goto label0;
+
+        $r4 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STARTING>;
+        $r5 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $z1 = virtualinvoke $r4.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r5);
+        if $z1 != 0 goto label0;
+
+        $r6 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STARTED>;
+        $r7 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $z2 = virtualinvoke $r6.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r7);
+        if $z2 == 0 goto label3;
+
+     label0:
+        $r8 = <org.apache.catalina.util.LifecycleBase: org.apache.juli.logging.Log log>;
+        $z3 = interfaceinvoke $r8.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z3 == 0 goto label1;
+
+        $r9 = new org.apache.catalina.LifecycleException;
+        specialinvoke $r9.<org.apache.catalina.LifecycleException: void <init>()>();
+        r2 = $r9;
+        $r10 = <org.apache.catalina.util.LifecycleBase: org.apache.juli.logging.Log log>;
+        $r11 = <org.apache.catalina.util.LifecycleBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r12 = newarray (java.lang.Object)[1];
+        $r13 = virtualinvoke r0.<java.lang.Object: java.lang.String toString()>();
+        $r12[0] = $r13;
+        $r14 = virtualinvoke $r11.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("lifecycleBase.alreadyStarted", $r12);
+        interfaceinvoke $r10.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r14, r2);
+        goto label2;
+
+     label1:
+        $r15 = <org.apache.catalina.util.LifecycleBase: org.apache.juli.logging.Log log>;
+        $z4 = interfaceinvoke $r15.<org.apache.juli.logging.Log: boolean isInfoEnabled()>();
+        if $z4 == 0 goto label2;
+
+        $r16 = <org.apache.catalina.util.LifecycleBase: org.apache.juli.logging.Log log>;
+        $r17 = <org.apache.catalina.util.LifecycleBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r18 = newarray (java.lang.Object)[1];
+        $r19 = virtualinvoke r0.<java.lang.Object: java.lang.String toString()>();
+        $r18[0] = $r19;
+        $r20 = virtualinvoke $r17.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("lifecycleBase.alreadyStarted", $r18);
+        interfaceinvoke $r16.<org.apache.juli.logging.Log: void info(java.lang.Object)>($r20);
+
+     label2:
+        return;
+
+     label3:
+        $r21 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r22 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState NEW>;
+        $z5 = virtualinvoke $r21.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r22);
+        if $z5 == 0 goto label4;
+
+        virtualinvoke r0.<org.apache.catalina.util.LifecycleBase: void init()>();
+        goto label6;
+
+     label4:
+        $r23 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r24 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState FAILED>;
+        $z6 = virtualinvoke $r23.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r24);
+        if $z6 == 0 goto label5;
+
+        virtualinvoke r0.<org.apache.catalina.util.LifecycleBase: void stop()>();
+        goto label6;
+
+     label5:
+        $r25 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r26 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState INITIALIZED>;
+        $z7 = virtualinvoke $r25.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r26);
+        if $z7 != 0 goto label6;
+
+        $r27 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r28 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STOPPED>;
+        $z8 = virtualinvoke $r27.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r28);
+        if $z8 != 0 goto label6;
+
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void invalidTransition(java.lang.String)>("before_start");
+
+     label6:
+        $r29 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STARTING_PREP>;
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void setStateInternal(org.apache.catalina.LifecycleState,java.lang.Object,boolean)>($r29, null, 0);
+        virtualinvoke r0.<org.apache.catalina.util.LifecycleBase: void startInternal()>();
+        $r30 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r31 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState FAILED>;
+        $z9 = virtualinvoke $r30.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r31);
+        if $z9 == 0 goto label7;
+
+        virtualinvoke r0.<org.apache.catalina.util.LifecycleBase: void stop()>();
+        goto label11;
+
+     label7:
+        $r32 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r33 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STARTING>;
+        $z10 = virtualinvoke $r32.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r33);
+        if $z10 != 0 goto label8;
+
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void invalidTransition(java.lang.String)>("after_start");
+        goto label11;
+
+     label8:
+        $r34 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STARTED>;
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void setStateInternal(org.apache.catalina.LifecycleState,java.lang.Object,boolean)>($r34, null, 0);
+
+     label9:
+        goto label11;
+
+     label10:
+        $r35 := @caughtexception;
+        r36 = $r35;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r36);
+        $r37 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState FAILED>;
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void setStateInternal(org.apache.catalina.LifecycleState,java.lang.Object,boolean)>($r37, null, 0);
+        $r38 = new org.apache.catalina.LifecycleException;
+        $r39 = <org.apache.catalina.util.LifecycleBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r40 = newarray (java.lang.Object)[1];
+        $r41 = virtualinvoke r0.<java.lang.Object: java.lang.String toString()>();
+        $r40[0] = $r41;
+        $r42 = virtualinvoke $r39.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("lifecycleBase.startFail", $r40);
+        specialinvoke $r38.<org.apache.catalina.LifecycleException: void <init>(java.lang.String,java.lang.Throwable)>($r42, r36);
+        throw $r38;
+
+     label11:
+        return;
+
+        catch java.lang.Throwable from label6 to label9 with label10;
+    }
+
+    protected abstract void startInternal() throws org.apache.catalina.LifecycleException;
+
+    public final synchronized void stop() throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.util.LifecycleBase r0;
+        org.apache.catalina.LifecycleState $r1, $r4, $r5, $r6, $r7, $r8, $r22, $r23, $r24, $r25, $r26, $r27, $r28, $r29, $r30, $r31, $r32, $r33, $r34, $r35, $r36, $r39, $r46, $r47;
+        org.apache.catalina.LifecycleException r2, $r10, $r40;
+        java.lang.Throwable r3, $r37, r38, $r45;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9, $z10, $z11, $z12;
+        org.apache.juli.logging.Log $r9, $r11, $r16, $r17;
+        org.apache.tomcat.util.res.StringManager $r12, $r18, $r41;
+        java.lang.Object[] $r13, $r19, $r42;
+        java.lang.String $r14, $r15, $r20, $r21, $r43, $r44;
+
+        r0 := @this: org.apache.catalina.util.LifecycleBase;
+        $r1 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STOPPING_PREP>;
+        $r4 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $z0 = virtualinvoke $r1.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r4);
+        if $z0 != 0 goto label0;
+
+        $r5 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STOPPING>;
+        $r6 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $z1 = virtualinvoke $r5.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r6);
+        if $z1 != 0 goto label0;
+
+        $r7 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STOPPED>;
+        $r8 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $z2 = virtualinvoke $r7.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r8);
+        if $z2 == 0 goto label3;
+
+     label0:
+        $r9 = <org.apache.catalina.util.LifecycleBase: org.apache.juli.logging.Log log>;
+        $z3 = interfaceinvoke $r9.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z3 == 0 goto label1;
+
+        $r10 = new org.apache.catalina.LifecycleException;
+        specialinvoke $r10.<org.apache.catalina.LifecycleException: void <init>()>();
+        r2 = $r10;
+        $r11 = <org.apache.catalina.util.LifecycleBase: org.apache.juli.logging.Log log>;
+        $r12 = <org.apache.catalina.util.LifecycleBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r13 = newarray (java.lang.Object)[1];
+        $r14 = virtualinvoke r0.<java.lang.Object: java.lang.String toString()>();
+        $r13[0] = $r14;
+        $r15 = virtualinvoke $r12.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("lifecycleBase.alreadyStopped", $r13);
+        interfaceinvoke $r11.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r15, r2);
+        goto label2;
+
+     label1:
+        $r16 = <org.apache.catalina.util.LifecycleBase: org.apache.juli.logging.Log log>;
+        $z4 = interfaceinvoke $r16.<org.apache.juli.logging.Log: boolean isInfoEnabled()>();
+        if $z4 == 0 goto label2;
+
+        $r17 = <org.apache.catalina.util.LifecycleBase: org.apache.juli.logging.Log log>;
+        $r18 = <org.apache.catalina.util.LifecycleBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r19 = newarray (java.lang.Object)[1];
+        $r20 = virtualinvoke r0.<java.lang.Object: java.lang.String toString()>();
+        $r19[0] = $r20;
+        $r21 = virtualinvoke $r18.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("lifecycleBase.alreadyStopped", $r19);
+        interfaceinvoke $r17.<org.apache.juli.logging.Log: void info(java.lang.Object)>($r21);
+
+     label2:
+        return;
+
+     label3:
+        $r22 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r23 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState NEW>;
+        $z5 = virtualinvoke $r22.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r23);
+        if $z5 == 0 goto label4;
+
+        $r24 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STOPPED>;
+        r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state> = $r24;
+        return;
+
+     label4:
+        $r25 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r26 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STARTED>;
+        $z6 = virtualinvoke $r25.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r26);
+        if $z6 != 0 goto label5;
+
+        $r27 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r28 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState FAILED>;
+        $z7 = virtualinvoke $r27.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r28);
+        if $z7 != 0 goto label5;
+
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void invalidTransition(java.lang.String)>("before_stop");
+
+     label5:
+        $r29 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r30 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState FAILED>;
+        $z8 = virtualinvoke $r29.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r30);
+        if $z8 == 0 goto label6;
+
+        virtualinvoke r0.<org.apache.catalina.util.LifecycleBase: void fireLifecycleEvent(java.lang.String,java.lang.Object)>("before_stop", null);
+        goto label7;
+
+     label6:
+        $r31 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STOPPING_PREP>;
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void setStateInternal(org.apache.catalina.LifecycleState,java.lang.Object,boolean)>($r31, null, 0);
+
+     label7:
+        virtualinvoke r0.<org.apache.catalina.util.LifecycleBase: void stopInternal()>();
+        $r32 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r33 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STOPPING>;
+        $z9 = virtualinvoke $r32.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r33);
+        if $z9 != 0 goto label8;
+
+        $r34 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r35 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState FAILED>;
+        $z10 = virtualinvoke $r34.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r35);
+        if $z10 != 0 goto label8;
+
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void invalidTransition(java.lang.String)>("after_stop");
+
+     label8:
+        $r36 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STOPPED>;
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void setStateInternal(org.apache.catalina.LifecycleState,java.lang.Object,boolean)>($r36, null, 0);
+
+     label9:
+        goto label13;
+
+     label10:
+        $r37 := @caughtexception;
+        r38 = $r37;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r38);
+        $r39 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState FAILED>;
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void setStateInternal(org.apache.catalina.LifecycleState,java.lang.Object,boolean)>($r39, null, 0);
+        $r40 = new org.apache.catalina.LifecycleException;
+        $r41 = <org.apache.catalina.util.LifecycleBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r42 = newarray (java.lang.Object)[1];
+        $r43 = virtualinvoke r0.<java.lang.Object: java.lang.String toString()>();
+        $r42[0] = $r43;
+        $r44 = virtualinvoke $r41.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("lifecycleBase.stopFail", $r42);
+        specialinvoke $r40.<org.apache.catalina.LifecycleException: void <init>(java.lang.String,java.lang.Throwable)>($r44, r38);
+        throw $r40;
+
+     label11:
+        $r45 := @caughtexception;
+        r3 = $r45;
+        $z11 = r0 instanceof org.apache.catalina.Lifecycle$SingleUse;
+        if $z11 == 0 goto label12;
+
+        $r46 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STOPPED>;
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void setStateInternal(org.apache.catalina.LifecycleState,java.lang.Object,boolean)>($r46, null, 0);
+        virtualinvoke r0.<org.apache.catalina.util.LifecycleBase: void destroy()>();
+
+     label12:
+        throw r3;
+
+     label13:
+        $z12 = r0 instanceof org.apache.catalina.Lifecycle$SingleUse;
+        if $z12 == 0 goto label14;
+
+        $r47 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STOPPED>;
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void setStateInternal(org.apache.catalina.LifecycleState,java.lang.Object,boolean)>($r47, null, 0);
+        virtualinvoke r0.<org.apache.catalina.util.LifecycleBase: void destroy()>();
+
+     label14:
+        return;
+
+        catch java.lang.Throwable from label5 to label9 with label10;
+        catch java.lang.Throwable from label5 to label11 with label11;
+    }
+
+    protected abstract void stopInternal() throws org.apache.catalina.LifecycleException;
+
+    public final synchronized void destroy() throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.util.LifecycleBase r0;
+        org.apache.catalina.LifecycleState $r1, $r3, $r10, $r11, $r12, $r13, $r28, $r29, $r30, $r31, $r32, $r33, $r34, $r35, $r36, $r37, $r40;
+        org.apache.catalina.LifecycleException r2, $r4, $r15, r16, $r41;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9;
+        org.apache.juli.logging.Log $r5, $r14, $r17, $r22, $r23;
+        org.apache.tomcat.util.res.StringManager $r6, $r18, $r24, $r42;
+        java.lang.Object[] $r7, $r19, $r25, $r43;
+        java.lang.String $r8, $r9, $r20, $r21, $r26, $r27, $r44, $r45;
+        java.lang.Throwable $r38, r39;
+
+        r0 := @this: org.apache.catalina.util.LifecycleBase;
+        $r1 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState FAILED>;
+        $r3 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $z0 = virtualinvoke $r1.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r3);
+        if $z0 == 0 goto label3;
+
+     label0:
+        virtualinvoke r0.<org.apache.catalina.util.LifecycleBase: void stop()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r4 := @caughtexception;
+        r2 = $r4;
+        $r5 = <org.apache.catalina.util.LifecycleBase: org.apache.juli.logging.Log log>;
+        $r6 = <org.apache.catalina.util.LifecycleBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r7 = newarray (java.lang.Object)[1];
+        $r8 = virtualinvoke r0.<java.lang.Object: java.lang.String toString()>();
+        $r7[0] = $r8;
+        $r9 = virtualinvoke $r6.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("lifecycleBase.destroyStopFail", $r7);
+        interfaceinvoke $r5.<org.apache.juli.logging.Log: void warn(java.lang.Object,java.lang.Throwable)>($r9, r2);
+
+     label3:
+        $r10 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState DESTROYING>;
+        $r11 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $z1 = virtualinvoke $r10.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r11);
+        if $z1 != 0 goto label4;
+
+        $r12 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState DESTROYED>;
+        $r13 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $z2 = virtualinvoke $r12.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r13);
+        if $z2 == 0 goto label7;
+
+     label4:
+        $r14 = <org.apache.catalina.util.LifecycleBase: org.apache.juli.logging.Log log>;
+        $z3 = interfaceinvoke $r14.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z3 == 0 goto label5;
+
+        $r15 = new org.apache.catalina.LifecycleException;
+        specialinvoke $r15.<org.apache.catalina.LifecycleException: void <init>()>();
+        r16 = $r15;
+        $r17 = <org.apache.catalina.util.LifecycleBase: org.apache.juli.logging.Log log>;
+        $r18 = <org.apache.catalina.util.LifecycleBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r19 = newarray (java.lang.Object)[1];
+        $r20 = virtualinvoke r0.<java.lang.Object: java.lang.String toString()>();
+        $r19[0] = $r20;
+        $r21 = virtualinvoke $r18.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("lifecycleBase.alreadyDestroyed", $r19);
+        interfaceinvoke $r17.<org.apache.juli.logging.Log: void debug(java.lang.Object,java.lang.Throwable)>($r21, r16);
+        goto label6;
+
+     label5:
+        $r22 = <org.apache.catalina.util.LifecycleBase: org.apache.juli.logging.Log log>;
+        $z4 = interfaceinvoke $r22.<org.apache.juli.logging.Log: boolean isInfoEnabled()>();
+        if $z4 == 0 goto label6;
+
+        $z5 = r0 instanceof org.apache.catalina.Lifecycle$SingleUse;
+        if $z5 != 0 goto label6;
+
+        $r23 = <org.apache.catalina.util.LifecycleBase: org.apache.juli.logging.Log log>;
+        $r24 = <org.apache.catalina.util.LifecycleBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r25 = newarray (java.lang.Object)[1];
+        $r26 = virtualinvoke r0.<java.lang.Object: java.lang.String toString()>();
+        $r25[0] = $r26;
+        $r27 = virtualinvoke $r24.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("lifecycleBase.alreadyDestroyed", $r25);
+        interfaceinvoke $r23.<org.apache.juli.logging.Log: void info(java.lang.Object)>($r27);
+
+     label6:
+        return;
+
+     label7:
+        $r28 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r29 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STOPPED>;
+        $z6 = virtualinvoke $r28.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r29);
+        if $z6 != 0 goto label8;
+
+        $r30 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r31 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState FAILED>;
+        $z7 = virtualinvoke $r30.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r31);
+        if $z7 != 0 goto label8;
+
+        $r32 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r33 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState NEW>;
+        $z8 = virtualinvoke $r32.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r33);
+        if $z8 != 0 goto label8;
+
+        $r34 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r35 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState INITIALIZED>;
+        $z9 = virtualinvoke $r34.<org.apache.catalina.LifecycleState: boolean equals(java.lang.Object)>($r35);
+        if $z9 != 0 goto label8;
+
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void invalidTransition(java.lang.String)>("before_destroy");
+
+     label8:
+        $r36 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState DESTROYING>;
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void setStateInternal(org.apache.catalina.LifecycleState,java.lang.Object,boolean)>($r36, null, 0);
+        virtualinvoke r0.<org.apache.catalina.util.LifecycleBase: void destroyInternal()>();
+        $r37 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState DESTROYED>;
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void setStateInternal(org.apache.catalina.LifecycleState,java.lang.Object,boolean)>($r37, null, 0);
+
+     label9:
+        goto label11;
+
+     label10:
+        $r38 := @caughtexception;
+        r39 = $r38;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r39);
+        $r40 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState FAILED>;
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void setStateInternal(org.apache.catalina.LifecycleState,java.lang.Object,boolean)>($r40, null, 0);
+        $r41 = new org.apache.catalina.LifecycleException;
+        $r42 = <org.apache.catalina.util.LifecycleBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r43 = newarray (java.lang.Object)[1];
+        $r44 = virtualinvoke r0.<java.lang.Object: java.lang.String toString()>();
+        $r43[0] = $r44;
+        $r45 = virtualinvoke $r42.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("lifecycleBase.destroyFail", $r43);
+        specialinvoke $r41.<org.apache.catalina.LifecycleException: void <init>(java.lang.String,java.lang.Throwable)>($r45, r39);
+        throw $r41;
+
+     label11:
+        return;
+
+        catch org.apache.catalina.LifecycleException from label0 to label1 with label2;
+        catch java.lang.Throwable from label8 to label9 with label10;
+    }
+
+    protected abstract void destroyInternal() throws org.apache.catalina.LifecycleException;
+
+    public org.apache.catalina.LifecycleState getState()
+    {
+        org.apache.catalina.util.LifecycleBase r0;
+        org.apache.catalina.LifecycleState $r1;
+
+        r0 := @this: org.apache.catalina.util.LifecycleBase;
+        $r1 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        return $r1;
+    }
+
+    public java.lang.String getStateName()
+    {
+        org.apache.catalina.util.LifecycleBase r0;
+        org.apache.catalina.LifecycleState $r1;
+        java.lang.String $r2;
+
+        r0 := @this: org.apache.catalina.util.LifecycleBase;
+        $r1 = virtualinvoke r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState getState()>();
+        $r2 = virtualinvoke $r1.<org.apache.catalina.LifecycleState: java.lang.String toString()>();
+        return $r2;
+    }
+
+    protected synchronized void setState(org.apache.catalina.LifecycleState) throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.util.LifecycleBase r0;
+        org.apache.catalina.LifecycleState r1;
+
+        r0 := @this: org.apache.catalina.util.LifecycleBase;
+        r1 := @parameter0: org.apache.catalina.LifecycleState;
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void setStateInternal(org.apache.catalina.LifecycleState,java.lang.Object,boolean)>(r1, null, 1);
+        return;
+    }
+
+    protected synchronized void setState(org.apache.catalina.LifecycleState, java.lang.Object) throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.util.LifecycleBase r0;
+        org.apache.catalina.LifecycleState r1;
+        java.lang.Object r2;
+
+        r0 := @this: org.apache.catalina.util.LifecycleBase;
+        r1 := @parameter0: org.apache.catalina.LifecycleState;
+        r2 := @parameter1: java.lang.Object;
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void setStateInternal(org.apache.catalina.LifecycleState,java.lang.Object,boolean)>(r1, r2, 1);
+        return;
+    }
+
+    private synchronized void setStateInternal(org.apache.catalina.LifecycleState, java.lang.Object, boolean) throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.util.LifecycleBase r0;
+        org.apache.catalina.LifecycleState r1, $r9, $r10, $r11, $r12, $r13, $r14, $r15, $r16, $r17, $r18;
+        java.lang.Object r2;
+        boolean z0, $z1;
+        org.apache.juli.logging.Log $r3, $r6;
+        org.apache.tomcat.util.res.StringManager $r4;
+        java.lang.String r5, $r8, $r19;
+        java.lang.Object[] $r7;
+
+        r0 := @this: org.apache.catalina.util.LifecycleBase;
+        r1 := @parameter0: org.apache.catalina.LifecycleState;
+        r2 := @parameter1: java.lang.Object;
+        z0 := @parameter2: boolean;
+        $r3 = <org.apache.catalina.util.LifecycleBase: org.apache.juli.logging.Log log>;
+        $z1 = interfaceinvoke $r3.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z1 == 0 goto label0;
+
+        $r6 = <org.apache.catalina.util.LifecycleBase: org.apache.juli.logging.Log log>;
+        $r4 = <org.apache.catalina.util.LifecycleBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r7 = newarray (java.lang.Object)[2];
+        $r7[0] = r0;
+        $r7[1] = r1;
+        $r8 = virtualinvoke $r4.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("lifecycleBase.setState", $r7);
+        interfaceinvoke $r6.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r8);
+
+     label0:
+        if z0 == 0 goto label5;
+
+        if r1 != null goto label1;
+
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void invalidTransition(java.lang.String)>("null");
+        return;
+
+     label1:
+        $r9 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState FAILED>;
+        if r1 == $r9 goto label5;
+
+        $r10 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r11 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STARTING_PREP>;
+        if $r10 != $r11 goto label2;
+
+        $r12 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STARTING>;
+        if r1 == $r12 goto label5;
+
+     label2:
+        $r13 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r14 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STOPPING_PREP>;
+        if $r13 != $r14 goto label3;
+
+        $r15 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STOPPING>;
+        if r1 == $r15 goto label5;
+
+     label3:
+        $r16 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r17 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState FAILED>;
+        if $r16 != $r17 goto label4;
+
+        $r18 = <org.apache.catalina.LifecycleState: org.apache.catalina.LifecycleState STOPPING>;
+        if r1 == $r18 goto label5;
+
+     label4:
+        $r19 = virtualinvoke r1.<org.apache.catalina.LifecycleState: java.lang.String name()>();
+        specialinvoke r0.<org.apache.catalina.util.LifecycleBase: void invalidTransition(java.lang.String)>($r19);
+
+     label5:
+        r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state> = r1;
+        r5 = virtualinvoke r1.<org.apache.catalina.LifecycleState: java.lang.String getLifecycleEvent()>();
+        if r5 == null goto label6;
+
+        virtualinvoke r0.<org.apache.catalina.util.LifecycleBase: void fireLifecycleEvent(java.lang.String,java.lang.Object)>(r5, r2);
+
+     label6:
+        return;
+    }
+
+    private void invalidTransition(java.lang.String) throws org.apache.catalina.LifecycleException
+    {
+        org.apache.catalina.util.LifecycleBase r0;
+        java.lang.String r1, r3, $r5;
+        org.apache.tomcat.util.res.StringManager $r2;
+        java.lang.Object[] $r4;
+        org.apache.catalina.LifecycleState $r6;
+        org.apache.catalina.LifecycleException $r7;
+
+        r0 := @this: org.apache.catalina.util.LifecycleBase;
+        r1 := @parameter0: java.lang.String;
+        $r2 = <org.apache.catalina.util.LifecycleBase: org.apache.tomcat.util.res.StringManager sm>;
+        $r4 = newarray (java.lang.Object)[3];
+        $r4[0] = r1;
+        $r5 = virtualinvoke r0.<java.lang.Object: java.lang.String toString()>();
+        $r4[1] = $r5;
+        $r6 = r0.<org.apache.catalina.util.LifecycleBase: org.apache.catalina.LifecycleState state>;
+        $r4[2] = $r6;
+        r3 = virtualinvoke $r2.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("lifecycleBase.invalidTransition", $r4);
+        $r7 = new org.apache.catalina.LifecycleException;
+        specialinvoke $r7.<org.apache.catalina.LifecycleException: void <init>(java.lang.String)>(r3);
+        throw $r7;
+    }
+}

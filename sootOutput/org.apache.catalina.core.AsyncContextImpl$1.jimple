@@ -1,0 +1,70 @@
+class org.apache.catalina.core.AsyncContextImpl$1 extends java.lang.Object implements java.lang.Runnable
+{
+    final org.apache.catalina.core.AsyncContextImpl this$0;
+    private final org.apache.catalina.AsyncDispatcher val$applicationDispatcher;
+    private final javax.servlet.ServletRequest val$servletRequest;
+    private final javax.servlet.ServletResponse val$servletResponse;
+
+    void <init>(org.apache.catalina.core.AsyncContextImpl, org.apache.catalina.AsyncDispatcher, javax.servlet.ServletRequest, javax.servlet.ServletResponse)
+    {
+        org.apache.catalina.core.AsyncContextImpl$1 r0;
+        org.apache.catalina.core.AsyncContextImpl r1;
+        org.apache.catalina.AsyncDispatcher r2;
+        javax.servlet.ServletRequest r3;
+        javax.servlet.ServletResponse r4;
+
+        r0 := @this: org.apache.catalina.core.AsyncContextImpl$1;
+        r1 := @parameter0: org.apache.catalina.core.AsyncContextImpl;
+        r2 := @parameter1: org.apache.catalina.AsyncDispatcher;
+        r3 := @parameter2: javax.servlet.ServletRequest;
+        r4 := @parameter3: javax.servlet.ServletResponse;
+        r0.<org.apache.catalina.core.AsyncContextImpl$1: org.apache.catalina.core.AsyncContextImpl this$0> = r1;
+        r0.<org.apache.catalina.core.AsyncContextImpl$1: org.apache.catalina.AsyncDispatcher val$applicationDispatcher> = r2;
+        r0.<org.apache.catalina.core.AsyncContextImpl$1: javax.servlet.ServletRequest val$servletRequest> = r3;
+        r0.<org.apache.catalina.core.AsyncContextImpl$1: javax.servlet.ServletResponse val$servletResponse> = r4;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public void run()
+    {
+        org.apache.catalina.core.AsyncContextImpl$1 r0;
+        org.apache.coyote.ActionCode $r1;
+        java.lang.Exception r2, $r9;
+        org.apache.catalina.core.AsyncContextImpl $r3;
+        org.apache.catalina.connector.Request $r4;
+        org.apache.coyote.Request $r5;
+        org.apache.catalina.AsyncDispatcher $r6;
+        javax.servlet.ServletRequest $r7;
+        javax.servlet.ServletResponse $r8;
+        java.lang.RuntimeException $r10;
+
+        r0 := @this: org.apache.catalina.core.AsyncContextImpl$1;
+        $r3 = r0.<org.apache.catalina.core.AsyncContextImpl$1: org.apache.catalina.core.AsyncContextImpl this$0>;
+        $r4 = staticinvoke <org.apache.catalina.core.AsyncContextImpl: org.apache.catalina.connector.Request access$0(org.apache.catalina.core.AsyncContextImpl)>($r3);
+        $r5 = virtualinvoke $r4.<org.apache.catalina.connector.Request: org.apache.coyote.Request getCoyoteRequest()>();
+        $r1 = <org.apache.coyote.ActionCode: org.apache.coyote.ActionCode ASYNC_DISPATCHED>;
+        virtualinvoke $r5.<org.apache.coyote.Request: void action(org.apache.coyote.ActionCode,java.lang.Object)>($r1, null);
+
+     label0:
+        $r6 = r0.<org.apache.catalina.core.AsyncContextImpl$1: org.apache.catalina.AsyncDispatcher val$applicationDispatcher>;
+        $r7 = r0.<org.apache.catalina.core.AsyncContextImpl$1: javax.servlet.ServletRequest val$servletRequest>;
+        $r8 = r0.<org.apache.catalina.core.AsyncContextImpl$1: javax.servlet.ServletResponse val$servletResponse>;
+        interfaceinvoke $r6.<org.apache.catalina.AsyncDispatcher: void dispatch(javax.servlet.ServletRequest,javax.servlet.ServletResponse)>($r7, $r8);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r9 := @caughtexception;
+        r2 = $r9;
+        $r10 = new java.lang.RuntimeException;
+        specialinvoke $r10.<java.lang.RuntimeException: void <init>(java.lang.Throwable)>(r2);
+        throw $r10;
+
+     label3:
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+}

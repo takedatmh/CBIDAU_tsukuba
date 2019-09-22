@@ -1,0 +1,68 @@
+class java.net.NetUtil extends java.lang.Object
+{
+    private static boolean revealLocalAddress;
+    private static volatile boolean propRevealLocalAddr;
+
+    void <init>()
+    {
+        java.net.NetUtil r0;
+
+        r0 := @this: java.net.NetUtil;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    static boolean doRevealLocalAddress()
+    {
+        boolean $z0, $z1;
+
+        $z0 = <java.net.NetUtil: boolean propRevealLocalAddr>;
+        if $z0 == 0 goto label0;
+
+        $z1 = <java.net.NetUtil: boolean revealLocalAddress>;
+        goto label1;
+
+     label0:
+        $z1 = staticinvoke <java.net.NetUtil: boolean readRevealLocalAddr()>();
+
+     label1:
+        return $z1;
+    }
+
+    private static boolean readRevealLocalAddr()
+    {
+        java.lang.SecurityManager r0;
+        java.lang.Exception r1, $r5;
+        java.net.NetUtil$1 $r2;
+        java.lang.Object $r3;
+        java.lang.String $r4;
+        boolean $z0, $z1;
+
+        r0 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r0 == null goto label4;
+
+     label0:
+        $r2 = new java.net.NetUtil$1;
+        specialinvoke $r2.<java.net.NetUtil$1: void <init>()>();
+        $r3 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedExceptionAction)>($r2);
+        $r4 = (java.lang.String) $r3;
+        $z0 = staticinvoke <java.lang.Boolean: boolean parseBoolean(java.lang.String)>($r4);
+        <java.net.NetUtil: boolean revealLocalAddress> = $z0;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r5 := @caughtexception;
+        r1 = $r5;
+
+     label3:
+        <java.net.NetUtil: boolean propRevealLocalAddr> = 1;
+
+     label4:
+        $z1 = <java.net.NetUtil: boolean revealLocalAddress>;
+        return $z1;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+}

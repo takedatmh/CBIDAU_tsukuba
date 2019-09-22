@@ -1,0 +1,2019 @@
+public class java.net.Socket extends java.lang.Object implements java.io.Closeable
+{
+    private boolean created;
+    private boolean bound;
+    private boolean connected;
+    private boolean closed;
+    private java.lang.Object closeLock;
+    private boolean shutIn;
+    private boolean shutOut;
+    java.net.SocketImpl impl;
+    private boolean oldImpl;
+    private static java.net.SocketImplFactory factory;
+
+    public void <init>()
+    {
+        java.net.Socket r0;
+        java.lang.Object $r1;
+
+        r0 := @this: java.net.Socket;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.net.Socket: boolean created> = 0;
+        r0.<java.net.Socket: boolean bound> = 0;
+        r0.<java.net.Socket: boolean connected> = 0;
+        r0.<java.net.Socket: boolean closed> = 0;
+        $r1 = new java.lang.Object;
+        specialinvoke $r1.<java.lang.Object: void <init>()>();
+        r0.<java.net.Socket: java.lang.Object closeLock> = $r1;
+        r0.<java.net.Socket: boolean shutIn> = 0;
+        r0.<java.net.Socket: boolean shutOut> = 0;
+        r0.<java.net.Socket: boolean oldImpl> = 0;
+        virtualinvoke r0.<java.net.Socket: void setImpl()>();
+        return;
+    }
+
+    public void <init>(java.net.Proxy)
+    {
+        java.net.Socket r0;
+        java.net.Proxy r1, r2, $r7, $r8, $r21;
+        java.lang.SecurityManager r3;
+        java.net.InetSocketAddress r4, $r14;
+        java.lang.Object $r5;
+        java.lang.IllegalArgumentException $r6, $r25;
+        java.net.Proxy$Type $r9, $r10;
+        java.net.SocketAddress $r11;
+        java.net.InetAddress $r12, $r13, $r17;
+        boolean $z0, $z1;
+        java.lang.String $r15, $r16, $r18;
+        int $i0, $i1, $i2;
+        java.net.SocksSocketImpl $r19;
+        java.net.SocketImpl $r20, $r24;
+        java.net.SocketImplFactory $r22;
+        java.net.PlainSocketImpl $r23;
+
+        r0 := @this: java.net.Socket;
+        r1 := @parameter0: java.net.Proxy;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.net.Socket: boolean created> = 0;
+        r0.<java.net.Socket: boolean bound> = 0;
+        r0.<java.net.Socket: boolean connected> = 0;
+        r0.<java.net.Socket: boolean closed> = 0;
+        $r5 = new java.lang.Object;
+        specialinvoke $r5.<java.lang.Object: void <init>()>();
+        r0.<java.net.Socket: java.lang.Object closeLock> = $r5;
+        r0.<java.net.Socket: boolean shutIn> = 0;
+        r0.<java.net.Socket: boolean shutOut> = 0;
+        r0.<java.net.Socket: boolean oldImpl> = 0;
+        if r1 != null goto label0;
+
+        $r6 = new java.lang.IllegalArgumentException;
+        specialinvoke $r6.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Invalid Proxy");
+        throw $r6;
+
+     label0:
+        $r7 = <java.net.Proxy: java.net.Proxy NO_PROXY>;
+        if r1 != $r7 goto label1;
+
+        $r8 = <java.net.Proxy: java.net.Proxy NO_PROXY>;
+        goto label2;
+
+     label1:
+        $r8 = staticinvoke <sun.net.ApplicationProxy: sun.net.ApplicationProxy create(java.net.Proxy)>(r1);
+
+     label2:
+        r2 = $r8;
+        $r9 = virtualinvoke r2.<java.net.Proxy: java.net.Proxy$Type type()>();
+        $r10 = <java.net.Proxy$Type: java.net.Proxy$Type SOCKS>;
+        if $r9 != $r10 goto label7;
+
+        r3 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        $r11 = virtualinvoke r2.<java.net.Proxy: java.net.SocketAddress address()>();
+        r4 = (java.net.InetSocketAddress) $r11;
+        $r12 = virtualinvoke r4.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        if $r12 == null goto label3;
+
+        $r13 = virtualinvoke r4.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        specialinvoke r0.<java.net.Socket: void checkAddress(java.net.InetAddress,java.lang.String)>($r13, "Socket");
+
+     label3:
+        if r3 == null goto label6;
+
+        $z0 = virtualinvoke r4.<java.net.InetSocketAddress: boolean isUnresolved()>();
+        if $z0 == 0 goto label4;
+
+        $r14 = new java.net.InetSocketAddress;
+        $r15 = virtualinvoke r4.<java.net.InetSocketAddress: java.lang.String getHostName()>();
+        $i0 = virtualinvoke r4.<java.net.InetSocketAddress: int getPort()>();
+        specialinvoke $r14.<java.net.InetSocketAddress: void <init>(java.lang.String,int)>($r15, $i0);
+        r4 = $r14;
+
+     label4:
+        $z1 = virtualinvoke r4.<java.net.InetSocketAddress: boolean isUnresolved()>();
+        if $z1 == 0 goto label5;
+
+        $r16 = virtualinvoke r4.<java.net.InetSocketAddress: java.lang.String getHostName()>();
+        $i1 = virtualinvoke r4.<java.net.InetSocketAddress: int getPort()>();
+        virtualinvoke r3.<java.lang.SecurityManager: void checkConnect(java.lang.String,int)>($r16, $i1);
+        goto label6;
+
+     label5:
+        $r17 = virtualinvoke r4.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        $r18 = virtualinvoke $r17.<java.net.InetAddress: java.lang.String getHostAddress()>();
+        $i2 = virtualinvoke r4.<java.net.InetSocketAddress: int getPort()>();
+        virtualinvoke r3.<java.lang.SecurityManager: void checkConnect(java.lang.String,int)>($r18, $i2);
+
+     label6:
+        $r19 = new java.net.SocksSocketImpl;
+        specialinvoke $r19.<java.net.SocksSocketImpl: void <init>(java.net.Proxy)>(r2);
+        r0.<java.net.Socket: java.net.SocketImpl impl> = $r19;
+        $r20 = r0.<java.net.Socket: java.net.SocketImpl impl>;
+        virtualinvoke $r20.<java.net.SocketImpl: void setSocket(java.net.Socket)>(r0);
+        goto label10;
+
+     label7:
+        $r21 = <java.net.Proxy: java.net.Proxy NO_PROXY>;
+        if r2 != $r21 goto label9;
+
+        $r22 = <java.net.Socket: java.net.SocketImplFactory factory>;
+        if $r22 != null goto label8;
+
+        $r23 = new java.net.PlainSocketImpl;
+        specialinvoke $r23.<java.net.PlainSocketImpl: void <init>()>();
+        r0.<java.net.Socket: java.net.SocketImpl impl> = $r23;
+        $r24 = r0.<java.net.Socket: java.net.SocketImpl impl>;
+        virtualinvoke $r24.<java.net.SocketImpl: void setSocket(java.net.Socket)>(r0);
+        goto label10;
+
+     label8:
+        virtualinvoke r0.<java.net.Socket: void setImpl()>();
+        goto label10;
+
+     label9:
+        $r25 = new java.lang.IllegalArgumentException;
+        specialinvoke $r25.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Invalid Proxy");
+        throw $r25;
+
+     label10:
+        return;
+    }
+
+    protected void <init>(java.net.SocketImpl) throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        java.net.SocketImpl r1, $r3;
+        java.lang.Object $r2;
+
+        r0 := @this: java.net.Socket;
+        r1 := @parameter0: java.net.SocketImpl;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.net.Socket: boolean created> = 0;
+        r0.<java.net.Socket: boolean bound> = 0;
+        r0.<java.net.Socket: boolean connected> = 0;
+        r0.<java.net.Socket: boolean closed> = 0;
+        $r2 = new java.lang.Object;
+        specialinvoke $r2.<java.lang.Object: void <init>()>();
+        r0.<java.net.Socket: java.lang.Object closeLock> = $r2;
+        r0.<java.net.Socket: boolean shutIn> = 0;
+        r0.<java.net.Socket: boolean shutOut> = 0;
+        r0.<java.net.Socket: boolean oldImpl> = 0;
+        r0.<java.net.Socket: java.net.SocketImpl impl> = r1;
+        if r1 == null goto label0;
+
+        specialinvoke r0.<java.net.Socket: void checkOldImpl()>();
+        $r3 = r0.<java.net.Socket: java.net.SocketImpl impl>;
+        virtualinvoke $r3.<java.net.SocketImpl: void setSocket(java.net.Socket)>(r0);
+
+     label0:
+        return;
+    }
+
+    public void <init>(java.lang.String, int) throws java.net.UnknownHostException, java.io.IOException
+    {
+        java.net.Socket r0;
+        java.lang.String r1;
+        int i0;
+        java.net.InetSocketAddress $r3;
+        java.net.InetAddress $r4;
+        java.net.SocketAddress $r5;
+
+        r0 := @this: java.net.Socket;
+        r1 := @parameter0: java.lang.String;
+        i0 := @parameter1: int;
+        if r1 == null goto label0;
+
+        $r3 = new java.net.InetSocketAddress;
+        specialinvoke $r3.<java.net.InetSocketAddress: void <init>(java.lang.String,int)>(r1, i0);
+        goto label1;
+
+     label0:
+        $r3 = new java.net.InetSocketAddress;
+        $r4 = staticinvoke <java.net.InetAddress: java.net.InetAddress getByName(java.lang.String)>(null);
+        specialinvoke $r3.<java.net.InetSocketAddress: void <init>(java.net.InetAddress,int)>($r4, i0);
+
+     label1:
+        $r5 = (java.net.SocketAddress) null;
+        specialinvoke r0.<java.net.Socket: void <init>(java.net.SocketAddress,java.net.SocketAddress,boolean)>($r3, $r5, 1);
+        return;
+    }
+
+    public void <init>(java.net.InetAddress, int) throws java.io.IOException
+    {
+        java.net.Socket r0;
+        java.net.InetAddress r1;
+        int i0;
+        java.net.InetSocketAddress $r3;
+        java.net.SocketAddress $r4;
+
+        r0 := @this: java.net.Socket;
+        r1 := @parameter0: java.net.InetAddress;
+        i0 := @parameter1: int;
+        if r1 == null goto label0;
+
+        $r3 = new java.net.InetSocketAddress;
+        specialinvoke $r3.<java.net.InetSocketAddress: void <init>(java.net.InetAddress,int)>(r1, i0);
+        goto label1;
+
+     label0:
+        $r3 = null;
+
+     label1:
+        $r4 = (java.net.SocketAddress) null;
+        specialinvoke r0.<java.net.Socket: void <init>(java.net.SocketAddress,java.net.SocketAddress,boolean)>($r3, $r4, 1);
+        return;
+    }
+
+    public void <init>(java.lang.String, int, java.net.InetAddress, int) throws java.io.IOException
+    {
+        java.net.Socket r0;
+        java.lang.String r1;
+        int i0, i1;
+        java.net.InetAddress r2, $r5;
+        java.net.InetSocketAddress $r4, $r6;
+
+        r0 := @this: java.net.Socket;
+        r1 := @parameter0: java.lang.String;
+        i0 := @parameter1: int;
+        r2 := @parameter2: java.net.InetAddress;
+        i1 := @parameter3: int;
+        if r1 == null goto label0;
+
+        $r4 = new java.net.InetSocketAddress;
+        specialinvoke $r4.<java.net.InetSocketAddress: void <init>(java.lang.String,int)>(r1, i0);
+        goto label1;
+
+     label0:
+        $r4 = new java.net.InetSocketAddress;
+        $r5 = staticinvoke <java.net.InetAddress: java.net.InetAddress getByName(java.lang.String)>(null);
+        specialinvoke $r4.<java.net.InetSocketAddress: void <init>(java.net.InetAddress,int)>($r5, i0);
+
+     label1:
+        $r6 = new java.net.InetSocketAddress;
+        specialinvoke $r6.<java.net.InetSocketAddress: void <init>(java.net.InetAddress,int)>(r2, i1);
+        specialinvoke r0.<java.net.Socket: void <init>(java.net.SocketAddress,java.net.SocketAddress,boolean)>($r4, $r6, 1);
+        return;
+    }
+
+    public void <init>(java.net.InetAddress, int, java.net.InetAddress, int) throws java.io.IOException
+    {
+        java.net.Socket r0;
+        java.net.InetAddress r1, r2;
+        int i0, i1;
+        java.net.InetSocketAddress $r4, $r5;
+
+        r0 := @this: java.net.Socket;
+        r1 := @parameter0: java.net.InetAddress;
+        i0 := @parameter1: int;
+        r2 := @parameter2: java.net.InetAddress;
+        i1 := @parameter3: int;
+        if r1 == null goto label0;
+
+        $r4 = new java.net.InetSocketAddress;
+        specialinvoke $r4.<java.net.InetSocketAddress: void <init>(java.net.InetAddress,int)>(r1, i0);
+        goto label1;
+
+     label0:
+        $r4 = null;
+
+     label1:
+        $r5 = new java.net.InetSocketAddress;
+        specialinvoke $r5.<java.net.InetSocketAddress: void <init>(java.net.InetAddress,int)>(r2, i1);
+        specialinvoke r0.<java.net.Socket: void <init>(java.net.SocketAddress,java.net.SocketAddress,boolean)>($r4, $r5, 1);
+        return;
+    }
+
+    public void <init>(java.lang.String, int, boolean) throws java.io.IOException
+    {
+        java.net.Socket r0;
+        java.lang.String r1;
+        int i0;
+        boolean z0;
+        java.net.InetSocketAddress $r3;
+        java.net.InetAddress $r4;
+        java.net.SocketAddress $r5;
+
+        r0 := @this: java.net.Socket;
+        r1 := @parameter0: java.lang.String;
+        i0 := @parameter1: int;
+        z0 := @parameter2: boolean;
+        if r1 == null goto label0;
+
+        $r3 = new java.net.InetSocketAddress;
+        specialinvoke $r3.<java.net.InetSocketAddress: void <init>(java.lang.String,int)>(r1, i0);
+        goto label1;
+
+     label0:
+        $r3 = new java.net.InetSocketAddress;
+        $r4 = staticinvoke <java.net.InetAddress: java.net.InetAddress getByName(java.lang.String)>(null);
+        specialinvoke $r3.<java.net.InetSocketAddress: void <init>(java.net.InetAddress,int)>($r4, i0);
+
+     label1:
+        $r5 = (java.net.SocketAddress) null;
+        specialinvoke r0.<java.net.Socket: void <init>(java.net.SocketAddress,java.net.SocketAddress,boolean)>($r3, $r5, z0);
+        return;
+    }
+
+    public void <init>(java.net.InetAddress, int, boolean) throws java.io.IOException
+    {
+        java.net.Socket r0;
+        java.net.InetAddress r1;
+        int i0;
+        boolean z0;
+        java.net.InetSocketAddress $r3, $r4;
+
+        r0 := @this: java.net.Socket;
+        r1 := @parameter0: java.net.InetAddress;
+        i0 := @parameter1: int;
+        z0 := @parameter2: boolean;
+        if r1 == null goto label0;
+
+        $r3 = new java.net.InetSocketAddress;
+        specialinvoke $r3.<java.net.InetSocketAddress: void <init>(java.net.InetAddress,int)>(r1, i0);
+        goto label1;
+
+     label0:
+        $r3 = null;
+
+     label1:
+        $r4 = new java.net.InetSocketAddress;
+        specialinvoke $r4.<java.net.InetSocketAddress: void <init>(int)>(0);
+        specialinvoke r0.<java.net.Socket: void <init>(java.net.SocketAddress,java.net.SocketAddress,boolean)>($r3, $r4, z0);
+        return;
+    }
+
+    private void <init>(java.net.SocketAddress, java.net.SocketAddress, boolean) throws java.io.IOException
+    {
+        java.net.Socket r0;
+        java.net.SocketAddress r1, r2;
+        boolean z0;
+        java.io.IOException r3, $r6;
+        java.lang.Object $r4;
+        java.lang.NullPointerException $r5;
+
+        r0 := @this: java.net.Socket;
+        r1 := @parameter0: java.net.SocketAddress;
+        r2 := @parameter1: java.net.SocketAddress;
+        z0 := @parameter2: boolean;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<java.net.Socket: boolean created> = 0;
+        r0.<java.net.Socket: boolean bound> = 0;
+        r0.<java.net.Socket: boolean connected> = 0;
+        r0.<java.net.Socket: boolean closed> = 0;
+        $r4 = new java.lang.Object;
+        specialinvoke $r4.<java.lang.Object: void <init>()>();
+        r0.<java.net.Socket: java.lang.Object closeLock> = $r4;
+        r0.<java.net.Socket: boolean shutIn> = 0;
+        r0.<java.net.Socket: boolean shutOut> = 0;
+        r0.<java.net.Socket: boolean oldImpl> = 0;
+        virtualinvoke r0.<java.net.Socket: void setImpl()>();
+        if r1 != null goto label0;
+
+        $r5 = new java.lang.NullPointerException;
+        specialinvoke $r5.<java.lang.NullPointerException: void <init>()>();
+        throw $r5;
+
+     label0:
+        virtualinvoke r0.<java.net.Socket: void createImpl(boolean)>(z0);
+        if r2 == null goto label1;
+
+        virtualinvoke r0.<java.net.Socket: void bind(java.net.SocketAddress)>(r2);
+
+     label1:
+        if r1 == null goto label2;
+
+        virtualinvoke r0.<java.net.Socket: void connect(java.net.SocketAddress)>(r1);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r6 := @caughtexception;
+        r3 = $r6;
+        virtualinvoke r0.<java.net.Socket: void close()>();
+        throw r3;
+
+     label4:
+        return;
+
+        catch java.io.IOException from label0 to label2 with label3;
+    }
+
+    void createImpl(boolean) throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        boolean z0;
+        java.io.IOException r1, $r4;
+        java.net.SocketImpl $r2, $r3;
+        java.net.SocketException $r5;
+        java.lang.String $r6;
+
+        r0 := @this: java.net.Socket;
+        z0 := @parameter0: boolean;
+        $r2 = r0.<java.net.Socket: java.net.SocketImpl impl>;
+        if $r2 != null goto label0;
+
+        virtualinvoke r0.<java.net.Socket: void setImpl()>();
+
+     label0:
+        $r3 = r0.<java.net.Socket: java.net.SocketImpl impl>;
+        virtualinvoke $r3.<java.net.SocketImpl: void create(boolean)>(z0);
+        r0.<java.net.Socket: boolean created> = 1;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r4 := @caughtexception;
+        r1 = $r4;
+        $r5 = new java.net.SocketException;
+        $r6 = virtualinvoke r1.<java.io.IOException: java.lang.String getMessage()>();
+        specialinvoke $r5.<java.net.SocketException: void <init>(java.lang.String)>($r6);
+        throw $r5;
+
+     label3:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    private void checkOldImpl()
+    {
+        java.net.Socket r0;
+        java.net.Socket$1 $r1;
+        java.net.SocketImpl $r2;
+        java.lang.Object $r3;
+        java.lang.Boolean $r4;
+        boolean $z0;
+
+        r0 := @this: java.net.Socket;
+        $r2 = r0.<java.net.Socket: java.net.SocketImpl impl>;
+        if $r2 != null goto label0;
+
+        return;
+
+     label0:
+        $r1 = new java.net.Socket$1;
+        specialinvoke $r1.<java.net.Socket$1: void <init>(java.net.Socket)>(r0);
+        $r3 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r1);
+        $r4 = (java.lang.Boolean) $r3;
+        $z0 = virtualinvoke $r4.<java.lang.Boolean: boolean booleanValue()>();
+        r0.<java.net.Socket: boolean oldImpl> = $z0;
+        return;
+    }
+
+    void setImpl()
+    {
+        java.net.Socket r0;
+        java.net.SocketImplFactory $r1, $r2;
+        java.net.SocketImpl $r3, $r5, $r6;
+        java.net.SocksSocketImpl $r4;
+
+        r0 := @this: java.net.Socket;
+        $r1 = <java.net.Socket: java.net.SocketImplFactory factory>;
+        if $r1 == null goto label0;
+
+        $r2 = <java.net.Socket: java.net.SocketImplFactory factory>;
+        $r3 = interfaceinvoke $r2.<java.net.SocketImplFactory: java.net.SocketImpl createSocketImpl()>();
+        r0.<java.net.Socket: java.net.SocketImpl impl> = $r3;
+        specialinvoke r0.<java.net.Socket: void checkOldImpl()>();
+        goto label1;
+
+     label0:
+        $r4 = new java.net.SocksSocketImpl;
+        specialinvoke $r4.<java.net.SocksSocketImpl: void <init>()>();
+        r0.<java.net.Socket: java.net.SocketImpl impl> = $r4;
+
+     label1:
+        $r5 = r0.<java.net.Socket: java.net.SocketImpl impl>;
+        if $r5 == null goto label2;
+
+        $r6 = r0.<java.net.Socket: java.net.SocketImpl impl>;
+        virtualinvoke $r6.<java.net.SocketImpl: void setSocket(java.net.Socket)>(r0);
+
+     label2:
+        return;
+    }
+
+    java.net.SocketImpl getImpl() throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        boolean $z0;
+        java.net.SocketImpl $r1;
+
+        r0 := @this: java.net.Socket;
+        $z0 = r0.<java.net.Socket: boolean created>;
+        if $z0 != 0 goto label0;
+
+        virtualinvoke r0.<java.net.Socket: void createImpl(boolean)>(1);
+
+     label0:
+        $r1 = r0.<java.net.Socket: java.net.SocketImpl impl>;
+        return $r1;
+    }
+
+    public void connect(java.net.SocketAddress) throws java.io.IOException
+    {
+        java.net.Socket r0;
+        java.net.SocketAddress r1;
+
+        r0 := @this: java.net.Socket;
+        r1 := @parameter0: java.net.SocketAddress;
+        virtualinvoke r0.<java.net.Socket: void connect(java.net.SocketAddress,int)>(r1, 0);
+        return;
+    }
+
+    public void connect(java.net.SocketAddress, int) throws java.io.IOException
+    {
+        java.net.Socket r0;
+        java.net.SocketAddress r1;
+        int i0, i1;
+        java.net.InetSocketAddress r2;
+        java.net.InetAddress r3;
+        java.lang.SecurityManager r4;
+        java.lang.IllegalArgumentException $r5, $r6, $r9;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7;
+        java.net.SocketException $r7, $r8;
+        java.lang.String $r10, $r11, $r14;
+        java.net.SocketImpl $r12, $r13, $r15;
+        java.lang.UnsupportedOperationException $r16;
+
+        r0 := @this: java.net.Socket;
+        r1 := @parameter0: java.net.SocketAddress;
+        i0 := @parameter1: int;
+        if r1 != null goto label0;
+
+        $r5 = new java.lang.IllegalArgumentException;
+        specialinvoke $r5.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("connect: The address can\'t be null");
+        throw $r5;
+
+     label0:
+        if i0 >= 0 goto label1;
+
+        $r6 = new java.lang.IllegalArgumentException;
+        specialinvoke $r6.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("connect: timeout can\'t be negative");
+        throw $r6;
+
+     label1:
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z0 == 0 goto label2;
+
+        $r7 = new java.net.SocketException;
+        specialinvoke $r7.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r7;
+
+     label2:
+        $z1 = r0.<java.net.Socket: boolean oldImpl>;
+        if $z1 != 0 goto label3;
+
+        $z2 = virtualinvoke r0.<java.net.Socket: boolean isConnected()>();
+        if $z2 == 0 goto label3;
+
+        $r8 = new java.net.SocketException;
+        specialinvoke $r8.<java.net.SocketException: void <init>(java.lang.String)>("already connected");
+        throw $r8;
+
+     label3:
+        $z3 = r1 instanceof java.net.InetSocketAddress;
+        if $z3 != 0 goto label4;
+
+        $r9 = new java.lang.IllegalArgumentException;
+        specialinvoke $r9.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Unsupported address type");
+        throw $r9;
+
+     label4:
+        r2 = (java.net.InetSocketAddress) r1;
+        r3 = virtualinvoke r2.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        i1 = virtualinvoke r2.<java.net.InetSocketAddress: int getPort()>();
+        specialinvoke r0.<java.net.Socket: void checkAddress(java.net.InetAddress,java.lang.String)>(r3, "connect");
+        r4 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r4 == null goto label6;
+
+        $z4 = virtualinvoke r2.<java.net.InetSocketAddress: boolean isUnresolved()>();
+        if $z4 == 0 goto label5;
+
+        $r10 = virtualinvoke r2.<java.net.InetSocketAddress: java.lang.String getHostName()>();
+        virtualinvoke r4.<java.lang.SecurityManager: void checkConnect(java.lang.String,int)>($r10, i1);
+        goto label6;
+
+     label5:
+        $r11 = virtualinvoke r3.<java.net.InetAddress: java.lang.String getHostAddress()>();
+        virtualinvoke r4.<java.lang.SecurityManager: void checkConnect(java.lang.String,int)>($r11, i1);
+
+     label6:
+        $z5 = r0.<java.net.Socket: boolean created>;
+        if $z5 != 0 goto label7;
+
+        virtualinvoke r0.<java.net.Socket: void createImpl(boolean)>(1);
+
+     label7:
+        $z6 = r0.<java.net.Socket: boolean oldImpl>;
+        if $z6 != 0 goto label8;
+
+        $r12 = r0.<java.net.Socket: java.net.SocketImpl impl>;
+        virtualinvoke $r12.<java.net.SocketImpl: void connect(java.net.SocketAddress,int)>(r2, i0);
+        goto label11;
+
+     label8:
+        if i0 != 0 goto label10;
+
+        $z7 = virtualinvoke r2.<java.net.InetSocketAddress: boolean isUnresolved()>();
+        if $z7 == 0 goto label9;
+
+        $r13 = r0.<java.net.Socket: java.net.SocketImpl impl>;
+        $r14 = virtualinvoke r3.<java.net.InetAddress: java.lang.String getHostName()>();
+        virtualinvoke $r13.<java.net.SocketImpl: void connect(java.lang.String,int)>($r14, i1);
+        goto label11;
+
+     label9:
+        $r15 = r0.<java.net.Socket: java.net.SocketImpl impl>;
+        virtualinvoke $r15.<java.net.SocketImpl: void connect(java.net.InetAddress,int)>(r3, i1);
+        goto label11;
+
+     label10:
+        $r16 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r16.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>("SocketImpl.connect(addr, timeout)");
+        throw $r16;
+
+     label11:
+        r0.<java.net.Socket: boolean connected> = 1;
+        r0.<java.net.Socket: boolean bound> = 1;
+        return;
+    }
+
+    public void bind(java.net.SocketAddress) throws java.io.IOException
+    {
+        java.net.Socket r0;
+        java.net.SocketAddress r1;
+        java.net.InetSocketAddress r2, $r9;
+        java.net.InetAddress r3;
+        int i0;
+        java.lang.SecurityManager r4;
+        boolean $z0, $z1, $z2, $z3, $z4;
+        java.net.SocketException $r5, $r6, $r8;
+        java.lang.IllegalArgumentException $r7;
+        java.net.SocketImpl $r10;
+
+        r0 := @this: java.net.Socket;
+        r1 := @parameter0: java.net.SocketAddress;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z0 == 0 goto label0;
+
+        $r5 = new java.net.SocketException;
+        specialinvoke $r5.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r5;
+
+     label0:
+        $z1 = r0.<java.net.Socket: boolean oldImpl>;
+        if $z1 != 0 goto label1;
+
+        $z2 = virtualinvoke r0.<java.net.Socket: boolean isBound()>();
+        if $z2 == 0 goto label1;
+
+        $r6 = new java.net.SocketException;
+        specialinvoke $r6.<java.net.SocketException: void <init>(java.lang.String)>("Already bound");
+        throw $r6;
+
+     label1:
+        if r1 == null goto label2;
+
+        $z3 = r1 instanceof java.net.InetSocketAddress;
+        if $z3 != 0 goto label2;
+
+        $r7 = new java.lang.IllegalArgumentException;
+        specialinvoke $r7.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Unsupported address type");
+        throw $r7;
+
+     label2:
+        r2 = (java.net.InetSocketAddress) r1;
+        if r2 == null goto label3;
+
+        $z4 = virtualinvoke r2.<java.net.InetSocketAddress: boolean isUnresolved()>();
+        if $z4 == 0 goto label3;
+
+        $r8 = new java.net.SocketException;
+        specialinvoke $r8.<java.net.SocketException: void <init>(java.lang.String)>("Unresolved address");
+        throw $r8;
+
+     label3:
+        if r2 != null goto label4;
+
+        $r9 = new java.net.InetSocketAddress;
+        specialinvoke $r9.<java.net.InetSocketAddress: void <init>(int)>(0);
+        r2 = $r9;
+
+     label4:
+        r3 = virtualinvoke r2.<java.net.InetSocketAddress: java.net.InetAddress getAddress()>();
+        i0 = virtualinvoke r2.<java.net.InetSocketAddress: int getPort()>();
+        specialinvoke r0.<java.net.Socket: void checkAddress(java.net.InetAddress,java.lang.String)>(r3, "bind");
+        r4 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r4 == null goto label5;
+
+        virtualinvoke r4.<java.lang.SecurityManager: void checkListen(int)>(i0);
+
+     label5:
+        $r10 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        virtualinvoke $r10.<java.net.SocketImpl: void bind(java.net.InetAddress,int)>(r3, i0);
+        r0.<java.net.Socket: boolean bound> = 1;
+        return;
+    }
+
+    private void checkAddress(java.net.InetAddress, java.lang.String)
+    {
+        java.net.Socket r0;
+        java.net.InetAddress r1;
+        java.lang.String r2, $r7;
+        java.lang.StringBuilder $r3, $r5, $r6;
+        boolean $z0, $z1;
+        java.lang.IllegalArgumentException $r4;
+
+        r0 := @this: java.net.Socket;
+        r1 := @parameter0: java.net.InetAddress;
+        r2 := @parameter1: java.lang.String;
+        if r1 != null goto label0;
+
+        return;
+
+     label0:
+        $z0 = r1 instanceof java.net.Inet4Address;
+        if $z0 != 0 goto label1;
+
+        $z1 = r1 instanceof java.net.Inet6Address;
+        if $z1 != 0 goto label1;
+
+        $r4 = new java.lang.IllegalArgumentException;
+        $r3 = new java.lang.StringBuilder;
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>()>();
+        $r5 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(r2);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(": invalid address type");
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r4.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r7);
+        throw $r4;
+
+     label1:
+        return;
+    }
+
+    final void postAccept()
+    {
+        java.net.Socket r0;
+
+        r0 := @this: java.net.Socket;
+        r0.<java.net.Socket: boolean connected> = 1;
+        r0.<java.net.Socket: boolean created> = 1;
+        r0.<java.net.Socket: boolean bound> = 1;
+        return;
+    }
+
+    void setCreated()
+    {
+        java.net.Socket r0;
+
+        r0 := @this: java.net.Socket;
+        r0.<java.net.Socket: boolean created> = 1;
+        return;
+    }
+
+    void setBound()
+    {
+        java.net.Socket r0;
+
+        r0 := @this: java.net.Socket;
+        r0.<java.net.Socket: boolean bound> = 1;
+        return;
+    }
+
+    void setConnected()
+    {
+        java.net.Socket r0;
+
+        r0 := @this: java.net.Socket;
+        r0.<java.net.Socket: boolean connected> = 1;
+        return;
+    }
+
+    public java.net.InetAddress getInetAddress()
+    {
+        java.net.Socket r0;
+        java.net.SocketException r1, $r4;
+        boolean $z0;
+        java.net.SocketImpl $r2;
+        java.net.InetAddress $r3;
+
+        r0 := @this: java.net.Socket;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isConnected()>();
+        if $z0 != 0 goto label0;
+
+        return null;
+
+     label0:
+        $r2 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $r3 = virtualinvoke $r2.<java.net.SocketImpl: java.net.InetAddress getInetAddress()>();
+
+     label1:
+        return $r3;
+
+     label2:
+        $r4 := @caughtexception;
+        r1 = $r4;
+        return null;
+
+        catch java.net.SocketException from label0 to label1 with label2;
+    }
+
+    public java.net.InetAddress getLocalAddress()
+    {
+        java.net.Socket r0;
+        null_type n0;
+        java.lang.SecurityManager r1;
+        boolean $z0, $z1, $z2;
+        java.net.InetAddress $r2, r5;
+        java.net.SocketImpl $r3;
+        java.lang.Object $r4;
+        java.lang.String $r6;
+        java.lang.SecurityException $r7, r8;
+        java.lang.Exception $r9, r10;
+
+        r0 := @this: java.net.Socket;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isBound()>();
+        if $z0 != 0 goto label0;
+
+        $r2 = staticinvoke <java.net.InetAddress: java.net.InetAddress anyLocalAddress()>();
+        return $r2;
+
+     label0:
+        n0 = null;
+
+     label1:
+        $r3 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $r4 = virtualinvoke $r3.<java.net.SocketImpl: java.lang.Object getOption(int)>(15);
+        r5 = (java.net.InetAddress) $r4;
+        $z1 = staticinvoke <java.net.NetUtil: boolean doRevealLocalAddress()>();
+        if $z1 != 0 goto label2;
+
+        r1 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r1 == null goto label2;
+
+        $r6 = virtualinvoke r5.<java.net.InetAddress: java.lang.String getHostAddress()>();
+        virtualinvoke r1.<java.lang.SecurityManager: void checkConnect(java.lang.String,int)>($r6, -1);
+
+     label2:
+        $z2 = virtualinvoke r5.<java.net.InetAddress: boolean isAnyLocalAddress()>();
+        if $z2 == 0 goto label3;
+
+        r5 = staticinvoke <java.net.InetAddress: java.net.InetAddress anyLocalAddress()>();
+
+     label3:
+        goto label6;
+
+     label4:
+        $r7 := @caughtexception;
+        r8 = $r7;
+        r5 = staticinvoke <java.net.InetAddress: java.net.InetAddress getLoopbackAddress()>();
+        goto label6;
+
+     label5:
+        $r9 := @caughtexception;
+        r10 = $r9;
+        r5 = staticinvoke <java.net.InetAddress: java.net.InetAddress anyLocalAddress()>();
+
+     label6:
+        return r5;
+
+        catch java.lang.SecurityException from label1 to label3 with label4;
+        catch java.lang.Exception from label1 to label3 with label5;
+    }
+
+    public int getPort()
+    {
+        java.net.Socket r0;
+        java.net.SocketException r1, $r3;
+        boolean $z0;
+        java.net.SocketImpl $r2;
+        int $i0;
+
+        r0 := @this: java.net.Socket;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isConnected()>();
+        if $z0 != 0 goto label0;
+
+        return 0;
+
+     label0:
+        $r2 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $i0 = virtualinvoke $r2.<java.net.SocketImpl: int getPort()>();
+
+     label1:
+        return $i0;
+
+     label2:
+        $r3 := @caughtexception;
+        r1 = $r3;
+        return -1;
+
+        catch java.net.SocketException from label0 to label1 with label2;
+    }
+
+    public int getLocalPort()
+    {
+        java.net.Socket r0;
+        java.net.SocketException r1, $r3;
+        boolean $z0;
+        java.net.SocketImpl $r2;
+        int $i0;
+
+        r0 := @this: java.net.Socket;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isBound()>();
+        if $z0 != 0 goto label0;
+
+        return -1;
+
+     label0:
+        $r2 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $i0 = virtualinvoke $r2.<java.net.SocketImpl: int getLocalPort()>();
+
+     label1:
+        return $i0;
+
+     label2:
+        $r3 := @caughtexception;
+        r1 = $r3;
+        return -1;
+
+        catch java.net.SocketException from label0 to label1 with label2;
+    }
+
+    public java.net.SocketAddress getRemoteSocketAddress()
+    {
+        java.net.Socket r0;
+        boolean $z0;
+        java.net.InetSocketAddress $r1;
+        java.net.InetAddress $r2;
+        int $i0;
+
+        r0 := @this: java.net.Socket;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isConnected()>();
+        if $z0 != 0 goto label0;
+
+        return null;
+
+     label0:
+        $r1 = new java.net.InetSocketAddress;
+        $r2 = virtualinvoke r0.<java.net.Socket: java.net.InetAddress getInetAddress()>();
+        $i0 = virtualinvoke r0.<java.net.Socket: int getPort()>();
+        specialinvoke $r1.<java.net.InetSocketAddress: void <init>(java.net.InetAddress,int)>($r2, $i0);
+        return $r1;
+    }
+
+    public java.net.SocketAddress getLocalSocketAddress()
+    {
+        java.net.Socket r0;
+        boolean $z0;
+        java.net.InetSocketAddress $r1;
+        java.net.InetAddress $r2;
+        int $i0;
+
+        r0 := @this: java.net.Socket;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isBound()>();
+        if $z0 != 0 goto label0;
+
+        return null;
+
+     label0:
+        $r1 = new java.net.InetSocketAddress;
+        $r2 = virtualinvoke r0.<java.net.Socket: java.net.InetAddress getLocalAddress()>();
+        $i0 = virtualinvoke r0.<java.net.Socket: int getLocalPort()>();
+        specialinvoke $r1.<java.net.InetSocketAddress: void <init>(java.net.InetAddress,int)>($r2, $i0);
+        return $r1;
+    }
+
+    public java.nio.channels.SocketChannel getChannel()
+    {
+        java.net.Socket r0;
+
+        r0 := @this: java.net.Socket;
+        return null;
+    }
+
+    public java.io.InputStream getInputStream() throws java.io.IOException
+    {
+        java.net.Socket r0, r1;
+        null_type n0;
+        java.security.PrivilegedActionException r2, $r9;
+        boolean $z0, $z1, $z2;
+        java.net.SocketException $r3, $r4, $r5;
+        java.net.Socket$2 $r6;
+        java.lang.Object $r7;
+        java.io.InputStream r8;
+        java.lang.Exception $r10;
+        java.io.IOException $r11;
+
+        r0 := @this: java.net.Socket;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z0 == 0 goto label0;
+
+        $r3 = new java.net.SocketException;
+        specialinvoke $r3.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r3;
+
+     label0:
+        $z1 = virtualinvoke r0.<java.net.Socket: boolean isConnected()>();
+        if $z1 != 0 goto label1;
+
+        $r4 = new java.net.SocketException;
+        specialinvoke $r4.<java.net.SocketException: void <init>(java.lang.String)>("Socket is not connected");
+        throw $r4;
+
+     label1:
+        $z2 = virtualinvoke r0.<java.net.Socket: boolean isInputShutdown()>();
+        if $z2 == 0 goto label2;
+
+        $r5 = new java.net.SocketException;
+        specialinvoke $r5.<java.net.SocketException: void <init>(java.lang.String)>("Socket input is shutdown");
+        throw $r5;
+
+     label2:
+        r1 = r0;
+        n0 = null;
+
+     label3:
+        $r6 = new java.net.Socket$2;
+        specialinvoke $r6.<java.net.Socket$2: void <init>(java.net.Socket)>(r0);
+        $r7 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedExceptionAction)>($r6);
+        r8 = (java.io.InputStream) $r7;
+
+     label4:
+        goto label6;
+
+     label5:
+        $r9 := @caughtexception;
+        r2 = $r9;
+        $r10 = virtualinvoke r2.<java.security.PrivilegedActionException: java.lang.Exception getException()>();
+        $r11 = (java.io.IOException) $r10;
+        throw $r11;
+
+     label6:
+        return r8;
+
+        catch java.security.PrivilegedActionException from label3 to label4 with label5;
+    }
+
+    public java.io.OutputStream getOutputStream() throws java.io.IOException
+    {
+        java.net.Socket r0, r1;
+        null_type n0;
+        java.security.PrivilegedActionException r2, $r9;
+        boolean $z0, $z1, $z2;
+        java.net.SocketException $r3, $r4, $r5;
+        java.net.Socket$3 $r6;
+        java.lang.Object $r7;
+        java.io.OutputStream r8;
+        java.lang.Exception $r10;
+        java.io.IOException $r11;
+
+        r0 := @this: java.net.Socket;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z0 == 0 goto label0;
+
+        $r3 = new java.net.SocketException;
+        specialinvoke $r3.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r3;
+
+     label0:
+        $z1 = virtualinvoke r0.<java.net.Socket: boolean isConnected()>();
+        if $z1 != 0 goto label1;
+
+        $r4 = new java.net.SocketException;
+        specialinvoke $r4.<java.net.SocketException: void <init>(java.lang.String)>("Socket is not connected");
+        throw $r4;
+
+     label1:
+        $z2 = virtualinvoke r0.<java.net.Socket: boolean isOutputShutdown()>();
+        if $z2 == 0 goto label2;
+
+        $r5 = new java.net.SocketException;
+        specialinvoke $r5.<java.net.SocketException: void <init>(java.lang.String)>("Socket output is shutdown");
+        throw $r5;
+
+     label2:
+        r1 = r0;
+        n0 = null;
+
+     label3:
+        $r6 = new java.net.Socket$3;
+        specialinvoke $r6.<java.net.Socket$3: void <init>(java.net.Socket)>(r0);
+        $r7 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedExceptionAction)>($r6);
+        r8 = (java.io.OutputStream) $r7;
+
+     label4:
+        goto label6;
+
+     label5:
+        $r9 := @caughtexception;
+        r2 = $r9;
+        $r10 = virtualinvoke r2.<java.security.PrivilegedActionException: java.lang.Exception getException()>();
+        $r11 = (java.io.IOException) $r10;
+        throw $r11;
+
+     label6:
+        return r8;
+
+        catch java.security.PrivilegedActionException from label3 to label4 with label5;
+    }
+
+    public void setTcpNoDelay(boolean) throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        boolean z0, $z1;
+        java.net.SocketException $r1;
+        java.net.SocketImpl $r2;
+        java.lang.Boolean $r3;
+
+        r0 := @this: java.net.Socket;
+        z0 := @parameter0: boolean;
+        $z1 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z1 == 0 goto label0;
+
+        $r1 = new java.net.SocketException;
+        specialinvoke $r1.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r1;
+
+     label0:
+        $r2 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $r3 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(boolean)>(z0);
+        virtualinvoke $r2.<java.net.SocketImpl: void setOption(int,java.lang.Object)>(1, $r3);
+        return;
+    }
+
+    public boolean getTcpNoDelay() throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        boolean $z0, $z1;
+        java.net.SocketException $r1;
+        java.net.SocketImpl $r2;
+        java.lang.Object $r3;
+        java.lang.Boolean $r4;
+
+        r0 := @this: java.net.Socket;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = new java.net.SocketException;
+        specialinvoke $r1.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r1;
+
+     label0:
+        $r2 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $r3 = virtualinvoke $r2.<java.net.SocketImpl: java.lang.Object getOption(int)>(1);
+        $r4 = (java.lang.Boolean) $r3;
+        $z1 = virtualinvoke $r4.<java.lang.Boolean: boolean booleanValue()>();
+        return $z1;
+    }
+
+    public void setSoLinger(boolean, int) throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        boolean z0, $z1;
+        int i0;
+        java.net.SocketException $r1;
+        java.net.SocketImpl $r2, $r5;
+        java.lang.Boolean $r3;
+        java.lang.IllegalArgumentException $r4;
+        java.lang.Integer $r6;
+
+        r0 := @this: java.net.Socket;
+        z0 := @parameter0: boolean;
+        i0 := @parameter1: int;
+        $z1 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z1 == 0 goto label0;
+
+        $r1 = new java.net.SocketException;
+        specialinvoke $r1.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r1;
+
+     label0:
+        if z0 != 0 goto label1;
+
+        $r2 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $r3 = new java.lang.Boolean;
+        specialinvoke $r3.<java.lang.Boolean: void <init>(boolean)>(z0);
+        virtualinvoke $r2.<java.net.SocketImpl: void setOption(int,java.lang.Object)>(128, $r3);
+        goto label4;
+
+     label1:
+        if i0 >= 0 goto label2;
+
+        $r4 = new java.lang.IllegalArgumentException;
+        specialinvoke $r4.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("invalid value for SO_LINGER");
+        throw $r4;
+
+     label2:
+        if i0 <= 65535 goto label3;
+
+        i0 = 65535;
+
+     label3:
+        $r5 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $r6 = new java.lang.Integer;
+        specialinvoke $r6.<java.lang.Integer: void <init>(int)>(i0);
+        virtualinvoke $r5.<java.net.SocketImpl: void setOption(int,java.lang.Object)>(128, $r6);
+
+     label4:
+        return;
+    }
+
+    public int getSoLinger() throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        java.lang.Object r1;
+        boolean $z0, $z1;
+        java.net.SocketException $r2;
+        java.net.SocketImpl $r3;
+        java.lang.Integer $r4;
+        int $i0;
+
+        r0 := @this: java.net.Socket;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = new java.net.SocketException;
+        specialinvoke $r2.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r2;
+
+     label0:
+        $r3 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        r1 = virtualinvoke $r3.<java.net.SocketImpl: java.lang.Object getOption(int)>(128);
+        $z1 = r1 instanceof java.lang.Integer;
+        if $z1 == 0 goto label1;
+
+        $r4 = (java.lang.Integer) r1;
+        $i0 = virtualinvoke $r4.<java.lang.Integer: int intValue()>();
+        return $i0;
+
+     label1:
+        return -1;
+    }
+
+    public void sendUrgentData(int) throws java.io.IOException
+    {
+        java.net.Socket r0;
+        int i0;
+        java.net.SocketImpl $r1, $r3;
+        boolean $z0;
+        java.net.SocketException $r2;
+
+        r0 := @this: java.net.Socket;
+        i0 := @parameter0: int;
+        $r1 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $z0 = virtualinvoke $r1.<java.net.SocketImpl: boolean supportsUrgentData()>();
+        if $z0 != 0 goto label0;
+
+        $r2 = new java.net.SocketException;
+        specialinvoke $r2.<java.net.SocketException: void <init>(java.lang.String)>("Urgent data not supported");
+        throw $r2;
+
+     label0:
+        $r3 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        virtualinvoke $r3.<java.net.SocketImpl: void sendUrgentData(int)>(i0);
+        return;
+    }
+
+    public void setOOBInline(boolean) throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        boolean z0, $z1;
+        java.net.SocketException $r1;
+        java.net.SocketImpl $r2;
+        java.lang.Boolean $r3;
+
+        r0 := @this: java.net.Socket;
+        z0 := @parameter0: boolean;
+        $z1 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z1 == 0 goto label0;
+
+        $r1 = new java.net.SocketException;
+        specialinvoke $r1.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r1;
+
+     label0:
+        $r2 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $r3 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(boolean)>(z0);
+        virtualinvoke $r2.<java.net.SocketImpl: void setOption(int,java.lang.Object)>(4099, $r3);
+        return;
+    }
+
+    public boolean getOOBInline() throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        boolean $z0, $z1;
+        java.net.SocketException $r1;
+        java.net.SocketImpl $r2;
+        java.lang.Object $r3;
+        java.lang.Boolean $r4;
+
+        r0 := @this: java.net.Socket;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = new java.net.SocketException;
+        specialinvoke $r1.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r1;
+
+     label0:
+        $r2 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $r3 = virtualinvoke $r2.<java.net.SocketImpl: java.lang.Object getOption(int)>(4099);
+        $r4 = (java.lang.Boolean) $r3;
+        $z1 = virtualinvoke $r4.<java.lang.Boolean: boolean booleanValue()>();
+        return $z1;
+    }
+
+    public synchronized void setSoTimeout(int) throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        int i0;
+        boolean $z0;
+        java.net.SocketException $r1;
+        java.lang.IllegalArgumentException $r2;
+        java.net.SocketImpl $r3;
+        java.lang.Integer $r4;
+
+        r0 := @this: java.net.Socket;
+        i0 := @parameter0: int;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = new java.net.SocketException;
+        specialinvoke $r1.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r1;
+
+     label0:
+        if i0 >= 0 goto label1;
+
+        $r2 = new java.lang.IllegalArgumentException;
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("timeout can\'t be negative");
+        throw $r2;
+
+     label1:
+        $r3 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $r4 = new java.lang.Integer;
+        specialinvoke $r4.<java.lang.Integer: void <init>(int)>(i0);
+        virtualinvoke $r3.<java.net.SocketImpl: void setOption(int,java.lang.Object)>(4102, $r4);
+        return;
+    }
+
+    public synchronized int getSoTimeout() throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        java.lang.Object r1;
+        boolean $z0, $z1;
+        java.net.SocketException $r2;
+        java.net.SocketImpl $r3;
+        java.lang.Integer $r4;
+        int $i0;
+
+        r0 := @this: java.net.Socket;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = new java.net.SocketException;
+        specialinvoke $r2.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r2;
+
+     label0:
+        $r3 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        r1 = virtualinvoke $r3.<java.net.SocketImpl: java.lang.Object getOption(int)>(4102);
+        $z1 = r1 instanceof java.lang.Integer;
+        if $z1 == 0 goto label1;
+
+        $r4 = (java.lang.Integer) r1;
+        $i0 = virtualinvoke $r4.<java.lang.Integer: int intValue()>();
+        return $i0;
+
+     label1:
+        return 0;
+    }
+
+    public synchronized void setSendBufferSize(int) throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        int i0;
+        java.lang.IllegalArgumentException $r1;
+        boolean $z0;
+        java.net.SocketException $r2;
+        java.net.SocketImpl $r3;
+        java.lang.Integer $r4;
+
+        r0 := @this: java.net.Socket;
+        i0 := @parameter0: int;
+        if i0 > 0 goto label0;
+
+        $r1 = new java.lang.IllegalArgumentException;
+        specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("negative send size");
+        throw $r1;
+
+     label0:
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z0 == 0 goto label1;
+
+        $r2 = new java.net.SocketException;
+        specialinvoke $r2.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r2;
+
+     label1:
+        $r3 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $r4 = new java.lang.Integer;
+        specialinvoke $r4.<java.lang.Integer: void <init>(int)>(i0);
+        virtualinvoke $r3.<java.net.SocketImpl: void setOption(int,java.lang.Object)>(4097, $r4);
+        return;
+    }
+
+    public synchronized int getSendBufferSize() throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        int i0;
+        java.lang.Object r1;
+        boolean $z0, $z1;
+        java.net.SocketException $r2;
+        java.net.SocketImpl $r3;
+        java.lang.Integer $r4;
+
+        r0 := @this: java.net.Socket;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = new java.net.SocketException;
+        specialinvoke $r2.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r2;
+
+     label0:
+        i0 = 0;
+        $r3 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        r1 = virtualinvoke $r3.<java.net.SocketImpl: java.lang.Object getOption(int)>(4097);
+        $z1 = r1 instanceof java.lang.Integer;
+        if $z1 == 0 goto label1;
+
+        $r4 = (java.lang.Integer) r1;
+        i0 = virtualinvoke $r4.<java.lang.Integer: int intValue()>();
+
+     label1:
+        return i0;
+    }
+
+    public synchronized void setReceiveBufferSize(int) throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        int i0;
+        java.lang.IllegalArgumentException $r1;
+        boolean $z0;
+        java.net.SocketException $r2;
+        java.net.SocketImpl $r3;
+        java.lang.Integer $r4;
+
+        r0 := @this: java.net.Socket;
+        i0 := @parameter0: int;
+        if i0 > 0 goto label0;
+
+        $r1 = new java.lang.IllegalArgumentException;
+        specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("invalid receive size");
+        throw $r1;
+
+     label0:
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z0 == 0 goto label1;
+
+        $r2 = new java.net.SocketException;
+        specialinvoke $r2.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r2;
+
+     label1:
+        $r3 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $r4 = new java.lang.Integer;
+        specialinvoke $r4.<java.lang.Integer: void <init>(int)>(i0);
+        virtualinvoke $r3.<java.net.SocketImpl: void setOption(int,java.lang.Object)>(4098, $r4);
+        return;
+    }
+
+    public synchronized int getReceiveBufferSize() throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        int i0;
+        java.lang.Object r1;
+        boolean $z0, $z1;
+        java.net.SocketException $r2;
+        java.net.SocketImpl $r3;
+        java.lang.Integer $r4;
+
+        r0 := @this: java.net.Socket;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = new java.net.SocketException;
+        specialinvoke $r2.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r2;
+
+     label0:
+        i0 = 0;
+        $r3 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        r1 = virtualinvoke $r3.<java.net.SocketImpl: java.lang.Object getOption(int)>(4098);
+        $z1 = r1 instanceof java.lang.Integer;
+        if $z1 == 0 goto label1;
+
+        $r4 = (java.lang.Integer) r1;
+        i0 = virtualinvoke $r4.<java.lang.Integer: int intValue()>();
+
+     label1:
+        return i0;
+    }
+
+    public void setKeepAlive(boolean) throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        boolean z0, $z1;
+        java.net.SocketException $r1;
+        java.net.SocketImpl $r2;
+        java.lang.Boolean $r3;
+
+        r0 := @this: java.net.Socket;
+        z0 := @parameter0: boolean;
+        $z1 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z1 == 0 goto label0;
+
+        $r1 = new java.net.SocketException;
+        specialinvoke $r1.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r1;
+
+     label0:
+        $r2 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $r3 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(boolean)>(z0);
+        virtualinvoke $r2.<java.net.SocketImpl: void setOption(int,java.lang.Object)>(8, $r3);
+        return;
+    }
+
+    public boolean getKeepAlive() throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        boolean $z0, $z1;
+        java.net.SocketException $r1;
+        java.net.SocketImpl $r2;
+        java.lang.Object $r3;
+        java.lang.Boolean $r4;
+
+        r0 := @this: java.net.Socket;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = new java.net.SocketException;
+        specialinvoke $r1.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r1;
+
+     label0:
+        $r2 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $r3 = virtualinvoke $r2.<java.net.SocketImpl: java.lang.Object getOption(int)>(8);
+        $r4 = (java.lang.Boolean) $r3;
+        $z1 = virtualinvoke $r4.<java.lang.Boolean: boolean booleanValue()>();
+        return $z1;
+    }
+
+    public void setTrafficClass(int) throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        int i0;
+        java.lang.IllegalArgumentException $r1;
+        boolean $z0;
+        java.net.SocketException $r2;
+        java.net.SocketImpl $r3;
+        java.lang.Integer $r4;
+
+        r0 := @this: java.net.Socket;
+        i0 := @parameter0: int;
+        if i0 < 0 goto label0;
+
+        if i0 <= 255 goto label1;
+
+     label0:
+        $r1 = new java.lang.IllegalArgumentException;
+        specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("tc is not in range 0 -- 255");
+        throw $r1;
+
+     label1:
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z0 == 0 goto label2;
+
+        $r2 = new java.net.SocketException;
+        specialinvoke $r2.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r2;
+
+     label2:
+        $r3 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $r4 = new java.lang.Integer;
+        specialinvoke $r4.<java.lang.Integer: void <init>(int)>(i0);
+        virtualinvoke $r3.<java.net.SocketImpl: void setOption(int,java.lang.Object)>(3, $r4);
+        return;
+    }
+
+    public int getTrafficClass() throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        java.net.SocketImpl $r1;
+        java.lang.Object $r2;
+        java.lang.Integer $r3, $r4;
+        int $i0;
+
+        r0 := @this: java.net.Socket;
+        $r1 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $r2 = virtualinvoke $r1.<java.net.SocketImpl: java.lang.Object getOption(int)>(3);
+        $r3 = (java.lang.Integer) $r2;
+        $r4 = (java.lang.Integer) $r3;
+        $i0 = virtualinvoke $r4.<java.lang.Integer: int intValue()>();
+        return $i0;
+    }
+
+    public void setReuseAddress(boolean) throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        boolean z0, $z1;
+        java.net.SocketException $r1;
+        java.net.SocketImpl $r2;
+        java.lang.Boolean $r3;
+
+        r0 := @this: java.net.Socket;
+        z0 := @parameter0: boolean;
+        $z1 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z1 == 0 goto label0;
+
+        $r1 = new java.net.SocketException;
+        specialinvoke $r1.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r1;
+
+     label0:
+        $r2 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $r3 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(boolean)>(z0);
+        virtualinvoke $r2.<java.net.SocketImpl: void setOption(int,java.lang.Object)>(4, $r3);
+        return;
+    }
+
+    public boolean getReuseAddress() throws java.net.SocketException
+    {
+        java.net.Socket r0;
+        boolean $z0, $z1;
+        java.net.SocketException $r1;
+        java.net.SocketImpl $r2;
+        java.lang.Object $r3;
+        java.lang.Boolean $r4, $r5;
+
+        r0 := @this: java.net.Socket;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = new java.net.SocketException;
+        specialinvoke $r1.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r1;
+
+     label0:
+        $r2 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $r3 = virtualinvoke $r2.<java.net.SocketImpl: java.lang.Object getOption(int)>(4);
+        $r4 = (java.lang.Boolean) $r3;
+        $r5 = (java.lang.Boolean) $r4;
+        $z1 = virtualinvoke $r5.<java.lang.Boolean: boolean booleanValue()>();
+        return $z1;
+    }
+
+    public synchronized void close() throws java.io.IOException
+    {
+        java.net.Socket r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r5;
+        boolean $z0, $z1;
+        java.net.SocketImpl $r4;
+
+        r0 := @this: java.net.Socket;
+        $r3 = r0.<java.net.Socket: java.lang.Object closeLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z0 == 0 goto label2;
+
+        exitmonitor r1;
+
+     label1:
+        return;
+
+     label2:
+        $z1 = r0.<java.net.Socket: boolean created>;
+        if $z1 == 0 goto label3;
+
+        $r4 = r0.<java.net.Socket: java.net.SocketImpl impl>;
+        virtualinvoke $r4.<java.net.SocketImpl: void close()>();
+
+     label3:
+        r0.<java.net.Socket: boolean closed> = 1;
+        exitmonitor r1;
+
+     label4:
+        goto label8;
+
+     label5:
+        $r5 := @caughtexception;
+
+     label6:
+        r2 = $r5;
+        exitmonitor r1;
+
+     label7:
+        throw r2;
+
+     label8:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label5;
+        catch java.lang.Throwable from label2 to label4 with label5;
+        catch java.lang.Throwable from label6 to label7 with label5;
+    }
+
+    public void shutdownInput() throws java.io.IOException
+    {
+        java.net.Socket r0;
+        boolean $z0, $z1, $z2;
+        java.net.SocketException $r1, $r2, $r3;
+        java.net.SocketImpl $r4;
+
+        r0 := @this: java.net.Socket;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = new java.net.SocketException;
+        specialinvoke $r1.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r1;
+
+     label0:
+        $z1 = virtualinvoke r0.<java.net.Socket: boolean isConnected()>();
+        if $z1 != 0 goto label1;
+
+        $r2 = new java.net.SocketException;
+        specialinvoke $r2.<java.net.SocketException: void <init>(java.lang.String)>("Socket is not connected");
+        throw $r2;
+
+     label1:
+        $z2 = virtualinvoke r0.<java.net.Socket: boolean isInputShutdown()>();
+        if $z2 == 0 goto label2;
+
+        $r3 = new java.net.SocketException;
+        specialinvoke $r3.<java.net.SocketException: void <init>(java.lang.String)>("Socket input is already shutdown");
+        throw $r3;
+
+     label2:
+        $r4 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        virtualinvoke $r4.<java.net.SocketImpl: void shutdownInput()>();
+        r0.<java.net.Socket: boolean shutIn> = 1;
+        return;
+    }
+
+    public void shutdownOutput() throws java.io.IOException
+    {
+        java.net.Socket r0;
+        boolean $z0, $z1, $z2;
+        java.net.SocketException $r1, $r2, $r3;
+        java.net.SocketImpl $r4;
+
+        r0 := @this: java.net.Socket;
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isClosed()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = new java.net.SocketException;
+        specialinvoke $r1.<java.net.SocketException: void <init>(java.lang.String)>("Socket is closed");
+        throw $r1;
+
+     label0:
+        $z1 = virtualinvoke r0.<java.net.Socket: boolean isConnected()>();
+        if $z1 != 0 goto label1;
+
+        $r2 = new java.net.SocketException;
+        specialinvoke $r2.<java.net.SocketException: void <init>(java.lang.String)>("Socket is not connected");
+        throw $r2;
+
+     label1:
+        $z2 = virtualinvoke r0.<java.net.Socket: boolean isOutputShutdown()>();
+        if $z2 == 0 goto label2;
+
+        $r3 = new java.net.SocketException;
+        specialinvoke $r3.<java.net.SocketException: void <init>(java.lang.String)>("Socket output is already shutdown");
+        throw $r3;
+
+     label2:
+        $r4 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        virtualinvoke $r4.<java.net.SocketImpl: void shutdownOutput()>();
+        r0.<java.net.Socket: boolean shutOut> = 1;
+        return;
+    }
+
+    public java.lang.String toString()
+    {
+        java.net.Socket r0;
+        java.net.SocketException r1, $r15;
+        boolean $z0;
+        java.lang.StringBuilder $r2, $r3, $r6, $r7, $r9, $r10, $r12, $r13;
+        java.net.SocketImpl $r4, $r8, $r11;
+        java.net.InetAddress $r5;
+        int $i0, $i1;
+        java.lang.String $r14;
+
+        r0 := @this: java.net.Socket;
+
+     label0:
+        $z0 = virtualinvoke r0.<java.net.Socket: boolean isConnected()>();
+        if $z0 == 0 goto label2;
+
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("Socket[addr=");
+        $r4 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $r5 = virtualinvoke $r4.<java.net.SocketImpl: java.net.InetAddress getInetAddress()>();
+        $r6 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r5);
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(",port=");
+        $r8 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $i0 = virtualinvoke $r8.<java.net.SocketImpl: int getPort()>();
+        $r9 = virtualinvoke $r7.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i0);
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(",localport=");
+        $r11 = virtualinvoke r0.<java.net.Socket: java.net.SocketImpl getImpl()>();
+        $i1 = virtualinvoke $r11.<java.net.SocketImpl: int getLocalPort()>();
+        $r12 = virtualinvoke $r10.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i1);
+        $r13 = virtualinvoke $r12.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("]");
+        $r14 = virtualinvoke $r13.<java.lang.StringBuilder: java.lang.String toString()>();
+
+     label1:
+        return $r14;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r15 := @caughtexception;
+        r1 = $r15;
+
+     label4:
+        return "Socket[unconnected]";
+
+        catch java.net.SocketException from label0 to label1 with label3;
+    }
+
+    public boolean isConnected()
+    {
+        java.net.Socket r0;
+        boolean $z0, $z1, $z2;
+
+        r0 := @this: java.net.Socket;
+        $z0 = r0.<java.net.Socket: boolean connected>;
+        if $z0 != 0 goto label0;
+
+        $z1 = r0.<java.net.Socket: boolean oldImpl>;
+        if $z1 == 0 goto label1;
+
+     label0:
+        $z2 = 1;
+        goto label2;
+
+     label1:
+        $z2 = 0;
+
+     label2:
+        return $z2;
+    }
+
+    public boolean isBound()
+    {
+        java.net.Socket r0;
+        boolean $z0, $z1, $z2;
+
+        r0 := @this: java.net.Socket;
+        $z0 = r0.<java.net.Socket: boolean bound>;
+        if $z0 != 0 goto label0;
+
+        $z1 = r0.<java.net.Socket: boolean oldImpl>;
+        if $z1 == 0 goto label1;
+
+     label0:
+        $z2 = 1;
+        goto label2;
+
+     label1:
+        $z2 = 0;
+
+     label2:
+        return $z2;
+    }
+
+    public boolean isClosed()
+    {
+        java.net.Socket r0;
+        java.lang.Object r1, $r3;
+        java.lang.Throwable r2, $r4;
+        boolean $z0;
+
+        r0 := @this: java.net.Socket;
+        $r3 = r0.<java.net.Socket: java.lang.Object closeLock>;
+        r1 = $r3;
+        entermonitor $r3;
+
+     label0:
+        $z0 = r0.<java.net.Socket: boolean closed>;
+        exitmonitor r1;
+
+     label1:
+        return $z0;
+
+     label2:
+        $r4 := @caughtexception;
+
+     label3:
+        r2 = $r4;
+        exitmonitor r1;
+
+     label4:
+        throw r2;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    public boolean isInputShutdown()
+    {
+        java.net.Socket r0;
+        boolean $z0;
+
+        r0 := @this: java.net.Socket;
+        $z0 = r0.<java.net.Socket: boolean shutIn>;
+        return $z0;
+    }
+
+    public boolean isOutputShutdown()
+    {
+        java.net.Socket r0;
+        boolean $z0;
+
+        r0 := @this: java.net.Socket;
+        $z0 = r0.<java.net.Socket: boolean shutOut>;
+        return $z0;
+    }
+
+    public static synchronized void setSocketImplFactory(java.net.SocketImplFactory) throws java.io.IOException
+    {
+        java.net.SocketImplFactory r0, $r1;
+        java.lang.SecurityManager r2;
+        java.net.SocketException $r3;
+
+        r0 := @parameter0: java.net.SocketImplFactory;
+        $r1 = <java.net.Socket: java.net.SocketImplFactory factory>;
+        if $r1 == null goto label0;
+
+        $r3 = new java.net.SocketException;
+        specialinvoke $r3.<java.net.SocketException: void <init>(java.lang.String)>("factory already defined");
+        throw $r3;
+
+     label0:
+        r2 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r2 == null goto label1;
+
+        virtualinvoke r2.<java.lang.SecurityManager: void checkSetFactory()>();
+
+     label1:
+        <java.net.Socket: java.net.SocketImplFactory factory> = r0;
+        return;
+    }
+
+    public void setPerformancePreferences(int, int, int)
+    {
+        java.net.Socket r0;
+        int i0, i1, i2;
+
+        r0 := @this: java.net.Socket;
+        i0 := @parameter0: int;
+        i1 := @parameter1: int;
+        i2 := @parameter2: int;
+        return;
+    }
+
+    static void <clinit>()
+    {
+        <java.net.Socket: java.net.SocketImplFactory factory> = null;
+        return;
+    }
+}

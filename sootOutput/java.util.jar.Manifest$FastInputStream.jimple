@@ -1,0 +1,326 @@
+class java.util.jar.Manifest$FastInputStream extends java.io.FilterInputStream
+{
+    private byte[] buf;
+    private int count;
+    private int pos;
+
+    void <init>(java.io.InputStream)
+    {
+        java.util.jar.Manifest$FastInputStream r0;
+        java.io.InputStream r1;
+
+        r0 := @this: java.util.jar.Manifest$FastInputStream;
+        r1 := @parameter0: java.io.InputStream;
+        specialinvoke r0.<java.util.jar.Manifest$FastInputStream: void <init>(java.io.InputStream,int)>(r1, 8192);
+        return;
+    }
+
+    void <init>(java.io.InputStream, int)
+    {
+        java.util.jar.Manifest$FastInputStream r0;
+        java.io.InputStream r1;
+        int i0;
+        byte[] $r2;
+
+        r0 := @this: java.util.jar.Manifest$FastInputStream;
+        r1 := @parameter0: java.io.InputStream;
+        i0 := @parameter1: int;
+        specialinvoke r0.<java.io.FilterInputStream: void <init>(java.io.InputStream)>(r1);
+        r0.<java.util.jar.Manifest$FastInputStream: int count> = 0;
+        r0.<java.util.jar.Manifest$FastInputStream: int pos> = 0;
+        $r2 = newarray (byte)[i0];
+        r0.<java.util.jar.Manifest$FastInputStream: byte[] buf> = $r2;
+        return;
+    }
+
+    public int read() throws java.io.IOException
+    {
+        java.util.jar.Manifest$FastInputStream r0;
+        int $i0, $i1, $i2, $i3, $i4, $i5;
+        byte[] $r1;
+        byte $b6;
+        short $s7;
+
+        r0 := @this: java.util.jar.Manifest$FastInputStream;
+        $i1 = r0.<java.util.jar.Manifest$FastInputStream: int pos>;
+        $i2 = r0.<java.util.jar.Manifest$FastInputStream: int count>;
+        if $i1 < $i2 goto label0;
+
+        specialinvoke r0.<java.util.jar.Manifest$FastInputStream: void fill()>();
+        $i3 = r0.<java.util.jar.Manifest$FastInputStream: int pos>;
+        $i4 = r0.<java.util.jar.Manifest$FastInputStream: int count>;
+        if $i3 < $i4 goto label0;
+
+        return -1;
+
+     label0:
+        $r1 = r0.<java.util.jar.Manifest$FastInputStream: byte[] buf>;
+        $i0 = r0.<java.util.jar.Manifest$FastInputStream: int pos>;
+        $i5 = $i0 + 1;
+        r0.<java.util.jar.Manifest$FastInputStream: int pos> = $i5;
+        $b6 = $r1[$i0];
+        $s7 = $b6 & 255;
+        return $s7;
+    }
+
+    public int read(byte[], int, int) throws java.io.IOException
+    {
+        java.util.jar.Manifest$FastInputStream r0;
+        byte[] r1, $r2, $r4;
+        int i0, i1, i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9, $i10, $i11;
+        java.io.InputStream $r3;
+
+        r0 := @this: java.util.jar.Manifest$FastInputStream;
+        r1 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        $i3 = r0.<java.util.jar.Manifest$FastInputStream: int count>;
+        $i4 = r0.<java.util.jar.Manifest$FastInputStream: int pos>;
+        i2 = $i3 - $i4;
+        if i2 > 0 goto label1;
+
+        $r2 = r0.<java.util.jar.Manifest$FastInputStream: byte[] buf>;
+        $i5 = lengthof $r2;
+        if i1 < $i5 goto label0;
+
+        $r3 = r0.<java.util.jar.Manifest$FastInputStream: java.io.InputStream in>;
+        $i6 = virtualinvoke $r3.<java.io.InputStream: int read(byte[],int,int)>(r1, i0, i1);
+        return $i6;
+
+     label0:
+        specialinvoke r0.<java.util.jar.Manifest$FastInputStream: void fill()>();
+        $i7 = r0.<java.util.jar.Manifest$FastInputStream: int count>;
+        $i8 = r0.<java.util.jar.Manifest$FastInputStream: int pos>;
+        i2 = $i7 - $i8;
+        if i2 > 0 goto label1;
+
+        return -1;
+
+     label1:
+        if i1 <= i2 goto label2;
+
+        i1 = i2;
+
+     label2:
+        $r4 = r0.<java.util.jar.Manifest$FastInputStream: byte[] buf>;
+        $i9 = r0.<java.util.jar.Manifest$FastInputStream: int pos>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r4, $i9, r1, i0, i1);
+        $i10 = r0.<java.util.jar.Manifest$FastInputStream: int pos>;
+        $i11 = $i10 + i1;
+        r0.<java.util.jar.Manifest$FastInputStream: int pos> = $i11;
+        return i1;
+    }
+
+    public int readLine(byte[], int, int) throws java.io.IOException
+    {
+        java.util.jar.Manifest$FastInputStream r0;
+        byte[] r1, r2;
+        int i0, i1, i2, i3, i4, i5, i6, $i7, $i8, $i9, $i10, $i11, $i13, i14, $i15, $i16;
+        byte $b12, $b17;
+
+        r0 := @this: java.util.jar.Manifest$FastInputStream;
+        r1 := @parameter0: byte[];
+        i0 := @parameter1: int;
+        i1 := @parameter2: int;
+        r2 = r0.<java.util.jar.Manifest$FastInputStream: byte[] buf>;
+        i2 = 0;
+
+     label0:
+        if i2 >= i1 goto label6;
+
+        $i7 = r0.<java.util.jar.Manifest$FastInputStream: int count>;
+        $i8 = r0.<java.util.jar.Manifest$FastInputStream: int pos>;
+        i3 = $i7 - $i8;
+        if i3 > 0 goto label1;
+
+        specialinvoke r0.<java.util.jar.Manifest$FastInputStream: void fill()>();
+        $i9 = r0.<java.util.jar.Manifest$FastInputStream: int count>;
+        $i10 = r0.<java.util.jar.Manifest$FastInputStream: int pos>;
+        i3 = $i9 - $i10;
+        if i3 > 0 goto label1;
+
+        return -1;
+
+     label1:
+        i4 = i1 - i2;
+        if i4 <= i3 goto label2;
+
+        i4 = i3;
+
+     label2:
+        i5 = r0.<java.util.jar.Manifest$FastInputStream: int pos>;
+        i6 = i5 + i4;
+
+     label3:
+        if i5 >= i6 goto label4;
+
+        $i11 = i5;
+        i5 = i5 + 1;
+        $b12 = r2[$i11];
+        if $b12 == 10 goto label4;
+
+        goto label3;
+
+     label4:
+        $i13 = r0.<java.util.jar.Manifest$FastInputStream: int pos>;
+        i14 = i5 - $i13;
+        $i15 = r0.<java.util.jar.Manifest$FastInputStream: int pos>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(r2, $i15, r1, i0, i14);
+        i0 = i0 + i14;
+        i2 = i2 + i14;
+        r0.<java.util.jar.Manifest$FastInputStream: int pos> = i5;
+        $i16 = i5 - 1;
+        $b17 = r2[$i16];
+        if $b17 != 10 goto label5;
+
+        goto label6;
+
+     label5:
+        goto label0;
+
+     label6:
+        return i2;
+    }
+
+    public byte peek() throws java.io.IOException
+    {
+        java.util.jar.Manifest$FastInputStream r0;
+        int $i0, $i1, $i2, $i3, $i4;
+        byte[] $r1;
+        byte $b5;
+
+        r0 := @this: java.util.jar.Manifest$FastInputStream;
+        $i0 = r0.<java.util.jar.Manifest$FastInputStream: int pos>;
+        $i1 = r0.<java.util.jar.Manifest$FastInputStream: int count>;
+        if $i0 != $i1 goto label0;
+
+        specialinvoke r0.<java.util.jar.Manifest$FastInputStream: void fill()>();
+
+     label0:
+        $i2 = r0.<java.util.jar.Manifest$FastInputStream: int pos>;
+        $i3 = r0.<java.util.jar.Manifest$FastInputStream: int count>;
+        if $i2 != $i3 goto label1;
+
+        return -1;
+
+     label1:
+        $r1 = r0.<java.util.jar.Manifest$FastInputStream: byte[] buf>;
+        $i4 = r0.<java.util.jar.Manifest$FastInputStream: int pos>;
+        $b5 = $r1[$i4];
+        return $b5;
+    }
+
+    public int readLine(byte[]) throws java.io.IOException
+    {
+        java.util.jar.Manifest$FastInputStream r0;
+        byte[] r1;
+        int $i0, $i1;
+
+        r0 := @this: java.util.jar.Manifest$FastInputStream;
+        r1 := @parameter0: byte[];
+        $i0 = lengthof r1;
+        $i1 = virtualinvoke r0.<java.util.jar.Manifest$FastInputStream: int readLine(byte[],int,int)>(r1, 0, $i0);
+        return $i1;
+    }
+
+    public long skip(long) throws java.io.IOException
+    {
+        java.util.jar.Manifest$FastInputStream r0;
+        long l0, l1, $l7, $l10, $l11;
+        byte $b2, $b6, $b8;
+        int $i3, $i4, $i5, $i9, $i12;
+        java.io.InputStream $r1;
+
+        r0 := @this: java.util.jar.Manifest$FastInputStream;
+        l0 := @parameter0: long;
+        $b2 = l0 cmp 0L;
+        if $b2 > 0 goto label0;
+
+        return 0L;
+
+     label0:
+        $i3 = r0.<java.util.jar.Manifest$FastInputStream: int count>;
+        $i4 = r0.<java.util.jar.Manifest$FastInputStream: int pos>;
+        $i5 = $i3 - $i4;
+        l1 = (long) $i5;
+        $b6 = l1 cmp 0L;
+        if $b6 > 0 goto label1;
+
+        $r1 = r0.<java.util.jar.Manifest$FastInputStream: java.io.InputStream in>;
+        $l7 = virtualinvoke $r1.<java.io.InputStream: long skip(long)>(l0);
+        return $l7;
+
+     label1:
+        $b8 = l0 cmp l1;
+        if $b8 <= 0 goto label2;
+
+        l0 = l1;
+
+     label2:
+        $i9 = r0.<java.util.jar.Manifest$FastInputStream: int pos>;
+        $l10 = (long) $i9;
+        $l11 = $l10 + l0;
+        $i12 = (int) $l11;
+        r0.<java.util.jar.Manifest$FastInputStream: int pos> = $i12;
+        return l0;
+    }
+
+    public int available() throws java.io.IOException
+    {
+        java.util.jar.Manifest$FastInputStream r0;
+        int $i0, $i1, $i2, $i3, $i4;
+        java.io.InputStream $r1;
+
+        r0 := @this: java.util.jar.Manifest$FastInputStream;
+        $i0 = r0.<java.util.jar.Manifest$FastInputStream: int count>;
+        $i1 = r0.<java.util.jar.Manifest$FastInputStream: int pos>;
+        $i2 = $i0 - $i1;
+        $r1 = r0.<java.util.jar.Manifest$FastInputStream: java.io.InputStream in>;
+        $i3 = virtualinvoke $r1.<java.io.InputStream: int available()>();
+        $i4 = $i2 + $i3;
+        return $i4;
+    }
+
+    public void close() throws java.io.IOException
+    {
+        java.util.jar.Manifest$FastInputStream r0;
+        java.io.InputStream $r1, $r2;
+
+        r0 := @this: java.util.jar.Manifest$FastInputStream;
+        $r1 = r0.<java.util.jar.Manifest$FastInputStream: java.io.InputStream in>;
+        if $r1 == null goto label0;
+
+        $r2 = r0.<java.util.jar.Manifest$FastInputStream: java.io.InputStream in>;
+        virtualinvoke $r2.<java.io.InputStream: void close()>();
+        r0.<java.util.jar.Manifest$FastInputStream: java.io.InputStream in> = null;
+        r0.<java.util.jar.Manifest$FastInputStream: byte[] buf> = null;
+
+     label0:
+        return;
+    }
+
+    private void fill() throws java.io.IOException
+    {
+        java.util.jar.Manifest$FastInputStream r0;
+        byte $b0;
+        int i1, $i2;
+        java.io.InputStream $r1;
+        byte[] $r2, $r3;
+
+        r0 := @this: java.util.jar.Manifest$FastInputStream;
+        $b0 = 0;
+        r0.<java.util.jar.Manifest$FastInputStream: int pos> = $b0;
+        r0.<java.util.jar.Manifest$FastInputStream: int count> = $b0;
+        $r1 = r0.<java.util.jar.Manifest$FastInputStream: java.io.InputStream in>;
+        $r2 = r0.<java.util.jar.Manifest$FastInputStream: byte[] buf>;
+        $r3 = r0.<java.util.jar.Manifest$FastInputStream: byte[] buf>;
+        $i2 = lengthof $r3;
+        i1 = virtualinvoke $r1.<java.io.InputStream: int read(byte[],int,int)>($r2, 0, $i2);
+        if i1 <= 0 goto label0;
+
+        r0.<java.util.jar.Manifest$FastInputStream: int count> = i1;
+
+     label0:
+        return;
+    }
+}

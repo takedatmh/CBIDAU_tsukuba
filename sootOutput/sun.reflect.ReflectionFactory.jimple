@@ -1,0 +1,471 @@
+public class sun.reflect.ReflectionFactory extends java.lang.Object
+{
+    private static boolean initted;
+    private static java.security.Permission reflectionFactoryAccessPerm;
+    private static sun.reflect.ReflectionFactory soleInstance;
+    private static volatile sun.reflect.LangReflectAccess langReflectAccess;
+    private static boolean noInflation;
+    private static int inflationThreshold;
+
+    private void <init>()
+    {
+        sun.reflect.ReflectionFactory r0;
+
+        r0 := @this: sun.reflect.ReflectionFactory;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static sun.reflect.ReflectionFactory getReflectionFactory()
+    {
+        java.lang.SecurityManager r0;
+        java.security.Permission $r1;
+        sun.reflect.ReflectionFactory $r2;
+
+        r0 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r0 == null goto label0;
+
+        $r1 = <sun.reflect.ReflectionFactory: java.security.Permission reflectionFactoryAccessPerm>;
+        virtualinvoke r0.<java.lang.SecurityManager: void checkPermission(java.security.Permission)>($r1);
+
+     label0:
+        $r2 = <sun.reflect.ReflectionFactory: sun.reflect.ReflectionFactory soleInstance>;
+        return $r2;
+    }
+
+    public void setLangReflectAccess(sun.reflect.LangReflectAccess)
+    {
+        sun.reflect.ReflectionFactory r0;
+        sun.reflect.LangReflectAccess r1;
+
+        r0 := @this: sun.reflect.ReflectionFactory;
+        r1 := @parameter0: sun.reflect.LangReflectAccess;
+        <sun.reflect.ReflectionFactory: sun.reflect.LangReflectAccess langReflectAccess> = r1;
+        return;
+    }
+
+    public sun.reflect.FieldAccessor newFieldAccessor(java.lang.reflect.Field, boolean)
+    {
+        sun.reflect.ReflectionFactory r0;
+        java.lang.reflect.Field r1;
+        boolean z0;
+        sun.reflect.FieldAccessor $r2;
+
+        r0 := @this: sun.reflect.ReflectionFactory;
+        r1 := @parameter0: java.lang.reflect.Field;
+        z0 := @parameter1: boolean;
+        staticinvoke <sun.reflect.ReflectionFactory: void checkInitted()>();
+        $r2 = staticinvoke <sun.reflect.UnsafeFieldAccessorFactory: sun.reflect.FieldAccessor newFieldAccessor(java.lang.reflect.Field,boolean)>(r1, z0);
+        return $r2;
+    }
+
+    public sun.reflect.MethodAccessor newMethodAccessor(java.lang.reflect.Method)
+    {
+        sun.reflect.ReflectionFactory r0;
+        java.lang.reflect.Method r1;
+        boolean $z0;
+        sun.reflect.NativeMethodAccessorImpl r2, $r11;
+        sun.reflect.DelegatingMethodAccessorImpl r3, $r12;
+        sun.reflect.MethodAccessorGenerator $r4;
+        java.lang.Class $r5, $r8;
+        java.lang.String $r6;
+        java.lang.Class[] $r7, $r9;
+        int $i0;
+        sun.reflect.MethodAccessor $r10;
+
+        r0 := @this: sun.reflect.ReflectionFactory;
+        r1 := @parameter0: java.lang.reflect.Method;
+        staticinvoke <sun.reflect.ReflectionFactory: void checkInitted()>();
+        $z0 = <sun.reflect.ReflectionFactory: boolean noInflation>;
+        if $z0 == 0 goto label0;
+
+        $r4 = new sun.reflect.MethodAccessorGenerator;
+        specialinvoke $r4.<sun.reflect.MethodAccessorGenerator: void <init>()>();
+        $r5 = virtualinvoke r1.<java.lang.reflect.Method: java.lang.Class getDeclaringClass()>();
+        $r6 = virtualinvoke r1.<java.lang.reflect.Method: java.lang.String getName()>();
+        $r7 = virtualinvoke r1.<java.lang.reflect.Method: java.lang.Class[] getParameterTypes()>();
+        $r8 = virtualinvoke r1.<java.lang.reflect.Method: java.lang.Class getReturnType()>();
+        $r9 = virtualinvoke r1.<java.lang.reflect.Method: java.lang.Class[] getExceptionTypes()>();
+        $i0 = virtualinvoke r1.<java.lang.reflect.Method: int getModifiers()>();
+        $r10 = virtualinvoke $r4.<sun.reflect.MethodAccessorGenerator: sun.reflect.MethodAccessor generateMethod(java.lang.Class,java.lang.String,java.lang.Class[],java.lang.Class,java.lang.Class[],int)>($r5, $r6, $r7, $r8, $r9, $i0);
+        return $r10;
+
+     label0:
+        $r11 = new sun.reflect.NativeMethodAccessorImpl;
+        specialinvoke $r11.<sun.reflect.NativeMethodAccessorImpl: void <init>(java.lang.reflect.Method)>(r1);
+        r2 = $r11;
+        $r12 = new sun.reflect.DelegatingMethodAccessorImpl;
+        specialinvoke $r12.<sun.reflect.DelegatingMethodAccessorImpl: void <init>(sun.reflect.MethodAccessorImpl)>(r2);
+        r3 = $r12;
+        virtualinvoke r2.<sun.reflect.NativeMethodAccessorImpl: void setParent(sun.reflect.DelegatingMethodAccessorImpl)>(r3);
+        return r3;
+    }
+
+    public sun.reflect.ConstructorAccessor newConstructorAccessor(java.lang.reflect.Constructor)
+    {
+        sun.reflect.ReflectionFactory r0;
+        java.lang.reflect.Constructor r1;
+        java.lang.Class r2, $r9;
+        sun.reflect.NativeConstructorAccessorImpl r3, $r13;
+        sun.reflect.DelegatingConstructorAccessorImpl r4, $r14;
+        int $i0, $i1;
+        boolean $z0, $z1, $z2;
+        sun.reflect.InstantiationExceptionConstructorAccessorImpl $r5, $r6;
+        sun.reflect.BootstrapConstructorAccessorImpl $r7;
+        sun.reflect.MethodAccessorGenerator $r8;
+        java.lang.Class[] $r10, $r11;
+        sun.reflect.ConstructorAccessor $r12;
+
+        r0 := @this: sun.reflect.ReflectionFactory;
+        r1 := @parameter0: java.lang.reflect.Constructor;
+        staticinvoke <sun.reflect.ReflectionFactory: void checkInitted()>();
+        r2 = virtualinvoke r1.<java.lang.reflect.Constructor: java.lang.Class getDeclaringClass()>();
+        $i0 = virtualinvoke r2.<java.lang.Class: int getModifiers()>();
+        $z0 = staticinvoke <java.lang.reflect.Modifier: boolean isAbstract(int)>($i0);
+        if $z0 == 0 goto label0;
+
+        $r5 = new sun.reflect.InstantiationExceptionConstructorAccessorImpl;
+        specialinvoke $r5.<sun.reflect.InstantiationExceptionConstructorAccessorImpl: void <init>(java.lang.String)>(null);
+        return $r5;
+
+     label0:
+        if r2 != class "java/lang/Class" goto label1;
+
+        $r6 = new sun.reflect.InstantiationExceptionConstructorAccessorImpl;
+        specialinvoke $r6.<sun.reflect.InstantiationExceptionConstructorAccessorImpl: void <init>(java.lang.String)>("Can not instantiate java.lang.Class");
+        return $r6;
+
+     label1:
+        $z1 = staticinvoke <sun.reflect.Reflection: boolean isSubclassOf(java.lang.Class,java.lang.Class)>(r2, class "sun/reflect/ConstructorAccessorImpl");
+        if $z1 == 0 goto label2;
+
+        $r7 = new sun.reflect.BootstrapConstructorAccessorImpl;
+        specialinvoke $r7.<sun.reflect.BootstrapConstructorAccessorImpl: void <init>(java.lang.reflect.Constructor)>(r1);
+        return $r7;
+
+     label2:
+        $z2 = <sun.reflect.ReflectionFactory: boolean noInflation>;
+        if $z2 == 0 goto label3;
+
+        $r8 = new sun.reflect.MethodAccessorGenerator;
+        specialinvoke $r8.<sun.reflect.MethodAccessorGenerator: void <init>()>();
+        $r9 = virtualinvoke r1.<java.lang.reflect.Constructor: java.lang.Class getDeclaringClass()>();
+        $r10 = virtualinvoke r1.<java.lang.reflect.Constructor: java.lang.Class[] getParameterTypes()>();
+        $r11 = virtualinvoke r1.<java.lang.reflect.Constructor: java.lang.Class[] getExceptionTypes()>();
+        $i1 = virtualinvoke r1.<java.lang.reflect.Constructor: int getModifiers()>();
+        $r12 = virtualinvoke $r8.<sun.reflect.MethodAccessorGenerator: sun.reflect.ConstructorAccessor generateConstructor(java.lang.Class,java.lang.Class[],java.lang.Class[],int)>($r9, $r10, $r11, $i1);
+        return $r12;
+
+     label3:
+        $r13 = new sun.reflect.NativeConstructorAccessorImpl;
+        specialinvoke $r13.<sun.reflect.NativeConstructorAccessorImpl: void <init>(java.lang.reflect.Constructor)>(r1);
+        r3 = $r13;
+        $r14 = new sun.reflect.DelegatingConstructorAccessorImpl;
+        specialinvoke $r14.<sun.reflect.DelegatingConstructorAccessorImpl: void <init>(sun.reflect.ConstructorAccessorImpl)>(r3);
+        r4 = $r14;
+        virtualinvoke r3.<sun.reflect.NativeConstructorAccessorImpl: void setParent(sun.reflect.DelegatingConstructorAccessorImpl)>(r4);
+        return r4;
+    }
+
+    public java.lang.reflect.Field newField(java.lang.Class, java.lang.String, java.lang.Class, int, int, java.lang.String, byte[])
+    {
+        sun.reflect.ReflectionFactory r0;
+        java.lang.Class r1, r3;
+        java.lang.String r2, r4;
+        int i0, i1;
+        byte[] r5;
+        sun.reflect.LangReflectAccess $r6;
+        java.lang.reflect.Field $r7;
+
+        r0 := @this: sun.reflect.ReflectionFactory;
+        r1 := @parameter0: java.lang.Class;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: java.lang.Class;
+        i0 := @parameter3: int;
+        i1 := @parameter4: int;
+        r4 := @parameter5: java.lang.String;
+        r5 := @parameter6: byte[];
+        $r6 = staticinvoke <sun.reflect.ReflectionFactory: sun.reflect.LangReflectAccess langReflectAccess()>();
+        $r7 = interfaceinvoke $r6.<sun.reflect.LangReflectAccess: java.lang.reflect.Field newField(java.lang.Class,java.lang.String,java.lang.Class,int,int,java.lang.String,byte[])>(r1, r2, r3, i0, i1, r4, r5);
+        return $r7;
+    }
+
+    public java.lang.reflect.Method newMethod(java.lang.Class, java.lang.String, java.lang.Class[], java.lang.Class, java.lang.Class[], int, int, java.lang.String, byte[], byte[], byte[])
+    {
+        sun.reflect.ReflectionFactory r0;
+        java.lang.Class r1, r4;
+        java.lang.String r2, r6;
+        java.lang.Class[] r3, r5;
+        int i0, i1;
+        byte[] r7, r8, r9;
+        sun.reflect.LangReflectAccess $r10;
+        java.lang.reflect.Method $r11;
+
+        r0 := @this: sun.reflect.ReflectionFactory;
+        r1 := @parameter0: java.lang.Class;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: java.lang.Class[];
+        r4 := @parameter3: java.lang.Class;
+        r5 := @parameter4: java.lang.Class[];
+        i0 := @parameter5: int;
+        i1 := @parameter6: int;
+        r6 := @parameter7: java.lang.String;
+        r7 := @parameter8: byte[];
+        r8 := @parameter9: byte[];
+        r9 := @parameter10: byte[];
+        $r10 = staticinvoke <sun.reflect.ReflectionFactory: sun.reflect.LangReflectAccess langReflectAccess()>();
+        $r11 = interfaceinvoke $r10.<sun.reflect.LangReflectAccess: java.lang.reflect.Method newMethod(java.lang.Class,java.lang.String,java.lang.Class[],java.lang.Class,java.lang.Class[],int,int,java.lang.String,byte[],byte[],byte[])>(r1, r2, r3, r4, r5, i0, i1, r6, r7, r8, r9);
+        return $r11;
+    }
+
+    public java.lang.reflect.Constructor newConstructor(java.lang.Class, java.lang.Class[], java.lang.Class[], int, int, java.lang.String, byte[], byte[])
+    {
+        sun.reflect.ReflectionFactory r0;
+        java.lang.Class r1;
+        java.lang.Class[] r2, r3;
+        int i0, i1;
+        java.lang.String r4;
+        byte[] r5, r6;
+        sun.reflect.LangReflectAccess $r7;
+        java.lang.reflect.Constructor $r8;
+
+        r0 := @this: sun.reflect.ReflectionFactory;
+        r1 := @parameter0: java.lang.Class;
+        r2 := @parameter1: java.lang.Class[];
+        r3 := @parameter2: java.lang.Class[];
+        i0 := @parameter3: int;
+        i1 := @parameter4: int;
+        r4 := @parameter5: java.lang.String;
+        r5 := @parameter6: byte[];
+        r6 := @parameter7: byte[];
+        $r7 = staticinvoke <sun.reflect.ReflectionFactory: sun.reflect.LangReflectAccess langReflectAccess()>();
+        $r8 = interfaceinvoke $r7.<sun.reflect.LangReflectAccess: java.lang.reflect.Constructor newConstructor(java.lang.Class,java.lang.Class[],java.lang.Class[],int,int,java.lang.String,byte[],byte[])>(r1, r2, r3, i0, i1, r4, r5, r6);
+        return $r8;
+    }
+
+    public sun.reflect.MethodAccessor getMethodAccessor(java.lang.reflect.Method)
+    {
+        sun.reflect.ReflectionFactory r0;
+        java.lang.reflect.Method r1;
+        sun.reflect.LangReflectAccess $r2;
+        sun.reflect.MethodAccessor $r3;
+
+        r0 := @this: sun.reflect.ReflectionFactory;
+        r1 := @parameter0: java.lang.reflect.Method;
+        $r2 = staticinvoke <sun.reflect.ReflectionFactory: sun.reflect.LangReflectAccess langReflectAccess()>();
+        $r3 = interfaceinvoke $r2.<sun.reflect.LangReflectAccess: sun.reflect.MethodAccessor getMethodAccessor(java.lang.reflect.Method)>(r1);
+        return $r3;
+    }
+
+    public void setMethodAccessor(java.lang.reflect.Method, sun.reflect.MethodAccessor)
+    {
+        sun.reflect.ReflectionFactory r0;
+        java.lang.reflect.Method r1;
+        sun.reflect.MethodAccessor r2;
+        sun.reflect.LangReflectAccess $r3;
+
+        r0 := @this: sun.reflect.ReflectionFactory;
+        r1 := @parameter0: java.lang.reflect.Method;
+        r2 := @parameter1: sun.reflect.MethodAccessor;
+        $r3 = staticinvoke <sun.reflect.ReflectionFactory: sun.reflect.LangReflectAccess langReflectAccess()>();
+        interfaceinvoke $r3.<sun.reflect.LangReflectAccess: void setMethodAccessor(java.lang.reflect.Method,sun.reflect.MethodAccessor)>(r1, r2);
+        return;
+    }
+
+    public sun.reflect.ConstructorAccessor getConstructorAccessor(java.lang.reflect.Constructor)
+    {
+        sun.reflect.ReflectionFactory r0;
+        java.lang.reflect.Constructor r1;
+        sun.reflect.LangReflectAccess $r2;
+        sun.reflect.ConstructorAccessor $r3;
+
+        r0 := @this: sun.reflect.ReflectionFactory;
+        r1 := @parameter0: java.lang.reflect.Constructor;
+        $r2 = staticinvoke <sun.reflect.ReflectionFactory: sun.reflect.LangReflectAccess langReflectAccess()>();
+        $r3 = interfaceinvoke $r2.<sun.reflect.LangReflectAccess: sun.reflect.ConstructorAccessor getConstructorAccessor(java.lang.reflect.Constructor)>(r1);
+        return $r3;
+    }
+
+    public void setConstructorAccessor(java.lang.reflect.Constructor, sun.reflect.ConstructorAccessor)
+    {
+        sun.reflect.ReflectionFactory r0;
+        java.lang.reflect.Constructor r1;
+        sun.reflect.ConstructorAccessor r2;
+        sun.reflect.LangReflectAccess $r3;
+
+        r0 := @this: sun.reflect.ReflectionFactory;
+        r1 := @parameter0: java.lang.reflect.Constructor;
+        r2 := @parameter1: sun.reflect.ConstructorAccessor;
+        $r3 = staticinvoke <sun.reflect.ReflectionFactory: sun.reflect.LangReflectAccess langReflectAccess()>();
+        interfaceinvoke $r3.<sun.reflect.LangReflectAccess: void setConstructorAccessor(java.lang.reflect.Constructor,sun.reflect.ConstructorAccessor)>(r1, r2);
+        return;
+    }
+
+    public java.lang.reflect.Method copyMethod(java.lang.reflect.Method)
+    {
+        sun.reflect.ReflectionFactory r0;
+        java.lang.reflect.Method r1, $r3;
+        sun.reflect.LangReflectAccess $r2;
+
+        r0 := @this: sun.reflect.ReflectionFactory;
+        r1 := @parameter0: java.lang.reflect.Method;
+        $r2 = staticinvoke <sun.reflect.ReflectionFactory: sun.reflect.LangReflectAccess langReflectAccess()>();
+        $r3 = interfaceinvoke $r2.<sun.reflect.LangReflectAccess: java.lang.reflect.Method copyMethod(java.lang.reflect.Method)>(r1);
+        return $r3;
+    }
+
+    public java.lang.reflect.Field copyField(java.lang.reflect.Field)
+    {
+        sun.reflect.ReflectionFactory r0;
+        java.lang.reflect.Field r1, $r3;
+        sun.reflect.LangReflectAccess $r2;
+
+        r0 := @this: sun.reflect.ReflectionFactory;
+        r1 := @parameter0: java.lang.reflect.Field;
+        $r2 = staticinvoke <sun.reflect.ReflectionFactory: sun.reflect.LangReflectAccess langReflectAccess()>();
+        $r3 = interfaceinvoke $r2.<sun.reflect.LangReflectAccess: java.lang.reflect.Field copyField(java.lang.reflect.Field)>(r1);
+        return $r3;
+    }
+
+    public java.lang.reflect.Constructor copyConstructor(java.lang.reflect.Constructor)
+    {
+        sun.reflect.ReflectionFactory r0;
+        java.lang.reflect.Constructor r1, $r3;
+        sun.reflect.LangReflectAccess $r2;
+
+        r0 := @this: sun.reflect.ReflectionFactory;
+        r1 := @parameter0: java.lang.reflect.Constructor;
+        $r2 = staticinvoke <sun.reflect.ReflectionFactory: sun.reflect.LangReflectAccess langReflectAccess()>();
+        $r3 = interfaceinvoke $r2.<sun.reflect.LangReflectAccess: java.lang.reflect.Constructor copyConstructor(java.lang.reflect.Constructor)>(r1);
+        return $r3;
+    }
+
+    public java.lang.reflect.Constructor newConstructorForSerialization(java.lang.Class, java.lang.reflect.Constructor)
+    {
+        sun.reflect.ReflectionFactory r0;
+        java.lang.Class r1, $r5, $r9, $r10;
+        java.lang.reflect.Constructor r2, r4;
+        sun.reflect.SerializationConstructorAccessorImpl r3;
+        sun.reflect.MethodAccessorGenerator $r6;
+        java.lang.Class[] $r7, $r8, $r11, $r12;
+        int $i0, $i1, $i2;
+        sun.reflect.LangReflectAccess $r13, $r14, $r16, $r18;
+        java.lang.String $r15;
+        byte[] $r17, $r19;
+
+        r0 := @this: sun.reflect.ReflectionFactory;
+        r1 := @parameter0: java.lang.Class;
+        r2 := @parameter1: java.lang.reflect.Constructor;
+        $r5 = virtualinvoke r2.<java.lang.reflect.Constructor: java.lang.Class getDeclaringClass()>();
+        if $r5 != r1 goto label0;
+
+        return r2;
+
+     label0:
+        $r6 = new sun.reflect.MethodAccessorGenerator;
+        specialinvoke $r6.<sun.reflect.MethodAccessorGenerator: void <init>()>();
+        $r7 = virtualinvoke r2.<java.lang.reflect.Constructor: java.lang.Class[] getParameterTypes()>();
+        $r8 = virtualinvoke r2.<java.lang.reflect.Constructor: java.lang.Class[] getExceptionTypes()>();
+        $i0 = virtualinvoke r2.<java.lang.reflect.Constructor: int getModifiers()>();
+        $r9 = virtualinvoke r2.<java.lang.reflect.Constructor: java.lang.Class getDeclaringClass()>();
+        r3 = virtualinvoke $r6.<sun.reflect.MethodAccessorGenerator: sun.reflect.SerializationConstructorAccessorImpl generateSerializationConstructor(java.lang.Class,java.lang.Class[],java.lang.Class[],int,java.lang.Class)>(r1, $r7, $r8, $i0, $r9);
+        $r10 = virtualinvoke r2.<java.lang.reflect.Constructor: java.lang.Class getDeclaringClass()>();
+        $r11 = virtualinvoke r2.<java.lang.reflect.Constructor: java.lang.Class[] getParameterTypes()>();
+        $r12 = virtualinvoke r2.<java.lang.reflect.Constructor: java.lang.Class[] getExceptionTypes()>();
+        $i1 = virtualinvoke r2.<java.lang.reflect.Constructor: int getModifiers()>();
+        $r13 = staticinvoke <sun.reflect.ReflectionFactory: sun.reflect.LangReflectAccess langReflectAccess()>();
+        $i2 = interfaceinvoke $r13.<sun.reflect.LangReflectAccess: int getConstructorSlot(java.lang.reflect.Constructor)>(r2);
+        $r14 = staticinvoke <sun.reflect.ReflectionFactory: sun.reflect.LangReflectAccess langReflectAccess()>();
+        $r15 = interfaceinvoke $r14.<sun.reflect.LangReflectAccess: java.lang.String getConstructorSignature(java.lang.reflect.Constructor)>(r2);
+        $r16 = staticinvoke <sun.reflect.ReflectionFactory: sun.reflect.LangReflectAccess langReflectAccess()>();
+        $r17 = interfaceinvoke $r16.<sun.reflect.LangReflectAccess: byte[] getConstructorAnnotations(java.lang.reflect.Constructor)>(r2);
+        $r18 = staticinvoke <sun.reflect.ReflectionFactory: sun.reflect.LangReflectAccess langReflectAccess()>();
+        $r19 = interfaceinvoke $r18.<sun.reflect.LangReflectAccess: byte[] getConstructorParameterAnnotations(java.lang.reflect.Constructor)>(r2);
+        r4 = virtualinvoke r0.<sun.reflect.ReflectionFactory: java.lang.reflect.Constructor newConstructor(java.lang.Class,java.lang.Class[],java.lang.Class[],int,int,java.lang.String,byte[],byte[])>($r10, $r11, $r12, $i1, $i2, $r15, $r17, $r19);
+        virtualinvoke r0.<sun.reflect.ReflectionFactory: void setConstructorAccessor(java.lang.reflect.Constructor,sun.reflect.ConstructorAccessor)>(r4, r3);
+        return r4;
+    }
+
+    static int inflationThreshold()
+    {
+        int $i0;
+
+        $i0 = <sun.reflect.ReflectionFactory: int inflationThreshold>;
+        return $i0;
+    }
+
+    private static void checkInitted()
+    {
+        boolean $z0;
+        sun.reflect.ReflectionFactory$1 $r0;
+
+        $z0 = <sun.reflect.ReflectionFactory: boolean initted>;
+        if $z0 == 0 goto label0;
+
+        return;
+
+     label0:
+        $r0 = new sun.reflect.ReflectionFactory$1;
+        specialinvoke $r0.<sun.reflect.ReflectionFactory$1: void <init>()>();
+        staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>($r0);
+        return;
+    }
+
+    private static sun.reflect.LangReflectAccess langReflectAccess()
+    {
+        sun.reflect.LangReflectAccess $r0, $r1;
+
+        $r0 = <sun.reflect.ReflectionFactory: sun.reflect.LangReflectAccess langReflectAccess>;
+        if $r0 != null goto label0;
+
+        staticinvoke <java.lang.reflect.Modifier: boolean isPublic(int)>(1);
+
+     label0:
+        $r1 = <sun.reflect.ReflectionFactory: sun.reflect.LangReflectAccess langReflectAccess>;
+        return $r1;
+    }
+
+    static boolean access$002(boolean)
+    {
+        boolean z0;
+
+        z0 := @parameter0: boolean;
+        <sun.reflect.ReflectionFactory: boolean noInflation> = z0;
+        return z0;
+    }
+
+    static int access$102(int)
+    {
+        int i0;
+
+        i0 := @parameter0: int;
+        <sun.reflect.ReflectionFactory: int inflationThreshold> = i0;
+        return i0;
+    }
+
+    static boolean access$202(boolean)
+    {
+        boolean z0;
+
+        z0 := @parameter0: boolean;
+        <sun.reflect.ReflectionFactory: boolean initted> = z0;
+        return z0;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.RuntimePermission $r0;
+        sun.reflect.ReflectionFactory $r1;
+
+        <sun.reflect.ReflectionFactory: boolean initted> = 0;
+        $r0 = new java.lang.RuntimePermission;
+        specialinvoke $r0.<java.lang.RuntimePermission: void <init>(java.lang.String)>("reflectionFactoryAccess");
+        <sun.reflect.ReflectionFactory: java.security.Permission reflectionFactoryAccessPerm> = $r0;
+        $r1 = new sun.reflect.ReflectionFactory;
+        specialinvoke $r1.<sun.reflect.ReflectionFactory: void <init>()>();
+        <sun.reflect.ReflectionFactory: sun.reflect.ReflectionFactory soleInstance> = $r1;
+        <sun.reflect.ReflectionFactory: boolean noInflation> = 0;
+        <sun.reflect.ReflectionFactory: int inflationThreshold> = 15;
+        return;
+    }
+}

@@ -1,0 +1,115 @@
+class org.apache.catalina.core.AsyncContextImpl$RunnableWrapper extends java.lang.Object implements java.lang.Runnable
+{
+    private java.lang.Runnable wrapped;
+    private org.apache.catalina.Context context;
+
+    public void <init>(java.lang.Runnable, org.apache.catalina.Context)
+    {
+        org.apache.catalina.core.AsyncContextImpl$RunnableWrapper r0;
+        java.lang.Runnable r1;
+        org.apache.catalina.Context r2;
+
+        r0 := @this: org.apache.catalina.core.AsyncContextImpl$RunnableWrapper;
+        r1 := @parameter0: java.lang.Runnable;
+        r2 := @parameter1: org.apache.catalina.Context;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        r0.<org.apache.catalina.core.AsyncContextImpl$RunnableWrapper: java.lang.Runnable wrapped> = null;
+        r0.<org.apache.catalina.core.AsyncContextImpl$RunnableWrapper: org.apache.catalina.Context context> = null;
+        r0.<org.apache.catalina.core.AsyncContextImpl$RunnableWrapper: java.lang.Runnable wrapped> = r1;
+        r0.<org.apache.catalina.core.AsyncContextImpl$RunnableWrapper: org.apache.catalina.Context context> = r2;
+        return;
+    }
+
+    public void run()
+    {
+        org.apache.catalina.core.AsyncContextImpl$RunnableWrapper r0;
+        boolean $z0, $z1, $z2, $z3;
+        org.apache.tomcat.util.security.PrivilegedGetTccl r1, $r5;
+        java.lang.ClassLoader r2, $r11, $r17;
+        java.lang.Throwable r3, $r19;
+        org.apache.tomcat.util.security.PrivilegedSetTccl r4, $r8, r12, $r20, $r23, r24;
+        java.lang.Object $r6;
+        java.lang.Thread $r7, $r14, $r22, $r26;
+        org.apache.catalina.Context $r9, $r15;
+        org.apache.catalina.Loader $r10, $r16;
+        java.lang.Runnable $r18;
+
+        r0 := @this: org.apache.catalina.core.AsyncContextImpl$RunnableWrapper;
+        $z0 = <org.apache.catalina.Globals: boolean IS_SECURITY_ENABLED>;
+        if $z0 == 0 goto label0;
+
+        $r5 = new org.apache.tomcat.util.security.PrivilegedGetTccl;
+        specialinvoke $r5.<org.apache.tomcat.util.security.PrivilegedGetTccl: void <init>()>();
+        r1 = $r5;
+        $r6 = staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>(r1);
+        r2 = (java.lang.ClassLoader) $r6;
+        goto label1;
+
+     label0:
+        $r7 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        r2 = virtualinvoke $r7.<java.lang.Thread: java.lang.ClassLoader getContextClassLoader()>();
+
+     label1:
+        $z1 = <org.apache.catalina.Globals: boolean IS_SECURITY_ENABLED>;
+        if $z1 == 0 goto label2;
+
+        $r8 = new org.apache.tomcat.util.security.PrivilegedSetTccl;
+        $r9 = r0.<org.apache.catalina.core.AsyncContextImpl$RunnableWrapper: org.apache.catalina.Context context>;
+        $r10 = interfaceinvoke $r9.<org.apache.catalina.Context: org.apache.catalina.Loader getLoader()>();
+        $r11 = interfaceinvoke $r10.<org.apache.catalina.Loader: java.lang.ClassLoader getClassLoader()>();
+        specialinvoke $r8.<org.apache.tomcat.util.security.PrivilegedSetTccl: void <init>(java.lang.ClassLoader)>($r11);
+        r12 = $r8;
+        staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>(r12);
+        goto label3;
+
+     label2:
+        $r14 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        $r15 = r0.<org.apache.catalina.core.AsyncContextImpl$RunnableWrapper: org.apache.catalina.Context context>;
+        $r16 = interfaceinvoke $r15.<org.apache.catalina.Context: org.apache.catalina.Loader getLoader()>();
+        $r17 = interfaceinvoke $r16.<org.apache.catalina.Loader: java.lang.ClassLoader getClassLoader()>();
+        virtualinvoke $r14.<java.lang.Thread: void setContextClassLoader(java.lang.ClassLoader)>($r17);
+
+     label3:
+        $r18 = r0.<org.apache.catalina.core.AsyncContextImpl$RunnableWrapper: java.lang.Runnable wrapped>;
+        interfaceinvoke $r18.<java.lang.Runnable: void run()>();
+        goto label7;
+
+     label4:
+        $r19 := @caughtexception;
+        r3 = $r19;
+        $z2 = <org.apache.catalina.Globals: boolean IS_SECURITY_ENABLED>;
+        if $z2 == 0 goto label5;
+
+        $r20 = new org.apache.tomcat.util.security.PrivilegedSetTccl;
+        specialinvoke $r20.<org.apache.tomcat.util.security.PrivilegedSetTccl: void <init>(java.lang.ClassLoader)>(r2);
+        r4 = $r20;
+        staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>(r4);
+        goto label6;
+
+     label5:
+        $r22 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        virtualinvoke $r22.<java.lang.Thread: void setContextClassLoader(java.lang.ClassLoader)>(r2);
+
+     label6:
+        throw r3;
+
+     label7:
+        $z3 = <org.apache.catalina.Globals: boolean IS_SECURITY_ENABLED>;
+        if $z3 == 0 goto label8;
+
+        $r23 = new org.apache.tomcat.util.security.PrivilegedSetTccl;
+        specialinvoke $r23.<org.apache.tomcat.util.security.PrivilegedSetTccl: void <init>(java.lang.ClassLoader)>(r2);
+        r24 = $r23;
+        staticinvoke <java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedAction)>(r24);
+        goto label9;
+
+     label8:
+        $r26 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        virtualinvoke $r26.<java.lang.Thread: void setContextClassLoader(java.lang.ClassLoader)>(r2);
+
+     label9:
+        return;
+
+        catch java.lang.Throwable from label1 to label4 with label4;
+    }
+}

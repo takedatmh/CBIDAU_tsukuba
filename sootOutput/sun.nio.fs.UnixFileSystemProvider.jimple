@@ -1,0 +1,1076 @@
+public abstract class sun.nio.fs.UnixFileSystemProvider extends sun.nio.fs.AbstractFileSystemProvider
+{
+    private static final java.lang.String USER_DIR;
+    private final sun.nio.fs.UnixFileSystem theFileSystem;
+
+    public void <init>()
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.lang.String r1;
+        sun.nio.fs.UnixFileSystem $r2;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        specialinvoke r0.<sun.nio.fs.AbstractFileSystemProvider: void <init>()>();
+        r1 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("user.dir");
+        $r2 = virtualinvoke r0.<sun.nio.fs.UnixFileSystemProvider: sun.nio.fs.UnixFileSystem newFileSystem(java.lang.String)>(r1);
+        r0.<sun.nio.fs.UnixFileSystemProvider: sun.nio.fs.UnixFileSystem theFileSystem> = $r2;
+        return;
+    }
+
+    abstract sun.nio.fs.UnixFileSystem newFileSystem(java.lang.String);
+
+    public final java.lang.String getScheme()
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        return "file";
+    }
+
+    private void checkUri(java.net.URI)
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.net.URI r1;
+        java.lang.String $r2, $r3, $r5, $r7, $r9, $r11, $r13;
+        boolean $z0, $z1;
+        java.lang.IllegalArgumentException $r4, $r6, $r8, $r10, $r12, $r14;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.net.URI;
+        $r2 = virtualinvoke r1.<java.net.URI: java.lang.String getScheme()>();
+        $r3 = virtualinvoke r0.<sun.nio.fs.UnixFileSystemProvider: java.lang.String getScheme()>();
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>($r3);
+        if $z0 != 0 goto label0;
+
+        $r4 = new java.lang.IllegalArgumentException;
+        specialinvoke $r4.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("URI does not match this provider");
+        throw $r4;
+
+     label0:
+        $r5 = virtualinvoke r1.<java.net.URI: java.lang.String getAuthority()>();
+        if $r5 == null goto label1;
+
+        $r6 = new java.lang.IllegalArgumentException;
+        specialinvoke $r6.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Authority component present");
+        throw $r6;
+
+     label1:
+        $r7 = virtualinvoke r1.<java.net.URI: java.lang.String getPath()>();
+        if $r7 != null goto label2;
+
+        $r8 = new java.lang.IllegalArgumentException;
+        specialinvoke $r8.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Path component is undefined");
+        throw $r8;
+
+     label2:
+        $r9 = virtualinvoke r1.<java.net.URI: java.lang.String getPath()>();
+        $z1 = virtualinvoke $r9.<java.lang.String: boolean equals(java.lang.Object)>("/");
+        if $z1 != 0 goto label3;
+
+        $r10 = new java.lang.IllegalArgumentException;
+        specialinvoke $r10.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Path component should be \'/\'");
+        throw $r10;
+
+     label3:
+        $r11 = virtualinvoke r1.<java.net.URI: java.lang.String getQuery()>();
+        if $r11 == null goto label4;
+
+        $r12 = new java.lang.IllegalArgumentException;
+        specialinvoke $r12.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Query component present");
+        throw $r12;
+
+     label4:
+        $r13 = virtualinvoke r1.<java.net.URI: java.lang.String getFragment()>();
+        if $r13 == null goto label5;
+
+        $r14 = new java.lang.IllegalArgumentException;
+        specialinvoke $r14.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Fragment component present");
+        throw $r14;
+
+     label5:
+        return;
+    }
+
+    public final java.nio.file.FileSystem newFileSystem(java.net.URI, java.util.Map)
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.net.URI r1;
+        java.util.Map r2;
+        java.nio.file.FileSystemAlreadyExistsException $r3;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.net.URI;
+        r2 := @parameter1: java.util.Map;
+        specialinvoke r0.<sun.nio.fs.UnixFileSystemProvider: void checkUri(java.net.URI)>(r1);
+        $r3 = new java.nio.file.FileSystemAlreadyExistsException;
+        specialinvoke $r3.<java.nio.file.FileSystemAlreadyExistsException: void <init>()>();
+        throw $r3;
+    }
+
+    public final java.nio.file.FileSystem getFileSystem(java.net.URI)
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.net.URI r1;
+        sun.nio.fs.UnixFileSystem $r2;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.net.URI;
+        specialinvoke r0.<sun.nio.fs.UnixFileSystemProvider: void checkUri(java.net.URI)>(r1);
+        $r2 = r0.<sun.nio.fs.UnixFileSystemProvider: sun.nio.fs.UnixFileSystem theFileSystem>;
+        return $r2;
+    }
+
+    public java.nio.file.Path getPath(java.net.URI)
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.net.URI r1;
+        sun.nio.fs.UnixFileSystem $r2;
+        java.nio.file.Path $r3;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.net.URI;
+        $r2 = r0.<sun.nio.fs.UnixFileSystemProvider: sun.nio.fs.UnixFileSystem theFileSystem>;
+        $r3 = staticinvoke <sun.nio.fs.UnixUriUtils: java.nio.file.Path fromUri(sun.nio.fs.UnixFileSystem,java.net.URI)>($r2, r1);
+        return $r3;
+    }
+
+    sun.nio.fs.UnixPath checkPath(java.nio.file.Path)
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.nio.file.Path r1;
+        java.lang.NullPointerException $r2;
+        boolean $z0;
+        java.nio.file.ProviderMismatchException $r3;
+        sun.nio.fs.UnixPath $r4;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.nio.file.Path;
+        if r1 != null goto label0;
+
+        $r2 = new java.lang.NullPointerException;
+        specialinvoke $r2.<java.lang.NullPointerException: void <init>()>();
+        throw $r2;
+
+     label0:
+        $z0 = r1 instanceof sun.nio.fs.UnixPath;
+        if $z0 != 0 goto label1;
+
+        $r3 = new java.nio.file.ProviderMismatchException;
+        specialinvoke $r3.<java.nio.file.ProviderMismatchException: void <init>()>();
+        throw $r3;
+
+     label1:
+        $r4 = (sun.nio.fs.UnixPath) r1;
+        return $r4;
+    }
+
+    public transient java.nio.file.attribute.FileAttributeView getFileAttributeView(java.nio.file.Path, java.lang.Class, java.nio.file.LinkOption[])
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.nio.file.Path r1;
+        java.lang.Class r2;
+        java.nio.file.LinkOption[] r3;
+        sun.nio.fs.UnixPath r4;
+        boolean z0;
+        sun.nio.fs.UnixFileAttributeViews$Basic $r5;
+        sun.nio.fs.UnixFileAttributeViews$Posix $r6;
+        sun.nio.fs.FileOwnerAttributeViewImpl $r7;
+        java.lang.NullPointerException $r8;
+        java.nio.file.attribute.FileAttributeView $r9;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.nio.file.Path;
+        r2 := @parameter1: java.lang.Class;
+        r3 := @parameter2: java.nio.file.LinkOption[];
+        r4 = staticinvoke <sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toUnixPath(java.nio.file.Path)>(r1);
+        z0 = staticinvoke <sun.nio.fs.Util: boolean followLinks(java.nio.file.LinkOption[])>(r3);
+        if r2 != class "java/nio/file/attribute/BasicFileAttributeView" goto label0;
+
+        $r5 = staticinvoke <sun.nio.fs.UnixFileAttributeViews: sun.nio.fs.UnixFileAttributeViews$Basic createBasicView(sun.nio.fs.UnixPath,boolean)>(r4, z0);
+        return $r5;
+
+     label0:
+        if r2 != class "java/nio/file/attribute/PosixFileAttributeView" goto label1;
+
+        $r6 = staticinvoke <sun.nio.fs.UnixFileAttributeViews: sun.nio.fs.UnixFileAttributeViews$Posix createPosixView(sun.nio.fs.UnixPath,boolean)>(r4, z0);
+        return $r6;
+
+     label1:
+        if r2 != class "java/nio/file/attribute/FileOwnerAttributeView" goto label2;
+
+        $r7 = staticinvoke <sun.nio.fs.UnixFileAttributeViews: sun.nio.fs.FileOwnerAttributeViewImpl createOwnerView(sun.nio.fs.UnixPath,boolean)>(r4, z0);
+        return $r7;
+
+     label2:
+        if r2 != null goto label3;
+
+        $r8 = new java.lang.NullPointerException;
+        specialinvoke $r8.<java.lang.NullPointerException: void <init>()>();
+        throw $r8;
+
+     label3:
+        $r9 = (java.nio.file.attribute.FileAttributeView) null;
+        return $r9;
+    }
+
+    public transient java.nio.file.attribute.BasicFileAttributes readAttributes(java.nio.file.Path, java.lang.Class, java.nio.file.LinkOption[]) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.nio.file.Path r1;
+        java.lang.Class r2, r4;
+        java.nio.file.LinkOption[] r3;
+        java.lang.NullPointerException $r5;
+        java.lang.UnsupportedOperationException $r6;
+        java.nio.file.attribute.FileAttributeView $r7;
+        java.nio.file.attribute.BasicFileAttributeView $r8;
+        java.nio.file.attribute.BasicFileAttributes $r9;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.nio.file.Path;
+        r2 := @parameter1: java.lang.Class;
+        r3 := @parameter2: java.nio.file.LinkOption[];
+        if r2 != class "java/nio/file/attribute/BasicFileAttributes" goto label0;
+
+        r4 = class "java/nio/file/attribute/BasicFileAttributeView";
+        goto label3;
+
+     label0:
+        if r2 != class "java/nio/file/attribute/PosixFileAttributes" goto label1;
+
+        r4 = class "java/nio/file/attribute/PosixFileAttributeView";
+        goto label3;
+
+     label1:
+        if r2 != null goto label2;
+
+        $r5 = new java.lang.NullPointerException;
+        specialinvoke $r5.<java.lang.NullPointerException: void <init>()>();
+        throw $r5;
+
+     label2:
+        $r6 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r6.<java.lang.UnsupportedOperationException: void <init>()>();
+        throw $r6;
+
+     label3:
+        $r7 = virtualinvoke r0.<sun.nio.fs.UnixFileSystemProvider: java.nio.file.attribute.FileAttributeView getFileAttributeView(java.nio.file.Path,java.lang.Class,java.nio.file.LinkOption[])>(r1, r4, r3);
+        $r8 = (java.nio.file.attribute.BasicFileAttributeView) $r7;
+        $r9 = interfaceinvoke $r8.<java.nio.file.attribute.BasicFileAttributeView: java.nio.file.attribute.BasicFileAttributes readAttributes()>();
+        return $r9;
+    }
+
+    protected transient sun.nio.fs.DynamicFileAttributeView getFileAttributeView(java.nio.file.Path, java.lang.String, java.nio.file.LinkOption[])
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.nio.file.Path r1;
+        java.lang.String r2;
+        java.nio.file.LinkOption[] r3;
+        sun.nio.fs.UnixPath r4;
+        boolean z0, $z1, $z2, $z3, $z4;
+        sun.nio.fs.UnixFileAttributeViews$Basic $r5;
+        sun.nio.fs.UnixFileAttributeViews$Posix $r6;
+        sun.nio.fs.UnixFileAttributeViews$Unix $r7;
+        sun.nio.fs.FileOwnerAttributeViewImpl $r8;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.nio.file.Path;
+        r2 := @parameter1: java.lang.String;
+        r3 := @parameter2: java.nio.file.LinkOption[];
+        r4 = staticinvoke <sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toUnixPath(java.nio.file.Path)>(r1);
+        z0 = staticinvoke <sun.nio.fs.Util: boolean followLinks(java.nio.file.LinkOption[])>(r3);
+        $z1 = virtualinvoke r2.<java.lang.String: boolean equals(java.lang.Object)>("basic");
+        if $z1 == 0 goto label0;
+
+        $r5 = staticinvoke <sun.nio.fs.UnixFileAttributeViews: sun.nio.fs.UnixFileAttributeViews$Basic createBasicView(sun.nio.fs.UnixPath,boolean)>(r4, z0);
+        return $r5;
+
+     label0:
+        $z2 = virtualinvoke r2.<java.lang.String: boolean equals(java.lang.Object)>("posix");
+        if $z2 == 0 goto label1;
+
+        $r6 = staticinvoke <sun.nio.fs.UnixFileAttributeViews: sun.nio.fs.UnixFileAttributeViews$Posix createPosixView(sun.nio.fs.UnixPath,boolean)>(r4, z0);
+        return $r6;
+
+     label1:
+        $z3 = virtualinvoke r2.<java.lang.String: boolean equals(java.lang.Object)>("unix");
+        if $z3 == 0 goto label2;
+
+        $r7 = staticinvoke <sun.nio.fs.UnixFileAttributeViews: sun.nio.fs.UnixFileAttributeViews$Unix createUnixView(sun.nio.fs.UnixPath,boolean)>(r4, z0);
+        return $r7;
+
+     label2:
+        $z4 = virtualinvoke r2.<java.lang.String: boolean equals(java.lang.Object)>("owner");
+        if $z4 == 0 goto label3;
+
+        $r8 = staticinvoke <sun.nio.fs.UnixFileAttributeViews: sun.nio.fs.FileOwnerAttributeViewImpl createOwnerView(sun.nio.fs.UnixPath,boolean)>(r4, z0);
+        return $r8;
+
+     label3:
+        return null;
+    }
+
+    public transient java.nio.channels.FileChannel newFileChannel(java.nio.file.Path, java.util.Set, java.nio.file.attribute.FileAttribute[]) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.nio.file.Path r1;
+        java.util.Set r2;
+        java.nio.file.attribute.FileAttribute[] r3;
+        sun.nio.fs.UnixPath r4;
+        int i0;
+        sun.nio.fs.UnixException r5, $r7;
+        java.nio.channels.FileChannel $r6;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.nio.file.Path;
+        r2 := @parameter1: java.util.Set;
+        r3 := @parameter2: java.nio.file.attribute.FileAttribute[];
+        r4 = virtualinvoke r0.<sun.nio.fs.UnixFileSystemProvider: sun.nio.fs.UnixPath checkPath(java.nio.file.Path)>(r1);
+        i0 = staticinvoke <sun.nio.fs.UnixFileModeAttribute: int toUnixMode(int,java.nio.file.attribute.FileAttribute[])>(438, r3);
+
+     label0:
+        $r6 = staticinvoke <sun.nio.fs.UnixChannelFactory: java.nio.channels.FileChannel newFileChannel(sun.nio.fs.UnixPath,java.util.Set,int)>(r4, r2, i0);
+
+     label1:
+        return $r6;
+
+     label2:
+        $r7 := @caughtexception;
+        r5 = $r7;
+        virtualinvoke r5.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r4);
+        return null;
+
+        catch sun.nio.fs.UnixException from label0 to label1 with label2;
+    }
+
+    public transient java.nio.channels.AsynchronousFileChannel newAsynchronousFileChannel(java.nio.file.Path, java.util.Set, java.util.concurrent.ExecutorService, java.nio.file.attribute.FileAttribute[]) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.nio.file.Path r1;
+        java.util.Set r2;
+        java.util.concurrent.ExecutorService r3;
+        java.nio.file.attribute.FileAttribute[] r4;
+        sun.nio.fs.UnixPath r5;
+        int i0;
+        sun.nio.ch.ThreadPool r6, $r8;
+        sun.nio.fs.UnixException r7, $r10;
+        java.nio.channels.AsynchronousFileChannel $r9;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.nio.file.Path;
+        r2 := @parameter1: java.util.Set;
+        r3 := @parameter2: java.util.concurrent.ExecutorService;
+        r4 := @parameter3: java.nio.file.attribute.FileAttribute[];
+        r5 = virtualinvoke r0.<sun.nio.fs.UnixFileSystemProvider: sun.nio.fs.UnixPath checkPath(java.nio.file.Path)>(r1);
+        i0 = staticinvoke <sun.nio.fs.UnixFileModeAttribute: int toUnixMode(int,java.nio.file.attribute.FileAttribute[])>(438, r4);
+        if r3 != null goto label0;
+
+        $r8 = null;
+        goto label1;
+
+     label0:
+        $r8 = staticinvoke <sun.nio.ch.ThreadPool: sun.nio.ch.ThreadPool wrap(java.util.concurrent.ExecutorService,int)>(r3, 0);
+
+     label1:
+        r6 = $r8;
+
+     label2:
+        $r9 = staticinvoke <sun.nio.fs.UnixChannelFactory: java.nio.channels.AsynchronousFileChannel newAsynchronousFileChannel(sun.nio.fs.UnixPath,java.util.Set,int,sun.nio.ch.ThreadPool)>(r5, r2, i0, r6);
+
+     label3:
+        return $r9;
+
+     label4:
+        $r10 := @caughtexception;
+        r7 = $r10;
+        virtualinvoke r7.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r5);
+        return null;
+
+        catch sun.nio.fs.UnixException from label2 to label3 with label4;
+    }
+
+    public transient java.nio.channels.SeekableByteChannel newByteChannel(java.nio.file.Path, java.util.Set, java.nio.file.attribute.FileAttribute[]) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.nio.file.Path r1;
+        java.util.Set r2;
+        java.nio.file.attribute.FileAttribute[] r3;
+        sun.nio.fs.UnixPath r4;
+        int i0;
+        sun.nio.fs.UnixException r5, $r7;
+        java.nio.channels.FileChannel $r6;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.nio.file.Path;
+        r2 := @parameter1: java.util.Set;
+        r3 := @parameter2: java.nio.file.attribute.FileAttribute[];
+        r4 = staticinvoke <sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toUnixPath(java.nio.file.Path)>(r1);
+        i0 = staticinvoke <sun.nio.fs.UnixFileModeAttribute: int toUnixMode(int,java.nio.file.attribute.FileAttribute[])>(438, r3);
+
+     label0:
+        $r6 = staticinvoke <sun.nio.fs.UnixChannelFactory: java.nio.channels.FileChannel newFileChannel(sun.nio.fs.UnixPath,java.util.Set,int)>(r4, r2, i0);
+
+     label1:
+        return $r6;
+
+     label2:
+        $r7 := @caughtexception;
+        r5 = $r7;
+        virtualinvoke r5.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r4);
+        return null;
+
+        catch sun.nio.fs.UnixException from label0 to label1 with label2;
+    }
+
+    boolean implDelete(java.nio.file.Path, boolean) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.nio.file.Path r1;
+        boolean z0, $z1, $z2, $z3;
+        sun.nio.fs.UnixPath r2;
+        sun.nio.fs.UnixFileAttributes r3;
+        sun.nio.fs.UnixException r4, $r5;
+        int $i0, $i1, $i2;
+        java.nio.file.DirectoryNotEmptyException $r6;
+        java.lang.String $r7;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.nio.file.Path;
+        z0 := @parameter1: boolean;
+        r2 = staticinvoke <sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toUnixPath(java.nio.file.Path)>(r1);
+        virtualinvoke r2.<sun.nio.fs.UnixPath: void checkDelete()>();
+        r3 = null;
+
+     label0:
+        r3 = staticinvoke <sun.nio.fs.UnixFileAttributes: sun.nio.fs.UnixFileAttributes get(sun.nio.fs.UnixPath,boolean)>(r2, 0);
+        $z1 = virtualinvoke r3.<sun.nio.fs.UnixFileAttributes: boolean isDirectory()>();
+        if $z1 == 0 goto label1;
+
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void rmdir(sun.nio.fs.UnixPath)>(r2);
+        goto label2;
+
+     label1:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void unlink(sun.nio.fs.UnixPath)>(r2);
+
+     label2:
+        $z2 = 1;
+
+     label3:
+        return $z2;
+
+     label4:
+        $r5 := @caughtexception;
+        r4 = $r5;
+        if z0 != 0 goto label5;
+
+        $i0 = virtualinvoke r4.<sun.nio.fs.UnixException: int errno()>();
+        if $i0 != 2 goto label5;
+
+        return 0;
+
+     label5:
+        if r3 == null goto label7;
+
+        $z3 = virtualinvoke r3.<sun.nio.fs.UnixFileAttributes: boolean isDirectory()>();
+        if $z3 == 0 goto label7;
+
+        $i1 = virtualinvoke r4.<sun.nio.fs.UnixException: int errno()>();
+        if $i1 == 17 goto label6;
+
+        $i2 = virtualinvoke r4.<sun.nio.fs.UnixException: int errno()>();
+        if $i2 != 66 goto label7;
+
+     label6:
+        $r6 = new java.nio.file.DirectoryNotEmptyException;
+        $r7 = virtualinvoke r2.<sun.nio.fs.UnixPath: java.lang.String getPathForExceptionMessage()>();
+        specialinvoke $r6.<java.nio.file.DirectoryNotEmptyException: void <init>(java.lang.String)>($r7);
+        throw $r6;
+
+     label7:
+        virtualinvoke r4.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r2);
+        return 0;
+
+        catch sun.nio.fs.UnixException from label0 to label3 with label4;
+    }
+
+    public transient void copy(java.nio.file.Path, java.nio.file.Path, java.nio.file.CopyOption[]) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.nio.file.Path r1, r2;
+        java.nio.file.CopyOption[] r3;
+        sun.nio.fs.UnixPath $r4, $r5;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.nio.file.Path;
+        r2 := @parameter1: java.nio.file.Path;
+        r3 := @parameter2: java.nio.file.CopyOption[];
+        $r4 = staticinvoke <sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toUnixPath(java.nio.file.Path)>(r1);
+        $r5 = staticinvoke <sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toUnixPath(java.nio.file.Path)>(r2);
+        staticinvoke <sun.nio.fs.UnixCopyFile: void copy(sun.nio.fs.UnixPath,sun.nio.fs.UnixPath,java.nio.file.CopyOption[])>($r4, $r5, r3);
+        return;
+    }
+
+    public transient void move(java.nio.file.Path, java.nio.file.Path, java.nio.file.CopyOption[]) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.nio.file.Path r1, r2;
+        java.nio.file.CopyOption[] r3;
+        sun.nio.fs.UnixPath $r4, $r5;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.nio.file.Path;
+        r2 := @parameter1: java.nio.file.Path;
+        r3 := @parameter2: java.nio.file.CopyOption[];
+        $r4 = staticinvoke <sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toUnixPath(java.nio.file.Path)>(r1);
+        $r5 = staticinvoke <sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toUnixPath(java.nio.file.Path)>(r2);
+        staticinvoke <sun.nio.fs.UnixCopyFile: void move(sun.nio.fs.UnixPath,sun.nio.fs.UnixPath,java.nio.file.CopyOption[])>($r4, $r5, r3);
+        return;
+    }
+
+    public transient void checkAccess(java.nio.file.Path, java.nio.file.AccessMode[]) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.nio.file.Path r1;
+        java.nio.file.AccessMode[] r2, r4;
+        sun.nio.fs.UnixPath r3;
+        boolean z0, z1, z2, z3;
+        int i0, i1, $i2, $i3, $i4;
+        java.nio.file.AccessMode r5;
+        int[] $r6;
+        java.lang.AssertionError $r7;
+        byte b5, $b6, $b7;
+        java.lang.SecurityManager r8;
+        java.lang.String $r9;
+        sun.nio.fs.UnixException $r10, r11;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.nio.file.Path;
+        r2 := @parameter1: java.nio.file.AccessMode[];
+        r3 = staticinvoke <sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toUnixPath(java.nio.file.Path)>(r1);
+        z0 = 0;
+        z1 = 0;
+        z2 = 0;
+        z3 = 0;
+        $i2 = lengthof r2;
+        if $i2 != 0 goto label0;
+
+        z0 = 1;
+        goto label7;
+
+     label0:
+        r4 = r2;
+        i0 = lengthof r4;
+        i1 = 0;
+
+     label1:
+        if i1 >= i0 goto label7;
+
+        r5 = r4[i1];
+        $r6 = <sun.nio.fs.UnixFileSystemProvider$2: int[] $SwitchMap$java$nio$file$AccessMode>;
+        $i3 = virtualinvoke r5.<java.nio.file.AccessMode: int ordinal()>();
+        $i4 = $r6[$i3];
+        tableswitch($i4)
+        {
+            case 1: goto label2;
+            case 2: goto label3;
+            case 3: goto label4;
+            default: goto label5;
+        };
+
+     label2:
+        z1 = 1;
+        goto label6;
+
+     label3:
+        z2 = 1;
+        goto label6;
+
+     label4:
+        z3 = 1;
+        goto label6;
+
+     label5:
+        $r7 = new java.lang.AssertionError;
+        specialinvoke $r7.<java.lang.AssertionError: void <init>(java.lang.Object)>("Should not get here");
+        throw $r7;
+
+     label6:
+        i1 = i1 + 1;
+        goto label1;
+
+     label7:
+        b5 = 0;
+        if z0 != 0 goto label8;
+
+        if z1 == 0 goto label11;
+
+     label8:
+        virtualinvoke r3.<sun.nio.fs.UnixPath: void checkRead()>();
+        $b6 = b5;
+        if z1 == 0 goto label9;
+
+        $b7 = 4;
+        goto label10;
+
+     label9:
+        $b7 = 0;
+
+     label10:
+        b5 = $b6 | $b7;
+
+     label11:
+        if z2 == 0 goto label12;
+
+        virtualinvoke r3.<sun.nio.fs.UnixPath: void checkWrite()>();
+        b5 = b5 | 2;
+
+     label12:
+        if z3 == 0 goto label14;
+
+        r8 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r8 == null goto label13;
+
+        $r9 = virtualinvoke r3.<sun.nio.fs.UnixPath: java.lang.String getPathForPermissionCheck()>();
+        virtualinvoke r8.<java.lang.SecurityManager: void checkExec(java.lang.String)>($r9);
+
+     label13:
+        b5 = b5 | 1;
+
+     label14:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void access(sun.nio.fs.UnixPath,int)>(r3, b5);
+
+     label15:
+        goto label17;
+
+     label16:
+        $r10 := @caughtexception;
+        r11 = $r10;
+        virtualinvoke r11.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r3);
+
+     label17:
+        return;
+
+        catch sun.nio.fs.UnixException from label14 to label15 with label16;
+    }
+
+    public boolean isSameFile(java.nio.file.Path, java.nio.file.Path) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.nio.file.Path r1, r2;
+        sun.nio.fs.UnixPath r3, r4;
+        sun.nio.fs.UnixFileAttributes r5, r7;
+        sun.nio.fs.UnixException r6, $r9, $r10, r11;
+        boolean $z0, $z1, $z2;
+        java.lang.NullPointerException $r8;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.nio.file.Path;
+        r2 := @parameter1: java.nio.file.Path;
+        r3 = staticinvoke <sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toUnixPath(java.nio.file.Path)>(r1);
+        $z0 = virtualinvoke r3.<sun.nio.fs.UnixPath: boolean equals(java.lang.Object)>(r2);
+        if $z0 == 0 goto label0;
+
+        return 1;
+
+     label0:
+        if r2 != null goto label1;
+
+        $r8 = new java.lang.NullPointerException;
+        specialinvoke $r8.<java.lang.NullPointerException: void <init>()>();
+        throw $r8;
+
+     label1:
+        $z1 = r2 instanceof sun.nio.fs.UnixPath;
+        if $z1 != 0 goto label2;
+
+        return 0;
+
+     label2:
+        r4 = (sun.nio.fs.UnixPath) r2;
+        virtualinvoke r3.<sun.nio.fs.UnixPath: void checkRead()>();
+        virtualinvoke r4.<sun.nio.fs.UnixPath: void checkRead()>();
+
+     label3:
+        r5 = staticinvoke <sun.nio.fs.UnixFileAttributes: sun.nio.fs.UnixFileAttributes get(sun.nio.fs.UnixPath,boolean)>(r3, 1);
+
+     label4:
+        goto label6;
+
+     label5:
+        $r9 := @caughtexception;
+        r6 = $r9;
+        virtualinvoke r6.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r3);
+        return 0;
+
+     label6:
+        r7 = staticinvoke <sun.nio.fs.UnixFileAttributes: sun.nio.fs.UnixFileAttributes get(sun.nio.fs.UnixPath,boolean)>(r4, 1);
+
+     label7:
+        goto label9;
+
+     label8:
+        $r10 := @caughtexception;
+        r11 = $r10;
+        virtualinvoke r11.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r4);
+        return 0;
+
+     label9:
+        $z2 = virtualinvoke r5.<sun.nio.fs.UnixFileAttributes: boolean isSameFile(sun.nio.fs.UnixFileAttributes)>(r7);
+        return $z2;
+
+        catch sun.nio.fs.UnixException from label3 to label4 with label5;
+        catch sun.nio.fs.UnixException from label6 to label7 with label8;
+    }
+
+    public boolean isHidden(java.nio.file.Path)
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.nio.file.Path r1;
+        sun.nio.fs.UnixPath r2, r3;
+        byte[] $r4;
+        byte $b0;
+        boolean $z0;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.nio.file.Path;
+        r2 = staticinvoke <sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toUnixPath(java.nio.file.Path)>(r1);
+        virtualinvoke r2.<sun.nio.fs.UnixPath: void checkRead()>();
+        r3 = virtualinvoke r2.<sun.nio.fs.UnixPath: sun.nio.fs.UnixPath getFileName()>();
+        if r3 != null goto label0;
+
+        return 0;
+
+     label0:
+        $r4 = virtualinvoke r3.<sun.nio.fs.UnixPath: byte[] asByteArray()>();
+        $b0 = $r4[0];
+        if $b0 != 46 goto label1;
+
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    abstract java.nio.file.FileStore getFileStore(sun.nio.fs.UnixPath) throws java.io.IOException;
+
+    public java.nio.file.FileStore getFileStore(java.nio.file.Path) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.nio.file.Path r1;
+        sun.nio.fs.UnixPath r2;
+        java.lang.SecurityManager r3;
+        java.lang.RuntimePermission $r4;
+        java.nio.file.FileStore $r5;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.nio.file.Path;
+        r2 = staticinvoke <sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toUnixPath(java.nio.file.Path)>(r1);
+        r3 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r3 == null goto label0;
+
+        $r4 = new java.lang.RuntimePermission;
+        specialinvoke $r4.<java.lang.RuntimePermission: void <init>(java.lang.String)>("getFileStoreAttributes");
+        virtualinvoke r3.<java.lang.SecurityManager: void checkPermission(java.security.Permission)>($r4);
+        virtualinvoke r2.<sun.nio.fs.UnixPath: void checkRead()>();
+
+     label0:
+        $r5 = virtualinvoke r0.<sun.nio.fs.UnixFileSystemProvider: java.nio.file.FileStore getFileStore(sun.nio.fs.UnixPath)>(r2);
+        return $r5;
+    }
+
+    public transient void createDirectory(java.nio.file.Path, java.nio.file.attribute.FileAttribute[]) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.nio.file.Path r1;
+        java.nio.file.attribute.FileAttribute[] r2;
+        sun.nio.fs.UnixPath r3;
+        int i0;
+        sun.nio.fs.UnixException r4, $r5;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.nio.file.Path;
+        r2 := @parameter1: java.nio.file.attribute.FileAttribute[];
+        r3 = staticinvoke <sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toUnixPath(java.nio.file.Path)>(r1);
+        virtualinvoke r3.<sun.nio.fs.UnixPath: void checkWrite()>();
+        i0 = staticinvoke <sun.nio.fs.UnixFileModeAttribute: int toUnixMode(int,java.nio.file.attribute.FileAttribute[])>(511, r2);
+
+     label0:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void mkdir(sun.nio.fs.UnixPath,int)>(r3, i0);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r5 := @caughtexception;
+        r4 = $r5;
+        virtualinvoke r4.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r3);
+
+     label3:
+        return;
+
+        catch sun.nio.fs.UnixException from label0 to label1 with label2;
+    }
+
+    public java.nio.file.DirectoryStream newDirectoryStream(java.nio.file.Path, java.nio.file.DirectoryStream$Filter) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.nio.file.Path r1;
+        java.nio.file.DirectoryStream$Filter r2;
+        sun.nio.fs.UnixPath r3;
+        long l0, l2;
+        int i1, $i3, i4, $i5;
+        sun.nio.fs.UnixException r4, $r7, r8, $r11;
+        java.lang.NullPointerException $r5;
+        boolean $z0, $z1;
+        sun.nio.fs.UnixDirectoryStream $r6;
+        java.nio.file.NotDirectoryException $r9, $r12;
+        java.lang.String $r10, $r13;
+        sun.nio.fs.UnixSecureDirectoryStream $r14;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.nio.file.Path;
+        r2 := @parameter1: java.nio.file.DirectoryStream$Filter;
+        r3 = staticinvoke <sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toUnixPath(java.nio.file.Path)>(r1);
+        virtualinvoke r3.<sun.nio.fs.UnixPath: void checkRead()>();
+        if r2 != null goto label0;
+
+        $r5 = new java.lang.NullPointerException;
+        specialinvoke $r5.<java.lang.NullPointerException: void <init>()>();
+        throw $r5;
+
+     label0:
+        $z0 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: boolean supportsAtSysCalls()>();
+        if $z0 == 0 goto label1;
+
+        $z1 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: boolean supportsNoFollowLinks()>();
+        if $z1 != 0 goto label5;
+
+     label1:
+        l0 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: long opendir(sun.nio.fs.UnixPath)>(r3);
+        $r6 = new sun.nio.fs.UnixDirectoryStream;
+        specialinvoke $r6.<sun.nio.fs.UnixDirectoryStream: void <init>(sun.nio.fs.UnixPath,long,java.nio.file.DirectoryStream$Filter)>(r3, l0, r2);
+
+     label2:
+        return $r6;
+
+     label3:
+        $r7 := @caughtexception;
+        r8 = $r7;
+        $i3 = virtualinvoke r8.<sun.nio.fs.UnixException: int errno()>();
+        if $i3 != 20 goto label4;
+
+        $r9 = new java.nio.file.NotDirectoryException;
+        $r10 = virtualinvoke r3.<sun.nio.fs.UnixPath: java.lang.String getPathForExceptionMessage()>();
+        specialinvoke $r9.<java.nio.file.NotDirectoryException: void <init>(java.lang.String)>($r10);
+        throw $r9;
+
+     label4:
+        virtualinvoke r8.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r3);
+
+     label5:
+        i4 = -1;
+        i1 = -1;
+        l2 = 0L;
+
+     label6:
+        i4 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: int open(sun.nio.fs.UnixPath,int,int)>(r3, 0, 0);
+        i1 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: int dup(int)>(i4);
+        l2 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: long fdopendir(int)>(i4);
+
+     label7:
+        goto label12;
+
+     label8:
+        $r11 := @caughtexception;
+        r4 = $r11;
+        if i4 == -1 goto label9;
+
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void close(int)>(i4);
+
+     label9:
+        if i1 == -1 goto label10;
+
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void close(int)>(i1);
+
+     label10:
+        $i5 = virtualinvoke r4.<sun.nio.fs.UnixException: int errno()>();
+        if $i5 != 20 goto label11;
+
+        $r12 = new java.nio.file.NotDirectoryException;
+        $r13 = virtualinvoke r3.<sun.nio.fs.UnixPath: java.lang.String getPathForExceptionMessage()>();
+        specialinvoke $r12.<java.nio.file.NotDirectoryException: void <init>(java.lang.String)>($r13);
+        throw $r12;
+
+     label11:
+        virtualinvoke r4.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r3);
+
+     label12:
+        $r14 = new sun.nio.fs.UnixSecureDirectoryStream;
+        specialinvoke $r14.<sun.nio.fs.UnixSecureDirectoryStream: void <init>(sun.nio.fs.UnixPath,long,int,java.nio.file.DirectoryStream$Filter)>(r3, l2, i1, r2);
+        return $r14;
+
+        catch sun.nio.fs.UnixException from label1 to label2 with label3;
+        catch sun.nio.fs.UnixException from label6 to label7 with label8;
+    }
+
+    public transient void createSymbolicLink(java.nio.file.Path, java.nio.file.Path, java.nio.file.attribute.FileAttribute[]) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.nio.file.Path r1, r2;
+        java.nio.file.attribute.FileAttribute[] r3;
+        sun.nio.fs.UnixPath r4, r5;
+        java.lang.SecurityManager r6;
+        sun.nio.fs.UnixException r7, $r11;
+        int $i0;
+        java.lang.UnsupportedOperationException $r8;
+        java.nio.file.LinkPermission $r9;
+        byte[] $r10;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.nio.file.Path;
+        r2 := @parameter1: java.nio.file.Path;
+        r3 := @parameter2: java.nio.file.attribute.FileAttribute[];
+        r4 = staticinvoke <sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toUnixPath(java.nio.file.Path)>(r1);
+        r5 = staticinvoke <sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toUnixPath(java.nio.file.Path)>(r2);
+        $i0 = lengthof r3;
+        if $i0 <= 0 goto label0;
+
+        staticinvoke <sun.nio.fs.UnixFileModeAttribute: int toUnixMode(int,java.nio.file.attribute.FileAttribute[])>(0, r3);
+        $r8 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r8.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>("Initial file attributesnot supported when creating symbolic link");
+        throw $r8;
+
+     label0:
+        r6 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r6 == null goto label1;
+
+        $r9 = new java.nio.file.LinkPermission;
+        specialinvoke $r9.<java.nio.file.LinkPermission: void <init>(java.lang.String)>("symbolic");
+        virtualinvoke r6.<java.lang.SecurityManager: void checkPermission(java.security.Permission)>($r9);
+        virtualinvoke r4.<sun.nio.fs.UnixPath: void checkWrite()>();
+
+     label1:
+        $r10 = virtualinvoke r5.<sun.nio.fs.UnixPath: byte[] asByteArray()>();
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void symlink(byte[],sun.nio.fs.UnixPath)>($r10, r4);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r11 := @caughtexception;
+        r7 = $r11;
+        virtualinvoke r7.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r4);
+
+     label4:
+        return;
+
+        catch sun.nio.fs.UnixException from label1 to label2 with label3;
+    }
+
+    public void createLink(java.nio.file.Path, java.nio.file.Path) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.nio.file.Path r1, r2;
+        sun.nio.fs.UnixPath r3, r4;
+        java.lang.SecurityManager r5;
+        java.nio.file.LinkPermission $r6;
+        sun.nio.fs.UnixException r7, $r8;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.nio.file.Path;
+        r2 := @parameter1: java.nio.file.Path;
+        r3 = staticinvoke <sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toUnixPath(java.nio.file.Path)>(r1);
+        r4 = staticinvoke <sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toUnixPath(java.nio.file.Path)>(r2);
+        r5 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r5 == null goto label0;
+
+        $r6 = new java.nio.file.LinkPermission;
+        specialinvoke $r6.<java.nio.file.LinkPermission: void <init>(java.lang.String)>("hard");
+        virtualinvoke r5.<java.lang.SecurityManager: void checkPermission(java.security.Permission)>($r6);
+        virtualinvoke r3.<sun.nio.fs.UnixPath: void checkWrite()>();
+        virtualinvoke r4.<sun.nio.fs.UnixPath: void checkWrite()>();
+
+     label0:
+        staticinvoke <sun.nio.fs.UnixNativeDispatcher: void link(sun.nio.fs.UnixPath,sun.nio.fs.UnixPath)>(r4, r3);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r8 := @caughtexception;
+        r7 = $r8;
+        virtualinvoke r7.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath,sun.nio.fs.UnixPath)>(r3, r4);
+
+     label3:
+        return;
+
+        catch sun.nio.fs.UnixException from label0 to label1 with label2;
+    }
+
+    public java.nio.file.Path readSymbolicLink(java.nio.file.Path) throws java.io.IOException
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        java.nio.file.Path r1;
+        sun.nio.fs.UnixPath r2, $r8;
+        java.lang.SecurityManager r3;
+        java.io.FilePermission r4, $r5;
+        java.lang.String $r6, $r13;
+        byte[] r7;
+        sun.nio.fs.UnixFileSystem $r9;
+        sun.nio.fs.UnixException $r10, r11;
+        int $i0;
+        java.nio.file.NotLinkException $r12;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        r1 := @parameter0: java.nio.file.Path;
+        r2 = staticinvoke <sun.nio.fs.UnixPath: sun.nio.fs.UnixPath toUnixPath(java.nio.file.Path)>(r1);
+        r3 = staticinvoke <java.lang.System: java.lang.SecurityManager getSecurityManager()>();
+        if r3 == null goto label0;
+
+        $r5 = new java.io.FilePermission;
+        $r6 = virtualinvoke r2.<sun.nio.fs.UnixPath: java.lang.String getPathForPermissionCheck()>();
+        specialinvoke $r5.<java.io.FilePermission: void <init>(java.lang.String,java.lang.String)>($r6, "readlink");
+        r4 = $r5;
+        staticinvoke <java.security.AccessController: void checkPermission(java.security.Permission)>(r4);
+
+     label0:
+        r7 = staticinvoke <sun.nio.fs.UnixNativeDispatcher: byte[] readlink(sun.nio.fs.UnixPath)>(r2);
+        $r8 = new sun.nio.fs.UnixPath;
+        $r9 = virtualinvoke r2.<sun.nio.fs.UnixPath: sun.nio.fs.UnixFileSystem getFileSystem()>();
+        specialinvoke $r8.<sun.nio.fs.UnixPath: void <init>(sun.nio.fs.UnixFileSystem,byte[])>($r9, r7);
+
+     label1:
+        return $r8;
+
+     label2:
+        $r10 := @caughtexception;
+        r11 = $r10;
+        $i0 = virtualinvoke r11.<sun.nio.fs.UnixException: int errno()>();
+        if $i0 != 22 goto label3;
+
+        $r12 = new java.nio.file.NotLinkException;
+        $r13 = virtualinvoke r2.<sun.nio.fs.UnixPath: java.lang.String getPathForExceptionMessage()>();
+        specialinvoke $r12.<java.nio.file.NotLinkException: void <init>(java.lang.String)>($r13);
+        throw $r12;
+
+     label3:
+        virtualinvoke r11.<sun.nio.fs.UnixException: void rethrowAsIOException(sun.nio.fs.UnixPath)>(r2);
+        return null;
+
+        catch sun.nio.fs.UnixException from label0 to label1 with label2;
+    }
+
+    java.nio.file.spi.FileTypeDetector getFileTypeDetector()
+    {
+        sun.nio.fs.UnixFileSystemProvider r0;
+        sun.nio.fs.UnixFileSystemProvider$1 $r1;
+
+        r0 := @this: sun.nio.fs.UnixFileSystemProvider;
+        $r1 = new sun.nio.fs.UnixFileSystemProvider$1;
+        specialinvoke $r1.<sun.nio.fs.UnixFileSystemProvider$1: void <init>(sun.nio.fs.UnixFileSystemProvider)>(r0);
+        return $r1;
+    }
+}

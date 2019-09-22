@@ -1,0 +1,288 @@
+public class org.apache.tomcat.util.modeler.BaseNotificationBroadcaster extends java.lang.Object implements javax.management.NotificationBroadcaster
+{
+    protected java.util.ArrayList entries;
+
+    public void <init>()
+    {
+        org.apache.tomcat.util.modeler.BaseNotificationBroadcaster r0;
+        java.util.ArrayList $r1;
+
+        r0 := @this: org.apache.tomcat.util.modeler.BaseNotificationBroadcaster;
+        specialinvoke r0.<java.lang.Object: void <init>()>();
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        r0.<org.apache.tomcat.util.modeler.BaseNotificationBroadcaster: java.util.ArrayList entries> = $r1;
+        return;
+    }
+
+    public void addNotificationListener(javax.management.NotificationListener, javax.management.NotificationFilter, java.lang.Object) throws java.lang.IllegalArgumentException
+    {
+        org.apache.tomcat.util.modeler.BaseNotificationBroadcaster r0;
+        javax.management.NotificationListener r1, $r14;
+        javax.management.NotificationFilter r2, $r15, $r16, $r18;
+        java.lang.Object r3, $r13, $r17;
+        java.util.ArrayList r4, $r11, $r12, $r20;
+        org.apache.tomcat.util.modeler.BaseAttributeFilter r5, r8;
+        java.util.Iterator r6;
+        org.apache.tomcat.util.modeler.BaseNotificationBroadcasterEntry r7, $r21;
+        java.lang.String[] r9, r10;
+        int i0, $i1, $i2, $i3;
+        boolean $z0, $z1, $z2;
+        java.lang.String $r19;
+        java.lang.Throwable $r22;
+
+        r0 := @this: org.apache.tomcat.util.modeler.BaseNotificationBroadcaster;
+        r1 := @parameter0: javax.management.NotificationListener;
+        r2 := @parameter1: javax.management.NotificationFilter;
+        r3 := @parameter2: java.lang.Object;
+        $r11 = r0.<org.apache.tomcat.util.modeler.BaseNotificationBroadcaster: java.util.ArrayList entries>;
+        r4 = $r11;
+        entermonitor $r11;
+
+     label0:
+        $z0 = r2 instanceof org.apache.tomcat.util.modeler.BaseAttributeFilter;
+        if $z0 == 0 goto label8;
+
+        r5 = (org.apache.tomcat.util.modeler.BaseAttributeFilter) r2;
+        $r12 = r0.<org.apache.tomcat.util.modeler.BaseNotificationBroadcaster: java.util.ArrayList entries>;
+        r6 = virtualinvoke $r12.<java.util.ArrayList: java.util.Iterator iterator()>();
+        goto label7;
+
+     label1:
+        $r13 = interfaceinvoke r6.<java.util.Iterator: java.lang.Object next()>();
+        r7 = (org.apache.tomcat.util.modeler.BaseNotificationBroadcasterEntry) $r13;
+        $r14 = r7.<org.apache.tomcat.util.modeler.BaseNotificationBroadcasterEntry: javax.management.NotificationListener listener>;
+        if $r14 != r1 goto label7;
+
+        $r15 = r7.<org.apache.tomcat.util.modeler.BaseNotificationBroadcasterEntry: javax.management.NotificationFilter filter>;
+        if $r15 == null goto label7;
+
+        $r16 = r7.<org.apache.tomcat.util.modeler.BaseNotificationBroadcasterEntry: javax.management.NotificationFilter filter>;
+        $z1 = $r16 instanceof org.apache.tomcat.util.modeler.BaseAttributeFilter;
+        if $z1 == 0 goto label7;
+
+        $r17 = r7.<org.apache.tomcat.util.modeler.BaseNotificationBroadcasterEntry: java.lang.Object handback>;
+        if $r17 != r3 goto label7;
+
+        $r18 = r7.<org.apache.tomcat.util.modeler.BaseNotificationBroadcasterEntry: javax.management.NotificationFilter filter>;
+        r8 = (org.apache.tomcat.util.modeler.BaseAttributeFilter) $r18;
+        r9 = virtualinvoke r5.<org.apache.tomcat.util.modeler.BaseAttributeFilter: java.lang.String[] getNames()>();
+        r10 = virtualinvoke r8.<org.apache.tomcat.util.modeler.BaseAttributeFilter: java.lang.String[] getNames()>();
+        $i1 = lengthof r9;
+        if $i1 != 0 goto label2;
+
+        virtualinvoke r8.<org.apache.tomcat.util.modeler.BaseAttributeFilter: void clear()>();
+        goto label5;
+
+     label2:
+        $i2 = lengthof r10;
+        if $i2 == 0 goto label5;
+
+        i0 = 0;
+        goto label4;
+
+     label3:
+        $r19 = r9[i0];
+        virtualinvoke r8.<org.apache.tomcat.util.modeler.BaseAttributeFilter: void addAttribute(java.lang.String)>($r19);
+        i0 = i0 + 1;
+
+     label4:
+        $i3 = lengthof r9;
+        if i0 < $i3 goto label3;
+
+     label5:
+        exitmonitor r4;
+
+     label6:
+        return;
+
+     label7:
+        $z2 = interfaceinvoke r6.<java.util.Iterator: boolean hasNext()>();
+        if $z2 != 0 goto label1;
+
+     label8:
+        $r20 = r0.<org.apache.tomcat.util.modeler.BaseNotificationBroadcaster: java.util.ArrayList entries>;
+        $r21 = new org.apache.tomcat.util.modeler.BaseNotificationBroadcasterEntry;
+        specialinvoke $r21.<org.apache.tomcat.util.modeler.BaseNotificationBroadcasterEntry: void <init>(javax.management.NotificationListener,javax.management.NotificationFilter,java.lang.Object)>(r1, r2, r3);
+        virtualinvoke $r20.<java.util.ArrayList: boolean add(java.lang.Object)>($r21);
+        exitmonitor r4;
+
+     label9:
+        goto label13;
+
+     label10:
+        $r22 := @caughtexception;
+
+     label11:
+        exitmonitor r4;
+
+     label12:
+        throw $r22;
+
+     label13:
+        return;
+
+        catch java.lang.Throwable from label0 to label6 with label10;
+        catch java.lang.Throwable from label7 to label9 with label10;
+        catch java.lang.Throwable from label11 to label12 with label10;
+    }
+
+    public javax.management.MBeanNotificationInfo[] getNotificationInfo()
+    {
+        org.apache.tomcat.util.modeler.BaseNotificationBroadcaster r0;
+        javax.management.MBeanNotificationInfo[] $r1;
+
+        r0 := @this: org.apache.tomcat.util.modeler.BaseNotificationBroadcaster;
+        $r1 = newarray (javax.management.MBeanNotificationInfo)[0];
+        return $r1;
+    }
+
+    public void removeNotificationListener(javax.management.NotificationListener) throws javax.management.ListenerNotFoundException
+    {
+        org.apache.tomcat.util.modeler.BaseNotificationBroadcaster r0;
+        javax.management.NotificationListener r1, $r8;
+        java.util.ArrayList r2, $r5, $r6;
+        java.util.Iterator r3;
+        org.apache.tomcat.util.modeler.BaseNotificationBroadcasterEntry r4;
+        java.lang.Object $r7;
+        boolean $z0;
+        java.lang.Throwable $r9;
+
+        r0 := @this: org.apache.tomcat.util.modeler.BaseNotificationBroadcaster;
+        r1 := @parameter0: javax.management.NotificationListener;
+        $r5 = r0.<org.apache.tomcat.util.modeler.BaseNotificationBroadcaster: java.util.ArrayList entries>;
+        r2 = $r5;
+        entermonitor $r5;
+
+     label0:
+        $r6 = r0.<org.apache.tomcat.util.modeler.BaseNotificationBroadcaster: java.util.ArrayList entries>;
+        r3 = virtualinvoke $r6.<java.util.ArrayList: java.util.Iterator iterator()>();
+        goto label2;
+
+     label1:
+        $r7 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+        r4 = (org.apache.tomcat.util.modeler.BaseNotificationBroadcasterEntry) $r7;
+        $r8 = r4.<org.apache.tomcat.util.modeler.BaseNotificationBroadcasterEntry: javax.management.NotificationListener listener>;
+        if $r8 != r1 goto label2;
+
+        interfaceinvoke r3.<java.util.Iterator: void remove()>();
+
+     label2:
+        $z0 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label1;
+
+        exitmonitor r2;
+
+     label3:
+        goto label7;
+
+     label4:
+        $r9 := @caughtexception;
+
+     label5:
+        exitmonitor r2;
+
+     label6:
+        throw $r9;
+
+     label7:
+        return;
+
+        catch java.lang.Throwable from label0 to label3 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+    }
+
+    public void removeNotificationListener(javax.management.NotificationListener, java.lang.Object) throws javax.management.ListenerNotFoundException
+    {
+        org.apache.tomcat.util.modeler.BaseNotificationBroadcaster r0;
+        javax.management.NotificationListener r1;
+        java.lang.Object r2;
+
+        r0 := @this: org.apache.tomcat.util.modeler.BaseNotificationBroadcaster;
+        r1 := @parameter0: javax.management.NotificationListener;
+        r2 := @parameter1: java.lang.Object;
+        virtualinvoke r0.<org.apache.tomcat.util.modeler.BaseNotificationBroadcaster: void removeNotificationListener(javax.management.NotificationListener)>(r1);
+        return;
+    }
+
+    public void removeNotificationListener(javax.management.NotificationListener, javax.management.NotificationFilter, java.lang.Object) throws javax.management.ListenerNotFoundException
+    {
+        org.apache.tomcat.util.modeler.BaseNotificationBroadcaster r0;
+        javax.management.NotificationListener r1;
+        javax.management.NotificationFilter r2;
+        java.lang.Object r3;
+
+        r0 := @this: org.apache.tomcat.util.modeler.BaseNotificationBroadcaster;
+        r1 := @parameter0: javax.management.NotificationListener;
+        r2 := @parameter1: javax.management.NotificationFilter;
+        r3 := @parameter2: java.lang.Object;
+        virtualinvoke r0.<org.apache.tomcat.util.modeler.BaseNotificationBroadcaster: void removeNotificationListener(javax.management.NotificationListener)>(r1);
+        return;
+    }
+
+    public void sendNotification(javax.management.Notification)
+    {
+        org.apache.tomcat.util.modeler.BaseNotificationBroadcaster r0;
+        javax.management.Notification r1;
+        java.util.ArrayList r2, $r5, $r6;
+        java.util.Iterator r3;
+        org.apache.tomcat.util.modeler.BaseNotificationBroadcasterEntry r4;
+        java.lang.Object $r7, $r11;
+        javax.management.NotificationFilter $r8, $r9;
+        boolean $z0, $z1;
+        javax.management.NotificationListener $r10;
+        java.lang.Throwable $r12;
+
+        r0 := @this: org.apache.tomcat.util.modeler.BaseNotificationBroadcaster;
+        r1 := @parameter0: javax.management.Notification;
+        $r5 = r0.<org.apache.tomcat.util.modeler.BaseNotificationBroadcaster: java.util.ArrayList entries>;
+        r2 = $r5;
+        entermonitor $r5;
+
+     label0:
+        $r6 = r0.<org.apache.tomcat.util.modeler.BaseNotificationBroadcaster: java.util.ArrayList entries>;
+        r3 = virtualinvoke $r6.<java.util.ArrayList: java.util.Iterator iterator()>();
+        goto label3;
+
+     label1:
+        $r7 = interfaceinvoke r3.<java.util.Iterator: java.lang.Object next()>();
+        r4 = (org.apache.tomcat.util.modeler.BaseNotificationBroadcasterEntry) $r7;
+        $r8 = r4.<org.apache.tomcat.util.modeler.BaseNotificationBroadcasterEntry: javax.management.NotificationFilter filter>;
+        if $r8 == null goto label2;
+
+        $r9 = r4.<org.apache.tomcat.util.modeler.BaseNotificationBroadcasterEntry: javax.management.NotificationFilter filter>;
+        $z0 = interfaceinvoke $r9.<javax.management.NotificationFilter: boolean isNotificationEnabled(javax.management.Notification)>(r1);
+        if $z0 != 0 goto label2;
+
+        goto label3;
+
+     label2:
+        $r10 = r4.<org.apache.tomcat.util.modeler.BaseNotificationBroadcasterEntry: javax.management.NotificationListener listener>;
+        $r11 = r4.<org.apache.tomcat.util.modeler.BaseNotificationBroadcasterEntry: java.lang.Object handback>;
+        interfaceinvoke $r10.<javax.management.NotificationListener: void handleNotification(javax.management.Notification,java.lang.Object)>(r1, $r11);
+
+     label3:
+        $z1 = interfaceinvoke r3.<java.util.Iterator: boolean hasNext()>();
+        if $z1 != 0 goto label1;
+
+        exitmonitor r2;
+
+     label4:
+        goto label8;
+
+     label5:
+        $r12 := @caughtexception;
+
+     label6:
+        exitmonitor r2;
+
+     label7:
+        throw $r12;
+
+     label8:
+        return;
+
+        catch java.lang.Throwable from label0 to label4 with label5;
+        catch java.lang.Throwable from label6 to label7 with label5;
+    }
+}

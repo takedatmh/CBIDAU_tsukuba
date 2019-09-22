@@ -1,0 +1,186 @@
+public class org.apache.tomcat.util.net.AprEndpoint$Acceptor extends org.apache.tomcat.util.net.AbstractEndpoint$Acceptor
+{
+    private final org.apache.juli.logging.Log log;
+    final org.apache.tomcat.util.net.AprEndpoint this$0;
+
+    protected void <init>(org.apache.tomcat.util.net.AprEndpoint)
+    {
+        org.apache.tomcat.util.net.AprEndpoint$Acceptor r0;
+        org.apache.tomcat.util.net.AprEndpoint r1;
+        org.apache.juli.logging.Log $r2;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint$Acceptor;
+        r1 := @parameter0: org.apache.tomcat.util.net.AprEndpoint;
+        r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.tomcat.util.net.AprEndpoint this$0> = r1;
+        specialinvoke r0.<org.apache.tomcat.util.net.AbstractEndpoint$Acceptor: void <init>()>();
+        $r2 = staticinvoke <org.apache.juli.logging.LogFactory: org.apache.juli.logging.Log getLog(java.lang.Class)>(class "org/apache/tomcat/util/net/AprEndpoint$Acceptor");
+        r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.juli.logging.Log log> = $r2;
+        return;
+    }
+
+    public void run()
+    {
+        org.apache.tomcat.util.net.AprEndpoint$Acceptor r0;
+        int i0, $i5, $i8;
+        org.apache.tomcat.util.net.AbstractEndpoint$Acceptor$AcceptorState $r1, $r9, $r37;
+        java.lang.InterruptedException r2, $r5;
+        long l1, l2, $l3, l4, $l6;
+        org.apache.tomcat.jni.Sockaddr r3;
+        java.lang.String r4, $r18;
+        org.apache.tomcat.util.net.AprEndpoint $r6, $r7, $r8, $r10, $r11, $r21, $r22, $r23, $r24, $r25, $r26, $r27, $r30, $r36;
+        boolean $z0, $z1, $z2, $z3, $z4, $z5, $z6, $z7, $z8, $z9;
+        org.apache.juli.logging.Log $r12, $r13, $r33, $r34, $r35;
+        org.apache.tomcat.util.res.StringManager $r14, $r31;
+        java.lang.Object[] $r15;
+        java.lang.Long $r16, $r17;
+        java.lang.Exception $r19, r20;
+        java.lang.Throwable $r28, r29;
+        org.apache.tomcat.jni.Error r32;
+
+        r0 := @this: org.apache.tomcat.util.net.AprEndpoint$Acceptor;
+        i0 = 0;
+        goto label17;
+
+     label0:
+        $r1 = <org.apache.tomcat.util.net.AbstractEndpoint$Acceptor$AcceptorState: org.apache.tomcat.util.net.AbstractEndpoint$Acceptor$AcceptorState PAUSED>;
+        r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.tomcat.util.net.AbstractEndpoint$Acceptor$AcceptorState state> = $r1;
+
+     label1:
+        staticinvoke <java.lang.Thread: void sleep(long)>(50L);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r5 := @caughtexception;
+        r2 = $r5;
+
+     label4:
+        $r6 = r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.tomcat.util.net.AprEndpoint this$0>;
+        $z0 = $r6.<org.apache.tomcat.util.net.AprEndpoint: boolean paused>;
+        if $z0 == 0 goto label5;
+
+        $r7 = r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.tomcat.util.net.AprEndpoint this$0>;
+        $z1 = $r7.<org.apache.tomcat.util.net.AprEndpoint: boolean running>;
+        if $z1 != 0 goto label0;
+
+     label5:
+        $r8 = r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.tomcat.util.net.AprEndpoint this$0>;
+        $z2 = $r8.<org.apache.tomcat.util.net.AprEndpoint: boolean running>;
+        if $z2 != 0 goto label6;
+
+        goto label18;
+
+     label6:
+        $r9 = <org.apache.tomcat.util.net.AbstractEndpoint$Acceptor$AcceptorState: org.apache.tomcat.util.net.AbstractEndpoint$Acceptor$AcceptorState RUNNING>;
+        r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.tomcat.util.net.AbstractEndpoint$Acceptor$AcceptorState state> = $r9;
+
+     label7:
+        $r10 = r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.tomcat.util.net.AprEndpoint this$0>;
+        virtualinvoke $r10.<org.apache.tomcat.util.net.AprEndpoint: void countUpOrAwaitConnection()>();
+        l2 = 0L;
+
+     label8:
+        $r11 = r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.tomcat.util.net.AprEndpoint this$0>;
+        $l3 = $r11.<org.apache.tomcat.util.net.AprEndpoint: long serverSock>;
+        l4 = staticinvoke <org.apache.tomcat.jni.Socket: long accept(long)>($l3);
+        $r12 = r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.juli.logging.Log log>;
+        $z3 = interfaceinvoke $r12.<org.apache.juli.logging.Log: boolean isDebugEnabled()>();
+        if $z3 == 0 goto label11;
+
+        l1 = staticinvoke <org.apache.tomcat.jni.Address: long get(int,long)>(1, l4);
+        r3 = staticinvoke <org.apache.tomcat.jni.Address: org.apache.tomcat.jni.Sockaddr getInfo(long)>(l1);
+        $r13 = r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.juli.logging.Log log>;
+        $r14 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        $r15 = newarray (java.lang.Object)[2];
+        $r16 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>(l4);
+        $r15[0] = $r16;
+        $i5 = r3.<org.apache.tomcat.jni.Sockaddr: int port>;
+        $l6 = (long) $i5;
+        $r17 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>($l6);
+        $r15[1] = $r17;
+        $r18 = virtualinvoke $r14.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String,java.lang.Object[])>("endpoint.apr.remoteport", $r15);
+        interfaceinvoke $r13.<org.apache.juli.logging.Log: void debug(java.lang.Object)>($r18);
+
+     label9:
+        goto label11;
+
+     label10:
+        $r19 := @caughtexception;
+        r20 = $r19;
+        $r21 = r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.tomcat.util.net.AprEndpoint this$0>;
+        virtualinvoke $r21.<org.apache.tomcat.util.net.AprEndpoint: long countDownConnection()>();
+        $r22 = r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.tomcat.util.net.AprEndpoint this$0>;
+        i0 = virtualinvoke $r22.<org.apache.tomcat.util.net.AprEndpoint: int handleExceptionWithDelay(int)>(i0);
+        throw r20;
+
+     label11:
+        i0 = 0;
+        $r23 = r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.tomcat.util.net.AprEndpoint this$0>;
+        $z4 = $r23.<org.apache.tomcat.util.net.AprEndpoint: boolean running>;
+        if $z4 == 0 goto label12;
+
+        $r24 = r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.tomcat.util.net.AprEndpoint this$0>;
+        $z5 = $r24.<org.apache.tomcat.util.net.AprEndpoint: boolean paused>;
+        if $z5 != 0 goto label12;
+
+        $r25 = r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.tomcat.util.net.AprEndpoint this$0>;
+        $z6 = virtualinvoke $r25.<org.apache.tomcat.util.net.AprEndpoint: boolean processSocketWithOptions(long)>(l4);
+        if $z6 != 0 goto label17;
+
+        $r26 = r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.tomcat.util.net.AprEndpoint this$0>;
+        staticinvoke <org.apache.tomcat.util.net.AprEndpoint: void access$0(org.apache.tomcat.util.net.AprEndpoint,long)>($r26, l4);
+        goto label17;
+
+     label12:
+        $r27 = r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.tomcat.util.net.AprEndpoint this$0>;
+        staticinvoke <org.apache.tomcat.util.net.AprEndpoint: void access$1(org.apache.tomcat.util.net.AprEndpoint,long)>($r27, l4);
+
+     label13:
+        goto label17;
+
+     label14:
+        $r28 := @caughtexception;
+        r29 = $r28;
+        staticinvoke <org.apache.tomcat.util.ExceptionUtils: void handleThrowable(java.lang.Throwable)>(r29);
+        $r30 = r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.tomcat.util.net.AprEndpoint this$0>;
+        $z7 = $r30.<org.apache.tomcat.util.net.AprEndpoint: boolean running>;
+        if $z7 == 0 goto label17;
+
+        $r31 = <org.apache.tomcat.util.net.AprEndpoint: org.apache.tomcat.util.res.StringManager sm>;
+        r4 = virtualinvoke $r31.<org.apache.tomcat.util.res.StringManager: java.lang.String getString(java.lang.String)>("endpoint.accept.fail");
+        $z8 = r29 instanceof org.apache.tomcat.jni.Error;
+        if $z8 == 0 goto label16;
+
+        r32 = (org.apache.tomcat.jni.Error) r29;
+        $i8 = virtualinvoke r32.<org.apache.tomcat.jni.Error: int getError()>();
+        if $i8 != 233 goto label15;
+
+        $r33 = r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r33.<org.apache.juli.logging.Log: void warn(java.lang.Object,java.lang.Throwable)>(r4, r29);
+        goto label17;
+
+     label15:
+        $r34 = r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r34.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>(r4, r29);
+        goto label17;
+
+     label16:
+        $r35 = r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.juli.logging.Log log>;
+        interfaceinvoke $r35.<org.apache.juli.logging.Log: void error(java.lang.Object,java.lang.Throwable)>(r4, r29);
+
+     label17:
+        $r36 = r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.tomcat.util.net.AprEndpoint this$0>;
+        $z9 = $r36.<org.apache.tomcat.util.net.AprEndpoint: boolean running>;
+        if $z9 != 0 goto label4;
+
+     label18:
+        $r37 = <org.apache.tomcat.util.net.AbstractEndpoint$Acceptor$AcceptorState: org.apache.tomcat.util.net.AbstractEndpoint$Acceptor$AcceptorState ENDED>;
+        r0.<org.apache.tomcat.util.net.AprEndpoint$Acceptor: org.apache.tomcat.util.net.AbstractEndpoint$Acceptor$AcceptorState state> = $r37;
+        return;
+
+        catch java.lang.InterruptedException from label1 to label2 with label3;
+        catch java.lang.Exception from label8 to label9 with label10;
+        catch java.lang.Throwable from label7 to label13 with label14;
+    }
+}
