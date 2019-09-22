@@ -13,8 +13,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import dataflow.tutorial.GuaranteedDefs;
+import soot.Body;
 import soot.Unit;
 import soot.Value;
+import soot.javaToJimple.JimpleBodyBuilder;
+import soot.javaToJimple.JimpleBodyBuilderFactory;
 import soot.jimple.AnyNewExpr;
 import soot.jimple.AssignStmt;
 import soot.jimple.BreakpointStmt;
@@ -22,6 +25,7 @@ import soot.jimple.GotoStmt;
 import soot.jimple.IdentityStmt;
 import soot.jimple.IfStmt;
 import soot.jimple.InvokeStmt;
+import soot.jimple.JimpleBody;
 import soot.jimple.MonitorStmt;
 import soot.jimple.NewArrayExpr;
 import soot.jimple.NewExpr;
@@ -29,7 +33,9 @@ import soot.jimple.NewMultiArrayExpr;
 import soot.jimple.NopStmt;
 import soot.jimple.NullConstant;
 import soot.jimple.ReturnStmt;
+import soot.jimple.StmtBody;
 import soot.jimple.ThrowStmt;
+import soot.toolkits.graph.ExceptionalUnitGraph;
 import soot.toolkits.graph.UnitGraph;
 
 public class Utility4Soot {
@@ -238,11 +244,31 @@ public static LinkedHashMap<String, String> create_dfMap(UnitGraph unitGraph, St
 	
 	public static UnitGraph rebuildCFG4MultiTailCFG(UnitGraph u) {
 		 
+		ExceptionalUnitGraph eu = (ExceptionalUnitGraph)u;
 		
+		
+		 List<Unit> tails = u.getTails();
+		 
+		 Unit newTail = (Unit)tails.get(0).clone();
+		 
+		 Body body = u.getBody();
+		 body.getMethod();
+		 
+		 
+		 for(Unit tail : tails)  {
+			 tail.clone();
+		 }
 		
 		return null;
 	}
 
+	
+	
+	
+	
+	
+	
+	
 
 }
 
