@@ -45,9 +45,13 @@ import dataflow.util.Utility4Soot;
 public class CFG_DF_20191014 {
 
 	// Method Name
-	private static String methodName = "read";
-	private static String mainClass = "simple.client.Client";
-	private static String targetClass = "simple.logic.Logic";
+//	private static String methodName = "create";
+//	private static String mainClass = "simple.client.Client";
+//	private static String targetClass = "simple.logic.Logic";
+	
+	private static String methodName = "deploy";
+	private static String mainClass = "org.apache.catalina.manager.TestManagerServlet";
+	private static String targetClass = "org.apache.catalina.manager.ManagerServlet";
 
 	// CRUD Map
 	private static Map<String, String> crudMap = new LinkedHashMap<String, String>();
@@ -635,7 +639,7 @@ System.out.println("=_=; " + resultPathMap.get(key));
 				visitNodeList.add(currentNode.toString());
 				//MapにvisitNodeListを格納
 				pathListMap.put(index++, visitNodeList);
-				
+//Weak point				
 				// 0.1.1.visitNodeListの最終インデックスから左にインデックスを下げて行きながら、seenの中でfalseになっているノード(restartNode)をchildに持つノードを逆探索する
 				int indexVNL = visitNodeList.size();
 				//for (int i = indexVNL; i < 0; i--) {
