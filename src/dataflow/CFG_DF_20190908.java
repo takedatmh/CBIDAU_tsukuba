@@ -86,7 +86,7 @@ public class CFG_DF_20190908 {
 			fileName = fileName + "call-graph" + DotGraph.DOT_EXTENSION;
 		}
 
-		System.out.println("CFG file name " + fileName);
+System.out.println("CFG file name " + fileName);
 
 		// Create GFG Edge List file for iGraph.
 		PrintWriter pwEdge = new PrintWriter("CFG_igraph_Edge_" + methodName
@@ -567,7 +567,7 @@ System.out.println("=_=; " + resultPathMap.get(key));
 	}
 
 	/**
-	 * Search all test case pathes on UnitGraph.
+	 * Search all test case paths on UnitGraph.
 	 * 
 	 * @param graph
 	 * @param currentNode

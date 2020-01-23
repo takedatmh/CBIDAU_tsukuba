@@ -42,7 +42,7 @@ public class Utility4Soot {
 
 	/**
 	 * setMainArgs Sets Soot main method following arguments values: - Java main
-	 * argument from main mehod arguments value. - Main Class - Target Class
+	 * argument from main method arguments value. - Main Class - Target Class
 	 * 
 	 * @param args
 	 * @param mainClass

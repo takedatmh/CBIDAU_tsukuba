@@ -45,13 +45,13 @@ import dataflow.util.Utility4Soot;
 public class CFG_DF_20191014 {
 
 	// Method Name
-//	private static String methodName = "create";
-//	private static String mainClass = "simple.client.Client";
-//	private static String targetClass = "simple.logic.Logic";
+	private static String methodName = "create";
+	private static String mainClass = "simple.client.Client";
+	private static String targetClass = "simple.logic.Logic";
 	
-	private static String methodName = "deploy";
-	private static String mainClass = "org.apache.catalina.manager.TestManagerServlet";
-	private static String targetClass = "org.apache.catalina.manager.ManagerServlet";
+//	private static String methodName = "deploy";
+//	private static String mainClass = "org.apache.catalina.manager.TestManagerServlet";
+//	private static String targetClass = "org.apache.catalina.manager.ManagerServlet";
 
 	// CRUD Map
 	private static Map<String, String> crudMap = new LinkedHashMap<String, String>();
@@ -61,7 +61,7 @@ public class CFG_DF_20191014 {
 
 	// Data Flaw Value LinkedHashMap
 	private static LinkedHashMap<String, String> dfVMap = new LinkedHashMap<String, String>();
-
+ 
 	// Key value for PathMap
 	static Integer index = 0;
 	
@@ -471,6 +471,31 @@ System.out.println(counter+ "############Check satement or Expr###############")
 						CallGraph cg = Scene.v().getCallGraph();
 						SerializeCallGraph(cg, "CG_Simple2"
 								+ DotGraph.DOT_EXTENSION);
+						
+						////Retrieve target method and then analyze that method body whether that body has any static variable references or not.
+						Iterator<Edge> iterEdges = cg.edgesInto(method);
+						while(iterEdges.hasNext()){
+							Edge edg = iterEdges.next();
+							edg.getSrc();
+							SootMethod sm = edg.getTgt().method();
+							Body bod= method.retrieveActiveBody();
+							// Create Control flow Graph as UnitGraph
+							UnitGraph unitG = new ExceptionalUnitGraph(bod);  // UnitGraph unitGraph = new EnhancedUnitGraph(body);
+							//Get unit from UnitGraph.
+							Iterator<Unit> uts = unitG.iterator();
+							while (uts.hasNext()) {
+								Unit ut = uts.next();
+								//Get soot value object from Unit.
+								Iterator<ValueBox> iVBox = ut.getUseBoxes()
+										.iterator();
+								while (iVBox.hasNext()) {
+									ValueBox vBox = iVBox.next();
+									Value v = vBox.getValue();
+									System.out.println(v);
+								}
+							}
+						}
+						///////////////////////////////////////
 
 						// /////Draw CGF/////////////////////
 						try {
