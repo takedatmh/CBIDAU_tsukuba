@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import soot.Body;
 import soot.MethodOrMethodContext;
@@ -41,6 +43,8 @@ public class CFPathDetector {
 	private static String methodName = "create";
 	private static String mainClass = "simple.client.Client";
 	private static String targetClass = "simple.logic.Logic_static";
+	
+	private static Logger logger = LogUtil.createLogger(".\\Sample.log", CFPathDetector.class);
 	
 	/**
 	 * Constructor
@@ -95,7 +99,7 @@ public class CFPathDetector {
 						//Prepare
 						//PathList Objects.
 						List<Unit> path = new ArrayList<>();
-						List<List<Unit>> pathList = new ArrayList();
+						List<List<Unit>> pathList = new ArrayList<List<Unit>>();
 						//Get children of Top node.
 						Unit top= unitGraph.getSuccsOf(head).get(0);
 						path.add(top);
@@ -136,8 +140,12 @@ public class CFPathDetector {
 						}
 						
 						//Select path.
-						List<String> listOfPathWithStaticVar = selectPath(listOfStaticVar, listOfPath);
+						List<String> listOfPathWithStaticVar = selectPathWithStaticVar(listOfStaticVar, listOfPath);
 						
+						//Write selected path information in a file.
+						boolean res = PathWritter.writePath(".\\CFG_Path_withStaticVar\\", targetClass, methodName, listOfPathWithStaticVar);
+						//log
+						logger.log(Level.INFO, res + " :: Written Path List with Stataic Var is success.");
 					}
 				}));
 		
@@ -165,7 +173,8 @@ public class CFPathDetector {
 			}
 		} else if (size == 0) {
 			pathList.add(path);
-System.out.println("##"+pathList);
+			//log : Display selected path.
+			logger.log(Level.INFO, "##"+pathList);
 		} 
 		
 		return pathList;
@@ -178,7 +187,7 @@ System.out.println("##"+pathList);
 	 * @param listOfPath
 	 * @return List<String> selected path.
 	 */
-	public static List<String> selectPath(List<String> varList, List<List<Unit>> listOfPath){
+	public static List<String> selectPathWithStaticVar(List<String> varList, List<List<Unit>> listOfPath){
 		//return
 		List<String> ret = new ArrayList<String>();
 		
@@ -190,8 +199,10 @@ System.out.println("##"+pathList);
 			String removedVar = var.replace("[<", "").replace(">]", "").replace(":", "");
 			List<String> tempList = Arrays.asList(removedVar.split(" "));
 			String fqcn = tempList.get(0) + "." +tempList.get(2);
-System.out.println(fqcn);
 			extractrdVarMap.put(fqcn, tempList);
+			
+			//log
+			logger.log(Level.INFO, "FQCN: " + fqcn);
 		}
 		
 		for(List<Unit> units : listOfPath){
@@ -206,27 +217,8 @@ System.out.println(fqcn);
 			}
 		}
 		
-		
-//		for(int i = 0; i < varList.size(); i++) {
-//			String var = varList.get(i);
-//			//get rid off [< and >] from variable char.
-//			String removedVar = var.replace("[<", "").replace(">]", "").replace(":", "");
-//			List<String> extractrdVarList = Arrays.asList(removedVar.split(" "));
-//			//path
-//			for(List<Unit> units : listOfPath){
-//				//node
-//				for(Unit unit : units){
-//					String node = unit.toString();
-//					if(node.contains(extractrdVarList.get(2).toString())) {
-//						ret.add(node);
-//					}
-//				}
-//			}
-//		}
-		
-		
 		for(String s : ret)
-			System.out.println("##2##"+s);
+			logger.log(Level.INFO, "##2##"+s);
 		return ret;
 	}
 	
@@ -245,7 +237,6 @@ System.out.println(fqcn);
 			}
 			fileName = fileName + "call-graph" + DotGraph.DOT_EXTENSION;
 		}
-		System.out.println("file name " + fileName);
 		DotGraph canvas = new DotGraph("Call_Graph_"+ methodName);
 		QueueReader<Edge> listener = graph.listener();
 

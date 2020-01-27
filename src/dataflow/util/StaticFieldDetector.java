@@ -110,9 +110,7 @@ public class StaticFieldDetector {
 					protected void internalTransform(String phaseName,
 							@SuppressWarnings("rawtypes") Map options) {
 						/////////////Call Flow///////////////////////////////
-						CallGraph cg = Scene.v().getCallGraph();
-//						SerializeCallGraph(cg, "CallGraph_" + methodName
-//								+ DotGraph.DOT_EXTENSION);
+						//CallGraph cg = Scene.v().getCallGraph();
 						
 						/////////////Control Flow Graph//////////////////////
 						CHATransformer.v().transform();
@@ -132,11 +130,6 @@ public class StaticFieldDetector {
 								staticFieldList.add(field);
 							}
 						}
-//System.out.println("-#-" + staticFieldList.toString());
-////-##-public static java.lang.String staticVariable
-//System.out.println("-##-" + staticFieldList.get(0).getDeclaration());
-////Display Declaring class name with package from SootField instance.
-//System.out.println("-###-" + staticFieldList.get(0).getDeclaringClass());
 
 						//Write the list of static field on the designated file.
 						// Create GFG Node List file for iGraph.
@@ -144,10 +137,6 @@ public class StaticFieldDetector {
 						PrintWriter staticFieldWriter = null;
 						String path = ".\\StaticFieldList\\"+"ListofStaticField" + targetClass + ".txt";
 						try {
-//							staticFieldWriter = new PrintWriter(".\\StaticFieldList\\"+"ListofStaticField" + targetClass + ".txt");
-//							staticFieldWriter.println(staticFieldList.toString());
-//							staticFieldWriter.close(); 
-							
 							//postscript version
 							in = new FileWriter(path, true);
 							staticFieldWriter = new PrintWriter(in);
