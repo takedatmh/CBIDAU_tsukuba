@@ -30,11 +30,15 @@ public class CGCreator {
 	// Method Name
 	public static String methodName = "create";
 	public static String mainClass = "simple.client.Client";
+	//public static String targetClass = "simple.logic.Logic_static";
 	public static String targetClass = "simple.logic.Logic_static";
 
 	public static Logger logger = LogUtil.createLogger(".\\Sample.log",
 			CGCreator.class);
-
+	
+	public static List<List<String>> EdgeListString= new ArrayList<List<String>>();
+	public static List<Edge> EdgeListEdge= new ArrayList<Edge>();
+	
 	/**
 	 * Call Graph Creation
 	 * 
@@ -42,6 +46,11 @@ public class CGCreator {
 	 * @param fileName
 	 */
 	public static void SerializeCallGraph(CallGraph graph, String fileName) {
+		
+		List<String> edge = null;
+		List<List<String>> allEdgeStringList = new ArrayList<List<String>>();
+		List<Edge> EdgeList = new ArrayList<Edge>();
+		
 		if (fileName == null) {
 			fileName = soot.SourceLocator.v().getOutputDir();
 			if (fileName.length() > 0) {
@@ -50,15 +59,19 @@ public class CGCreator {
 			fileName = fileName + "call-graph" + DotGraph.DOT_EXTENSION;
 		}
 		System.out.println("file name " + fileName);
-		DotGraph canvas = new DotGraph("Call_Graph_" + methodName);
+		DotGraph canvas = new DotGraph("Call_Graph");
 		QueueReader<Edge> listener = graph.listener();
 
+		int index = 0;
 		while (listener.hasNext()) {
 			Edge next = listener.next();
 			MethodOrMethodContext src = next.getSrc();
 			MethodOrMethodContext tgt = next.getTgt();
 			String srcString = src.toString();
 			String tgtString = tgt.toString();
+			
+			//EdgeList
+			EdgeList.add(index, next);
 
 			// Excepted java packages.
 			if ((!srcString.startsWith("<java.")
@@ -67,20 +80,34 @@ public class CGCreator {
 					&& !srcString.startsWith("<com.")
 					&& !srcString.startsWith("<jdk.") && !srcString
 						.startsWith("<javax."))
-					|| (!tgtString.startsWith("<java.")
+					&& (!tgtString.startsWith("<java.")
 							&& !tgtString.startsWith("<sun.")
 							&& !tgtString.startsWith("<org.")
 							&& !tgtString.startsWith("<com.")
 							&& !tgtString.startsWith("<jdk.") && !tgtString
 								.startsWith("<javax."))) {
+				
 				// Drawing CG excepted designated java packages.
-				canvas.drawNode(src.toString());
-				canvas.drawNode(tgt.toString());
-				canvas.drawEdge(src.toString(), tgt.toString());
+				canvas.drawNode(srcString);
+				canvas.drawNode(tgtString);
+				canvas.drawEdge(srcString, tgtString);
+				
+				//Create Edge List.
+				edge = new ArrayList<String>();
+				//Store as "package.class.method". The last element is method name which is devided by dot.
+				edge.add(0, src.getClass().getName()+"."+src.method().getName()); 
+				edge.add(1, tgt.getClass().getName()+"."+tgt.method().getName());
+				allEdgeStringList.add(index, edge);
 			}
-
 		}
+		//Write .dot file.
 		canvas.plot(fileName);
+		//Put edge List into class field to be refered by other methods.
+		EdgeListString = allEdgeStringList;
+		EdgeListEdge = EdgeList;
+		
+for(List<String> e : allEdgeStringList)
+	System.out.println("**:" + e);
 		return;
 	}
 
@@ -113,7 +140,8 @@ public class CGCreator {
 						// Graph///////////////////////////////
 						CallGraph cg = Scene.v().getCallGraph();
 						SerializeCallGraph(cg, ".\\CallGraph\\" + "CallGraph_"
-								+ methodName + DotGraph.DOT_EXTENSION);
+								+ targetClass+ "_" +methodName + DotGraph.DOT_EXTENSION);				
+ 
 						// ///////// Get Unit
 						// ///////////////////////////////////////////////
 						// Get a Soot Class of target class. :
@@ -125,12 +153,21 @@ public class CGCreator {
 						// method.
 						SootMethod method = sootClass
 								.getMethodByName(methodName);
-
-						// Detect influenced paths and nodes.
-						List<List<Edge>> pathList = new ArrayList<List<Edge>>();
-						List<Edge> edgeList = new ArrayList<Edge>();
-						pathList = searchPath(method, cg, edgeList, pathList);
-
+						
+						//Get start edge.
+						//Get Method Name from each edge src node and compare with start method name.
+						List<Edge> startEdges = new ArrayList<Edge>();
+						Iterator<Edge> iter = EdgeListEdge.iterator();
+						while(iter.hasNext()){
+							Edge edge = iter.next();
+							SootMethod srcMethod = edge.getSrc().method();
+							if(srcMethod.equals(method)){
+								startEdges.add(edge);
+							}
+						}
+						
+						List<List<Edge>> ListOfPath = search(EdgeListEdge, startEdges);
+						
 					}
 
 				}));
@@ -139,13 +176,90 @@ public class CGCreator {
 		soot.Main.main(args2);
 
 	}
+	
+	private static List<List<Edge>> search(List<Edge> edgeList, List<Edge> edges){
+	
+		List<List<Edge>> ret = new ArrayList<List<Edge>>();
+		
+		List<Edge> path = new ArrayList<Edge>();
+	
+		for(Edge e : edges){
+			SootMethod tgt = e.getTgt().method();
+			List<Edge> children = children(edgeList, tgt);
+			if(children.size() != 0 && !isInvolved(path, tgt)){
+				path.add(e);
+				search(edgeList, children);
+			} else if( isInvolved(path, tgt) ){
+				ret.add(path);
+			} else {
+				path.add(e);
+				ret.add(path);
+			}
+		}
+		
+		return ret;
+	}
+	
+	private static boolean isInvolved(List<Edge> path, SootMethod tgt){
+		boolean ret = false;
+		
+		for(Edge e : path){
+			if(e.getSrc().method().equals(tgt) || e.getTgt().method().equals(tgt)){
+				ret = true;
+			}
+		}
+		
+		return ret;
+	}
 
+	
+	private static List<Edge> children(List<Edge> edgeList,  SootMethod tgtMethod){
+		
+		List<Edge> children = new ArrayList<Edge>();
+		
+		for(Edge edge : edgeList){
+			if(tgtMethod.equals( edge.getSrc().method())){
+				children.add(edge);
+			}
+		}
+		
+		return children;
+	}
+	
+	private static String detectMethodName(String fqcn){
+		String[] elements = fqcn.split(".");
+		String methodName = elements[elements.length - 1];
+		return methodName;
+	}
+
+	/**
+	 * This method have a function which searches C1 level coverage path information from the designated start method.
+	 * If this method finds any loop edges in this path search disposal, force to stop the path search.
+	 * @param startMethod : Start point method
+	 * @param cg : Call Graph Object
+	 * @param edgeList : having each path information
+	 * @param ret : return object
+	 * @return List<List<Edge>> Return a list contains each path list.
+	 */
 	private static List<List<Edge>> searchPath(SootMethod startMethod, CallGraph cg, List<Edge> edgeList, List<List<Edge>> ret) {
 		
+//		QueueReader<Edge> listener = cg.listener();
+//
+//		while (listener.hasNext()) {
+//			Edge next = listener.next();
+//			MethodOrMethodContext src = next.getSrc();
+//			MethodOrMethodContext tgt = next.getTgt();
+//			String srcString = src.toString();
+//			String tgtString = tgt.toString();
+//		}
+		
+		///////////////////////////////
+		
+		//Obtain out edges from the designated method node.
 		Iterator<Edge> edges = cg.edgesOutOf(startMethod);
-		
-		
-		if(edges.hasNext()){
+System.out.println("///:" + edges);
+		//In case of existing children, continue to search path for each child node.
+		top: if(edges.hasNext()){
 			
 			//Get an out of edge from target method.
 			Edge edge  = edges.next();
@@ -158,22 +272,28 @@ public class CGCreator {
 			
 			//Loop Check
 			if(checkLoop(targetMethod, edgeList)) {
-				//When a loop is found, add the current edgeList into ret and return ret value.
+				//When a loop is found, add the current edgeList into return and return return value.
 				ret.add(edgeList);
-				return ret;
+				
+				//exit this iteration and goto next iteration loop.
+				break top;
+				
+				//return.
+				//return ret;
 			}
 			
 			//recursive calling
 			searchPath(targetMethod, cg, edgeList, ret);
-			
+		
+		//In case of not existing children, finishing path search and storing this path into return object.
 		} else {
 			
+			//Add this path information into return object.
 			ret.add(edgeList);
-			
-			return ret;
 			
 		}
 		
+		//return.
 		return ret;
 	}
 	
