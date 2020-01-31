@@ -165,8 +165,14 @@ for(List<String> e : allEdgeStringList)
 								startEdges.add(edge);
 							}
 						}
-						
-						List<List<Edge>> ListOfPath = search(EdgeListEdge, startEdges);
+//for(Edge e : startEdges){
+//	System.out.print("srcEdge: " + e.getSrc().method() + "  ->  ");
+//	System.out.println("tgtEdge: " + e.getTgt().method());
+//}
+						//Get path list.
+						List<List<Edge>> ret = new ArrayList<List<Edge>>();
+						List<Edge> path = new ArrayList<Edge>();
+						List<List<Edge>> ListOfPath = search(EdgeListEdge, startEdges, path, ret);
 						
 					}
 
@@ -177,21 +183,18 @@ for(List<String> e : allEdgeStringList)
 
 	}
 	
-	private static List<List<Edge>> search(List<Edge> edgeList, List<Edge> edges){
-	
-		List<List<Edge>> ret = new ArrayList<List<Edge>>();
+	private static List<List<Edge>> search(List<Edge> edgeList, List<Edge> edges, List<Edge> path, List<List<Edge>> ret){
 		
-		List<Edge> path = new ArrayList<Edge>();
-	
 		for(Edge e : edges){
-			SootMethod tgt = e.getTgt().method();
-			List<Edge> children = children(edgeList, tgt);
+			MethodOrMethodContext tgt = e.getTgt();
+			List<Edge> children = detectChildren(edgeList, tgt);
+System.out.println("Children:::" + children);
 			if(children.size() != 0 && !isInvolved(path, tgt)){
 				path.add(e);
-				search(edgeList, children);
-			} else if( isInvolved(path, tgt) ){
+				search(edgeList, children, path, ret);
+			} else if(children.size() != 0 && isInvolved(path, tgt) ){
 				ret.add(path);
-			} else {
+			} else if(children.size() == 0) {
 				path.add(e);
 				ret.add(path);
 			}
@@ -200,11 +203,11 @@ for(List<String> e : allEdgeStringList)
 		return ret;
 	}
 	
-	private static boolean isInvolved(List<Edge> path, SootMethod tgt){
+	private static boolean isInvolved(List<Edge> path, MethodOrMethodContext tgt){
 		boolean ret = false;
 		
 		for(Edge e : path){
-			if(e.getSrc().method().equals(tgt) || e.getTgt().method().equals(tgt)){
+			if(e.getSrc().equals(tgt) || e.getTgt().equals(tgt)){
 				ret = true;
 			}
 		}
@@ -213,12 +216,12 @@ for(List<String> e : allEdgeStringList)
 	}
 
 	
-	private static List<Edge> children(List<Edge> edgeList,  SootMethod tgtMethod){
+	private static List<Edge> detectChildren(List<Edge> edgeList,  MethodOrMethodContext tgt){
 		
 		List<Edge> children = new ArrayList<Edge>();
 		
 		for(Edge edge : edgeList){
-			if(tgtMethod.equals( edge.getSrc().method())){
+			if(tgt.equals( edge.getSrc())){
 				children.add(edge);
 			}
 		}
