@@ -2,6 +2,7 @@ package dataflow.util;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -28,10 +29,13 @@ import soot.util.queue.QueueReader;
 public class CGCreator {
 
 	// Method Name
-	public static String methodName = "create";
-	public static String mainClass = "simple.client.Client";
-	//public static String targetClass = "simple.logic.Logic_static";
-	public static String targetClass = "simple.logic.Logic_static";
+//	public static String methodName = "create";
+//	public static String mainClass = "simple.client.Client";
+//	public static String targetClass = "simple.logic.Logic_static";
+	
+	private static String methodName = "deploy";
+	private static String mainClass = "org.apache.catalina.manager.TestManagerServlet";
+	private static String targetClass = "org.apache.catalina.manager.ManagerServlet";
 
 	public static Logger logger = LogUtil.createLogger(".\\Sample.log",
 			CGCreator.class);
@@ -69,9 +73,6 @@ public class CGCreator {
 			MethodOrMethodContext tgt = next.getTgt();
 			String srcString = src.toString();
 			String tgtString = tgt.toString();
-			
-			//EdgeList
-			EdgeList.add(index, next);
 
 			// Excepted java packages.
 			if ((!srcString.startsWith("<java.")
@@ -80,7 +81,7 @@ public class CGCreator {
 					&& !srcString.startsWith("<com.")
 					&& !srcString.startsWith("<jdk.") && !srcString
 						.startsWith("<javax."))
-					&& (!tgtString.startsWith("<java.")
+				|| (!tgtString.startsWith("<java.")
 							&& !tgtString.startsWith("<sun.")
 							&& !tgtString.startsWith("<org.")
 							&& !tgtString.startsWith("<com.")
@@ -98,6 +99,9 @@ public class CGCreator {
 				edge.add(0, src.getClass().getName()+"."+src.method().getName()); 
 				edge.add(1, tgt.getClass().getName()+"."+tgt.method().getName());
 				allEdgeStringList.add(index, edge);
+				
+				//EdgeList
+				EdgeList.add(index, next);
 			}
 		}
 		//Write .dot file.
@@ -106,8 +110,8 @@ public class CGCreator {
 		EdgeListString = allEdgeStringList;
 		EdgeListEdge = EdgeList;
 		
-for(List<String> e : allEdgeStringList)
-	System.out.println("**:" + e);
+for(Edge e : EdgeListEdge)
+	System.out.println("ALL Edge : " + e.getSrc() +" -> "+ e.getTgt());
 		return;
 	}
 
@@ -172,8 +176,12 @@ for(List<String> e : allEdgeStringList)
 						//Get path list.
 						List<List<Edge>> ret = new ArrayList<List<Edge>>();
 						List<Edge> path = new ArrayList<Edge>();
-						List<List<Edge>> ListOfPath = search(EdgeListEdge, startEdges, path, ret);
-						
+for(Edge ed : startEdges){
+	System.out.println("stargEdges : " + ed);
+}
+						List<List<Edge>> ListOfPath = search(startEdges, path, ret);
+for(List<Edge> p : ListOfPath)
+	System.out.println("ListOfPath : " + p );
 					}
 
 				}));
@@ -183,45 +191,36 @@ for(List<String> e : allEdgeStringList)
 
 	}
 	
-	private static List<List<Edge>> search(List<Edge> edgeList, List<Edge> edges, List<Edge> path, List<List<Edge>> ret){
+	private static List<List<Edge>> search( List<Edge> edges, List<Edge> path, List<List<Edge>> ret){
 		
 		for(Edge e : edges){
+			path.add(e);
 			MethodOrMethodContext tgt = e.getTgt();
-			List<Edge> children = detectChildren(edgeList, tgt);
+			List<Edge> children = detectChildren(tgt);
 System.out.println("Children:::" + children);
-			if(children.size() != 0 && !isInvolved(path, tgt)){
-				path.add(e);
-				search(edgeList, children, path, ret);
-			} else if(children.size() != 0 && isInvolved(path, tgt) ){
+			if(children.size() != 0 && !isLoop(path, tgt)){
+				search(children, path, ret);
+			} else if(children.size() != 0 && isLoop(path, tgt) ){
 				ret.add(path);
+				path = new ArrayList<Edge>();
 			} else if(children.size() == 0) {
 				path.add(e);
 				ret.add(path);
+				path = new ArrayList<Edge>();
 			}
 		}
 		
 		return ret;
 	}
-	
-	private static boolean isInvolved(List<Edge> path, MethodOrMethodContext tgt){
-		boolean ret = false;
 		
-		for(Edge e : path){
-			if(e.getSrc().equals(tgt) || e.getTgt().equals(tgt)){
-				ret = true;
-			}
-		}
-		
-		return ret;
-	}
-
-	
-	private static List<Edge> detectChildren(List<Edge> edgeList,  MethodOrMethodContext tgt){
+	private static List<Edge> detectChildren(MethodOrMethodContext tgt){
 		
 		List<Edge> children = new ArrayList<Edge>();
 		
-		for(Edge edge : edgeList){
+		for(Edge edge : EdgeListEdge){
 			if(tgt.equals( edge.getSrc())){
+				if(isRedundant(tgt, edge.getTgt()))
+					continue;
 				children.add(edge);
 			}
 		}
@@ -229,10 +228,27 @@ System.out.println("Children:::" + children);
 		return children;
 	}
 	
-	private static String detectMethodName(String fqcn){
-		String[] elements = fqcn.split(".");
-		String methodName = elements[elements.length - 1];
-		return methodName;
+	private static boolean isLoop(List<Edge> path, MethodOrMethodContext tgt){
+		boolean ret = false;
+		
+		for(Edge e : path){
+			if(e.getSrc().method().equals(tgt.method()) || e.getTgt().method().equals(tgt.method())){
+				ret = true;
+			}
+		}
+		
+		return ret;
+	}
+	
+	private static boolean isRedundant(MethodOrMethodContext in, MethodOrMethodContext tgt){
+		boolean ret = false;
+		
+		if(in != null){
+			if(in.method().equals(tgt.method()))
+				ret = true;
+		}
+		
+		return ret;
 	}
 
 	/**
