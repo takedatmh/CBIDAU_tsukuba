@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import soot.MethodOrMethodContext;
@@ -29,18 +30,18 @@ import soot.util.queue.QueueReader;
 public class CGCreator {
 
 	// Method Name
-//	public static String methodName = "create";
-//	public static String mainClass = "simple.client.Client";
-//	public static String targetClass = "simple.logic.Logic_static";
+	public static String methodName = "create";
+	public static String mainClass = "simple.client.Client";
+	public static String targetClass = "simple.logic.Logic_static";
 	
-	private static String methodName = "deploy";
-	private static String mainClass = "org.apache.catalina.manager.TestManagerServlet";
-	private static String targetClass = "org.apache.catalina.manager.ManagerServlet";
+//	private static String methodName = "deploy";
+//	private static String mainClass = "org.apache.catalina.manager.TestManagerServlet";
+//	private static String targetClass = "org.apache.catalina.manager.ManagerServlet";
 
 	public static Logger logger = LogUtil.createLogger(".\\Sample.log",
 			CGCreator.class);
 	
-	public static List<List<String>> EdgeListString= new ArrayList<List<String>>();
+//	public static List<List<String>> EdgeListString= new ArrayList<List<String>>();
 	public static List<Edge> EdgeListEdge= new ArrayList<Edge>();
 	
 	/**
@@ -93,12 +94,12 @@ public class CGCreator {
 				canvas.drawNode(tgtString);
 				canvas.drawEdge(srcString, tgtString);
 				
-				//Create Edge List.
-				edge = new ArrayList<String>();
-				//Store as "package.class.method". The last element is method name which is devided by dot.
-				edge.add(0, src.getClass().getName()+"."+src.method().getName()); 
-				edge.add(1, tgt.getClass().getName()+"."+tgt.method().getName());
-				allEdgeStringList.add(index, edge);
+//				//Create Edge List.
+//				edge = new ArrayList<String>();
+//				//Store as "package.class.method". The last element is method name which is devided by dot.
+//				edge.add(0, src.getClass().getName()+"."+src.method().getName()); 
+//				edge.add(1, tgt.getClass().getName()+"."+tgt.method().getName());
+//				allEdgeStringList.add(index, edge);
 				
 				//EdgeList
 				EdgeList.add(index, next);
@@ -107,7 +108,7 @@ public class CGCreator {
 		//Write .dot file.
 		canvas.plot(fileName);
 		//Put edge List into class field to be refered by other methods.
-		EdgeListString = allEdgeStringList;
+//		EdgeListString = allEdgeStringList;
 		EdgeListEdge = EdgeList;
 		
 for(Edge e : EdgeListEdge)
@@ -146,19 +147,16 @@ for(Edge e : EdgeListEdge)
 						SerializeCallGraph(cg, ".\\CallGraph\\" + "CallGraph_"
 								+ targetClass+ "_" +methodName + DotGraph.DOT_EXTENSION);				
  
-						// ///////// Get Unit
-						// ///////////////////////////////////////////////
-						// Get a Soot Class of target class. :
-						// "org.apache.struts.action.ActionServlet");
+						//Get SootClass.
 						SootClass sootClass = Scene.v().getSootClass(
 								targetClass);
 						// Analyze class structure.
 						sootClass.setApplicationClass();
-						// method.
+						//Get soot method.
 						SootMethod method = sootClass
 								.getMethodByName(methodName);
 						
-						//Get start edge.
+						//Get first edge.
 						//Get Method Name from each edge src node and compare with start method name.
 						List<Edge> startEdges = new ArrayList<Edge>();
 						Iterator<Edge> iter = EdgeListEdge.iterator();
@@ -169,19 +167,22 @@ for(Edge e : EdgeListEdge)
 								startEdges.add(edge);
 							}
 						}
-//for(Edge e : startEdges){
-//	System.out.print("srcEdge: " + e.getSrc().method() + "  ->  ");
-//	System.out.println("tgtEdge: " + e.getTgt().method());
-//}
-						//Get path list.
+						
+for(Edge ed : startEdges){
+	System.out.println("startEdges : " + ed.getSrc() +" -> "+ ed.getTgt());
+}
+						
+						//Search CG Path.
 						List<List<Edge>> ret = new ArrayList<List<Edge>>();
 						List<Edge> path = new ArrayList<Edge>();
-for(Edge ed : startEdges){
-	System.out.println("stargEdges : " + ed);
-}
 						List<List<Edge>> ListOfPath = search(startEdges, path, ret);
-for(List<Edge> p : ListOfPath)
-	System.out.println("ListOfPath : " + p );
+						
+						//Path List writter
+						PathWritter.writeEdgePath(".¥¥CallGraphPathList¥¥", targetClass, methodName, ListOfPath);
+for(List<Edge> p : ListOfPath){
+	System.out.println("PathList:: "+p);
+}
+
 					}
 
 				}));
@@ -191,19 +192,30 @@ for(List<Edge> p : ListOfPath)
 
 	}
 	
+	/**
+	 * This method have a function which searches C1 level coverage path information from the designated start method.
+	 * If this method finds any loop edges in this path search disposal, force to stop the path search.
+	 * @param edges
+	 * @param path
+	 * @param ret
+	 * @return path list
+	 */
 	private static List<List<Edge>> search( List<Edge> edges, List<Edge> path, List<List<Edge>> ret){
 		
 		for(Edge e : edges){
 			path.add(e);
 			MethodOrMethodContext tgt = e.getTgt();
 			List<Edge> children = detectChildren(tgt);
-System.out.println("Children:::" + children);
+			logger.log(Level.INFO, "Find  Children:::" + children);
 			if(children.size() != 0 && !isLoop(path, tgt)){
+				logger.log(Level.INFO,"Recursive!");
 				search(children, path, ret);
 			} else if(children.size() != 0 && isLoop(path, tgt) ){
 				ret.add(path);
+				logger.log(Level.INFO,"FindLoop!!" + e);
 				path = new ArrayList<Edge>();
 			} else if(children.size() == 0) {
+				logger.log(Level.INFO,"No Children!");
 				path.add(e);
 				ret.add(path);
 				path = new ArrayList<Edge>();
