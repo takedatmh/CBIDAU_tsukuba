@@ -1,5 +1,8 @@
 package dataflow.util;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -177,8 +180,34 @@ for(Edge ed : startEdges){
 						List<Edge> path = new ArrayList<Edge>();
 						List<List<Edge>> ListOfPath = search(startEdges, path, ret);
 						
+						//Write
+						FileWriter in = null;
+						PrintWriter CGPathWriter = null;
+						String filePath = ".\\CallGraphPathList\\"+ "_" +targetClass + "_" + methodName + ".txt";
+						try {
+							//postscript version
+							in = new FileWriter(filePath, true);
+							CGPathWriter = new PrintWriter(in);
+							for(List<Edge> p : ListOfPath)
+								CGPathWriter.println(p.toString());
+							CGPathWriter.flush();
+						} catch (Exception e) {
+							e.printStackTrace();
+						} finally {
+							try {
+								//close
+								in.close();
+								CGPathWriter.close();
+								logger.log(Level.INFO, "Written!");
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}	
+						
 						//Path List writter
-						PathWritter.writeEdgePath(".¥¥CallGraphPathList¥¥", targetClass, methodName, ListOfPath);
+						//boolean pathListWriteResult = PathWritter.writeEdgePath(".¥¥CallGraphPathList¥¥", targetClass, methodName, ListOfPath);
+						//logger.log(Level.INFO, String.valueOf(pathListWriteResult));
+						
 for(List<Edge> p : ListOfPath){
 	System.out.println("PathList:: "+p);
 }
@@ -263,85 +292,4 @@ for(List<Edge> p : ListOfPath){
 		return ret;
 	}
 
-	/**
-	 * This method have a function which searches C1 level coverage path information from the designated start method.
-	 * If this method finds any loop edges in this path search disposal, force to stop the path search.
-	 * @param startMethod : Start point method
-	 * @param cg : Call Graph Object
-	 * @param edgeList : having each path information
-	 * @param ret : return object
-	 * @return List<List<Edge>> Return a list contains each path list.
-	 */
-	private static List<List<Edge>> searchPath(SootMethod startMethod, CallGraph cg, List<Edge> edgeList, List<List<Edge>> ret) {
-		
-//		QueueReader<Edge> listener = cg.listener();
-//
-//		while (listener.hasNext()) {
-//			Edge next = listener.next();
-//			MethodOrMethodContext src = next.getSrc();
-//			MethodOrMethodContext tgt = next.getTgt();
-//			String srcString = src.toString();
-//			String tgtString = tgt.toString();
-//		}
-		
-		///////////////////////////////
-		
-		//Obtain out edges from the designated method node.
-		Iterator<Edge> edges = cg.edgesOutOf(startMethod);
-System.out.println("///:" + edges);
-		//In case of existing children, continue to search path for each child node.
-		top: if(edges.hasNext()){
-			
-			//Get an out of edge from target method.
-			Edge edge  = edges.next();
-			
-			//Add an edge into list.
-			edgeList.add(edge);
-			
-			//Get next "method".
-			SootMethod targetMethod = edge.tgt();
-			
-			//Loop Check
-			if(checkLoop(targetMethod, edgeList)) {
-				//When a loop is found, add the current edgeList into return and return return value.
-				ret.add(edgeList);
-				
-				//exit this iteration and goto next iteration loop.
-				break top;
-				
-				//return.
-				//return ret;
-			}
-			
-			//recursive calling
-			searchPath(targetMethod, cg, edgeList, ret);
-		
-		//In case of not existing children, finishing path search and storing this path into return object.
-		} else {
-			
-			//Add this path information into return object.
-			ret.add(edgeList);
-			
-		}
-		
-		//return.
-		return ret;
-	}
-	
-	private static boolean checkLoop(SootMethod targetMethod, List<Edge> edgeList){
-		//return value
-		boolean ret = false;
-		
-		//check whether this target method is loop node or not. 
-		//Obtain an edge from edgeList.
-		for(Edge edge : edgeList){
-			//Compare targetMethod with this edge's source method or target method.  
-			if( edge.equals(edge.src()) || edge.equals(edge.tgt()) ){
-				return ret = true;
-			}
-		}
-		
-		//return result.
-		return ret;
-	}
 }

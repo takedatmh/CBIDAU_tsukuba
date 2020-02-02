@@ -83,6 +83,10 @@ public class Logic_static {
 			//code = "0";
 			code = staticVariable;
 			
+			Caller caller = new Caller();
+			caller.callerMethod01();
+			caller.callerMethod02();
+			
 		} catch (Exception e) {
 			// Logging
 			logger.log(Level.WARNING, "Fail to execute create method.");
