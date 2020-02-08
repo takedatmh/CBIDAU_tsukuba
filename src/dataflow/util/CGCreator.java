@@ -4,8 +4,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -31,17 +31,21 @@ import soot.util.queue.QueueReader;
  * 
  */
 public class CGCreator {
-
+	static int a = 0;
 	// Method Name
-	public static String methodName = "create";
-	public static String mainClass = "simple.client.Client";
-	public static String targetClass = "simple.logic.Logic_static";
+	public static String methodName = "main";
+	public static String mainClass = "sample.functionA.MainA";
+	public static String targetClass = "sample.functionA.MainA";
+
+//	public static String methodName = "create";
+//	public static String mainClass = "simple.client.Client";
+//	public static String targetClass = "simple.logic.Logic_static";
 	
 //	private static String methodName = "deploy";
 //	private static String mainClass = "org.apache.catalina.manager.TestManagerServlet";
 //	private static String targetClass = "org.apache.catalina.manager.ManagerServlet";
 
-	public static Logger logger = LogUtil.createLogger(".\\Sample.log",
+	public static Logger logger = LogUtil.createLogger(".\\SampleA.log",
 			CGCreator.class);
 	
 //	public static List<List<String>> EdgeListString= new ArrayList<List<String>>();
@@ -85,7 +89,7 @@ public class CGCreator {
 					&& !srcString.startsWith("<com.")
 					&& !srcString.startsWith("<jdk.") && !srcString
 						.startsWith("<javax."))
-				|| (!tgtString.startsWith("<java.")
+				&& (!tgtString.startsWith("<java.")
 							&& !tgtString.startsWith("<sun.")
 							&& !tgtString.startsWith("<org.")
 							&& !tgtString.startsWith("<com.")
@@ -177,13 +181,14 @@ for(Edge ed : startEdges){
 						
 						//Search CG Path.
 						List<List<Edge>> ret = new ArrayList<List<Edge>>();
-						List<Edge> path = new ArrayList<Edge>();
-						List<List<Edge>> ListOfPath = search(startEdges, path, ret);
+						ArrayList<Edge> path = new ArrayList<Edge>();
+						//List<List<Edge>> ListOfPath = search(startEdges, path, ret);
+						List<List<Edge>> ListOfPath = search2(startEdges.get(0), path, ret);
 						
 						//Write
 						FileWriter in = null;
 						PrintWriter CGPathWriter = null;
-						String filePath = ".\\CallGraphPathList\\"+ "_" +targetClass + "_" + methodName + ".txt";
+						String filePath = ".\\CallGraphPathList\\"+ targetClass + "_" + methodName + ".txt";
 						try {
 							//postscript version
 							in = new FileWriter(filePath, true);
@@ -221,6 +226,49 @@ for(List<Edge> p : ListOfPath){
 
 	}
 	
+	private static List<List<Edge>> search2(Edge edge, ArrayList<Edge> path, List<List<Edge>> ret){
+			//for(Edge e : edges){  
+		   logger.log(Level.INFO, "search2: start method --------------");
+		   logger.log(Level.INFO, "    edge: " + edge.toString());
+		   logger.log(Level.INFO, "    path: " + path.toString());
+		   logger.log(Level.INFO, "    ret: " + ret.toString());
+			MethodOrMethodContext tgt = edge.getTgt();
+			List<Edge> children = detectChildren(tgt);
+logger.log(Level.INFO, "Find  Children:::" + children);			
+			if(children.size() != 0 && ! isLoop(path, tgt)){
+				for(Edge e : children){
+					//ArrayList<Edge> newPath = (ArrayList<Edge>)path.clone();
+                    path.add(edge);
+					ArrayList<Edge> newPath = new ArrayList<Edge>();
+					for(Edge copyEdge : path) {
+						newPath.add(copyEdge);
+					}
+					logger.log(Level.INFO, "search2:     if1 : newPath: " + newPath.toString());
+                   search2(e, newPath, ret);
+				}
+			} else if(children.size() != 0 && isLoop(path, tgt) ){
+                path.add(edge);
+				ArrayList<Edge> newPath = new ArrayList<Edge>();
+				for(Edge copyEdge : path) {
+					newPath.add(copyEdge);
+				}
+				logger.log(Level.INFO, "search2:     if2 : newPath:" + newPath.toString());
+				ret.add(newPath);
+			} else if(children.size() == 0) {
+                path.add(edge);
+				ArrayList<Edge> newPath = new ArrayList<Edge>();
+				for(Edge copyEdge : path) {
+					newPath.add(copyEdge);
+				}
+				logger.log(Level.INFO, "search2:     if3 : newPath:" + newPath.toString());
+				ret.add(newPath);
+			}
+		
+		//List<List<Edge>> rt = new ArrayList<List<Edge>>(new HashSet<>(ret));
+			logger.log(Level.INFO, "search2:   return: " + ret.toString());
+		return ret;
+	}
+	
 	/**
 	 * This method have a function which searches C1 level coverage path information from the designated start method.
 	 * If this method finds any loop edges in this path search disposal, force to stop the path search.
@@ -229,39 +277,45 @@ for(List<Edge> p : ListOfPath){
 	 * @param ret
 	 * @return path list
 	 */
-	private static List<List<Edge>> search( List<Edge> edges, List<Edge> path, List<List<Edge>> ret){
-		
-		for(Edge e : edges){
+	private static List<List<Edge>> search( List<Edge> edges, ArrayList<Edge> path, List<List<Edge>> ret){
+		Iterator<Edge> iter = edges.iterator();
+		while(iter.hasNext()) {
+			Edge e = iter.next();
+			//for(Edge e : edges){
 			path.add(e);
+			logger.log(Level.INFO, String.valueOf(path.size()));
 			MethodOrMethodContext tgt = e.getTgt();
-			List<Edge> children = detectChildren(tgt);
+			List<Edge> children = detectChildren(tgt, e);
 			logger.log(Level.INFO, "Find  Children:::" + children);
 			if(children.size() != 0 && !isLoop(path, tgt)){
 				logger.log(Level.INFO,"Recursive!");
-				search(children, path, ret);
+				//List<Edge> newPath = new ArrayList<Edge>();
+				//newPath.addAll(path);
+				search(children, (ArrayList<Edge>)path.clone(), ret);
 			} else if(children.size() != 0 && isLoop(path, tgt) ){
-				ret.add(path);
+				ret.add((List<Edge>)path.clone());
 				logger.log(Level.INFO,"FindLoop!!" + e);
-				path = new ArrayList<Edge>();
 			} else if(children.size() == 0) {
 				logger.log(Level.INFO,"No Children!");
-				path.add(e);
-				ret.add(path);
+				//path.add(e);
+				ret.add((List<Edge>)path.clone());
 				path = new ArrayList<Edge>();
 			}
 		}
 		
-		return ret;
+		List<List<Edge>> rt = new ArrayList<List<Edge>>(new HashSet<>(ret));
+		return rt;
 	}
+	
 		
-	private static List<Edge> detectChildren(MethodOrMethodContext tgt){
+	private static List<Edge> detectChildren(MethodOrMethodContext tgt, Edge e){
 		
 		List<Edge> children = new ArrayList<Edge>();
 		
 		for(Edge edge : EdgeListEdge){
-			if(tgt.equals( edge.getSrc())){
-				if(isRedundant(tgt, edge.getTgt()))
-					continue;
+			if(tgt.method().equals( edge.getSrc().method())){
+//				if(isRedundant(edge, e))
+//					continue;
 				children.add(edge);
 			}
 		}
@@ -269,7 +323,29 @@ for(List<Edge> p : ListOfPath){
 		return children;
 	}
 	
+	private static List<Edge> detectChildren(MethodOrMethodContext tgt){
+		logger.log(Level.INFO, "detectChildren: start method -----------------------");
+		logger.log(Level.INFO, "    tgt: " + tgt.toString());
+		List<Edge> children = new ArrayList<Edge>();
+		
+		for(Edge edge : EdgeListEdge){
+logger.log(Level.INFO, "tgt::"+tgt.method().getName());
+logger.log(Level.INFO, "src::"+edge.getSrc().method().getName());
+			if(tgt.method().getName().equals( edge.getSrc().method().getName())){
+//				if(isRedundant(edge, e))
+//					continue;
+				children.add(edge);
+logger.log(Level.INFO, "detectChildren: children::"+children.toString());
+			}
+		}
+		
+		return children;
+	}
+	
+	
 	private static boolean isLoop(List<Edge> path, MethodOrMethodContext tgt){
+		logger.log(Level.INFO, "isLoop start method --------------------------");
+		logger.log(Level.INFO, "    tgt: " + tgt.toString());
 		boolean ret = false;
 		
 		for(Edge e : path){
@@ -277,15 +353,15 @@ for(List<Edge> p : ListOfPath){
 				ret = true;
 			}
 		}
-		
+		logger.log(Level.INFO, "    ret flag: " + ret);
 		return ret;
 	}
 	
-	private static boolean isRedundant(MethodOrMethodContext in, MethodOrMethodContext tgt){
+	private static boolean isRedundant(Edge currentEdge, Edge e){
 		boolean ret = false;
 		
-		if(in != null){
-			if(in.method().equals(tgt.method()))
+		if(e != null){
+			if(e.equals(currentEdge))
 				ret = true;
 		}
 		

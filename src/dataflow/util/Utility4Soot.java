@@ -201,8 +201,7 @@ public static LinkedHashMap<String, String> create_dfMap(UnitGraph unitGraph, St
 		Iterator<Unit> units2 = unitGraph.iterator();
 		PrintWriter pw = null;
 		try {
-			pw = new PrintWriter("DF" + "_" + "Simple_"
-					+ methodName + ".txt");
+			pw = new PrintWriter(".\\igraph\\"+"DF" + "_" + "Simple_" + methodName + ".txt");
 			int count = 1;
 			while (units2.hasNext()) {
 				Unit u = units2.next();

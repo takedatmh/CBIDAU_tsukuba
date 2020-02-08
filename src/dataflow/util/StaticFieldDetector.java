@@ -1,7 +1,5 @@
 package dataflow.util;
 
-
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -35,9 +33,13 @@ import dataflow.util.Utility4Soot;
 public class StaticFieldDetector {
 
 	// Method Name
-	public static String methodName = "create";
-	public static String mainClass = "simple.client.Client";
-	public static String targetClass = "simple.logic.Logic_static";
+//	public static String methodName = "create";
+//	public static String mainClass = "simple.client.Client";
+//	public static String targetClass = "simple.logic.Logic_static";
+	
+	public static String methodName = "SharedVarX";
+	public static String mainClass = "sample.common.SharedVarX";
+	public static String targetClass = "sample.common.SharedVarX";
 	
 	/**
 	 * Call Graph Creation

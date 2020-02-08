@@ -40,9 +40,13 @@ import soot.util.queue.QueueReader;
 public class CFPathDetector {
 	
 	// Method Name
-	private static String methodName = "create";
-	private static String mainClass = "simple.client.Client";
-	private static String targetClass = "simple.logic.Logic_static";
+//	private static String methodName = "create";
+//	private static String mainClass = "simple.client.Client";
+//	private static String targetClass = "simple.logic.Logic_static";
+	
+	public static String methodName = "main";
+	public static String mainClass = "sample.functionA.MainA";
+	public static String targetClass = "sample.functionA.MainA";
 	
 	private static Logger logger = LogUtil.createLogger(".\\Sample.log", CFPathDetector.class);
 	
@@ -52,6 +56,7 @@ public class CFPathDetector {
 	 * @param mainClass
 	 * @param targetClass
 	 */
+	@SuppressWarnings("static-access")
 	public CFPathDetector(String methodName, String mainClass, String targetClass){
 		this.methodName = methodName;
 		this.mainClass = mainClass;
@@ -98,7 +103,7 @@ public class CFPathDetector {
 						Unit head = unitGraph.getHeads().get(0);
 						//Prepare
 						//PathList Objects.
-						List<Unit> path = new ArrayList<>();
+						ArrayList<Unit> path = new ArrayList<>();
 						List<List<Unit>> pathList = new ArrayList<List<Unit>>();
 						//Get children of Top node.
 						Unit top= unitGraph.getSuccsOf(head).get(0);
@@ -107,27 +112,27 @@ public class CFPathDetector {
 						//Invoke Path Search method and then Return List of test coverage path
 						List<List<Unit>> listOfPath = searchPathFromCFG(top, unitGraph, path, pathList);
 						
-						//Write the list of path.
-						FileWriter in = null;
-						PrintWriter out = null;
-						String filePath = ".\\CFG_PathList\\" + targetClass + methodName +".txt";
-						try {
-							//postscript versionu
-							in = new FileWriter(filePath, true);
-							out = new PrintWriter(in);
-							out.println(pathList.toString());
-							out.flush();
-						} catch (Exception e) {
-							e.printStackTrace();
-						} finally {
-							try {
-								//close
-								in.close();
-								out.close();
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
+								//Write the list of path.
+								FileWriter in = null;
+								PrintWriter out = null;
+								String filePath = ".\\CFG_PathList\\" + targetClass + "_"+methodName +".txt";
+								try {
+									//postscript version
+									in = new FileWriter(filePath, true);
+									out = new PrintWriter(in);
+									out.println(pathList.toString());
+									out.flush();
+								} catch (Exception e) {
+									e.printStackTrace();
+								} finally {
+									try {
+										//close
+										in.close();
+										out.close();
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+								}
 						
 						////PathListWithStaticVariable////
 						//Read Static Variable List from file.
@@ -160,16 +165,21 @@ public class CFPathDetector {
 	 * @param unitGraph
 	 * @return List : List of coverage path
 	 */
-	public static List<List<Unit>> searchPathFromCFG(Unit node, UnitGraph unitGraph, List<Unit> path, List<List<Unit>> pathList){
+	public static List<List<Unit>> searchPathFromCFG(Unit node, UnitGraph unitGraph, ArrayList<Unit> path, List<List<Unit>> pathList){
+		
+		path.add(node);
 		
 		List<Unit> children = unitGraph.getSuccsOf(node);
 		int size = children.size();
 		
 		if(size != 0){
-			for(int i = 0; i < size; i++) {
-				Unit nextNode = children.get(i);
-				path.add(nextNode);
-				searchPathFromCFG(nextNode, unitGraph, path, pathList);
+			for(Unit nextNode : children) {
+				//path.add(nextNode);
+				if(!isLoop(nextNode, path)) {
+					searchPathFromCFG(nextNode, unitGraph, (ArrayList<Unit>)path.clone(), pathList);
+				} else {
+					continue;
+				}
 			}
 		} else if (size == 0) {
 			pathList.add(path);
@@ -178,6 +188,17 @@ public class CFPathDetector {
 		} 
 		
 		return pathList;
+	}
+	
+	private static boolean isLoop(Unit nextNode, List<Unit> path){
+		boolean ret = false;
+		
+		for(Unit node : path){
+			if(node.equals(nextNode))
+				ret = true;
+		}
+		
+		return ret;
 	}
 
 	/**

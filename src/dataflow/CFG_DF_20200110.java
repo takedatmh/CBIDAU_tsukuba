@@ -1,9 +1,11 @@
 package dataflow;
 
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +28,21 @@ import soot.Transform;
 import soot.Unit;
 import soot.Value;
 import soot.ValueBox;
+import soot.jimple.AnyNewExpr;
+import soot.jimple.AssignStmt;
+import soot.jimple.BreakpointStmt;
+import soot.jimple.GotoStmt;
+import soot.jimple.IdentityStmt;
+import soot.jimple.IfStmt;
+import soot.jimple.InvokeStmt;
+import soot.jimple.MonitorStmt;
+import soot.jimple.NewArrayExpr;
+import soot.jimple.NewExpr;
+import soot.jimple.NewMultiArrayExpr;
+import soot.jimple.NopStmt;
+import soot.jimple.NullConstant;
+import soot.jimple.ReturnStmt;
+import soot.jimple.ThrowStmt;
 import soot.jimple.toolkits.callgraph.CHATransformer;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
@@ -45,9 +63,17 @@ import dataflow.util.Utility4Soot;
 public class CFG_DF_20200110 {
 
 	// Method Name
-	private static String methodName = "create";
-	private static String mainClass = "simple.client.Client";
-	private static String targetClass = "simple.logic.Logic";
+//	private static String methodName = "create";
+//	private static String mainClass = "simple.client.Client";
+//	private static String targetClass = "simple.logic.Logic";
+	
+//	public static String methodName = "main";
+//	public static String mainClass = "sample.functionB.MainB";
+//	public static String targetClass = "sample.functionB.MainB";
+	
+	public static String methodName = "read";
+	public static String mainClass = "sample.functionB.MainB";
+	public static String targetClass = "sample.functionB.CallerFromB";
 	
 //	private static String methodName = "deploy";
 //	private static String mainClass = "org.apache.catalina.manager.TestManagerServlet";
@@ -93,12 +119,11 @@ public class CFG_DF_20200110 {
 		System.out.println("CFG file name " + fileName);
 
 		// Create GFG Edge List file for iGraph.
-		PrintWriter pwEdge = new PrintWriter("CFG_igraph_Edge_" + methodName
-				+ "_" + ".csv");
+		PrintWriter pwEdge = new PrintWriter(".\\igraph\\"+"CFG_igraph_Edge_" + targetClass +"_" + methodName + ".csv");
 		pwEdge.println("start" + "	" + "end" + "	" + "CRUD_Test");
 
 		// Create GFG Node List file for iGraph.
-		PrintWriter pwNode = new PrintWriter("CFG_igraph_Node_" + methodName
+		PrintWriter pwNode = new PrintWriter(".\\igraph\\"+"CFG_igraph_Node_" + targetClass +"_" + methodName
 				+ "_" + ".csv");
 		pwNode.println("Node" + "	" + "CRUD" + "	" + "DataFlowValue");
 		for (String node : crudMap.keySet()) {
@@ -250,7 +275,7 @@ public class CFG_DF_20200110 {
 			return;
 		
 		// Create GFG Node List file for iGraph.
-		PrintWriter pwPath = new PrintWriter("CFG_igraph_Path_" + methodName + "_" + ".csv");
+		PrintWriter pwPath = new PrintWriter(".\\igraph\\"+"CFG_igraph_Path_" +targetClass+"_"+ methodName + ".csv");
 		
 		int columNum = resultPathMap.size();
 		String columStr = "";
@@ -297,7 +322,7 @@ public class CFG_DF_20200110 {
 		List<List<String>> startEndList = new LinkedList<List<String>>();
 		
 		// Create GFG Node List file for iGraph.
-		PrintWriter pwPathEdge = new PrintWriter("CFG_igraph_Path_Edge_" + methodName + "_" + ".csv");
+		PrintWriter pwPathEdge = new PrintWriter(".\\igraph\\"+"CFG_igraph_Path_Edge_" +targetClass+"_"+ methodName + ".csv");
 		
 		int columNum = resultPathMap.size();
 		String columStr = "";
@@ -420,14 +445,14 @@ System.out.println(startEndList);
 						SootMethod method = sootClass.getMethodByName(methodName);
 						// Body has same jimple code to SootMethod's activeBody.
 						Body body = method.retrieveActiveBody();
-						// search body
-						List<ValueBox> list = body.getUseBoxes();
+//						// search body
+//						List<ValueBox> list = body.getUseBoxes();
 						
-System.out.println("########Box########");
-for (ValueBox box : list) {
-	System.out.println("Value = " + box.getValue()
-			+ "," + "Tag = " + box.getTag("jtp"));
-}
+//System.out.println("########Box########");
+//for (ValueBox box : list) {
+//	System.out.println("Value = " + box.getValue()
+//			+ "," + "Tag = " + box.getTag("jtp"));
+//}
 
 						// Create Control flow Graph as UnitGraph
 						UnitGraph unitGraph = new ExceptionalUnitGraph(body);  // UnitGraph unitGraph = new EnhancedUnitGraph(body);
@@ -436,25 +461,117 @@ for (ValueBox box : list) {
 						while (units.hasNext()) {
 							Unit u = units.next();
 							//Get soot value object from Unit.
-							Iterator<ValueBox> iValueBox = u.getUseBoxes()
-									.iterator();
+							Iterator<ValueBox> iValueBox = u.getUseBoxes().iterator();
 							int counter = 0;
 							while (iValueBox.hasNext()) {
 								ValueBox valueBox = iValueBox.next();
 								Value v = valueBox.getValue();
 
 /* Check each value statement. */
-System.out.println(counter+ "############Check satement or Expr###############");
+System.out.println(counter++ + "############Check satement or Expr###############");
 
 								// Check Expressions of each soot value and detect CRUD information from each soot value.
-								crudMap = Utility4Soot.create_crudMap(crudMap, u, v);
-
+								//crudMap = Utility4Soot.create_crudMap(crudMap, u, v);
+								// Check Expr of each statements and detect CRUD information.
+								if (v instanceof NewExpr || v instanceof NewArrayExpr
+										|| v instanceof NewMultiArrayExpr || v instanceof AnyNewExpr) {
+									crudMap.put(u.toString(), "C");
+								} else if (u instanceof NullConstant
+										|| u.toString().contains("nullConstant ")
+										|| u.toString().contains("delete ")
+										|| u.toString().contains("Delete ")) {
+									crudMap.put(u.toString(), "D");
+									// Treat each Statement.
+								} else if (u instanceof AssignStmt) {
+									crudMap.put(u.toString(), "U");
+								} else if (u instanceof IdentityStmt) {
+									crudMap.put(u.toString(), "R");
+								} else if (u instanceof GotoStmt) {
+									crudMap.put(u.toString(), "R");
+								} else if (u instanceof IfStmt) {
+									crudMap.put(u.toString(), "R");
+								} else if (u instanceof InvokeStmt) {
+									crudMap.put(u.toString(), "R");
+								} else if (u instanceof MonitorStmt) {
+									crudMap.put(u.toString(), "R");
+								} else if (u instanceof ReturnStmt) {
+									crudMap.put(u.toString(), "R");
+								} else if (u instanceof ThrowStmt) {
+									crudMap.put(u.toString(), "R");
+								} else if (u instanceof BreakpointStmt) {
+									crudMap.put(u.toString(), "R");
+								} else if (u instanceof NopStmt) {
+									crudMap.put(u.toString(), "R");
+									// Any other cases are fallen into R.
+								} else {
+									crudMap.put(u.toString(), "R");
+								}
+								
 								/*
 								 * Complement crudMap creation:: detect only refer variable statement and update crudMap key information as R.
 								 * Check current Unit object's description like a "r12" by matcher.
 								 */
-								crudMap = Utility4Soot.complement_crudMap(u, unitGraph, dfMap);
+								//crudMap = Utility4Soot.complement_crudMap(u, unitGraph, dfMap);
+								int sindex = 0;
+								sindex = u.getDefBoxes().toString().lastIndexOf("(");
 
+								@SuppressWarnings("unused")
+								String tmp = null;
+								// Detect Defined Data Flow Value.
+								if (sindex != -1) {
+									tmp = u.getDefBoxes()
+											.toString()
+											.substring(sindex + 1,
+													u.getDefBoxes().toString().length() - 2);
+								}
+								// Detect invoked Data Flow Value.
+								else if (sindex == -1) {
+									tmp = "none";
+									Pattern pattern1 = Pattern.compile("¥¥$r[0-9]{1,}");
+									Matcher matcher1 = pattern1.matcher(u.toString());
+									while (matcher1.find()) {
+										String matched = matcher1.group();
+										// System.out
+										// .printf("[%s] がマッチしました。 Pattern:[%s] input:[%s]\n",
+										// matched, pattern1,
+										// u.toString());
+										tmp = "$" + matched;
+										break;
+									}
+									Pattern pattern2 = Pattern.compile("r[0-9]{1,}");
+									Matcher matcher2 = pattern2.matcher(u.toString());
+									while (matcher2.find()) {
+										String matched = matcher2.group();
+						// System.out
+						// .printf("2:"
+						// + "[%s] がマッチしました。 Pattern:[%s] input:[%s]\n",
+						// matched, pattern1,
+						// u.toString());
+										tmp = "$" + matched;
+										break;
+									}
+								}
+
+								// check crudMap
+								Map<String, String> tmap = new HashMap<String, String>();
+								Iterator<Unit> units3 = unitGraph.iterator();
+								int ct = 0;
+								while (units3.hasNext()) {
+									Unit unit3 = units3.next();
+									List<Unit> childUnits = unitGraph.getSuccsOf(unit3);
+									for (int i = 0; i < childUnits.size(); i++) {
+										tmap.put(childUnits.get(i).toString(), String.valueOf(ct++));
+									}
+								}
+								// comparison between crudMap and childUnitMap
+								for (Map.Entry<String, String> entry : tmap.entrySet()) {
+									String key = entry.getKey();
+									if (crudMap.get(key) == null) {
+										crudMap.put(key, "R");
+									}
+								}
+
+							
 							}
 						}
 
@@ -465,16 +582,46 @@ System.out.println(counter+ "############Check satement or Expr###############")
 					     * This class getGuaranteedDefs() method returns each live data list.
 					     * Following disposal is to get data flow information and put them into dfMap each statement.
 					     */
-						dfMap = Utility4Soot.create_dfMap(unitGraph, methodName, dfMap);
+						//dfMap = Utility4Soot.create_dfMap(unitGraph, methodName, dfMap);
+						GuaranteedDefs gf = new GuaranteedDefs(unitGraph);
+						Iterator<Unit> units2 = unitGraph.iterator();
+						PrintWriter pw = null;
+						try {
+							pw = new PrintWriter(".\\igraph\\"+"DF" + "_" + "Simple_" + methodName + ".txt");
+							int count = 1;
+							while (units2.hasNext()) {
+								Unit u = units2.next();
+								List<?> dfList = gf.getGuaranteedDefs(u);
+								System.out
+										.println(count
+												+ " : ####################DataFlow########################");
+								System.out.println(dfList + "	" + u.toString());
+								
+								//Write DF data on a csv file.
+								pw.println(dfList + "	" + u.toString());
 
+								// put DF info into dfMap<Statement, DF variable
+								// List>
+								dfMap.put(u.toString(), dfList.toString());
+
+								count++;
+							}
+						//PrintWriter close
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						} finally {
+							pw.close();
+						}
+
+						
 						// /////CG///////////////////////
-						CallGraph cg = Scene.v().getCallGraph();
-						SerializeCallGraph(cg, "CG_Simple2"
-								+ DotGraph.DOT_EXTENSION);
+//						CallGraph cg = Scene.v().getCallGraph();
+//						SerializeCallGraph(cg, "CG_Simple2"
+//								+ DotGraph.DOT_EXTENSION);
 
 						// /////Draw CGF/////////////////////
 						try {
-							SerializeControlFlowGraph(unitGraph, "CFG_Simple_"
+							SerializeControlFlowGraph(unitGraph, ".\\ControlFlowGraphPDF\\"+"CFG_" + targetClass
 									+ methodName + DotGraph.DOT_EXTENSION);
 						} catch (FileNotFoundException e) {
 							e.printStackTrace();
@@ -495,8 +642,42 @@ for (String key : dfVMap.keySet()) {
 }
 
 						////////Path Analysis////////////////////////////////////////////////////////////////////
-						analyzePath(unitGraph);
+						//analyzePath(unitGraph);
 
+						////Retrieve each test Path in the CFG.////
+						//Get Head and Tail node from whole of CFG.
+						Unit head = unitGraph.getHeads().get(0);
+						//Prepare
+						//PathList Objects.
+						ArrayList<Unit> path = new ArrayList<>();
+						List<List<Unit>> pathList = new ArrayList<List<Unit>>();
+						//Get children of Top node.
+						Unit top= unitGraph.getSuccsOf(head).get(0);
+						path.add(top);
+						
+						List<List<Unit>> listOfPath = searchPathFromCFG(top, unitGraph, path, pathList);
+
+						//Write the list of path.
+						FileWriter in = null;
+						PrintWriter out = null;
+						String filePath = ".\\CFG_PathList\\" + targetClass + "_"+methodName +".txt";
+						try {
+							//postscript version
+							in = new FileWriter(filePath, true);
+							out = new PrintWriter(in);
+							out.println(listOfPath.toString());
+							out.flush();
+						} catch (Exception e) {
+							e.printStackTrace();
+						} finally {
+							try {
+								//close
+								in.close();
+								out.close();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
 					}
 
 				}));
@@ -504,6 +685,41 @@ for (String key : dfVMap.keySet()) {
 		/* Execute Soot main method with your designated argument values */
 		soot.Main.main(args2);
 
+	}
+	
+	
+	public static List<List<Unit>> searchPathFromCFG(Unit node, UnitGraph unitGraph, ArrayList<Unit> path, List<List<Unit>> pathList){
+		
+		path.add(node);
+		
+		List<Unit> children = unitGraph.getSuccsOf(node);
+		int size = children.size();
+		
+		if(size != 0){
+			for(Unit nextNode : children) {
+				//path.add(nextNode);
+				if(!isLoop(nextNode, path)) {
+					searchPathFromCFG(nextNode, unitGraph, (ArrayList<Unit>)path.clone(), pathList);
+				} else {
+					continue;
+				}
+			}
+		} else if (size == 0) {
+			pathList.add(path);
+		} 
+		
+		return pathList;
+	}
+	
+	private static boolean isLoop(Unit nextNode, List<Unit> path){
+		boolean ret = false;
+		
+		for(Unit node : path){
+			if(node.equals(nextNode))
+				ret = true;
+		}
+		
+		return ret;
 	}
 	
 	/**
