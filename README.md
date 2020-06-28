@@ -17,7 +17,7 @@ Regarding Overview of CB-IDAU, please refer to our [wiki] page.
 Non-source downloads such as WAR files and several Linux packages can be found on our [GitHub].
 
 # Source
-Our latest and greatest source of CB-IDAU can be found on [GitHub]. Fork us!
+Our latest and greatest source of CB-IDAU can be found on [GitHub].
 
 [GitHub]: https://github.com/takedatmh/CBIDAU_tsukuba
 [wiki]: https://github.com/takedatmh/CBIDAU_tsukuba/wiki
