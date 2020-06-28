@@ -4,7 +4,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -32,23 +31,15 @@ import soot.util.queue.QueueReader;
  */
 public class CGCreator {
 	static int a = 0;
+	static int counter = 0;
 	// Method Name
-	public static String methodName = "main";
-	public static String mainClass = "sample.functionA.MainA";
-	public static String targetClass = "sample.functionA.MainA";
-
-//	public static String methodName = "create";
-//	public static String mainClass = "simple.client.Client";
-//	public static String targetClass = "simple.logic.Logic_static";
-	
-//	private static String methodName = "deploy";
-//	private static String mainClass = "org.apache.catalina.manager.TestManagerServlet";
-//	private static String targetClass = "org.apache.catalina.manager.ManagerServlet";
+	private static String methodName = null;
+	private static String mainClass = null;
+	private static String targetClass = null;
 
 	public static Logger logger = LogUtil.createLogger(".\\SampleA.log",
 			CGCreator.class);
 	
-//	public static List<List<String>> EdgeListString= new ArrayList<List<String>>();
 	public static List<Edge> EdgeListEdge= new ArrayList<Edge>();
 	
 	/**
@@ -59,8 +50,6 @@ public class CGCreator {
 	 */
 	public static void SerializeCallGraph(CallGraph graph, String fileName) {
 		
-		List<String> edge = null;
-		List<List<String>> allEdgeStringList = new ArrayList<List<String>>();
 		List<Edge> EdgeList = new ArrayList<Edge>();
 		
 		if (fileName == null) {
@@ -70,7 +59,7 @@ public class CGCreator {
 			}
 			fileName = fileName + "call-graph" + DotGraph.DOT_EXTENSION;
 		}
-		System.out.println("file name " + fileName);
+		//System.out.println("file name " + fileName);
 		DotGraph canvas = new DotGraph("Call_Graph");
 		QueueReader<Edge> listener = graph.listener();
 
@@ -85,28 +74,23 @@ public class CGCreator {
 			// Excepted java packages.
 			if ((!srcString.startsWith("<java.")
 					&& !srcString.startsWith("<sun.")
-					&& !srcString.startsWith("<org.")
+					//&& !srcString.startsWith("<org.")
 					&& !srcString.startsWith("<com.")
-					&& !srcString.startsWith("<jdk.") && !srcString
-						.startsWith("<javax."))
+					&& !srcString.startsWith("<jdk.") 
+					&& !srcString.startsWith("<simple.") 
+					&& !srcString.startsWith("<javax."))
 				&& (!tgtString.startsWith("<java.")
 							&& !tgtString.startsWith("<sun.")
-							&& !tgtString.startsWith("<org.")
+							//&& !tgtString.startsWith("<org.")
 							&& !tgtString.startsWith("<com.")
-							&& !tgtString.startsWith("<jdk.") && !tgtString
-								.startsWith("<javax."))) {
+							&& !tgtString.startsWith("<jdk.") 
+							&& !srcString.startsWith("<simple.") 
+							&& !tgtString.startsWith("<javax."))) {
 				
 				// Drawing CG excepted designated java packages.
 				canvas.drawNode(srcString);
 				canvas.drawNode(tgtString);
 				canvas.drawEdge(srcString, tgtString);
-				
-//				//Create Edge List.
-//				edge = new ArrayList<String>();
-//				//Store as "package.class.method". The last element is method name which is devided by dot.
-//				edge.add(0, src.getClass().getName()+"."+src.method().getName()); 
-//				edge.add(1, tgt.getClass().getName()+"."+tgt.method().getName());
-//				allEdgeStringList.add(index, edge);
 				
 				//EdgeList
 				EdgeList.add(index, next);
@@ -115,11 +99,12 @@ public class CGCreator {
 		//Write .dot file.
 		canvas.plot(fileName);
 		//Put edge List into class field to be refered by other methods.
-//		EdgeListString = allEdgeStringList;
 		EdgeListEdge = EdgeList;
+
+////Debug
+//for(Edge e : EdgeListEdge)
+//	System.out.println("ALL Edge : " + e.getSrc().method().getName() +" -> "+ e.getTgt().method().getName());
 		
-for(Edge e : EdgeListEdge)
-	System.out.println("ALL Edge : " + e.getSrc() +" -> "+ e.getTgt());
 		return;
 	}
 
@@ -134,10 +119,24 @@ for(Edge e : EdgeListEdge)
 	 *            :true,,safe-forname:true,safe-newinstance:true
 	 */
 	public static void main(String[] args) {
+		
+		methodName = System.getProperty("method");
+		mainClass = System.getProperty("main");
+		targetClass = System.getProperty("target");
 
 		/* Set arguments for Soot main method. */
 		String[] args2 = Utility4Soot.setMainArgs(args, mainClass, targetClass);
 
+//		/*
+//		 * Delete previous result files under the output directories as follows:
+//		 */
+//	     File CallGraph_Dir = new File("CallGraph" + Context.SEPARATOR);
+//	     deleteFile(CallGraph_Dir);
+//	     File CallGraphPathList_Dir = new File("CallGraphPathList" + Context.SEPARATOR);
+//	     deleteFile(CallGraphPathList_Dir);
+//	     File CFG_PathList_Dir = new File("CFG_PathList" + Context.SEPARATOR);
+//	     deleteFile(CFG_PathList_Dir);
+		
 		/**
 		 * Soot PackManager
 		 * 
@@ -151,20 +150,18 @@ for(Edge e : EdgeListEdge)
 						// ///////////Create Call Flow
 						// Graph///////////////////////////////
 						CallGraph cg = Scene.v().getCallGraph();
-						SerializeCallGraph(cg, ".\\CallGraph\\" + "CallGraph_"
+						SerializeCallGraph(cg, "CallGraph" + Context.SEPARATOR + "CallGraph_"
 								+ targetClass+ "_" +methodName + DotGraph.DOT_EXTENSION);				
- 
+						
 						//Get SootClass.
 						SootClass sootClass = Scene.v().getSootClass(
 								targetClass);
 						// Analyze class structure.
 						sootClass.setApplicationClass();
 						//Get soot method.
-						SootMethod method = sootClass
-								.getMethodByName(methodName);
+						SootMethod method = sootClass.getMethodByName(methodName);
 						
-						//Get first edge.
-						//Get Method Name from each edge src node and compare with start method name.
+						//Get first edge. Get Method Name from each edge src node and compare with start method name.
 						List<Edge> startEdges = new ArrayList<Edge>();
 						Iterator<Edge> iter = EdgeListEdge.iterator();
 						while(iter.hasNext()){
@@ -174,10 +171,11 @@ for(Edge e : EdgeListEdge)
 								startEdges.add(edge);
 							}
 						}
-						
-for(Edge ed : startEdges){
-	System.out.println("startEdges : " + ed.getSrc() +" -> "+ ed.getTgt());
-}
+
+////Debug
+//for(Edge ed : startEdges){
+//	System.out.println("startEdges : " + ed.getSrc() +" -> "+ ed.getTgt());
+//}
 						
 						//Search CG Path.
 						List<List<Edge>> ret = new ArrayList<List<Edge>>();
@@ -185,10 +183,10 @@ for(Edge ed : startEdges){
 						//List<List<Edge>> ListOfPath = search(startEdges, path, ret);
 						List<List<Edge>> ListOfPath = search2(startEdges.get(0), path, ret);
 						
-						//Write
+						//Write Detail Edges List
 						FileWriter in = null;
 						PrintWriter CGPathWriter = null;
-						String filePath = ".\\CallGraphPathList\\"+ targetClass + "_" + methodName + ".txt";
+						String filePath = "CallGraphPathList"+ Context.SEPARATOR +targetClass + "_" + methodName + ".txt";
 						try {
 							//postscript version
 							in = new FileWriter(filePath, true);
@@ -207,15 +205,46 @@ for(Edge ed : startEdges){
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
+						}
+						
+						//Write Simple Edges List
+						String filePathSimple = "CallGraphPathList"+ Context.SEPARATOR + targetClass + "_" + methodName + "_Simple" +".txt";
+						//String filePathSimple = CallGraphPathListPath;
+						try {
+							//postscript version
+							in = new FileWriter(filePathSimple, true);
+							CGPathWriter = new PrintWriter(in);
+							for(List<Edge> p : ListOfPath){
+								for(Edge e : p){
+									CGPathWriter.print(
+											e.getSrc().getClass().getPackage().toString().replace("pakage ", "") + "." 
+												+ e.getSrc().getClass().getClass() + " " 
+													+ e.getSrc().method().getName() + 
+											" ==> " + 
+											e.getTgt().getClass().getPackage().toString().replace("pakage ", "") + "." 
+												+ e.getTgt().getClass().getClass() + " " 
+													+ e.getTgt().method().getName() + " , ");
+								}
+								CGPathWriter.println();
+							}
+							CGPathWriter.flush();
+						} catch (Exception e) {
+							e.printStackTrace();
+						} finally {
+							try {
+								//close
+								in.close();
+								CGPathWriter.close();
+////Debug								
+//logger.log(Level.INFO, "Written! Simple version.");
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 						}	
-						
-						//Path List writter
-						//boolean pathListWriteResult = PathWritter.writeEdgePath(".¥¥CallGraphPathList¥¥", targetClass, methodName, ListOfPath);
-						//logger.log(Level.INFO, String.valueOf(pathListWriteResult));
-						
-for(List<Edge> p : ListOfPath){
-	System.out.println("PathList:: "+p);
-}
+////Debug												
+//for(List<Edge> p : ListOfPath){
+//	System.out.println("PathList:: "+p);
+//}
 
 					}
 
@@ -227,23 +256,22 @@ for(List<Edge> p : ListOfPath){
 	}
 	
 	private static List<List<Edge>> search2(Edge edge, ArrayList<Edge> path, List<List<Edge>> ret){
-			//for(Edge e : edges){  
-		   logger.log(Level.INFO, "search2: start method --------------");
-		   logger.log(Level.INFO, "    edge: " + edge.toString());
-		   logger.log(Level.INFO, "    path: " + path.toString());
-		   logger.log(Level.INFO, "    ret: " + ret.toString());
+
 			MethodOrMethodContext tgt = edge.getTgt();
 			List<Edge> children = detectChildren(tgt);
-logger.log(Level.INFO, "Find  Children:::" + children);			
+		
 			if(children.size() != 0 && ! isLoop(path, tgt)){
 				for(Edge e : children){
+					//breaker
+					if(counter++ > 30) break;
 					//ArrayList<Edge> newPath = (ArrayList<Edge>)path.clone();
                     path.add(edge);
 					ArrayList<Edge> newPath = new ArrayList<Edge>();
 					for(Edge copyEdge : path) {
 						newPath.add(copyEdge);
 					}
-					logger.log(Level.INFO, "search2:     if1 : newPath: " + newPath.toString());
+////Debug					
+//logger.log(Level.INFO, "search2:     if1 : newPath: " + newPath.toString());
                    search2(e, newPath, ret);
 				}
 			} else if(children.size() != 0 && isLoop(path, tgt) ){
@@ -252,7 +280,8 @@ logger.log(Level.INFO, "Find  Children:::" + children);
 				for(Edge copyEdge : path) {
 					newPath.add(copyEdge);
 				}
-				logger.log(Level.INFO, "search2:     if2 : newPath:" + newPath.toString());
+////Debug
+//logger.log(Level.INFO, "search2:     if2 : newPath:" + newPath.toString());
 				ret.add(newPath);
 			} else if(children.size() == 0) {
                 path.add(edge);
@@ -260,82 +289,25 @@ logger.log(Level.INFO, "Find  Children:::" + children);
 				for(Edge copyEdge : path) {
 					newPath.add(copyEdge);
 				}
-				logger.log(Level.INFO, "search2:     if3 : newPath:" + newPath.toString());
+////Debug				
+//logger.log(Level.INFO, "search2:     if3 : newPath:" + newPath.toString());
 				ret.add(newPath);
 			}
 		
-		//List<List<Edge>> rt = new ArrayList<List<Edge>>(new HashSet<>(ret));
-			logger.log(Level.INFO, "search2:   return: " + ret.toString());
+//Debug
+////logger.log(Level.INFO, "search2:   return: " + ret.toString());
+			
 		return ret;
 	}
 	
-	/**
-	 * This method have a function which searches C1 level coverage path information from the designated start method.
-	 * If this method finds any loop edges in this path search disposal, force to stop the path search.
-	 * @param edges
-	 * @param path
-	 * @param ret
-	 * @return path list
-	 */
-	private static List<List<Edge>> search( List<Edge> edges, ArrayList<Edge> path, List<List<Edge>> ret){
-		Iterator<Edge> iter = edges.iterator();
-		while(iter.hasNext()) {
-			Edge e = iter.next();
-			//for(Edge e : edges){
-			path.add(e);
-			logger.log(Level.INFO, String.valueOf(path.size()));
-			MethodOrMethodContext tgt = e.getTgt();
-			List<Edge> children = detectChildren(tgt, e);
-			logger.log(Level.INFO, "Find  Children:::" + children);
-			if(children.size() != 0 && !isLoop(path, tgt)){
-				logger.log(Level.INFO,"Recursive!");
-				//List<Edge> newPath = new ArrayList<Edge>();
-				//newPath.addAll(path);
-				search(children, (ArrayList<Edge>)path.clone(), ret);
-			} else if(children.size() != 0 && isLoop(path, tgt) ){
-				ret.add((List<Edge>)path.clone());
-				logger.log(Level.INFO,"FindLoop!!" + e);
-			} else if(children.size() == 0) {
-				logger.log(Level.INFO,"No Children!");
-				//path.add(e);
-				ret.add((List<Edge>)path.clone());
-				path = new ArrayList<Edge>();
-			}
-		}
-		
-		List<List<Edge>> rt = new ArrayList<List<Edge>>(new HashSet<>(ret));
-		return rt;
-	}
-	
-		
-	private static List<Edge> detectChildren(MethodOrMethodContext tgt, Edge e){
-		
-		List<Edge> children = new ArrayList<Edge>();
-		
-		for(Edge edge : EdgeListEdge){
-			if(tgt.method().equals( edge.getSrc().method())){
-//				if(isRedundant(edge, e))
-//					continue;
-				children.add(edge);
-			}
-		}
-		
-		return children;
-	}
-	
 	private static List<Edge> detectChildren(MethodOrMethodContext tgt){
-		logger.log(Level.INFO, "detectChildren: start method -----------------------");
-		logger.log(Level.INFO, "    tgt: " + tgt.toString());
 		List<Edge> children = new ArrayList<Edge>();
 		
 		for(Edge edge : EdgeListEdge){
-logger.log(Level.INFO, "tgt::"+tgt.method().getName());
-logger.log(Level.INFO, "src::"+edge.getSrc().method().getName());
 			if(tgt.method().getName().equals( edge.getSrc().method().getName())){
-//				if(isRedundant(edge, e))
-//					continue;
 				children.add(edge);
-logger.log(Level.INFO, "detectChildren: children::"+children.toString());
+//Debug
+////logger.log(Level.INFO, "detectChildren: children::"+children.toString());
 			}
 		}
 		
@@ -344,12 +316,12 @@ logger.log(Level.INFO, "detectChildren: children::"+children.toString());
 	
 	
 	private static boolean isLoop(List<Edge> path, MethodOrMethodContext tgt){
-		logger.log(Level.INFO, "isLoop start method --------------------------");
-		logger.log(Level.INFO, "    tgt: " + tgt.toString());
+
 		boolean ret = false;
 		
 		for(Edge e : path){
-			if(e.getSrc().method().equals(tgt.method()) || e.getTgt().method().equals(tgt.method())){
+			if(e.getSrc().method().getName().equals(tgt.method().getName()) 
+					|| e.getTgt().method().getName().equals(tgt.method().getName())){
 				ret = true;
 			}
 		}
@@ -357,15 +329,47 @@ logger.log(Level.INFO, "detectChildren: children::"+children.toString());
 		return ret;
 	}
 	
-	private static boolean isRedundant(Edge currentEdge, Edge e){
-		boolean ret = false;
-		
-		if(e != null){
-			if(e.equals(currentEdge))
-				ret = true;
-		}
-		
-		return ret;
-	}
-
+//	/**
+//	 * Utility to delete result files under output directories before invoke soot main method.
+//	 * 
+//	 * Example of invocation of this method.
+//	 * <p>
+//	 *  FileClass fc = new FileClass();
+//     *  File dir = new File("/Users/Shared/java/");
+//     *  FileClass.fileClass(dir);
+//	 * </p>
+//	 * @param dir
+//	 */
+//	static private void deleteFile(File dir){
+//        //Delete files under your designated directory.
+//        if(dir.exists()) {
+//            
+//            if(dir.isFile()) {
+//                if(dir.delete()) {
+//                    System.out.println("Delete File.");
+//                }
+//            } else if(dir.isDirectory()) {
+//                File[] files = dir.listFiles();
+//                
+//                if(files == null) {
+//                    System.out.println("Not existing any files under the directory.");
+//                }
+//                //Loop for the number of the existing files.
+//                for(int i=0; i<files.length; i++) {
+//                    
+//                    //Confirm existing any files or not.
+//                    if(files[i].exists() == false) {
+//                        continue;
+//                    //Recursive deletion.
+//                    } else if(files[i].isFile()) {
+//                        deleteFile(files[i]);
+//                        System.out.println("ファイル削除2");
+//                    }        
+//                }
+//            }
+//        } else {
+//            System.out.println("ディレクトリが存在しない");
+//        }
+//    }
+	
 }

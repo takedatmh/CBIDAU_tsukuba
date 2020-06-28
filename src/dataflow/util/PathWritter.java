@@ -11,6 +11,16 @@ import soot.jimple.toolkits.callgraph.ReachableMethods;
 
 public class PathWritter {
 	
+	/**
+	 * 引数で指定したファイルパスとフィアル名で、CFGパスリストの中身をそのまま、
+	 * 行単位（パス単位）に.txtファイルとして書き出す。
+	 * 
+	 * @param path ファイルパス
+	 * @param targetClass　ファイル名の一部としてのクラス名
+	 * @param methodName　ファイル名の一部としての対象CFGのメソッド名
+	 * @param pathList　CFGのパスリスト
+	 * @return ファイ込書込　boolean
+	 */
 	public static boolean writePath(String path, String targetClass, String methodName, List<String> pathList ) {
 		boolean ret = false;
 		
@@ -44,7 +54,16 @@ public class PathWritter {
 		
 	}
 	
-	
+	/**
+	 * 概要プロセスの#3にあたる処理。
+	 * 解析対象MethodからののCGを抽出した後に、このメソッドで到達可能なUnitを抽出して
+	 * ファイルに書き出す。
+	 * @param path ファイルパス
+	 * @param targetClass　フィアル名の一部として利用するクラスファイル名
+	 * @param methodName　ファイル名の一部として利用するCFG解析対象のメソッド名
+	 * @param reachMethods 指定されたCGのノードに関連のあるノードを抽出するオブジェクト
+	 * @return ファイル書き込み成否　boolean
+	 */
 	public static boolean writePath(String path, String targetClass, String methodName,  ReachableMethods reachMethods) {
 		boolean ret = false;
 		
@@ -80,7 +99,18 @@ public class PathWritter {
 		
 	}
 	
-	
+	/**
+	 * Edgeの情報のリストをファイルとして書き込むメソッド。
+	 * igraphのdataframeのインプット情報として利用できるメリットがある。
+	 * 書き込まれるデータはテーブル形式で、
+	 * 開始ノード, 終点ノード, Edgeの種類(CRUD), シーケンス番号
+	 * 
+	 * @param filePath ファイルパス
+	 * @param targetClass ファイル名の一部としての解析対象クラス名
+	 * @param methodName フィアル名の一部としての解析対象クラス名
+	 * @param pathList 解析したCFGパスリスト
+	 * @return ファイル書き込み成否 boolean型
+	 */
 	public static boolean writeEdgePath(String filePath, String targetClass, String methodName, List<List<Edge>> pathList ) {
 		boolean ret = false;
 		

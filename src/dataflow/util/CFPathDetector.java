@@ -1,12 +1,9 @@
 package dataflow.util;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -39,29 +36,13 @@ import soot.util.queue.QueueReader;
  */
 public class CFPathDetector {
 	
-	// Method Name
-//	private static String methodName = "create";
-//	private static String mainClass = "simple.client.Client";
-//	private static String targetClass = "simple.logic.Logic_static";
-	
-	public static String methodName = "main";
-	public static String mainClass = "sample.functionA.MainA";
-	public static String targetClass = "sample.functionA.MainA";
-	
+	//Target Class, Method, TestCalss name.
+	private static String methodName = null;
+	private static String mainClass = null;
+	private static String targetClass = null;
+
+	//Logger Declaration.
 	private static Logger logger = LogUtil.createLogger(".\\Sample.log", CFPathDetector.class);
-	
-	/**
-	 * Constructor
-	 * @param methodName
-	 * @param mainClass
-	 * @param targetClass
-	 */
-	@SuppressWarnings("static-access")
-	public CFPathDetector(String methodName, String mainClass, String targetClass){
-		this.methodName = methodName;
-		this.mainClass = mainClass;
-		this.targetClass = targetClass;
-	}
 
 	/**
 	 * Main Method.
@@ -71,8 +52,21 @@ public class CFPathDetector {
 	 */
 	public static void main(String[] args) {
 		
+		//Obtain soot main arguments from system properties.
+		methodName = System.getProperty("method");
+		mainClass = System.getProperty("main");
+		targetClass = System.getProperty("target");
+		
 		/* Set arguments for Soot main method. */
 		String[] args2 = Utility4Soot.setMainArgs(args, mainClass, targetClass);
+		
+//		/*
+//		 * Delete previous result files under the output directories as follows:
+//		 */
+//	     File CFG_PathList_Dir = new File("CFG_PathList" + Context.SEPARATOR);
+//	     deleteFile(CFG_PathList_Dir);
+//	     File ControlFlowGraphPDF_Dir = new File("ControlFlowGraphPDF" + Context.SEPARATOR);
+//	     deleteFile(ControlFlowGraphPDF_Dir);
 
 		/**
 		 * Soot PackManager
@@ -111,11 +105,15 @@ public class CFPathDetector {
 						
 						//Invoke Path Search method and then Return List of test coverage path
 						List<List<Unit>> listOfPath = searchPathFromCFG(top, unitGraph, path, pathList);
+////Debug						
+//logger.log(Level.INFO, "Start writing!");
 						
 								//Write the list of path.
 								FileWriter in = null;
 								PrintWriter out = null;
-								String filePath = ".\\CFG_PathList\\" + targetClass + "_"+methodName +".txt";
+								/*20200506 Amend file path from ¥¥ to /. For Linux  */
+								//String filePath = ".\\CFG_PathList\\" + targetClass + "_"+methodName +".txt";
+								String filePath = "CFG_PathList/" + targetClass + "_"+methodName +".txt";
 								try {
 									//postscript version
 									in = new FileWriter(filePath, true);
@@ -133,24 +131,8 @@ public class CFPathDetector {
 										e.printStackTrace();
 									}
 								}
-						
-						////PathListWithStaticVariable////
-						//Read Static Variable List from file.
-						Path file = Paths.get(".\\StaticFieldList\\ListofStaticFieldsimple.logic.Logic_static.txt");
-						List<String> listOfStaticVar =null;
-						try {
-							listOfStaticVar = Files.readAllLines(file, Charset.forName("MS932"));		
-						} catch (IOException e1) { 
-							e1.printStackTrace();
-						}
-						
-						//Select path.
-						List<String> listOfPathWithStaticVar = selectPathWithStaticVar(listOfStaticVar, listOfPath);
-						
-						//Write selected path information in a file.
-						boolean res = PathWritter.writePath(".\\CFG_Path_withStaticVar\\", targetClass, methodName, listOfPathWithStaticVar);
-						//log
-						logger.log(Level.INFO, res + " :: Written Path List with Stataic Var is success.");
+						logger.log(Level.INFO, "Finish writting!");
+
 					}
 				}));
 		
@@ -176,15 +158,26 @@ public class CFPathDetector {
 			for(Unit nextNode : children) {
 				//path.add(nextNode);
 				if(!isLoop(nextNode, path)) {
-					searchPathFromCFG(nextNode, unitGraph, (ArrayList<Unit>)path.clone(), pathList);
+					//Create new Unit List object for recursive algorithm.
+					ArrayList<Unit> newPath = new ArrayList<Unit>();					
+					for(Unit u : path)
+						newPath.add(u);
+					//Recursive Call for searchPathFromCFG method.
+					//searchPathFromCFG(nextNode, unitGraph, (ArrayList<Unit>)path.clone(), pathList);
+					searchPathFromCFG(nextNode, unitGraph, newPath, pathList);
 				} else {
 					continue;
 				}
 			}
-		} else if (size == 0) {
-			pathList.add(path);
+		//Modified by takeda in 20200511
+		//} else if (size == 0) {
+		} else {			
+			ArrayList<Unit> newPath = new ArrayList<Unit>();
+			for(Unit u : path)
+				newPath.add(u);
+			pathList.add(newPath);
 			//log : Display selected path.
-			logger.log(Level.INFO, "##"+pathList);
+			logger.log(Level.INFO, "##"+newPath);
 		} 
 		
 		return pathList;
@@ -222,8 +215,9 @@ public class CFPathDetector {
 			String fqcn = tempList.get(0) + "." +tempList.get(2);
 			extractrdVarMap.put(fqcn, tempList);
 			
-			//log
-			logger.log(Level.INFO, "FQCN: " + fqcn);
+////log
+//logger.log(Level.INFO, "FQCN: " + fqcn);
+
 		}
 		
 		for(List<Unit> units : listOfPath){
@@ -271,16 +265,17 @@ public class CFPathDetector {
 			// Excepted java packages.
 			if ((!srcString.startsWith("<java.")
 					&& !srcString.startsWith("<sun.")
-					&& !srcString.startsWith("<org.")
+					//&& !srcString.startsWith("<org.")
 					&& !srcString.startsWith("<com.")
-					&& !srcString.startsWith("<jdk.") && !srcString
-						.startsWith("<javax."))
-					|| (!tgtString.startsWith("<java.")
+					&& !srcString.startsWith("<jdk.") 
+					&& !srcString.startsWith("<javax."))
+					&& (!tgtString.startsWith("<java.")
 							&& !tgtString.startsWith("<sun.")
-							&& !tgtString.startsWith("<org.")
+							//&& !tgtString.startsWith("<org.")
 							&& !tgtString.startsWith("<com.")
 							&& !tgtString.startsWith("<jdk.") && !tgtString
 								.startsWith("<javax."))) {
+				
 				// Drawing CG excepted designated java packages.
 				canvas.drawNode(src.toString());
 				canvas.drawNode(tgt.toString());
@@ -291,5 +286,48 @@ public class CFPathDetector {
 		canvas.plot(fileName);
 		return;
 	}
+	
+	/**
+	 * Utility to delete result files under output directories before invoke soot main method.
+	 * 
+	 * Example of invocation of this method.
+	 * <p>
+	 *  FileClass fc = new FileClass();
+     *  File dir = new File("/Users/Shared/java/");
+     *  FileClass.fileClass(dir);
+	 * </p>
+	 * @param dir
+	 */
+	static private void deleteFile(File dir){
+        //Delete files under your designated directory.
+        if(dir.exists()) {
+            
+            if(dir.isFile()) {
+                if(dir.delete()) {
+                    System.out.println("Delete File.");
+                }
+            } else if(dir.isDirectory()) {
+                File[] files = dir.listFiles();
+                
+                if(files == null) {
+                    System.out.println("Not existing any files under the directory.");
+                }
+                //Loop for the number of the existing files.
+                for(int i=0; i<files.length; i++) {
+                    
+                    //Confirm existing any files or not.
+                    if(files[i].exists() == false) {
+                        continue;
+                    //Recursive deletion.
+                    } else if(files[i].isFile()) {
+                        deleteFile(files[i]);
+                        System.out.println("ファイル削除2");
+                    }        
+                }
+            }
+        } else {
+            System.out.println("ディレクトリが存在しない");
+        }
+    }
 
 }

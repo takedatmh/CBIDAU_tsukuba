@@ -8,83 +8,32 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import soot.MethodOrMethodContext;
+import soot.Body;
 import soot.PackManager;
 import soot.Scene;
 import soot.SceneTransformer;
 import soot.SootClass;
 import soot.SootField;
+import soot.SootMethod;
 import soot.Transform;
+import soot.Unit;
+import soot.ValueBox;
 import soot.jimple.toolkits.callgraph.CHATransformer;
-import soot.jimple.toolkits.callgraph.CallGraph;
-import soot.jimple.toolkits.callgraph.Edge;
+import soot.tagkit.Tag;
+import soot.toolkits.graph.ExceptionalUnitGraph;
 import soot.util.Chain;
-import soot.util.dot.DotGraph;
-import soot.util.queue.QueueReader;
-import dataflow.util.Utility4Soot;
 
 /**
- * In case of existing statements more than one branch and one external call
- * method.
- * 
- * @author takedatmh
+ * This class has a function to detect Public Field from designated classes' field.
+ * @author takeda
  * 
  */
 public class PublicFieldDetector {
-
+	
 	// Method Name
-	public static String methodName = "create";
-	public static String mainClass = "simple.client.Client";
-	public static String targetClass = "simple.logic.Logic_static";
-
-	/**
-	 * Call Graph Creation
-	 * 
-	 * @param graph
-	 * @param fileName
-	 */
-	public static void SerializeCallGraph(CallGraph graph, String fileName) {
-		if (fileName == null) {
-			fileName = soot.SourceLocator.v().getOutputDir();
-			if (fileName.length() > 0) {
-				fileName = fileName + java.io.File.separator;
-			}
-			fileName = fileName + "call-graph" + DotGraph.DOT_EXTENSION;
-		}
-		System.out.println("file name " + fileName);
-		DotGraph canvas = new DotGraph("Call_Graph_" + methodName);
-		QueueReader<Edge> listener = graph.listener();
-
-		while (listener.hasNext()) {
-			Edge next = listener.next();
-			MethodOrMethodContext src = next.getSrc();
-			MethodOrMethodContext tgt = next.getTgt();
-			String srcString = src.toString();
-			String tgtString = tgt.toString();
-
-			// Excepted java packages.
-			if ((!srcString.startsWith("<java.")
-					&& !srcString.startsWith("<sun.")
-					&& !srcString.startsWith("<org.")
-					&& !srcString.startsWith("<com.")
-					&& !srcString.startsWith("<jdk.") && !srcString
-						.startsWith("<javax."))
-					|| (!tgtString.startsWith("<java.")
-							&& !tgtString.startsWith("<sun.")
-							&& !tgtString.startsWith("<org.")
-							&& !tgtString.startsWith("<com.")
-							&& !tgtString.startsWith("<jdk.") && !tgtString
-								.startsWith("<javax."))) {
-				// Drawing CG excepted designated java packages.
-				canvas.drawNode(src.toString());
-				canvas.drawNode(tgt.toString());
-				canvas.drawEdge(src.toString(), tgt.toString());
-			}
-
-		}
-		canvas.plot(fileName);
-		return;
-	}
+	public static String methodName = null;
+	public static String mainClass = null;
+	public static String targetClass = null;
 
 	/**
 	 * Main Method.
@@ -97,10 +46,15 @@ public class PublicFieldDetector {
 	 *            :true,,safe-forname:true,safe-newinstance:true
 	 */
 	public static void main(String[] args) {
+		
+		//Obtain soot main arguments from system properties.
+		methodName = System.getProperty("method");
+		mainClass = System.getProperty("main");
+		targetClass = System.getProperty("target");
 
 		/* Set arguments for Soot main method. */
 		String[] args2 = Utility4Soot.setMainArgs(args, mainClass, targetClass);
-
+		
 		/**
 		 * Soot PackManager
 		 * 
@@ -112,41 +66,74 @@ public class PublicFieldDetector {
 					protected void internalTransform(String phaseName,
 							@SuppressWarnings("rawtypes") Map options) {
 
-						// ///////////Control Flow Graph//////////////////////
+						/////////////Control Flow Graph//////////////////////
 						CHATransformer.v().transform();
 
 						// Get a Soot Class of target class. :
-						// "org.apache.struts.action.ActionServlet");
-						SootClass sootClass = Scene.v().getSootClass(
-								targetClass);
+						SootClass sootClass = Scene.v().getSootClass(targetClass);
 						// Analyze class structure.
 						sootClass.setApplicationClass();
+						// method.
+						SootMethod method = sootClass.getMethodByName(methodName);
+						// Body has same jimple code to SootMethod's activeBody.
+						Body body = method.retrieveActiveBody();
 
-						// Field Analysis
+						/* 
+						 * Create Control flow Graph as UnitGraph.
+						 * 'unitGraph' is an instance created by ExceptionalUnitGraph which includes Exceptional relation.
+						 * 'briefUnitGraph' is an instance created by BriefUnitGraph which dose not include Exceptional relation.
+						 * */
+						ExceptionalUnitGraph unitGraph = new ExceptionalUnitGraph(body);  // UnitGraph unitGraph = new EnhancedUnitGraph(body);
+						//briefUnitGraph = new BriefUnitGraph(body);
+
+						//Unit
+						Unit u = null;
+						
+						//Get unit from UnitGraph.
+						Iterator<Unit> units = unitGraph.iterator();
+						while (units.hasNext()) {
+							u = units.next();
+							System.out.println("Unit: " + u.toString());
+							System.out.println("getClass(): "+u.getClass());
+							System.out.println("getBoxesPointingToThis: "+u.getBoxesPointingToThis());
+							System.out.println("getDefBoxes(): "+u.getDefBoxes());
+							System.out.println("getTags(): "+ u.getTags().toString());
+							System.out.println("getUnitBoxes(): "+ u.getUnitBoxes());
+							System.out.println("getUseAndDefBoxes(): "+ u.getUseAndDefBoxes());
+							System.out.println("getUseBoxes(): "+ u.getUseBoxes());
+							
+							//Get soot value object from Unit.
+							Iterator<ValueBox> iUseBox = u.getUseBoxes().iterator();
+							
+							while (iUseBox.hasNext()) {
+								ValueBox valueBox = iUseBox.next();
+								System.out.println("valueBox: " + valueBox.toString());
+								
+							}
+						}
+												
+
+						/* Field Analysis */
 						Chain<SootField> sootFields = sootClass.getFields();
-						Iterator<SootField> iteratorFields = sootFields
-								.iterator();
-						List<SootField> staticFieldList = new ArrayList<SootField>();
+						Iterator<SootField> iteratorFields = sootFields.iterator();
+						List<SootField> publicFieldList = new ArrayList<SootField>();
 						while (iteratorFields.hasNext()) {
 							SootField field = iteratorFields.next();
 							//* This "isPublic" method judges public modification field or not. *//
 							if (field.isPublic() == true) {
-								staticFieldList.add(field);
+								publicFieldList.add(field);
 							}
 						}
-						// Write the list of public field on the designated
-						// file.
-						// Create GFG Node List file for iGraph.
+						// Write the list of public field on the public field list file.
 						FileWriter in = null;
 						PrintWriter staticFieldWriter = null;
-						String path = ".\\PublicFieldList\\"
-								+ "ListOfPublicField_" + targetClass + ".txt";
+						String path = "PublicFieldList" + Context.SEPARATOR 
+								+ "ListOfPublicField" + ".txt";
 						try {
 							// postscript version
 							in = new FileWriter(path, true);
 							staticFieldWriter = new PrintWriter(in);
-							staticFieldWriter.println(staticFieldList
-									.toString());
+							staticFieldWriter.println(publicFieldList.toString());
 							staticFieldWriter.flush();
 						} catch (Exception e) {
 							e.printStackTrace();

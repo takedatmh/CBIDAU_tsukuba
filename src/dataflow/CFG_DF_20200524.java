@@ -1,24 +1,21 @@
 package dataflow;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import soot.Body;
-import soot.MethodOrMethodContext;
 import soot.PackManager;
 import soot.Scene;
 import soot.SceneTransformer;
@@ -44,40 +41,45 @@ import soot.jimple.NullConstant;
 import soot.jimple.ReturnStmt;
 import soot.jimple.ThrowStmt;
 import soot.jimple.toolkits.callgraph.CHATransformer;
-import soot.jimple.toolkits.callgraph.CallGraph;
-import soot.jimple.toolkits.callgraph.Edge;
 import soot.toolkits.graph.ExceptionalUnitGraph;
 import soot.toolkits.graph.UnitGraph;
 import soot.util.dot.DotGraph;
-import soot.util.queue.QueueReader;
 import dataflow.tutorial.GuaranteedDefs;
+import dataflow.util.CRUD_Judgement;
+import dataflow.util.Context;
 import dataflow.util.Utility4Soot;
 
 /**
- * In case of existing statements more than one branch and one external call
- * method.
+ * This class provides the following functions:
+ * - Create Control Flow Graph. :: SerializaeControlFlowGraph method
+ * - Create '.dot' graph file into 'ControlFlowGraphPDF' directory. :: SerializeControlFlowGraph
+ * - Create graph data as R igraph csv format and annotate IDAU test priority as 0 or 1.::SerializePath, SerializeControlFlowGraph
+ * - 'igraph' data is generated the following two different types:
+ *   - 'CFG_igraph_Edge_CLASS_MEHTOD.csv' is has start, end node and CRUD Test Case flag.
+ *   - 'CFG_igraph_Node_CLASS_MEHTOD.csv' is has node, CRUF and Data Flow Value.
+ * - Create data flow analysis data and output txt data into igraph directory as '.txt' format.
+ * - Search all E2E path in Control Flow Graph and output this data into 'CFG_PathList' directory as '.txt' format.
  * 
+ * This class is executed by the following java command:
+ * <p>
+ * -whole-program -xml-attributes -keep-line-number -f jimple -p cg.cha enabled:true -p cg verbose:true,all-reachable:true,safe-forname:true,safe-newinstance:true
+ * -Xss1000m -Xmx5000M -Dmethod=main -Dmain=sample.functionA.MainA -Dtarget=sample.functionA.MainA
+ * </P>
  * @author takedatmh
  *
  */
-public class CFG_DF_20200110 {
+public class CFG_DF_20200524 {
+	
+	//Debug
+	static int count = 0;
+	
+	//Search Loop limit Number
+	static int limitNum = 0;
 
 	// Method Name
-//	private static String methodName = "create";
-//	private static String mainClass = "simple.client.Client";
-//	private static String targetClass = "simple.logic.Logic";
-	
-//	public static String methodName = "main";
-//	public static String mainClass = "sample.functionB.MainB";
-//	public static String targetClass = "sample.functionB.MainB";
-	
-	public static String methodName = "read";
-	public static String mainClass = "sample.functionB.MainB";
-	public static String targetClass = "sample.functionB.CallerFromB";
-	
-//	private static String methodName = "deploy";
-//	private static String mainClass = "org.apache.catalina.manager.TestManagerServlet";
-//	private static String targetClass = "org.apache.catalina.manager.ManagerServlet";
+	public static String methodName = null;
+	public static String mainClass = null;
+	public static String targetClass = null;
 
 	// CRUD Map
 	private static Map<String, String> crudMap = new LinkedHashMap<String, String>();
@@ -85,8 +87,10 @@ public class CFG_DF_20200110 {
 	// Data Flow LinkedHashMap
 	private static LinkedHashMap<String, String> dfMap = new LinkedHashMap<String, String>();
 
+
 	// Data Flaw Value LinkedHashMap
-	private static LinkedHashMap<String, String> dfVMap = new LinkedHashMap<String, String>();
+	//Modified by takeda in 20200510.
+	//private static LinkedHashMap<String, String> dfVMap = new LinkedHashMap<String, String>();
  
 	// Key value for PathMap
 	static Integer index = 0;
@@ -94,8 +98,18 @@ public class CFG_DF_20200110 {
 	//newBranch
 	static boolean newBranchFlag = false;
 	
+	//ExcepationlUnitGraph
+	static ExceptionalUnitGraph unitGraph = null;
+	
+	//BriefUnitGraph is used for 'getExtendedBasicBlockPathBetween(briefUnitGraph.getHeads().get(0), graph.getTails().get(0))'.
+	//static BriefUnitGraph briefUnitGraph = null; 
+	
 	/**
 	 * Control Flow Graph Creation
+	 * 
+	 * Change UnitGraph to EnhancedUnitGraph for adding termination final
+	 * node when target source multiple return statements.
+	 * graph = new EnhancedUnitGraph(graph.getBody());
 	 * 
 	 * @param graph
 	 * @param fileName
@@ -103,9 +117,6 @@ public class CFG_DF_20200110 {
 	 */
 	public static void SerializeControlFlowGraph(UnitGraph graph,
 			String fileName) throws FileNotFoundException {
-		// Change UnitGraph to EnhancedUnitGraph for adding termination final
-		// node when target source multiple return statements.
-		// graph = new EnhancedUnitGraph(graph.getBody());
 
 		// Create CFG output file.
 		if (fileName == null) {
@@ -116,23 +127,28 @@ public class CFG_DF_20200110 {
 			fileName = fileName + "call-graph" + DotGraph.DOT_EXTENSION;
 		}
 
-		System.out.println("CFG file name " + fileName);
+////Debug
+//System.out.println("CFG file name " + fileName);
 
 		// Create GFG Edge List file for iGraph.
-		PrintWriter pwEdge = new PrintWriter(".\\igraph\\"+"CFG_igraph_Edge_" + targetClass +"_" + methodName + ".csv");
+		PrintWriter pwEdge = new PrintWriter("igraph"+ Context.SEPARATOR +"CFG_igraph_Edge_" + targetClass +"_" + methodName + ".csv");
 		pwEdge.println("start" + "	" + "end" + "	" + "CRUD_Test");
 
 		// Create GFG Node List file for iGraph.
-		PrintWriter pwNode = new PrintWriter(".\\igraph\\"+"CFG_igraph_Node_" + targetClass +"_" + methodName
+		PrintWriter pwNode = new PrintWriter("igraph"+ Context.SEPARATOR + "CFG_igraph_Node_" + targetClass +"_" + methodName
 				+ "_" + ".csv");
 		pwNode.println("Node" + "	" + "CRUD" + "	" + "DataFlowValue");
+		
+		//Describe Node csv file data.
 		for (String node : crudMap.keySet()) {
 			// Annotate Node's CRUD info and DF-Value
 			pwNode.println(node + "	" + crudMap.get(node) + "	"
-					+ dfVMap.get(node));
+					//Modified by takeda in 20200510.
+					//+ dfVMap.get(node));
+					+ dfMap.get(node));
 		}
 
-		// Create CFG/////////////////
+		//// Create CFG/////////////////
 		DotGraph canvas = new DotGraph("Control_Flow_Graph");
 		Iterator<Unit> iteratorUnit = graph.iterator();
 
@@ -145,11 +161,6 @@ public class CFG_DF_20200110 {
 				 * start&End Node name and attribute(id::node_name_CRUD ||
 				 * node_name_DF , attribute::CRUD_value || node_name_DF_values)
 				 */
-				// Create start_name
-				// String start_name = start.toString() + "_" +
-				// crudMap.get(start.toString()) + "_" +
-				// dfMap.get(start.toString()) + "_" +
-				// start.getUseAndDefBoxes().toString();
 				String start_name = crudMap.get(start.toString()) + "_"
 						+ start.toString() + "_" + dfMap.get(start.toString());
 				// Create ends_name
@@ -202,68 +213,22 @@ public class CFG_DF_20200110 {
 		// Output Graph data on designated file.
 		canvas.plot(fileName);
 
-		// //////////Path detection/////////////
-		System.out.println(graph.getHeads().get(0));
-		System.out.println(graph.getTails().get(0));
-		List<Unit> unitPathE2E = graph.getExtendedBasicBlockPathBetween(graph
-				.getHeads().get(0), graph.getTails().get(0));
-		System.out.println(unitPathE2E);
+////Debug
+//System.out.println(graph.getHeads().get(0));
+//System.out.println(graph.getTails().get(0));
+		
+		
+//////Path detection/////////////
+//List<Unit> unitPathE2E = graph.getExtendedBasicBlockPathBetween(briefUnitGraph
+//		.getHeads().get(0), graph.getTails().get(0));
+		
+////Debug
+//System.out.println("E2E Path : "+unitPathE2E);
 
+		//Debug
 		return;
 	}
-
-	/**
-	 * Call Graph Creation
-	 * 
-	 * @param graph
-	 * @param fileName
-	 */
-	public static void SerializeCallGraph(CallGraph graph, String fileName) {
-		if (fileName == null) {
-			fileName = soot.SourceLocator.v().getOutputDir();
-			if (fileName.length() > 0) {
-				fileName = fileName + java.io.File.separator;
-			}
-			fileName = fileName + "call-graph" + DotGraph.DOT_EXTENSION;
-		}
-		System.out.println("file name " + fileName);
-		DotGraph canvas = new DotGraph("Call_Graph");
-		QueueReader<Edge> listener = graph.listener();
-
-		while (listener.hasNext()) {
-			Edge next = listener.next();
-			MethodOrMethodContext src = next.getSrc();
-			MethodOrMethodContext tgt = next.getTgt();
-			String srcString = src.toString();
-			String tgtString = tgt.toString();
-
-			// Excepted java packages.
-			if ((!srcString.startsWith("<java.")
-					&& !srcString.startsWith("<sun.")
-					&& !srcString.startsWith("<org.")
-					&& !srcString.startsWith("<com.")
-					&& !srcString.startsWith("<jdk.") && !srcString
-						.startsWith("<javax."))
-					|| (!tgtString.startsWith("<java.")
-							&& !tgtString.startsWith("<sun.")
-							&& !tgtString.startsWith("<org.")
-							&& !tgtString.startsWith("<com.")
-							&& !tgtString.startsWith("<jdk.") && !tgtString
-								.startsWith("<javax."))) {
-				// Drawing CG excepted designated java packages.
-				canvas.drawNode(src.toString());
-				canvas.drawNode(tgt.toString());
-				canvas.drawEdge(src.toString(), tgt.toString());
-			}
-
-// Console Output
-// System.out.println(" src = " + srcString);
-// System.out.println(" tgt = " + tgtString);
-
-		}
-		canvas.plot(fileName);
-		return;
-	}
+	
 
 	/**
 	 * SerializePath
@@ -275,7 +240,7 @@ public class CFG_DF_20200110 {
 			return;
 		
 		// Create GFG Node List file for iGraph.
-		PrintWriter pwPath = new PrintWriter(".\\igraph\\"+"CFG_igraph_Path_" +targetClass+"_"+ methodName + ".csv");
+		PrintWriter pwPath = new PrintWriter("igraph"+ Context.SEPARATOR + "CFG_igraph_Path_" +targetClass+"_"+ methodName + ".csv");
 		
 		int columNum = resultPathMap.size();
 		String columStr = "";
@@ -303,7 +268,9 @@ public class CFG_DF_20200110 {
 			}
 			
 			// Annotate Node's CRUD info and DF-Value
-			pwPath.println(node + "	" + crudMap.get(node) + "	" + dfVMap.get(node) + colStr);
+			//Modified by takeda in 20200510.
+			//pwPath.println(node + "	" + crudMap.get(node) + "	" + dfVMap.get(node) + colStr);
+			pwPath.println(node + "	" + crudMap.get(node) + "	" + dfMap.get(node) + colStr);
 		}
 		//close
 		pwPath.close();
@@ -322,7 +289,8 @@ public class CFG_DF_20200110 {
 		List<List<String>> startEndList = new LinkedList<List<String>>();
 		
 		// Create GFG Node List file for iGraph.
-		PrintWriter pwPathEdge = new PrintWriter(".\\igraph\\"+"CFG_igraph_Path_Edge_" +targetClass+"_"+ methodName + ".csv");
+		/* Amend from .¥¥igraph to igraph/. */
+		PrintWriter pwPathEdge = new PrintWriter("igraph"+ Context.SEPARATOR +"CFG_igraph_Path_Edge_" +targetClass+"_"+ methodName + ".csv");
 		
 		int columNum = resultPathMap.size();
 		String columStr = "";
@@ -362,14 +330,14 @@ public class CFG_DF_20200110 {
 						&& "C".equals(crudMap.get(ends.get(i).toString()))) {
 					crudFlag = "1";
 				}
-				
-				
+							
 				List<String> st = new LinkedList<String>();
 				st.add(start.toString());
 				st.add(ends.get(i).toString());
 				st.add(crudFlag);
 				startEndList.add(st);
-System.out.println(startEndList);
+////Debug
+//System.out.println(startEndList);
 			}
 
 		}
@@ -402,7 +370,7 @@ System.out.println(startEndList);
 						rowStr += "0";
 					}				
 			}		
-			//Annotate Node's CRUD info and DF-Value
+			//Annotate Node's CRUD info.
 			pwPathEdge.println(rowStr);
 		}
 		//close
@@ -420,8 +388,23 @@ System.out.println(startEndList);
 	 */
 	public static void main(String[] args) {
 		
+		//Obtain soot main arguments from system properties.
+		methodName = System.getProperty("method");
+		mainClass = System.getProperty("main");
+		targetClass = System.getProperty("target");
+		
 		/* Set arguments for Soot main method. */
 		String[] args2 = Utility4Soot.setMainArgs(args, mainClass, targetClass);
+		
+//		/*
+//		 * Delete previous result files under the output directories as follows:
+//		 */
+//	     File igraph_Dir = new File("igraph" + Context.SEPARATOR);
+//	     deleteFile(igraph_Dir);
+//	     File ControlFlowGraphPDF_Dir = new File("ControlFlowGraphPDF" + Context.SEPARATOR);
+//	     deleteFile(ControlFlowGraphPDF_Dir);
+//	     File CFG_PathList_Dir = new File("CFG_PathList" + Context.SEPARATOR);
+//	     deleteFile(CFG_PathList_Dir);
 
 		/**
 		 * Soot PackManager
@@ -445,34 +428,37 @@ System.out.println(startEndList);
 						SootMethod method = sootClass.getMethodByName(methodName);
 						// Body has same jimple code to SootMethod's activeBody.
 						Body body = method.retrieveActiveBody();
-//						// search body
-//						List<ValueBox> list = body.getUseBoxes();
-						
+
+////Debug
 //System.out.println("########Box########");
 //for (ValueBox box : list) {
 //	System.out.println("Value = " + box.getValue()
 //			+ "," + "Tag = " + box.getTag("jtp"));
 //}
 
-						// Create Control flow Graph as UnitGraph
-						UnitGraph unitGraph = new ExceptionalUnitGraph(body);  // UnitGraph unitGraph = new EnhancedUnitGraph(body);
+						/* 
+						 * Create Control flow Graph as UnitGraph.
+						 * 'unitGraph' is an instance created by ExceptionalUnitGraph which includes Exceptional relation.
+						 * 'briefUnitGraph' is an instance created by BriefUnitGraph which dose not include Exceptional relation.
+						 * */
+						unitGraph = new ExceptionalUnitGraph(body);
+						
 						//Get unit from UnitGraph.
 						Iterator<Unit> units = unitGraph.iterator();
+//Loop1 Graph->unit
 						while (units.hasNext()) {
+//ここから無分離、引数にはUnitとcrudMapを渡して、指定したUnitがCRUDのどれに相当するか判定し、crudMapに格納して返却。							
 							Unit u = units.next();
 							//Get soot value object from Unit.
 							Iterator<ValueBox> iValueBox = u.getUseBoxes().iterator();
-							int counter = 0;
+//Loop2 Unit->iValueBox
 							while (iValueBox.hasNext()) {
 								ValueBox valueBox = iValueBox.next();
 								Value v = valueBox.getValue();
 
-/* Check each value statement. */
-System.out.println(counter++ + "############Check satement or Expr###############");
-
-								// Check Expressions of each soot value and detect CRUD information from each soot value.
-								//crudMap = Utility4Soot.create_crudMap(crudMap, u, v);
-								// Check Expr of each statements and detect CRUD information.
+								/* 
+								 * Check Expressions of each soot value and detect CRUD information from each soot value.
+								 */
 								if (v instanceof NewExpr || v instanceof NewArrayExpr
 										|| v instanceof NewMultiArrayExpr || v instanceof AnyNewExpr) {
 									crudMap.put(u.toString(), "C");
@@ -481,7 +467,7 @@ System.out.println(counter++ + "############Check satement or Expr##############
 										|| u.toString().contains("delete ")
 										|| u.toString().contains("Delete ")) {
 									crudMap.put(u.toString(), "D");
-									// Treat each Statement.
+								// Treat each Statement.
 								} else if (u instanceof AssignStmt) {
 									crudMap.put(u.toString(), "U");
 								} else if (u instanceof IdentityStmt) {
@@ -511,7 +497,6 @@ System.out.println(counter++ + "############Check satement or Expr##############
 								 * Complement crudMap creation:: detect only refer variable statement and update crudMap key information as R.
 								 * Check current Unit object's description like a "r12" by matcher.
 								 */
-								//crudMap = Utility4Soot.complement_crudMap(u, unitGraph, dfMap);
 								int sindex = 0;
 								sindex = u.getDefBoxes().toString().lastIndexOf("(");
 
@@ -531,10 +516,6 @@ System.out.println(counter++ + "############Check satement or Expr##############
 									Matcher matcher1 = pattern1.matcher(u.toString());
 									while (matcher1.find()) {
 										String matched = matcher1.group();
-										// System.out
-										// .printf("[%s] がマッチしました。 Pattern:[%s] input:[%s]\n",
-										// matched, pattern1,
-										// u.toString());
 										tmp = "$" + matched;
 										break;
 									}
@@ -542,11 +523,6 @@ System.out.println(counter++ + "############Check satement or Expr##############
 									Matcher matcher2 = pattern2.matcher(u.toString());
 									while (matcher2.find()) {
 										String matched = matcher2.group();
-						// System.out
-						// .printf("2:"
-						// + "[%s] がマッチしました。 Pattern:[%s] input:[%s]\n",
-						// matched, pattern1,
-						// u.toString());
 										tmp = "$" + matched;
 										break;
 									}
@@ -570,41 +546,38 @@ System.out.println(counter++ + "############Check satement or Expr##############
 										crudMap.put(key, "R");
 									}
 								}
-
-							
 							}
+//END Loop2							
 						}
-
-						// /////DFA//////////////////////
+//END Loop1 ここまで
+						///////DFA//////////////////////
 					    /*
 					     * Data Flow Analysis using Soot default API. 
-					     * In this project, we have implemented as GuaranteeDefs class.
-					     * This class getGuaranteedDefs() method returns each live data list.
+					     * In this class, we have implemented as GuaranteeDefs class.
+					     * This getGuaranteedDefs() method returns each live data list.
 					     * Following disposal is to get data flow information and put them into dfMap each statement.
 					     */
-						//dfMap = Utility4Soot.create_dfMap(unitGraph, methodName, dfMap);
 						GuaranteedDefs gf = new GuaranteedDefs(unitGraph);
 						Iterator<Unit> units2 = unitGraph.iterator();
 						PrintWriter pw = null;
 						try {
-							pw = new PrintWriter(".\\igraph\\"+"DF" + "_" + "Simple_" + methodName + ".txt");
-							int count = 1;
+							/* Amend from .¥¥igraph to igraph/. */
+							pw = new PrintWriter("igraph"+ Context.SEPARATOR +"DF" + "_" + "Simple_" + methodName + ".txt");
+							//int count = 1;
 							while (units2.hasNext()) {
 								Unit u = units2.next();
 								List<?> dfList = gf.getGuaranteedDefs(u);
-								System.out
-										.println(count
-												+ " : ####################DataFlow########################");
-								System.out.println(dfList + "	" + u.toString());
+//////Debug
+//System.out.println(count++ + " : ####################DataFlow########################");
+//System.out.println(dfList + "	" + u.toString());
 								
-								//Write DF data on a csv file.
+								//Write DF data on data flow csv file.
 								pw.println(dfList + "	" + u.toString());
 
 								// put DF info into dfMap<Statement, DF variable
-								// List>
 								dfMap.put(u.toString(), dfList.toString());
 
-								count++;
+								//count++;
 							}
 						//PrintWriter close
 						} catch (IOException ex) {
@@ -613,59 +586,78 @@ System.out.println(counter++ + "############Check satement or Expr##############
 							pw.close();
 						}
 
-						
-						// /////CG///////////////////////
-//						CallGraph cg = Scene.v().getCallGraph();
-//						SerializeCallGraph(cg, "CG_Simple2"
-//								+ DotGraph.DOT_EXTENSION);
-
-						// /////Draw CGF/////////////////////
+						///////Draw CGF into ControlFlowGraphPDF directory as '.dot' file format./////////////////////
 						try {
-							SerializeControlFlowGraph(unitGraph, ".\\ControlFlowGraphPDF\\"+"CFG_" + targetClass
+							SerializeControlFlowGraph(unitGraph, "ControlFlowGraphPDF"+ Context.SEPARATOR +"CFG_" + targetClass
 									+ methodName + DotGraph.DOT_EXTENSION);
 						} catch (FileNotFoundException e) {
 							e.printStackTrace();
 						}
 						
-System.out.println("serializeCallGraph completed for CFG.");
+////Debug						
+//System.out.println("serializeCallGraph completed for CFG.");
 
-// /////SYSOUT CRUD Map//////////////
-System.out.println("##############CRUD##################");
-for (String key : crudMap.keySet()) {
-	System.out.println(crudMap.get(key) + "	" + key);
-}
+//////Debug /////SYSOUT CRUD Map//////////////
+//System.out.println("##############CRUD##################");
+//for (String key : crudMap.keySet()) {
+//	System.out.println(crudMap.get(key) + "	" + key);
+//}
+//
+//////Debug//////SYSOUT df Value Map////////
+//System.out.println("##############dfVMap##################");
+////Modified by takeda in 20200510 from dfVMap to dfMap.
+//for (String key : dfMap.keySet()) {
+//	System.out.println(dfMap.get(key) + "	" + key);
+//}
 
-// //////SYSOUT df Value Map////////
-System.out.println("##############dfVMap##################");
-for (String key : dfVMap.keySet()) {
-	System.out.println(dfVMap.get(key) + "	" + key);
-}
-
-						////////Path Analysis////////////////////////////////////////////////////////////////////
-						//analyzePath(unitGraph);
-
-						////Retrieve each test Path in the CFG.////
-						//Get Head and Tail node from whole of CFG.
+						////Path Analysis////////////////////////////////////////////////////////////////////
+						/*
+						 * 再帰処理でUnitグラフの全パスを検索する処理。
+						 * Retrieve each test Path in the CFG.
+						 * Get Head and Tail node from whole of CFG.
+						 * And obtain all CFG Paths from Head to Tail node.
+						 */
+						//Get Start Node which is called as Head.
 						Unit head = unitGraph.getHeads().get(0);
-						//Prepare
-						//PathList Objects.
+						
+						//Preparation of PathList Objects.
 						ArrayList<Unit> path = new ArrayList<>();
 						List<List<Unit>> pathList = new ArrayList<List<Unit>>();
+						
 						//Get children of Top node.
 						Unit top= unitGraph.getSuccsOf(head).get(0);
 						path.add(top);
-						
-						List<List<Unit>> listOfPath = searchPathFromCFG(top, unitGraph, path, pathList);
 
-						//Write the list of path.
+						/* Search all of CFG Paths from whole CFG by the following searchPathFromCFG method. */
+						List<List<Unit>> listOfPath = searchPathFromCFG(top, unitGraph, path, pathList);
+						
+//Debug
+//for(List<Unit> list: listOfPath)
+//	System.out.println("E2E:" + list.toString());
+
+						//Write all paths into CFG_PathList directory as '.txt' format file.
 						FileWriter in = null;
 						PrintWriter out = null;
-						String filePath = ".\\CFG_PathList\\" + targetClass + "_"+methodName +".txt";
+						String filePath = "CFG_PathList" + Context.SEPARATOR + targetClass + "_"+methodName +".txt";
 						try {
-							//postscript version
+							//postscript version 追記形式
 							in = new FileWriter(filePath, true);
 							out = new PrintWriter(in);
-							out.println(listOfPath.toString());
+//Modified by takeda in 20200524. Before write Unit string data, retrieve CRUD for each Unit expression and add CRUD info.
+							for(List<Unit> pathListUnits : listOfPath){
+								String tmpPath = "[";
+								
+								//Unitを取り出してiValueからCRUD判定を行い、UnitのString情報の頭にC_, R_, U_ and D_として追加する。
+								for(Unit unit: pathListUnits){
+									tmpPath = tmpPath + CRUD_Judgement.judgeCRUD(unit) + ", ";
+								}
+								tmpPath = tmpPath.substring(0, tmpPath.length()-1) + "]";
+System.out.println("tmpPath: "+tmpPath);
+								//パス情報の書き込み
+								//Modified by takeda in 20200524 form 'pathListUnits.toString' to 'tmpUnit'.
+								//out.println(pathListUnits.toString());
+								out.println(tmpPath);
+							}
 							out.flush();
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -687,30 +679,60 @@ for (String key : dfVMap.keySet()) {
 
 	}
 	
-	
+	/**
+	 * This method search all paths from Head to Tail node in CFG by recursive algorithm of DFS.
+	 * As a circuit breaker, we set limit number of loop :: 100,000 count.
+	 * @param node
+	 * @param unitGraph
+	 * @param path
+	 * @param pathList
+	 * @return List of E2E CFG Paths
+	 */
+	@SuppressWarnings("unchecked")
 	public static List<List<Unit>> searchPathFromCFG(Unit node, UnitGraph unitGraph, ArrayList<Unit> path, List<List<Unit>> pathList){
 		
+		//If children != 0, add the child node into path.
 		path.add(node);
-		
+////Debug
+//System.out.println(count++ + ": PathB:" + path.size());		
 		List<Unit> children = unitGraph.getSuccsOf(node);
 		int size = children.size();
-		
+
 		if(size != 0){
 			for(Unit nextNode : children) {
-				//path.add(nextNode);
+				//limit counter as breaker.
+				limitNum++;
+				if(limitNum > 1000000) break;
+////Debug				
+//System.out.println(count++ + ": PathF:" + path.size());
 				if(!isLoop(nextNode, path)) {
+					/* Regression Method Call of searchPathfromCFG method. */
 					searchPathFromCFG(nextNode, unitGraph, (ArrayList<Unit>)path.clone(), pathList);
+					//searchPathFromCFG(nextNode, unitGraph, deepPath, pathList);
 				} else {
 					continue;
 				}
 			}
-		} else if (size == 0) {
+		//Modified takedatmh in 20200510.			
+		//} else if (size == 0) {
+		} else {
+////Debug			
+//System.out.println(count++ + "PathList:" + path.toString()); 
 			pathList.add(path);
-		} 
-		
+		}
+////Debug		
+//System.out.println(count++ + "PathList E2E:" + path.toString());
+
 		return pathList;
 	}
 	
+	/**
+	 * Private Method for check whether NextNode is contained into already obtained nodes on paths.
+	 * If NextNode is included, we skip searchPathFromCFG method and go back to For-Loop again.
+	 * @param nextNode
+	 * @param path
+	 * @return
+	 */
 	private static boolean isLoop(Unit nextNode, List<Unit> path){
 		boolean ret = false;
 		
@@ -723,240 +745,47 @@ for (String key : dfVMap.keySet()) {
 	}
 	
 	/**
-	 * analyzePath
+	 * Utility to delete result files under output directories before invoke soot main method.
 	 * 
-	 *  Retrieve all CFG path from top to tail.
-	 *  In this method, defined top node, tail node, seen list, todo stack and visit node list.
-	 *  And then, we call searchPath method implemented all available paths search algorithm by DFS in this method.
-	 *  Moreover, searched node and edge information are written as csv file respective.
-	 * @param unitGraph
+	 * Example of invocation of this method.
+	 * <p>
+	 *  FileClass fc = new FileClass();
+     *  File dir = new File("/Users/Shared/java/");
+     *  FileClass.fileClass(dir);
+	 * </p>
+	 * @param dir
 	 */
-	public static void analyzePath(UnitGraph unitGraph) {
+	static public void deleteFile(File dir){
+        //Delete files under your designated directory.
+        if(dir.exists()) {
+            
+            if(dir.isFile()) {
+                if(dir.delete()) {
+                    System.out.println("Delete File.");
+                }
+            } else if(dir.isDirectory()) {
+                File[] files = dir.listFiles();
+                
+                if(files == null) {
+                    System.out.println("Not existing any files under the directory.");
+                }
+                //Loop for the number of the existing files.
+                for(int i=0; i<files.length; i++) {
+                    
+                    //Confirm existing any files or not.
+                    if(files[i].exists() == false) {
+                        continue;
+                    //Recursive deletion.
+                    } else if(files[i].isFile()) {
+                        deleteFile(files[i]);
+                        System.out.println("ファイル削除2");
+                    }        
+                }
+            }
+        } else {
+            System.out.println("ディレクトリが存在しない");
+        }
+    }
 	
-		// seen
-		Map<String, Boolean> seen = new LinkedHashMap<String, Boolean>();
-		//List<String> vList = new LinkedList<String>();
-		for (String key : crudMap.keySet()) {
-			seen.put(key, false);
-		}
-
-		// Map<StringNode, Unit>
-		Map<String, Unit> strUnitMap = new LinkedHashMap<String, Unit>();
-		Iterator<Unit> unit = unitGraph.iterator();
-		while (unit.hasNext()) {
-			Unit node = unit.next();
-			strUnitMap.put(node.toString(), node);
-		}
-
-		// stack
-		Deque<Unit> todo = new ArrayDeque<Unit>();
-
-		// PathListMap
-		Map<Integer, List<String>> pathListMap = new LinkedHashMap<Integer, List<String>>();
-
-		// Get Head and Tails.
-		Unit top = unitGraph.getHeads().get(0);
-		List<Unit> tails = unitGraph.getTails();
-
-		// VistNodeList
-		List<String> visitNodeList = new LinkedList<String>();
-		
-		//If  this graph is not multiple termination graph.
-		if(Utility4Soot.multiEndGraphFlag(tails) == true) {
-			//TODO: Rebuild Control Flow graph as single tail graph.
-			unitGraph = Utility4Soot.rebuildCFG4MultiTailCFG(unitGraph);
-		}
-
-		//Search Paths on the UnitGraph
-		Map<Integer, List<String>> resultPathMap = searchPath(unitGraph, top, tails.get(0), todo, seen, visitNodeList, pathListMap, strUnitMap);
-		
-for (Integer key : resultPathMap.keySet()) {
-System.out.println("=_=; " + resultPathMap.get(key));
-}
-		
-		//Create Path and Edge.
-		try {
-			//PathFile
-			SerializePath(resultPathMap);
-			//PathEdgeFile
-			SerializePathEdge(resultPathMap, unitGraph);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	/**
-	 * Search all test case pathes on UnitGraph.
-	 * 
-	 * @param graph
-	 * @param currentNode
-	 * @param tail
-	 * @param todo
-	 * @param seen
-	 * @param visitNodeList
-	 * @param pathListMap
-	 * @param strUnitMap
-	 * @param index
-	 * @return
-	 */
-	public static Map<Integer, List<String>> searchPath(UnitGraph graph,
-			Unit currentNode, Unit tail, Deque<Unit> todo,
-			Map<String, Boolean> seen, List<String> visitNodeList,
-			Map<Integer, List<String>> pathListMap,
-			Map<String, Unit> strUnitMap) {
-		/*
-		 * １currentNodeに対してseenの該当Nodeをtrueにする 0.引数からnodeを取り出し終端ノードでないことを確認する。
-		 * 　0.1.終端ノード & todoにtrueでないnodeがある場合：終端ノードをvisitNodeListに加えて、MapにvisitNodeListを格納
-		 *    0.1.1.visitNodeListの最終インデックスから左にインデックスを下げて行きながらseenの中でfalseになっているノードをchildに持つノードを逆探索する 　
-		 *    0.1.2.逆探索してseen falseのノードを子供として持つノードをcurrentノードとして引数指定で４に戻る。
-		 *           その際、visitNodeListをコピーして、開始インデックスからvisitNodeListを上書きして行く。 　
-		 * 0.2.終端ノード & todoがすべてtrueの場合：終端ノードに対してsennをtrue, NodeListに加えて、MapにnodeListを格納し、終了。
-		 * 01.CurrentNodeの子供たちを検索 
-		 * ２visitNodeListにnodeを格納する。 
-		 * ３todoに子供たちを入れる。
-		 * ４todoから子供を一人取り出して、todoから消す。 
-		 * ５取り出した子供がseenの中でtrueになってないか調べる
-		 * 　 5.1.   trueだったら４に戻って別な子供を取り出す 
-		 *     5.1.1 こどもがいなくなったら終わり 　
-		 *     5.2.   falseだったら
-		 *     5.2.1.todoから取り出したノードを指定して０1に戻る
-		 */
-		// １nodeに対してseenのNodeをtrueにする
-		seen.put(currentNode.toString(), true);
-		
-		if(currentNode.equals(tail)){
-			// seenの中でtrueでないnodeがあるかないかのresearchFlagの取得処理
-			// todoに残っていて且つseenの中でfalseのノードを格納する変数restartNode
-			String restartNode = null;
-			// todo(deque)から残りを一個づつ取り出して、
-			Iterator<Unit> todoUnits = todo.iterator();
-			boolean researchFlag = false;
-			// todoの中のノードを取り出して、seenでfalseのものが見つかったresearchFlagがtrueになるまでループ
-			Loop1: while (todoUnits.hasNext() & researchFlag == false) {
-				Unit todoUnit = todoUnits.next();
-				// seenにfalseとして登録されているか否かチェック
-				for (String key : seen.keySet()) {
-					// 終端ノード & todoにseenのなかでtrueでないnodeがある場合　の条件判定
-					if (key.equals(todoUnit.toString())
-							& seen.get(key) == false) {
-						researchFlag = true;
-						restartNode = key;
-						break Loop1;
-					}
-				}
-			}
-				
-			// 0.1 終端ノード & todoにseenのなかでtrueでないnodeがある場合：
-			if (researchFlag == true) {
-				//終端ノードをseenでtrueに変更
-				//seen.put(currentNode.toString(), true);
-				// 終端ノードをvisitNodeListに加え
-				visitNodeList.add(currentNode.toString());
-				//MapにvisitNodeListを格納
-				pathListMap.put(index++, visitNodeList);
-//Weak point				
-				// 0.1.1.visitNodeListの最終インデックスから左にインデックスを下げて行きながら、seenの中でfalseになっているノード(restartNode)をchildに持つノードを逆探索する
-				int indexVNL = visitNodeList.size();
-				//for (int i = indexVNL; i < 0; i--) {
-				for(int i = 0; i < indexVNL; i++){
-					String node = visitNodeList.get(indexVNL - 1 - i);
-					Unit unit = strUnitMap.get(node);
-					List<Unit> childUnits = graph.getSuccsOf(unit);
-					// seenの中でfalseになっているノード(restartNode)をchildに持つノードを発見
-					if (childUnits != null && childUnits.contains(strUnitMap.get(restartNode))) {
-						// 0.1.2.逆探索してseen
-						// falseのノードを子供として持つノードをcurrentノードとして引数指定で４に戻る。
-						// その際、visitNodeListをコピーして、開始インデックスからvisitNodeListを上書きして行く。
-						List<String> tmpVisitNodeList = new LinkedList<String>();
-						for (int x = 0; x < indexVNL - i; x++) {
-							tmpVisitNodeList.add(x, visitNodeList.get(x));
-						}
-						//CurrentNodeを新しいvisitNodeListの最終ノードに変更する。
-						currentNode = strUnitMap.get(tmpVisitNodeList.get(tmpVisitNodeList.size() - 1));
-						//NewBranch Flag を　true
-						newBranchFlag = true;
-						// 04から実行
-						methodNo4(graph, tail, todo, seen,
-								tmpVisitNodeList, pathListMap, strUnitMap);
-					} 
-				}
-			}
-			//0.2.終端ノード & todoがすべてtrueの場合：終端ノードに対してsennをtrue,NodeListに加えて、MapにnodeListを格納し、終了。
-			else if(researchFlag == false){
-				//seen.put(currentNode.toString(), true);
-				visitNodeList.add(currentNode.toString());
-				pathListMap.put(index++, visitNodeList);
-				//初期化
-				newBranchFlag = false;
-				index = 0;			
-				//終わり
-				return pathListMap;
-			}
-			
-		}
-			
-		// 1.CurrentNodeの子供たちを検索 
-		List<Unit> children = graph.getSuccsOf(currentNode);
-		
-		//1.1. In case that Child Node  is null and Current Node is not tail Node, finish this disposal.
-		if(children == null && !currentNode.equals(tail)) {
-			return pathListMap;
-		}
-
-		// 2 nodeListにnodeを格納する。
-		visitNodeList.add(currentNode.toString());
-		
-		// ３todoに子供たちを入れる
-		for (Unit child : children)
-			todo.push(child);
-
-		// 04 - 05
-		methodNo4(graph, tail, todo, seen, visitNodeList,
-				pathListMap, strUnitMap);
-
-		//初期化
-		//index = 0;
-		//newBranchFlag = false;
-		
-		return pathListMap;
-	}
-
-	/**
-	 * 04からの繰り返し用
-	 * @return Map
-	 */
-	public static Map<Integer, List<String>> methodNo4(UnitGraph graph,
-			Unit tail, Deque<Unit> todo, Map<String, Boolean> seen,
-			List<String> visitNodeList, Map<Integer, List<String>> pathListMap,
-			Map<String, Unit> strUnitMap) {
-		// ４todoから子供を一人取り出す
-		if(todo.equals(null))
-			return pathListMap;
-		Unit child = todo.poll();
-		//Unit child = todo.pop();
-
-		// ５取り出した子供がseenの中でtrueになってないか調べる when child node is not a tail node.
-		if(child != null ){
-			if (seen.get(child.toString()) == true) {
-				// ５．１trueだったら４に戻って別な子供を取り出す
-				methodNo4(graph, tail, todo, seen, visitNodeList,
-						pathListMap, strUnitMap);
-			}
-		//When the current node does not have any child, return.
-		} else {
-			return pathListMap;
-		}
-		// ５．２falseだったら
-		// 5.2.1.todoから取り出したノードを指定して
-		Unit nextNode = child;
-		
-		// 5.2.1.2. 空でないならNextNodeを引数指定して０に戻る。
-		if(nextNode != null)
-			pathListMap = searchPath(graph, nextNode, tail, todo, seen, visitNodeList,
-				pathListMap, strUnitMap);
-		
-		return pathListMap;
-	}
 
 }

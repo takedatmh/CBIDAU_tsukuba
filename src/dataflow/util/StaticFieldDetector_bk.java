@@ -30,16 +30,12 @@ import dataflow.util.Utility4Soot;
  * @author takedatmh
  *
  */
-public class StaticFieldDetector {
+public class StaticFieldDetector_bk {
 
 	// Method Name
-//	public static String methodName = "create";
-//	public static String mainClass = "simple.client.Client";
-//	public static String targetClass = "simple.logic.Logic_static";
-	
-	public static String methodName = "SharedVarX";
-	public static String mainClass = "sample.common.SharedVarX";
-	public static String targetClass = "sample.common.SharedVarX";
+	public static String methodName = "main";
+	public static String mainClass = "sample.functionA.MainA";
+	public static String targetClass = "sample.functionA.MainA";
 	
 	/**
 	 * Call Graph Creation
@@ -69,13 +65,13 @@ public class StaticFieldDetector {
 			// Excepted java packages.
 			if ((!srcString.startsWith("<java.")
 					&& !srcString.startsWith("<sun.")
-					&& !srcString.startsWith("<org.")
+					//&& !srcString.startsWith("<org.")
 					&& !srcString.startsWith("<com.")
 					&& !srcString.startsWith("<jdk.") && !srcString
 						.startsWith("<javax."))
-					|| (!tgtString.startsWith("<java.")
+					&& (!tgtString.startsWith("<java.")
 							&& !tgtString.startsWith("<sun.")
-							&& !tgtString.startsWith("<org.")
+							//&& !tgtString.startsWith("<org.")
 							&& !tgtString.startsWith("<com.")
 							&& !tgtString.startsWith("<jdk.") && !tgtString
 								.startsWith("<javax."))) {
@@ -98,6 +94,11 @@ public class StaticFieldDetector {
 	 */
 	public static void main(String[] args) {
 		
+		//Obtain soot main arguments from system properties.
+		methodName = System.getProperty("method");
+		mainClass = System.getProperty("main");
+		targetClass = System.getProperty("target");
+		
 		/* Set arguments for Soot main method. */
 		String[] args2 = Utility4Soot.setMainArgs(args, mainClass, targetClass);
 
@@ -111,8 +112,6 @@ public class StaticFieldDetector {
 				.add(new Transform("wjtp.myTrans", new SceneTransformer() {
 					protected void internalTransform(String phaseName,
 							@SuppressWarnings("rawtypes") Map options) {
-						/////////////Call Flow///////////////////////////////
-						//CallGraph cg = Scene.v().getCallGraph();
 						
 						/////////////Control Flow Graph//////////////////////
 						CHATransformer.v().transform();
